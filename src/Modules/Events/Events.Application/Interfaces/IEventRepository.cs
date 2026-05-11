@@ -1,0 +1,21 @@
+using System;
+using Events.Contract.DTOs;
+using SharedKernel.Domain;
+
+namespace Events.Application.Interfaces;
+
+public interface IEventRepository
+{
+      Task<Pagination<EventDto>> GetPaginationByLocationIdAsync(PaginationParams param, string tenant_id);
+      Task AddAsync(
+            DateTime timeStamp,
+            string actor,
+            string module,
+            string type,
+            string image,
+            string mac,
+            string name,
+            string remarks,
+            int locationId
+            );
+}

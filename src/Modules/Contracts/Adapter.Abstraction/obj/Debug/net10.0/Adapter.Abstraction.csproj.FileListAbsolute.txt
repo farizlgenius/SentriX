@@ -1,0 +1,17 @@
+D:\code\sentrix\src\Modules\Contracts\Adapter.Abstraction\bin\Debug\net10.0\Adapter.Abstraction.deps.json
+D:\code\sentrix\src\Modules\Contracts\Adapter.Abstraction\bin\Debug\net10.0\Adapter.Abstraction.dll
+D:\code\sentrix\src\Modules\Contracts\Adapter.Abstraction\bin\Debug\net10.0\Adapter.Abstraction.pdb
+D:\code\sentrix\src\Modules\Contracts\Adapter.Abstraction\obj\Debug\net10.0\Adapter.Abstraction.GeneratedMSBuildEditorConfig.editorconfig
+D:\code\sentrix\src\Modules\Contracts\Adapter.Abstraction\obj\Debug\net10.0\Adapter.Abstraction.AssemblyInfoInputs.cache
+D:\code\sentrix\src\Modules\Contracts\Adapter.Abstraction\obj\Debug\net10.0\Adapter.Abstraction.AssemblyInfo.cs
+D:\code\sentrix\src\Modules\Contracts\Adapter.Abstraction\obj\Debug\net10.0\Adapter.Abstraction.csproj.CoreCompileInputs.cache
+D:\code\sentrix\src\Modules\Contracts\Adapter.Abstraction\obj\Debug\net10.0\Adapter.Abstraction.dll
+D:\code\sentrix\src\Modules\Contracts\Adapter.Abstraction\obj\Debug\net10.0\refint\Adapter.Abstraction.dll
+D:\code\sentrix\src\Modules\Contracts\Adapter.Abstraction\obj\Debug\net10.0\Adapter.Abstraction.pdb
+D:\code\sentrix\src\Modules\Contracts\Adapter.Abstraction\obj\Debug\net10.0\ref\Adapter.Abstraction.dll
+D:\code\sentrix\src\Modules\Contracts\Adapter.Abstraction\bin\Debug\net10.0\Device.Contract.dll
+D:\code\sentrix\src\Modules\Contracts\Adapter.Abstraction\bin\Debug\net10.0\SharedKernel.dll
+D:\code\sentrix\src\Modules\Contracts\Adapter.Abstraction\bin\Debug\net10.0\Device.Contract.pdb
+D:\code\sentrix\src\Modules\Contracts\Adapter.Abstraction\bin\Debug\net10.0\SharedKernel.pdb
+D:\code\sentrix\src\Modules\Contracts\Adapter.Abstraction\obj\Debug\net10.0\Adapter.Abstraction.csproj.AssemblyReference.cache
+D:\code\sentrix\src\Modules\Contracts\Adapter.Abstraction\obj\Debug\net10.0\Adapter..3A0A819A.Up2Date

@@ -1,0 +1,11 @@
+D:\code\sentrix\src\Modules\Auth\Auth.Domain\bin\Debug\net10.0\Auth.Domain.deps.json
+D:\code\sentrix\src\Modules\Auth\Auth.Domain\bin\Debug\net10.0\Auth.Domain.dll
+D:\code\sentrix\src\Modules\Auth\Auth.Domain\bin\Debug\net10.0\Auth.Domain.pdb
+D:\code\sentrix\src\Modules\Auth\Auth.Domain\obj\Debug\net10.0\Auth.Domain.GeneratedMSBuildEditorConfig.editorconfig
+D:\code\sentrix\src\Modules\Auth\Auth.Domain\obj\Debug\net10.0\Auth.Domain.AssemblyInfoInputs.cache
+D:\code\sentrix\src\Modules\Auth\Auth.Domain\obj\Debug\net10.0\Auth.Domain.AssemblyInfo.cs
+D:\code\sentrix\src\Modules\Auth\Auth.Domain\obj\Debug\net10.0\Auth.Domain.csproj.CoreCompileInputs.cache
+D:\code\sentrix\src\Modules\Auth\Auth.Domain\obj\Debug\net10.0\Auth.Domain.dll
+D:\code\sentrix\src\Modules\Auth\Auth.Domain\obj\Debug\net10.0\refint\Auth.Domain.dll
+D:\code\sentrix\src\Modules\Auth\Auth.Domain\obj\Debug\net10.0\Auth.Domain.pdb
+D:\code\sentrix\src\Modules\Auth\Auth.Domain\obj\Debug\net10.0\ref\Auth.Domain.dll

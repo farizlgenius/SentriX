@@ -1,0 +1,68 @@
+import { ReactNode } from "react";
+
+interface ButtonProps {
+  name?:string;
+  children: ReactNode; // Button text or content
+  size?: "sm" | "md"; // Button size
+  variant?: "primary" | "outline" | "danger" | "purple" | "orange" | "yellow" | "green" ; // Button variant
+  startIcon?: ReactNode; // Icon before the text
+  endIcon?: ReactNode; // Icon after the text
+  onClick?: (e:React.MouseEvent<HTMLButtonElement,MouseEvent>) => void; // Click handler
+  onClickWithEvent?:(e: React.MouseEvent<HTMLButtonElement>) => void;
+  disabled?: boolean; // Disabled state
+  className?: string; // Disabled state
+}
+
+const Button: React.FC<ButtonProps> = ({
+  name,
+  children,
+  size = "md",
+  variant = "primary",
+  startIcon,
+  endIcon,
+  onClick,
+  onClickWithEvent,
+  className = "",
+  disabled = false
+}) => {
+  // Size Classes
+  const sizeClasses = {
+    sm: "px-4 py-2.5 text-sm",
+    md: "px-5 py-3 text-sm",
+  };
+
+  // Variant Classes
+  const variantClasses = {
+    red:"bg-red-500 text-white shadow-theme-xs hover:bg-red-600 disabled:bg-red-300",
+    orange:"bg-orange-500 text-white shadow-theme-xs hover:bg-orange-600 disabled:bg-orange-300",
+    yellow:"bg-yellow-500 text-white shadow-theme-xs hover:bg-yellow-600 disabled:bg-yellow-300",
+    green:"bg-green-500 text-white shadow-theme-xs hover:bg-green-600 disabled:bg-green-300",
+    purple:"bg-purple-500 text-white shadow-theme-xs hover:bg-purple-600 disabled:bg-purple-300",
+    primary:
+      "bg-brand-500 text-white shadow-theme-xs hover:bg-brand-600 disabled:bg-brand-300",
+      danger:"bg-red-500 text-white shadow-theme-xs hover:bg-red-600 disabled:bg-red-300",
+    outline:
+      "bg-[var(--app-panel-bg)] text-gray-700 ring-1 ring-inset ring-[var(--app-panel-border)] hover:border-brand-200 hover:bg-[var(--app-panel-muted)] dark:text-gray-300",
+  };
+
+  return (
+    <button
+    name={name}
+      className={`inline-flex items-center justify-center gap-2 rounded-lg transition ${className} ${
+        "font-semibold"
+      } ${
+        sizeClasses[size]
+      } ${variantClasses[variant]} ${
+        disabled ? "cursor-not-allowed opacity-50" : ""
+      }`}
+      onClick={onClick || onClickWithEvent}
+      disabled={disabled}
+    >
+      {startIcon && <span className="flex items-center">{startIcon}</span>}
+      {children}
+      {endIcon && <span className="flex items-center">{endIcon}</span>}
+    </button>
+  );
+};
+
+export default Button;

@@ -1,0 +1,60 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RuntimeIdentifiers>win-x64;linux-arm64</RuntimeIdentifiers>
+  </PropertyGroup>
+
+   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
+	</PropertyGroup>
+
+  <ItemGroup Condition="'$(RuntimeIdentifier)' == 'win-x64'">
+  <None Include="..\Modules\Adapters\Adapter.Aero\Libs\Windows\**\*">
+    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <TargetPath>%(Filename)%(Extension)</TargetPath>
+  </None>
+</ItemGroup>
+
+<ItemGroup Condition="'$(RuntimeIdentifier)' == 'linux-arm64'">
+  <None Include="..\Modules\Adapters\Adapter.Aero\Libs\Linux\**\*">
+    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <TargetPath>%(Filename)%(Extension)</TargetPath>
+  </None>
+</ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MediatR" Version="14.1.0" />
+    <PackageReference Include="MediatR.Contracts" Version="2.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.7" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.7" />
+    <PackageReference Include="Scalar.AspNetCore" Version="2.14.11" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Controllers\" />
+    <Folder Include="Helpers\" />
+    <Folder Include="Middlewares\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Modules\Adapters\Adapter.Aero\Adapter.Aero.csproj" />
+    <ProjectReference Include="..\Modules\Adapters\Adapter.Amico\Adapter.Amico.csproj" />
+    <ProjectReference Include="..\Modules\Auth\Auth.Infrastructure\Auth.Infrastructure.csproj" />
+    <ProjectReference Include="..\Modules\Cache\Cache.Infrastrucure\Cache.Infrastructure.csproj" />
+    <ProjectReference Include="..\Modules\Contracts\Auth.Contract\Auth.Contract.csproj" />
+    <ProjectReference Include="..\Modules\Contracts\Events.Contract\Events.Contract.csproj" />
+    <ProjectReference Include="..\Modules\Contracts\Location.Contract\Location.Contract.csproj" />
+    <ProjectReference Include="..\Modules\Device\Device.Infrastructure\Device.Infrastructure.csproj" />
+    <ProjectReference Include="..\Modules\Events\Events.Infrastructure\Events.Infrastructure.csproj" />
+    <ProjectReference Include="..\Modules\Location\Location.Infrastructure\Location.Infrastructure.csproj" />
+    <ProjectReference Include="..\Modules\Notifier\Notifier.Client\Notifier.Client.csproj" />
+    <ProjectReference Include="..\Modules\Operator\Operator.Infrastructure\Operator.Infrastructure.csproj" />
+    <ProjectReference Include="..\Modules\Role\Role.Infrastructure\Role.Infrastructure.csproj" />
+    <ProjectReference Include="..\SharedKernel\SharedKernel.csproj" />
+  </ItemGroup>
+
+</Project>

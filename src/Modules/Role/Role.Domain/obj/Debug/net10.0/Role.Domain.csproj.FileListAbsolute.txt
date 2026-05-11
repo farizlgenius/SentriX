@@ -1,0 +1,15 @@
+D:\code\sentrix\src\Modules\Role\Role.Domain\bin\Debug\net10.0\Role.Domain.deps.json
+D:\code\sentrix\src\Modules\Role\Role.Domain\bin\Debug\net10.0\Role.Domain.dll
+D:\code\sentrix\src\Modules\Role\Role.Domain\bin\Debug\net10.0\Role.Domain.pdb
+D:\code\sentrix\src\Modules\Role\Role.Domain\bin\Debug\net10.0\SharedKernel.dll
+D:\code\sentrix\src\Modules\Role\Role.Domain\bin\Debug\net10.0\SharedKernel.pdb
+D:\code\sentrix\src\Modules\Role\Role.Domain\obj\Debug\net10.0\Role.Domain.csproj.AssemblyReference.cache
+D:\code\sentrix\src\Modules\Role\Role.Domain\obj\Debug\net10.0\Role.Domain.GeneratedMSBuildEditorConfig.editorconfig
+D:\code\sentrix\src\Modules\Role\Role.Domain\obj\Debug\net10.0\Role.Domain.AssemblyInfoInputs.cache
+D:\code\sentrix\src\Modules\Role\Role.Domain\obj\Debug\net10.0\Role.Domain.AssemblyInfo.cs
+D:\code\sentrix\src\Modules\Role\Role.Domain\obj\Debug\net10.0\Role.Domain.csproj.CoreCompileInputs.cache
+D:\code\sentrix\src\Modules\Role\Role.Domain\obj\Debug\net10.0\Role.Dom.4018A522.Up2Date
+D:\code\sentrix\src\Modules\Role\Role.Domain\obj\Debug\net10.0\Role.Domain.dll
+D:\code\sentrix\src\Modules\Role\Role.Domain\obj\Debug\net10.0\refint\Role.Domain.dll
+D:\code\sentrix\src\Modules\Role\Role.Domain\obj\Debug\net10.0\Role.Domain.pdb
+D:\code\sentrix\src\Modules\Role\Role.Domain\obj\Debug\net10.0\ref\Role.Domain.dll

@@ -1,0 +1,11 @@
+D:\code\sentrix\src\Modules\Core\Core.Application\bin\Debug\net10.0\Core.Application.deps.json
+D:\code\sentrix\src\Modules\Core\Core.Application\bin\Debug\net10.0\Core.Application.dll
+D:\code\sentrix\src\Modules\Core\Core.Application\bin\Debug\net10.0\Core.Application.pdb
+D:\code\sentrix\src\Modules\Core\Core.Application\obj\Debug\net10.0\Core.Application.GeneratedMSBuildEditorConfig.editorconfig
+D:\code\sentrix\src\Modules\Core\Core.Application\obj\Debug\net10.0\Core.Application.AssemblyInfoInputs.cache
+D:\code\sentrix\src\Modules\Core\Core.Application\obj\Debug\net10.0\Core.Application.AssemblyInfo.cs
+D:\code\sentrix\src\Modules\Core\Core.Application\obj\Debug\net10.0\Core.Application.csproj.CoreCompileInputs.cache
+D:\code\sentrix\src\Modules\Core\Core.Application\obj\Debug\net10.0\Core.Application.dll
+D:\code\sentrix\src\Modules\Core\Core.Application\obj\Debug\net10.0\refint\Core.Application.dll
+D:\code\sentrix\src\Modules\Core\Core.Application\obj\Debug\net10.0\Core.Application.pdb
+D:\code\sentrix\src\Modules\Core\Core.Application\obj\Debug\net10.0\ref\Core.Application.dll

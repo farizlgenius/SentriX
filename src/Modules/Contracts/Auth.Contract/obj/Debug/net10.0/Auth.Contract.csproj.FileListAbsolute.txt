@@ -1,0 +1,17 @@
+D:\code\sentrix\src\Modules\Contracts\Auth.Contract\bin\Debug\net10.0\Auth.Contract.deps.json
+D:\code\sentrix\src\Modules\Contracts\Auth.Contract\bin\Debug\net10.0\Auth.Contract.dll
+D:\code\sentrix\src\Modules\Contracts\Auth.Contract\bin\Debug\net10.0\Auth.Contract.pdb
+D:\code\sentrix\src\Modules\Contracts\Auth.Contract\bin\Debug\net10.0\Role.Contract.dll
+D:\code\sentrix\src\Modules\Contracts\Auth.Contract\bin\Debug\net10.0\SharedKernel.dll
+D:\code\sentrix\src\Modules\Contracts\Auth.Contract\bin\Debug\net10.0\SharedKernel.pdb
+D:\code\sentrix\src\Modules\Contracts\Auth.Contract\bin\Debug\net10.0\Role.Contract.pdb
+D:\code\sentrix\src\Modules\Contracts\Auth.Contract\obj\Debug\net10.0\Auth.Contract.csproj.AssemblyReference.cache
+D:\code\sentrix\src\Modules\Contracts\Auth.Contract\obj\Debug\net10.0\Auth.Contract.GeneratedMSBuildEditorConfig.editorconfig
+D:\code\sentrix\src\Modules\Contracts\Auth.Contract\obj\Debug\net10.0\Auth.Contract.AssemblyInfoInputs.cache
+D:\code\sentrix\src\Modules\Contracts\Auth.Contract\obj\Debug\net10.0\Auth.Contract.AssemblyInfo.cs
+D:\code\sentrix\src\Modules\Contracts\Auth.Contract\obj\Debug\net10.0\Auth.Contract.csproj.CoreCompileInputs.cache
+D:\code\sentrix\src\Modules\Contracts\Auth.Contract\obj\Debug\net10.0\Auth.Con.93F0AEAC.Up2Date
+D:\code\sentrix\src\Modules\Contracts\Auth.Contract\obj\Debug\net10.0\Auth.Contract.dll
+D:\code\sentrix\src\Modules\Contracts\Auth.Contract\obj\Debug\net10.0\refint\Auth.Contract.dll
+D:\code\sentrix\src\Modules\Contracts\Auth.Contract\obj\Debug\net10.0\Auth.Contract.pdb
+D:\code\sentrix\src\Modules\Contracts\Auth.Contract\obj\Debug\net10.0\ref\Auth.Contract.dll

@@ -1,0 +1,116 @@
+// src/api/api.ts
+import axios, { AxiosInstance } from "axios";
+import Logger from "../utility/Logger";
+
+const PORT = import.meta.env.VITE_PORT || 8000;
+const API_BASE = import.meta.env.VITE_SERVER_IP || `${location.protocol}//${location.hostname}:${PORT}`;
+let accessToken: string | null = null;
+
+const api: AxiosInstance = axios.create({
+    baseURL: API_BASE,
+    timeout: 15000,
+    withCredentials: true, // remove if you don't need cookies
+});
+
+// ---- Token Setters -----------------------------------------------------
+
+export function setAccessToken(token: string | null) {
+    accessToken = token;
+
+    if (token) {
+        api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    } else {
+        delete api.defaults.headers.common["Authorization"];
+    }
+}
+
+export function getAccessToken() {
+    return accessToken;
+}
+
+export function clearAccessToken() {
+    accessToken = null;
+    delete api.defaults.headers.common["Authorization"];
+}
+
+
+export const send = {
+    get: async (endpoint: string) => {
+        try {
+            const res = await api.get(endpoint);
+            return res;
+        } catch (e: any) {
+            Logger.error(e)
+            return e.response;
+        }
+    },
+
+    getImage: async (endpoint: string) => {
+        try {
+            const res = await api.get(endpoint, {
+                responseType: "arraybuffer",
+            });
+            return res;
+        } catch (e: any) {
+            Logger.error(e);
+            return e.response;
+        }
+    },
+
+    post: async (endpoint: string, payload?: Object) => {
+        try {
+            const res = await api.post(endpoint, payload);
+            return res;
+        } catch (e: any) {
+            Logger.error(e)
+            return e;
+        }
+    },
+    put: async (endpoint: string, payload: Object) => {
+        try {
+            const res = await api.put(endpoint, payload);
+            return res
+        } catch (e: any) {
+            Logger.error(e)
+            return e.response;
+        }
+    },
+    delete: async (endpoint: string) => {
+        try {
+            const res = await api.delete(endpoint);
+            return res;
+        } catch (e: any) {
+            Logger.error(e)
+            return e.response;
+        }
+    },
+    postForm: async (endpoint: string, payload: FormData) => {
+        try {
+            const res = await api.post(endpoint, payload);
+            return res;
+        } catch (e: any) {
+            Logger.error(e)
+            return e.response;
+        }
+    }
+}
+
+
+// ---- Request Interceptor (optional) ------------------------------------
+
+api.interceptors.request.use((config) => {
+    if (accessToken) {
+        config.headers = {
+            ...(config.headers as any),
+            // "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+        };
+    }
+    return config;
+});
+
+
+
+// ---- Export -------------------------------------------------------------
+
+export default api;

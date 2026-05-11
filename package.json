@@ -1,0 +1,32 @@
+{
+  "scripts": {
+    "dev": "dotnet watch --project src/Host",   
+    "auth:migadd": "dotnet ef migrations add --project src/Modules/Auth/Auth.Infrastructure --startup-project src/Host",
+    "auth:migup" : "dotnet ef database update --project src/Modules/Auth/Auth.Infrastructure --startup-project src/Host",
+    "auth:migremove": "dotnet ef migrations remove --project src/Modules/Auth/Auth.Infrastructure --startup-project src/Host",
+    "cache:migadd": "dotnet ef migrations add --project src/Modules/Cache/Cache.Infrastructure --startup-project src/Host",
+    "cache:migup" : "dotnet ef database update --project src/Modules/Cache/Cache.Infrastructure --startup-project src/Host",
+    "cache:migremove": "dotnet ef migrations remove --project src/Modules/Cache/Cache.Infrastructure --startup-project src/Host",
+    "core:migadd": "dotnet ef migrations add --project src/Modules/Core/Core.Infrastructure --startup-project src/Host",
+    "core:migup" : "dotnet ef database update --project src/Modules/Core/Core.Infrastructure --startup-project src/Host",
+    "core:migremove": "dotnet ef migrations remove --project src/Modules/Core/Core.Infrastructure --startup-project src/Host",
+    "location:migadd": "dotnet ef migrations add --project src/Modules/Location/Location.Infrastructure --startup-project src/Host",
+    "location:migup" : "dotnet ef database update --project src/Modules/Location/Location.Infrastructure --startup-project src/Host",
+    "location:migremove": "dotnet ef migrations remove --project src/Modules/Location/Location.Infrastructure --startup-project src/Host",
+    "role:migadd": "dotnet ef migrations add --project src/Modules/Role/Role.Infrastructure --startup-project src/Host",
+    "role:migup" : "dotnet ef database update --project src/Modules/Role/Role.Infrastructure --startup-project src/Host",
+    "role:migremove": "dotnet ef migrations remove --project src/Modules/Role/Role.Infrastructure --startup-project src/Host",
+    "operator:migadd": "dotnet ef migrations add --project src/Modules/Operator/Operator.Infrastructure --startup-project src/Host",
+    "operator:migup" : "dotnet ef database update --project src/Modules/Operator/Operator.Infrastructure --startup-project src/Host",
+    "operator:migremove": "dotnet ef migrations remove --project src/Modules/Operator/Operator.Infrastructure --startup-project src/Host",
+    "device:migadd": "dotnet ef migrations add --project src/Modules/Device/Device.Infrastructure --startup-project src/Host",
+    "device:migup" : "dotnet ef database update --project src/Modules/Device/Device.Infrastructure --startup-project src/Host",
+    "device:migremove": "dotnet ef migrations remove --project src/Modules/Device/Device.Infrastructure --startup-project src/Host",
+    "aero:migadd": "dotnet ef migrations add --project src/Modules/Adapters/Adapter.Aero --startup-project src/Host",
+    "aero:migup" : "dotnet ef database update --project src/Modules/Adapters/Adapter.Aero --startup-project src/Host",
+    "aero:migremove": "dotnet ef migrations remove --project src/Modules/Adapters/Adapter.Aero --startup-project src/Host",
+    "events:migadd": "dotnet ef migrations add --project src/Modules/Events/Events.Infrastructure --startup-project src/Host",
+    "events:migup" : "dotnet ef database update --project src/Modules/Events/Events.Infrastructure --startup-project src/Host",
+    "events:migremove": "dotnet ef migrations remove --project src/Modules/Events/Events.Infrastructure --startup-project src/Host"
+  }
+}

@@ -1,0 +1,96 @@
+import React, { useEffect, useState } from "react";
+import { Options } from "../../model/Options";
+
+interface SelectProps {
+  id?: string;
+  isString?: boolean
+  name: string;
+  options: Options[];
+  placeholder?: string;
+  onChange?: (value: string) => void;
+  onChangeWithEvent?: (value: string, e: React.ChangeEvent<HTMLSelectElement>) => void
+  className?: string;
+  defaultValue?: string | number;
+  icon?:React.ReactNode;
+  disabled?:boolean;
+}
+
+const Select: React.FC<SelectProps> = ({
+  id,
+  isString,
+  name = "",
+  options,
+  placeholder = "Select an option",
+  onChange,
+  onChangeWithEvent,
+  className = "",
+  defaultValue = "",
+  icon,
+  disabled=false
+}) => {
+  // Manage the selected value
+  //const [selectedValue, setSelectedValue] = useState<string | number>(defaultValue);
+  const [refresh,setRefresh] = useState<boolean>(false);
+  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const value = e.target.value;
+    //setSelectedValue(value);
+    if (onChange != undefined) {
+      onChange(value);
+    }
+    if (onChangeWithEvent != undefined) {
+      onChangeWithEvent(value, e); // Trigger parent handler
+    }
+
+  };
+  useEffect(() => {
+    console.log("Refresh triggered!", refresh);
+  }, [refresh]);
+
+  useEffect(() => {
+    setRefresh(prev => !prev)
+  }, [options])
+
+  return (
+    <div className="relative w-full">
+      <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+        {icon}
+      </div>
+      <select
+        id={id}
+        name={name}
+        className={`${icon ? 'pl-10 ' : ''}h-12 w-full appearance-none rounded-2xl border border-[var(--app-panel-border)] bg-[var(--app-panel-bg)] px-4 py-3 pr-11 text-sm shadow-theme-xs placeholder:text-gray-400 transition-colors focus:border-brand-300 focus:outline-hidden focus:ring-4 focus:ring-brand-500/10 dark:text-white/90 dark:placeholder:text-white/30 ${defaultValue
+            ? "text-gray-800 dark:text-white/90"
+            : "text-gray-400 dark:text-gray-400"
+          } ${className}`}
+        //value={selectedValue}
+        value={defaultValue}
+        onChange={handleChange}
+        disabled={disabled}
+      >
+        {/* Placeholder option */}
+        <option
+          value={isString ? "" : -1}
+          disabled
+          className="text-gray-700 dark:bg-gray-900 dark:text-gray-400"
+        >
+          {placeholder}
+        </option>
+        {/* Map over options */}
+        {options.map((option) => (
+          <option
+            key={option.value + crypto.randomUUID()}
+            value={option.value}
+            className="text-gray-700 dark:bg-gray-900 dark:text-gray-400"
+          >
+            {option.label}
+          </option>
+        ))}
+
+      </select>
+
+    </div>
+
+  );
+};
+
+export default Select;

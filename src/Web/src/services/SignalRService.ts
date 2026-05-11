@@ -1,0 +1,150 @@
+// import * as signalR from "@microsoft/signalr";
+// import { SignalRHub } from "../constants/signalr-constant";
+
+// const PORT = import.meta.env.VITE_RT_PORT || 5031;
+// const server = import.meta.env.VITE_SERVER_IP || `${location.protocol}//${location.hostname}:${PORT}`;
+
+// class SignalRService {
+  
+//   private connection: signalR.HubConnection | null = null;
+
+//   public getConnection(token:string): signalR.HubConnection {
+//     if (!this.connection) {
+//       this.connection = new signalR.HubConnectionBuilder()
+//         .withUrl(server + SignalRHub.UI,{
+//           accessTokenFactory:() => token
+//         })
+//         .withAutomaticReconnect()
+//         .build();
+
+//       // Register lifecycle handlers (for logging & recovery)
+//       this.connection.onreconnecting((error) => {
+//         console.warn("[SignalR] Reconnecting...", error);
+//       });
+
+//       this.connection.onreconnected((connectionId) => {
+//         console.info("[SignalR] Reconnected successfully:", connectionId);
+//       });
+
+//       this.connection.onclose((error) => {
+//         console.error("[SignalR] Connection closed:", error);
+//         // Optional: You can auto-restart if desired
+//         //this.startConnection();
+//       });
+
+//       // Start the connection once
+//       this.startConnection();
+//     }
+
+//     return this.connection;
+//   }
+
+//   private async startConnection() {
+//     if (!this.connection) return;
+
+//     try {
+//       await this.connection.start();
+//       console.info("[SignalR] Connection started successfully.");
+//     } catch (error) {
+//       console.error("[SignalR] Connection start failed:", error);
+//       console.log(server)
+//       // Retry after delay if initial connect fails
+//       // setTimeout(() => this.startConnection(), 5000);
+//     }
+
+//   }
+
+//   public stopConnection() {
+//     if (this.connection) {
+//       this.connection.stop()
+//         .then(() => console.info("[SignalR] Connection stopped."))
+//         .catch((error) => console.error("[SignalR] Stop error:", error));
+//       this.connection = null;
+//     }
+//   }
+// }
+
+// export default new SignalRService();
+
+import * as signalR from "@microsoft/signalr";
+import { SignalRHub } from "../constants/signalr-constant";
+
+const PORT = import.meta.env.VITE_RT_PORT || 5031;
+const server = import.meta.env.VITE_SERVER_IP || `${location.protocol}//${location.hostname}:${PORT}`;
+
+class SignalRService {
+  private connection: signalR.HubConnection | null = null;
+  private token: string | null = null;
+
+  // ⭐ set/update token anytime (login or refresh)
+  public setToken(token: string) {
+    this.token = token;
+  }
+
+  public async startConnection() {
+    if (this.connection) return;
+    if (!this.token) {
+      console.warn("SignalR: No token yet, skipping start.");
+      return;
+    }
+
+    this.connection = new signalR.HubConnectionBuilder()
+      .withUrl(server + SignalRHub.UI, {
+        accessTokenFactory: async () => {
+          // ⭐ SignalR will call this BEFORE every HTTP request
+          console.log("SignalR sending token...");
+          return this.token!;
+        }
+      })
+      .withAutomaticReconnect()
+      .build();
+
+    this.registerLifecycleEvents();
+
+    try {
+      await this.connection.start();
+      console.info("✅ SignalR connected");
+    } catch (error) {
+      console.error("❌ SignalR start failed:", error);
+    }
+  }
+
+  private registerLifecycleEvents() {
+    if (!this.connection) return;
+
+    this.connection.onreconnecting(err => {
+      console.warn("[SignalR] Reconnecting...", err);
+    });
+
+    this.connection.onreconnected(id => {
+      console.info("[SignalR] Reconnected:", id);
+    });
+
+    this.connection.onclose(err => {
+      console.error("[SignalR] Closed:", err);
+      this.connection = null;
+    });
+  }
+
+  public getConnection() {
+    return this.connection;
+  }
+
+  public async joinGroup(groupName: string) {
+  if (!this.connection) return;
+  await this.connection.invoke("Subscribe", groupName);
+}
+
+public async leaveGroup(groupName: string) {
+  if (!this.connection) return;
+  await this.connection.invoke("Unsubscribe", groupName);
+}
+
+  public async stopConnection() {
+    if (!this.connection) return;
+    await this.connection.stop();
+    this.connection = null;
+  }
+}
+
+export default new SignalRService();
