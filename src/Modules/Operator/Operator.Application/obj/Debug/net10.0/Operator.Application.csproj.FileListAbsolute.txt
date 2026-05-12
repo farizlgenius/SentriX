@@ -14,6 +14,7 @@ D:\code\sentrix\src\Modules\Operator\Operator.Application\obj\Debug\net10.0\Oper
 D:\code\sentrix\src\Modules\Operator\Operator.Application\obj\Debug\net10.0\Operator.Application.AssemblyInfoInputs.cache
 D:\code\sentrix\src\Modules\Operator\Operator.Application\obj\Debug\net10.0\Operator.Application.AssemblyInfo.cs
 D:\code\sentrix\src\Modules\Operator\Operator.Application\obj\Debug\net10.0\Operator.Application.csproj.CoreCompileInputs.cache
+D:\code\sentrix\src\Modules\Operator\Operator.Application\obj\Debug\net10.0\Operator.Application.sourcelink.json
 D:\code\sentrix\src\Modules\Operator\Operator.Application\obj\Debug\net10.0\Operator.8DAF8A01.Up2Date
 D:\code\sentrix\src\Modules\Operator\Operator.Application\obj\Debug\net10.0\Operator.Application.dll
 D:\code\sentrix\src\Modules\Operator\Operator.Application\obj\Debug\net10.0\refint\Operator.Application.dll

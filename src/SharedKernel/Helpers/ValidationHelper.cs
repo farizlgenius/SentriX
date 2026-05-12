@@ -20,4 +20,14 @@ public sealed class ValidationHelper
     }
   }
 
+  public static bool ValidateTenants(string Tenants,int LocationId)
+      {
+            if(string.IsNullOrWhiteSpace(Tenants))
+                  return false;
+
+            var arr = Tenants.Split(",").Select(x => int.Parse(x)).ToList();
+
+            return arr.Contains(LocationId);
+      }
+
 }

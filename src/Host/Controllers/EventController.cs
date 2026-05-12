@@ -2,6 +2,8 @@ using Events.Contract.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SharedKernel.Domain;
+using SharedKernel.Exceptions;
+using SharedKernel.Helpers;
 
 namespace Host.Controllers
 {
@@ -12,9 +14,14 @@ namespace Host.Controllers
         [HttpGet("pagination")]
         public async Task<IActionResult> GetPagination([FromQuery] PaginationParams param)
         {
-            var tenant_id = User.FindFirst("tenant_id")?.Value ?? "";
-            var res = await @event.GetPaginationByLocationIdAsync(param,tenant_id);
+            var tenants = User.FindFirst("tenants")?.Value ?? "";
+
+            if(!ValidationHelper.ValidateTenants(tenants,param.locationId))
+                throw new ForbiddenException(MessageHelper.Location.LocationNotAllow);
+
+            var res = await @event.GetPaginationByLocationIdAsync(param);
             return Ok(res);
+            
         }
     }
 }

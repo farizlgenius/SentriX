@@ -9,12 +9,14 @@ using Auth.Domain.Enums;
 using Cache.Contract.Interfaces;
 using Microsoft.IdentityModel.Tokens;
 using Operator.Contract.DTOs;
+using Operator.Contract.Queries;
 using SharedKernel.Helpers;
+using SharedKernel.Messaging;
 
 
 namespace Auth.Application.Services;
 
-public sealed class JwtService(IRefreshTokenAuditRepository repo, IJwtSetting settings,ICache redis) : IJwt
+public sealed class JwtService(IRefreshTokenAuditRepository repo, IJwtSetting settings, ICache redis, IMessageBus bus) : IJwt
 {
       private readonly string _secretKey = settings.Secret;
       private readonly string _issuer = settings.Issuer;
@@ -28,6 +30,8 @@ public sealed class JwtService(IRefreshTokenAuditRepository repo, IJwtSetting se
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
             var now = DateTime.UtcNow;
 
+            var locations = await bus.QueryAsync(new LocationListByUsernameQuery(user.Username));
+
             var claims = new[]
             {
                   // Adding data to token claims (for demonstration, only username is added)
@@ -36,7 +40,7 @@ public sealed class JwtService(IRefreshTokenAuditRepository repo, IJwtSetting se
 
                   // Authorized
                   new Claim("role_id",user.RoleId.ToString()),
-                  // new Claim("tenant_id",user.LocationIds[0].ToString()),
+                  new Claim("tenants",string.Join(",", locations.Select(l => l))),
 
             };
 
@@ -82,6 +86,7 @@ public sealed class JwtService(IRefreshTokenAuditRepository repo, IJwtSetting se
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secretKey));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
             var now = DateTime.UtcNow;
+            var locations = await bus.QueryAsync(new LocationListByUsernameQuery(user.Username));
 
             var claims = new[]
             {
@@ -92,7 +97,7 @@ public sealed class JwtService(IRefreshTokenAuditRepository repo, IJwtSetting se
 
       // Authorized
       new Claim("role_id",user.RoleId.ToString()),
-      // new Claim("tenant_id",user.LocationIds[0].ToString()),
+      new Claim("tenants",string.Join(",", locations.Select(l => l))),
 
     };
 

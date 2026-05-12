@@ -17,8 +17,9 @@ public sealed class Devices
   public string Status {get; private set;}
   public DateTime SyncedAt {get; private set;}
   public int LocationId { get; private set; }
+  public string Metadata { get; private set; } = string.Empty;
 
-  public Devices(int id,int componentid, string name, string serialnumber, string mac,string ip,int port,string fw,string type,string status,DateTime synced_at,int locationid)
+  public Devices(int id,int componentid, string name, string serialnumber, string mac,string ip,int port,string fw,string type,string status,DateTime synced_at,int locationid,string metadata)
   {
     ValidationHelper.ValidateNotMinus(id, nameof(Id));
     ValidationHelper.ValidateNotMinus(componentid, nameof(ComponentId));
@@ -39,6 +40,7 @@ public sealed class Devices
     this.Status = status;
     this.LocationId = locationid;
     this.SyncedAt = synced_at;
+    this.Metadata = metadata;
   }
 }
 

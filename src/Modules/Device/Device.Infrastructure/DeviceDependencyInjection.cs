@@ -1,5 +1,7 @@
 using System;
+using Device.Application.Behaviors;
 using Device.Application.Interfaces;
+using Device.Contract.Interfaces;
 using Device.Infrastructure.Persistences;
 using Device.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -14,7 +16,7 @@ public static class DeviceDependencyInjection
         this IServiceCollection services,
         IConfiguration configuration)
       {
-
+            services.AddScoped<IDevice, DeviceBehaviors>();
             services.AddScoped<IDeviceRepository, DeviceRepository>();
 
              // ==========================

@@ -13,11 +13,13 @@ public interface ILocationRepository
       Task<bool> IsAnyNameAsync(string name);
       Task<LocationDto> AddAsync(Locations location);
       Task<bool> IsValidCountryAsync(int id);
-      Task<bool> IsAnyByIdAsync(int id);
+      Task<bool> IsAnyByIdAsync(int id,CancellationToken ct = default);
       Task<LocationDto> DeleteByIdAsync(int id);
       Task<LocationDto> UpdateAsync(Locations location);
       Task<List<LocationDto>> GetRangeLocationAsync(List<int> ids);
       Task<List<CountryDto>> GetAllCountriesAsync();
       Task<bool> IsAllExistByIdsAsync(List<int> ids);
       Task<List<LocationDto>> DeleteRangeAsync(List<int> ids);
+      Task<string> GetNameByIdAsync(int id, CancellationToken ct = default);
+      Task<bool> IsLocationIdsValidAsync(List<int> LocationIds,CancellationToken ct = default);
 }

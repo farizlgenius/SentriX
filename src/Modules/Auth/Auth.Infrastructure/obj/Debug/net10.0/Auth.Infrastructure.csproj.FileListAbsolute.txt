@@ -20,6 +20,7 @@ D:\code\sentrix\src\Modules\Auth\Auth.Infrastructure\obj\Debug\net10.0\Auth.Infr
 D:\code\sentrix\src\Modules\Auth\Auth.Infrastructure\obj\Debug\net10.0\Auth.Infrastructure.AssemblyInfoInputs.cache
 D:\code\sentrix\src\Modules\Auth\Auth.Infrastructure\obj\Debug\net10.0\Auth.Infrastructure.AssemblyInfo.cs
 D:\code\sentrix\src\Modules\Auth\Auth.Infrastructure\obj\Debug\net10.0\Auth.Infrastructure.csproj.CoreCompileInputs.cache
+D:\code\sentrix\src\Modules\Auth\Auth.Infrastructure\obj\Debug\net10.0\Auth.Infrastructure.sourcelink.json
 D:\code\sentrix\src\Modules\Auth\Auth.Infrastructure\obj\Debug\net10.0\Auth.Inf.EC29ECAC.Up2Date
 D:\code\sentrix\src\Modules\Auth\Auth.Infrastructure\obj\Debug\net10.0\Auth.Infrastructure.dll
 D:\code\sentrix\src\Modules\Auth\Auth.Infrastructure\obj\Debug\net10.0\refint\Auth.Infrastructure.dll

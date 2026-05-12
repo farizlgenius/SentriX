@@ -1298,6 +1298,7 @@
           "Npgsql.EntityFrameworkCore.PostgreSQL": "10.0.1",
           "Operator.Application": "1.0.0",
           "Operator.Domain": "1.0.0",
+          "Role.Contract": "1.0.0",
           "SharedKernel": "1.0.0"
         },
         "compile": {
@@ -1312,7 +1313,8 @@
         "framework": ".NETCoreApp,Version=v10.0",
         "dependencies": {
           "Role.Contract": "1.0.0",
-          "Role.Domain": "1.0.0"
+          "Role.Domain": "1.0.0",
+          "SharedKernel": "1.0.0"
         },
         "compile": {
           "bin/placeholder/Role.Application.dll": {}
@@ -1351,6 +1353,7 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v10.0",
         "dependencies": {
+          "Location.Contract": "1.0.0",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "10.0.1",
           "Role.Application": "1.0.0",
           "SharedKernel": "1.0.0"
@@ -2674,6 +2677,7 @@
           "Npgsql.EntityFrameworkCore.PostgreSQL": "10.0.1",
           "Operator.Application": "1.0.0",
           "Operator.Domain": "1.0.0",
+          "Role.Contract": "1.0.0",
           "SharedKernel": "1.0.0"
         },
         "compile": {
@@ -2688,7 +2692,8 @@
         "framework": ".NETCoreApp,Version=v10.0",
         "dependencies": {
           "Role.Contract": "1.0.0",
-          "Role.Domain": "1.0.0"
+          "Role.Domain": "1.0.0",
+          "SharedKernel": "1.0.0"
         },
         "compile": {
           "bin/placeholder/Role.Application.dll": {}
@@ -2727,6 +2732,7 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v10.0",
         "dependencies": {
+          "Location.Contract": "1.0.0",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "10.0.1",
           "Role.Application": "1.0.0",
           "SharedKernel": "1.0.0"
@@ -4050,6 +4056,7 @@
           "Npgsql.EntityFrameworkCore.PostgreSQL": "10.0.1",
           "Operator.Application": "1.0.0",
           "Operator.Domain": "1.0.0",
+          "Role.Contract": "1.0.0",
           "SharedKernel": "1.0.0"
         },
         "compile": {
@@ -4064,7 +4071,8 @@
         "framework": ".NETCoreApp,Version=v10.0",
         "dependencies": {
           "Role.Contract": "1.0.0",
-          "Role.Domain": "1.0.0"
+          "Role.Domain": "1.0.0",
+          "SharedKernel": "1.0.0"
         },
         "compile": {
           "bin/placeholder/Role.Application.dll": {}
@@ -4103,6 +4111,7 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v10.0",
         "dependencies": {
+          "Location.Contract": "1.0.0",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "10.0.1",
           "Role.Application": "1.0.0",
           "SharedKernel": "1.0.0"
@@ -6178,11 +6187,13 @@
   },
   "projectFileDependencyGroups": {
     "net10.0": [
+      "Adapter.Abstraction >= 1.0.0",
       "Adapter.Aero >= 1.0.0",
       "Adapter.Amico >= 1.0.0",
       "Auth.Contract >= 1.0.0",
       "Auth.Infrastructure >= 1.0.0",
       "Cache.Infrastructure >= 1.0.0",
+      "Device.Contract >= 1.0.0",
       "Device.Infrastructure >= 1.0.0",
       "Events.Contract >= 1.0.0",
       "Events.Infrastructure >= 1.0.0",
@@ -6244,8 +6255,14 @@
             "D:\\code\\sentrix\\src\\Modules\\Cache\\Cache.Infrastrucure\\Cache.Infrastructure.csproj": {
               "projectPath": "D:\\code\\sentrix\\src\\Modules\\Cache\\Cache.Infrastrucure\\Cache.Infrastructure.csproj"
             },
+            "D:\\code\\sentrix\\src\\Modules\\Contracts\\Adapter.Abstraction\\Adapter.Abstraction.csproj": {
+              "projectPath": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Adapter.Abstraction\\Adapter.Abstraction.csproj"
+            },
             "D:\\code\\sentrix\\src\\Modules\\Contracts\\Auth.Contract\\Auth.Contract.csproj": {
               "projectPath": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Auth.Contract\\Auth.Contract.csproj"
+            },
+            "D:\\code\\sentrix\\src\\Modules\\Contracts\\Device.Contract\\Device.Contract.csproj": {
+              "projectPath": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Device.Contract\\Device.Contract.csproj"
             },
             "D:\\code\\sentrix\\src\\Modules\\Contracts\\Events.Contract\\Events.Contract.csproj": {
               "projectPath": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Events.Contract\\Events.Contract.csproj"

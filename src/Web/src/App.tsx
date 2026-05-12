@@ -74,6 +74,7 @@ import { IdReport } from "./model/IdReport/IdReport";
 import { useIdReport } from "./context/IdReportContext";
 import { SignalRTopic } from "./constants/signalr-constant";
 import { DeviceEndpoint } from "./endpoint/HardwareEndpoint";
+import Scan from "./pages/Scan/Scan";
 
 export default function App() {
   const navigate = useNavigate();
@@ -91,6 +92,7 @@ export default function App() {
   const { showAlertFlag, alertSuccessFlag, alertMessage } = useAlert();
   const { showToast, ToastContainer, toggleToast } = useToast();
   const { loading, Loading } = useLoading();
+  const { setIdReports } = useIdReport();
   const { locationId } = useLocation();
 
   const [license, setLicense] = useState<boolean>(true);
@@ -146,6 +148,38 @@ useEffect(() => {
     }
 },[])
 
+const fetchIdReport = async () => {
+    var res = await send.get(DeviceEndpoint.ID_REPORT);
+   setIdReports(res.data);
+  }
+
+{/* UseEffect */ }
+ useEffect(() => {
+  const setup = async () => {
+    const connection = SignalRService.getConnection();
+    if (!connection) return;
+
+    connection.on(SignalRTopic.IDREPORT, (payload: any) => {
+      console.log("Received realtime update:", payload);
+
+      // ⭐ unwrap { reports: [...] }
+      const list = Array.isArray(payload?.reports) ? payload.reports : [];
+
+      setIdReports(list);
+    });
+
+    await SignalRService.joinGroup(SignalRTopic.IDREPORT);
+    fetchIdReport();
+  };
+
+  setup();
+
+  return () => {
+    const connection = SignalRService.getConnection();
+    connection?.off(SignalRTopic.IDREPORT);
+  };
+}, []);
+
 
   return (
     <>
@@ -157,12 +191,6 @@ useEffect(() => {
         {loading && <Loading />}
         {showToast && (
           <>
-            {/* <Toast
-              type={toastType}
-              message={toastMessage}
-              duration={300000}
-              onClose={() => setShowToast(false)}
-            /> */}
             <ToastContainer />
           </>
         )}
@@ -196,7 +224,8 @@ useEffect(() => {
             <Route path="/company" element={<Company />} />
             <Route path="/department" element={<Department />} />
             <Route path="/position" element={<Position />} />
-            <Route path="/hardware" element={<Device />} />
+            < Route path="/scan" element={<Scan />}/>
+            <Route path="/device" element={<Device />} />
             <Route path="/module" element={<Module />} />
             <Route path="/event" element={<Transaction />} />
             <Route path="/control" element={<ControlPoint />} />

@@ -12,5 +12,6 @@ public interface IScp
       Task<bool> VerifySCPStructureMemoryAllocate(int ScpId, SCPReplyMessageDto.SCPReplyStrStatusDto message);
       Task<bool> UploadScpComponentAsync(int ScpId);
       Task<bool> VerifyScpComponentAsync(int ScpId);
-      Task InitialScpConfiguration(short ScpId);
+      Task InitialScpConfigurationAsync(int ScpId);
+
 }

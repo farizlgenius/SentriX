@@ -16,6 +16,7 @@ import { LoadingProvider } from "./context/LoadingContext.tsx";
 import { LocationProvider } from "./context/LocationContext.tsx";
 import { PaginationProvider } from "./context/PaginationContext.tsx";
 import { IdReportProvider } from "./context/IdReportContext.tsx";
+import { AppBootstrap } from "./AppBootstrap.tsx";
 
 createRoot(document.getElementById("root")!).render(
   // <StrictMode>
@@ -28,30 +29,33 @@ createRoot(document.getElementById("root")!).render(
   <ThemeProvider>
     <BrowserRouter>
       <AppWrapper>
-          <LocationProvider>
-             <LoadingProvider>
+        <LocationProvider>
+          <LoadingProvider>
             <ToastProvider>
-              
-                <AuthProvider>
-                  <NotificationProvider>
-                    <PopupProvider>
-                      <AlertProvider>
-                        <PaginationProvider>
-                          <IdReportProvider>
-                              <App />
-                          </IdReportProvider>
-                          
-                        </PaginationProvider>
+
+              <AuthProvider>
+                <NotificationProvider>
+                  <PopupProvider>
+                    <AlertProvider>
+                      <PaginationProvider>
+                        <IdReportProvider>
+                          <AppBootstrap>
+                            <App />
+                          </AppBootstrap>
+
+                        </IdReportProvider>
+
+                      </PaginationProvider>
 
 
-                      </AlertProvider>
-                    </PopupProvider>
-                  </NotificationProvider>
-                </AuthProvider>
+                    </AlertProvider>
+                  </PopupProvider>
+                </NotificationProvider>
+              </AuthProvider>
             </ToastProvider>
           </LoadingProvider>
-          </LocationProvider>
-         
+        </LocationProvider>
+
 
       </AppWrapper>
     </BrowserRouter>

@@ -13,8 +13,5 @@ public record CreateOperatorDto(
   string Email,
   string Mobile,
   int RoleId,
-  int CompanyId,
-  int DepartmentId,
-  int PositionId,
   List<int> LocationId
   );

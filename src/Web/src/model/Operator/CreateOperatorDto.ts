@@ -1,5 +1,4 @@
 export interface CreateOperatorDto{
-      operatorId:number;
       username:string;
       password:string;
       title:string;

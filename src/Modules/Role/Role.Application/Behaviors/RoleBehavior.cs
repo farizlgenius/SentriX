@@ -1,44 +1,93 @@
 using System;
+using Role.Application.Interfaces;
 using Role.Contract.DTOs;
 using Role.Contract.Interfaces;
+using Role.Domain.Entities;
 using SharedKernel.Domain;
+using SharedKernel.Exceptions;
+using SharedKernel.Helpers;
 
 namespace Role.Application.Behaviors;
 
-public sealed class RoleBehavior : IRole
+public sealed class RoleBehavior(IRoleRepository repo) : IRole
 {
-      public Task<RoleDto> CreateAsync(CreateRoleDto dto)
+      public async Task<RoleDto> CreateAsync(CreateRoleDto dto)
       {
-            throw new NotImplementedException();
+            if (string.IsNullOrWhiteSpace(dto.Name))
+                  throw new BadRequestException(MessageHelper.Common.NameEmpty);
+
+            if (!await repo.IsAnyLocationIdAsync(dto.LocationId))
+                  throw new BadRequestException(MessageHelper.Location.LocationInvalid);
+
+            if (await repo.IsAnyNameWithLocationIdAsync(dto.LocationId, dto.Name))
+                  throw new BadRequestException(MessageHelper.Common.DuplicatedName);
+
+            var domain = new Roles(0, dto.Name, dto.Permissions.Select(r => new Permission(
+              r.FeatureId,
+              r.FeatureName,
+              r.IsEnabled,
+              r.IsCreated,
+              r.IsUpdated,
+              r.IsDeleted
+            )).ToList(), dto.LocationId);
+
+            return await repo.AddAsync(domain);
+
       }
 
-      public Task<RoleDto> DeleteByIdAsync(int id)
+      public async Task<RoleDto> DeleteByIdAsync(int id)
       {
-            throw new NotImplementedException();
+            if (!await repo.IsAnyWithIdAsync(id))
+                  throw new BadRequestException(MessageHelper.Common.RecordNotFound);
+
+            return await repo.DeleteByIdAsync(id);
       }
 
-      public Task<List<RoleDto>> DeleteRangeAsync(RangeIdDto ids)
+      public async Task<List<RoleDto>> DeleteRangeAsync(RangeIdDto dto)
       {
-            throw new NotImplementedException();
+            if (dto.Ids == null || dto.Ids.Count <= 0)
+                  throw new BadRequestException(MessageHelper.Role.RoleInvalid);
+
+            if (!await repo.IsAllExistByIdsAsync(dto.Ids))
+                  throw new BadRequestException(MessageHelper.Role.RoleNotFound);
+
+
+            return await repo.DeleteRangeAsync(dto.Ids);
       }
 
-      public Task<List<RoleDto>> GetByLocationIdAsync(int location)
+      public async Task<List<RoleDto>> GetByLocationIdAsync(int location)
       {
-            throw new NotImplementedException();
+            var res = await repo.GetByLocationIdAsync(location);
+            return res;
+
       }
 
-      public Task<List<FeatureDto>> GetFeaturesAsync()
+      public async Task<List<FeatureDto>> GetFeaturesAsync()
       {
-            throw new NotImplementedException();
+            var res = await repo.GetFeaturesAsync();
+            return res;
       }
 
-      public Task<Pagination<RoleDto>> GetPaginationWithLocationIdAsync(int location, int Page, int PageSize)
+      public async Task<Pagination<RoleDto>> GetPagination(PaginationParams param)
       {
-            throw new NotImplementedException();
+            var res = await repo.GetPagination(param);
+            return res;
       }
 
-      public Task<RoleDto> UpdateAsync(UpdateRoleDto dto)
+      public async Task<RoleDto> UpdateAsync(UpdateRoleDto dto)
       {
-            throw new NotImplementedException();
+            if (string.IsNullOrWhiteSpace(dto.Name))
+                  throw new BadRequestException(MessageHelper.Common.NameEmpty);
+
+            if (!await repo.IsAnyLocationIdAsync(dto.LocationId))
+                  throw new BadRequestException(MessageHelper.Location.LocationInvalid);
+
+            var domain = new Domain.Entities.Roles(dto.Id, dto.Name, dto.Permissions.Select(r =>
+              new Permission(r.FeatureId, r.FeatureName, r.IsEnabled, r.IsCreated, r.IsUpdated, r.IsDeleted)
+            ).ToList(), dto.LocationId);
+
+            var res = await repo.UpdateAsync(domain);
+            return res;
+
       }
 }

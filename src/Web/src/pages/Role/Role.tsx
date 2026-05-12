@@ -171,7 +171,7 @@ export const Role = () => {
             <PageBreadcrumb pageTitle="Roles" />
             {form ?
 
-                <BaseForm tabContent={tabContent} />
+                <BaseForm tabContent={tabContent} header={""} desc={""} />
                 :
                 <div className="space-y-6">
                     <BaseTable<RoleDto> headers={LOCATION_HEADER} keys={LOCATION_KEY} data={rolesDto} select={selectedObjects} onEdit={handleEdit} onRemove={handleRemove} onClick={handleClick} permission={filterPermission(FeatureId.operator)} onInfo={handleInfo} setSelect={setSelectedObjects} fetchData={fetchData} locationId={locationId} refresh={refresh} />

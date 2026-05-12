@@ -1,17 +1,15 @@
 
 export interface OperatorDto{
     id:number;
-    operatorId:string;
     username:string;
     password:string;
-    title:number;
+    title:string;
     firstName:string;
     middleName:string;
     lastName:string;
-    gender:number;
+    gender:string;
     email:string;
     mobile:string;
     roleId:number; //
-    role:string;
     locationId:number[]; //
 }

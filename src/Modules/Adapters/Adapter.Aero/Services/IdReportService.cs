@@ -24,6 +24,15 @@ public sealed class IdReportService : IIdReportService
 
       }
 
+      public void RemoveIdReportById(int id)
+      {
+            var data = IdReportInMemory.FirstOrDefault(x => x.ScpId == id);
+            if (data == null)
+                  return;
+
+            IdReportInMemory.Remove(data);
+      }
+
       public void RemoveIdReport(string mac)
       {
             var data = IdReportInMemory.Where(x => x.Mac.Equals(mac)).FirstOrDefault();

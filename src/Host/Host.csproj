@@ -45,7 +45,9 @@
     <ProjectReference Include="..\Modules\Adapters\Adapter.Amico\Adapter.Amico.csproj" />
     <ProjectReference Include="..\Modules\Auth\Auth.Infrastructure\Auth.Infrastructure.csproj" />
     <ProjectReference Include="..\Modules\Cache\Cache.Infrastrucure\Cache.Infrastructure.csproj" />
+    <ProjectReference Include="..\Modules\Contracts\Adapter.Abstraction\Adapter.Abstraction.csproj" />
     <ProjectReference Include="..\Modules\Contracts\Auth.Contract\Auth.Contract.csproj" />
+    <ProjectReference Include="..\Modules\Contracts\Device.Contract\Device.Contract.csproj" />
     <ProjectReference Include="..\Modules\Contracts\Events.Contract\Events.Contract.csproj" />
     <ProjectReference Include="..\Modules\Contracts\Location.Contract\Location.Contract.csproj" />
     <ProjectReference Include="..\Modules\Device\Device.Infrastructure\Device.Infrastructure.csproj" />

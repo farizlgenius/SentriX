@@ -9,7 +9,9 @@ public sealed class OperatorDbContext(DbContextOptions<OperatorDbContext> option
 {
       public const string Schema = "operator";
       public DbSet<Operators> operators { get; set; }
-      public DbSet<OperatorLocation> operator_locations {get; set;}
+      public DbSet<OperatorLocation> operator_locations { get; set; }
+      public DbSet<PasswordRule> password_rules { get; set; }
+      public DbSet<WeakPassword> weak_passwords { get; set; }
 
       protected override void OnModelCreating(ModelBuilder modelBuilder)
       {
@@ -64,6 +66,26 @@ public sealed class OperatorDbContext(DbContextOptions<OperatorDbContext> option
                        location_id = 1
                  }
             );
+
+            modelBuilder.Entity<PasswordRule>()
+            .HasMany(x => x.weaks)
+            .WithOne(x => x.password_rule)
+            .HasForeignKey(x => x.password_rule_id)
+            .HasPrincipalKey(x => x.id)
+            .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<PasswordRule>()
+            .HasData(
+            new PasswordRule { id = 1, len = 4, is_digit = false, is_lower = false, is_symbol = false, is_upper = false }
+            );
+
+            modelBuilder.Entity<WeakPassword>()
+                .HasData(
+                new WeakPassword { id = 1, pattern = "P@ssw0rd", password_rule_id = 1 },
+                new WeakPassword { id = 2, pattern = "password", password_rule_id = 1 },
+                new WeakPassword { id = 3, pattern = "admin", password_rule_id = 1 },
+                new WeakPassword { id = 4, pattern = "123456", password_rule_id = 1 }
+                );
 
       }
 }

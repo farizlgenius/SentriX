@@ -1,4 +1,5 @@
 using System;
+using Adapter.Abstraction.Events;
 using Adapter.Aero.Entities;
 using Adapter.Aero.Enums;
 using Adapter.Aero.Helpers;
@@ -100,50 +101,24 @@ public sealed class ScpService(IScpRepository repo,IMessageBus bus,IScpWriter wr
                   return;
 
 
-            // // Read Structure 
-            // if (!await writer.SCPStructureStatusRead(id.scp_id,
-            //       [
-            //             (short)SCPStructure.SCPSID_TRAN,
-            //             (short)SCPStructure.SCPSID_TZ,
-            //             (short)SCPStructure.SCPSID_HOL,
-            //             (short)SCPStructure.SCPSID_MSP1,
-            //             (short)SCPStructure.SCPSID_SIO,
-            //             (short)SCPStructure.SCPSID_MP,
-            //             (short)SCPStructure.SCPSID_CP,
-            //             (short)SCPStructure.SCPSID_ACR,
-            //             (short)SCPStructure.SCPSID_ALVL,
-            //             (short)SCPStructure.SCPSID_TRIG,
-            //             (short)SCPStructure.SCPSID_PROC,
-            //             (short)SCPStructure.SCPSID_MPG,
-            //             (short)SCPStructure.SCPSID_AREA,
-            //             (short)SCPStructure.SCPSID_EAL,
-            //             (short)SCPStructure.SCPSID_CRDB
-            //       ]
-            // ))
-            //       return;
-
-
-
-
-
-            // // Send to get IP and Port 
-            // await writer.ReadsConfiguration(id.scp_id, WebConfigReadType.NetworkSettingss);
-            // await writer.ReadsConfiguration(id.scp_id, WebConfigReadType.HostCommunicationPrimarySettings);
+      
 
 
       }
 
-      public async Task InitialScpConfiguration(short ScpId)
+      public async Task InitialScpConfigurationAsync(int ScpId)
       {
-
-            string Mac = await bus.QueryAsync<string>(new DeviceMacByComponentIdQuery(ScpId));
+            string Mac = await bus.QueryAsync<string>(new DeviceMacByComponentIdQuery((short)ScpId));
+            // Send to get IP and Port 
+            await writer.ReadsConfiguration((short)ScpId, Mac, WebConfigReadType.NetworkSettingss);
+            await writer.ReadsConfiguration((short)ScpId, Mac, WebConfigReadType.HostCommunicationPrimarySettings);
 
             var config = await repo.GetDriverConfigurationByIdAndMacAndPortNumberAsync(0, string.Empty, 3); // 3 is internal port in x1100
             if (config.baudrate == 0)
                   // Log here the no database detail
                   return;
 
-            if (!await writer.DriverConfiguration(ScpId, Mac, config))
+            if (!await writer.DriverConfiguration((short)ScpId, Mac, config))
                   return;
 
 
@@ -152,7 +127,7 @@ public sealed class ScpService(IScpRepository repo,IMessageBus bus,IScpWriter wr
                   // Log here the no database detail
                   return;
 
-            if (!await sioWriter.SioPanelConfiguration(ScpId, Mac, sio))
+            if (!await sioWriter.SioPanelConfiguration((short)ScpId, Mac, sio))
                   return;
 
 
@@ -168,7 +143,7 @@ public sealed class ScpService(IScpRepository repo,IMessageBus bus,IScpWriter wr
             foreach (var i in inputs)
             {
                   input.UpdateInputNumber((short)i);
-                  if (!await mpWriter.InputPointSpecification(ScpId, Mac, input))
+                  if (!await mpWriter.InputPointSpecification((short)ScpId, Mac, input))
                         return;
             }
       }
@@ -305,17 +280,18 @@ public sealed class ScpService(IScpRepository repo,IMessageBus bus,IScpWriter wr
                         break;
             }
 
-            // string mac = await repo.GetMacFromScpIdAsync((short)ScpId);
-            // if (isVerify)
-            // {
-            //       // Publish verify 
+            string Mac = await bus.QueryAsync<string>(new DeviceMacByComponentIdQuery((short)ScpId));
+            if (isVerify)
+            {
+                  // Publish verify 
+                  await bus.PublishAsync(new MemoryAllocateEvent(Mac, ScpSyncStatus.SYNC.ToString()));
 
-            // }
-            // else
-            // {
-            //       // Publish verify 
-
-            // }
+            }
+            else
+            {
+                  // Publish verify 
+                  await bus.PublishAsync(new MemoryAllocateEvent(Mac, ScpSyncStatus.RESET.ToString()));
+            }
 
 
 

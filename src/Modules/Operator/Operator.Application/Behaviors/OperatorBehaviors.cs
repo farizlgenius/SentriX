@@ -33,7 +33,7 @@ public sealed class OperatorBehaviors(IOperatorRepository repo) : IOperator
             if (string.IsNullOrWhiteSpace(dto.Email))
                   throw new BadRequestException(MessageHelper.Common.EmailEmpty);
 
-            if (await repo.IsExceptLocationIdsAsync(dto.LocationId))
+            if (!await repo.IsLocationIdsValidAsync(dto.LocationId))
                   throw new BadRequestException(MessageHelper.Location.LocationInvalid);
 
             if (!await repo.IsValidRoleIdAsync(dto.RoleId))
@@ -67,12 +67,10 @@ public sealed class OperatorBehaviors(IOperatorRepository repo) : IOperator
             return await repo.DeleteByIdAsync(id);
       }
 
-      public async Task<Pagination<OperatorDto>> GetPaginationWithLocationIdAsync(int location, int Page, int PageSize,string Search)
+      public async Task<Pagination<OperatorDto>> GetPagination(PaginationParams param)
       {
-            if (!await repo.IsAnyWithLocationIdAsync(location))
-                  throw new NotFoundException(MessageHelper.Location.LocationInvalid);
 
-            var res = await repo.GetPaginationWithLocationIdAsync(location, Page, PageSize,Search);
+            var res = await repo.GetPagination(param);
             return res;
       }
 
@@ -91,7 +89,7 @@ public sealed class OperatorBehaviors(IOperatorRepository repo) : IOperator
             if (string.IsNullOrWhiteSpace(dto.Email))
                   throw new BadRequestException(MessageHelper.Common.EmailEmpty);
 
-            if (await repo.IsExceptLocationIdsAsync(dto.LocationId))
+            if (await repo.IsLocationIdsValidAsync(dto.LocationId))
                   throw new BadRequestException(MessageHelper.Location.LocationInvalid);
 
             if (!await repo.IsValidRoleIdAsync(dto.RoleId))
@@ -127,5 +125,22 @@ public sealed class OperatorBehaviors(IOperatorRepository repo) : IOperator
       public async Task<OperatorDto> GetOperatorAsync(string Username)
       {
             return await repo.GetOperatorByUsernameAsync(Username);
+      }
+
+      public async Task<PasswordRuleDto> CreatePasswordRuleAsync(PasswordRuleDto dto)
+      {
+            if(dto.Len == 0 )
+                  throw new BadRequestException(MessageHelper.Common.PasswordLenEmpty);
+
+            var domain = new PasswordRule(dto.Id,dto.Len,dto.IsDigit,dto.IsLower,dto.IsSymbol,dto.IsUpper,dto.Weaks);
+            
+            var res = await repo.CreatePasswordRuleAsync(domain);
+            return res;
+      }
+
+      public async Task<PasswordRuleDto> GetPassowrdRuleAsync()
+      {
+            var res  = await repo.GetPassowrdRuleAsync();
+            return res;
       }
 }

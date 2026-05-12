@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Channels;
+using Adapter.Abstraction.Events;
 using Adapter.Aero.Helpers;
 using Adapter.Aero.Interfaces;
 using Adapter.Aero.Model;
@@ -280,12 +281,12 @@ public sealed class ScpReplyWorker(Channel<SCPReplyMessageDto> queue, ILogger<Sc
                         case (int)enSCPReplyType.enSCPReplySioRelayCounts:
                             break;
                         case (int)enSCPReplyType.enSCPReplyStrStatus:
-                            // scp = scope.ServiceProvider.GetRequiredService<IScpService>();
-                            // if(await scp.VerifySCPStructureMemoryAllocate(message.SCPId, message.str_sts))
-                            // {
-                            //     await scp.InitialScpConfiguration((short)message.SCPId);
-                            //     await scp.VerifyScpComponentAsync(message.SCPId);
-                            // }
+                            scp = scope.ServiceProvider.GetRequiredService<IScp>();
+                            if(await scp.VerifySCPStructureMemoryAllocate(message.SCPId, message.str_sts))
+                            {
+                                await scp.InitialScpConfigurationAsync((short)message.SCPId);
+                                await scp.VerifyScpComponentAsync(message.SCPId);
+                            }
                             break;
                         case (int)enSCPReplyType.enSCPReplyCmndStatus:
                             var writer = scope.ServiceProvider.GetRequiredService<IWriterRepository>();
@@ -301,8 +302,8 @@ public sealed class ScpReplyWorker(Channel<SCPReplyMessageDto> queue, ILogger<Sc
                             // await publisher.CmndNotifyStatus(cstatus);
                             break;
                         case (int)enSCPReplyType.enSCPReplyWebConfigNetwork:
-                            // scp = scope.ServiceProvider.GetRequiredService<IScpService>();
-                            // await scp.AssignIpAddressAsync(message.SCPId,message.web_network);
+                            bus = scope.ServiceProvider.GetRequiredService<IMessageBus>();
+                            await bus.PublishAsync(new AssignIpEvent(await bus.QueryAsync(new DeviceMacByComponentIdQuery((short)message.SCPId), ct), UtilitiesHelper.IntegerToIp(message.web_network.cIpAddr)), ct);
                             break;
                         case (int)enSCPReplyType.enSCPReplyWebConfigNotes:
                             break;
@@ -319,8 +320,8 @@ public sealed class ScpReplyWorker(Channel<SCPReplyMessageDto> queue, ILogger<Sc
                         case (int)enSCPReplyType.enSCPReplyWebConfigDiagnostics:
                             break;
                         case (int)enSCPReplyType.enSCPReplyWebConfigHostCommPrim:
-                            // scp = scope.ServiceProvider.GetRequiredService<IScpService>();
-                            // await scp.AssignPortAsync(message.SCPId,message.web_host_comm_prim);
+                            bus = scope.ServiceProvider.GetRequiredService<IMessageBus>();
+                            await bus.PublishAsync(new AssignPortEvent(await bus.QueryAsync(new DeviceMacByComponentIdQuery((short)message.SCPId), ct), message.web_host_comm_prim.ipclient.nPort), ct);
                             break;
                         default:
                             break;

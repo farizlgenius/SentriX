@@ -1,11 +1,12 @@
 using System;
+using Adapter.Abstraction.Constants;
 using Adapter.Abstraction.Interfaces;
 
 namespace Adapter.Aero;
 
 public sealed class AeroAdapter : IAdapter
 {
-      public string Vendor => "AERO";
+      public string Vendor => Venders.AERO;
 
       public IDeviceAdapter Device { get; }
 

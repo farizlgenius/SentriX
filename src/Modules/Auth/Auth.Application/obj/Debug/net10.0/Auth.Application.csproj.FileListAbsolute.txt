@@ -18,6 +18,7 @@ D:\code\sentrix\src\Modules\Auth\Auth.Application\obj\Debug\net10.0\Auth.Applica
 D:\code\sentrix\src\Modules\Auth\Auth.Application\obj\Debug\net10.0\Auth.Application.AssemblyInfoInputs.cache
 D:\code\sentrix\src\Modules\Auth\Auth.Application\obj\Debug\net10.0\Auth.Application.AssemblyInfo.cs
 D:\code\sentrix\src\Modules\Auth\Auth.Application\obj\Debug\net10.0\Auth.Application.csproj.CoreCompileInputs.cache
+D:\code\sentrix\src\Modules\Auth\Auth.Application\obj\Debug\net10.0\Auth.Application.sourcelink.json
 D:\code\sentrix\src\Modules\Auth\Auth.Application\obj\Debug\net10.0\Auth.App.E6399BD7.Up2Date
 D:\code\sentrix\src\Modules\Auth\Auth.Application\obj\Debug\net10.0\Auth.Application.dll
 D:\code\sentrix\src\Modules\Auth\Auth.Application\obj\Debug\net10.0\refint\Auth.Application.dll

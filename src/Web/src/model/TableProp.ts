@@ -4,7 +4,8 @@ import { PermissionDto } from "./Role/PermissionDto";
 import { ActionButton } from "./ActionButton";
 import { StatusDto } from "./StatusDto";
 
-export interface TableProp<T> {
+export interface TableProp<T extends { id: number | string }> {
+    id?:number;
     headers:string[];
     keys:string[];
     data: T[]
@@ -20,7 +21,7 @@ export interface TableProp<T> {
     status?:StatusDto[];
     action?:ActionButton[];
     subTable?:(index:number) => JSX.Element;
-    fetchData:(pageNumber: number, pageSize: number,locationId?:number,search?: string | undefined, startDate?: string | undefined, endDate?: string | undefined) => Promise<void>
+    fetchData:(pageNumber: number, pageSize: number,locationId?:number | undefined ,search?: string | undefined, startDate?: string | undefined, endDate?: string | undefined) => Promise<void>
     refresh?:boolean;
     locationId:number;
 }

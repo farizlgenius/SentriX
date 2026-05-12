@@ -9,6 +9,7 @@ import UserDropdown from "../components/header/UserDropdown";
 import { LocationIcon } from "../icons";
 import { useLocation } from "../context/LocationContext";
 import Select from "../components/form/Select";
+import { ScanButton } from "../components/common/ScanButton";
 
 const AppHeader: React.FC = () => {
   const { locationId,locationOption,setLocationId,setLocationName } = useLocation();
@@ -187,6 +188,7 @@ const AppHeader: React.FC = () => {
                          
              {/* <!-- Language Toggler --> */}
             {/* <!-- Dark Mode Toggler --> */}
+            <ScanButton/>
             <ThemeToggleButton />
             <ThemeColorToggleButton />
             {/* <!-- Dark Mode Toggler --> */}

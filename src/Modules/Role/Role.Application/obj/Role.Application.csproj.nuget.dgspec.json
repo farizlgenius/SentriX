@@ -380,6 +380,9 @@
               },
               "D:\\code\\sentrix\\src\\Modules\\Role\\Role.Domain\\Role.Domain.csproj": {
                 "projectPath": "D:\\code\\sentrix\\src\\Modules\\Role\\Role.Domain\\Role.Domain.csproj"
+              },
+              "D:\\code\\sentrix\\src\\SharedKernel\\SharedKernel.csproj": {
+                "projectPath": "D:\\code\\sentrix\\src\\SharedKernel\\SharedKernel.csproj"
               }
             }
           }

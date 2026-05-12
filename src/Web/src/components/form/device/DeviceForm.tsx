@@ -11,7 +11,6 @@ import { DeviceEndpoint } from "../../../endpoint/HardwareEndpoint.ts";
 import { ModeDto } from "../../../model/ModeDto.ts";
 import Switch from "../switch/Switch.tsx";
 import { ModuleEndpoint } from "../../../endpoint/ModuleEndpoint.ts";
-import { CreateDeviceDto } from "../../../model/Device/CreateDeviceDto.ts";
 
 
 
@@ -19,7 +18,7 @@ import { CreateDeviceDto } from "../../../model/Device/CreateDeviceDto.ts";
 
 
 
-const DeviceForm: React.FC<PropsWithChildren<FormProp<HardwareDto | CreateDeviceDto>>> = ({ dto, type, handleClick, setDto }) => {
+const DeviceForm: React.FC<PropsWithChildren<FormProp<HardwareDto >>> = ({ dto, type, handleClick, setDto }) => {
   const [device, setDevice] = useState<number>(-1);
   const [deviceOptions, setDeviceOptions] = useState<Options[]>([])
   const [protocol, setProtocol] = useState<Options[]>([]);

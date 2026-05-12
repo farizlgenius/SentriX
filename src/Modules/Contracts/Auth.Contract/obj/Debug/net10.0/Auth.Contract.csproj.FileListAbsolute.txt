@@ -10,6 +10,7 @@ D:\code\sentrix\src\Modules\Contracts\Auth.Contract\obj\Debug\net10.0\Auth.Contr
 D:\code\sentrix\src\Modules\Contracts\Auth.Contract\obj\Debug\net10.0\Auth.Contract.AssemblyInfoInputs.cache
 D:\code\sentrix\src\Modules\Contracts\Auth.Contract\obj\Debug\net10.0\Auth.Contract.AssemblyInfo.cs
 D:\code\sentrix\src\Modules\Contracts\Auth.Contract\obj\Debug\net10.0\Auth.Contract.csproj.CoreCompileInputs.cache
+D:\code\sentrix\src\Modules\Contracts\Auth.Contract\obj\Debug\net10.0\Auth.Contract.sourcelink.json
 D:\code\sentrix\src\Modules\Contracts\Auth.Contract\obj\Debug\net10.0\Auth.Con.93F0AEAC.Up2Date
 D:\code\sentrix\src\Modules\Contracts\Auth.Contract\obj\Debug\net10.0\Auth.Contract.dll
 D:\code\sentrix\src\Modules\Contracts\Auth.Contract\obj\Debug\net10.0\refint\Auth.Contract.dll

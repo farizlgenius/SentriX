@@ -17,20 +17,20 @@ import { FeatureId } from "../../enum/FeatureId";
 import { usePopup } from "../../context/PopupContext";
 import { FormType } from "../../model/Form/FormProp";
 import { usePagination } from "../../context/PaginationContext";
+import { CreateOperatorDto } from "../../model/Operator/CreateOperatorDto";
+import { UpdateOperatorDto } from "../../model/Operator/UpdateOperatorDto";
 
 
 const defaultDto: OperatorDto = {
     username: "",
     email: "",
-    title: -1,
+    title: "",
     firstName: "",
     middleName: "",
     lastName: "",
     mobile: "",
     id: 0,
-    operatorId: "",
-    gender: 0,
-    role: "",
+    gender: "",
     password: "",
     roleId: 0,
     locationId: []
@@ -38,8 +38,10 @@ const defaultDto: OperatorDto = {
 
 
 
-export const HEADER: string[] = ["UserId","Username","Email", "Action"]
-export const KEY: string[] = ["userId","username","email"];
+
+
+export const HEADER: string[] = ["Username","Email", "Action"]
+export const KEY: string[] = ["username","email"];
 
 export const Operator = () => {
     const {setPagination} = usePagination();
@@ -149,7 +151,7 @@ export const Operator = () => {
         }
     ];
     
-    const fetchData = async (pageNumber: number, pageSize: number,locationId?:number,search?: string, startDate?: string, endDate?: string) => {
+    const fetchData = async (pageNumber: number, pageSize: number,locationId?:number | undefined ,search?: string, startDate?: string, endDate?: string) => {
         const res = await send.get(OperatorEndpoint.PAGINATION(pageNumber,pageSize,locationId,search, startDate, endDate));
         console.log(res.data)
         if (res && res.data) {
@@ -165,7 +167,7 @@ export const Operator = () => {
             <PageBreadcrumb pageTitle="Operators" />
             {form ?
 
-                <BaseForm tabContent={tabContent} />
+                <BaseForm tabContent={tabContent} header={""} desc={""} />
                 :
                 <div className="space-y-6">
                     <BaseTable<OperatorDto> refresh={refresh} headers={HEADER} keys={KEY} data={operatorsDto} select={selectedObjects} onEdit={handleEdit} onRemove={handleRemove} onInfo={handleInfo} onClick={handleClick} permission={filterPermission(FeatureId.operator)} setSelect={setSelectedObjects} fetchData={fetchData} locationId={locationId}  />

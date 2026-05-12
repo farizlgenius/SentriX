@@ -152,6 +152,93 @@ namespace Operator.Infrastructure.Migrations
                         });
                 });
 
+            modelBuilder.Entity("Operator.Infrastructure.Persistences.Entities.PasswordRule", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<bool>("is_digit")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("is_lower")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("is_symbol")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("is_upper")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("len")
+                        .HasColumnType("integer");
+
+                    b.HasKey("id");
+
+                    b.ToTable("password_rules", "operator");
+
+                    b.HasData(
+                        new
+                        {
+                            id = 1,
+                            is_digit = false,
+                            is_lower = false,
+                            is_symbol = false,
+                            is_upper = false,
+                            len = 4
+                        });
+                });
+
+            modelBuilder.Entity("Operator.Infrastructure.Persistences.Entities.WeakPassword", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<int>("password_rule_id")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("pattern")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("password_rule_id");
+
+                    b.ToTable("weak_passwords", "operator");
+
+                    b.HasData(
+                        new
+                        {
+                            id = 1,
+                            password_rule_id = 1,
+                            pattern = "P@ssw0rd"
+                        },
+                        new
+                        {
+                            id = 2,
+                            password_rule_id = 1,
+                            pattern = "password"
+                        },
+                        new
+                        {
+                            id = 3,
+                            password_rule_id = 1,
+                            pattern = "admin"
+                        },
+                        new
+                        {
+                            id = 4,
+                            password_rule_id = 1,
+                            pattern = "123456"
+                        });
+                });
+
             modelBuilder.Entity("Operator.Infrastructure.Persistences.Entities.OperatorLocation", b =>
                 {
                     b.HasOne("Operator.Infrastructure.Persistences.Entities.Operators", "operators")
@@ -163,9 +250,25 @@ namespace Operator.Infrastructure.Migrations
                     b.Navigation("operators");
                 });
 
+            modelBuilder.Entity("Operator.Infrastructure.Persistences.Entities.WeakPassword", b =>
+                {
+                    b.HasOne("Operator.Infrastructure.Persistences.Entities.PasswordRule", "password_rule")
+                        .WithMany("weaks")
+                        .HasForeignKey("password_rule_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("password_rule");
+                });
+
             modelBuilder.Entity("Operator.Infrastructure.Persistences.Entities.Operators", b =>
                 {
                     b.Navigation("operator_locations");
+                });
+
+            modelBuilder.Entity("Operator.Infrastructure.Persistences.Entities.PasswordRule", b =>
+                {
+                    b.Navigation("weaks");
                 });
 #pragma warning restore 612, 618
         }

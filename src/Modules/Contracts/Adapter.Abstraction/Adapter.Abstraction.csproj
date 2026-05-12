@@ -10,4 +10,9 @@
     <ProjectReference Include="..\Device.Contract\Device.Contract.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Constants\" />
+    <Folder Include="Events\" />
+  </ItemGroup>
+
 </Project>

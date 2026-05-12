@@ -6,7 +6,7 @@ namespace Role.Contract.Interfaces;
 
 public interface IRole
 {
-      Task<Pagination<RoleDto>> GetPaginationWithLocationIdAsync(int location, int Page, int PageSize);
+      Task<Pagination<RoleDto>> GetPagination(PaginationParams param);
       Task<RoleDto> CreateAsync(CreateRoleDto dto);
       Task<RoleDto> DeleteByIdAsync(int id);
       Task<RoleDto> UpdateAsync(UpdateRoleDto dto);

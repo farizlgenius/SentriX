@@ -2,6 +2,8 @@ using System;
 using System.Threading.Channels;
 using Adapter.Abstraction.Interfaces;
 using Adapter.Aero.Interfaces;
+using Adapter.Aero.Listener;
+using Adapter.Aero.Mapper;
 using Adapter.Aero.Model;
 using Adapter.Aero.Persistences;
 using Adapter.Aero.Repositories;
@@ -29,8 +31,9 @@ public static class AeroDependencyInjection
             //   });
 
             services.AddHostedService<ScpReplyWorker>();
+            services.AddSingleton<ReplyMessageListener>();
+            services.AddScoped<IObjectMapper, ScpReplyMapper>();
 
-            
 
 
             // ==========================

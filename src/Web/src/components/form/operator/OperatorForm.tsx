@@ -24,7 +24,6 @@ import {
 } from "../../../icons";
 import { send } from "../../../api/api";
 import { OperatorEndpoint } from "../../../endpoint/OperatorEndpoint";
-import { SettingEndpoint } from "../../../endpoint/SettingEndpoint";
 import { PasswordRuleDto } from "../../../model/Setting/PasswordRuleDto";
 import { OperatorToast } from "../../../model/ToastMessage";
 import { useToast } from "../../../context/ToastContext";
@@ -169,7 +168,7 @@ export const OperatorForm: React.FC<PropsWithChildren<FormProp<OperatorDto>>> = 
     };
 
     const fetchPasswordRule = async () => {
-        const res = await send.get(SettingEndpoint.GET_PASSWORD);
+        const res = await send.get(OperatorEndpoint.GET_PASSWORD);
         console.log(res.data)
         if (res?.data) {
             setPassRule({
@@ -584,17 +583,6 @@ export const OperatorForm: React.FC<PropsWithChildren<FormProp<OperatorDto>>> = 
                             </div>
 
                             <div className="grid gap-5 md:grid-cols-2">
-                                 <div>
-                                    <Label htmlFor="operatorId">Operator Id</Label>
-                                    <Input
-                                        disabled={type === FormType.INFO || type === FormType.UPDATE}
-                                        name="operatorId"
-                                        id="operatorId"
-                                        onChange={handleChange}
-                                        value={dto.operatorId}
-                                        placeholder="ABC123"
-                                    />
-                                </div>
                                 <div>
                                     <Label htmlFor="username">Username</Label>
                                     <Input
@@ -622,7 +610,7 @@ export const OperatorForm: React.FC<PropsWithChildren<FormProp<OperatorDto>>> = 
                                     options={titleOptions}
                                     name="title"
                                     id="title"
-                                    onChange={(e) => setDto(prev => ({...prev,title:Number(e)}))}
+                                    onChange={(e) => setDto(prev => ({...prev,title:e}))}
                                     defaultValue={dto.title}
                                     />
                                 </div>

@@ -33,8 +33,8 @@ public sealed class EventBehavior(IEventRepository repo) : IEvent
             );
       }
 
-      public async Task<Pagination<EventDto>> GetPaginationByLocationIdAsync(PaginationParams param, string tenant_id)
+      public async Task<Pagination<EventDto>> GetPaginationByLocationIdAsync(PaginationParams param)
       {
-            return await repo.GetPaginationByLocationIdAsync(param, tenant_id);
+            return await repo.GetPaginationByLocationIdAsync(param);
       }
 }

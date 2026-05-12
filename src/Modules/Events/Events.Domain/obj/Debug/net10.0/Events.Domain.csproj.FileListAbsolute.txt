@@ -5,6 +5,7 @@ D:\code\sentrix\src\Modules\Events\Events.Domain\obj\Debug\net10.0\Events.Domain
 D:\code\sentrix\src\Modules\Events\Events.Domain\obj\Debug\net10.0\Events.Domain.AssemblyInfoInputs.cache
 D:\code\sentrix\src\Modules\Events\Events.Domain\obj\Debug\net10.0\Events.Domain.AssemblyInfo.cs
 D:\code\sentrix\src\Modules\Events\Events.Domain\obj\Debug\net10.0\Events.Domain.csproj.CoreCompileInputs.cache
+D:\code\sentrix\src\Modules\Events\Events.Domain\obj\Debug\net10.0\Events.Domain.sourcelink.json
 D:\code\sentrix\src\Modules\Events\Events.Domain\obj\Debug\net10.0\Events.Domain.dll
 D:\code\sentrix\src\Modules\Events\Events.Domain\obj\Debug\net10.0\refint\Events.Domain.dll
 D:\code\sentrix\src\Modules\Events\Events.Domain\obj\Debug\net10.0\Events.Domain.pdb

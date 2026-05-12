@@ -2,10 +2,14 @@ using System;
 using System.Threading.Channels;
 using Adapter.Abstraction.Interfaces;
 using Adapter.Aero.Helpers;
+using Adapter.Aero.Interfaces;
 using Adapter.Aero.Model;
+using Adapter.Aero.Services;
+using Device.Contract.Queries;
 using HID.Aero.ScpdNet.Wrapper;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using SharedKernel.Messaging;
 
 namespace Adapter.Aero.Listener;
 
@@ -85,7 +89,7 @@ public sealed class ReplyMessageListener(ILogger<ReplyMessageListener> logger,Ch
 
       private async Task ProcessMessageAsync(SCPReplyMessageDto message)
       {
-            // using var scope = scopeFactory.CreateScope();
+            using var scope = factory.CreateScope();
             switch (message.ReplyType)
             {
                   // Occur when command to SCP not success
@@ -103,6 +107,8 @@ public sealed class ReplyMessageListener(ILogger<ReplyMessageListener> logger,Ch
                                     logger.LogInformation(ScpReplyMessageBuilder.CommStatusMessage(message));
                                     break;
                               default:
+                                    var idReportService = scope.ServiceProvider.GetRequiredService<IIdReportService>();
+                                    idReportService.RemoveIdReportById(message.SCPId);
                                     logger.LogError(ScpReplyMessageBuilder.CommStatusMessage(message));
                                     break;
                         }

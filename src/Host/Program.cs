@@ -1,5 +1,6 @@
 
 using System.Text;
+using Adapter.Abstraction;
 using Adapter.Aero;
 using Adapter.Aero.Interfaces;
 using Adapter.Aero.Listener;
@@ -70,6 +71,7 @@ public class Program
         builder.Services.AddDevice(builder.Configuration);
         builder.Services.AddNotifyModule(builder.Configuration);
         builder.Services.AddEvents(builder.Configuration);
+        builder.Services.AddAdapter(builder.Configuration);
 
         // ==========================
         // MediatR
@@ -126,6 +128,62 @@ public class Program
                     ValidAudience = jwtSection["Audience"],
                     IssuerSigningKey = new SymmetricSecurityKey(key),
                     ClockSkew = TimeSpan.Zero
+                };
+
+                options.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
+                    {
+                        var accessToken = context.Request.Query["access_token"];
+                        var authHeader = context.Request.Headers["Authorization"].FirstOrDefault();
+                        var path = context.HttpContext.Request.Path;
+
+                        // ⭐ 1) Normal API requests → read header
+                        if (!string.IsNullOrEmpty(authHeader) && authHeader.StartsWith("Bearer "))
+                        {
+                            context.Token = authHeader.Substring("Bearer ".Length);
+                        }
+
+                        // ⭐ 2) SignalR requests → read query string
+                        if (!string.IsNullOrEmpty(accessToken) &&
+                            path.StartsWithSegments("/notiHubs"))
+                        {
+                            context.Token = accessToken;
+                        }
+
+                        return Task.CompletedTask;
+                    },
+
+                        OnChallenge = async context =>
+                        {
+                              context.HandleResponse(); // stop default 401 page
+
+                              var message = "Jwt Token invalid or missing";
+
+                              if (context.AuthenticateFailure != null)
+                                    message = context.AuthenticateFailure.Message;
+
+                              await AuthResponseHelper.Write401(context.Response, message);
+                        },
+
+                        OnForbidden = async context =>
+                        {
+                              await AuthResponseHelper.Write403(context.Response);
+                        },
+
+                        OnAuthenticationFailed = context =>
+                        {
+                              Console.WriteLine("❌ JWT FAILED: " + context.Exception.Message);
+                              return Task.CompletedTask;
+                        },
+
+                        OnTokenValidated = context =>
+                        {
+                              Console.WriteLine("✅ TOKEN VALIDATED");
+                              return Task.CompletedTask;
+                        },
+
+                    
                 };
             });
 
@@ -204,7 +262,6 @@ _ = Task.Run(() => readDriver.GetTransactionUntilShutDownAsync());
             readDriver.TurnOffDebug();
 
         });
-
 
 
         app.UseCors("CorsPolicy");

@@ -6,4 +6,5 @@ namespace Device.Contract.Interfaces;
 public interface IDevice
 {
       Task<List<IdReportDto>> GetIdReportsAsync();
+      Task<DeviceDto> CreateAsync(CreateDeviceDto dto);
 }

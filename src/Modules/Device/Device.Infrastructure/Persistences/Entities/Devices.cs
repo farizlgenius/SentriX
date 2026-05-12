@@ -5,6 +5,7 @@ namespace Device.Infrastructure.Persistences.Entities;
 
 public sealed class Devices : BaseEntity
 {
+  public string name { get; set; } = string.Empty;
   public int component_id { get; set; }
   public string serial_number { get; set; } = string.Empty;
   public string mac { get; set; } = string.Empty;
@@ -22,6 +23,7 @@ public sealed class Devices : BaseEntity
 
   public Devices(Device.Domain.Entities.Devices domain)
   {
+    this.name = domain.Name;
     this.component_id = domain.ComponentId;
     this.serial_number = domain.SerialNumber;
     this.mac = domain.Mac;
@@ -38,6 +40,8 @@ public sealed class Devices : BaseEntity
 
   public void Update(Device.Domain.Entities.Devices domain)
   {
+    this.name = domain.Name;
+    this.component_id = domain.ComponentId;
     this.serial_number = domain.SerialNumber;
     this.mac = domain.Mac;
     this.ip = domain.Ip;
@@ -49,6 +53,12 @@ public sealed class Devices : BaseEntity
     this.synced_at = domain.SyncedAt;
     this.updated_at = DateTime.UtcNow;
     this.created_at = DateTime.UtcNow;
+  }
+
+  public void UpdateMemoryAllocateStatus(string Status)
+  {
+    this.status = Status;
+    this.updated_at = DateTime.UtcNow;
   }
 
   public void UpdateIp(string ip)

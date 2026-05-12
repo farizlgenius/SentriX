@@ -568,6 +568,19 @@
           "bin/placeholder/Operator.Domain.dll": {}
         }
       },
+      "Role.Contract/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v10.0",
+        "dependencies": {
+          "SharedKernel": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/Role.Contract.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Role.Contract.dll": {}
+        }
+      },
       "SharedKernel/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v10.0",
@@ -1389,6 +1402,11 @@
       "path": "../Operator.Domain/Operator.Domain.csproj",
       "msbuildProject": "../Operator.Domain/Operator.Domain.csproj"
     },
+    "Role.Contract/1.0.0": {
+      "type": "project",
+      "path": "../../Contracts/Role.Contract/Role.Contract.csproj",
+      "msbuildProject": "../../Contracts/Role.Contract/Role.Contract.csproj"
+    },
     "SharedKernel/1.0.0": {
       "type": "project",
       "path": "../../../SharedKernel/SharedKernel.csproj",
@@ -1403,6 +1421,7 @@
       "Npgsql.EntityFrameworkCore.PostgreSQL >= 10.0.1",
       "Operator.Application >= 1.0.0",
       "Operator.Domain >= 1.0.0",
+      "Role.Contract >= 1.0.0",
       "SharedKernel >= 1.0.0"
     ]
   },
@@ -1438,6 +1457,9 @@
         "net10.0": {
           "targetAlias": "net10.0",
           "projectReferences": {
+            "D:\\code\\sentrix\\src\\Modules\\Contracts\\Role.Contract\\Role.Contract.csproj": {
+              "projectPath": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Role.Contract\\Role.Contract.csproj"
+            },
             "D:\\code\\sentrix\\src\\Modules\\Operator\\Operator.Application\\Operator.Application.csproj": {
               "projectPath": "D:\\code\\sentrix\\src\\Modules\\Operator\\Operator.Application\\Operator.Application.csproj"
             },

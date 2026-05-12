@@ -160,6 +160,14 @@ public class LocationRepository(LocationDbContext context,IMessageBus bus) : ILo
             return new Pagination<CountryDto>(Page, PageSize, totalItems, (int)Math.Ceiling(totalItems / (double)PageSize), items);
       }
 
+      public async Task<string> GetNameByIdAsync(int id, CancellationToken ct = default)
+      {
+            return await context.Locations.AsNoTracking()
+            .Where(x => x.id == id)
+            .Select(x => x.name)
+            .FirstOrDefaultAsync() ?? string.Empty;
+      }
+
       public async Task<Pagination<LocationDto>> GetPaginationAsync(int Page, int PageSize, string Search)
       {
             var query = context.Locations.AsNoTracking().AsQueryable();
@@ -220,16 +228,21 @@ public class LocationRepository(LocationDbContext context,IMessageBus bus) : ILo
             return count == ids.Count;
       }
 
-      public async Task<bool> IsAnyByIdAsync(int id)
+      public async Task<bool> IsAnyByIdAsync(int id,CancellationToken ct = default)
       {
             return await context.Locations.AsNoTracking()
-            .AnyAsync(l => l.id == id);
+            .AnyAsync(l => l.id == id, ct);
       }
 
       public async Task<bool> IsAnyNameAsync(string name)
       {
             return await context.Locations.AsNoTracking()
             .AnyAsync(l => l.name.ToLower().Equals(name.Trim().ToLower()));
+      }
+
+      public async Task<bool> IsLocationIdsValidAsync(List<int> LocationIds, CancellationToken ct = default)
+      {
+            return await context.Locations.AsNoTracking().AnyAsync(x => LocationIds.Contains(x.id), ct);
       }
 
       public async Task<bool> IsValidCountryAsync(int id)

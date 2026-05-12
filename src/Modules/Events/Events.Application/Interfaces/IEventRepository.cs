@@ -6,7 +6,7 @@ namespace Events.Application.Interfaces;
 
 public interface IEventRepository
 {
-      Task<Pagination<EventDto>> GetPaginationByLocationIdAsync(PaginationParams param, string tenant_id);
+      Task<Pagination<EventDto>> GetPaginationByLocationIdAsync(PaginationParams param);
       Task AddAsync(
             DateTime timeStamp,
             string actor,

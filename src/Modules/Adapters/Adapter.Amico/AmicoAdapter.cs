@@ -1,11 +1,12 @@
 using System;
+using Adapter.Abstraction.Constants;
 using Adapter.Abstraction.Interfaces;
 
 namespace Adapter.Amico;
 
 public sealed class AmicoAdapter : IAdapter
 {
-      public string Vendor => "AMICO";
+      public string Vendor => Venders.AMICO;
 
       public IDeviceAdapter Device { get; }
 

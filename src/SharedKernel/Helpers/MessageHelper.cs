@@ -61,6 +61,7 @@ public static class MessageHelper
             public static string LocationNotFound = "Location not found.";
             public static string LocationInvalid = "Location invalid.";
             public static string CountryInvalid = "Country invalid.";
+            public static string LocationNotAllow = "Location not allowed.";
       }
 
 }

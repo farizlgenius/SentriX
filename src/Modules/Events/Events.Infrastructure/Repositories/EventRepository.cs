@@ -28,7 +28,7 @@ public sealed class EventRepository(EventDbContext context) : IEventRepository
             await context.SaveChangesAsync();
       }
 
-      public async Task<Pagination<EventDto>> GetPaginationByLocationIdAsync(PaginationParams param, string tenant_id)
+      public async Task<Pagination<EventDto>> GetPaginationByLocationIdAsync(PaginationParams param)
       {
             var query = context.events.AsNoTracking().AsQueryable();
 
@@ -65,9 +65,9 @@ public sealed class EventRepository(EventDbContext context) : IEventRepository
                   }
             }
 
-            if (int.TryParse(tenant_id, out int locationId) && locationId >= 0)
+            if (param.locationId >= 0)
             {
-                  query = query.Where(x => x.location_id == locationId || x.location_id == 1);
+                  query = query.Where(x => x.location_id == param.locationId || x.location_id == 1);
             }
 
             if (param.startDate != null)

@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\SharedKernel\SharedKernel.csproj" />
+    <ProjectReference Include="..\..\Contracts\Role.Contract\Role.Contract.csproj" />
     <ProjectReference Include="..\Operator.Application\Operator.Application.csproj" />
     <ProjectReference Include="..\Operator.Domain\Operator.Domain.csproj" />
   </ItemGroup>

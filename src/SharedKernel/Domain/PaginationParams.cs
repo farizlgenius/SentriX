@@ -11,16 +11,18 @@ public sealed class PaginationParams
     public string search { get; set; } = string.Empty;
     public DateTime? startDate { get; set; }
     public DateTime? endDate { get; set; }
+    public int locationId { get; set; }
 
     public PaginationParams() { }
 
-    public PaginationParams(int pageNumber, int pageSize, string search, DateTime? startDate, DateTime? endDate)
+    public PaginationParams(int pageNumber, int pageSize, string search, DateTime? startDate, DateTime? endDate, int locationId)
     {
         this.pageNumber = pageNumber;
         this.pageSize = pageSize;
         this.search = ValidateRequiredString(search, nameof(search));
         this.startDate = startDate;
         this.endDate = endDate;
+        this.locationId = locationId;
     }
 
     private static string ValidateRequiredString(string value, string field)

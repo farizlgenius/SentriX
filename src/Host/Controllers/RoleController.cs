@@ -2,6 +2,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Role.Contract.DTOs;
 using Role.Contract.Interfaces;
+using SharedKernel.Domain;
+using SharedKernel.Exceptions;
+using SharedKernel.Helpers;
 
 namespace Host.Controllers
 {
@@ -17,10 +20,15 @@ namespace Host.Controllers
         }
 
         [HttpGet("pagination")]
-        public async Task<IActionResult> GetPaginationWithLocationIdAsync([FromQuery] int LocationId, [FromQuery] int Page, [FromQuery] int PageSize)
+        public async Task<IActionResult> GetPagination([FromQuery] PaginationParams param)
         {
-            var res = await role.GetPaginationWithLocationIdAsync(LocationId, Page, PageSize);
-            return Ok(res);
+            var tenants = User.FindFirst("tenants")?.Value ?? "";
+
+            if(!ValidationHelper.ValidateTenants(tenants,param.locationId))
+                throw new ForbiddenException(MessageHelper.Location.LocationNotAllow);
+            
+             var res = await role.GetPagination(param);
+                return Ok(res);
         }
 
         [HttpPost]

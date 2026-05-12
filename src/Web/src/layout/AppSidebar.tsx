@@ -61,7 +61,7 @@ const navItems: NavItem[] = [
     id: 3,
     name: "Locations",
     icon: <LocationIcon />,
-    subItems: [{ name: "Location", path: "/location", }, { name: "Company", path: "/company", },{ name: "Department", path: "/department", },{ name: "Position", path: "/position", }],
+    path:"/location"
   },
   {
     id: 4,
@@ -79,7 +79,7 @@ const navItems: NavItem[] = [
     id: 6,
     name: "Devices",
     icon: <ModuleIcon />,
-    subItems: [{ name: "Controller", path: "/hardware", }, { name: "Module", path: "/module", },{ name: "Lift Controller", path: "/lift", },{ name: "Face Reader", path: "/face", }],
+    subItems: [{ name: "Controller", path: "/device", }, { name: "Module", path: "/module", },{ name: "Lift Controller", path: "/lift", },{ name: "Face Reader", path: "/face", }],
   },{
     id: 7,
     name:"Control Point",
@@ -104,7 +104,7 @@ const navItems: NavItem[] = [
     id: 11,
     icon: <CardIcon />,
     name: "Users",
-    path: "/cardholder",
+    subItems: [{ name: "Users", path: "/cardholder", }, { name: "Company", path: "/company", },{ name: "Department", path: "/department", },{ name: "Position", path: "/position", }],
   }, {
     id: 12,
     icon: <GroupIcon />,

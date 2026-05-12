@@ -14,6 +14,7 @@
           "Npgsql.EntityFrameworkCore.PostgreSQL": "10.0.1",
           "Operator.Application": "1.0.0",
           "Operator.Domain": "1.0.0",
+          "Role.Contract": "1.0.0",
           "SharedKernel": "1.0.0"
         },
         "runtime": {
@@ -383,6 +384,17 @@
           }
         }
       },
+      "Role.Contract/1.0.0": {
+        "dependencies": {
+          "SharedKernel": "1.0.0"
+        },
+        "runtime": {
+          "Role.Contract.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
       "SharedKernel/1.0.0": {
         "dependencies": {
           "Npgsql.EntityFrameworkCore.PostgreSQL": "10.0.1",
@@ -615,6 +627,11 @@
       "sha512": ""
     },
     "Operator.Domain/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Role.Contract/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

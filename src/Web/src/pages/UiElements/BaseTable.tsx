@@ -7,9 +7,9 @@ import Pagination from "../../components/ui/table/Pagination";
 import { usePagination } from "../../context/PaginationContext";
 import React from "react";
 
+    
 
-
-export const BaseTable = <T extends Record<string, any>>({ headers, keys, data, onEdit, onInfo, onRemove, setSelect, renderOptionalComponent, specialDisplay, onClick: handleClick, permission, action, status, select, subTable, fetchData,refresh,locationId }: TableProp<T>) => {
+export const BaseTable = <T extends { id: number | string }>({ id, headers, keys, data, onEdit, onInfo, onRemove, setSelect, renderOptionalComponent, specialDisplay, onClick: handleClick, permission, action, status, select, subTable, fetchData,refresh,locationId }: TableProp<T>) => {
     const {search,startDate,endDate,pageSize,pagination,setPageSize} = usePagination();
     const [show, setShow] = useState<number>(-1)
     const [sortKey, setSortKey] = useState<string>(keys?.[0] ?? "");
@@ -95,7 +95,7 @@ export const BaseTable = <T extends Record<string, any>>({ headers, keys, data, 
             setSelect((prev) => [...prev, data]);
         } else {
             setSelect((prev) =>
-                prev.filter((item) => item.componentId !== data.componentId)
+                prev.filter((item) => item.id !== data.id)
             );
         }
 
@@ -103,10 +103,10 @@ export const BaseTable = <T extends Record<string, any>>({ headers, keys, data, 
 
      useEffect(() => {
         if(locationId != -1){
-            fetchData(1, pageSize, locationId,search, startDate)
+            fetchData(1, pageSize,locationId,search, startDate,endDate);
         }
         console.log(permission);
-    }, [refresh,pageSize,search,startDate,locationId])
+    }, [refresh,pageSize,search,startDate,endDate,locationId])
 
 
     return (
@@ -192,14 +192,14 @@ export const BaseTable = <T extends Record<string, any>>({ headers, keys, data, 
                                                     <a id="detail" onClick={() => onInfo(data)} className="cursor-pointer font-medium text-blue-600 dark:text-blue-500 hover:underline">
                                                         <Info2Icon className="w-10 h-5" />
                                                     </a>
-                                                    {permission?.isUpdated  &&
+                                                    {permission?.isUpdated  && data.id !== 1 &&
                                                         <a id="edit" onClick={() => onEdit(data)} className="cursor-pointer font-medium text-blue-600 dark:text-blue-500 hover:underline">
                                                             <EditIcon className="w-10 h-5" />
 
                                                         </a>
                                                     }
                                                     {
-                                                        permission?.isDeleted &&
+                                                        permission?.isDeleted && id !== data.id && data.id !== 1 &&
 
                                                         <a id="remove" onClick={() => onRemove(data)} className="cursor-pointer font-medium text-red-600 dark:text-red-500 hover:underline"><TrashBinIcon className="w-10 h-5" /></a>
                                                     }

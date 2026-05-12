@@ -12,6 +12,7 @@ public sealed record OperatorDto(
   string Gender,
   string Email,
   string Mobile,
-  int RoleId
+  int RoleId,
+  List<int> LocationId
 );
 

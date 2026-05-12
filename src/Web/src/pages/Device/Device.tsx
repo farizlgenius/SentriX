@@ -159,7 +159,7 @@ const Device = () => {
             </TableRow>
           </TableHeader>
           <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
-            { 
+            {/* { 
             
              idReports.map((data: any, i: number) => (
               <TableRow key={i}>
@@ -175,7 +175,8 @@ const Device = () => {
                 </TableCell>
               </TableRow>
             ))
-            }
+            } */}
+            <></>
 
           </TableBody>
         </Table>
@@ -635,7 +636,7 @@ const Device = () => {
         <Modals body={<SelectDeviceForm setDeviceType={setDeviceType} setSelectType={setSelectType} setForm={setForm} />} handleClickWithEvent={handleCloseSelect}  />
       }
 
-      <PageBreadcrumb pageTitle="Hardware" />
+      <PageBreadcrumb pageTitle="Device" />
       <div className="space-y-6">
         {form ?
           <>

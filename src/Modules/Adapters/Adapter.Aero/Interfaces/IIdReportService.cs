@@ -11,6 +11,7 @@ public interface IIdReportService
       void AddIdReport(IdReport reports);
 
       void RemoveIdReport(string mac);
+      void RemoveIdReportById(int id);
       void UpdateIp(string mac, string ip);
       void UpdatePort(string mac, int port);
       bool IsMacExist(string mac);

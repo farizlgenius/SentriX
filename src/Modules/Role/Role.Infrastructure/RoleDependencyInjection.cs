@@ -2,7 +2,9 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Role.Application.Behaviors;
 using Role.Application.Interfaces;
+using Role.Contract.Interfaces;
 using Role.Infrastructure.Persistences;
 using Role.Infrastructure.Repositories;
 
@@ -16,6 +18,7 @@ public static class LocationDependencyInjection
       {
 
             services.AddScoped<IRoleRepository, RoleRepository>();
+            services.AddScoped<IRole, RoleBehavior>();
 
 
             // ==========================

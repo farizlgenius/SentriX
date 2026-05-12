@@ -44,8 +44,14 @@
               "D:\\code\\sentrix\\src\\Modules\\Cache\\Cache.Infrastrucure\\Cache.Infrastructure.csproj": {
                 "projectPath": "D:\\code\\sentrix\\src\\Modules\\Cache\\Cache.Infrastrucure\\Cache.Infrastructure.csproj"
               },
+              "D:\\code\\sentrix\\src\\Modules\\Contracts\\Adapter.Abstraction\\Adapter.Abstraction.csproj": {
+                "projectPath": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Adapter.Abstraction\\Adapter.Abstraction.csproj"
+              },
               "D:\\code\\sentrix\\src\\Modules\\Contracts\\Auth.Contract\\Auth.Contract.csproj": {
                 "projectPath": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Auth.Contract\\Auth.Contract.csproj"
+              },
+              "D:\\code\\sentrix\\src\\Modules\\Contracts\\Device.Contract\\Device.Contract.csproj": {
+                "projectPath": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Device.Contract\\Device.Contract.csproj"
               },
               "D:\\code\\sentrix\\src\\Modules\\Contracts\\Events.Contract\\Events.Contract.csproj": {
                 "projectPath": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Events.Contract\\Events.Contract.csproj"
@@ -10802,6 +10808,9 @@
           "net10.0": {
             "targetAlias": "net10.0",
             "projectReferences": {
+              "D:\\code\\sentrix\\src\\Modules\\Contracts\\Role.Contract\\Role.Contract.csproj": {
+                "projectPath": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Role.Contract\\Role.Contract.csproj"
+              },
               "D:\\code\\sentrix\\src\\Modules\\Operator\\Operator.Application\\Operator.Application.csproj": {
                 "projectPath": "D:\\code\\sentrix\\src\\Modules\\Operator\\Operator.Application\\Operator.Application.csproj"
               },
@@ -11174,6 +11183,9 @@
               },
               "D:\\code\\sentrix\\src\\Modules\\Role\\Role.Domain\\Role.Domain.csproj": {
                 "projectPath": "D:\\code\\sentrix\\src\\Modules\\Role\\Role.Domain\\Role.Domain.csproj"
+              },
+              "D:\\code\\sentrix\\src\\SharedKernel\\SharedKernel.csproj": {
+                "projectPath": "D:\\code\\sentrix\\src\\SharedKernel\\SharedKernel.csproj"
               }
             }
           }
@@ -11858,6 +11870,9 @@
           "net10.0": {
             "targetAlias": "net10.0",
             "projectReferences": {
+              "D:\\code\\sentrix\\src\\Modules\\Contracts\\Location.Contract\\Location.Contract.csproj": {
+                "projectPath": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Location.Contract\\Location.Contract.csproj"
+              },
               "D:\\code\\sentrix\\src\\Modules\\Role\\Role.Application\\Role.Application.csproj": {
                 "projectPath": "D:\\code\\sentrix\\src\\Modules\\Role\\Role.Application\\Role.Application.csproj"
               },

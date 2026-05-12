@@ -5,8 +5,10 @@ D:\code\sentrix\src\Modules\Operator\Operator.Infrastructure\bin\Debug\net10.0\L
 D:\code\sentrix\src\Modules\Operator\Operator.Infrastructure\bin\Debug\net10.0\Operator.Application.dll
 D:\code\sentrix\src\Modules\Operator\Operator.Infrastructure\bin\Debug\net10.0\Operator.Contract.dll
 D:\code\sentrix\src\Modules\Operator\Operator.Infrastructure\bin\Debug\net10.0\Operator.Domain.dll
+D:\code\sentrix\src\Modules\Operator\Operator.Infrastructure\bin\Debug\net10.0\Role.Contract.dll
 D:\code\sentrix\src\Modules\Operator\Operator.Infrastructure\bin\Debug\net10.0\SharedKernel.dll
 D:\code\sentrix\src\Modules\Operator\Operator.Infrastructure\bin\Debug\net10.0\SharedKernel.pdb
+D:\code\sentrix\src\Modules\Operator\Operator.Infrastructure\bin\Debug\net10.0\Role.Contract.pdb
 D:\code\sentrix\src\Modules\Operator\Operator.Infrastructure\bin\Debug\net10.0\Operator.Application.pdb
 D:\code\sentrix\src\Modules\Operator\Operator.Infrastructure\bin\Debug\net10.0\Operator.Domain.pdb
 D:\code\sentrix\src\Modules\Operator\Operator.Infrastructure\bin\Debug\net10.0\Location.Contract.pdb
@@ -16,6 +18,7 @@ D:\code\sentrix\src\Modules\Operator\Operator.Infrastructure\obj\Debug\net10.0\O
 D:\code\sentrix\src\Modules\Operator\Operator.Infrastructure\obj\Debug\net10.0\Operator.Infrastructure.AssemblyInfoInputs.cache
 D:\code\sentrix\src\Modules\Operator\Operator.Infrastructure\obj\Debug\net10.0\Operator.Infrastructure.AssemblyInfo.cs
 D:\code\sentrix\src\Modules\Operator\Operator.Infrastructure\obj\Debug\net10.0\Operator.Infrastructure.csproj.CoreCompileInputs.cache
+D:\code\sentrix\src\Modules\Operator\Operator.Infrastructure\obj\Debug\net10.0\Operator.Infrastructure.sourcelink.json
 D:\code\sentrix\src\Modules\Operator\Operator.Infrastructure\obj\Debug\net10.0\Operator.BB33C322.Up2Date
 D:\code\sentrix\src\Modules\Operator\Operator.Infrastructure\obj\Debug\net10.0\Operator.Infrastructure.dll
 D:\code\sentrix\src\Modules\Operator\Operator.Infrastructure\obj\Debug\net10.0\refint\Operator.Infrastructure.dll

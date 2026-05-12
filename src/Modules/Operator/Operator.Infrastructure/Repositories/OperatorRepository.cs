@@ -1,19 +1,68 @@
 using System;
+using Location.Contract.Queries;
 using Microsoft.EntityFrameworkCore;
 using Operator.Application.Interfaces;
 using Operator.Contract.DTOs;
+using Operator.Domain.Entities;
 using Operator.Infrastructure.Persistences;
 using Operator.Infrastructure.Persistences.Entities;
+using Role.Contract.Queries;
 using SharedKernel.Domain;
 using SharedKernel.Helpers;
+using SharedKernel.Messaging;
 
 namespace Operator.Infrastructure.Repositories;
 
-public sealed class OperatorRepository(OperatorDbContext context) : IOperatorRepository
+public sealed class OperatorRepository(OperatorDbContext context, IMessageBus bus) : IOperatorRepository
 {
-      public Task<OperatorDto> AddAsync(Domain.Entities.Operators domain)
+      public async Task<OperatorDto> AddAsync(Domain.Entities.Operators domain)
       {
-            throw new NotImplementedException();
+            var data = await context.operators.AddAsync(
+            new Persistences.Entities.Operators(domain)
+          );
+
+            var save = await context.SaveChangesAsync();
+
+            if (data == null || save <= 0)
+                  throw new Exception(MessageHelper.DB.SaveRecordUnsuccessful);
+
+            data.Entity.AddPassword(domain.Password);
+            save = await context.SaveChangesAsync();
+
+            if (data == null || save <= 0)
+                  throw new Exception(MessageHelper.DB.SaveRecordUnsuccessful);
+
+            foreach (var locationId in domain.LocationId)
+            {
+                  if (await context.operator_locations.AsNoTracking().AnyAsync(ol => ol.operator_id == data.Entity.id && ol.location_id == locationId))
+                        continue;
+                  await context.operator_locations.AddAsync(
+                        new OperatorLocation
+                        {
+                              location_id = locationId,
+                              operator_id = data.Entity.id
+                        }
+                  );
+            }
+
+            save = await context.SaveChangesAsync();
+
+            if (data == null || save <= 0)
+                  throw new Exception(MessageHelper.DB.SaveRecordUnsuccessful);
+
+            return new OperatorDto(
+              data.Entity.id,
+              data.Entity.username,
+              data.Entity.title,
+              data.Entity.firstname,
+              data.Entity.middlename,
+              data.Entity.lastname,
+              data.Entity.gender,
+              data.Entity.email,
+              data.Entity.mobile,
+            data.Entity.role_id,
+            data.Entity.operator_locations.Select(ol => ol.location_id).ToList()
+              );
       }
 
       public async Task AddOperatorLocationsAsync(int operatorId, int locationId, CancellationToken ct)
@@ -30,9 +79,46 @@ public sealed class OperatorRepository(OperatorDbContext context) : IOperatorRep
             await context.SaveChangesAsync(ct);
       }
 
-      public Task<OperatorDto> DeleteByIdAsync(int id)
+      public async Task<OperatorDto> DeleteByIdAsync(int id)
       {
-            throw new NotImplementedException();
+            var entity = await context.operators.OrderByDescending(u => u.id).Where(u => u.id == id).FirstOrDefaultAsync();
+            if (entity == null)
+                  throw new Exception(MessageHelper.DB.RecordNotFound);
+
+            var data = context.operators.Remove(entity);
+            var save = await context.SaveChangesAsync();
+
+            if (data == null || save <= 0)
+                  throw new Exception(MessageHelper.DB.UpdateRecordUnsuccessful);
+
+            var operatorLocations = await context.operator_locations.Where(ol => ol.operator_id == id).ToArrayAsync();
+            if (operatorLocations != null && operatorLocations.Length > 0)
+            {
+                  context.operator_locations.RemoveRange(operatorLocations);
+                  await context.SaveChangesAsync();
+            }
+
+            return new OperatorDto(
+              data.Entity.id,
+              data.Entity.username,
+              data.Entity.title,
+              data.Entity.firstname,
+              data.Entity.middlename,
+              data.Entity.lastname,
+              data.Entity.gender,
+              data.Entity.email,
+              data.Entity.mobile,
+              data.Entity.role_id,
+                  data.Entity.operator_locations.Select(ol => ol.location_id).ToList()
+              );
+      }
+
+      public async Task<int> GetLocationIdByUsernameAsync(string username)
+      {
+            return await context.operator_locations
+                  .Where(ol => context.operators.Any(o => o.username == username))
+                  .Select(ol => ol.location_id)
+                  .FirstOrDefaultAsync();
       }
 
       public async Task<List<int>> GetLocationIdsByUsernameAsync(string username, CancellationToken ct)
@@ -58,16 +144,76 @@ public sealed class OperatorRepository(OperatorDbContext context) : IOperatorRep
                   x.gender,
                   x.email,
                   x.mobile,
-                  x.role_id
+                  x.role_id,
+                  x.operator_locations.Select(ol => ol.location_id).ToList()
             ))
             .FirstOrDefaultAsync()
             ??
-            new OperatorDto(0, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, 0);
+            new OperatorDto(0, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, 0, new List<int>());
       }
 
-      public Task<Pagination<OperatorDto>> GetPaginationWithLocationIdAsync(int LocationId, int Page, int PageSize, string Search)
+      public async Task<Pagination<OperatorDto>> GetPagination(PaginationParams param,CancellationToken ct = default)
       {
-            throw new NotImplementedException();
+
+            var operatorIds = await context.operator_locations.AsNoTracking().Where(ol => ol.location_id == param.locationId).Select(ol => ol.operator_id).ToListAsync();
+            var query = context.operators.AsNoTracking().Where(x => operatorIds.Contains(x.id)).AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(param.search))
+            {
+                  if (!string.IsNullOrWhiteSpace(param.search))
+                  {
+                        var search = param.search.Trim();
+
+                        if (context.Database.IsNpgsql())
+                        {
+                              var pattern = $"%{search}%";
+
+                              query = query.Where(x =>
+                                  EF.Functions.ILike(x.username, pattern) ||
+                                  EF.Functions.ILike(x.firstname, pattern) ||
+                                  EF.Functions.ILike(x.lastname, pattern) ||
+                                  EF.Functions.ILike(x.middlename, pattern) ||
+                                  EF.Functions.ILike(x.email, pattern) ||
+                                  EF.Functions.ILike(x.mobile, pattern)
+                              );
+                        }
+                        else // SQL Server
+                        {
+                              query = query.Where(x =>
+                                  x.username.Contains(search) ||
+                                  x.firstname.Contains(search) ||
+                                  x.lastname.Contains(search) ||
+                                  x.middlename.Contains(search) ||
+                                  x.email.Contains(search) ||
+                                  x.mobile.Contains(search)
+                              );
+                        }
+                  }
+            }
+
+
+            if (param.startDate != null)
+            {
+                  var startUtc = DateTime.SpecifyKind(param.startDate.Value, DateTimeKind.Utc);
+                  query = query.Where(x => x.created_at >= startUtc);
+            }
+
+            if (param.endDate != null)
+            {
+                  var endUtc = DateTime.SpecifyKind(param.endDate.Value, DateTimeKind.Utc);
+                  query = query.Where(x => x.created_at <= endUtc);
+            }
+
+            var totalItems = await query.CountAsync();
+            var items = await query.OrderByDescending(r => r.id)
+            .Skip((param.pageNumber - 1) * param.pageSize)
+            .Take(param.pageSize)
+            .Select(r => new OperatorDto(r.id, r.username, r.title, r.firstname, r.middlename, r.lastname, r.gender, r.email, r.mobile, r.role_id,r.operator_locations.Select(ol => ol.location_id).ToList()))
+            .ToListAsync(ct);
+
+            return new Pagination<OperatorDto>(param.pageNumber, param.pageSize, totalItems,
+            (int)Math.Ceiling(totalItems / (double)param.pageSize)
+            , items);
       }
 
       public async Task<string> GetPassowrdByUsernameAsync(string Username)
@@ -79,24 +225,24 @@ public sealed class OperatorRepository(OperatorDbContext context) : IOperatorRep
             .FirstOrDefaultAsync() ?? string.Empty;
       }
 
-      public Task<bool> IsAnyByIdAsync(int id)
+      public async Task<bool> IsAnyByIdAsync(int id)
       {
-            throw new NotImplementedException();
+            return await context.operators.AsNoTracking().AnyAsync(u => u.id == id);
       }
 
-      public Task<bool> IsAnyUsernameAsync(string Username)
+      public async Task<bool> IsAnyUsernameAsync(string Username)
       {
-            throw new NotImplementedException();
+            return await context.operators.AsNoTracking().AnyAsync(u => u.username.Equals(Username));
       }
 
-      public Task<bool> IsAnyWithLocationIdAsync(int LocationId)
+      public async Task<bool> IsAnyWithLocationIdAsync(int LocationId)
       {
-            throw new NotImplementedException();
+            return await bus.QueryAsync(new IsAnyLocationByIdQuery(LocationId));
       }
 
-      public Task<bool> IsExceptLocationIdsAsync(List<int> LocationIds)
+      public async Task<bool> IsLocationIdsValidAsync(List<int> LocationIds)
       {
-            throw new NotImplementedException();
+            return await bus.QueryAsync(new IsLocationIdsValidQuery(LocationIds));
       }
 
       public async Task<bool> IsOperatorExistsByUsernameAsync(string Username)
@@ -105,24 +251,10 @@ public sealed class OperatorRepository(OperatorDbContext context) : IOperatorRep
             .AnyAsync(x => x.username.Equals(Username));
       }
 
-      public Task<bool> IsValidCompanyAsync(int CompanyId)
-      {
-            throw new NotImplementedException();
-      }
 
-      public Task<bool> IsValidDepartmentAsync(int DepartmentId)
+      public async Task<bool> IsValidRoleIdAsync(int RoleId)
       {
-            throw new NotImplementedException();
-      }
-
-      public Task<bool> IsValidPositionAsync(int PositionId)
-      {
-            throw new NotImplementedException();
-      }
-
-      public Task<bool> IsValidRoleIdAsync(int RoleId)
-      {
-            throw new NotImplementedException();
+            return await bus.QueryAsync(new IsValidRoleIdQuery(RoleId));
       }
 
       public async Task RemoveOperatorLocationByLocationIdAsync(int locationID)
@@ -141,7 +273,7 @@ public sealed class OperatorRepository(OperatorDbContext context) : IOperatorRep
       {
             var entities = await context.operator_locations.Where(x => x.location_id == locationId).ToArrayAsync(ct);
 
-            if(entities is null || entities.Length == 0)
+            if (entities is null || entities.Length == 0)
                   return;
 
             context.operator_locations.RemoveRange(entities);
@@ -149,166 +281,57 @@ public sealed class OperatorRepository(OperatorDbContext context) : IOperatorRep
             await context.SaveChangesAsync(ct);
       }
 
-      public Task<OperatorDto> UpdateAsync(Domain.Entities.Operators domain)
+      public async Task<OperatorDto> UpdateAsync(Domain.Entities.Operators domain)
       {
-            throw new NotImplementedException();
+            var entity = await context.operators.OrderByDescending(u => u.id).Where(u => u.id == domain.Id).FirstOrDefaultAsync();
+            if (entity == null)
+                  throw new Exception(MessageHelper.Common.RecordNotFound);
+
+            entity.Update(domain);
+            var data = context.operators.Update(entity);
+            var save = await context.SaveChangesAsync();
+
+            if (data == null || save <= 0)
+                  throw new Exception(MessageHelper.DB.UpdateRecordUnsuccessful);
+
+            return new OperatorDto(
+              data.Entity.id,
+              data.Entity.username,
+              data.Entity.title,
+              data.Entity.firstname,
+              data.Entity.middlename,
+              data.Entity.lastname,
+              data.Entity.gender,
+              data.Entity.email,
+              data.Entity.mobile,
+              data.Entity.role_id,
+                  data.Entity.operator_locations.Select(ol => ol.location_id).ToList()
+              );
       }
 
-      // public async Task<OperatorDto> AddAsync(Operators domain)
-      // {
-      //       var data = await context.operators.AddAsync(
-      //        new Persistences.Entities.Operators(domain)
-      //      );
+      public async Task<PasswordRuleDto> CreatePasswordRuleAsync(Domain.Entities.PasswordRule dto)
+      {
+            var entity = await context.password_rules.FirstOrDefaultAsync();
+            if(entity == null)
+                  throw new Exception(MessageHelper.DB.RecordNotFound);
 
-      //       var save = await context.SaveChangesAsync();
+            entity.Update(dto);
+            var data = context.password_rules.Update(entity);
 
-      //       if (data == null || save <= 0)
-      //             throw new Exception(MessageHelper.DB.SaveRecordUnsuccessful);
+            var save = await context.SaveChangesAsync();
 
-      //       data.Entity.AddPassword(domain.password);
-      //       data.Entity.AddLocation(data.Entity.id, domain.LocationId);
-      //       save = await context.SaveChangesAsync();
+            if(data.Entity == null || save <= 0)
+                  throw new Exception(MessageHelper.DB.SaveRecordUnsuccessful);
 
-      //       if (data == null || save <= 0)
-      //             throw new Exception(MessageHelper.DB.SaveRecordUnsuccessful);
+            return new PasswordRuleDto(data.Entity.id,data.Entity.len,data.Entity.is_lower,data.Entity.is_upper,data.Entity.is_symbol,data.Entity.is_digit,data.Entity.weaks.Select(x => x.pattern).ToList());
+      }
 
-      //       return new OperatorDto(
-      //         data.Entity.id,
-      //         data.Entity.operator_id,
-      //         data.Entity.username,
-      //         data.Entity.title,
-      //         data.Entity.firstname,
-      //         data.Entity.middlename,
-      //         data.Entity.lastname,
-      //         data.Entity.gender,
-      //         data.Entity.email,
-      //         data.Entity.mobile,
-      //         await context.Roles.AsNoTracking().OrderByDescending(x => x.id).Where(c => c.users.Select(x => x.id).Contains(data.Entity.id)).Select(c => c.name).FirstOrDefaultAsync() ?? ""
-      //         );
-      // }
+      public async Task<PasswordRuleDto> GetPassowrdRuleAsync()
+      {
+            return await context.password_rules.AsNoTracking()
+            .Select(x => new PasswordRuleDto(x.id,x.len,x.is_lower,x.is_upper,x.is_symbol,x.is_digit,x.weaks.Select(x => x.pattern).ToList()))
+            .FirstOrDefaultAsync() ?? new PasswordRuleDto(0,0,false,false,false,false,new List<string>());
+      }
 
-      // public async Task<OperatorDto> DeleteByIdAsync(int id)
-      // {
-      //       var entity = await context.operators.OrderByDescending(u => u.id).Where(u => u.id == id).FirstOrDefaultAsync();
-      //       if (entity == null)
-      //             throw new Exception(MessageHelper.DB.RecordNotFound);
 
-      //       var data = context.Operators.Remove(entity);
-      //       var save = await context.SaveChangesAsync();
-
-      //       if (data == null || save <= 0)
-      //             throw new Exception(MessageHelper.DB.UpdateRecordUnsuccessful);
-
-      //       return new OperatorDto(
-      //         data.Entity.id,
-      //         data.Entity.operator_id,
-      //         data.Entity.username,
-      //         data.Entity.title,
-      //         data.Entity.firstname,
-      //         data.Entity.middlename,
-      //         data.Entity.lastname,
-      //         data.Entity.gender,
-      //         data.Entity.email,
-      //         data.Entity.mobile,
-      //         await context.Roles.AsNoTracking().OrderByDescending(x => x.id).Where(c => c.users.Select(x => x.id).Contains(data.Entity.id)).Select(c => c.name).FirstOrDefaultAsync() ?? ""
-      //         );
-      // }
-
-      // public async Task<Pagination<OperatorDto>> GetPaginationWithLocationIdAsync(int LocationId, int Page, int PageSize,string Search)
-      // {
-      //       var query = context.operators.AsNoTracking().AsQueryable();
-      //       var totalItems = await query.CountAsync();
-      //       var items = await query.OrderByDescending(u => u.id)
-      //       .Where(u => u.operator_locations.Select(ul => ul.location_id).Contains(LocationId))
-      //       .Skip((Page - 1) * PageSize)
-      //       .Take(PageSize)
-      //       .Select(u =>
-      //       new OperatorDto(
-      //         u.id,
-      //         u.username,
-      //         u.title,
-      //         u.firstname,
-      //         u.middlename,
-      //         u.lastname,
-      //         u.gender,
-      //         u.email,
-      //         u.mobile,
-      //          u.role.name
-      //         ))
-      //       .ToListAsync();
-
-      //       return new Pagination<OperatorDto>(Page, PageSize, totalItems, (int)Math.Ceiling(totalItems / (double)PageSize), items);
-      // }
-
-      // public async Task<bool> IsAnyByIdAsync(int id)
-      // {
-      //       return await context.operators.AsNoTracking().AnyAsync(u => u.id == id);
-      // }
-
-      // public async Task<bool> IsAnyUsernameAsync(string Username)
-      // {
-      //       return await context.operators.AsNoTracking().AnyAsync(u => u.username.Equals(Username));
-      // }
-
-      // public async Task<bool> IsAnyWithLocationIdAsync(int LocationId)
-      // {
-      //       return await context.Locations.AsNoTracking().AnyAsync(l => l.id == LocationId);
-      // }
-
-      // public async Task<bool> IsValidCompanyAsync(int CompanyId)
-      // {
-      //       return await context.Companies.AsNoTracking().AnyAsync(c => c.id == CompanyId);
-      // }
-
-      // public async Task<bool> IsValidDepartmentAsync(int DepartmentId)
-      // {
-      //       return await context.Departments.AsNoTracking().AnyAsync(d => d.id == DepartmentId);
-      // }
-
-      // public async Task<bool> IsExceptLocationIdsAsync(List<int> LocationIds)
-      // {
-      //       var existingIds = await context.Locations
-      //           .Where(x => LocationIds.Contains(x.id))
-      //           .Select(x => x.id)
-      //           .ToListAsync();
-
-      //       return LocationIds.Except(existingIds).Any();
-      // }
-
-      // public async Task<bool> IsValidPositionAsync(int PositionId)
-      // {
-      //       return await context.Positions.AsNoTracking().AnyAsync(p => p.id == PositionId);
-      // }
-
-      // public async Task<OperatorDto> UpdateAsync(Operators domain)
-      // {
-      //       var entity = await context.operators.OrderByDescending(u => u.id).Where(u => u.id == domain.Id).FirstOrDefaultAsync();
-      //       if (entity == null)
-      //             throw new Exception(MessageHelper.Common.RecordNotFound);
-
-      //       entity.Update(domain);
-      //       var data = context.operators.Update(entity);
-      //       var save = await context.SaveChangesAsync();
-
-      //       if (data == null || save <= 0)
-      //             throw new Exception(MessageHelper.DB.UpdateRecordUnsuccessful);
-
-      //       return new OperatorDto(
-      //         data.Entity.id,
-      //         data.Entity.username,
-      //         data.Entity.title,
-      //         data.Entity.firstname,
-      //         data.Entity.middlename,
-      //         data.Entity.lastname,
-      //         data.Entity.gender,
-      //         data.Entity.email,
-      //         data.Entity.mobile,
-      //         await context.Roles.AsNoTracking().OrderByDescending(x => x.id).Where(c => c.users.Select(x => x.id).Contains(data.Entity.id)).Select(c => c.name).FirstOrDefaultAsync() ?? ""
-      //         );
-      // }
-
-      // public async Task<bool> IsValidRoleIdAsync(int RoleId)
-      // {
-      //       return await context.Roles.AsNoTracking().AnyAsync(x => x.id == RoleId);
-      // }
 }

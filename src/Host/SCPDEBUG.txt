@@ -1,0 +1,1655 @@
+Debug file SCPDEBUG.txt <SCPDEBUGc.txt> <SCPDEBUG.TXT> opened Tue May 12 13:22:32 2026
+Begin - SCP Driver DLL (64-bit) version 4.7.1.43
+66954.124 WSAStartup ok
+66954.126 RNG_X931A24 Initialized
+66954.126 1, enCcSystem: 011 1024 1024 0 0 1
+66954.131 1, enCcCreateChannel: 0012 1 7 3333 0 3000 0 "" 0
+66954.387 listen(lsock) created socket=3500 on port 3333
+66954.387 Listen Successful, port: 3333
+68269.115 Shutting down debug Thread...
+File closed Tue May 12 13:44:29 2026
+Debug file SCPDEBUG.txt <SCPDEBUGc.txt> <SCPDEBUG.TXT> opened Tue May 12 13:44:56 2026
+Begin - SCP Driver DLL (64-bit) version 4.7.1.43
+68297.411 WSAStartup ok
+68297.413 RNG_X931A24 Initialized
+68297.413 1, enCcSystem: 011 1024 1024 0 0 1
+68297.415 1, enCcCreateChannel: 0012 1 7 3333 0 3000 0 "" 0
+68297.503 listen(lsock) created socket=3480 on port 3333
+68297.503 Listen Successful, port: 3333
+Debug file SCPDEBUG.txt <SCPDEBUGc.txt> <SCPDEBUG.TXT> opened Tue May 12 14:16:54 2026
+Begin - SCP Driver DLL (64-bit) version 4.7.1.43
+70215.608 WSAStartup ok
+70215.608 RNG_X931A24 Initialized
+70215.608 1, enCcSystem: 011 1024 1024 0 0 1
+70215.623 1, enCcCreateChannel: 0012 1 7 3333 0 3000 0 "" 0
+70215.770 listen(lsock) created socket=3460 on port 3333
+70215.770 Listen Successful, port: 3333
+Debug file SCPDEBUG.txt <SCPDEBUGc.txt> <SCPDEBUG.TXT> opened Tue May 12 17:54:56 2026
+Begin - SCP Driver DLL (64-bit) version 4.7.1.43
+83297.479 WSAStartup ok
+83297.482 RNG_X931A24 Initialized
+83297.482 1, enCcSystem: 011 1024 1024 0 0 1
+83297.485 1, enCcCreateChannel: 0012 1 7 3333 0 3000 0 "" 0
+83297.678 listen(lsock) created socket=3500 on port 3333
+83297.678 Listen Successful, port: 3333
+90260.494 Shutting down debug Thread...
+File closed Tue May 12 19:51:00 2026
+Debug file SCPDEBUG.txt <SCPDEBUGc.txt> <SCPDEBUG.TXT> opened Tue May 12 19:56:01 2026
+Begin - SCP Driver DLL (64-bit) version 4.7.1.43
+90562.040 WSAStartup ok
+90562.041 RNG_X931A24 Initialized
+90562.041 1, enCcSystem: 011 1024 1024 0 0 1
+90562.043 1, enCcCreateChannel: 0012 1 7 3333 0 3000 0 "" 0
+90562.145 listen(lsock) created socket=3492 on port 3333
+90562.145 Listen Successful, port: 3333
+90798.888 Shutting down debug Thread...
+File closed Tue May 12 19:59:58 2026
+Debug file SCPDEBUG.txt <SCPDEBUGc.txt> <SCPDEBUG.TXT> opened Tue May 12 20:00:19 2026
+Begin - SCP Driver DLL (64-bit) version 4.7.1.43
+90819.979 WSAStartup ok
+90819.980 RNG_X931A24 Initialized
+90819.981 1, enCcSystem: 011 1024 1024 0 0 1
+90819.982 1, enCcCreateChannel: 0012 1 7 3333 0 3000 0 "" 0
+90820.070 listen(lsock) created socket=3476 on port 3333
+90820.070 Listen Successful, port: 3333
+92778.384 Shutting down debug Thread...
+File closed Tue May 12 20:32:58 2026
+Debug file SCPDEBUG.txt <SCPDEBUGc.txt> <SCPDEBUG.TXT> opened Tue May 12 20:34:29 2026
+Begin - SCP Driver DLL (64-bit) version 4.7.1.43
+92870.444 WSAStartup ok
+92870.445 RNG_X931A24 Initialized
+92870.445 1, enCcSystem: 011 1024 1024 0 0 1
+92870.447 1, enCcCreateChannel: 0012 1 7 3333 0 3000 0 "" 0
+92870.574 listen(lsock) created socket=3500 on port 3333
+92870.574 Listen Successful, port: 3333
+93127.092  tcpIpAccept() lsock = 3500, sSock = 1860
+93127.092 Connection accepted from [::ffff:192.168.0.51]:46801
+93127.092 Found available channel object, Chnl-1
+93127.092 Incoming socket connection assigned to Chnl-1 (highest available)
+93127.092 Incoming socket connection attached to Channel 1, attaching temp SCP (state: 1, TLS State: 0)
+93127.092 Chnl-1, SCP--1.0 (1/0), (0) tx: 6B 00 0C 00 00 01 02 00 00 00
+93127.159 TempScp Rxd:  6B 80 58 00 20 81 03 00 4C 00 03 1B 01 1F 7B 21 20 00 00 00 00 01 60 FC FD 00 64 2D 03 6A E8 03 00 00 00 00 00 00 00 00 00 00 00 00 01 00 01 01 00 00
+93127.159 Caller's response: Reply 81-03, spc_ln 0x00, rec_ln: 0x4C, struct: 0x4C
+93127.159 Attached incoming Scp-1 as Primary
+93127.159 Buf Sizing: Baud Sw = 00, CommMode = 7, ScpRev = 101F0 (27.1.31.0.0681), MinVer = 30031, max_txdb = 2952
+93127.159 Chnl-1, SCP-1.0 (32/0), (0) rx: 6B 80 58 00 20 81 03 00 4C 00
+93127.159 > 03 1B 01 1F 7B 21 20 00 00 00 00 01 60 FC FD 00 64 2D 03 6A E8 03 00 00 00 00 00 00 00 00 00 00 00 00 01
+93127.159 . 00 01 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 F8 57 61 9E 18 00 00 00 00 A9 02 00 00
+93127.159 . D9 01 12 00 00 00
+93127.159 Chnl-1, SCP-1.0 (32/0), (0) tx: 6B 00 15 00 01 01 01 00 09 00
+93127.159 > B0 0B 22 05 20 03 98 3A 00
+93127.159 Reporting CommCoS:  Channel-1, SCP-1.0, Status = 2(1), Error = 0(0.6/6.6), Prim=3(1), Alt=0(0)
+93127.161 8103 id report, SCP-1, Device=3.27, FW=1.310.681, SN=2105723, OEM=1, MAC=00:18:9E:61:57:F8, ram=16645216(16777216), cards=0(1000), DipCur=0, DipPwr=0, ID=1, Inputs=1,1,0, Hardware Components = 18
+93127.232 1(3), enCcScpScp: 1107 0 1 0 0 0 0 3 60000 33 615 388 64 32000 1024 1024 -25200 0 255 255 128 60000 0 0 1 0 0
+93127.240 Chnl-1, SCP-1.0 (32/0), (0) tx: 6B 00 10 00 03 02 01 00 04 00
+93127.240 > FF FF FF FF
+93127.291 Chnl-1, SCP-1.0 (32/0), (1) tx: 6B 00 52 00 01 02 02 00 05 00
+93127.291 > 01 18 00 00 00
+93127.291 > 02 60 EA 00 00
+93127.291 > 03 FC 03 00 00
+93127.291 > 04 FF 00 00 00
+93127.291 > 05 FF 00 00 00
+93127.291 > 06 03 00 00 00
+93127.291 > 07 21 00 00 00
+93127.291 > 08 67 02 00 00
+93127.291 > 09 84 01 00 00
+93127.291 > 0A 40 00 00 00
+93127.291 > 0C 00 7D 00 00
+93127.291 > 0D 00 04 00 00
+93127.291 > 0E 00 04 00 00
+93127.291 > 10 01 00 00 00
+93127.355 Chnl-1, SCP-1.0 (32/0), (1) rx: 6B 80 15 00 21 81 02 00 09 00
+93127.355 > 04 06 00 00 00 02 02 00 00
+93127.355 Chnl-1, SCP-1.0 (32/0), (2) tx: 6B 00 10 00 02 02 09 00 04 00
+93127.355 > 80 00 80 00
+93127.355 Command Status: Scp-1.0, (tag-1-nak), NAK: reason:4, rec=6, descr_code=0x0202, description=SIO count differs from previous allocation
+93127.424 Chnl-1, SCP-1.0 (32/0), (3) tx: 6B 00 10 00 03 02 0A 00 04 00
+93127.424 > 60 EA 00 00
+93127.424 Command Status: Scp-1.0, (tag-2-ok)
+93127.492 Command Status: Scp-1.0, (tag-3-ok)
+93190.754 Shutting down debug Thread...
+File closed Tue May 12 20:39:50 2026
+Debug file SCPDEBUG.txt <SCPDEBUGc.txt> <SCPDEBUG.TXT> opened Tue May 12 20:40:16 2026
+Begin - SCP Driver DLL (64-bit) version 4.7.1.43
+93216.741 WSAStartup ok
+93216.742 RNG_X931A24 Initialized
+93216.742 1, enCcSystem: 011 1024 1024 0 0 1
+93216.744 1, enCcCreateChannel: 0012 1 7 3333 0 3000 0 "" 0
+93216.841 listen(lsock) created socket=3500 on port 3333
+93216.841 Listen Successful, port: 3333
+93217.720  tcpIpAccept() lsock = 3500, sSock = 3512
+93217.720 Connection accepted from [::ffff:192.168.0.51]:46802
+93217.720 Found available channel object, Chnl-1
+93217.720 Incoming socket connection assigned to Chnl-1 (highest available)
+93217.720 Incoming socket connection attached to Channel 1, attaching temp SCP (state: 1, TLS State: 0)
+93217.720 Chnl-1, SCP--1.0 (1/0), (0) tx: 6B 00 0C 00 00 01 02 00 00 00
+93217.772 TempScp Rxd:  6B 80 58 00 20 81 03 00 4C 00 03 1B 01 1F 7B 21 20 00 00 00 00 01 60 FC FD 00 BF 2D 03 6A E8 03 00 00 00 00 00 00 00 00 00 00 00 00 01 00 01 01 00 00
+93217.772 Caller's response: Reply 81-03, spc_ln 0x00, rec_ln: 0x4C, struct: 0x4C
+93217.772 Attached incoming Scp-1 as Primary
+93217.772 Buf Sizing: Baud Sw = 00, CommMode = 7, ScpRev = 101F0 (27.1.31.0.0681), MinVer = 30031, max_txdb = 2952
+93217.772 Chnl-1, SCP-1.0 (32/0), (0) rx: 6B 80 58 00 20 81 03 00 4C 00
+93217.772 > 03 1B 01 1F 7B 21 20 00 00 00 00 01 60 FC FD 00 BF 2D 03 6A E8 03 00 00 00 00 00 00 00 00 00 00 00 00 01
+93217.772 . 00 01 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 F8 57 61 9E 18 00 00 00 00 A9 02 00 00
+93217.772 . D9 01 12 00 00 00
+93217.772 Chnl-1, SCP-1.0 (32/0), (0) tx: 6B 00 15 00 01 01 01 00 09 00
+93217.772 > B0 0B 22 05 20 03 98 3A 00
+93217.772 Reporting CommCoS:  Channel-1, SCP-1.0, Status = 2(1), Error = 0(0.6/6.6), Prim=3(1), Alt=0(0)
+93217.805 8103 id report, SCP-1, Device=3.27, FW=1.310.681, SN=2105723, OEM=1, MAC=00:18:9E:61:57:F8, ram=16645216(16777216), cards=0(1000), DipCur=0, DipPwr=0, ID=1, Inputs=1,1,0, Hardware Components = 18
+93217.873 Chnl-1, SCP-1.0 (32/0), (0) tx: 6B 00 10 00 03 02 01 00 04 00
+93217.873 > FF FF FF FF
+93218.015 1(3), enCcScpScp: 1107 0 1 0 0 0 0 3 60000 33 615 388 64 32000 1024 1024 -25200 0 255 255 128 60000 0 0 1 0 0
+93218.038 Chnl-1, SCP-1.0 (32/0), (1) tx: 6B 00 52 00 02 02 02 00 05 00
+93218.038 > 01 18 00 00 00
+93218.038 > 02 60 EA 00 00
+93218.038 > 03 FC 03 00 00
+93218.038 > 04 FF 00 00 00
+93218.038 > 05 FF 00 00 00
+93218.038 > 06 03 00 00 00
+93218.038 > 07 21 00 00 00
+93218.038 > 08 67 02 00 00
+93218.038 > 09 84 01 00 00
+93218.038 > 0A 40 00 00 00
+93218.038 > 0C 00 7D 00 00
+93218.038 > 0D 00 04 00 00
+93218.038 > 0E 00 04 00 00
+93218.038 > 10 01 00 00 00
+93218.104 Chnl-1, SCP-1.0 (32/0), (1) rx: 6B 80 15 00 22 81 02 00 09 00
+93218.104 > 04 06 00 00 00 02 02 00 00
+93218.104 Chnl-1, SCP-1.0 (32/0), (2) tx: 6B 00 10 00 03 02 09 00 04 00
+93218.104 > 80 00 80 00
+93218.104 Command Status: Scp-1.0, (tag-1-nak), NAK: reason:4, rec=6, descr_code=0x0202, description=SIO count differs from previous allocation
+93218.109 Chnl-1, SCP-1.0 (32/0), (3) tx: 6B 00 10 00 01 02 0A 00 04 00
+93218.109 > 60 EA 00 00
+93218.109 Command Status: Scp-1.0, (tag-2-ok)
+93218.171 Command Status: Scp-1.0, (tag-3-ok)
+93307.451 Socket recv on Socket-3512: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+93307.451 Socket recv on Socket-3512: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+93307.516 Socket recv on Socket-3512: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+93307.516 Socket recv on Socket-3512: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+93307.567 Socket recv on Socket-3512: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+93307.567 Socket recv on Socket-3512: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+93307.634 Socket recv on Socket-3512: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+93307.634 Socket recv on Socket-3512: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+93307.684 Socket recv on Socket-3512: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+93307.684 Socket recv on Socket-3512: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+93307.749 Socket recv on Socket-3512: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+93307.749 Socket recv on Socket-3512: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+93307.817 Socket recv on Socket-3512: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+93307.817 Socket recv on Socket-3512: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+93307.880 Socket recv on Socket-3512: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+93307.880 Socket recv on Socket-3512: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+93307.933 Socket recv on Socket-3512: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+93307.933 Socket recv on Socket-3512: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+93307.989 Socket recv on Socket-3512: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+93307.989 Socket recv on Socket-3512: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+93308.047 Socket recv on Socket-3512: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+93308.047 Socket recv on Socket-3512: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+93308.102 Socket recv on Socket-3512: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+93308.102 Socket recv on Socket-3512: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+93308.167 Socket recv on Socket-3512: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+93308.167 Socket recv on Socket-3512: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+93308.234 Socket recv on Socket-3512: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+93308.234 Socket recv on Socket-3512: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+93308.292 Socket recv on Socket-3512: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+93308.292 Socket recv on Socket-3512: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+93308.352 Socket recv on Socket-3512: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+93308.352 Socket recv on Socket-3512: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+93308.409 Socket recv on Socket-3512: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+93308.409 Socket recv on Socket-3512: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+93308.460 Socket recv on Socket-3512: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+93308.460 Socket recv on Socket-3512: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+93308.583 Socket recv on Socket-3512: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+93308.583 Chnl-1, RxByte socket error
+93308.583 RxErr-1, Chnl-1, Scp-1.0:  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+93308.583 scpCloseChannelSock(): Closing Socket-3512, Chnl-1
+93308.583 Receive Error: 1 (broken), Chnl=1, Scp=1.0 (ctag=0),
+93308.583 SCP detach: found it, detaching it, SCP-1, Chnl-1
+93308.583 Setting SCP-1 for delete on IP Client detach
+93308.583 Reporting CommCoS:  Channel--1, SCP-1.0, Status = 1(2), Error = 6(6.0/6.6), Prim=0(3), Alt=0(0)
+93308.583 Found SCP-1 to be deleted on detach, but related to valid message, skip for now
+93308.583 Found SCP-1 to be deleted on detach, calling scpDeleteScp
+93308.583 SCP detach: this SCP is already detached - nothing to do, SCP-1, Chnl-0
+93308.649 Did not find any SCPs to delete on detach, clear pending delete flag
+93325.433  tcpIpAccept() lsock = 3500, sSock = 3512
+93325.434 Connection accepted from [::ffff:192.168.0.51]:37814
+93325.434 Found available channel object, Chnl-1
+93325.434 Incoming socket connection assigned to Chnl-1 (highest available)
+93325.434 Incoming socket connection attached to Channel 1, attaching temp SCP (state: 1, TLS State: 0)
+93325.434 Chnl-1, SCP--1.0 (1/0), (0) tx: 6B 00 0C 00 00 01 02 00 00 00
+93325.499 TempScp Rxd:  6B 80 58 00 20 81 03 00 4C 00 03 1B 01 1F 7B 21 20 00 00 00 00 01 60 FC FD 00 2B 2E 03 6A E8 03 00 00 00 00 00 00 00 00 00 00 00 00 01 00 01 01 00 00
+93325.499 Caller's response: Reply 81-03, spc_ln 0x00, rec_ln: 0x4C, struct: 0x4C
+93325.499 Attached incoming Scp-1 as Primary
+93325.499 Buf Sizing: Baud Sw = 00, CommMode = 7, ScpRev = 101F0 (27.1.31.0.0681), MinVer = 30031, max_txdb = 2952
+93325.499 Chnl-1, SCP-1.0 (32/0), (0) rx: 6B 80 58 00 20 81 03 00 4C 00
+93325.499 > 03 1B 01 1F 7B 21 20 00 00 00 00 01 60 FC FD 00 2B 2E 03 6A E8 03 00 00 00 00 00 00 00 00 00 00 00 00 01
+93325.499 . 00 01 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 F8 57 61 9E 18 00 00 00 00 A9 02 00 00
+93325.499 . D9 01 12 00 00 00
+93325.501 Chnl-1, SCP-1.0 (32/0), (0) tx: 6B 00 15 00 01 01 01 00 09 00
+93325.501 > B0 0B 22 05 20 03 98 3A 00
+93325.502 Reporting CommCoS:  Channel-1, SCP-1.0, Status = 2(1), Error = 0(0.6/6.6), Prim=3(1), Alt=0(0)
+93325.504 8103 id report, SCP-1, Device=3.27, FW=1.310.681, SN=2105723, OEM=1, MAC=00:18:9E:61:57:F8, ram=16645216(16777216), cards=0(1000), DipCur=0, DipPwr=0, ID=1, Inputs=1,1,0, Hardware Components = 18
+93325.515 1(3), enCcScpScp: 1107 0 1 0 0 0 0 3 60000 33 615 388 64 32000 1024 1024 -25200 0 255 255 128 60000 0 0 1 0 0
+93325.617 Chnl-1, SCP-1.0 (32/0), (0) tx: 6B 00 10 00 03 02 01 00 04 00
+93325.618 > FF FF FF FF
+93325.683 Chnl-1, SCP-1.0 (32/0), (1) tx: 6B 00 52 00 01 02 02 00 05 00
+93325.683 > 01 18 00 00 00
+93325.683 > 02 60 EA 00 00
+93325.683 > 03 FC 03 00 00
+93325.683 > 04 FF 00 00 00
+93325.683 > 05 FF 00 00 00
+93325.683 > 06 03 00 00 00
+93325.683 > 07 21 00 00 00
+93325.683 > 08 67 02 00 00
+93325.683 > 09 84 01 00 00
+93325.683 > 0A 40 00 00 00
+93325.683 > 0C 00 7D 00 00
+93325.683 > 0D 00 04 00 00
+93325.683 > 0E 00 04 00 00
+93325.683 > 10 01 00 00 00
+93325.749 Chnl-1, SCP-1.0 (32/0), (1) rx: 6B 80 15 00 21 81 02 00 09 00
+93325.749 > 04 06 00 00 00 02 02 00 00
+93325.749 Chnl-1, SCP-1.0 (32/0), (2) tx: 6B 00 10 00 02 02 09 00 04 00
+93325.749 > 80 00 80 00
+93325.749 Command Status: Scp-1.0, (tag-1-nak), NAK: reason:4, rec=6, descr_code=0x0202, description=SIO count differs from previous allocation
+93325.815 Chnl-1, SCP-1.0 (32/0), (3) tx: 6B 00 10 00 03 02 0A 00 04 00
+93325.815 > 60 EA 00 00
+93325.815 Command Status: Scp-1.0, (tag-2-ok)
+93325.870 Command Status: Scp-1.0, (tag-3-ok)
+93459.971 Shutting down debug Thread...
+File closed Tue May 12 20:44:19 2026
+Debug file SCPDEBUG.txt <SCPDEBUGc.txt> <SCPDEBUG.TXT> opened Tue May 12 20:45:40 2026
+Begin - SCP Driver DLL (64-bit) version 4.7.1.43
+93541.566 WSAStartup ok
+93541.567 RNG_X931A24 Initialized
+93541.567 1, enCcSystem: 011 1024 1024 0 0 1
+93541.569 1, enCcCreateChannel: 0012 1 7 3333 0 3000 0 "" 0
+93541.662 listen(lsock) created socket=3504 on port 3333
+93541.662 Listen Successful, port: 3333
+93551.624  tcpIpAccept() lsock = 3504, sSock = 3528
+93551.624 Connection accepted from [::ffff:192.168.0.51]:37817
+93551.624 Found available channel object, Chnl-1
+93551.624 Incoming socket connection assigned to Chnl-1 (highest available)
+93551.624 Incoming socket connection attached to Channel 1, attaching temp SCP (state: 1, TLS State: 0)
+93551.624 Chnl-1, SCP--1.0 (1/0), (0) tx: 6B 00 0C 00 00 01 02 00 00 00
+93551.689 TempScp Rxd:  6B 80 58 00 20 81 03 00 4C 00 03 1B 01 1F 7B 21 20 00 00 00 00 01 60 FC FD 00 0D 2F 03 6A E8 03 00 00 00 00 00 00 00 00 00 00 00 00 01 00 01 01 00 00
+93551.689 Caller's response: Reply 81-03, spc_ln 0x00, rec_ln: 0x4C, struct: 0x4C
+93551.689 Attached incoming Scp-1 as Primary
+93551.690 Buf Sizing: Baud Sw = 00, CommMode = 7, ScpRev = 101F0 (27.1.31.0.0681), MinVer = 30031, max_txdb = 2952
+93551.690 Chnl-1, SCP-1.0 (32/0), (0) rx: 6B 80 58 00 20 81 03 00 4C 00
+93551.690 > 03 1B 01 1F 7B 21 20 00 00 00 00 01 60 FC FD 00 0D 2F 03 6A E8 03 00 00 00 00 00 00 00 00 00 00 00 00 01
+93551.690 . 00 01 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 F8 57 61 9E 18 00 00 00 00 A9 02 00 00
+93551.690 . D9 01 12 00 00 00
+93551.690 Chnl-1, SCP-1.0 (32/0), (0) tx: 6B 00 15 00 01 01 01 00 09 00
+93551.690 > B0 0B 22 05 20 03 98 3A 00
+93551.691 Reporting CommCoS:  Channel-1, SCP-1.0, Status = 2(1), Error = 0(0.6/6.6), Prim=3(1), Alt=0(0)
+93551.692 8103 id report, SCP-1, Device=3.27, FW=1.310.681, SN=2105723, OEM=1, MAC=00:18:9E:61:57:F8, ram=16645216(16777216), cards=0(1000), DipCur=0, DipPwr=0, ID=1, Inputs=1,1,0, Hardware Components = 18
+93551.751 1(3), enCcScpScp: 1107 0 1 0 0 0 0 3 60000 33 615 388 64 32000 1024 1024 -25200 0 255 255 128 60000 0 0 1 0 0
+93551.761 Chnl-1, SCP-1.0 (32/0), (0) tx: 6B 00 10 00 03 02 01 00 04 00
+93551.761 > FF FF FF FF
+93551.817 Chnl-1, SCP-1.0 (32/0), (1) tx: 6B 00 52 00 01 02 02 00 05 00
+93551.817 > 01 18 00 00 00
+93551.817 > 02 60 EA 00 00
+93551.817 > 03 FC 03 00 00
+93551.817 > 04 FF 00 00 00
+93551.817 > 05 FF 00 00 00
+93551.817 > 06 03 00 00 00
+93551.817 > 07 21 00 00 00
+93551.817 > 08 67 02 00 00
+93551.817 > 09 84 01 00 00
+93551.817 > 0A 40 00 00 00
+93551.817 > 0C 00 7D 00 00
+93551.817 > 0D 00 04 00 00
+93551.817 > 0E 00 04 00 00
+93551.817 > 10 01 00 00 00
+93551.832 1(5), enCcScpAdbSpec: 1105 0 1 1000 8 324 1 1 2 2 1 1 7 1 1 64 0 5 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 15 15 0 0 0
+93551.852 1(6), enCcTime: 0302 1 0
+93551.883 Chnl-1, SCP-1.0 (32/0), (1) rx: 6B 80 15 00 21 81 02 00 09 00
+93551.883 > 04 06 00 00 00 02 02 00 00
+93551.883 Chnl-1, SCP-1.0 (32/0), (2) tx: 6B 00 10 00 02 02 09 00 04 00
+93551.883 > 80 00 80 00
+93551.883 Command Status: Scp-1.0, (tag-1-nak), NAK: reason:4, rec=6, descr_code=0x0202, description=SIO count differs from previous allocation
+93551.886 Chnl-1, SCP-1.0 (32/0), (3) tx: 6B 00 10 00 03 02 0A 00 04 00
+93551.886 > 60 EA 00 00
+93551.887 Command Status: Scp-1.0, (tag-2-ok)
+93551.943 Chnl-1, SCP-1.0 (32/0), (4) tx: 6B 00 36 00 01 07 01 00 2A 00
+93551.943 > 08 44 07 05 FF 12 40 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+93551.943 . 0F 0F 00 00 00 00 00
+93551.943 Command Status: Scp-1.0, (tag-3-ok)
+93552.009 Chnl-1, SCP-1.0 (32/0), (5) tx: 6B 00 11 00 02 02 02 00 05 00
+93552.009 > 0B E8 03 00 00
+93552.009 Command Status: Scp-1.0, (tag-4-ok)
+93552.011 Chnl-1, SCP-1.0 (32/0), (6) tx: 6B 00 15 00 03 01 04 00 09 00
+93552.011 > 10 2F 03 6A 90 9D FF FF 00
+93552.011 Command Status: Scp-1.0, (tag-5-ok)
+93552.073 Command Status: Scp-1.0, (tag-6-ok)
+94085.819 Shutting down debug Thread...
+File closed Tue May 12 20:54:45 2026
+Debug file SCPDEBUG.txt <SCPDEBUGc.txt> <SCPDEBUG.TXT> opened Tue May 12 20:55:21 2026
+Begin - SCP Driver DLL (64-bit) version 4.7.1.43
+94121.737 WSAStartup ok
+94121.739 RNG_X931A24 Initialized
+94121.739 1, enCcSystem: 011 1024 1024 0 0 1
+94121.740 1, enCcCreateChannel: 0012 1 7 3333 0 3000 0 "" 0
+94121.826 listen(lsock) created socket=3472 on port 3333
+94121.826 Listen Successful, port: 3333
+94145.832  tcpIpAccept() lsock = 3472, sSock = 3596
+94145.832 Connection accepted from [::ffff:192.168.0.51]:37819
+94145.832 Found available channel object, Chnl-1
+94145.832 Incoming socket connection assigned to Chnl-1 (highest available)
+94145.832 Incoming socket connection attached to Channel 1, attaching temp SCP (state: 1, TLS State: 0)
+94145.832 Chnl-1, SCP--1.0 (1/0), (0) tx: 6B 00 0C 00 00 01 02 00 00 00
+94145.898 TempScp Rxd:  6B 80 58 00 20 81 03 00 4C 00 03 1B 01 1F 7B 21 20 00 00 00 00 01 60 FC FD 00 61 31 03 6A E8 03 00 00 00 00 00 00 00 00 00 00 00 00 01 00 01 01 00 00
+94145.898 Caller's response: Reply 81-03, spc_ln 0x00, rec_ln: 0x4C, struct: 0x4C
+94145.898 Attached incoming Scp-1 as Primary
+94145.898 Buf Sizing: Baud Sw = 00, CommMode = 7, ScpRev = 101F0 (27.1.31.0.0681), MinVer = 30031, max_txdb = 2952
+94145.898 Chnl-1, SCP-1.0 (32/0), (0) rx: 6B 80 58 00 20 81 03 00 4C 00
+94145.898 > 03 1B 01 1F 7B 21 20 00 00 00 00 01 60 FC FD 00 61 31 03 6A E8 03 00 00 00 00 00 00 00 00 00 00 00 00 01
+94145.898 . 00 01 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 F8 57 61 9E 18 00 00 00 00 A9 02 00 00
+94145.898 . D9 01 12 00 00 00
+94145.898 Chnl-1, SCP-1.0 (32/0), (0) tx: 6B 00 15 00 01 01 01 00 09 00
+94145.898 > B0 0B 22 05 20 03 98 3A 00
+94145.899 Reporting CommCoS:  Channel-1, SCP-1.0, Status = 2(1), Error = 0(0.6/6.6), Prim=3(1), Alt=0(0)
+94145.904 8103 id report, SCP-1, Device=3.27, FW=1.310.681, SN=2105723, OEM=1, MAC=00:18:9E:61:57:F8, ram=16645216(16777216), cards=0(1000), DipCur=0, DipPwr=0, ID=1, Inputs=1,1,0, Hardware Components = 18
+94145.956 1(3), enCcScpScp: 1107 0 1 0 0 0 0 3 60000 33 615 388 64 32000 1024 1024 -25200 0 255 255 128 60000 0 0 1 0 0
+94145.967 Chnl-1, SCP-1.0 (32/0), (0) tx: 6B 00 10 00 03 02 01 00 04 00
+94145.967 > FF FF FF FF
+94146.013 1(5), enCcScpAdbSpec: 1105 0 1 1000 8 324 1 1 2 2 1 1 7 1 1 64 0 5 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 15 15 0 0 0
+94146.017 Chnl-1, SCP-1.0 (32/0), (1) tx: 6B 00 52 00 01 02 02 00 05 00
+94146.017 > 01 18 00 00 00
+94146.017 > 02 60 EA 00 00
+94146.017 > 03 FC 03 00 00
+94146.017 > 04 FF 00 00 00
+94146.017 > 05 FF 00 00 00
+94146.017 > 06 03 00 00 00
+94146.017 > 07 21 00 00 00
+94146.017 > 08 67 02 00 00
+94146.017 > 09 84 01 00 00
+94146.017 > 0A 40 00 00 00
+94146.017 > 0C 00 7D 00 00
+94146.017 > 0D 00 04 00 00
+94146.017 > 0E 00 04 00 00
+94146.017 > 10 01 00 00 00
+94146.029 1(6), enCcTime: 0302 1 0
+94146.084 Chnl-1, SCP-1.0 (32/0), (1) rx: 6B 80 15 00 21 81 02 00 09 00
+94146.085 > 04 06 00 00 00 02 02 00 00
+94146.085 Chnl-1, SCP-1.0 (32/0), (2) tx: 6B 00 10 00 02 02 09 00 04 00
+94146.085 > 80 00 80 00
+94146.085 Command Status: Scp-1.0, (tag-1-nak), NAK: reason:4, rec=6, descr_code=0x0202, description=SIO count differs from previous allocation
+94146.092 Chnl-1, SCP-1.0 (32/0), (3) tx: 6B 00 10 00 03 02 0A 00 04 00
+94146.092 > 60 EA 00 00
+94146.092 Command Status: Scp-1.0, (tag-2-ok)
+94146.150 Chnl-1, SCP-1.0 (32/0), (4) tx: 6B 00 36 00 01 07 01 00 2A 00
+94146.150 > 08 44 07 05 FF 12 40 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+94146.150 . 0F 0F 00 00 00 00 00
+94146.150 Command Status: Scp-1.0, (tag-3-ok)
+94146.161 Chnl-1, SCP-1.0 (32/0), (5) tx: 6B 00 11 00 02 02 02 00 05 00
+94146.161 > 0B E8 03 00 00
+94146.161 Command Status: Scp-1.0, (tag-4-ok)
+94146.217 Chnl-1, SCP-1.0 (32/0), (6) tx: 6B 00 15 00 03 01 04 00 09 00
+94146.217 > 62 31 03 6A 90 9D FF FF 00
+94146.217 Command Status: Scp-1.0, (tag-5-ok)
+94146.270 Command Status: Scp-1.0, (tag-6-ok)
+94170.331 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94170.331 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94170.383 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94170.383 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94170.447 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94170.447 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94170.514 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94170.514 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94170.581 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94170.581 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94170.631 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94170.631 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94170.682 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94170.682 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94170.746 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94170.746 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94170.796 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94170.796 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94170.847 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94170.847 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94170.898 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94170.898 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94170.949 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94170.949 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94171.014 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94171.014 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94171.065 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94171.065 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94171.130 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94171.130 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94171.181 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94171.181 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94171.234 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94171.234 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94171.297 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94171.298 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94171.349 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94171.349 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94171.466 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94171.466 Chnl-1, RxByte socket error
+94171.466 RxErr-1, Chnl-1, Scp-1.0:  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+94171.466 scpCloseChannelSock(): Closing Socket-3596, Chnl-1
+94171.466 Receive Error: 1 (broken), Chnl=1, Scp=1.0 (ctag=0),
+94171.466 SCP detach: found it, detaching it, SCP-1, Chnl-1
+94171.466 Setting SCP-1 for delete on IP Client detach
+94171.466 Reporting CommCoS:  Channel--1, SCP-1.0, Status = 1(2), Error = 6(6.0/6.6), Prim=0(3), Alt=0(0)
+94171.466 Found SCP-1 to be deleted on detach, but related to valid message, skip for now
+94172.488 Found SCP-1 to be deleted on detach, calling scpDeleteScp
+94172.488 SCP detach: this SCP is already detached - nothing to do, SCP-1, Chnl-0
+94172.553 Did not find any SCPs to delete on detach, clear pending delete flag
+94189.344 Shutting down debug Thread...
+File closed Tue May 12 20:56:29 2026
+Debug file SCPDEBUG.txt <SCPDEBUGc.txt> <SCPDEBUG.TXT> opened Tue May 12 21:00:31 2026
+Begin - SCP Driver DLL (64-bit) version 4.7.1.43
+94431.791 WSAStartup ok
+94431.791 RNG_X931A24 Initialized
+94431.791 1, enCcSystem: 011 1024 1024 0 0 1
+94431.791 1, enCcCreateChannel: 0012 1 7 3333 0 3000 0 "" 0
+94431.872 listen(lsock) created socket=3488 on port 3333
+94431.872 Listen Successful, port: 3333
+94453.988  tcpIpAccept() lsock = 3488, sSock = 3612
+94453.988 Connection accepted from [::ffff:192.168.0.51]:37852
+94453.988 Found available channel object, Chnl-1
+94453.988 Incoming socket connection assigned to Chnl-1 (highest available)
+94453.988 Incoming socket connection attached to Channel 1, attaching temp SCP (state: 1, TLS State: 0)
+94453.988 Chnl-1, SCP--1.0 (1/0), (0) tx: 6B 00 0C 00 00 01 02 00 00 00
+94454.055 TempScp Rxd:  6B 80 58 00 20 81 03 00 4C 00 03 1B 01 1F 7B 21 20 00 00 00 00 01 60 FC FD 00 95 32 03 6A E8 03 00 00 00 00 00 00 00 00 00 00 00 00 01 00 01 01 00 00
+94454.056 Caller's response: Reply 81-03, spc_ln 0x00, rec_ln: 0x4C, struct: 0x4C
+94454.056 Attached incoming Scp-1 as Primary
+94454.056 Buf Sizing: Baud Sw = 00, CommMode = 7, ScpRev = 101F0 (27.1.31.0.0681), MinVer = 30031, max_txdb = 2952
+94454.056 Chnl-1, SCP-1.0 (32/0), (0) rx: 6B 80 58 00 20 81 03 00 4C 00
+94454.056 > 03 1B 01 1F 7B 21 20 00 00 00 00 01 60 FC FD 00 95 32 03 6A E8 03 00 00 00 00 00 00 00 00 00 00 00 00 01
+94454.056 . 00 01 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 F8 57 61 9E 18 00 00 00 00 A9 02 00 00
+94454.056 . D9 01 12 00 00 00
+94454.056 Chnl-1, SCP-1.0 (32/0), (0) tx: 6B 00 15 00 01 01 01 00 09 00
+94454.056 > B0 0B 22 05 20 03 98 3A 00
+94454.056 Reporting CommCoS:  Channel-1, SCP-1.0, Status = 2(1), Error = 0(0.6/6.6), Prim=3(1), Alt=0(0)
+94454.065 8103 id report, SCP-1, Device=3.27, FW=1.310.681, SN=2105723, OEM=1, MAC=00:18:9E:61:57:F8, ram=16645216(16777216), cards=0(1000), DipCur=0, DipPwr=0, ID=1, Inputs=1,1,0, Hardware Components = 18
+94454.119 1(3), enCcScpScp: 1107 0 1 0 0 0 0 3 60000 33 615 388 64 32000 1024 1024 -25200 0 255 255 128 60000 0 0 1 0 0
+94454.137 Chnl-1, SCP-1.0 (32/0), (0) tx: 6B 00 10 00 03 02 01 00 04 00
+94454.137 > FF FF FF FF
+94454.175 1(5), enCcScpAdbSpec: 1105 0 1 1000 8 324 1 1 2 2 1 1 7 1 1 64 0 5 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 15 15 0 0 0
+94454.189 Chnl-1, SCP-1.0 (32/0), (1) tx: 6B 00 52 00 01 02 02 00 05 00
+94454.189 > 01 18 00 00 00
+94454.189 > 02 60 EA 00 00
+94454.189 > 03 FC 03 00 00
+94454.190 > 04 FF 00 00 00
+94454.190 > 05 FF 00 00 00
+94454.190 > 06 03 00 00 00
+94454.190 > 07 21 00 00 00
+94454.190 > 08 67 02 00 00
+94454.190 > 09 84 01 00 00
+94454.190 > 0A 40 00 00 00
+94454.190 > 0C 00 7D 00 00
+94454.190 > 0D 00 04 00 00
+94454.190 > 0E 00 04 00 00
+94454.190 > 10 01 00 00 00
+94454.193 1(6), enCcTime: 0302 1 0
+94454.254 Chnl-1, SCP-1.0 (32/0), (1) rx: 6B 80 15 00 21 81 02 00 09 00
+94454.255 > 04 06 00 00 00 02 02 00 00
+94454.255 Chnl-1, SCP-1.0 (32/0), (2) tx: 6B 00 10 00 02 02 09 00 04 00
+94454.255 > 80 00 80 00
+94454.255 Command Status: Scp-1.0, (tag-1-nak), NAK: reason:4, rec=6, descr_code=0x0202, description=SIO count differs from previous allocation
+94454.264 Chnl-1, SCP-1.0 (32/0), (3) tx: 6B 00 10 00 03 02 0A 00 04 00
+94454.264 > 60 EA 00 00
+94454.264 Command Status: Scp-1.0, (tag-2-ok)
+94454.265 Chnl-1, SCP-1.0 (32/0), (4) tx: 6B 00 36 00 01 07 01 00 2A 00
+94454.265 > 08 44 07 05 FF 12 40 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+94454.265 . 0F 0F 00 00 00 00 00
+94454.265 Command Status: Scp-1.0, (tag-3-ok)
+94454.322 Chnl-1, SCP-1.0 (32/0), (5) tx: 6B 00 11 00 02 02 02 00 05 00
+94454.322 > 0B E8 03 00 00
+94454.323 Command Status: Scp-1.0, (tag-4-ok)
+94454.385 Chnl-1, SCP-1.0 (32/0), (6) tx: 6B 00 15 00 03 01 04 00 09 00
+94454.385 > 96 32 03 6A 90 9D FF FF 00
+94454.385 Command Status: Scp-1.0, (tag-5-ok)
+94454.437 Command Status: Scp-1.0, (tag-6-ok)
+94525.634 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94525.634 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94525.699 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94525.699 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94525.751 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94525.751 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94525.816 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94525.816 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94525.868 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94525.868 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94525.934 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94525.934 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94526.999 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94526.999 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94526.050 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94526.050 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94526.114 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94526.114 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94526.177 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94526.177 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94526.233 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94526.233 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94526.299 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94526.299 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94526.351 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94526.351 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94526.401 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94526.401 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94526.466 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94526.466 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94526.517 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94526.517 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94526.583 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94526.583 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94526.634 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94526.634 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94526.699 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94526.699 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94526.751 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94526.751 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94526.816 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94526.816 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94526.871 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94526.871 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94526.934 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94526.934 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94527.000 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94527.000 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94527.050 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94527.050 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94527.115 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94527.115 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94527.179 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94527.179 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94527.234 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94527.234 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94527.300 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94527.300 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94527.354 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94527.354 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94527.407 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94527.407 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94527.461 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94527.461 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94527.518 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94527.519 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94527.585 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94527.585 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94527.648 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94527.648 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94527.703 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94527.703 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94527.753 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94527.753 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94527.818 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94527.818 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94527.884 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94527.884 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94527.936 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94527.936 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94528.000 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94528.000 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94528.050 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94528.050 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94528.107 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94528.107 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94528.166 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94528.166 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94528.216 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94528.216 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94528.267 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94528.267 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94528.333 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94528.333 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94528.388 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94528.388 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94528.440 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94528.440 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94528.498 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94528.498 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94528.549 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94528.549 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94528.601 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94528.601 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94528.666 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94528.666 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94528.717 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94528.718 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94528.769 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94528.769 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94528.833 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94528.833 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94528.884 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94528.884 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94528.951 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94528.951 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94529.002 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94529.002 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94529.065 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94529.065 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94529.131 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94529.133 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94529.184 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94529.184 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94529.236 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94529.236 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94529.301 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94529.301 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94529.367 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94529.368 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94529.418 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94529.418 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94529.484 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94529.484 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94529.537 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94529.537 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94529.601 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94529.601 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94529.652 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94529.652 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94529.717 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94529.718 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94529.769 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94529.769 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94529.820 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94529.821 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94529.932 Socket recv on Socket-3612: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94529.932 Chnl-1, RxByte socket error
+94529.932 RxErr-1, Chnl-1, Scp-1.0:  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+94529.932 scpCloseChannelSock(): Closing Socket-3612, Chnl-1
+94529.932 Receive Error: 1 (broken), Chnl=1, Scp=1.0 (ctag=0),
+94529.932 SCP detach: found it, detaching it, SCP-1, Chnl-1
+94529.932 Setting SCP-1 for delete on IP Client detach
+94529.932 Reporting CommCoS:  Channel--1, SCP-1.0, Status = 1(2), Error = 6(6.0/6.6), Prim=0(3), Alt=0(0)
+94529.932 Found SCP-1 to be deleted on detach, but related to valid message, skip for now
+94529.933 Found SCP-1 to be deleted on detach, calling scpDeleteScp
+94529.933 SCP detach: this SCP is already detached - nothing to do, SCP-1, Chnl-0
+94529.984 Did not find any SCPs to delete on detach, clear pending delete flag
+94581.381  tcpIpAccept() lsock = 3488, sSock = 3596
+94581.381 Connection accepted from [::ffff:192.168.0.51]:37855
+94581.381 Found available channel object, Chnl-1
+94581.381 Incoming socket connection assigned to Chnl-1 (highest available)
+94581.381 Incoming socket connection attached to Channel 1, attaching temp SCP (state: 1, TLS State: 0)
+94581.381 Chnl-1, SCP--1.0 (1/0), (0) tx: 6B 00 0C 00 00 01 02 00 00 00
+94581.433 TempScp Rxd:  6B 80 58 00 20 81 03 00 4C 00 03 1B 01 1F 7B 21 20 00 00 00 00 01 60 FC FD 00 14 33 03 6A E8 03 00 00 00 00 00 00 00 00 00 00 00 00 01 00 01 01 00 00
+94581.433 Caller's response: Reply 81-03, spc_ln 0x00, rec_ln: 0x4C, struct: 0x4C
+94581.433 Attached incoming Scp-1 as Primary
+94581.433 Buf Sizing: Baud Sw = 00, CommMode = 7, ScpRev = 101F0 (27.1.31.0.0681), MinVer = 30031, max_txdb = 2952
+94581.433 Chnl-1, SCP-1.0 (32/0), (0) rx: 6B 80 58 00 20 81 03 00 4C 00
+94581.433 > 03 1B 01 1F 7B 21 20 00 00 00 00 01 60 FC FD 00 14 33 03 6A E8 03 00 00 00 00 00 00 00 00 00 00 00 00 01
+94581.433 . 00 01 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 F8 57 61 9E 18 00 00 00 00 A9 02 00 00
+94581.433 . D9 01 12 00 00 00
+94581.433 Chnl-1, SCP-1.0 (32/0), (0) tx: 6B 00 15 00 01 01 01 00 09 00
+94581.433 > B0 0B 22 05 20 03 98 3A 00
+94581.433 Reporting CommCoS:  Channel-1, SCP-1.0, Status = 2(1), Error = 0(0.6/6.6), Prim=3(1), Alt=0(0)
+94581.433 8103 id report, SCP-1, Device=3.27, FW=1.310.681, SN=2105723, OEM=1, MAC=00:18:9E:61:57:F8, ram=16645216(16777216), cards=0(1000), DipCur=0, DipPwr=0, ID=1, Inputs=1,1,0, Hardware Components = 18
+94581.446 1(3), enCcScpScp: 1107 0 1 0 0 0 0 3 60000 33 615 388 64 32000 1024 1024 -25200 0 255 255 128 60000 0 0 1 0 0
+94581.458 1(5), enCcScpAdbSpec: 1105 0 1 1000 8 324 1 1 2 2 1 1 7 1 1 64 0 5 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 15 15 0 0 0
+94581.461 1(6), enCcTime: 0302 1 0
+94581.490 Chnl-1, SCP-1.0 (32/0), (0) tx: 6B 00 10 00 03 02 01 00 04 00
+94581.490 > FF FF FF FF
+94581.548 Chnl-1, SCP-1.0 (32/0), (1) tx: 6B 00 52 00 01 02 02 00 05 00
+94581.549 > 01 18 00 00 00
+94581.549 > 02 60 EA 00 00
+94581.550 > 03 FC 03 00 00
+94581.551 > 04 FF 00 00 00
+94581.552 > 05 FF 00 00 00
+94581.552 > 06 03 00 00 00
+94581.552 > 07 21 00 00 00
+94581.553 > 08 67 02 00 00
+94581.553 > 09 84 01 00 00
+94581.553 > 0A 40 00 00 00
+94581.553 > 0C 00 7D 00 00
+94581.553 > 0D 00 04 00 00
+94581.553 > 0E 00 04 00 00
+94581.553 > 10 01 00 00 00
+94581.613 Chnl-1, SCP-1.0 (32/0), (1) rx: 6B 80 15 00 21 81 02 00 09 00
+94581.613 > 04 06 00 00 00 02 02 00 00
+94581.613 Chnl-1, SCP-1.0 (32/0), (2) tx: 6B 00 10 00 02 02 09 00 04 00
+94581.613 > 80 00 80 00
+94581.613 Command Status: Scp-1.0, (tag-1-nak), NAK: reason:4, rec=6, descr_code=0x0202, description=SIO count differs from previous allocation
+94581.618 Chnl-1, SCP-1.0 (32/0), (3) tx: 6B 00 10 00 03 02 0A 00 04 00
+94581.619 > 60 EA 00 00
+94581.619 Command Status: Scp-1.0, (tag-2-ok)
+94581.680 Chnl-1, SCP-1.0 (32/0), (4) tx: 6B 00 36 00 01 07 01 00 2A 00
+94581.680 > 08 44 07 05 FF 12 40 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+94581.680 . 0F 0F 00 00 00 00 00
+94581.680 Command Status: Scp-1.0, (tag-3-ok)
+94581.746 Chnl-1, SCP-1.0 (32/0), (5) tx: 6B 00 11 00 02 02 02 00 05 00
+94581.746 > 0B E8 03 00 00
+94581.746 Command Status: Scp-1.0, (tag-4-ok)
+94581.812 Chnl-1, SCP-1.0 (32/0), (6) tx: 6B 00 15 00 03 01 04 00 09 00
+94581.812 > 15 33 03 6A 90 9D FF FF 00
+94581.812 Command Status: Scp-1.0, (tag-5-ok)
+94581.865 Command Status: Scp-1.0, (tag-6-ok)
+94660.043 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94660.043 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94660.106 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94660.106 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94660.170 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94660.170 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94660.234 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94660.234 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94660.297 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94660.297 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94660.361 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94660.361 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94660.423 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94660.423 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94660.478 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94660.478 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94660.542 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94660.542 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94660.606 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94660.606 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94660.670 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94660.670 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94660.733 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94660.733 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94660.796 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94660.796 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94660.860 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94660.860 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94660.924 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94660.924 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94660.977 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94660.977 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94661.041 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94661.041 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94661.104 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94661.104 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94661.168 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94661.168 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94661.231 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94661.231 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94661.295 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94661.295 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94661.358 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94661.358 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94661.423 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94661.423 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94661.478 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94661.478 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94661.541 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94661.541 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94661.604 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94661.604 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94661.667 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94661.667 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94661.731 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94661.731 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94661.795 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94661.795 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94661.859 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94661.859 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94661.922 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94661.922 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94661.977 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94661.977 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94662.044 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94662.044 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94662.107 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94662.107 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94662.235 Socket recv on Socket-3596: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94662.235 Chnl-1, RxByte socket error
+94662.235 RxErr-1, Chnl-1, Scp-1.0:  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+94662.235 scpCloseChannelSock(): Closing Socket-3596, Chnl-1
+94662.235 Receive Error: 1 (broken), Chnl=1, Scp=1.0 (ctag=0),
+94662.235 SCP detach: found it, detaching it, SCP-1, Chnl-1
+94662.235 Setting SCP-1 for delete on IP Client detach
+94662.235 Reporting CommCoS:  Channel--1, SCP-1.0, Status = 1(2), Error = 6(6.0/6.6), Prim=0(3), Alt=0(0)
+94662.235 Found SCP-1 to be deleted on detach, but related to valid message, skip for now
+94662.235 Found SCP-1 to be deleted on detach, calling scpDeleteScp
+94662.235 SCP detach: this SCP is already detached - nothing to do, SCP-1, Chnl-0
+94662.295 Did not find any SCPs to delete on detach, clear pending delete flag
+94692.245  tcpIpAccept() lsock = 3488, sSock = 3640
+94692.245 Connection accepted from [::ffff:192.168.0.51]:37856
+94692.245 Found available channel object, Chnl-1
+94692.245 Incoming socket connection assigned to Chnl-1 (highest available)
+94692.245 Incoming socket connection attached to Channel 1, attaching temp SCP (state: 1, TLS State: 0)
+94692.245 Chnl-1, SCP--1.0 (1/0), (0) tx: 6B 00 0C 00 00 01 02 00 00 00
+94692.312 TempScp Rxd:  6B 80 58 00 20 81 03 00 4C 00 03 1B 01 1F 7B 21 20 00 00 00 00 01 60 FC FD 00 82 33 03 6A E8 03 00 00 00 00 00 00 00 00 00 00 00 00 01 00 01 01 00 00
+94692.312 Caller's response: Reply 81-03, spc_ln 0x00, rec_ln: 0x4C, struct: 0x4C
+94692.312 Attached incoming Scp-1 as Primary
+94692.312 Buf Sizing: Baud Sw = 00, CommMode = 7, ScpRev = 101F0 (27.1.31.0.0681), MinVer = 30031, max_txdb = 2952
+94692.312 Chnl-1, SCP-1.0 (32/0), (0) rx: 6B 80 58 00 20 81 03 00 4C 00
+94692.312 > 03 1B 01 1F 7B 21 20 00 00 00 00 01 60 FC FD 00 82 33 03 6A E8 03 00 00 00 00 00 00 00 00 00 00 00 00 01
+94692.312 . 00 01 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 F8 57 61 9E 18 00 00 00 00 A9 02 00 00
+94692.312 . D9 01 12 00 00 00
+94692.312 Chnl-1, SCP-1.0 (32/0), (0) tx: 6B 00 15 00 01 01 01 00 09 00
+94692.312 > B0 0B 22 05 20 03 98 3A 00
+94692.312 Reporting CommCoS:  Channel-1, SCP-1.0, Status = 2(1), Error = 0(0.6/6.6), Prim=3(1), Alt=0(0)
+94692.312 8103 id report, SCP-1, Device=3.27, FW=1.310.681, SN=2105723, OEM=1, MAC=00:18:9E:61:57:F8, ram=16645216(16777216), cards=0(1000), DipCur=0, DipPwr=0, ID=1, Inputs=1,1,0, Hardware Components = 18
+94692.319 1(3), enCcScpScp: 1107 0 1 0 0 0 0 3 60000 33 615 388 64 32000 1024 1024 -25200 0 255 255 128 60000 0 0 1 0 0
+94692.335 1(5), enCcScpAdbSpec: 1105 0 1 1000 8 324 1 1 2 2 1 1 7 1 1 64 0 5 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 15 15 0 0 0
+94692.341 1(6), enCcTime: 0302 1 0
+94692.380 Chnl-1, SCP-1.0 (32/0), (0) tx: 6B 00 10 00 03 02 01 00 04 00
+94692.380 > FF FF FF FF
+94692.444 Chnl-1, SCP-1.0 (32/0), (1) tx: 6B 00 52 00 01 02 02 00 05 00
+94692.444 > 01 18 00 00 00
+94692.444 > 02 60 EA 00 00
+94692.444 > 03 FC 03 00 00
+94692.444 > 04 FF 00 00 00
+94692.444 > 05 FF 00 00 00
+94692.444 > 06 03 00 00 00
+94692.444 > 07 21 00 00 00
+94692.444 > 08 67 02 00 00
+94692.444 > 09 84 01 00 00
+94692.444 > 0A 40 00 00 00
+94692.444 > 0C 00 7D 00 00
+94692.444 > 0D 00 04 00 00
+94692.444 > 0E 00 04 00 00
+94692.444 > 10 01 00 00 00
+94692.509 Chnl-1, SCP-1.0 (32/0), (1) rx: 6B 80 15 00 21 81 02 00 09 00
+94692.510 > 04 06 00 00 00 02 02 00 00
+94692.510 Chnl-1, SCP-1.0 (32/0), (2) tx: 6B 00 10 00 02 02 09 00 04 00
+94692.510 > 80 00 80 00
+94692.510 Command Status: Scp-1.0, (tag-1-nak), NAK: reason:4, rec=6, descr_code=0x0202, description=SIO count differs from previous allocation
+94692.563 Chnl-1, SCP-1.0 (32/0), (3) tx: 6B 00 10 00 03 02 0A 00 04 00
+94692.563 > 60 EA 00 00
+94692.563 Command Status: Scp-1.0, (tag-2-ok)
+94692.629 Chnl-1, SCP-1.0 (32/0), (4) tx: 6B 00 36 00 01 07 01 00 2A 00
+94692.629 > 08 44 07 05 FF 12 40 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+94692.629 . 0F 0F 00 00 00 00 00
+94692.629 Command Status: Scp-1.0, (tag-3-ok)
+94692.696 Chnl-1, SCP-1.0 (32/0), (5) tx: 6B 00 11 00 02 02 02 00 05 00
+94692.696 > 0B E8 03 00 00
+94692.696 Command Status: Scp-1.0, (tag-4-ok)
+94692.761 Chnl-1, SCP-1.0 (32/0), (6) tx: 6B 00 15 00 03 01 04 00 09 00
+94692.761 > 84 33 03 6A 90 9D FF FF 00
+94692.761 Command Status: Scp-1.0, (tag-5-ok)
+94692.828 Command Status: Scp-1.0, (tag-6-ok)
+94940.000 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94940.000 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94940.064 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94940.064 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94940.117 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94940.117 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94940.169 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94940.169 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94940.232 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94940.232 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94940.295 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94940.295 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94940.349 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94940.349 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94940.399 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94940.399 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94940.451 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94940.451 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94940.502 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94940.502 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94940.567 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94940.567 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94940.618 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94940.618 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94940.682 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94940.682 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94940.733 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94940.733 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94940.797 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94940.797 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94940.860 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94940.860 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94940.915 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94940.915 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94940.968 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94940.969 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94941.019 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94941.019 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94941.083 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94941.083 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94941.148 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94941.148 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94941.201 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94941.201 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94941.266 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94941.266 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94941.317 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94941.317 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94941.380 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94941.380 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94941.432 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94941.432 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94941.483 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94941.483 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94941.535 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94941.535 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94941.587 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94941.587 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94941.650 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94941.650 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94941.717 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94941.717 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94941.768 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94941.768 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94941.833 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94941.833 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94941.896 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94941.896 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94941.951 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94941.951 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94942.016 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94942.016 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94942.067 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94942.067 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94942.130 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94942.130 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94942.181 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94942.181 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94942.237 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94942.237 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94942.302 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94942.302 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94942.368 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94942.368 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94942.428 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94942.428 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94942.485 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94942.485 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94942.540 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94942.540 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94942.600 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94942.600 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94942.652 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94942.652 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94942.703 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94942.703 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94942.767 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94942.767 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94942.819 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94942.819 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94942.874 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94942.874 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94942.932 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94942.932 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94942.994 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94942.994 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94943.050 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94943.050 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94943.102 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94943.102 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94943.165 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94943.165 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94943.219 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94943.220 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94943.272 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94943.272 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94943.333 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94943.333 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94943.399 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94943.399 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94943.450 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94943.450 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94943.502 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94943.502 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94943.568 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94943.568 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94943.630 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94943.630 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94943.688 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94943.688 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94943.751 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94943.751 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94943.815 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94943.815 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94943.881 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94943.881 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94943.933 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94943.933 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94943.989 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94943.989 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94944.112 Socket recv on Socket-3640: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94944.112 Chnl-1, RxByte socket error
+94944.112 RxErr-1, Chnl-1, Scp-1.0:  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+94944.112 scpCloseChannelSock(): Closing Socket-3640, Chnl-1
+94944.112 Receive Error: 1 (broken), Chnl=1, Scp=1.0 (ctag=0),
+94944.112 SCP detach: found it, detaching it, SCP-1, Chnl-1
+94944.112 Setting SCP-1 for delete on IP Client detach
+94944.112 Reporting CommCoS:  Channel--1, SCP-1.0, Status = 1(2), Error = 6(6.0/6.6), Prim=0(3), Alt=0(0)
+94944.112 Found SCP-1 to be deleted on detach, but related to valid message, skip for now
+94944.112 Found SCP-1 to be deleted on detach, calling scpDeleteScp
+94944.113 SCP detach: this SCP is already detached - nothing to do, SCP-1, Chnl-0
+94944.172 Did not find any SCPs to delete on detach, clear pending delete flag
+94974.083  tcpIpAccept() lsock = 3488, sSock = 3916
+94974.083 Connection accepted from [::ffff:192.168.0.51]:37857
+94974.083 Found available channel object, Chnl-1
+94974.083 Incoming socket connection assigned to Chnl-1 (highest available)
+94974.083 Incoming socket connection attached to Channel 1, attaching temp SCP (state: 1, TLS State: 0)
+94974.083 Chnl-1, SCP--1.0 (1/0), (0) tx: 6B 00 0C 00 00 01 02 00 00 00
+94974.149 TempScp Rxd:  6B 80 58 00 20 81 03 00 4C 00 03 1B 01 1F 7B 21 20 00 00 00 00 01 60 FC FD 00 9C 34 03 6A E8 03 00 00 00 00 00 00 00 00 00 00 00 00 01 00 01 01 00 00
+94974.149 Caller's response: Reply 81-03, spc_ln 0x00, rec_ln: 0x4C, struct: 0x4C
+94974.149 Attached incoming Scp-1 as Primary
+94974.149 Buf Sizing: Baud Sw = 00, CommMode = 7, ScpRev = 101F0 (27.1.31.0.0681), MinVer = 30031, max_txdb = 2952
+94974.149 Chnl-1, SCP-1.0 (32/0), (0) rx: 6B 80 58 00 20 81 03 00 4C 00
+94974.150 > 03 1B 01 1F 7B 21 20 00 00 00 00 01 60 FC FD 00 9C 34 03 6A E8 03 00 00 00 00 00 00 00 00 00 00 00 00 01
+94974.150 . 00 01 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 F8 57 61 9E 18 00 00 00 00 A9 02 00 00
+94974.150 . D9 01 12 00 00 00
+94974.150 Chnl-1, SCP-1.0 (32/0), (0) tx: 6B 00 15 00 01 01 01 00 09 00
+94974.150 > B0 0B 22 05 20 03 98 3A 00
+94974.150 Reporting CommCoS:  Channel-1, SCP-1.0, Status = 2(1), Error = 0(0.6/6.6), Prim=3(1), Alt=0(0)
+94974.152 8103 id report, SCP-1, Device=3.27, FW=1.310.681, SN=2105723, OEM=1, MAC=00:18:9E:61:57:F8, ram=16645216(16777216), cards=0(1000), DipCur=0, DipPwr=0, ID=1, Inputs=1,1,0, Hardware Components = 18
+94974.158 1(3), enCcScpScp: 1107 0 1 0 0 0 0 3 60000 33 615 388 64 32000 1024 1024 -25200 0 255 255 128 60000 0 0 1 0 0
+94974.166 1(5), enCcScpAdbSpec: 1105 0 1 1000 8 324 1 1 2 2 1 1 7 1 1 64 0 5 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 15 15 0 0 0
+94974.174 1(6), enCcTime: 0302 1 0
+94974.265 Chnl-1, SCP-1.0 (32/0), (0) tx: 6B 00 10 00 03 02 01 00 04 00
+94974.265 > FF FF FF FF
+94974.330 Chnl-1, SCP-1.0 (32/0), (1) tx: 6B 00 52 00 01 02 02 00 05 00
+94974.330 > 01 18 00 00 00
+94974.331 > 02 60 EA 00 00
+94974.331 > 03 FC 03 00 00
+94974.331 > 04 FF 00 00 00
+94974.332 > 05 FF 00 00 00
+94974.332 > 06 03 00 00 00
+94974.332 > 07 21 00 00 00
+94974.332 > 08 67 02 00 00
+94974.332 > 09 84 01 00 00
+94974.332 > 0A 40 00 00 00
+94974.332 > 0C 00 7D 00 00
+94974.332 > 0D 00 04 00 00
+94974.332 > 0E 00 04 00 00
+94974.332 > 10 01 00 00 00
+94974.396 Chnl-1, SCP-1.0 (32/0), (1) rx: 6B 80 15 00 21 81 02 00 09 00
+94974.396 > 04 06 00 00 00 02 02 00 00
+94974.396 Chnl-1, SCP-1.0 (32/0), (2) tx: 6B 00 10 00 02 02 09 00 04 00
+94974.396 > 80 00 80 00
+94974.396 Command Status: Scp-1.0, (tag-1-nak), NAK: reason:4, rec=6, descr_code=0x0202, description=SIO count differs from previous allocation
+94974.458 Chnl-1, SCP-1.0 (32/0), (3) tx: 6B 00 10 00 03 02 0A 00 04 00
+94974.458 > 60 EA 00 00
+94974.458 Command Status: Scp-1.0, (tag-2-ok)
+94974.521 Chnl-1, SCP-1.0 (32/0), (4) tx: 6B 00 36 00 01 07 01 00 2A 00
+94974.521 > 08 44 07 05 FF 12 40 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+94974.521 . 0F 0F 00 00 00 00 00
+94974.521 Command Status: Scp-1.0, (tag-3-ok)
+94974.581 Chnl-1, SCP-1.0 (32/0), (5) tx: 6B 00 11 00 02 02 02 00 05 00
+94974.581 > 0B E8 03 00 00
+94974.581 Command Status: Scp-1.0, (tag-4-ok)
+94974.634 Chnl-1, SCP-1.0 (32/0), (6) tx: 6B 00 15 00 03 01 04 00 09 00
+94974.634 > 9E 34 03 6A 90 9D FF FF 00
+94974.634 Command Status: Scp-1.0, (tag-5-ok)
+94974.699 Command Status: Scp-1.0, (tag-6-ok)
+94981.698 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94981.699 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94981.754 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94981.754 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94981.815 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94981.815 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94981.880 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94981.880 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94981.945 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94981.945 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94982.008 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94982.008 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94982.069 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94982.069 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94982.131 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94982.131 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94982.195 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94982.195 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94982.257 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94982.257 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94982.320 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94982.320 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94982.381 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94982.381 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94982.444 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94982.444 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94982.497 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94982.497 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94982.550 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94982.550 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94982.615 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94982.615 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94982.680 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94982.680 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94982.734 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94982.734 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94982.787 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94982.787 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94982.847 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94982.847 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94982.898 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94982.898 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94982.960 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94982.960 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94983.023 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94983.023 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94983.080 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94983.080 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94983.142 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94983.142 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94983.197 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94983.197 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94983.248 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94983.248 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94983.299 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94983.299 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94983.364 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94983.364 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94983.415 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94983.415 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94983.466 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94983.466 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94983.530 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94983.530 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94983.581 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94983.581 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94983.647 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94983.647 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94983.700 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94983.700 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94983.761 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94983.762 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94983.812 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94983.812 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94983.870 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94983.870 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94983.928 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94983.928 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94983.981 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94983.981 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94984.034 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94984.034 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94984.094 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94984.094 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94984.158 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94984.158 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94984.220 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94984.220 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94984.279 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94984.279 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94984.332 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94984.332 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94984.403 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94984.403 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94984.459 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94984.459 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94984.518 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94984.518 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94984.569 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94984.569 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94984.633 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94984.633 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94984.686 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94984.686 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94984.815 Socket recv on Socket-3916: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+94984.815 Chnl-1, RxByte socket error
+94984.815 RxErr-1, Chnl-1, Scp-1.0:  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+94984.815 scpCloseChannelSock(): Closing Socket-3916, Chnl-1
+94984.815 Receive Error: 1 (broken), Chnl=1, Scp=1.0 (ctag=0),
+94984.815 SCP detach: found it, detaching it, SCP-1, Chnl-1
+94984.815 Setting SCP-1 for delete on IP Client detach
+94984.815 Reporting CommCoS:  Channel--1, SCP-1.0, Status = 1(2), Error = 6(6.0/6.6), Prim=0(3), Alt=0(0)
+94984.816 Found SCP-1 to be deleted on detach, but related to valid message, skip for now
+94984.819 Found SCP-1 to be deleted on detach, calling scpDeleteScp
+94984.819 SCP detach: this SCP is already detached - nothing to do, SCP-1, Chnl-0
+94984.883 Did not find any SCPs to delete on detach, clear pending delete flag
+95014.815  tcpIpAccept() lsock = 3488, sSock = 3680
+95014.815 Connection accepted from [::ffff:192.168.0.51]:37858
+95014.815 Found available channel object, Chnl-1
+95014.815 Incoming socket connection assigned to Chnl-1 (highest available)
+95014.815 Incoming socket connection attached to Channel 1, attaching temp SCP (state: 1, TLS State: 0)
+95014.815 Chnl-1, SCP--1.0 (1/0), (0) tx: 6B 00 0C 00 00 01 02 00 00 00
+95014.881 TempScp Rxd:  6B 80 58 00 20 81 03 00 4C 00 03 1B 01 1F 7B 21 20 00 00 00 00 01 60 FC FD 00 C5 34 03 6A E8 03 00 00 00 00 00 00 00 00 00 00 00 00 01 00 01 01 00 00
+95014.881 Caller's response: Reply 81-03, spc_ln 0x00, rec_ln: 0x4C, struct: 0x4C
+95014.881 Attached incoming Scp-1 as Primary
+95014.881 Buf Sizing: Baud Sw = 00, CommMode = 7, ScpRev = 101F0 (27.1.31.0.0681), MinVer = 30031, max_txdb = 2952
+95014.881 Chnl-1, SCP-1.0 (32/0), (0) rx: 6B 80 58 00 20 81 03 00 4C 00
+95014.881 > 03 1B 01 1F 7B 21 20 00 00 00 00 01 60 FC FD 00 C5 34 03 6A E8 03 00 00 00 00 00 00 00 00 00 00 00 00 01
+95014.881 . 00 01 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 F8 57 61 9E 18 00 00 00 00 A9 02 00 00
+95014.881 . D9 01 12 00 00 00
+95014.881 Chnl-1, SCP-1.0 (32/0), (0) tx: 6B 00 15 00 01 01 01 00 09 00
+95014.881 > B0 0B 22 05 20 03 98 3A 00
+95014.881 Reporting CommCoS:  Channel-1, SCP-1.0, Status = 2(1), Error = 0(0.6/6.6), Prim=3(1), Alt=0(0)
+95014.881 8103 id report, SCP-1, Device=3.27, FW=1.310.681, SN=2105723, OEM=1, MAC=00:18:9E:61:57:F8, ram=16645216(16777216), cards=0(1000), DipCur=0, DipPwr=0, ID=1, Inputs=1,1,0, Hardware Components = 18
+95014.890 1(3), enCcScpScp: 1107 0 1 0 0 0 0 3 60000 33 615 388 64 32000 1024 1024 -25200 0 255 255 128 60000 0 0 1 0 0
+95014.905 1(5), enCcScpAdbSpec: 1105 0 1 1000 8 324 1 1 2 2 1 1 7 1 1 64 0 5 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 15 15 0 0 0
+95014.909 1(6), enCcTime: 0302 1 0
+95014.941 Chnl-1, SCP-1.0 (32/0), (0) tx: 6B 00 10 00 03 02 01 00 04 00
+95014.941 > FF FF FF FF
+95014.991 Chnl-1, SCP-1.0 (32/0), (1) tx: 6B 00 52 00 01 02 02 00 05 00
+95014.991 > 01 18 00 00 00
+95014.991 > 02 60 EA 00 00
+95014.991 > 03 FC 03 00 00
+95014.991 > 04 FF 00 00 00
+95014.991 > 05 FF 00 00 00
+95014.991 > 06 03 00 00 00
+95014.991 > 07 21 00 00 00
+95014.991 > 08 67 02 00 00
+95014.991 > 09 84 01 00 00
+95014.991 > 0A 40 00 00 00
+95014.991 > 0C 00 7D 00 00
+95014.991 > 0D 00 04 00 00
+95014.991 > 0E 00 04 00 00
+95014.991 > 10 01 00 00 00
+95015.048 Chnl-1, SCP-1.0 (32/0), (1) rx: 6B 80 15 00 21 81 02 00 09 00
+95015.048 > 04 06 00 00 00 02 02 00 00
+95015.048 Chnl-1, SCP-1.0 (32/0), (2) tx: 6B 00 10 00 02 02 09 00 04 00
+95015.048 > 80 00 80 00
+95015.049 Command Status: Scp-1.0, (tag-1-nak), NAK: reason:4, rec=6, descr_code=0x0202, description=SIO count differs from previous allocation
+95015.107 Chnl-1, SCP-1.0 (32/0), (3) tx: 6B 00 10 00 03 02 0A 00 04 00
+95015.108 > 60 EA 00 00
+95015.108 Command Status: Scp-1.0, (tag-2-ok)
+95015.109 Chnl-1, SCP-1.0 (32/0), (4) tx: 6B 00 36 00 01 07 01 00 2A 00
+95015.109 > 08 44 07 05 FF 12 40 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+95015.109 . 0F 0F 00 00 00 00 00
+95015.109 Command Status: Scp-1.0, (tag-3-ok)
+95015.167 Chnl-1, SCP-1.0 (32/0), (5) tx: 6B 00 11 00 02 02 02 00 05 00
+95015.167 > 0B E8 03 00 00
+95015.167 Command Status: Scp-1.0, (tag-4-ok)
+95015.232 Chnl-1, SCP-1.0 (32/0), (6) tx: 6B 00 15 00 03 01 04 00 09 00
+95015.232 > C7 34 03 6A 90 9D FF FF 00
+95015.232 Command Status: Scp-1.0, (tag-5-ok)
+95015.298 Command Status: Scp-1.0, (tag-6-ok)
+95114.661 Socket recv on Socket-3680: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95114.661 Socket recv on Socket-3680: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95114.723 Socket recv on Socket-3680: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95114.723 Socket recv on Socket-3680: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95114.789 Socket recv on Socket-3680: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95114.789 Socket recv on Socket-3680: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95114.866 Socket recv on Socket-3680: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95114.866 Socket recv on Socket-3680: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95114.929 Socket recv on Socket-3680: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95114.929 Socket recv on Socket-3680: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95114.992 Socket recv on Socket-3680: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95114.992 Socket recv on Socket-3680: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95115.055 Socket recv on Socket-3680: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95115.055 Socket recv on Socket-3680: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95115.119 Socket recv on Socket-3680: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95115.119 Socket recv on Socket-3680: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95115.194 Socket recv on Socket-3680: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95115.194 Socket recv on Socket-3680: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95115.258 Socket recv on Socket-3680: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95115.258 Socket recv on Socket-3680: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95115.320 Socket recv on Socket-3680: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95115.320 Socket recv on Socket-3680: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95115.384 Socket recv on Socket-3680: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95115.384 Socket recv on Socket-3680: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95115.444 Socket recv on Socket-3680: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95115.444 Socket recv on Socket-3680: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95115.507 Socket recv on Socket-3680: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95115.508 Socket recv on Socket-3680: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95115.558 Socket recv on Socket-3680: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95115.558 Socket recv on Socket-3680: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95115.677 Socket recv on Socket-3680: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95115.677 Chnl-1, RxByte socket error
+95115.678 RxErr-1, Chnl-1, Scp-1.0:  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+95115.678 scpCloseChannelSock(): Closing Socket-3680, Chnl-1
+95115.678 Receive Error: 1 (broken), Chnl=1, Scp=1.0 (ctag=0),
+95115.678 SCP detach: found it, detaching it, SCP-1, Chnl-1
+95115.678 Setting SCP-1 for delete on IP Client detach
+95115.678 Reporting CommCoS:  Channel--1, SCP-1.0, Status = 1(2), Error = 6(6.0/6.6), Prim=0(3), Alt=0(0)
+95115.678 Found SCP-1 to be deleted on detach, but related to valid message, skip for now
+95115.678 Found SCP-1 to be deleted on detach, calling scpDeleteScp
+95115.678 SCP detach: this SCP is already detached - nothing to do, SCP-1, Chnl-0
+95115.743 Did not find any SCPs to delete on detach, clear pending delete flag
+95145.679  tcpIpAccept() lsock = 3488, sSock = 3836
+95145.679 Connection accepted from [::ffff:192.168.0.51]:37859
+95145.679 Found available channel object, Chnl-1
+95145.679 Incoming socket connection assigned to Chnl-1 (highest available)
+95145.679 Incoming socket connection attached to Channel 1, attaching temp SCP (state: 1, TLS State: 0)
+95145.679 Chnl-1, SCP--1.0 (1/0), (0) tx: 6B 00 0C 00 00 01 02 00 00 00
+95145.744 TempScp Rxd:  6B 80 58 00 20 81 03 00 4C 00 03 1B 01 1F 7B 21 20 00 00 00 00 01 60 FC FD 00 49 35 03 6A E8 03 00 00 00 00 00 00 00 00 00 00 00 00 01 00 01 01 00 00
+95145.745 Caller's response: Reply 81-03, spc_ln 0x00, rec_ln: 0x4C, struct: 0x4C
+95145.747 Attached incoming Scp-1 as Primary
+95145.748 Buf Sizing: Baud Sw = 00, CommMode = 7, ScpRev = 101F0 (27.1.31.0.0681), MinVer = 30031, max_txdb = 2952
+95145.749 Chnl-1, SCP-1.0 (32/0), (0) rx: 6B 80 58 00 20 81 03 00 4C 00
+95145.750 > 03 1B 01 1F 7B 21 20 00 00 00 00 01 60 FC FD 00 49 35 03 6A E8 03 00 00 00 00 00 00 00 00 00 00 00 00 01
+95145.750 . 00 01 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 F8 57 61 9E 18 00 00 00 00 A9 02 00 00
+95145.751 . D9 01 12 00 00 00
+95145.751 Chnl-1, SCP-1.0 (32/0), (0) tx: 6B 00 15 00 01 01 01 00 09 00
+95145.751 > B0 0B 22 05 20 03 98 3A 00
+95145.751 Reporting CommCoS:  Channel-1, SCP-1.0, Status = 2(1), Error = 0(0.6/6.6), Prim=3(1), Alt=0(0)
+95145.752 8103 id report, SCP-1, Device=3.27, FW=1.310.681, SN=2105723, OEM=1, MAC=00:18:9E:61:57:F8, ram=16645216(16777216), cards=0(1000), DipCur=0, DipPwr=0, ID=1, Inputs=1,1,0, Hardware Components = 18
+95145.756 1(3), enCcScpScp: 1107 0 1 0 0 0 0 3 60000 33 615 388 64 32000 1024 1024 -25200 0 255 255 128 60000 0 0 1 0 0
+95145.762 1(5), enCcScpAdbSpec: 1105 0 1 1000 8 324 1 1 2 2 1 1 7 1 1 64 0 5 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 15 15 0 0 0
+95145.770 1(6), enCcTime: 0302 1 0
+95145.810 Chnl-1, SCP-1.0 (32/0), (0) tx: 6B 00 10 00 03 02 01 00 04 00
+95145.810 > FF FF FF FF
+95145.867 Chnl-1, SCP-1.0 (32/0), (1) tx: 6B 00 52 00 01 02 02 00 05 00
+95145.867 > 01 18 00 00 00
+95145.867 > 02 60 EA 00 00
+95145.867 > 03 FC 03 00 00
+95145.867 > 04 FF 00 00 00
+95145.867 > 05 FF 00 00 00
+95145.867 > 06 03 00 00 00
+95145.867 > 07 21 00 00 00
+95145.867 > 08 67 02 00 00
+95145.867 > 09 84 01 00 00
+95145.867 > 0A 40 00 00 00
+95145.867 > 0C 00 7D 00 00
+95145.867 > 0D 00 04 00 00
+95145.867 > 0E 00 04 00 00
+95145.867 > 10 01 00 00 00
+95145.942 Chnl-1, SCP-1.0 (32/0), (1) rx: 6B 80 15 00 21 81 02 00 09 00
+95145.942 > 04 06 00 00 00 02 02 00 00
+95145.942 Chnl-1, SCP-1.0 (32/0), (2) tx: 6B 00 10 00 02 02 09 00 04 00
+95145.943 > 80 00 80 00
+95145.943 Command Status: Scp-1.0, (tag-1-nak), NAK: reason:4, rec=6, descr_code=0x0202, description=SIO count differs from previous allocation
+95146.009 Chnl-1, SCP-1.0 (32/0), (3) tx: 6B 00 10 00 03 02 0A 00 04 00
+95146.009 > 60 EA 00 00
+95146.009 Command Status: Scp-1.0, (tag-2-ok)
+95146.061 Chnl-1, SCP-1.0 (32/0), (4) tx: 6B 00 36 00 01 07 01 00 2A 00
+95146.061 > 08 44 07 05 FF 12 40 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+95146.061 . 0F 0F 00 00 00 00 00
+95146.061 Command Status: Scp-1.0, (tag-3-ok)
+95146.125 Chnl-1, SCP-1.0 (32/0), (5) tx: 6B 00 11 00 02 02 02 00 05 00
+95146.126 > 0B E8 03 00 00
+95146.126 Command Status: Scp-1.0, (tag-4-ok)
+95146.177 Chnl-1, SCP-1.0 (32/0), (6) tx: 6B 00 15 00 03 01 04 00 09 00
+95146.177 > 4A 35 03 6A 90 9D FF FF 00
+95146.177 Command Status: Scp-1.0, (tag-5-ok)
+95146.243 Command Status: Scp-1.0, (tag-6-ok)
+95323.517 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95323.517 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95323.567 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95323.567 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95323.618 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95323.618 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95323.684 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95323.684 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95323.735 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95323.735 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95323.785 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95323.785 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95323.850 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95323.850 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95323.901 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95323.901 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95323.967 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95323.967 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95324.018 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95324.018 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95324.068 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95324.068 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95324.133 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95324.133 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95324.183 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95324.183 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95324.234 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95324.234 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95324.300 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95324.300 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95324.356 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95324.356 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95324.418 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95324.418 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95324.471 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95324.471 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95324.522 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95324.522 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95324.580 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95324.580 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95324.634 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95324.634 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95324.685 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95324.685 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95324.740 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95324.740 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95324.791 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95324.791 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95324.841 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95324.841 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95324.902 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95324.903 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95324.967 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95324.967 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95325.030 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95325.030 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95325.084 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95325.084 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95325.135 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95325.135 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95325.186 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95325.186 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95325.251 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95325.251 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95325.317 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95325.317 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95325.368 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95325.368 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95325.434 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95325.435 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95325.490 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95325.490 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95325.541 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95325.541 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95325.604 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95325.604 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95325.659 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95325.659 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95325.711 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95325.711 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95325.772 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95325.772 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95325.835 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95325.835 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95325.887 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95325.887 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95325.952 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95325.952 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95326.009 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95326.009 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95326.066 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95326.066 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95326.119 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95326.119 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95326.174 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95326.174 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95326.234 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95326.234 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95326.286 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95326.286 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95326.339 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95326.339 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95326.404 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95326.404 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95326.454 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95326.454 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95326.507 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95326.507 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95326.568 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95326.568 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95326.620 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95326.620 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95326.670 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95326.670 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95326.727 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95326.727 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95326.780 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95326.780 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95326.836 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95326.836 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95326.892 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95326.892 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95326.948 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95326.948 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95327.011 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95327.011 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95327.076 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95327.076 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95327.135 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95327.135 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95327.198 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95327.198 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95327.307 Socket recv on Socket-3836: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+95327.307 Chnl-1, RxByte socket error
+95327.307 RxErr-1, Chnl-1, Scp-1.0:  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+95327.307 scpCloseChannelSock(): Closing Socket-3836, Chnl-1
+95327.307 Receive Error: 1 (broken), Chnl=1, Scp=1.0 (ctag=0),
+95327.307 SCP detach: found it, detaching it, SCP-1, Chnl-1
+95327.307 Setting SCP-1 for delete on IP Client detach
+95327.307 Reporting CommCoS:  Channel--1, SCP-1.0, Status = 1(2), Error = 6(6.0/6.6), Prim=0(3), Alt=0(0)
+95327.307 Found SCP-1 to be deleted on detach, but related to valid message, skip for now
+95327.308 Found SCP-1 to be deleted on detach, calling scpDeleteScp
+95327.308 SCP detach: this SCP is already detached - nothing to do, SCP-1, Chnl-0
+95327.373 Did not find any SCPs to delete on detach, clear pending delete flag
+95357.359  tcpIpAccept() lsock = 3488, sSock = 4012
+95357.359 Connection accepted from [::ffff:192.168.0.51]:37860
+95357.359 Found available channel object, Chnl-1
+95357.359 Incoming socket connection assigned to Chnl-1 (highest available)
+95357.359 Incoming socket connection attached to Channel 1, attaching temp SCP (state: 1, TLS State: 0)
+95357.359 Chnl-1, SCP--1.0 (1/0), (0) tx: 6B 00 0C 00 00 01 02 00 00 00
+95357.417 TempScp Rxd:  6B 80 58 00 20 81 03 00 4C 00 03 1B 01 1F 7B 21 20 00 00 00 00 01 60 FC FD 00 1C 36 03 6A E8 03 00 00 00 00 00 00 00 00 00 00 00 00 01 00 01 01 00 00
+95357.417 Caller's response: Reply 81-03, spc_ln 0x00, rec_ln: 0x4C, struct: 0x4C
+95357.418 Attached incoming Scp-1 as Primary
+95357.418 Buf Sizing: Baud Sw = 00, CommMode = 7, ScpRev = 101F0 (27.1.31.0.0681), MinVer = 30031, max_txdb = 2952
+95357.418 Chnl-1, SCP-1.0 (32/0), (0) rx: 6B 80 58 00 20 81 03 00 4C 00
+95357.418 > 03 1B 01 1F 7B 21 20 00 00 00 00 01 60 FC FD 00 1C 36 03 6A E8 03 00 00 00 00 00 00 00 00 00 00 00 00 01
+95357.418 . 00 01 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 F8 57 61 9E 18 00 00 00 00 A9 02 00 00
+95357.418 . D9 01 12 00 00 00
+95357.418 Chnl-1, SCP-1.0 (32/0), (0) tx: 6B 00 15 00 01 01 01 00 09 00
+95357.418 > B0 0B 22 05 20 03 98 3A 00
+95357.418 Reporting CommCoS:  Channel-1, SCP-1.0, Status = 2(1), Error = 0(0.6/6.6), Prim=3(1), Alt=0(0)
+95357.418 8103 id report, SCP-1, Device=3.27, FW=1.310.681, SN=2105723, OEM=1, MAC=00:18:9E:61:57:F8, ram=16645216(16777216), cards=0(1000), DipCur=0, DipPwr=0, ID=1, Inputs=1,1,0, Hardware Components = 18
+95357.433 1(3), enCcScpScp: 1107 0 1 0 0 0 0 3 60000 33 615 388 64 32000 1024 1024 -25200 0 255 255 128 60000 0 0 1 0 0
+95357.448 1(5), enCcScpAdbSpec: 1105 0 1 1000 8 324 1 1 2 2 1 1 7 1 1 64 0 5 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 15 15 0 0 0
+95357.451 1(6), enCcTime: 0302 1 0
+95357.481 Chnl-1, SCP-1.0 (32/0), (0) tx: 6B 00 10 00 03 02 01 00 04 00
+95357.481 > FF FF FF FF
+95357.532 Chnl-1, SCP-1.0 (32/0), (1) tx: 6B 00 52 00 01 02 02 00 05 00
+95357.532 > 01 18 00 00 00
+95357.532 > 02 60 EA 00 00
+95357.532 > 03 FC 03 00 00
+95357.532 > 04 FF 00 00 00
+95357.532 > 05 FF 00 00 00
+95357.532 > 06 03 00 00 00
+95357.532 > 07 21 00 00 00
+95357.532 > 08 67 02 00 00
+95357.532 > 09 84 01 00 00
+95357.532 > 0A 40 00 00 00
+95357.532 > 0C 00 7D 00 00
+95357.532 > 0D 00 04 00 00
+95357.532 > 0E 00 04 00 00
+95357.532 > 10 01 00 00 00
+95357.596 Chnl-1, SCP-1.0 (32/0), (1) rx: 6B 80 15 00 21 81 02 00 09 00
+95357.596 > 04 06 00 00 00 02 02 00 00
+95357.596 Chnl-1, SCP-1.0 (32/0), (2) tx: 6B 00 10 00 02 02 09 00 04 00
+95357.597 > 80 00 80 00
+95357.597 Command Status: Scp-1.0, (tag-1-nak), NAK: reason:4, rec=6, descr_code=0x0202, description=SIO count differs from previous allocation
+95357.649 Chnl-1, SCP-1.0 (32/0), (3) tx: 6B 00 10 00 03 02 0A 00 04 00
+95357.649 > 60 EA 00 00
+95357.649 Command Status: Scp-1.0, (tag-2-ok)
+95357.700 Chnl-1, SCP-1.0 (32/0), (4) tx: 6B 00 36 00 01 07 01 00 2A 00
+95357.700 > 08 44 07 05 FF 12 40 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+95357.700 . 0F 0F 00 00 00 00 00
+95357.700 Command Status: Scp-1.0, (tag-3-ok)
+95357.705 Chnl-1, SCP-1.0 (32/0), (5) tx: 6B 00 11 00 02 02 02 00 05 00
+95357.705 > 0B E8 03 00 00
+95357.705 Command Status: Scp-1.0, (tag-4-ok)
+95357.768 Chnl-1, SCP-1.0 (32/0), (6) tx: 6B 00 15 00 03 01 04 00 09 00
+95357.768 > 1D 36 03 6A 90 9D FF FF 00
+95357.768 Command Status: Scp-1.0, (tag-5-ok)
+95357.836 Command Status: Scp-1.0, (tag-6-ok)
+00389.477 Shutting down debug Thread...
+File closed Tue May 12 22:39:49 2026
+Debug file SCPDEBUG.txt <SCPDEBUGc.txt> <SCPDEBUG.TXT> opened Tue May 12 22:41:24 2026
+Begin - SCP Driver DLL (64-bit) version 4.7.1.43
+00485.650 WSAStartup ok
+00485.652 RNG_X931A24 Initialized
+00485.652 1, enCcSystem: 011 1024 1024 0 0 1
+00485.653 1, enCcCreateChannel: 0012 1 7 3333 0 3000 0 "" 0
+00485.861 listen(lsock) created socket=3524 on port 3333
+00485.861 Listen Successful, port: 3333
+00501.572  tcpIpAccept() lsock = 3524, sSock = 3636
+00501.572 Connection accepted from [::ffff:192.168.0.51]:37866
+00501.572 Found available channel object, Chnl-1
+00501.572 Incoming socket connection assigned to Chnl-1 (highest available)
+00501.572 Incoming socket connection attached to Channel 1, attaching temp SCP (state: 1, TLS State: 0)
+00501.572 Chnl-1, SCP--1.0 (1/0), (0) tx: 6B 00 0C 00 00 01 02 00 00 00
+00501.639 TempScp Rxd:  6B 80 58 00 20 81 03 00 4C 00 03 1B 01 1F 7B 21 20 00 00 00 00 01 60 FC FD 00 34 4A 03 6A E8 03 00 00 00 00 00 00 00 00 00 00 00 00 01 00 01 01 00 00
+00501.639 Caller's response: Reply 81-03, spc_ln 0x00, rec_ln: 0x4C, struct: 0x4C
+00501.639 Attached incoming Scp-1 as Primary
+00501.639 Buf Sizing: Baud Sw = 00, CommMode = 7, ScpRev = 101F0 (27.1.31.0.0681), MinVer = 30031, max_txdb = 2952
+00501.639 Chnl-1, SCP-1.0 (32/0), (0) rx: 6B 80 58 00 20 81 03 00 4C 00
+00501.639 > 03 1B 01 1F 7B 21 20 00 00 00 00 01 60 FC FD 00 34 4A 03 6A E8 03 00 00 00 00 00 00 00 00 00 00 00 00 01
+00501.639 . 00 01 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 F8 57 61 9E 18 00 00 00 00 A9 02 00 00
+00501.639 . D9 01 12 00 00 00
+00501.639 Chnl-1, SCP-1.0 (32/0), (0) tx: 6B 00 15 00 01 01 01 00 09 00
+00501.639 > B0 0B 22 05 20 03 98 3A 00
+00501.639 Reporting CommCoS:  Channel-1, SCP-1.0, Status = 2(1), Error = 0(0.6/6.6), Prim=3(1), Alt=0(0)
+00501.645 8103 id report, SCP-1, Device=3.27, FW=1.310.681, SN=2105723, OEM=1, MAC=00:18:9E:61:57:F8, ram=16645216(16777216), cards=0(1000), DipCur=0, DipPwr=0, ID=1, Inputs=1,1,0, Hardware Components = 18
+00501.703 Chnl-1, SCP-1.0 (32/0), (0) tx: 6B 00 10 00 03 02 01 00 04 00
+00501.703 > FF FF FF FF
+00501.721 1(3), enCcScpScp: 1107 0 1 0 0 0 0 3 60000 33 615 388 64 32000 1024 1024 -25200 0 255 255 128 60000 0 0 1 0 0
+00501.756 Chnl-1, SCP-1.0 (32/0), (1) tx: 6B 00 52 00 01 02 02 00 05 00
+00501.756 > 01 18 00 00 00
+00501.756 > 02 60 EA 00 00
+00501.756 > 03 FC 03 00 00
+00501.756 > 04 FF 00 00 00
+00501.756 > 05 FF 00 00 00
+00501.756 > 06 03 00 00 00
+00501.756 > 07 21 00 00 00
+00501.756 > 08 67 02 00 00
+00501.756 > 09 84 01 00 00
+00501.756 > 0A 40 00 00 00
+00501.756 > 0C 00 7D 00 00
+00501.756 > 0D 00 04 00 00
+00501.756 > 0E 00 04 00 00
+00501.756 > 10 01 00 00 00
+00501.777 1(5), enCcScpAdbSpec: 1105 0 1 1000 8 324 1 1 2 2 1 1 7 1 1 64 0 5 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 15 15 0 0 0
+00501.793 1(6), enCcTime: 0302 1 0
+00501.812 Chnl-1, SCP-1.0 (32/0), (1) rx: 6B 80 15 00 21 81 02 00 09 00
+00501.812 > 04 06 00 00 00 02 02 00 00
+00501.812 Chnl-1, SCP-1.0 (32/0), (2) tx: 6B 00 10 00 02 02 09 00 04 00
+00501.812 > 80 00 80 00
+00501.812 Command Status: Scp-1.0, (tag-1-nak), NAK: reason:4, rec=6, descr_code=0x0202, description=SIO count differs from previous allocation
+00501.817 Chnl-1, SCP-1.0 (32/0), (3) tx: 6B 00 10 00 03 02 0A 00 04 00
+00501.817 > 60 EA 00 00
+00501.817 Command Status: Scp-1.0, (tag-2-ok)
+00501.818 Chnl-1, SCP-1.0 (32/0), (4) tx: 6B 00 36 00 01 07 01 00 2A 00
+00501.818 > 08 44 07 05 FF 12 40 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+00501.818 . 0F 0F 00 00 00 00 00
+00501.818 Command Status: Scp-1.0, (tag-3-ok)
+00501.873 Chnl-1, SCP-1.0 (32/0), (5) tx: 6B 00 11 00 02 02 02 00 05 00
+00501.874 > 0B E8 03 00 00
+00501.874 Command Status: Scp-1.0, (tag-4-ok)
+00501.939 Chnl-1, SCP-1.0 (32/0), (6) tx: 6B 00 15 00 03 01 04 00 09 00
+00501.939 > 35 4A 03 6A 90 9D FF FF 00
+00501.939 Command Status: Scp-1.0, (tag-5-ok)
+00501.940 Command Status: Scp-1.0, (tag-6-ok)
+00561.317 Socket recv on Socket-3636: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+00561.317 Socket recv on Socket-3636: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+00561.381 Socket recv on Socket-3636: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+00561.381 Socket recv on Socket-3636: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+00561.436 Socket recv on Socket-3636: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+00561.436 Socket recv on Socket-3636: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+00561.488 Socket recv on Socket-3636: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+00561.488 Socket recv on Socket-3636: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+00561.552 Socket recv on Socket-3636: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+00561.552 Socket recv on Socket-3636: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+00561.603 Socket recv on Socket-3636: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+00561.603 Socket recv on Socket-3636: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+00561.654 Socket recv on Socket-3636: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+00561.654 Socket recv on Socket-3636: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+00561.719 Socket recv on Socket-3636: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+00561.720 Socket recv on Socket-3636: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+00561.786 Socket recv on Socket-3636: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+00561.787 Socket recv on Socket-3636: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+00561.837 Socket recv on Socket-3636: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+00561.837 Socket recv on Socket-3636: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+00561.902 Socket recv on Socket-3636: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+00561.902 Socket recv on Socket-3636: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+00561.954 Socket recv on Socket-3636: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+00561.954 Socket recv on Socket-3636: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+00562.004 Socket recv on Socket-3636: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+00562.004 Socket recv on Socket-3636: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+00562.069 Socket recv on Socket-3636: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+00562.069 Socket recv on Socket-3636: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+00562.121 Socket recv on Socket-3636: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+00562.121 Socket recv on Socket-3636: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+00562.186 Socket recv on Socket-3636: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+00562.186 Socket recv on Socket-3636: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+00562.304 Socket recv on Socket-3636: failed, Chnl-1, Error: 10054 (An existing connection was forcibly closed by the remote host. )
+00562.305 Chnl-1, RxByte socket error
+00562.306 RxErr-1, Chnl-1, Scp-1.0:  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+00562.306 scpCloseChannelSock(): Closing Socket-3636, Chnl-1
+00562.306 Receive Error: 1 (broken), Chnl=1, Scp=1.0 (ctag=0),
+00562.307 SCP detach: found it, detaching it, SCP-1, Chnl-1
+00562.307 Setting SCP-1 for delete on IP Client detach
+00562.307 Reporting CommCoS:  Channel--1, SCP-1.0, Status = 1(2), Error = 6(6.0/6.6), Prim=0(3), Alt=0(0)
+00562.307 Found SCP-1 to be deleted on detach, but related to valid message, skip for now
+00562.309 Found SCP-1 to be deleted on detach, calling scpDeleteScp
+00562.309 SCP detach: this SCP is already detached - nothing to do, SCP-1, Chnl-0
+00562.369 Did not find any SCPs to delete on detach, clear pending delete flag
+00617.668 Shutting down debug Thread...
+File closed Tue May 12 22:43:37 2026

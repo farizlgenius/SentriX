@@ -1,6 +1,5 @@
 export interface UpdateOperatorDto{
       id:number;
-      operatorId:number;
       username:string;
       password:string;
       title:string;

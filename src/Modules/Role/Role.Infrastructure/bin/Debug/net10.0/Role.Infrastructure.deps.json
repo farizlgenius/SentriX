@@ -8,6 +8,7 @@
     ".NETCoreApp,Version=v10.0": {
       "Role.Infrastructure/1.0.0": {
         "dependencies": {
+          "Location.Contract": "1.0.0",
           "Microsoft.Extensions.Configuration.FileExtensions": "10.0.7",
           "Microsoft.Extensions.Configuration.Json": "10.0.7",
           "Microsoft.Extensions.Options": "10.0.7",
@@ -299,10 +300,22 @@
           }
         }
       },
+      "Location.Contract/1.0.0": {
+        "dependencies": {
+          "SharedKernel": "1.0.0"
+        },
+        "runtime": {
+          "Location.Contract.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
       "Role.Application/1.0.0": {
         "dependencies": {
           "Role.Contract": "1.0.0",
-          "Role.Domain": "1.0.0"
+          "Role.Domain": "1.0.0",
+          "SharedKernel": "1.0.0"
         },
         "runtime": {
           "Role.Application.dll": {
@@ -520,6 +533,11 @@
       "sha512": "sha512-wHWaroody48jnlLoq/REwUltIFLxplXyHTP+sttrc8P7+jkiVqf38afDidJNv4qgD/6zz2NKOYg06xLZ1bG7wQ==",
       "path": "scrutor/7.0.0",
       "hashPath": "scrutor.7.0.0.nupkg.sha512"
+    },
+    "Location.Contract/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
     },
     "Role.Application/1.0.0": {
       "type": "project",

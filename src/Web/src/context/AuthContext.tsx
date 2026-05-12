@@ -19,8 +19,9 @@ interface AuthContextType {
     signOut: () => Promise<boolean>;
     filterPermission: (FeatureId: number) => PermissionDto | undefined;
     isAllowedPermission: (FeatureId: number) => boolean;
-    fetchMeTrigger:() => void;
-    token:string;
+    fetchMeTrigger: () => void;
+    token: string;
+    isAuthReady: boolean;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -35,40 +36,42 @@ let refreshPromise: Promise<boolean> | null = null;
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
     const { loading, setLoading } = useLoading();
-    const [fetch,setFetch] = useState<boolean>(false);
+    const [fetch, setFetch] = useState<boolean>(false);
     const { setLocationId, setLocationList, setLocationName, SetLocationOption } = useLocation();
     const { toggleToast } = useToast();
     const [isAuthenticated, setIsAuthenticated] = useState(false);
-    const [token,setToken] = useState<string>("");
-const [permissions, setPermission] = useState<PermissionDto[]>([]);
+    const [isAuthReady, setIsAuthReady] = useState(false);
+    const [token, setToken] = useState<string>("");
+    const [permissions, setPermission] = useState<PermissionDto[]>([]);
 
-const fetchMeTrigger = () => setFetch(!fetch);
+    const fetchMeTrigger = () => setFetch(!fetch);
 
-const doRefresh = async () => {
-    if (isRefreshing && refreshPromise) return refreshPromise;
-    isRefreshing = true;
-    refreshPromise = (async () => {
-        try {
-            const res = await send.post(AuthEndpoint.REFRESH,{
-                refresh:""
-            })
-            if (res?.status !== 200) return false;
-            setAccessToken(res.data.accessToken)
-            setToken(res.data.accessToken);
-            SignalRService.setToken(res.data.accessToken);
+    const doRefresh = async () => {
+        if (isRefreshing && refreshPromise) return refreshPromise;
+        isRefreshing = true;
+        refreshPromise = (async () => {
+            try {
+                const res = await send.post(AuthEndpoint.REFRESH, {
+                    refresh: ""
+                })
+                if (res?.status !== 200) return false;
+                setAccessToken(res.data.accessToken)
+                setToken(res.data.accessToken);
+                SignalRService.setToken(res.data.accessToken);
 
-            await SignalRService.stopConnection();
-            await SignalRService.startConnection();
-            return true;
-        } catch {
-            return false;
-        } finally {
-            isRefreshing = false;
-            refreshPromise = null;
-        }
-    })();
-    return refreshPromise;
-}
+                await SignalRService.stopConnection();
+                await SignalRService.startConnection();
+                return true;
+            } catch {
+                return false;
+            } finally {
+                isRefreshing = false;
+                refreshPromise = null;
+                setIsAuthReady(true);
+            }
+        })();
+        return refreshPromise;
+    }
 
 
     const fetchMe = useCallback(async () => {
@@ -94,11 +97,11 @@ const doRefresh = async () => {
         let locs: LocationDto[] = res.data;
         setLocationList(locs)
         SetLocationOption(locs.map(d => ({
-    label: d.name,
-    value: d.id,
-    description: d.description,
-    isTaken: false
-})));
+            label: d.name,
+            value: d.id,
+            description: d.description,
+            isTaken: false
+        })));
         if (locs.length > 0) {
             setLocationName(locs[0].name)
             setLocationId(locs[0].id)
@@ -138,8 +141,8 @@ const doRefresh = async () => {
     }, [fetchMe])
 
     const signOut = useCallback(async () => {
-        const res = await send.post(AuthEndpoint.LOGOUT,{
-            "refresh":""
+        const res = await send.post(AuthEndpoint.LOGOUT, {
+            "refresh": ""
         })
         console.log(res.data)
         if (res.data) {
@@ -154,21 +157,33 @@ const doRefresh = async () => {
     }, [permissions])
 
 
-    const isAllowedPermission = useCallback((featureId:number) => {
-    return !(permissions.find(p => p.featureId === featureId)?.isEnabled ?? false);
-}, [permissions]);
+    const isAllowedPermission = useCallback((featureId: number) => {
+        return !(permissions.find(p => p.featureId === featureId)?.isEnabled ?? false);
+    }, [permissions]);
+
+    useEffect(() => {
+        if (!token) return;
+
+        const startSignalR = async () => {
+            await SignalRService.startConnection();
+            console.log("✅ Global SignalR connected");
+        };
+
+        startSignalR();
+    }, [token]);
 
     return (
         <AuthContext.Provider
             value={{
+                isAuthReady,
                 token,
                 isAuthenticated,
                 isAllowedPermission,
-        loading,
-        signIn,
-        signOut,
-        filterPermission,
-        fetchMeTrigger
+                loading,
+                signIn,
+                signOut,
+                filterPermission,
+                fetchMeTrigger
             }}
         >
             {children}
