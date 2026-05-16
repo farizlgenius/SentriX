@@ -11,5 +11,8 @@ public enum WriterType
       InputPointSpecification=110,
       ReadsConfiguration=900,
       SCPStructureStatusRead=1853,
-      ElevatorAccessLevelSpecification=501
+      ElevatorAccessLevelSpecification=501,
+      SCPReset=301,
+      SioStatusReq=404
+
 }

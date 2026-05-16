@@ -37,18 +37,19 @@ public sealed class ScpWriter(ILogger<ScpWriter> logger, IWriterRepository write
             c.nEscortTimeout = spec.n_escort_timeout;
             c.nMultiCardTimeout = spec.n_multi_card_timeout;
             c.nAssetTimeout = 0;
+            var command = MessageHelper.ToString(c);
             var result = Send((short)enCfgCmnd.enCcScpAdbSpec, c);
             if (result)
             {
                   logger.LogInformation(MessageHelper.CommandSuccess(WriterType.AccessDatabaseSpecification, ScpId));
-                  await writer.AddWriterAuditAsync(ScpId, Mac, WriterType.AccessDatabaseSpecification, SCPDLL.scpGetTagLastPosted(ScpId), MessageHelper.ToString(c));
+                  await writer.AddWriterAuditAsync(ScpId, Mac, WriterType.AccessDatabaseSpecification, SCPDLL.scpGetTagLastPosted(ScpId), command);
                   return true;
 
             }
             else
             {
                   logger.LogError(MessageHelper.CommandUnsuccess(WriterType.AccessDatabaseSpecification, ScpId));
-                  await writer.AddWriterAuditAsync(ScpId, Mac, WriterType.AccessDatabaseSpecification, 0, MessageHelper.ToString(c), WriterStatus.FAILED.ToString());
+                  await writer.AddWriterAuditAsync(ScpId, Mac, WriterType.AccessDatabaseSpecification, 0, command, WriterStatus.FAILED.ToString());
                   return false;
 
             }
@@ -89,17 +90,19 @@ public sealed class ScpWriter(ILogger<ScpWriter> logger, IWriterRepository write
             c.reply_time = config.reply_time;
             c.nProtocol = config.n_protocol;
             c.nDialect = config.n_dialect;
+            var command = MessageHelper.ToString(c);
             var result = Send((short)enCfgCmnd.enCcMsp1, c);
             if (result)
             {
                   logger.LogInformation(MessageHelper.CommandSuccess(WriterType.DriverConfiguration, ScpId));
-                  await writer.AddWriterAuditAsync(ScpId, Mac, WriterType.DriverConfiguration, SCPDLL.scpGetTagLastPosted(ScpId), MessageHelper.ToString(c));
+                  await writer.AddWriterAuditAsync(ScpId, Mac, WriterType.DriverConfiguration, SCPDLL.scpGetTagLastPosted(ScpId), command);
                   return true;
 
             }
             else
             {
                   logger.LogError(MessageHelper.CommandUnsuccess(WriterType.DriverConfiguration, ScpId));
+                  await writer.AddWriterAuditAsync(ScpId, Mac, WriterType.DriverConfiguration, 0, command, WriterStatus.FAILED.ToString());
                   return false;
 
             }
@@ -132,17 +135,19 @@ public sealed class ScpWriter(ILogger<ScpWriter> logger, IWriterRepository write
             CC_WEB_CONFIG_READ c = new CC_WEB_CONFIG_READ();
             c.scp_number = ScpId;
             c.read_type = (short)Type;
+            var command = MessageHelper.ToString(c);
             var result = Send((short)enCfgCmnd.enCcWebConfigRead, c);
             if (result)
             {
                   logger.LogInformation(MessageHelper.CommandSuccess(WriterType.ReadsConfiguration, ScpId));
-                  await writer.AddWriterAuditAsync(ScpId, Mac, WriterType.ReadsConfiguration, SCPDLL.scpGetTagLastPosted(ScpId), MessageHelper.ToString(c));
+                  await writer.AddWriterAuditAsync(ScpId, Mac, WriterType.ReadsConfiguration, SCPDLL.scpGetTagLastPosted(ScpId), command);
                   return true;
 
             }
             else
             {
                   logger.LogError(MessageHelper.CommandUnsuccess(WriterType.ReadsConfiguration, ScpId));
+                  await writer.AddWriterAuditAsync(ScpId, Mac, WriterType.ReadsConfiguration, 0, command, WriterStatus.FAILED.ToString());
                   return false;
 
             }
@@ -179,22 +184,46 @@ public sealed class ScpWriter(ILogger<ScpWriter> logger, IWriterRepository write
             c.oper_type = spec.oper_type;
             c.nLanguages = spec.n_language;
             c.nSrvcType = 0;
+            var command = MessageHelper.ToString(c);
             var result = Send((short)enCfgCmnd.enCcScpScp, c);
             if (result)
             {
                   logger.LogInformation(MessageHelper.CommandSuccess(WriterType.ScpDeviceSpecification, ScpId));
-                  await writer.AddWriterAuditAsync(ScpId, Mac, WriterType.ScpDeviceSpecification, SCPDLL.scpGetTagLastPosted(ScpId), MessageHelper.ToString(c));
+                  await writer.AddWriterAuditAsync(ScpId, Mac, WriterType.ScpDeviceSpecification, SCPDLL.scpGetTagLastPosted(ScpId), command);
                   return true;
 
             }
             else
             {
                   logger.LogError(MessageHelper.CommandUnsuccess(WriterType.ScpDeviceSpecification, ScpId));
-                  await writer.AddWriterAuditAsync(ScpId, Mac, WriterType.ScpDeviceSpecification, 0, MessageHelper.ToString(c), WriterStatus.FAILED.ToString());
+                  await writer.AddWriterAuditAsync(ScpId, Mac, WriterType.ScpDeviceSpecification, 0, command, WriterStatus.FAILED.ToString());
                   return false;
 
             }
 
+      }
+
+      public async Task<bool> SCPReset(short ScpId,string Mac)
+      {
+
+            CC_RESET c = new CC_RESET();
+            c.scp_number = ScpId;
+            var command = MessageHelper.ToString(c);
+            var result = Send((short)enCfgCmnd.enCcReset, c);
+            if (result)
+            {
+                  logger.LogInformation(MessageHelper.CommandSuccess(WriterType.SCPReset, ScpId));
+                  await writer.AddWriterAuditAsync(ScpId, Mac, WriterType.SCPReset, SCPDLL.scpGetTagLastPosted(ScpId), command);
+                  return true;
+
+            }
+            else
+            {
+                  logger.LogError(MessageHelper.CommandUnsuccess(WriterType.SCPReset, ScpId));
+                  await writer.AddWriterAuditAsync(ScpId, Mac, WriterType.SCPReset, 0, command, WriterStatus.FAILED.ToString());
+                  return false;
+
+            }
       }
 
       public async Task<bool> SCPStructureStatusRead(short ScpId, string Mac, List<short> StructureList)
@@ -202,22 +231,24 @@ public sealed class ScpWriter(ILogger<ScpWriter> logger, IWriterRepository write
             CC_STRSRQ c = new CC_STRSRQ();
             c.nScpID = ScpId;
             c.nListLength = (short)StructureList.Count();
+
             for (int i = 0; i < (short)StructureList.Count(); i++)
             {
                   c.nStructId[i] = StructureList.ElementAt(i);
             }
+            var command = MessageHelper.ToString(c);
             var result = Send((short)enCfgCmnd.enCcStrSRq, c);
             if (result)
             {
                   logger.LogInformation(MessageHelper.CommandSuccess(WriterType.SCPStructureStatusRead, ScpId));
-                  await writer.AddWriterAuditAsync(ScpId, Mac, WriterType.SCPStructureStatusRead, SCPDLL.scpGetTagLastPosted(ScpId), MessageHelper.ToString(c));
+                  await writer.AddWriterAuditAsync(ScpId, Mac, WriterType.SCPStructureStatusRead, SCPDLL.scpGetTagLastPosted(ScpId), command);
                   return true;
 
             }
             else
             {
                   logger.LogError(MessageHelper.CommandUnsuccess(WriterType.SCPStructureStatusRead, ScpId));
-                  await writer.AddWriterAuditAsync(ScpId, Mac, WriterType.SCPStructureStatusRead, 0, MessageHelper.ToString(c), WriterStatus.FAILED.ToString());
+                  await writer.AddWriterAuditAsync(ScpId, Mac, WriterType.SCPStructureStatusRead, 0, command, WriterStatus.FAILED.ToString());
                   return false;
 
             }
@@ -233,18 +264,19 @@ public sealed class ScpWriter(ILogger<ScpWriter> logger, IWriterRepository write
             CC_TIME c = new CC_TIME();
             c.scp_number = ScpId;
             c.custom_time = 0;
+            var command = MessageHelper.ToString(c);
             var result = Send((short)enCfgCmnd.enCcTime, c);
             if (result)
             {
                   logger.LogInformation(MessageHelper.CommandSuccess(WriterType.TimeSet, ScpId));
-                  await writer.AddWriterAuditAsync(ScpId, Mac, WriterType.TimeSet, SCPDLL.scpGetTagLastPosted(ScpId), MessageHelper.ToString(c));
+                  await writer.AddWriterAuditAsync(ScpId, Mac, WriterType.TimeSet, SCPDLL.scpGetTagLastPosted(ScpId), command);
                   return true;
 
             }
             else
             {
                   logger.LogError(MessageHelper.CommandUnsuccess(WriterType.TimeSet, ScpId));
-                  await writer.AddWriterAuditAsync(ScpId, Mac, WriterType.TimeSet, 0, MessageHelper.ToString(c), WriterStatus.FAILED.ToString());
+                  await writer.AddWriterAuditAsync(ScpId, Mac, WriterType.TimeSet, 0, command, WriterStatus.FAILED.ToString());
                   return false;
 
             }
@@ -255,18 +287,19 @@ public sealed class ScpWriter(ILogger<ScpWriter> logger, IWriterRepository write
             CC_WEB_CONFIG_READ c = new CC_WEB_CONFIG_READ();
             c.scp_number = ScpId;
             c.read_type = (short)Type;
+            var command = MessageHelper.ToString(c);
             var result = Send((short)enCfgCmnd.enCcWebConfigRead, c);
             if (result)
             {
                   logger.LogInformation(MessageHelper.CommandSuccess(WriterType.ReadWebConfig, ScpId));
-                  await writer.AddWriterAuditAsync(ScpId, Mac, WriterType.ReadWebConfig, SCPDLL.scpGetTagLastPosted(ScpId), MessageHelper.ToString(c));
+                  await writer.AddWriterAuditAsync(ScpId, Mac, WriterType.ReadWebConfig, SCPDLL.scpGetTagLastPosted(ScpId), command);
                   return true;
 
             }
             else
             {
                   logger.LogError(MessageHelper.CommandUnsuccess(WriterType.ReadWebConfig, ScpId));
-                  await writer.AddWriterAuditAsync(ScpId, Mac, WriterType.ReadWebConfig, 0, MessageHelper.ToString(c), WriterStatus.FAILED.ToString());
+                  await writer.AddWriterAuditAsync(ScpId, Mac, WriterType.ReadWebConfig, 0, command, WriterStatus.FAILED.ToString());
                   return false;
 
             }

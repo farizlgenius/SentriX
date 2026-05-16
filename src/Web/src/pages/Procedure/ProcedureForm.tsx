@@ -12,7 +12,7 @@ import Select from "../../components/form/Select"
 import { ActionDto } from "../../model/Procedure/ActionDto"
 import { DeviceEndpoint } from "../../endpoint/HardwareEndpoint"
 import { useLocation } from "../../context/LocationContext"
-import { HardwareDto } from "../../model/Device/HardwareDto"
+import { DeviceDto } from "../../model/Device/DeviceDto"
 import Button from "../../components/ui/button/Button"
 import { MonitorPointEndpoint } from "../../endpoint/MonitorPointEndpoint"
 import { MonitorPointDto } from "../../model/MonitorPoint/MonitorPointDto"
@@ -162,7 +162,7 @@ export const ProcedureForm: React.FC<PropsWithChildren<FormProp<ProcedureDto>>> 
     const fetchHardware = async () => {
         var res = await api.get(DeviceEndpoint.GET(locationId))
         if (res && res.data.data) {
-            res.data.data.map((a: HardwareDto) => {
+            res.data.data.map((a: DeviceDto) => {
                 setHardware(prev => ([...prev, {
                     label: a.name,
                     value: a.componentId,

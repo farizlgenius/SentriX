@@ -15,7 +15,7 @@ import { ScanCardStatus } from "../../../model/User/ScanCardStatus";
 import { CredentialEndpoint } from "../../../endpoint/CredentialEndpoint";
 import { send } from "../../../api/api";
 import { DeviceEndpoint } from "../../../endpoint/HardwareEndpoint";
-import { HardwareDto } from "../../../model/Device/HardwareDto";
+import { DeviceDto } from "../../../model/Device/DeviceDto";
 import { DoorEndpoint } from "../../../endpoint/DoorEndpoint";
 import { DoorDto } from "../../../model/Door/DoorDto";
 import { ScanCardDto } from "../../../model/User/ScanCard";
@@ -162,7 +162,7 @@ export const CredentialForm: React.FC<PropsWithChildren<FormProp<UserDto>>> = ({
     const fetchController = async () => {
         const res = await send.get(DeviceEndpoint.GET(locationId))
         if (res && res.data.data) {
-            res.data.data.map((a: HardwareDto) => {
+            res.data.data.map((a: DeviceDto) => {
                 setControllerOption(prev => ([...prev, {
                     value: a.mac,
                     label: a.name,

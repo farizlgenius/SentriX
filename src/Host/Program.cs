@@ -11,6 +11,7 @@ using Cache.Infrastructure;
 using Device.Infrastructure;
 using Events.Infrastructure;
 using Host.Helpers;
+using Host.Logging;
 using Host.Middlewares;
 using Location.Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -20,6 +21,7 @@ using Notifier.Client.Hubs;
 using Operator.Infrastructure;
 using Role.Infrastructure;
 using Scalar.AspNetCore;
+using Serilog;
 using SharedKernel;
 
 
@@ -72,6 +74,11 @@ public class Program
         builder.Services.AddNotifyModule(builder.Configuration);
         builder.Services.AddEvents(builder.Configuration);
         builder.Services.AddAdapter(builder.Configuration);
+
+
+        // Replace default logging with Serilog
+            // builder.Host.UseSerilog();
+            builder.Host.ConfigureEnterpriseLogging();
 
         // ==========================
         // MediatR
@@ -200,6 +207,7 @@ public class Program
         var app = builder.Build();
 
         app.UseMiddleware<GlobalException>();
+        app.UseMiddleware<CorrelationMiddleware>();
 
         app.MapOpenApi();
 
@@ -262,6 +270,8 @@ _ = Task.Run(() => readDriver.GetTransactionUntilShutDownAsync());
             readDriver.TurnOffDebug();
 
         });
+
+        app.UseSerilogRequestLogging();
 
 
         app.UseCors("CorsPolicy");

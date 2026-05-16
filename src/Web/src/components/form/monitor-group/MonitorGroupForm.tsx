@@ -9,7 +9,7 @@ import { useLocation } from "../../../context/LocationContext";
 import { send } from "../../../api/api";
 import { DeviceEndpoint } from "../../../endpoint/HardwareEndpoint";
 import { Options } from "../../../model/Options";
-import { HardwareDto } from "../../../model/Device/HardwareDto";
+import { DeviceDto } from "../../../model/Device/DeviceDto";
 import { ModeDto } from "../../../model/ModeDto";
 import { MonitorGroupEndpoint } from "../../../endpoint/MonitorGroupEndpoint";
 import { MonitorGroupListDto } from "../../../model/MonitorGroup/MonitorGroupListDto";
@@ -71,7 +71,7 @@ export const MonitorGroupForm: React.FC<PropsWithChildren<FormProp<MonitorGroupD
     const fetchHardware = async () => {
         const res = await send.get(DeviceEndpoint.GET(locationId))
         if (res && res.data.data) {
-            res.data.data.map((a: HardwareDto) => {
+            res.data.data.map((a: DeviceDto) => {
                 setHardwareOptions(prev => ([...prev, {
                     label: a.name,
                     value: a.mac,

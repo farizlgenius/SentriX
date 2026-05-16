@@ -6,5 +6,9 @@ namespace Adapter.Abstraction.Interfaces;
 public interface IDeviceAdapter
 {
       Task<List<IdReportDto>> GetIdReportsAsync();
-      Task CreateDeviceCommandAsync(CreateDeviceDto dto);
+      Task CreateDeviceAsync(CreateDeviceDto dto);
+      Task<bool> GetDeviceStatusByMacAsync(string mac);
+      Task<bool> ResetDeviceAsync(string mac);
+      Task CreateModuleAsync(CreateModuleDto dto);
+
 }

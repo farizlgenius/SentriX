@@ -3,9 +3,10 @@ import Label from "../Label.tsx";
 import Input from "../input/InputField.tsx";
 import Button from "../../ui/button/Button.tsx";
 import { FormProp, FormType } from "../../../model/Form/FormProp.ts";
-import { CreateDeviceDto } from "../../../model/Device/CreateDeviceDto.ts";
+import { CreateAeroDeviceDto } from "../../../model/Device/CreateAeroDeviceDto.ts";
 import { CheckCircleIcon, ErrorIcon, LoadIcon } from "../../../icons/index.ts";
 import { FormActions, FormField, FormSection } from "../template/FormTemplate.tsx";
+import { DeviceDto } from "../../../model/Device/DeviceDto.ts";
 
 
 
@@ -13,7 +14,7 @@ import { FormActions, FormField, FormSection } from "../template/FormTemplate.ts
 
 
 
-const AmicoCreateDeviceForm: React.FC<PropsWithChildren<FormProp<CreateDeviceDto>>> = ({ dto, type, handleClick, setDto }) => {
+const AmicoCreateDeviceForm: React.FC<PropsWithChildren<FormProp<DeviceDto>>> = ({ dto, type, handleClick, setDto }) => {
 
       type ConnectionStatus = "idle" | "loading" | "success" | "error";
 

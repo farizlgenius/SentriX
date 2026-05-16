@@ -1,8 +1,12 @@
 D:\code\sentrix\src\Modules\Notifier\Notifier.Client\bin\Debug\net10.0\Notifier.Client.deps.json
 D:\code\sentrix\src\Modules\Notifier\Notifier.Client\bin\Debug\net10.0\Notifier.Client.dll
 D:\code\sentrix\src\Modules\Notifier\Notifier.Client\bin\Debug\net10.0\Notifier.Client.pdb
+D:\code\sentrix\src\Modules\Notifier\Notifier.Client\bin\Debug\net10.0\Device.Contract.dll
 D:\code\sentrix\src\Modules\Notifier\Notifier.Client\bin\Debug\net10.0\Notifier.Contract.dll
+D:\code\sentrix\src\Modules\Notifier\Notifier.Client\bin\Debug\net10.0\SharedKernel.dll
 D:\code\sentrix\src\Modules\Notifier\Notifier.Client\bin\Debug\net10.0\Notifier.Contract.pdb
+D:\code\sentrix\src\Modules\Notifier\Notifier.Client\bin\Debug\net10.0\Device.Contract.pdb
+D:\code\sentrix\src\Modules\Notifier\Notifier.Client\bin\Debug\net10.0\SharedKernel.pdb
 D:\code\sentrix\src\Modules\Notifier\Notifier.Client\obj\Debug\net10.0\Notifier.Client.csproj.AssemblyReference.cache
 D:\code\sentrix\src\Modules\Notifier\Notifier.Client\obj\Debug\net10.0\Notifier.Client.GeneratedMSBuildEditorConfig.editorconfig
 D:\code\sentrix\src\Modules\Notifier\Notifier.Client\obj\Debug\net10.0\Notifier.Client.AssemblyInfoInputs.cache

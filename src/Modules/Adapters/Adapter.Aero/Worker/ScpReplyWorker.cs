@@ -3,6 +3,7 @@ using System.Threading.Channels;
 using Adapter.Abstraction.Events;
 using Adapter.Aero.Helpers;
 using Adapter.Aero.Interfaces;
+using Adapter.Aero.Mapper;
 using Adapter.Aero.Model;
 using AeroAdapter.Application.Interfaces;
 using Device.Contract.Interfaces;
@@ -36,28 +37,31 @@ public sealed class ScpReplyWorker(Channel<SCPReplyMessageDto> queue, ILogger<Sc
 
                 try
                 {
+                    Console.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>> Message Type: " + DescriptionHelper.GetMessageTypeDesc(message.ReplyType));
                     switch (message.ReplyType)
                     {
+                        
                         case (int)enSCPReplyType.enSCPReplyNAK:
                             break;
                         case (int)enSCPReplyType.enSCPReplyTransaction:
                             switch (message.tran.tran_type)
                             {
                                 case (short)tranType.tranTypeSioComm:
-                                    // await md.HandleFoundModuleAsync(message);
                                     var @e = scope.ServiceProvider.GetRequiredService<Events.Contract.Interfaces.IEvent>();
                                     var b = scope.ServiceProvider.GetRequiredService<IMessageBus>();
-                                    var (m, l) = b.QueryAsync(new DeviceMacAndLocationIdByComponentIdQuery((short)message.SCPId), ct).Result;
+                                    var r = scope.ServiceProvider.GetRequiredService<IScpRepository>();
+                                    var d = await r.GetMacAndLocationIdByScpIdAsync(message.SCPId);
+                                    var (mac,loc) = d == null ? (string.Empty,0) : d.Value;
                                     await @e.AddEventAsync(
                                         DateTimeOffset.FromUnixTimeSeconds(message.tran.time).UtcDateTime,
                                         string.Empty,
                                         EventModule.MODULE,
                                         DescriptionHelper.GetTranTypeDesc(message.tran.tran_type),
                                         string.Empty,
-                                        m,
+                                        mac,
                                         string.Empty,
                                         string.Empty,
-                                        l
+                                        loc
                                     );
                                     break;
                                 case (short)tranType.tranTypeCardFull:
@@ -228,18 +232,19 @@ public sealed class ScpReplyWorker(Channel<SCPReplyMessageDto> queue, ILogger<Sc
                             break;
                         case (int)enSCPReplyType.enSCPReplyCommStatus:
                             var @event = scope.ServiceProvider.GetRequiredService<Events.Contract.Interfaces.IEvent>();
-                            var bus = scope.ServiceProvider.GetRequiredService<IMessageBus>();
-                            var (mac, locationId) = bus.QueryAsync(new DeviceMacAndLocationIdByComponentIdQuery((short)message.SCPId), ct).Result;
+                            var repo = scope.ServiceProvider.GetRequiredService<IScpRepository>();
+                            var data = await repo.GetMacAndLocationIdByScpIdAsync(message.SCPId);
+                            var (m, l) = data == null ? (string.Empty, 0) : data.Value;
                             await @event.AddEventAsync(
-                                DateTimeOffset.FromUnixTimeSeconds(message.tran.time).UtcDateTime,
+                                DateTime.UtcNow,
                                 string.Empty,
                                 EventModule.DEVICE,
                                 DescriptionHelper.GetMessageTypeDesc(message.ReplyType),
                                 string.Empty,
-                                mac,
+                                m,
                                 string.Empty,
                                 DescriptionHelper.GetCommStatusDesc(message.comm.status),
-                                locationId
+                                l
                             );
                             break;
                         case (int)enSCPReplyType.enSCPReplyTranStatus:
@@ -257,6 +262,8 @@ public sealed class ScpReplyWorker(Channel<SCPReplyMessageDto> queue, ILogger<Sc
                         case (int)enSCPReplyType.enSCPReplySrSio:
                             // var siostatus = new SioStatus(message.ScpId, message.sts_sio.number, DecodeHelper.TypeSioCommTranCodeDecode(message.sts_sio.com_status), DecodeHelper.TypeCosStatusDecode(Convert.ToByte(message.sts_sio.ip_stat[4])), DecodeHelper.TypeCosStatusDecode(Convert.ToByte(message.sts_sio.ip_stat[5])), DecodeHelper.TypeCosStatusDecode(Convert.ToByte(message.sts_sio.ip_stat[6])));
                             // await publisher.SioNotifyStatus(siostatus);
+                            var s = scope.ServiceProvider.GetRequiredService<ISio>();
+                            await s.HandleFoundSioAsync(message.SCPId,message.sts_sio);
                             break;
                         case (int)enSCPReplyType.enSCPReplySrMp:
                             // var mpstatus = new MpStatus(message.ScpId, message.sts_mp.first, DecodeHelper.TypeCosStatusDecode(Convert.ToByte(message.sts_mp.status[0])));
@@ -290,11 +297,10 @@ public sealed class ScpReplyWorker(Channel<SCPReplyMessageDto> queue, ILogger<Sc
                             break;
                         case (int)enSCPReplyType.enSCPReplyCmndStatus:
                             var writer = scope.ServiceProvider.GetRequiredService<IWriterRepository>();
-                            bus = scope.ServiceProvider.GetRequiredService<IMessageBus>();
-                            Console.WriteLine("################################# Cmnd Status #############################");
+                            repo = scope.ServiceProvider.GetRequiredService<IScpRepository>();
                             await writer.UpdateWriterAuditAsync(
                                 message.SCPId,
-                                await bus.QueryAsync(new DeviceMacByComponentIdQuery((short)message.SCPId), ct),
+                                await repo.MacByScpIdAsync(message.SCPId,ct),
                                 message.cmnd_sts.sequence_number,
                                 message.cmnd_sts
                             );
@@ -302,8 +308,9 @@ public sealed class ScpReplyWorker(Channel<SCPReplyMessageDto> queue, ILogger<Sc
                             // await publisher.CmndNotifyStatus(cstatus);
                             break;
                         case (int)enSCPReplyType.enSCPReplyWebConfigNetwork:
-                            bus = scope.ServiceProvider.GetRequiredService<IMessageBus>();
-                            await bus.PublishAsync(new AssignIpEvent(await bus.QueryAsync(new DeviceMacByComponentIdQuery((short)message.SCPId), ct), UtilitiesHelper.IntegerToIp(message.web_network.cIpAddr)), ct);
+                            var bus = scope.ServiceProvider.GetRequiredService<IMessageBus>();
+                            repo = scope.ServiceProvider.GetRequiredService<IScpRepository>();
+                            await bus.PublishAsync(new AssignIpEvent(await repo.MacByScpIdAsync(message.SCPId,ct), UtilitiesHelper.IntegerToIp(message.web_network.cIpAddr)), ct);
                             break;
                         case (int)enSCPReplyType.enSCPReplyWebConfigNotes:
                             break;
@@ -321,7 +328,8 @@ public sealed class ScpReplyWorker(Channel<SCPReplyMessageDto> queue, ILogger<Sc
                             break;
                         case (int)enSCPReplyType.enSCPReplyWebConfigHostCommPrim:
                             bus = scope.ServiceProvider.GetRequiredService<IMessageBus>();
-                            await bus.PublishAsync(new AssignPortEvent(await bus.QueryAsync(new DeviceMacByComponentIdQuery((short)message.SCPId), ct), message.web_host_comm_prim.ipclient.nPort), ct);
+                            repo = scope.ServiceProvider.GetRequiredService<IScpRepository>();
+                            await bus.PublishAsync(new AssignPortEvent(await repo.MacByScpIdAsync(message.SCPId,ct), message.web_host_comm_prim.ipclient.nPort), ct);
                             break;
                         default:
                             break;

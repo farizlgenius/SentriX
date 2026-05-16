@@ -11,13 +11,11 @@
     <ProjectReference Include="..\..\Contracts\Adapter.Abstraction\Adapter.Abstraction.csproj" />
     <ProjectReference Include="..\..\Contracts\Device.Contract\Device.Contract.csproj" />
     <ProjectReference Include="..\..\Contracts\Events.Contract\Events.Contract.csproj" />
+    <ProjectReference Include="..\..\Contracts\Notifier.Contract\Notifier.Contract.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Entities\" />
-    <Folder Include="Enums\" />
-    <Folder Include="Handler\" />
-    <Folder Include="Helpers\" />
     <Folder Include="Libs\" />
     <Folder Include="Listener\" />
     <Folder Include="Mapper\" />

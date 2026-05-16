@@ -6,12 +6,12 @@ import { MemoryDto as MemoryDto } from "../../../model/Device/MemoryDto"
 import { send } from "../../../api/api"
 import { DeviceEndpoint } from "../../../endpoint/HardwareEndpoint"
 import { useToast } from "../../../context/ToastContext"
-import { HardwareDto } from "../../../model/Device/HardwareDto"
+import { DeviceDto } from "../../../model/Device/DeviceDto"
 import { MemoryAllocateDto } from "../../../model/Device/MemoryAllocateDto"
-import { CreateDeviceDto } from "../../../model/Device/CreateDeviceDto"
+import { CreateAeroDeviceDto } from "../../../model/Device/CreateAeroDeviceDto"
 
 interface HardwareMemAllocFormInterface {
-    data:HardwareDto | CreateDeviceDto;
+    data:DeviceDto | CreateAeroDeviceDto;
 }
 
 export const HardwareMemAllocForm:React.FC<PropsWithChildren<HardwareMemAllocFormInterface>> = ({data}) => {

@@ -1,0 +1,13 @@
+D:\code\sentrix\src\Modules\Core\Core.Infrastructure\bin\Debug\net10.0\Core.Infrastructure.deps.json
+D:\code\sentrix\src\Modules\Core\Core.Infrastructure\bin\Debug\net10.0\Core.Infrastructure.dll
+D:\code\sentrix\src\Modules\Core\Core.Infrastructure\bin\Debug\net10.0\Core.Infrastructure.pdb
+D:\code\sentrix\src\Modules\Core\Core.Infrastructure\obj\Debug\net10.0\Core.Infrastructure.csproj.AssemblyReference.cache
+D:\code\sentrix\src\Modules\Core\Core.Infrastructure\obj\Debug\net10.0\Core.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+D:\code\sentrix\src\Modules\Core\Core.Infrastructure\obj\Debug\net10.0\Core.Infrastructure.AssemblyInfoInputs.cache
+D:\code\sentrix\src\Modules\Core\Core.Infrastructure\obj\Debug\net10.0\Core.Infrastructure.AssemblyInfo.cs
+D:\code\sentrix\src\Modules\Core\Core.Infrastructure\obj\Debug\net10.0\Core.Infrastructure.csproj.CoreCompileInputs.cache
+D:\code\sentrix\src\Modules\Core\Core.Infrastructure\obj\Debug\net10.0\Core.Infrastructure.sourcelink.json
+D:\code\sentrix\src\Modules\Core\Core.Infrastructure\obj\Debug\net10.0\Core.Infrastructure.dll
+D:\code\sentrix\src\Modules\Core\Core.Infrastructure\obj\Debug\net10.0\refint\Core.Infrastructure.dll
+D:\code\sentrix\src\Modules\Core\Core.Infrastructure\obj\Debug\net10.0\Core.Infrastructure.pdb
+D:\code\sentrix\src\Modules\Core\Core.Infrastructure\obj\Debug\net10.0\ref\Core.Infrastructure.dll

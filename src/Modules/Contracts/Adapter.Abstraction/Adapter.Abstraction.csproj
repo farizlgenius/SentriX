@@ -11,8 +11,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Command\" />
     <Folder Include="Constants\" />
     <Folder Include="Events\" />
+    <Folder Include="Query\" />
   </ItemGroup>
 
 </Project>

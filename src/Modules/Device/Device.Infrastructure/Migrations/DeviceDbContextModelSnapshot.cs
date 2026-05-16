@@ -61,6 +61,10 @@ namespace Device.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<int>("port")
                         .HasColumnType("integer");
 
@@ -86,7 +90,79 @@ namespace Device.Infrastructure.Migrations
 
                     b.HasKey("id");
 
-                    b.ToTable("devices", "device");
+                    b.ToTable("Devices", "device");
+                });
+
+            modelBuilder.Entity("Device.Infrastructure.Persistences.Entities.Module", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<int>("address")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("component_id")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("created_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.Property<int>("device_id")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("fw")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("is_active")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("mac")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("port")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("serial_number")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("updated_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("device_id");
+
+                    b.ToTable("Modules", "device");
+                });
+
+            modelBuilder.Entity("Device.Infrastructure.Persistences.Entities.Module", b =>
+                {
+                    b.HasOne("Device.Infrastructure.Persistences.Entities.Devices", "devices")
+                        .WithMany("modules")
+                        .HasForeignKey("device_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("devices");
+                });
+
+            modelBuilder.Entity("Device.Infrastructure.Persistences.Entities.Devices", b =>
+                {
+                    b.Navigation("modules");
                 });
 #pragma warning restore 612, 618
         }

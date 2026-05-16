@@ -1,5 +1,6 @@
 using System;
 using Adapter.Aero.Enums;
+using SharedKernel.Enums;
 
 namespace Adapter.Aero.Helpers;
 

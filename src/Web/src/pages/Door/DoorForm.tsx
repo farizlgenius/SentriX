@@ -10,7 +10,7 @@ import Helper from '../../utility/Helper';
 import { DoorDto } from '../../model/Door/DoorDto';
 import { Options } from '../../model/Options';
 import { ModuleDto } from '../../model/Module/ModuleDto';
-import { HardwareDto } from '../../model/Device/HardwareDto';
+import { DeviceDto } from '../../model/Device/DeviceDto';
 import { ModeDto } from '../../model/ModeDto';
 import { TimeZoneDto } from '../../model/TimeZone/TimeZoneDto';
 import Switch from '../../components/form/switch/Switch';
@@ -188,10 +188,10 @@ var defaultReader: ReaderDto = {
     const res = await send.get(DeviceEndpoint.GET(locationId));
     Logger.info(res)
     if (res && res.data.data) {
-      res.data.data.map((a: HardwareDto) => {
+      res.data.data.map((a: DeviceDto) => {
         setControllerOption(prev => [...prev, {
           label: a.name,
-          value: a.scpId,
+          value: a.componentId,
           isTaken: false
         }])
       });

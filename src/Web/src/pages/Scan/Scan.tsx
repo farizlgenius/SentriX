@@ -1,25 +1,24 @@
 import { ReactNode, useEffect, useState } from "react";
 import PageBreadcrumb from "../../components/common/PageBreadCrumb";
 import { IdReport } from "../../model/IdReport/IdReport";
-import SignalRService from "../../services/SignalRService";
 import { DeviceEndpoint } from "../../endpoint/HardwareEndpoint";
 import { send } from "../../api/api";
 import { useLocation } from "../../context/LocationContext";
 import { Table, TableBody, TableCell, TableHeader, TableRow } from "../../components/ui/table";
 import { useIdReport } from "../../context/IdReportContext";
-import { SignalRTopic } from "../../constants/signalr-constant";
 import Button from "../../components/ui/button/Button";
-import { useAuth } from "../../context/AuthContext";
 import { BaseForm } from "../UiElements/BaseForm";
 import { HardwareIcon } from "../../icons";
 import { FormContent } from "../../model/Form/FormContent";
 import AeroCreateDeviceForm from "../../components/form/device/AeroCreateDeviceForm";
 import { FormType } from "../../model/Form/FormProp";
-import { CreateDeviceDto } from "../../model/Device/CreateDeviceDto";
+import { CreateAeroDeviceDto } from "../../model/Device/CreateAeroDeviceDto";
 import Helper from "../../utility/Helper";
 import { HardwareToast } from "../../model/ToastMessage";
 import { usePopup } from "../../context/PopupContext";
 import { useToast } from "../../context/ToastContext";
+import { mapFields } from "../../utility/Mapper";
+import { CreateDeviceStrMetadataDto } from "../../model/Device/CreateDeviceStrMetadataDto";
 
 
 
@@ -30,16 +29,15 @@ const ID_REPORT_TABLE_HEADER = ["Id", "Mac", "Firmware", "Serial No", "Action"];
 
 
 const Scan = () => {
-      const { idReports, setIdReports } = useIdReport();
+      const { idReports,setIdReports } = useIdReport();
       const { locationId } = useLocation();
       const { setCreate, setConfirmCreate } = usePopup();
       const toggleRefresh = () => setRefresh(!refresh);
       const { toggleToast } = useToast();
       const [refresh, setRefresh] = useState(false);
-      const { token } = useAuth();
       const [form, setForm] = useState(false);
 
-      const defaultCreateDto: CreateDeviceDto = {
+      const defaultCreateDto: CreateAeroDeviceDto = {
             // Base
             locationId: locationId,
 
@@ -51,14 +49,25 @@ const Scan = () => {
             mac: "",
             syncedAt: new Date(),
             type: "AERO",
-            status: "PENDING"
+            status: "PENDING",
+            ip: "",
+            port: 0,
+            metadata: {
+                  portOne: false,
+                  protocolOne: -1    ,
+                  baudRateOne: -1,
+                  portTwo: false,
+                  protocolTwo: -1,
+                  baudRateTwo: -1
+            }
       }
 
-      const [dto, setDto] = useState<CreateDeviceDto>(defaultCreateDto);
+      const [dto, setDto] = useState<CreateAeroDeviceDto>(defaultCreateDto);
 
-
-
-
+       function mapDto(api: CreateAeroDeviceDto): CreateDeviceStrMetadataDto {
+            const { metadata, ...rest } = api
+            return mapFields(rest, { metadata: JSON.stringify(metadata) })
+      }
 
 
 
@@ -73,7 +82,17 @@ const Scan = () => {
                   mac: data.mac,
                   syncedAt: new Date(),
                   type: "AERO",
-                  status: "PENDING"
+                  status: "PENDING",
+                  ip: "",
+                  port: 0,
+                  metadata: {
+                        portOne: false,
+                        protocolOne: -1,
+                        baudRateOne: -1,
+                        portTwo: false,
+                        protocolTwo: -1,
+                        baudRateTwo: -1
+                  }     
             })
       }
 
@@ -81,11 +100,13 @@ const Scan = () => {
             switch (e.currentTarget.name) {
                   case "create":
                         setConfirmCreate(() => async () => {
-                              const res = await send.post(DeviceEndpoint.CREATE, dto);
+                              var req:CreateDeviceStrMetadataDto = mapDto(dto);
+                              const res = await send.post(DeviceEndpoint.CREATE, req);
                               if (Helper.handleToastByResCode(res, HardwareToast.CREATE, toggleToast)) {
                                     toggleRefresh();
                                     setForm(false);
                                     setDto(defaultCreateDto);
+                                    setIdReports(prev => prev.filter(r => r.scpId !== dto.componentId));
                               }
                         })
                         setCreate(true);

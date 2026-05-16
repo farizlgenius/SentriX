@@ -4,6 +4,7 @@ using Adapter.Aero.Helpers;
 using Adapter.Aero.Persistences.Entities;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel.Domain;
+using SharedKernel.Enums;
 
 namespace Adapter.Aero.Persistences;
 
@@ -18,6 +19,7 @@ public sealed class AeroDbContext(DbContextOptions<AeroDbContext> options) : DbC
       public DbSet<DriverConfiguration> DriverConfigurations { get; set; }
       public DbSet<SioPanelConfiguration> SioPanelConfigurations { get; set; }
       public DbSet<InputPointSpecification> InputPointSpecifications { get; set; }
+      public DbSet<Scp> Scps {get; set;}
 
       public DbSet<ElevatorAccessLevelSpecification> ElevatorAccessLevelSpecifications { get; set; }
       protected override void OnModelCreating(ModelBuilder modelBuilder)

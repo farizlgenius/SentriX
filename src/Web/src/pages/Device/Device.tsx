@@ -1,11 +1,23 @@
 import { ReactNode, useEffect, useState } from "react";
 import PageBreadcrumb from "../../components/common/PageBreadCrumb";
-import Button from "../../components/ui/button/Button";
-import { HardwareIcon, ResetIcon, ScanIcon, ToggleTranIcon, TransferIcon, UploadIcon } from "../../icons";
+import {
+  AddIcon,
+  AmicoIcon,
+  ControlIcon,
+  HardwareIcon,
+  Info2Icon,
+  ModuleIcon,
+  ResetIcon,
+  ScanIcon,
+  ToggleTranIcon,
+  TransferIcon,
+  TrashBinIcon,
+  UploadIcon
+} from "../../icons";
 import Modals from "../UiElements/Modals";
 import Helper from "../../utility/Helper";
-import DeviceForm from "../../components/form/device/DeviceForm";
-import { HardwareDto } from "../../model/Device/HardwareDto";
+import DeviceForm from "../../components/form/device/AeroDeviceForm";
+import { DeviceDto } from "../../model/Device/DeviceDto";
 import { IdReport } from "../../model/IdReport/IdReport";
 import SignalRService from "../../services/SignalRService";
 import { StatusDto } from "../../model/StatusDto";
@@ -21,484 +33,342 @@ import { FormContent } from "../../model/Form/FormContent";
 import { useToast } from "../../context/ToastContext";
 import { HardwareToast } from "../../model/ToastMessage";
 import Badge from "../../components/ui/badge/Badge";
-import { Table, TableBody, TableCell, TableHeader, TableRow } from "../../components/ui/table";
+import { TableCell } from "../../components/ui/table";
 import { HardwareMemAllocForm } from "../../components/form/device/HardwareMemAllocForm";
-import { useLoading } from "../../context/LoadingContext";
 import { HardwareComponentForm } from "../../components/form/device/HardwareComponentForm";
 import { TranStatusDto } from "../../model/Device/TranStatusDto";
 import { FormType } from "../../model/Form/FormProp";
 import { usePopup } from "../../context/PopupContext";
 import { SetTranDto } from "../../model/Device/SetTranDto";
 import { usePagination } from "../../context/PaginationContext";
-import { CreateDeviceDto } from "../../model/Device/CreateDeviceDto";
 import { useIdReport } from "../../context/IdReportContext";
 import { SignalRTopic } from "../../constants/signalr-constant";
-import AeroCreateDeviceForm from "../../components/form/device/AeroCreateDeviceForm";
 import SelectDeviceForm from "../../components/form/device/SelectDeviceForm";
 import { DeviceType } from "../../enum/DeviceType";
-import AmicoCreateDeviceForm from "../../components/form/device/AmicoCreateDeviceForm";
+import { AeroModuleDetailForm } from "../../components/form/device/AeroModuleDetailForm";
+import AeroDeviceForm from "../../components/form/device/AeroDeviceForm";
+import { DeviceDtoMetadata as AeroDtoMetadata } from "../../model/Device/DeviceDtoStrMetadata";
+import { mapFields } from "../../utility/Mapper";
+
+const HEADER = ["Type", "Name", "Mac", "Firmware", "IP", "Port", "Configuration", "Status", "Action"];
+const KEY = ["type", "name", "mac", "fw", "ip", "port"];
 
 
-const HEADER = ["Name", "Type", "Mac","Firmware", "IP","Port", "Transction", "Configuration", "Status", "Action"];
-const KEY = ["name", "hardwareTypeDetail", "mac","firmware", "ip","port", "tranStatus"];
-// Hardware Page
-const ID_REPORT_KEY = [ "scpId",'mac','fw','serialNumber'];
-const ID_REPORT_TABLE_HEADER = ["Id", "Mac", "Firmware","Serial No", "Action"];
+
+
 
 
 const Device = () => {
-  const { FlashLoading } = useLoading();
-  const { idReports,setIdReports } = useIdReport();
-  const {setPagination} = usePagination();
+  const { idReports, setIdReports } = useIdReport();
+  const { setPagination } = usePagination();
   const { locationId } = useLocation();
   const { toggleToast } = useToast();
-  const { filterPermission,token } = useAuth();
-  const { setCreate,setRemove,setUpdate,setConfirmCreate,setConfirmRemove,setConfirmUpdate,setMessage,setInfo  } = usePopup();
+  const { filterPermission, token } = useAuth();
+  const {
+    setCreate,
+    setRemove,
+    setUpdate,
+    setConfirmRemove,
+    setConfirmUpdate,
+    setMessage,
+    setInfo
+  } = usePopup();
   const [refresh, setRefresh] = useState(false);
   const toggleRefresh = () => setRefresh(!refresh);
 
-  let ScanTableTemplate: ReactNode;
-
-
-
-  const defaultDto: HardwareDto = {
-    // Base
-    locationId: locationId,
-    isActive: true,
-
-    // Define
-    name: "",
-    ip: "",
-    serialNumber: "",
-    isUpload: false,
-    isReset: false,
-    hardwareType: 1,
-    hardwareTypeDetail: "",
-    firmware: "",
-    port: "",
-    modules: [],
-    portOne: false,
-    portTwo: false,
-    protocolOne: 0,
-    protocolOneDetail: "",
-    baudRateOne: -1,
-    protocolTwo: 0,
-    protocolTwoDetail: "",
-    baudRateTwo: -1,
+  const defaultDto:DeviceDto = {
     id: 0,
-    scpId: 0,
+    componentId: 0,
+    name: "",
+    serialNumber: "",
     mac: "",
-    lastSync: new Date()
+    ip: "",
+    port: "",
+    fw: "",
+    type: "",
+    status: "",
+    syncedAt: new Date(),
+    locationId: 0,
+    metadata: "",
   }
 
-   const defaultCreateDto: CreateDeviceDto = {
-     // Base
-     locationId: locationId,
+  const aeroDefault:AeroDtoMetadata = {
+    id: 0,
+    componentId: 0,
+    name: "",
+    serialNumber: "",
+    mac: "",
+    ip: "",
+    port: "",
+    fw: "",
+    type: "",
+    status: "",
+    syncedAt: new Date(),
+    locationId: 0,
+    metadata: {
+      portOne: false,
+      protocolOne: -1,
+      baudRateOne: -1,
+      portTwo: false,
+      protocolTwo: -1,
+      baudRateTwo: -1
+    }
+  }
 
-     // Define
-     name: "",
-     serialNumber: "",
-     fw: "",
-     componentId: 0,
-     mac: "",
-     syncedAt: new Date(),
-     type: "",
-     status: "PENDING"
-   }
-  
 
-
-  {/* Modal Handler */ }
   const [scan, setScan] = useState<boolean>(false);
-  const [selectType,setSelectType] = useState<boolean>(false);
-  const [form,setForm] = useState<boolean>(false);
-  const [formType,setFormType] = useState<FormType>(FormType.CREATE);
+  const [selectType, setSelectType] = useState<boolean>(false);
+  const [form, setForm] = useState<boolean>(false);
+  const [formType, setFormType] = useState<FormType>(FormType.CREATE);
+  const [currentDeviceType, setCurrentDeviceType] = useState<string>("");
+  const [deviceDto, setDeviceDto] = useState<DeviceDto>(defaultDto);
+  const [aeroDto, setAeroDto] = useState<AeroDtoMetadata>(aeroDefault);
+  const [data, setData] = useState<DeviceDto[]>([]);
+  const [status, setStatus] = useState<StatusDto[]>([]);
+  const [tranStatus, setTranStatus] = useState<TranStatusDto[]>([]);
+  const [select, setSelect] = useState<DeviceDto[]>([]);
 
-  // Upload Modal
-  const [deviceType,setDeviceType] = useState<string>("");
   const handleCloseModal = () => setScan(false);
   const handleCloseSelect = () => setSelectType(false);
 
+  const fetchData = async (
+    pageNumber: number,
+    pageSize: number,
+    fetchLocationId?: number,
+    search?: string,
+    startDate?: string,
+    endDate?: string
+  ) => {
+    const res = await send.get(DeviceEndpoint.PAGINATION(pageNumber, pageSize, fetchLocationId, search, startDate, endDate));
+    if (res && res.data) {
+      setData(res.data.items);
+      setPagination(res.data);
 
-
-  {/* IdReport */ }
-  const handleAddIdReport = async (data: IdReport) => {
-    setCreateDto({
-      name:"",
-      componentId:data.scpId,
-      mac:data.mac,
-      serialNumber:data.serialNumber,
-      fw:data.fw,
-      type:"aero",
-      syncedAt:new Date(),
-      status:"PENDING",
-      locationId:locationId
-    });
-    console.log(data);
-    setScan(false);
-    setForm(true);
-  }
-
-
-  ScanTableTemplate = (
-    <>
-      <div className="max-h-[70vh] overflow-y-auto hidden-scroll">
-        <Table>
-          {/* Table Header */}
-          <TableHeader className="border-b border-gray-100 dark:border-white/[0.05] bg-white dark:bg-gray-900 sticky top-0 z-10">
-            <TableRow>
-              {ID_REPORT_TABLE_HEADER.map((head: string, i: number) =>
-                <TableCell
-                  key={i}
-                  isHeader
-                  className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
-                >
-                  {head}
-                </TableCell>
-              )}
-            </TableRow>
-          </TableHeader>
-          <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
-            {/* { 
-            
-             idReports.map((data: any, i: number) => (
-              <TableRow key={i}>
-                {ID_REPORT_KEY.map((key: string, i: number) =>
-                  <TableCell key={i} className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {String(data[key as keyof typeof data])}
-                  </TableCell>
-                )}
-                <TableCell>
-                  <Button onClick={() => handleAddIdReport(data)} size="sm" variant="primary">
-                    Add
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))
-            } */}
-            <></>
-
-          </TableBody>
-        </Table>
-      </div>
-
-    </>
-  );
-
-
-
-  {/* Hardware Data */ }
-  const [deviceDto,setDeviceDto] = useState<HardwareDto>(defaultDto);
-  const [createDto,setCreateDto] = useState<CreateDeviceDto>(defaultCreateDto);
-  const [data, setData] = useState<HardwareDto[]>([]);
-  const [status, setStatus] = useState<StatusDto[]>([]);
-  const [tranStatus, setTranStatus] = useState<TranStatusDto[]>([]);
-  const fetchData = async (pageNumber: number, pageSize: number,locationId?:number,search?: string, startDate?: string, endDate?: string) => {
-    const res = await send.get(DeviceEndpoint.PAGINATION(pageNumber,pageSize,locationId,search, startDate, endDate))
-    if (res && res.data.data) {
-      setData(res.data.data.data);
-      setPagination(res.data.data.page);
-      // Batch set state
-      const newStatuses = res.data.data.data.map((a: HardwareDto) => ({
-        scpId: a.scpId,
-        driverId: a.scpId,
+      const newStatuses = res.data.items.map((item: StatusDto) => ({
+        id: item.id,
+        componentId: item.componentId,
         status: -1,
         tamper: -1,
         ac: -1,
         batt: -1
       }));
 
-      const newTranStatuses = res.data.data.data.map((a: HardwareDto) => ({
-        scpId: a.scpId,
+      const newTranStatuses = res.data.items.map((item: StatusDto) => ({
+        scpId: item.componentId,
         capacity: 0,
         oldest: 0,
         lastReport: 0,
         lastLog: 0,
         disabled: 0,
+        status: ""
       }));
 
-      console.log(newStatuses);
+      setStatus(newStatuses);
+      setTranStatus(newTranStatuses);
 
-      setTranStatus((prev) => [...prev, ...newTranStatuses])
-      setStatus((prev) => [...prev, ...newStatuses]);
-      console.log(res.data.data)
-      // Fetch status for each
-      res.data.data.data.forEach((a: HardwareDto) => {
-        fetchStatus(a.id);
-        fetchTransactionStatus(a.mac);
+      res.data.items.forEach((item: DeviceDto) => {
+        fetchStatus(item.id);
       });
     }
+  };
 
-  }
-
-  const setTran = async (data:SetTranDto[]) => {
-    var res = await send.post(DeviceEndpoint.TRAN_RANGE,data);
-    if(Helper.handleToastByResCode(res,HardwareToast.TOGGLE_TRAN,toggleToast)){
+  const setTran = async (tranData: SetTranDto[]) => {
+    const res = await send.post(DeviceEndpoint.TRAN_RANGE, tranData);
+    if (Helper.handleToastByResCode(res, HardwareToast.TOGGLE_TRAN, toggleToast)) {
       toggleRefresh();
     }
-  }
+  };
+
   const fetchStatus = async (id: number) => {
     const res = await send.get(DeviceEndpoint.STATUS(id));
-    console.log(res)
-    if (res && res.data.data) {
-      setStatus((prev) => prev.map((a) =>
-        a.scpId == res.data.data.scpId
-          ? {
-            ...a,
-            status: res.data.data.status,
-          }
-          : {
-            ...a
-          }
-      )
+    if (res.data) {
+      setStatus((prev) =>
+        prev.map((item) =>
+          item.id === res.data.id
+            ? {
+                ...item,
+                status: res.data.status
+              }
+            : item
+        )
       );
     }
-  }
+  };
 
-  const fetchTransactionStatus = async (mac: string) => {
-    const res = await send.get(DeviceEndpoint.TRAN(mac));
-    if (res && res.data.data) {
-      setTranStatus((prev) => prev.map((a: TranStatusDto) =>
-        a.scpId == res.data.data.scpId ? {
-          ...a,
-        } : {
-          ...a
-        }
-      ))
-    }
-  }
-
-  const resetDevice = async (ScpMac: string) => {
-    const res = await send.post(DeviceEndpoint.RESET(ScpMac))
+  const resetDevice = async (id: number) => {
+    const res = await send.post(DeviceEndpoint.RESET(id));
     if (Helper.handleToastByResCode(res, HardwareToast.RESET, toggleToast)) {
       toggleRefresh();
     }
-  }
+  };
 
   const uploadConfig = async (id: number) => {
-    const res = await send.post(DeviceEndpoint.UPLOAD(id))
+    const res = await send.post(DeviceEndpoint.UPLOAD(id));
     if (Helper.handleToastByResCode(res, HardwareToast.UPLOAD, toggleToast)) {
       toggleRefresh();
+    }
+  };
+
+  const handleFormSelection = (type:string,data:any) => {
+    switch(type){
+      case DeviceType.AERO :
+       const {metadata,...rest} = data;
+        setAeroDto(mapFields(rest, { metadata: JSON.parse(metadata) }));
+      break;
+      case DeviceType.AMICO:
+        break;
+        default:
+          break;
     }
   }
 
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setDeviceDto((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-  }
 
+  const handleEdit = (item: DeviceDto) => {
 
-
-  {/* Handle Action Table*/ }
-  const handleEdit = (data: HardwareDto) => {
-    setFormType(FormType.UPDATE)
-    setDeviceDto({
-      // Base
-      id :data.id,
-      scpId: data.scpId,
-      name: data.name,
-      hardwareType: data.hardwareType,
-      hardwareTypeDetail: data.hardwareTypeDetail,
-      mac: data.mac,
-      ip: data.ip,
-      firmware: data.firmware,
-      port: data.port,
-      modules: data.modules,
-      serialNumber: data.serialNumber,
-      isUpload: data.isUpload,
-      isReset: data.isReset,
-      portOne: data.portOne,
-      portTwo: data.portTwo,
-      protocolOne:data.protocolOne,
-      baudRateOne:data.baudRateOne,
-      protocolOneDetail:data.protocolOneDetail,
-      protocolTwo:data.protocolTwo,
-      protocolTwoDetail:data.protocolTwoDetail,
-      baudRateTwo:data.baudRateTwo,
-      lastSync:new Date(),
-
-      locationId: data.locationId,
-      isActive: true,
-    })
+    setFormType(FormType.UPDATE);
+    setCurrentDeviceType(item.type);
+    handleFormSelection(item.type,item);
     setForm(true);
-  }
+  };
 
-  const handleRemove = (data: HardwareDto) => {
+  const handleRemove = (item: DeviceDto) => {
     setConfirmRemove(() => async () => {
-      const res = await send.delete(DeviceEndpoint.DELETE(data.id));
-      if(Helper.handleToastByResCode(res,HardwareToast.DELETE,toggleToast)){
-        setDeviceDto(defaultDto)
+      const res = await send.delete(DeviceEndpoint.DELETE(item.id));
+      if (Helper.handleToastByResCode(res, HardwareToast.DELETE, toggleToast)) {
+        setDeviceDto(defaultDto);
         toggleRefresh();
       }
-    })
+    });
     setRemove(true);
+  };
 
-  }
-  const handleInfo = (data:HardwareDto) => {
+  const handleInfo = (item: DeviceDto) => {
     setFormType(FormType.INFO);
-    setDeviceDto(data);
+    setCurrentDeviceType(item.type);
+    handleFormSelection(item.type,item);
     setForm(true);
-  }
-  {/* Handle Click */ }
+  };
+
   const handleClickWithEvent = (e: React.MouseEvent<HTMLButtonElement>) => {
-    console.log(e.currentTarget.name);
     switch (e.currentTarget.name) {
       case "add":
         setFormType(FormType.CREATE);
+        setDeviceDto(defaultDto);
         setSelectType(true);
         break;
       case "report":
-        if (select.length == 0) {
-          setMessage("Please select object")
+        if (select.length === 0) {
+          setMessage("Please select object");
           setInfo(true);
         } else {
-          let data:SetTranDto[] = []
-          select.map((a:HardwareDto) => {
-            data.push({
-              macAddress:a.mac,
-              param:1
-            });
-          })
-          setTran(data);
-          
+          const tranData = select.map((item: DeviceDto) => ({
+            macAddress: item.mac,
+            param: 1
+          }));
+          setTran(tranData);
         }
         break;
       case "delete":
-        if (select.length == 0) {
-          setMessage("Please select object")
+        if (select.length === 0) {
+          setMessage("Please select object");
           setInfo(true);
         } else {
           setConfirmRemove(() => async () => {
-            var data: number[] = [];
-            select.map(async (a: HardwareDto) => {
-              data.push(a.id)
-            })
-            var res = await send.post(DeviceEndpoint.DELETE_RANGE, data)
+            const ids = select.map((item: DeviceDto) => item.id);
+            const res = await send.post(DeviceEndpoint.DELETE_RANGE, ids);
             if (Helper.handleToastByResCode(res, HardwareToast.DELETE_RANGE, toggleToast)) {
               setRemove(false);
               toggleRefresh();
             }
-          })
+          });
           setRemove(true);
         }
         break;
       case "update":
         setConfirmUpdate(() => async () => {
-          const res = await send.put(DeviceEndpoint.UPDATE,deviceDto);
-          if(Helper.handleToastByResCode(res,HardwareToast.UPDATE,toggleToast)){
+          const res = await send.put(DeviceEndpoint.UPDATE, deviceDto);
+          if (Helper.handleToastByResCode(res, HardwareToast.UPDATE, toggleToast)) {
             setForm(false);
             toggleRefresh();
             setDeviceDto(defaultDto);
+            setCurrentDeviceType("");
           }
-        })
+        });
         setUpdate(true);
         break;
       case "create":
-        setConfirmCreate(() => async () => {
-          const res = await send.post(DeviceEndpoint.CREATE,createDto);
-          if(Helper.handleToastByResCode(res,HardwareToast.CREATE,toggleToast)){
-            toggleRefresh();
-            setForm(false);
-            setCreateDto(defaultCreateDto);
-          }
-        })
         setCreate(true);
         break;
       case "type":
-        setForm(true)
+        setForm(true);
         break;
       case "scan":
         setScan(true);
-        // fetchIdReport();
         break;
       case "close":
-        setForm(false)
-        setCreateDto(defaultCreateDto)
-        setDeviceDto(defaultDto)
+        setForm(false);
+        setDeviceDto(defaultDto);
+        setCurrentDeviceType("");
         break;
       case "reset":
-        if (select.length != 0) {
-          select.map((a: HardwareDto) => {
-            resetDevice(a.mac);
-          })
-
+        if (select.length !== 0) {
+          select.forEach((item: DeviceDto) => resetDevice(item.id));
         } else {
-          alert("No selected object")
+          setMessage("No selected object");
+          setInfo(true);
         }
         break;
       case "upload":
-        if (select.length != 0) {
-          select.map((a: HardwareDto) => {
-            uploadConfig(a.id);
-          })
-
+        if (select.length !== 0) {
+          select.forEach((item: DeviceDto) => uploadConfig(item.id));
         } else {
-          alert("No selected object")
+          setMessage("No selected object");
+          setInfo(true);
         }
         break;
       default:
         break;
     }
-  }
+  };
 
-  {/* checkBox */ }
-  const [select, setSelect] = useState<HardwareDto[]>([]);
-
-  const fetchIdReport = async () => {
-    var res = await send.get(DeviceEndpoint.ID_REPORT);
-   setIdReports(res.data);
-  }
-
-
-  {/* UseEffect */ }
   useEffect(() => {
     const initSignalR = async () => {
+      if (!token) return;
 
-
-      if (!token)
-        return;
-
-      // ⭐ ensure connection is started
       await SignalRService.startConnection();
-
       const connection = SignalRService.getConnection();
       if (!connection) return;
 
-      // ⭐ register handlers FIRST
-      connection.on(SignalRTopic.IDREPORT, (idreports: IdReport[]) => {
-        console.log("Received realtime update:", idreports);
-        setIdReports(idreports);
+      connection.on(SignalRTopic.IDREPORT, (reports: IdReport[]) => {
+        setIdReports(reports);
       });
 
-      // ⭐ THEN join group
       try {
         await SignalRService.joinGroup(SignalRTopic.IDREPORT);
-        console.log("Joined group:");
       } catch (err) {
         console.error("Subscribe error:", err);
       }
 
-
-      // initial load
-      fetchIdReport();
+      const res = await send.get(DeviceEndpoint.ID_REPORT);
+      setIdReports(res.data);
     };
 
     initSignalR();
-
 
     return () => {
       const connection = SignalRService.getConnection();
       connection?.off(SignalRTopic.IDREPORT);
     };
-  }, [refresh, locationId]);
-
+  }, [refresh, locationId, token, setIdReports]);
 
   const actionBtn: ActionButton[] = [
     {
       buttonName: "Reset",
       lable: "reset",
       icon: <ResetIcon />
-    }, {
+    },
+    {
       buttonName: "Upload",
       lable: "upload",
       icon: <UploadIcon />
@@ -507,164 +377,147 @@ const Device = () => {
       buttonName: "Transfer",
       lable: "transfer",
       icon: <TransferIcon />
-    },{
-      buttonName:"Report Toggle",
-      lable:"report",
-      icon:<ToggleTranIcon/>
+    },
+    {
+      buttonName: "Report Toggle",
+      lable: "report",
+      icon: <ToggleTranIcon />
     },
     {
       buttonName: "Scan",
       lable: "scan",
-      icon: <>
-        <ScanIcon className={idReports.length != 0 ? "animate-ping" : ""} />
-      </>
+      icon: <ScanIcon className={idReports.length !== 0 ? "animate-ping" : ""} />
     }
   ];
-  const renderOptional = (data: HardwareDto, statusDto: StatusDto[],index:number) => {
-    console.log(data)
-    console.log(statusDto)
-    console.log(statusDto.find(b => b.scpId == data.scpId)?.status)
+
+  const renderOptional = (item: DeviceDto, statusDto: StatusDto[], index: number) => {
     return [
       <TableCell key={index} className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-        <>
-          {
-            data.isReset == true && statusDto.find(b => b.scpId == data.scpId && b.driverId == data.id)?.status == 0 ?
-              <FlashLoading />
-              :
-              data.isReset == true ?
-                <Badge
-                  variant="solid"
-                  size="sm"
-                  color="error"
-                >
-                  Reset Require
-                </Badge>
-                : data.isUpload == true ?
-                  <Badge
-                    variant="solid"
-                    size="sm"
-                    color="warning"
-                  >
-                    Upload Require
-                  </Badge>
-                  :
-                  <Badge
-                    variant="solid"
-                    size="sm"
-                    color="success"
-                  >
-                    Synced
-                  </Badge>
-          }
-
-        </>
+        <Badge variant="solid" size="sm" color={item.status == "RESET" ? "error" : item.status == "UPLOAD" ? "warning" : "success" }>
+          {item.status === "RESET" ? "Reset" : item.status === "UPLOAD" ? "Upload" : "Synced"}
+        </Badge>
       </TableCell>,
-      <TableCell key={index+1} className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-        {data.isReset || data.isUpload ?
-          <Badge
-            size="sm"
-            color="error"
-          >
-            Error
-          </Badge>
-          :
-          <Badge
-            size="sm"
-            color={
-              statusDto.find(b => b.scpId == data.scpId)?.status == 1
-                ? "success"
-                : statusDto.find(b => b.scpId == data.scpId)?.status == 0
-                  ? "error"
-                  : "warning"
-            }
-          >
-            {statusDto.find(b => b.scpId == data.scpId)?.status == 1 ? "Online" : statusDto.find(b => b.scpId == data.scpId)?.status == 0 ? "Offline" : statusDto.find(b => b.scpId == data.scpId)?.status}
-          </Badge>
-
-        }
+      <TableCell key={index + 1} className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+        <Badge
+          size="sm"
+          color={statusDto.find((statusItem) => statusItem.id === item.id)?.status ? "success" : "error"}
+        >
+          {statusDto.find((statusItem) => statusItem.id === item.id)?.status
+            ? "Online"
+            : "Offline"}
+        </Badge>
       </TableCell>
-    ]
-  }
+    ];
+  };
 
-  {/* Form */ }
-  const tabContent: FormContent[] = [
+
+
+  const aeroContent: FormContent[] = [
     {
-      icon: <HardwareIcon />,
-      label: "Hardware",
-      content: <DeviceForm handleClick={handleClickWithEvent}  dto={deviceDto} setDto={setDeviceDto} type={formType} />
-    }, {
-      icon: <HardwareIcon />,
-      label: "Memory Allocate",
+      icon: <Info2Icon />,
+      label: "Device Information",
+      content:  <AeroDeviceForm handleClick={handleClickWithEvent} dto={aeroDto} setDto={setAeroDto} type={formType} />
+    },
+    {
+      icon: <ModuleIcon />,
+      label: "Module",
+      content:<AeroModuleDetailForm/> 
+    },
+    {
+      icon: <TransferIcon />,
+      label: "Memory Allocate Detail",
       content: <HardwareMemAllocForm data={deviceDto} />
-    }, {
-      icon: <HardwareIcon />,
-      label: "Component",
+    },
+    {
+      icon: <ControlIcon />,
+      label: "ComponentSync Detail",
       content: <HardwareComponentForm data={deviceDto} />
     }
   ];
 
-  const createAmicoContent: FormContent[] = [
+  const amicoContent: FormContent[] = [
     {
       icon: <HardwareIcon />,
-      label: "AMICO",
-      content: <AmicoCreateDeviceForm handleClick={handleClickWithEvent}  dto={createDto} setDto={setCreateDto} type={formType} />
+      label: "Show Detail",
+      content: (
+        // <DeviceInfoSummary device={deviceDto} />
+        <></>
+      )
     }
-  ]
-
-  const createAeroContent: FormContent[] = [
-    {
-      icon: <HardwareIcon />,
-      label: "AERO",
-      content: <AeroCreateDeviceForm handleClick={handleClickWithEvent}  dto={createDto} setDto={setCreateDto} type={formType} />
-    }
-  ]
-
+  ];
 
   return (
     <>
+      {selectType && (
+        <Modals
+          body={<SelectDeviceForm setDeviceType={setCurrentDeviceType} setSelectType={setSelectType} setForm={setForm} />}
+          handleClickWithEvent={handleCloseSelect}
+        />
+      )}
 
-      {/* {select &&ด
-        <Modals header="Hardware Select" body={<SelectDeviceForm setDto={setHardwareType} handleClick={handleClickWithEvent} />} handleClickWithEvent={handleCloseSelectDevice} />
-      } */}
-      {scan &&
-        <Modals header="Host List" body={ScanTableTemplate} handleClickWithEvent={handleCloseModal} />
-      }
-
-      {
-        selectType && 
-
-        <Modals body={<SelectDeviceForm setDeviceType={setDeviceType} setSelectType={setSelectType} setForm={setForm} />} handleClickWithEvent={handleCloseSelect}  />
-      }
+      {scan && <Modals header="Scan" body={<div className="text-sm text-gray-500">Scanning workspace is not changed in this screen yet.</div>} handleClickWithEvent={handleCloseModal} />}
 
       <PageBreadcrumb pageTitle="Device" />
       <div className="space-y-6">
-        {form ?
-          <>
-
-            {deviceType == DeviceType.AERO ?
-              <BaseForm tabContent={createAeroContent} header="Aero Form" desc="Form used for create device." />
-             :
-              <BaseForm tabContent={createAmicoContent} header="Amico Form" desc="Form used for create device." />
-             }
-            
-          </>
-
-          :
-          <BaseTable<HardwareDto> refresh={refresh} headers={HEADER} keys={KEY} data={data} onEdit={handleEdit} onRemove={handleRemove} onInfo={handleInfo} onClick={handleClickWithEvent} select={select} setSelect={setSelect} permission={filterPermission(FeatureId.device)} action={actionBtn} renderOptionalComponent={renderOptional} status={status} locationId={locationId} fetchData={fetchData} specialDisplay={[
-            {
-              key: "tranStatus",
-              content: (a, i) => <TableCell key={i} className="px-4 py-3 text-gray-500 text-center text-theme-sm dark:text-gray-400">
-                <Badge size="sm" color={tranStatus.find(x => x.scpId == a.scpId)?.disabled == 0 && tranStatus.find(x => x.scpId == a.scpId)?.status ? "success" : "error"}>
-                  {tranStatus.find(x => x.scpId == a.scpId)?.status ?? "Unknown"}
-                </Badge>
-              </TableCell>
+        {form ? (
+          <BaseForm
+            tabContent={currentDeviceType === DeviceType.AMICO ? amicoContent : aeroContent}
+            header={currentDeviceType === DeviceType.AMICO ? "AMICO Device Detail" : "AERO Device Detail"}
+            desc={
+              currentDeviceType === DeviceType.AMICO
+                ? "Single-tab AMICO detail with the existing form and a graphical module split."
+                : "Split detail workspace for AERO with information, module, memory allocation, and component sync tabs."
             }
-          ]} />
-        }
+          />
+        ) : (
+          <BaseTable<DeviceDto>
+            refresh={refresh}
+            headers={HEADER}
+            keys={KEY}
+            data={data}
+            onEdit={handleEdit}
+            onRemove={handleRemove}
+            onInfo={handleInfo}
+            onClick={handleClickWithEvent}
+            select={select}
+            setSelect={setSelect}
+            permission={filterPermission(FeatureId.device)}
+            action={actionBtn}
+            renderOptionalComponent={renderOptional}
+            status={status}
+            locationId={locationId}
+            fetchData={fetchData}
+            specialDisplay={[
+              {
+                key: "tranStatus",
+                content: (item, index) => (
+                  <TableCell key={index} className="px-4 py-3 text-gray-500 text-center text-theme-sm dark:text-gray-400">
+                    <Badge
+                      size="sm"
+                      color={tranStatus.find((tranItem) => tranItem.scpId === item.componentId)?.disabled === 0 &&
+                        tranStatus.find((tranItem) => tranItem.scpId === item.componentId)?.status
+                        ? "success"
+                        : "error"}
+                    >
+                      {tranStatus.find((tranItem) => tranItem.scpId === item.componentId)?.status ?? "Unknown"}
+                    </Badge>
+                  </TableCell>
+                )
+              },
+              {
+                key: "type",
+                content: (item, index) => (
+                  <TableCell key={index} className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                    {item.type === "AERO" ? <ModuleIcon className="text-2xl" /> : <AmicoIcon className="text-2xl"/>}
+                  </TableCell>
+                )
+              }
+            ]}
+          />
+        )}
       </div>
     </>
   );
-}
-
+};
 
 export default Device;

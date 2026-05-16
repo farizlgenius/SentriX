@@ -6,12 +6,12 @@ import { useToast } from "../../../context/ToastContext";
 import { DeviceEndpoint } from "../../../endpoint/HardwareEndpoint";
 import { send } from "../../../api/api";
 import { VerifyHardwareDeviceConfigDto } from "../../../model/Device/VerifyHardwareDeviceConfigDto";
-import { HardwareDto } from "../../../model/Device/HardwareDto";
+import { DeviceDto } from "../../../model/Device/DeviceDto";
 import { ScpConfiguration } from "../../../model/Device/ScpConfiguraion";
-import { CreateDeviceDto } from "../../../model/Device/CreateDeviceDto";
+import { CreateAeroDeviceDto } from "../../../model/Device/CreateAeroDeviceDto";
 
 interface HardwareComponentFormInterface {
-    data: HardwareDto | CreateDeviceDto;
+    data: DeviceDto | CreateAeroDeviceDto;
 }
 
 export const HardwareComponentForm:React.FC<PropsWithChildren<HardwareComponentFormInterface>> = ({data}) => {

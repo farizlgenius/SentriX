@@ -4,7 +4,6 @@ namespace Device.Contract.DTOs;
 
 public sealed record DeviceDto(
       int Id,
-      int ComponentId,
       string Name,
       string SerialNumber,
       string Mac,

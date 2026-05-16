@@ -29,6 +29,7 @@ D:\code\sentrix\src\Host\bin\Debug\net10.0\win-x64\Host.deps.json
 D:\code\sentrix\src\Host\bin\Debug\net10.0\win-x64\Host.runtimeconfig.json
 D:\code\sentrix\src\Host\bin\Debug\net10.0\win-x64\Host.dll
 D:\code\sentrix\src\Host\bin\Debug\net10.0\win-x64\Host.pdb
+D:\code\sentrix\src\Host\bin\Debug\net10.0\win-x64\Ben.Demystifier.dll
 D:\code\sentrix\src\Host\bin\Debug\net10.0\win-x64\Humanizer.dll
 D:\code\sentrix\src\Host\bin\Debug\net10.0\win-x64\MediatR.dll
 D:\code\sentrix\src\Host\bin\Debug\net10.0\win-x64\MediatR.Contracts.dll
@@ -61,6 +62,20 @@ D:\code\sentrix\src\Host\bin\Debug\net10.0\win-x64\Npgsql.EntityFrameworkCore.Po
 D:\code\sentrix\src\Host\bin\Debug\net10.0\win-x64\Pipelines.Sockets.Unofficial.dll
 D:\code\sentrix\src\Host\bin\Debug\net10.0\win-x64\Scalar.AspNetCore.dll
 D:\code\sentrix\src\Host\bin\Debug\net10.0\win-x64\Scrutor.dll
+D:\code\sentrix\src\Host\bin\Debug\net10.0\win-x64\Serilog.dll
+D:\code\sentrix\src\Host\bin\Debug\net10.0\win-x64\Serilog.AspNetCore.dll
+D:\code\sentrix\src\Host\bin\Debug\net10.0\win-x64\Serilog.Enrichers.CallerInfo.dll
+D:\code\sentrix\src\Host\bin\Debug\net10.0\win-x64\Serilog.Enrichers.CorrelationId.dll
+D:\code\sentrix\src\Host\bin\Debug\net10.0\win-x64\Serilog.Enrichers.Environment.dll
+D:\code\sentrix\src\Host\bin\Debug\net10.0\win-x64\Serilog.Enrichers.Process.dll
+D:\code\sentrix\src\Host\bin\Debug\net10.0\win-x64\Serilog.Enrichers.Thread.dll
+D:\code\sentrix\src\Host\bin\Debug\net10.0\win-x64\Serilog.Extensions.Hosting.dll
+D:\code\sentrix\src\Host\bin\Debug\net10.0\win-x64\Serilog.Extensions.Logging.dll
+D:\code\sentrix\src\Host\bin\Debug\net10.0\win-x64\Serilog.Formatting.Compact.dll
+D:\code\sentrix\src\Host\bin\Debug\net10.0\win-x64\Serilog.Settings.Configuration.dll
+D:\code\sentrix\src\Host\bin\Debug\net10.0\win-x64\Serilog.Sinks.Console.dll
+D:\code\sentrix\src\Host\bin\Debug\net10.0\win-x64\Serilog.Sinks.Debug.dll
+D:\code\sentrix\src\Host\bin\Debug\net10.0\win-x64\Serilog.Sinks.File.dll
 D:\code\sentrix\src\Host\bin\Debug\net10.0\win-x64\StackExchange.Redis.dll
 D:\code\sentrix\src\Host\bin\Debug\net10.0\win-x64\System.CodeDom.dll
 D:\code\sentrix\src\Host\bin\Debug\net10.0\win-x64\System.Composition.AttributedModel.dll
@@ -175,6 +190,7 @@ D:\code\sentrix\src\Host\bin\Debug\net10.0\win-x64\Auth.Infrastructure.pdb
 D:\code\sentrix\src\Host\bin\Debug\net10.0\win-x64\Cache.Infrastructure.pdb
 D:\code\sentrix\src\Host\bin\Debug\net10.0\win-x64\Adapter.Abstraction.pdb
 D:\code\sentrix\src\Host\bin\Debug\net10.0\win-x64\Auth.Contract.pdb
+D:\code\sentrix\src\Host\bin\Debug\net10.0\win-x64\Device.Contract.pdb
 D:\code\sentrix\src\Host\bin\Debug\net10.0\win-x64\Events.Contract.pdb
 D:\code\sentrix\src\Host\bin\Debug\net10.0\win-x64\Location.Contract.pdb
 D:\code\sentrix\src\Host\bin\Debug\net10.0\win-x64\Device.Infrastructure.pdb
@@ -190,7 +206,6 @@ D:\code\sentrix\src\Host\bin\Debug\net10.0\win-x64\Cache.Application.pdb
 D:\code\sentrix\src\Host\bin\Debug\net10.0\win-x64\Cache.Contract.pdb
 D:\code\sentrix\src\Host\bin\Debug\net10.0\win-x64\Cache.Domain.pdb
 D:\code\sentrix\src\Host\bin\Debug\net10.0\win-x64\Device.Application.pdb
-D:\code\sentrix\src\Host\bin\Debug\net10.0\win-x64\Device.Contract.pdb
 D:\code\sentrix\src\Host\bin\Debug\net10.0\win-x64\Device.Domain.pdb
 D:\code\sentrix\src\Host\bin\Debug\net10.0\win-x64\Events.Application.pdb
 D:\code\sentrix\src\Host\bin\Debug\net10.0\win-x64\Events.Domain.pdb

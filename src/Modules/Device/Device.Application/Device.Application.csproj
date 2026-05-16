@@ -9,14 +9,11 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Contracts\Adapter.Abstraction\Adapter.Abstraction.csproj" />
     <ProjectReference Include="..\..\Contracts\Device.Contract\Device.Contract.csproj" />
-    <ProjectReference Include="..\..\Contracts\Notifier.Contract\Notifier.Contract.csproj" />
     <ProjectReference Include="..\Device.Domain\Device.Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Behaviors\" />
-    <Folder Include="Handler\" />
-    <Folder Include="Queries\" />
   </ItemGroup>
 
 </Project>

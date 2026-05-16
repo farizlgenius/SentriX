@@ -78,10 +78,84 @@ public sealed class MessageHelper
     }
 
     // ================= DEBUG STRING STYLE =================
+    // public static string ToString(object? obj)
+    // {
+    //     return ToStringInternal(obj, 0, new HashSet<object>());
+    // }
+
     public static string ToString(object? obj)
     {
-        return ToStringInternal(obj, 0, new HashSet<object>());
+        if (obj == null)
+            return string.Empty;
+
+        var values = new List<string>();
+        BuildString(obj, values);
+
+        return string.Join(" ", values);
     }
+
+    private static void BuildString(object obj, List<string> values)
+    {
+        if (obj == null) return;
+
+        // string → treat as primitive
+        if (obj is string str)
+        {
+            values.Add(str);
+            return;
+        }
+
+        // IEnumerable (array / list) but NOT string
+        if (obj is IEnumerable enumerable && !(obj is string))
+        {
+            var arrayValues = new List<string>();
+
+            foreach (var item in enumerable)
+            {
+                if (item == null) continue;
+
+                if (IsSimple(item.GetType()))
+                    arrayValues.Add(item.ToString());
+                else
+                    BuildString(item, arrayValues); // nested objects inside array
+            }
+
+            // join WITHOUT spaces → 1234
+            if (arrayValues.Count > 0)
+                values.Add(string.Join("", arrayValues));
+
+            return;
+        }
+
+        // primitive / simple types
+        if (IsSimple(obj.GetType()))
+        {
+            values.Add(obj.ToString());
+            return;
+        }
+
+        // complex object → loop properties
+        var props = obj.GetType()
+                       .GetProperties(BindingFlags.Public | BindingFlags.Instance);
+
+        foreach (var prop in props)
+        {
+            var value = prop.GetValue(obj);
+            if (value == null) continue;
+
+            BuildString(value, values);
+        }
+    }
+
+    private static bool IsSimple(Type type)
+    {
+        return type.IsPrimitive
+            || type.IsEnum
+            || type == typeof(string)
+            || type == typeof(decimal)
+            || type == typeof(DateTime)
+            || type == typeof(Guid);
+    }    
 
     private static string ToStringInternal(object? obj, int indent, HashSet<object> visited)
     {
@@ -130,13 +204,6 @@ public sealed class MessageHelper
         return sb.ToString();
     }
 
-    private static bool IsSimple(Type type)
-    {
-        return type.IsPrimitive
-            || type == typeof(string)
-            || type == typeof(decimal)
-            || type == typeof(DateTime)
-            || type == typeof(Guid);
-    }
+
 
 }

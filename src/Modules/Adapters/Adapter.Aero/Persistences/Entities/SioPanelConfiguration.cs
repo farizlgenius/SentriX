@@ -21,10 +21,11 @@ public sealed class SioPanelConfiguration : BaseEntity
       public short n_sio_next_in { get; set; }
       public short n_sio_next_out { get; set; }
       public short n_sio_next_rdr { get; set; }
+      public int module_id {get; set;}
 
       public SioPanelConfiguration(){}
 
-            public SioPanelConfiguration(short scp_id, string mac, short sio_number, short n_inputs, short n_outputs, short n_readers, short model, short enable, short port, short address, short emax, short flags, short n_sio_next_in, short n_sio_next_out, short n_sio_next_rdr)
+            public SioPanelConfiguration(short scp_id, string mac, short sio_number, short n_inputs, short n_outputs, short n_readers, short model, short enable, short port, short address, short emax, short flags, short n_sio_next_in, short n_sio_next_out, short n_sio_next_rdr,int module_id)
       {
             this.scp_id = scp_id;
             this.mac = mac;
@@ -41,6 +42,7 @@ public sealed class SioPanelConfiguration : BaseEntity
             this.n_sio_next_in = n_sio_next_in;
             this.n_sio_next_out = n_sio_next_out;
             this.n_sio_next_rdr = n_sio_next_rdr;
+            this.module_id = module_id;
       }
 
 }

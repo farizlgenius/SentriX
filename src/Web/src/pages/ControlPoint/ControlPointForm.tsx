@@ -5,7 +5,7 @@ import Input from "../../components/form/input/InputField";
 import ComponentCard from "../../components/common/ComponentCard";
 import Select from "../../components/form/Select";
 import Button from "../../components/ui/button/Button";
-import { HardwareDto } from "../../model/Device/HardwareDto";
+import { DeviceDto } from "../../model/Device/DeviceDto";
 import { ModuleDto } from "../../model/Module/ModuleDto";
 import { Options } from "../../model/Options";
 import { ControlPointDto } from "../../model/ControlPoint/ControlPointDto";
@@ -59,10 +59,10 @@ const ControlPointForm: React.FC<PropsWithChildren<FormProp<ControlPointDto>>> =
   const fetchController = async () => {
     const res = await send.get(DeviceEndpoint.GET(locationId));
     if (res && res.data.data) {
-      res.data.data.map((a: HardwareDto) => {
+      res.data.data.map((a: DeviceDto) => {
         setControllerOption(prev => [...prev, {
           label: a.name,
-          value: a.scpId
+          value: a.componentId
         }])
       })
     }

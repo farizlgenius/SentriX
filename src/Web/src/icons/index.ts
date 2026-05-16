@@ -98,6 +98,7 @@ import {ReactComponent as ToggleTranIcon} from "./toggletran.svg?react";
 import {ReactComponent as DoorInIcon} from "./in.svg?react";
 import {ReactComponent as DoorOutIcon} from "./out.svg?react";
 import {ReactComponent as LoadIcon} from "./loading.svg?react";
+import {ReactComponent as AmicoIcon} from "./amico.svg?react";
 
 export {
   ErrorHexaIcon,
@@ -197,5 +198,6 @@ export {
   ToggleTranIcon,
   DoorInIcon,
   DoorOutIcon,
-  LoadIcon
+  LoadIcon,
+  AmicoIcon
 };

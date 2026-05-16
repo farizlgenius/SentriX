@@ -1,6 +1,6 @@
 export interface StatusDto {
-  scpId: number;
-  driverId: number;
+  id: number;
+  componentId: number;
   status: number | string;
   tamper: number | string;
   ac: number | string;

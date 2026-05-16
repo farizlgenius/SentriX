@@ -52,4 +52,27 @@ public sealed class SioWriter(ILogger<SioWriter> logger, IWriterRepository write
                  
             }
       }
+
+      public async Task<bool> SioStatusRequest(short ScpId, string Mac, int First, int Count)
+      {
+            CC_SIOSRQ c = new CC_SIOSRQ();
+            c.scp_number = ScpId;
+            c.first = (short)First;
+            c.count = (short)Count;
+            var result = Send((short)enCfgCmnd.enCcSioSrq,c);
+            if (result)
+            {
+                  logger.LogInformation(MessageHelper.CommandSuccess(WriterType.SioStatusReq,ScpId));
+                  await writer.AddWriterAuditAsync(ScpId, Mac, WriterType.SioStatusReq, SCPDLL.scpGetTagLastPosted(ScpId), MessageHelper.ToJsonString(c));
+                  return true;
+                  
+            }
+            else
+            {
+                  logger.LogError(MessageHelper.CommandUnsuccess(WriterType.SioStatusReq,ScpId));
+                  return false;
+                 
+            }
+
+      }
 }

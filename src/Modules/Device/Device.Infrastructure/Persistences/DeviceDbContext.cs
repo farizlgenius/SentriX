@@ -8,7 +8,8 @@ namespace Device.Infrastructure.Persistences;
 public sealed class DeviceDbContext(DbContextOptions<DeviceDbContext> options) : DbContext(options)
 {
       public const string Schema = "device";
-      public DbSet<Devices> devices { get; set; }
+      public DbSet<Devices> Devices { get; set; }
+      public DbSet<Module> Modules {get; set;}
 
       protected override void OnModelCreating(ModelBuilder modelBuilder)
       {
@@ -46,6 +47,12 @@ public sealed class DeviceDbContext(DbContextOptions<DeviceDbContext> options) :
                             .ValueGeneratedOnAdd();
                   }
             }
+
+            modelBuilder.Entity<Devices>()
+            .HasMany(x => x.modules)
+            .WithOne(x => x.devices)
+            .HasForeignKey(x => x.device_id)
+            .OnDelete(DeleteBehavior.Cascade);
       }
 
 }

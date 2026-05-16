@@ -206,7 +206,7 @@ const MonitorPoint = () => {
             (status:MpStatus) => {
                 setStatus((prev) =>
                     prev.map((a) =>
-                        a.driverId == status.deviceId && a.scpId == status.first
+                        a.componentId == status.deviceId && a.id == status.first
                             ? {
                                 ...a,
                                 status: status.status,
@@ -234,14 +234,14 @@ const MonitorPoint = () => {
                 <Badge
                     size="sm"
                     color={
-                        statusDto.find(b => b.driverId == data.deviceId)?.status == "Active"
+                        statusDto.find(b => b.componentId == data.deviceId)?.status == "Active"
                             ? "success"
-                            : statusDto.find(b => b.driverId == data.deviceId)?.status == "Inactive"
+                            : statusDto.find(b => b.componentId == data.deviceId)?.status == "Inactive"
                                 ? "error"
                                 : "warning"
                     }
                 >
-                    {statusDto.find(b => b.driverId == data.deviceId)?.status == "" ? "Error" : statusDto.find(b => b.driverId == data.deviceId)?.status}
+                    {statusDto.find(b => b.componentId == data.deviceId)?.status == "" ? "Error" : statusDto.find(b => b.componentId == data.deviceId)?.status}
                 </Badge>
             </TableCell>
         ]

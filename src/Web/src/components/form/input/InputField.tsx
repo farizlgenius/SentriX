@@ -41,7 +41,7 @@ const Input: FC<InputProps> = ({
   let inputClasses = `h-12 w-full appearance-none rounded-2xl border border-[var(--app-panel-border)] bg-[var(--app-panel-bg)] px-4 py-3 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 transition-colors focus:outline-hidden focus:ring-4 dark:text-white/90 dark:placeholder:text-white/30 ${className}`;
 
   if (disabled) {
-    inputClasses += ` cursor-not-allowed bg-gray-100 text-gray-500 opacity-50`;
+    inputClasses += ` cursor-not-allowed text-gray-500 opacity-50`;
   } else if (error) {
     inputClasses += ` border-error-500 focus:border-error-300 focus:ring-error-500/20 dark:text-error-400`;
   } else if (success) {

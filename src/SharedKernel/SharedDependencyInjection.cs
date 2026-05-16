@@ -1,6 +1,8 @@
 using System;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Serilog;
+using SharedKernel.Logging;
 using SharedKernel.Messaging;
 
 namespace SharedKernel;
@@ -32,6 +34,8 @@ public static class SharedDependencyInjection
                 .AddClasses(c => c.AssignableTo(typeof(IEventHandler<>)))
                 .AsImplementedInterfaces()
                 .WithScopedLifetime());
+
+            
 
             return services;
       }
