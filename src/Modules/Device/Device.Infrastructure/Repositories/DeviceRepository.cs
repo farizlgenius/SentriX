@@ -149,6 +149,14 @@ public sealed class DeviceRepository(DeviceDbContext context) : IDeviceRepositor
            0);
       }
 
+      public async Task<int> GetModuleIdByMacAndAddressAsync(string Mac, int Address, CancellationToken ct = default)
+      {
+            return await context.Modules.AsNoTracking()
+            .OrderByDescending(x => x.id)
+            .Where(x => x.mac.Equals(Mac) && x.address == Address)
+            .Select(x => x.id)
+            .FirstOrDefaultAsync();
+      }
 
       public async Task<Pagination<DeviceDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
       {
@@ -255,6 +263,7 @@ public sealed class DeviceRepository(DeviceDbContext context) : IDeviceRepositor
                   return;
 
             entity.ip = ip;
+            context.Devices.Update(entity);
             await context.SaveChangesAsync(ct);
       }
 
@@ -282,6 +291,7 @@ public sealed class DeviceRepository(DeviceDbContext context) : IDeviceRepositor
                   return;
 
             entity.port = port;
+            context.Devices.Update(entity);
             await context.SaveChangesAsync(ct);
       }
 

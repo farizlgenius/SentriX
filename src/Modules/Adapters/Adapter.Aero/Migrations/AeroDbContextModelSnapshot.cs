@@ -139,6 +139,51 @@ namespace Adapter.Aero.Migrations
                         });
                 });
 
+            modelBuilder.Entity("Adapter.Aero.Persistences.Entities.ControlPointConfiguration", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<short>("cp_number")
+                        .HasColumnType("smallint");
+
+                    b.Property<DateTime>("created_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.Property<short>("dflt_pulse")
+                        .HasColumnType("smallint");
+
+                    b.Property<bool>("is_active")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("mac")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<short>("op_number")
+                        .HasColumnType("smallint");
+
+                    b.Property<int>("scp_number")
+                        .HasColumnType("integer");
+
+                    b.Property<short>("sio_number")
+                        .HasColumnType("smallint");
+
+                    b.Property<DateTime>("updated_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.HasKey("id");
+
+                    b.ToTable("ControlPointConfigurations", "aero");
+                });
+
             modelBuilder.Entity("Adapter.Aero.Persistences.Entities.CreateChannel", b =>
                 {
                     b.Property<int>("id")
@@ -222,6 +267,9 @@ namespace Adapter.Aero.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
 
+                    b.Property<int>("device_id")
+                        .HasColumnType("integer");
+
                     b.Property<bool>("is_active")
                         .HasColumnType("boolean");
 
@@ -255,23 +303,6 @@ namespace Adapter.Aero.Migrations
                     b.HasKey("id");
 
                     b.ToTable("DriverConfigurations", "aero");
-
-                    b.HasData(
-                        new
-                        {
-                            id = 1,
-                            baudrate = (short)-1,
-                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            is_active = true,
-                            mac = "",
-                            msp1_number = (short)0,
-                            n_dialect = (short)0,
-                            n_protocol = (short)0,
-                            port_number = (short)3,
-                            reply_time = (short)0,
-                            scp_id = (short)0,
-                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        });
                 });
 
             modelBuilder.Entity("Adapter.Aero.Persistences.Entities.ElevatorAccessLevelSpecification", b =>
@@ -388,6 +419,84 @@ namespace Adapter.Aero.Migrations
                             sio_number = (short)0,
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         });
+                });
+
+            modelBuilder.Entity("Adapter.Aero.Persistences.Entities.OutputPointSpecification", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<DateTime>("created_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.Property<bool>("is_active")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("mac")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<short>("mode")
+                        .HasColumnType("smallint");
+
+                    b.Property<short>("output")
+                        .HasColumnType("smallint");
+
+                    b.Property<int>("scp_id")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("sio_number")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("updated_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.HasKey("id");
+
+                    b.ToTable("OutputPointSpecifications", "aero");
+                });
+
+            modelBuilder.Entity("Adapter.Aero.Persistences.Entities.Scp", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<DateTime>("created_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.Property<bool>("is_active")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("location_id")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("mac")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("scp_id")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("updated_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.HasKey("id");
+
+                    b.ToTable("Scps", "aero");
                 });
 
             modelBuilder.Entity("Adapter.Aero.Persistences.Entities.ScpDeviceSpecification", b =>
@@ -522,6 +631,9 @@ namespace Adapter.Aero.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
 
+                    b.Property<int>("device_id")
+                        .HasColumnType("integer");
+
                     b.Property<short>("emax")
                         .HasColumnType("smallint");
 
@@ -540,6 +652,9 @@ namespace Adapter.Aero.Migrations
 
                     b.Property<short>("model")
                         .HasColumnType("smallint");
+
+                    b.Property<int>("module_id")
+                        .HasColumnType("integer");
 
                     b.Property<short>("n_inputs")
                         .HasColumnType("smallint");
@@ -576,30 +691,6 @@ namespace Adapter.Aero.Migrations
                     b.HasKey("id");
 
                     b.ToTable("SioPanelConfigurations", "aero");
-
-                    b.HasData(
-                        new
-                        {
-                            id = 1,
-                            address = (short)0,
-                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            emax = (short)3,
-                            enable = (short)1,
-                            flags = (short)0,
-                            is_active = true,
-                            mac = "",
-                            model = (short)196,
-                            n_inputs = (short)7,
-                            n_outputs = (short)4,
-                            n_readers = (short)4,
-                            n_sio_next_in = (short)-1,
-                            n_sio_next_out = (short)-1,
-                            n_sio_next_rdr = (short)-1,
-                            port = (short)0,
-                            scp_id = (short)0,
-                            sio_number = (short)0,
-                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        });
                 });
 
             modelBuilder.Entity("Adapter.Aero.Persistences.Entities.SystemLevelSpecification", b =>

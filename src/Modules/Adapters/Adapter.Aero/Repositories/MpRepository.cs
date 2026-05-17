@@ -8,11 +8,16 @@ namespace Adapter.Aero.Repositories;
 
 public sealed class MpRepository(AeroDbContext context) : IMpRepository
 {
-      public async Task<InputPointSpecification> GetInputPointSpecificationByIdAndMacAndSioNumber(short ScpId, string Mac, short SioNumber)
+      public async Task<InputPointSpecification> AddInputPointSpecificationAsync(InputPointSpecification config,CancellationToken ct = default)
       {
-            return await context.InputPointSpecifications.AsNoTracking()
-            .OrderByDescending(x => x.id)
-            .Where(x => x.scp_id == ScpId && x.mac.Equals(Mac) && x.sio_number == SioNumber)
-            .FirstOrDefaultAsync() ?? new InputPointSpecification();
+            var data = await context.InputPointSpecifications.AddAsync(config);
+            var save = await context.SaveChangesAsync(ct);
+
+            if(data.Entity == null || save <= 0)
+                  return new InputPointSpecification();
+
+            return data.Entity;
       }
+
+
 }

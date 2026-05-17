@@ -13,7 +13,7 @@ public sealed class Module : BaseEntity
       public int address {get; set;}
       public string model {get; set;} = string.Empty;
       public int device_id {get; set;}
-      public Devices devices {get; set; } = new Devices();
+      public Devices devices {get; set; } = default!;
 
       public Module(){}
       public Module(Domain.Entities.Module domain)

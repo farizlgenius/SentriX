@@ -35,5 +35,15 @@
     "C:\\Users\\User\\.nuget\\packages\\serilog.sinks.debug\\2.0.0\\serilog.sinks.debug.2.0.0.nupkg.sha512",
     "C:\\Users\\User\\.nuget\\packages\\serilog.sinks.file\\7.0.0\\serilog.sinks.file.7.0.0.nupkg.sha512"
   ],
-  "logs": []
+  "logs": [
+    {
+      "code": "NU1900",
+      "level": "Warning",
+      "message": "Error occurred while getting package vulnerability data: Unable to load the service index for source https://api.nuget.org/v3/index.json.",
+      "projectPath": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Events.Contract\\Events.Contract.csproj",
+      "warningLevel": 1,
+      "filePath": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Events.Contract\\Events.Contract.csproj",
+      "targetGraphs": []
+    }
+  ]
 }

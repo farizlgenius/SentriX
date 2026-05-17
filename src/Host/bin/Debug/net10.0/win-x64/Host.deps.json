@@ -28,6 +28,7 @@
           "Microsoft.EntityFrameworkCore.Design": "10.0.7",
           "Notifier.Client": "1.0.0",
           "Operator.Infrastructure": "1.0.0",
+          "Output.Contract": "1.0.0",
           "Role.Infrastructure": "1.0.0",
           "Scalar.AspNetCore": "2.14.11",
           "Serilog.AspNetCore": "10.0.0",
@@ -847,7 +848,8 @@
       },
       "Adapter.Abstraction/1.0.0": {
         "dependencies": {
-          "Device.Contract": "1.0.0"
+          "Device.Contract": "1.0.0",
+          "Output.Contract": "1.0.0"
         },
         "runtime": {
           "Adapter.Abstraction.dll": {
@@ -1184,6 +1186,17 @@
         },
         "runtime": {
           "Operator.Infrastructure.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "Output.Contract/1.0.0": {
+        "dependencies": {
+          "SharedKernel": "1.0.0"
+        },
+        "runtime": {
+          "Output.Contract.dll": {
             "assemblyVersion": "1.0.0.0",
             "fileVersion": "1.0.0.0"
           }
@@ -1802,6 +1815,11 @@
       "sha512": ""
     },
     "Operator.Infrastructure/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Output.Contract/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

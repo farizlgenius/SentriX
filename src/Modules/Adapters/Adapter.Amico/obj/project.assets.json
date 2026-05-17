@@ -667,7 +667,8 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v10.0",
         "dependencies": {
-          "Device.Contract": "1.0.0"
+          "Device.Contract": "1.0.0",
+          "Output.Contract": "1.0.0"
         },
         "compile": {
           "bin/placeholder/Adapter.Abstraction.dll": {}
@@ -687,6 +688,19 @@
         },
         "runtime": {
           "bin/placeholder/Device.Contract.dll": {}
+        }
+      },
+      "Output.Contract/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v10.0",
+        "dependencies": {
+          "SharedKernel": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/Output.Contract.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Output.Contract.dll": {}
         }
       },
       "SharedKernel/1.0.0": {
@@ -1712,6 +1726,11 @@
       "type": "project",
       "path": "../../Contracts/Device.Contract/Device.Contract.csproj",
       "msbuildProject": "../../Contracts/Device.Contract/Device.Contract.csproj"
+    },
+    "Output.Contract/1.0.0": {
+      "type": "project",
+      "path": "../../Contracts/Output.Contract/Output.Contract.csproj",
+      "msbuildProject": "../../Contracts/Output.Contract/Output.Contract.csproj"
     },
     "SharedKernel/1.0.0": {
       "type": "project",

@@ -340,7 +340,8 @@
       },
       "Adapter.Abstraction/1.0.0": {
         "dependencies": {
-          "Device.Contract": "1.0.0"
+          "Device.Contract": "1.0.0",
+          "Output.Contract": "1.0.0"
         },
         "runtime": {
           "Adapter.Abstraction.dll": {
@@ -355,6 +356,17 @@
         },
         "runtime": {
           "Device.Contract.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "Output.Contract/1.0.0": {
+        "dependencies": {
+          "SharedKernel": "1.0.0"
+        },
+        "runtime": {
+          "Output.Contract.dll": {
             "assemblyVersion": "1.0.0.0",
             "fileVersion": "1.0.0.0"
           }
@@ -585,6 +597,11 @@
       "sha512": ""
     },
     "Device.Contract/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Output.Contract/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

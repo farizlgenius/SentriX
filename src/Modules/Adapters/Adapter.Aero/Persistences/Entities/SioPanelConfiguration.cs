@@ -5,9 +5,8 @@ namespace Adapter.Aero.Persistences.Entities;
 
 public sealed class SioPanelConfiguration : BaseEntity
 {
-
-      public short scp_id { get; set; }
-      public string mac {get; set;} = string.Empty;
+      public int aero_id {get; set;}
+      public Aeros aero {get; set;} = default!;
       public short sio_number { get; set; }
       public short n_inputs { get; set; }
       public short n_outputs { get; set; }
@@ -25,10 +24,9 @@ public sealed class SioPanelConfiguration : BaseEntity
 
       public SioPanelConfiguration(){}
 
-            public SioPanelConfiguration(short scp_id, string mac, short sio_number, short n_inputs, short n_outputs, short n_readers, short model, short enable, short port, short address, short emax, short flags, short n_sio_next_in, short n_sio_next_out, short n_sio_next_rdr,int module_id)
+            public SioPanelConfiguration(int aero_id, short sio_number, short n_inputs, short n_outputs, short n_readers, short model, short enable, short port, short address, short emax, short flags, short n_sio_next_in, short n_sio_next_out, short n_sio_next_rdr,int module_id)
       {
-            this.scp_id = scp_id;
-            this.mac = mac;
+            this.aero_id = aero_id;
             this.sio_number = sio_number;
             this.n_inputs = n_inputs;
             this.n_outputs = n_outputs;

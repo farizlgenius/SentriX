@@ -57,6 +57,11 @@ public sealed class ScpWriter(ILogger<ScpWriter> logger, IWriterRepository write
 
       }
 
+      public async Task<bool> AsciiCommandAsync(int ScpId, string Command)
+      {
+            return SCPDLL.scpConfigCommand(Command); 
+      }
+
       public bool CreateChannel()
       {
 

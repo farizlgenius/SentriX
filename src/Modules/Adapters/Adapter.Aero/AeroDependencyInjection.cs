@@ -60,12 +60,17 @@ public static class AeroDependencyInjection
             services.AddScoped<IWriterRepository, WriterRepository>();
             services.AddScoped<IScpRepository,ScpRepository>();
             services.AddScoped<IMpRepository,MpRepository>();
+            services.AddScoped<ICpRepository,CpRepository>();
+            services.AddScoped<ISioRepository,SioRepository>();
             services.AddScoped<IWriterRepository,WriterRepository>();
 
             services.AddScoped<IScp,ScpService>();
+            services.AddScoped<ISio,SioService>();
                   
             services.AddScoped<IDeviceAdapter, AeroDeviceService>();
-            // services.AddScoped<IMonitorAdapter, AeroMonitorService>();
+            services.AddScoped<IControlAdapter,AeroControlService>();
+            services.AddScoped<IMonitorAdapter,AeroMonitorService>();
+
 
             services.AddScoped<IAdapter, AeroAdapter>();
 

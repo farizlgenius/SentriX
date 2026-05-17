@@ -59,6 +59,7 @@
     <ProjectReference Include="..\Modules\Contracts\Device.Contract\Device.Contract.csproj" />
     <ProjectReference Include="..\Modules\Contracts\Events.Contract\Events.Contract.csproj" />
     <ProjectReference Include="..\Modules\Contracts\Location.Contract\Location.Contract.csproj" />
+    <ProjectReference Include="..\Modules\Contracts\Output.Contract\Output.Contract.csproj" />
     <ProjectReference Include="..\Modules\Device\Device.Infrastructure\Device.Infrastructure.csproj" />
     <ProjectReference Include="..\Modules\Events\Events.Infrastructure\Events.Infrastructure.csproj" />
     <ProjectReference Include="..\Modules\Location\Location.Infrastructure\Location.Infrastructure.csproj" />

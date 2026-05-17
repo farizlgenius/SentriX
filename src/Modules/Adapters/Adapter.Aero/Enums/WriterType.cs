@@ -13,6 +13,8 @@ public enum WriterType
       SCPStructureStatusRead=1853,
       ElevatorAccessLevelSpecification=501,
       SCPReset=301,
-      SioStatusReq=404
+      SioStatusReq=404,
+      OutputPointSpecification=111,
+      ControlPointConfiguration=114
 
 }

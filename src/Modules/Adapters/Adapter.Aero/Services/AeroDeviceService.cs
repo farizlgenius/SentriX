@@ -19,7 +19,7 @@ namespace Adapter.Aero.Services;
 
 public sealed class AeroDeviceService(
       ILogger<AeroDeviceService> logger,
-      IScpRepository repo,ISioRepository sioRepo, IMessageBus bus, IScpWriter writer, IIdReportService idReport, ISioWriter sioWriter
+      IScpRepository repo,ISioRepository sioRepo, IScpWriter writer, IIdReportService idReport, ISioWriter sioWriter
       ) : IDeviceAdapter
 {
       public async Task<List<IdReportDto>> GetIdReportsAsync()
@@ -27,18 +27,19 @@ public sealed class AeroDeviceService(
             return idReport.IdReportInMemory.Select(x => new IdReportDto(x.ScpId, x.SerialNumber, x.Mac, x.Ip, x.Port, x.Fw)).ToList();
       }
 
-      public async Task CreateDeviceAsync(CreateDeviceDto dto)
+      public async Task CreateDeviceAsync(DeviceDto dto)
       {
 
-            var Metadata = JsonSerializer.Deserialize<CreateAeroMetadata>(dto.Metadata);
+            var Metadata = JsonSerializer.Deserialize<AeroMetadata>(dto.Metadata);
+            var aero_id = await repo.GetAeroIdByMacAsync(dto.Mac);
+            var scp_id = await repo.GetScpIdByMacAsync(dto.Mac);
 
             // Save Driver Configuration to Database
             if (Metadata != null && Metadata.PortOne)
             {
-                  await repo.CreateDriverConfigurationAsync(
+                  await repo.AddDriverConfigurationAsync(
                         new Persistences.Entities.DriverConfiguration(
-                              (short)dto.ComponentId,
-                              dto.Mac,
+                              aero_id,
                               1,
                               1,
                               (short)Metadata.BaudRateOne,
@@ -51,10 +52,9 @@ public sealed class AeroDeviceService(
 
             if (Metadata != null && Metadata.PortTwo)
             {
-                  await repo.CreateDriverConfigurationAsync(
+                  await repo.AddDriverConfigurationAsync(
                         new Persistences.Entities.DriverConfiguration(
-                              (short)dto.ComponentId,
-                              dto.Mac,
+                              aero_id,
                               2,
                               2,
                               (short)Metadata.BaudRateTwo,
@@ -66,7 +66,7 @@ public sealed class AeroDeviceService(
             }
 
              // Read Structure 
-            if (!await writer.SCPStructureStatusRead((short)dto.ComponentId, dto.Mac,
+            if (!await writer.SCPStructureStatusRead((short)scp_id,dto.Mac,
                   [
                         (short)SCPStructure.SCPSID_TRAN,
                         (short)SCPStructure.SCPSID_TZ,
@@ -88,7 +88,7 @@ public sealed class AeroDeviceService(
                   return;
 
 
-            idReport.IdReportInMemory.RemoveAll(x => x.ScpId == dto.ComponentId);
+            idReport.IdReportInMemory.RemoveAll(x => x.Mac.Equals(dto.Mac));
 
             // Add to Scp 
             
@@ -111,9 +111,9 @@ public sealed class AeroDeviceService(
       public async Task CreateModuleAsync(CreateModuleDto dto)
       {
             int ScpId = await repo.ScpIdByMacAsync(dto.Mac);
+            var aero_id = await repo.GetAeroIdByMacAsync(dto.Mac);
             var sio = new SioPanelConfiguration(
-                  (short)ScpId,
-                  dto.Mac,
+                  aero_id,
                   0,
                   SioModelHelper.nInputByModel((SioModel)dto.Model),
                   SioModelHelper.nOutputByModel((SioModel)dto.Model),
@@ -143,6 +143,12 @@ public sealed class AeroDeviceService(
                   throw new Exception("Sio panel configuration send failed.");
             }
 
+      }
+
+      public async Task<bool> AsciiCommandAsync(string Mac,string Command)
+      {
+            var ScpId = await repo.ScpIdByMacAsync(Mac);
+            return await writer.AsciiCommandAsync(ScpId,Command);
       }
 }
 

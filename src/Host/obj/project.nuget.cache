@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "9SHScxkTq7g=",
+  "dgSpecHash": "2wyFgxK6JwI=",
   "success": true,
   "projectFilePath": "D:\\code\\sentrix\\src\\Host\\Host.csproj",
   "expectedPackageFiles": [
@@ -69,5 +69,15 @@
     "C:\\Users\\User\\.nuget\\packages\\microsoft.aspnetcore.app.runtime.linux-arm64\\10.0.6\\microsoft.aspnetcore.app.runtime.linux-arm64.10.0.6.nupkg.sha512",
     "C:\\Users\\User\\.nuget\\packages\\microsoft.netcore.app.host.linux-arm64\\10.0.6\\microsoft.netcore.app.host.linux-arm64.10.0.6.nupkg.sha512"
   ],
-  "logs": []
+  "logs": [
+    {
+      "code": "NU1900",
+      "level": "Warning",
+      "message": "Error occurred while getting package vulnerability data: Unable to load the service index for source https://api.nuget.org/v3/index.json.",
+      "projectPath": "D:\\code\\sentrix\\src\\Host\\Host.csproj",
+      "warningLevel": 1,
+      "filePath": "D:\\code\\sentrix\\src\\Host\\Host.csproj",
+      "targetGraphs": []
+    }
+  ]
 }

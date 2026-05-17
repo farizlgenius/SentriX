@@ -229,6 +229,7 @@ const Device = () => {
     setFormType(FormType.UPDATE);
     setCurrentDeviceType(item.type);
     handleFormSelection(item.type,item);
+    setDeviceDto(item);
     setForm(true);
   };
 
@@ -247,6 +248,7 @@ const Device = () => {
     setFormType(FormType.INFO);
     setCurrentDeviceType(item.type);
     handleFormSelection(item.type,item);
+    setDeviceDto(item);
     setForm(true);
   };
 
@@ -421,7 +423,7 @@ const Device = () => {
     {
       icon: <ModuleIcon />,
       label: "Module",
-      content:<AeroModuleDetailForm/> 
+      content:<AeroModuleDetailForm data={deviceDto}/> 
     },
     {
       icon: <TransferIcon />,

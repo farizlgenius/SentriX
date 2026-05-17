@@ -1147,7 +1147,8 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v10.0",
         "dependencies": {
-          "Device.Contract": "1.0.0"
+          "Device.Contract": "1.0.0",
+          "Output.Contract": "1.0.0"
         },
         "compile": {
           "bin/placeholder/Adapter.Abstraction.dll": {}
@@ -1543,6 +1544,19 @@
         },
         "runtime": {
           "bin/placeholder/Operator.Infrastructure.dll": {}
+        }
+      },
+      "Output.Contract/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v10.0",
+        "dependencies": {
+          "SharedKernel": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/Output.Contract.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Output.Contract.dll": {}
         }
       },
       "Role.Application/1.0.0": {
@@ -2766,7 +2780,8 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v10.0",
         "dependencies": {
-          "Device.Contract": "1.0.0"
+          "Device.Contract": "1.0.0",
+          "Output.Contract": "1.0.0"
         },
         "compile": {
           "bin/placeholder/Adapter.Abstraction.dll": {}
@@ -3162,6 +3177,19 @@
         },
         "runtime": {
           "bin/placeholder/Operator.Infrastructure.dll": {}
+        }
+      },
+      "Output.Contract/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v10.0",
+        "dependencies": {
+          "SharedKernel": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/Output.Contract.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Output.Contract.dll": {}
         }
       },
       "Role.Application/1.0.0": {
@@ -4385,7 +4413,8 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v10.0",
         "dependencies": {
-          "Device.Contract": "1.0.0"
+          "Device.Contract": "1.0.0",
+          "Output.Contract": "1.0.0"
         },
         "compile": {
           "bin/placeholder/Adapter.Abstraction.dll": {}
@@ -4781,6 +4810,19 @@
         },
         "runtime": {
           "bin/placeholder/Operator.Infrastructure.dll": {}
+        }
+      },
+      "Output.Contract/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v10.0",
+        "dependencies": {
+          "SharedKernel": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/Output.Contract.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Output.Contract.dll": {}
         }
       },
       "Role.Application/1.0.0": {
@@ -7207,6 +7249,11 @@
       "path": "../Modules/Operator/Operator.Infrastructure/Operator.Infrastructure.csproj",
       "msbuildProject": "../Modules/Operator/Operator.Infrastructure/Operator.Infrastructure.csproj"
     },
+    "Output.Contract/1.0.0": {
+      "type": "project",
+      "path": "../Modules/Contracts/Output.Contract/Output.Contract.csproj",
+      "msbuildProject": "../Modules/Contracts/Output.Contract/Output.Contract.csproj"
+    },
     "Role.Application/1.0.0": {
       "type": "project",
       "path": "../Modules/Role/Role.Application/Role.Application.csproj",
@@ -7254,6 +7301,7 @@
       "Microsoft.EntityFrameworkCore.Design >= 10.0.7",
       "Notifier.Client >= 1.0.0",
       "Operator.Infrastructure >= 1.0.0",
+      "Output.Contract >= 1.0.0",
       "Role.Infrastructure >= 1.0.0",
       "Scalar.AspNetCore >= 2.14.11",
       "Serilog.AspNetCore >= 10.0.0",
@@ -7324,6 +7372,9 @@
             },
             "D:\\code\\sentrix\\src\\Modules\\Contracts\\Location.Contract\\Location.Contract.csproj": {
               "projectPath": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Location.Contract\\Location.Contract.csproj"
+            },
+            "D:\\code\\sentrix\\src\\Modules\\Contracts\\Output.Contract\\Output.Contract.csproj": {
+              "projectPath": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Output.Contract\\Output.Contract.csproj"
             },
             "D:\\code\\sentrix\\src\\Modules\\Device\\Device.Infrastructure\\Device.Infrastructure.csproj": {
               "projectPath": "D:\\code\\sentrix\\src\\Modules\\Device\\Device.Infrastructure\\Device.Infrastructure.csproj"
@@ -7888,5 +7939,13 @@
         "#import": []
       }
     }
-  }
+  },
+  "logs": [
+    {
+      "code": "NU1900",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Error occurred while getting package vulnerability data: Unable to load the service index for source https://api.nuget.org/v3/index.json."
+    }
+  ]
 }

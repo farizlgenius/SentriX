@@ -6,11 +6,11 @@ using SharedKernel.Messaging;
 
 namespace Adapter.Aero.Handler;
 
-public sealed class ModuleStatusByDeviceIdEventHandler(ISioWriter writer,IScpRepository repo) : IEventHandler<ModuleStatusByDeviceIdEvent>
+public sealed class ModuleStatusByModuleIdEventHandler(ISioWriter writer,ISioRepository repo) : IEventHandler<ModuleStatusByModuleIdEvent>
 {
-      public async Task HandleAsync(ModuleStatusByDeviceIdEvent @event, CancellationToken ct)
+      public async Task HandleAsync(ModuleStatusByModuleIdEvent @event, CancellationToken ct)
       {
-            var ScpId = await repo.ScpIdByMacAsync(@event.Mac);
-            await writer.SioStatusRequest((short)ScpId,@event.Mac,@event.ComponentIds,1);
+            var sio = await repo.GetSioPanelConfigurationByModuleIdAsync(@event.ModuleId);
+            await writer.SioStatusRequest((short)sio.aero.scp_id,sio.aero.mac,sio.sio_number,1);
       }
 }

@@ -15,13 +15,13 @@ public sealed class AeroAdapter : IAdapter
       public IControlAdapter Control { get; }
 
       public AeroAdapter(
-            IDeviceAdapter devices
-            // IMonitorAdapter monitors,
-            // IControlAdapter controls
+            IDeviceAdapter devices,
+            IControlAdapter controls,
+            IMonitorAdapter monitor
       )
       {
             Device = devices;
-            // Monitor = monitors;
-            // Control = controls;
+            Control = controls;
+            Monitor = monitor;
       }
 }

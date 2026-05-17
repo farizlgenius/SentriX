@@ -2,7 +2,7 @@ using System;
 
 namespace Adapter.Aero.Model;
 
-public sealed class CreateAeroMetadata
+public sealed class AeroMetadata
 {
       public bool PortOne { get; set; }
       public int ProtocolOne { get; set; }

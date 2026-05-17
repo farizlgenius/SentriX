@@ -1,0 +1,8 @@
+using Output.Contract.DTOs;
+using SharedKernel.Domain;
+
+public interface IOutput
+{
+      Task<Pagination<OutputDto>> GetPaginationAsync(PaginationParams param);
+      Task<OutputDto> CreateAsync(CreateOutputDto dto);
+}

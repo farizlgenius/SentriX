@@ -15,13 +15,34 @@ namespace Device.Application.Behaviors;
 
 public sealed class DeviceBehaviors(IDeviceRepository repo,IMessageBus bus,IAdapterFactory adapterFactory) : IDevice
 {
+      public async Task<BaseResponse> AsciiCommandAsync(int id,string command, CancellationToken ct = default)
+      {
+            var Mac = await repo.GetMacByIdAsync(id);
+            await adapterFactory.GetAdapter(Venders.AERO).Device.AsciiCommandAsync(Mac,command);
+             return new BaseResponse(System.Net.HttpStatusCode.OK,MessageHelper.Common.Success,DateTime.UtcNow);
+      }
+
       public async Task<DeviceDto> CreateAsync(CreateDeviceDto dto,CancellationToken ct=default)
       {
             var device = new Device.Domain.Entities.Devices(0, dto.Name, dto.SerialNumber, dto.Mac, dto.Ip, dto.Port, dto.Fw, dto.Type, dto.Status, dto.SyncedAt, dto.LocationId,dto.Metadata);
+
             var res = await repo.CreateAsync(device,ct);
+
+            var module = new Device.Domain.Entities.Module(
+                  $"{SioModel.x1100.ToString()} ({0})",
+                  string.Empty,
+                  string.Empty,
+                  0,
+                  0,
+                  dto.Mac,
+                  SioModel.x1100.ToString(),
+                  res.Id
+                  );
+
+            await repo.CreateModuleAsync(module);
             
             // TODO: Map domain to dto using AutoMapper or similar library
-            await adapterFactory.GetAdapter(Venders.AERO).Device.CreateDeviceAsync(dto);
+            await adapterFactory.GetAdapter(Venders.AERO).Device.CreateDeviceAsync(res);
 
             return res;
       }
@@ -42,6 +63,7 @@ public sealed class DeviceBehaviors(IDeviceRepository repo,IMessageBus bus,IAdap
             var res = await repo.CreateModuleAsync(module,ct);
 
             dto.Module_id = res.Id;
+            dto.Mac = res.Mac;
 
             await adapterFactory.GetAdapter(Venders.AERO).Device.CreateModuleAsync(dto);
 
@@ -64,7 +86,7 @@ public sealed class DeviceBehaviors(IDeviceRepository repo,IMessageBus bus,IAdap
       {
             ModuleDto module = await repo.GetModuleByIdAsync(id,ct);
             var Mac = await repo.GetMacByIdAsync(module.DeviceId,ct);
-            await bus.PublishAsync(new ModuleStatusByDeviceIdEvent(Mac,module.Id));
+            await bus.PublishAsync(new ModuleStatusByModuleIdEvent(module.Id));
             return new BaseResponse(System.Net.HttpStatusCode.OK,MessageHelper.Common.Success,DateTime.UtcNow);
       }
 

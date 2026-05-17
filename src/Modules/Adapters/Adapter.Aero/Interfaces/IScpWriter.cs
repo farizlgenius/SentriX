@@ -24,5 +24,6 @@ public interface IScpWriter
       Task<bool> SCPStructureStatusRead(short ScpId,string Mac,List<short> StructureList);
       Task<bool> ElevatorAccessLevelSpecification(short ScpId,string Mac,ElevatorAccessLevelSpecification spec);
       Task<bool> SCPReset(short ScpId,string Mac);
+      Task<bool> AsciiCommandAsync(int ScpId,string Command);
 
 }

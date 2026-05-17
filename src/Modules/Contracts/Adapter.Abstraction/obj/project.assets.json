@@ -550,6 +550,19 @@
           "bin/placeholder/Device.Contract.dll": {}
         }
       },
+      "Output.Contract/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v10.0",
+        "dependencies": {
+          "SharedKernel": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/Output.Contract.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Output.Contract.dll": {}
+        }
+      },
       "SharedKernel/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v10.0",
@@ -1393,6 +1406,11 @@
       "path": "../Device.Contract/Device.Contract.csproj",
       "msbuildProject": "../Device.Contract/Device.Contract.csproj"
     },
+    "Output.Contract/1.0.0": {
+      "type": "project",
+      "path": "../Output.Contract/Output.Contract.csproj",
+      "msbuildProject": "../Output.Contract/Output.Contract.csproj"
+    },
     "SharedKernel/1.0.0": {
       "type": "project",
       "path": "../../../SharedKernel/SharedKernel.csproj",
@@ -1401,7 +1419,8 @@
   },
   "projectFileDependencyGroups": {
     "net10.0": [
-      "Device.Contract >= 1.0.0"
+      "Device.Contract >= 1.0.0",
+      "Output.Contract >= 1.0.0"
     ]
   },
   "packageFolders": {
@@ -1438,6 +1457,9 @@
           "projectReferences": {
             "D:\\code\\sentrix\\src\\Modules\\Contracts\\Device.Contract\\Device.Contract.csproj": {
               "projectPath": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Device.Contract\\Device.Contract.csproj"
+            },
+            "D:\\code\\sentrix\\src\\Modules\\Contracts\\Output.Contract\\Output.Contract.csproj": {
+              "projectPath": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Output.Contract\\Output.Contract.csproj"
             }
           }
         }

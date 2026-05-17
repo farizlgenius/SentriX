@@ -14,6 +14,9 @@ using HID.Aero.ScpdNet.Wrapper;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Notifier.Contract.Constants;
+using Notifier.Contract.Interfaces;
+using SharedKernel.Domain;
 using SharedKernel.Messaging;
 
 namespace Adapter.Aero.Worker;
@@ -263,7 +266,17 @@ public sealed class ScpReplyWorker(Channel<SCPReplyMessageDto> queue, ILogger<Sc
                             // var siostatus = new SioStatus(message.ScpId, message.sts_sio.number, DecodeHelper.TypeSioCommTranCodeDecode(message.sts_sio.com_status), DecodeHelper.TypeCosStatusDecode(Convert.ToByte(message.sts_sio.ip_stat[4])), DecodeHelper.TypeCosStatusDecode(Convert.ToByte(message.sts_sio.ip_stat[5])), DecodeHelper.TypeCosStatusDecode(Convert.ToByte(message.sts_sio.ip_stat[6])));
                             // await publisher.SioNotifyStatus(siostatus);
                             var s = scope.ServiceProvider.GetRequiredService<ISio>();
+                            var srepo = scope.ServiceProvider.GetRequiredService<ISioRepository>();
+                            var notifier = scope.ServiceProvider.GetRequiredService<INotifier>();
                             await s.HandleFoundSioAsync(message.SCPId,message.sts_sio);
+                            await notifier.SendToTopic(NotifierTopic.MODULE_STATUS,new StatusDto(
+                                await srepo.GetModuleIdByScpIdAndSioIdAsync(message.SCPId,message.sts_sio.number),
+                                message.sts_sio.number,
+                                TranCodeHelper.GetDesc(tranType.tranTypeSioComm,message.sts_sio.com_status),
+                                DescriptionHelper.DecodeStatusTypeCoS(message.sts_sio.ct_stat),
+                                DescriptionHelper.DecodeStatusTypeCoS(message.sts_sio.pw_stat),
+                                string.Empty
+                            ),ct);
                             break;
                         case (int)enSCPReplyType.enSCPReplySrMp:
                             // var mpstatus = new MpStatus(message.ScpId, message.sts_mp.first, DecodeHelper.TypeCosStatusDecode(Convert.ToByte(message.sts_mp.status[0])));

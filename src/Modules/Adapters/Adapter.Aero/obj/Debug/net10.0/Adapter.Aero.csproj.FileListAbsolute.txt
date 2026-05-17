@@ -12,12 +12,14 @@ D:\code\sentrix\src\Modules\Adapters\Adapter.Aero\bin\Debug\net10.0\Device.Contr
 D:\code\sentrix\src\Modules\Adapters\Adapter.Aero\bin\Debug\net10.0\Events.Contract.dll
 D:\code\sentrix\src\Modules\Adapters\Adapter.Aero\bin\Debug\net10.0\HIDAeroWrap64.dll
 D:\code\sentrix\src\Modules\Adapters\Adapter.Aero\bin\Debug\net10.0\Notifier.Contract.dll
+D:\code\sentrix\src\Modules\Adapters\Adapter.Aero\bin\Debug\net10.0\Output.Contract.dll
 D:\code\sentrix\src\Modules\Adapters\Adapter.Aero\bin\Debug\net10.0\SharedKernel.dll
 D:\code\sentrix\src\Modules\Adapters\Adapter.Aero\bin\Debug\net10.0\SharedKernel.pdb
 D:\code\sentrix\src\Modules\Adapters\Adapter.Aero\bin\Debug\net10.0\Adapter.Abstraction.pdb
 D:\code\sentrix\src\Modules\Adapters\Adapter.Aero\bin\Debug\net10.0\Device.Contract.pdb
 D:\code\sentrix\src\Modules\Adapters\Adapter.Aero\bin\Debug\net10.0\Events.Contract.pdb
 D:\code\sentrix\src\Modules\Adapters\Adapter.Aero\bin\Debug\net10.0\Notifier.Contract.pdb
+D:\code\sentrix\src\Modules\Adapters\Adapter.Aero\bin\Debug\net10.0\Output.Contract.pdb
 D:\code\sentrix\src\Modules\Adapters\Adapter.Aero\bin\Debug\net10.0\HIDAeroWrap64.xml
 D:\code\sentrix\src\Modules\Adapters\Adapter.Aero\obj\Debug\net10.0\Adapter..1C1D7F6F.Up2Date
 D:\code\sentrix\src\Modules\Adapters\Adapter.Aero\obj\Debug\net10.0\Adapter.Aero.dll

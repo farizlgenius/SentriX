@@ -21,5 +21,6 @@ public interface IDeviceRepository
       Task<string> GetMacByIdAsync(int id,CancellationToken ct= default);
       Task<ModuleDto> GetModuleByIdAsync(int id,CancellationToken ct = default);
       Task<DeviceDto> GetByMacAsync(string Mac,CancellationToken ct= default);
+      Task<int> GetModuleIdByMacAndAddressAsync(string Mac,int Address,CancellationToken ct =default);
 
 }

@@ -2,6 +2,7 @@ using System;
 using System.Globalization;
 using System.Net;
 using System.Text;
+using Adapter.Aero.Enums;
 
 namespace Adapter.Aero.Helpers;
 
@@ -16,55 +17,34 @@ public sealed class UtilitiesHelper
             return dto.ToUnixTimeSeconds();
       }
 
-      // public static string DaysInWeekToString(DaysInWeekDto days)
-      // {
-      //       var map = new Dictionary<string, bool>{
-      //           {"Sun",days.Sunday },
-      //           {
-      //               "Mon",days.Monday
-      //           },
-      //           {
-      //               "Tue",days.Tuesday
-      //           },
-      //           {
-      //               "Wed",days.Wednesday
-      //           },
-      //           {
-      //               "Thu",days.Thursday
-      //           },
-      //           {
-      //               "Fri",days.Friday
-      //           },
-      //           {
-      //               "Sat",days.Saturday
-      //           }
-      //       };
+      public static short OutputModeResolver(RelayMode relay,RelayOfflineMode offline)
+      {
+            if(relay == RelayMode.Normal && offline == RelayOfflineMode.NoChange)
+            {
+                  return 0;
 
-      //       return string.Join(",", map.Where(x => x.Value).Select(x => x.Key));
-      // }
+            }else if (relay == RelayMode.Normal && offline == RelayOfflineMode.Inactive)
+            {
+                  return 16;
+            }else if (relay == RelayMode.Normal && offline == RelayOfflineMode.Active)
+            {
+                  return 32;
+            }else if (relay == RelayMode.Inverted && offline == RelayOfflineMode.NoChange)
+            {
+                  return 1;
+            }else if (relay == RelayMode.Inverted && offline == RelayOfflineMode.Inactive)
+            {
+                  return 17;
+            }else if (relay == RelayMode.Inverted && offline == RelayOfflineMode.Active)
+            {
+                  return 33;
+            }
+            else
+            {
+                  return -1;
+            }
+      } 
 
-
-      // public static int ConvertDayToBinary(DaysInWeek days)
-      // {
-      //       int result = 0;
-      //       result |= (days.Sunday ? 1 : 0) << 0;
-      //       result |= (days.Monday ? 1 : 0) << 1;
-      //       result |= (days.Tuesday ? 1 : 0) << 2;
-      //       result |= (days.Wednesday ? 1 : 0) << 3;
-      //       result |= (days.Thursday ? 1 : 0) << 4;
-      //       result |= (days.Friday ? 1 : 0) << 5;
-      //       result |= (days.Saturday ? 1 : 0) << 6;
-      //       // Holiday
-      //       //result |= 0 << 8;
-      //       //result |= 0 << 9;
-      //       //result |= 0 << 10;
-      //       //result |= 0 << 11;
-      //       //result |= 0 << 12;
-      //       //result |= 0 << 13;
-      //       //result |= 0 << 14;
-      //       //result |= 0 << 15;
-      //       return result;
-      // }
 
       public static int ConvertTimeToEndMinute(string timeString)
       {

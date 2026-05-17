@@ -14,5 +14,6 @@ public interface IDevice
       Task<List<ModuleDto>> GetModuleByDeviceIdAsync(int id,CancellationToken ct=default);
       Task<ModuleDto> CreateModuleAsync(CreateModuleDto dto,CancellationToken ct=default);
       Task<BaseResponse> GetModuleStatusByIdAsync(int id,CancellationToken ct = default);
+      Task<BaseResponse> AsciiCommandAsync(int deviceId,string command,CancellationToken ct = default);
 
 }

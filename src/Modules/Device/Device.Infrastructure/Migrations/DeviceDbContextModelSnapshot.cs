@@ -31,9 +31,6 @@ namespace Device.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
 
-                    b.Property<int>("component_id")
-                        .HasColumnType("integer");
-
                     b.Property<DateTime>("created_at")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
@@ -104,9 +101,6 @@ namespace Device.Infrastructure.Migrations
                     b.Property<int>("address")
                         .HasColumnType("integer");
 
-                    b.Property<int>("component_id")
-                        .HasColumnType("integer");
-
                     b.Property<DateTime>("created_at")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
@@ -123,6 +117,10 @@ namespace Device.Infrastructure.Migrations
                         .HasColumnType("boolean");
 
                     b.Property<string>("mac")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("model")
                         .IsRequired()
                         .HasColumnType("text");
 

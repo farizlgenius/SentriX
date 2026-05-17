@@ -143,7 +143,7 @@ public sealed class ReplyMessageListener(ILogger<ReplyMessageListener> logger,Ch
                         break;
                   case (int)enSCPReplyType.enSCPReplySrSio:
                         await queue.Writer.WriteAsync(message);
-                        // MessageHandlerHelper.SCPReplySrSio(message);
+                        logger.LogInformation(MessageHelper.ToString(message.sts_sio));
                         break;
                   case (int)enSCPReplyType.enSCPReplySrMp:
                         await queue.Writer.WriteAsync(message);

@@ -5,5 +5,5 @@ namespace AeroAdapter.Application.Interfaces;
 
 public interface IMpRepository
 {
-      Task<InputPointSpecification> GetInputPointSpecificationByIdAndMacAndSioNumber(short ScpId,string Mac,short SioNumber);
+      Task<InputPointSpecification> AddInputPointSpecificationAsync(InputPointSpecification config,CancellationToken ct = default);
 }

@@ -120,8 +120,8 @@ public sealed class ScpService(ILogger<ScpService> logger,IScpRepository repo,IS
       public async Task InitialScpConfigurationAsync(int ScpId)
       {
             string Mac = await repo.MacByScpIdAsync(ScpId);
-            var device = await bus.QueryAsync<DeviceDto>(new DeviceByMacAsyncQuery(Mac));
-            var Metadata = JsonSerializer.Deserialize<CreateAeroMetadata>(device.Metadata);
+            var aero_id = await repo.GetAeroIdByScpIdAsync(ScpId);
+            var ModuleId = await bus.QueryAsync(new ModuleIdByMacAndAddressQuery(Mac,0));
 
             var db = await repo.GetAccessDatabaseSpecificationByIdAndMacAsync(0, string.Empty);
             if (db.n_card == 0)
@@ -157,91 +157,104 @@ public sealed class ScpService(ILogger<ScpService> logger,IScpRepository repo,IS
                   
 
             // Send to get IP and Port 
-            if(await writer.ReadsConfiguration((short)ScpId, Mac, WebConfigReadType.NetworkSettingss))
+            if(!await writer.ReadsConfiguration((short)ScpId, Mac, WebConfigReadType.NetworkSettingss))
             {
                   logger.LogError("Read configuration send failed.");
             }
 
-            if(await writer.ReadsConfiguration((short)ScpId, Mac, WebConfigReadType.HostCommunicationPrimarySettings))
+            if(!await writer.ReadsConfiguration((short)ScpId, Mac, WebConfigReadType.HostCommunicationPrimarySettings))
             {
                   logger.LogError("Read configuration send failed.");
             }
 
-            var config = await repo.GetDriverConfigurationByIdAndMacAndPortNumberAsync(0, string.Empty,3); // 3 is internal port in x1100
-            if (config.baudrate == 0)
+
+
+            // Save Driver Configuration to DB
+            var driverConfig = new DriverConfiguration(
+                  aero_id,
+                  0,
+                  3,
+                  -1,
+                  0,
+                  0,
+                  0
+                  );
+
+            var drivCon = await repo.AddDriverConfigurationAsync(driverConfig);
+
+            if(drivCon.id == 0)
             {
-                  logger.LogError("Driver configuration setting not found.");
+                  logger.LogError("Driver configuration save failed.");
                   return;
             }
 
                   
 
-            if (!await writer.DriverConfiguration((short)ScpId, Mac, config))
+            if (!await writer.DriverConfiguration((short)ScpId, Mac, driverConfig))
             {
                   logger.LogError("Driver configuration send failed.");
                   return;
             }
                   
 
-            var configs = await repo.GetDriverConfigurationsByIdAndMacAsync((short)ScpId, Mac);
-            foreach(var conf in configs)
+
+
+            var sioConfig = new SioPanelConfiguration(
+                  aero_id,
+                  0,
+                  SioModelHelper.nInputByModel(SioModel.x1100),
+                  SioModelHelper.nOutputByModel(SioModel.x1100),
+                  SioModelHelper.nReaderByModel(SioModel.x1100),
+                  (short)SioModel.x1100,
+                  1,
+                  0,
+                  0,
+                  3,
+                  0,
+                  -1,
+                  -1
+                  -1,
+                  -1,
+                  ModuleId
+            );
+
+            var config = await sioRepo.AddSioPanelConfigurationAsync(sioConfig);
+
+            if(config.id == 0)
             {
-                  if (!await writer.DriverConfiguration((short)ScpId, Mac, conf))
-                  {
-                        logger.LogError("Driver configuration send failed.");
-                        return;
-                  }
-                        
-            }
-
-
-
-            var sio = await sioRepo.GetSioPanelConfigurationByIdAndMacAndAddressAsync(0, string.Empty, 0);
-            if (sio.model == 0)
-            {
-                  logger.LogError("Sio panel configuration setting not found.");
+                  logger.LogError("Sio pane configuration add failed.");
                   return;
             }
+
+
                   
 
-            if (!await sioWriter.SioPanelConfiguration((short)ScpId, Mac, sio))
+            if (!await sioWriter.SioPanelConfiguration((short)ScpId, Mac, config))
             {
                   logger.LogError("Sio panel configuration send failed.");
                    return;
             }
                  
 
-            // Add Module to database 
-            var moduleDto = new ModuleDto(
-                  0,
-                  $"{SioModel.x1100.ToString()} (${0})",
-                  device.Fw,
-                  device.SerialNumber,
-                  0,
-                  0,
-                  Mac,
-                  SioModel.x1100.ToString(),
-                  device.Id);
-            await bus.SendAsync(new ModuleCreateCommand(moduleDto));
-
-
             List<int> inputs = Enumerable.Range(SioModelHelper.nInputByModel(SioModel.x1100) - 3, 3).ToList();
 
-            var input = await mpRepository.GetInputPointSpecificationByIdAndMacAndSioNumber(0, string.Empty, 0);
-            if (input.hold_time == 0)
-            {
-                  logger.LogError("Input point specification setting not found.");
-                  return;
-            }
-                  
-                  
 
 
             // Setting Input for Alarm 
             foreach (var i in inputs)
             {
-                  input.UpdateInputNumber((short)i);
-                  if (!await mpWriter.InputPointSpecification((short)ScpId, Mac, input))
+                  var cInput = new InputPointSpecification(
+                        aero_id,
+                        0,
+                        (short)i,
+                        0,
+                        2,
+                        0
+                        );
+
+                  var sInput = await mpRepository.AddInputPointSpecificationAsync(cInput);
+
+                  if (!await mpWriter.InputPointSpecification((short)ScpId, Mac, sInput))
                   {
                         logger.LogError("Input point specification send failed.");
                   }

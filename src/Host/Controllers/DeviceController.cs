@@ -66,6 +66,13 @@ namespace Host.Controllers
             return Ok(res);
         }
 
+        [HttpPost("aero/command/{id}")]
+        public async Task<IActionResult> AsciiAsync(int id,string Command)
+        {
+            var res = await device.AsciiCommandAsync(id,Command);
+            return Ok(res);
+        }
+
 
 
     }
