@@ -3,6 +3,7 @@ using System.Collections;
 using System.Reflection;
 using System.Text;
 using System.Text.Json;
+using Adapter.Aero.Constants;
 using Adapter.Aero.Enums;
 
 namespace Adapter.Aero.Helpers;
@@ -19,8 +20,8 @@ public sealed class MessageHelper
             return JsonSerializer.Deserialize<T>(message)!;
       }
 
-      public static string CommandSuccess(WriterType type,short ScpId) => $"{type.ToString()} on ScpId {ScpId}  - Successfully.";
-      public static string CommandUnsuccess(WriterType type,short ScpId) => $"{type.ToString()} on ScpId {ScpId}  - Unsuccessfully.";
+      public static string CommandSuccess(string type,short ScpId) => $"{type} on ScpId {ScpId}  - Successfully.";
+      public static string CommandUnsuccess(string type,short ScpId) => $"{type} on ScpId {ScpId}  - Unsuccessfully.";
 
 
            // ================= JSON STYLE =================
@@ -154,7 +155,10 @@ public sealed class MessageHelper
             || type == typeof(string)
             || type == typeof(decimal)
             || type == typeof(DateTime)
-            || type == typeof(Guid);
+            || type == typeof(Guid)
+            || type == typeof(int)
+            || type == typeof(short)
+            || type == typeof(long);
     }    
 
     private static string ToStringInternal(object? obj, int indent, HashSet<object> visited)

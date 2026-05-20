@@ -29,6 +29,7 @@
           "Notifier.Client": "1.0.0",
           "Operator.Infrastructure": "1.0.0",
           "Output.Contract": "1.0.0",
+          "Output.Infrastructure": "1.0.0",
           "Role.Infrastructure": "1.0.0",
           "Scalar.AspNetCore": "2.14.11",
           "Serilog.AspNetCore": "10.0.0",
@@ -981,7 +982,8 @@
         "dependencies": {
           "Adapter.Abstraction": "1.0.0",
           "Device.Contract": "1.0.0",
-          "Device.Domain": "1.0.0"
+          "Device.Domain": "1.0.0",
+          "Location.Contract": "1.0.0"
         },
         "runtime": {
           "Device.Application.dll": {
@@ -1191,12 +1193,49 @@
           }
         }
       },
+      "Output.Application/1.0.0": {
+        "dependencies": {
+          "Adapter.Abstraction": "1.0.0",
+          "Output.Contract": "1.0.0",
+          "Output.Domain": "1.0.0"
+        },
+        "runtime": {
+          "Output.Application.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
       "Output.Contract/1.0.0": {
         "dependencies": {
           "SharedKernel": "1.0.0"
         },
         "runtime": {
           "Output.Contract.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "Output.Domain/1.0.0": {
+        "dependencies": {
+          "SharedKernel": "1.0.0"
+        },
+        "runtime": {
+          "Output.Domain.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "Output.Infrastructure/1.0.0": {
+        "dependencies": {
+          "Npgsql.EntityFrameworkCore.PostgreSQL": "10.0.1",
+          "Output.Application": "1.0.0",
+          "SharedKernel": "1.0.0"
+        },
+        "runtime": {
+          "Output.Infrastructure.dll": {
             "assemblyVersion": "1.0.0.0",
             "fileVersion": "1.0.0.0"
           }
@@ -1819,7 +1858,22 @@
       "serviceable": false,
       "sha512": ""
     },
+    "Output.Application/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
     "Output.Contract/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Output.Domain/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Output.Infrastructure/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

@@ -8,6 +8,7 @@ import { ModuleDto } from "../../../model/Module/ModuleDto";
 import { StatusDto } from "../../../model/StatusDto";
 import SignalRService from "../../../services/SignalRService";
 import { SignalRTopic } from "../../../constants/signalr-constant";
+import Badge from "../../ui/badge/Badge";
 
 interface AeroModuleDetailFormInterface {
       data: DeviceDto;
@@ -17,6 +18,8 @@ interface AeroModuleDetailFormInterface {
 export const AeroModuleDetailForm: React.FC<PropsWithChildren<AeroModuleDetailFormInterface>> = ({ data }) => {
       const [modules, setModules] = useState<ModuleDto[]>([]);
       const [status, setStatus] = useState<StatusDto[]>([]);
+      const [refresh, setRefresh] = useState<boolean>(false);
+      const toggleRefresh = () => setRefresh(!refresh);
 
       const fetchModule = async () => {
             const res = await send.get(ModuleEndpoint.GET(data.id));
@@ -39,13 +42,13 @@ export const AeroModuleDetailForm: React.FC<PropsWithChildren<AeroModuleDetailFo
             });
       }
 
-      const fetchStatus = async (moduleId:number) => {
+      const fetchStatus = async (moduleId: number) => {
             await send.get(ModuleEndpoint.STATUS(moduleId))
             //Helper.handlePopup(res, PopUpMsg.GET_MODULE_STATUS, showPopup)
       };
 
 
-      
+
       {/* UseEffect */ }
       useEffect(() => {
             const setup = async () => {
@@ -56,13 +59,13 @@ export const AeroModuleDetailForm: React.FC<PropsWithChildren<AeroModuleDetailFo
                         console.log("Received realtime update:", status);
                         setStatus((prev) =>
                               prev.map((a) =>
-                                    a.componentId == status.componentId && a.id == status.id
+                                    a.id == status.id
                                           ? {
                                                 ...a,
                                                 status: status.status,
-                                                ac:status.ac,
-                                                batt:status.batt,
-                                                tamper:status.tamper
+                                                ac: status.ac,
+                                                batt: status.batt,
+                                                tamper: status.tamper
                                           }
                                           : {
                                                 // scpIp:ScpIp,
@@ -72,7 +75,7 @@ export const AeroModuleDetailForm: React.FC<PropsWithChildren<AeroModuleDetailFo
                                           }
                               )
                         );
-                        // toggleRefresh();
+                        toggleRefresh();
 
                   });
 
@@ -81,13 +84,17 @@ export const AeroModuleDetailForm: React.FC<PropsWithChildren<AeroModuleDetailFo
             };
 
             setup();
-            
+
 
             return () => {
                   const connection = SignalRService.getConnection();
                   connection?.off(SignalRTopic.MODULE_STATUS);
             };
       }, []);
+
+      useEffect(() => {
+
+      }, [refresh])
 
       return (
             <>
@@ -128,11 +135,48 @@ export const AeroModuleDetailForm: React.FC<PropsWithChildren<AeroModuleDetailFo
                                                       <TableCell className="text-center">{m.model}</TableCell>
                                                       <TableCell className="text-center">{m.fw}</TableCell>
                                                       <TableCell className="text-center">{m.serialNumber}</TableCell>
-                                                      <TableCell className="text-center">{m.port == 0 ? "Internal" : m.port == 1 ? "PORT 1" : m.port == 2  ? "PORT 2" : "NONE"}</TableCell>
-                                                      <TableCell className="text-center">{status.find(x => x.id == m.id)?.ac}</TableCell>
+                                                      <TableCell className="text-center">{m.port == 0 ? "Internal" : m.port == 1 ? "PORT 1" : m.port == 2 ? "PORT 2" : "NONE"}</TableCell>
+                                                      <TableCell className="text-center"> <Badge
+                                                            size="sm"
+                                                            color={status.find(x => x.id == m.id)?.batt == "Active"
+                                                                  ? "success"
+                                                                  : "error"}
+                                                      >
+                                                            {status.find(x => x.id == m.id)?.batt}
+                                                      </Badge></TableCell>
+                                                      <TableCell className="text-center"> <Badge
+                                                            size="sm"
+                                                            color={status.find(x => x.id == m.id)?.ac == "Active"
+                                                                  ? "success"
+                                                                  : "error"}
+                                                      >
+                                                            {status.find(x => x.id == m.id)?.ac}
+                                                      </Badge></TableCell>
+                                                      <TableCell className="text-center">
+                                                            <Badge
+                                                                  size="sm"
+                                                                  color={status.find(x => x.id == m.id)?.tamper == "Active"
+                                                                        ? "success"
+                                                                        : "error"}
+                                                            >
+                                                                  {status.find(x => x.id == m.id)?.tamper}
+                                                            </Badge>
+                                                      </TableCell>
+                                                      <TableCell className="text-center">
+                                                            <Badge
+                                                                  size="sm"
+                                                                  color={status.find(x => x.id == m.id)?.status == "Online"
+                                                                        ? "success"
+                                                                        : "error"}
+                                                            >
+                                                                  {status.find(x => x.id == m.id)?.status}
+                                                            </Badge>
+                                                      </TableCell>
                                                 </TableRow>
+
+
                                           ))}
-                                        
+
                                     </TableBody>
                               </Table>
                         </div>

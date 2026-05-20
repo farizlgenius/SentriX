@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Channels;
 using Adapter.Abstraction.Interfaces;
+using Adapter.Aero.Command;
 using Adapter.Aero.Interfaces;
 using Adapter.Aero.Listener;
 using Adapter.Aero.Mapper;
@@ -9,7 +10,6 @@ using Adapter.Aero.Persistences;
 using Adapter.Aero.Repositories;
 using Adapter.Aero.Services;
 using Adapter.Aero.Worker;
-using Adapter.Aero.Writer;
 using AeroAdapter.Application.Interfaces;
 using AeroAdapter.Infrastructure.Writer;
 using Microsoft.EntityFrameworkCore;
@@ -50,22 +50,16 @@ public static class AeroDependencyInjection
                 )
              );
 
-            services.AddScoped<IScpWriter, ScpWriter>();
-            services.AddScoped<ISioWriter, SioWriter>();
-            services.AddScoped<IMpWriter, MpWriter>();
-            services.AddScoped<ISioWriter, SioWriter>();
-            services.AddScoped<IDriverWriter, DriverWriter>();
+            services.AddScoped<IScpCommand, ScpCommand>();
+            services.AddScoped<IModuleCommand, ModuleCommand>();
+            services.AddScoped<IInputCommand, InputCommand>();
+            services.AddScoped<IOutputCommand,OutputCommand>();
+            services.AddScoped<IModuleCommand, ModuleCommand>();
+            services.AddScoped<IDriverCommand, DriverCommand>();
 
-
-            services.AddScoped<IWriterRepository, WriterRepository>();
-            services.AddScoped<IScpRepository,ScpRepository>();
-            services.AddScoped<IMpRepository,MpRepository>();
-            services.AddScoped<ICpRepository,CpRepository>();
-            services.AddScoped<ISioRepository,SioRepository>();
-            services.AddScoped<IWriterRepository,WriterRepository>();
 
             services.AddScoped<IScp,ScpService>();
-            services.AddScoped<ISio,SioService>();
+            services.AddScoped<IAeroRepository,AeroRepository>();
                   
             services.AddScoped<IDeviceAdapter, AeroDeviceService>();
             services.AddScoped<IControlAdapter,AeroControlService>();

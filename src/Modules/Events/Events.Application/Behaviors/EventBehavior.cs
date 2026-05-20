@@ -33,6 +33,23 @@ public sealed class EventBehavior(IEventRepository repo) : IEvent
             );
       }
 
+      public async Task AddEventAsync(DateTime TimeStamp, int ComponentId, string Actor, string Module, string Type, string Remarks)
+      {
+            throw new NotImplementedException();
+
+            // await repo.AddAsync(
+            //       TimeStamp,
+            //       actor,
+            //       Module,
+            //       type,
+            //       image,
+            //       mac,
+            //       name,
+            //       remarks,
+            //       locationId
+            // );
+      }
+
       public async Task<Pagination<EventDto>> GetPaginationByLocationIdAsync(PaginationParams param)
       {
             return await repo.GetPaginationByLocationIdAsync(param);

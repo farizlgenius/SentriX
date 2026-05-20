@@ -7,9 +7,16 @@ public interface IDeviceAdapter
 {
       Task<List<IdReportDto>> GetIdReportsAsync();
       Task CreateDeviceAsync(DeviceDto dto);
-      Task<bool> GetDeviceStatusByMacAsync(string mac);
-      Task<bool> ResetDeviceAsync(string mac);
-      Task CreateModuleAsync(CreateModuleDto dto);
-      Task<bool> AsciiCommandAsync(string Mac,string Command);
+      Task<bool> GetDeviceStatusAsync(int ComponentId);
+      Task<bool> ResetDeviceAsync(string Mac,short ComponentId);
+      Task CreateModuleAsync(
+            string Mac,
+            short ScpId,
+            short SioNumber,
+            short Model,
+            short Address,
+            short Port
+      );
+      Task<bool> AsciiCommandAsync(string Mac,int ComponentId,string Command);
 
 }

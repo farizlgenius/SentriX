@@ -5,7 +5,7 @@ using Output.Contract.DTOs;
 
 namespace Adapter.Aero.Services;
 
-public sealed class AeroMonitorService(IMpRepository repo) : IMonitorAdapter
+public sealed class AeroMonitorService() : IMonitorAdapter
 {
 
 }

@@ -8,7 +8,8 @@ namespace Events.Infrastructure.Persistences;
 public sealed class EventDbContext(DbContextOptions<EventDbContext> options) : DbContext(options)
 {
       public const string Schema = "events";
-      public DbSet<Event> events { get; set; }
+      public DbSet<Event> Events { get; set; }
+      public DbSet<CommandEvent> CommandEvents {get; set;}
 
       protected override void OnModelCreating(ModelBuilder modelBuilder)
       {

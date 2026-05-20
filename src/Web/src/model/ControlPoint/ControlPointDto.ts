@@ -1,20 +1,13 @@
-import { BaseDto } from "../BaseDto";
 
-export interface ControlPointDto extends BaseDto
+export interface ControlPointDto 
 {
     id:number;
-    cpId:number;
     name:string;
     moduleId:number;
-    moduleDriverId:number;
-    moduleDetail:string;
     outputNo:number;
+    model:string;
     relayMode:number;
-    relayModeDetail:string;
-    offlineMode:number;
-    offlineModeDetail:string;
-    scpId:number;
+    locationId:number;
     defaultPulse:number;
-
 }
 

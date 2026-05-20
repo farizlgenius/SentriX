@@ -10,6 +10,21 @@ namespace Host.Controllers
     [ApiController]
     public class DeviceController(IDevice device) : ControllerBase
     {
+        [HttpGet("option/{id}")]
+        public async Task<IActionResult> GetOptionByLocationIdAsync(int id)
+        {
+            var res = await device.GetOptionByLocationIdAsync(id);
+            return Ok(res);
+        }
+
+        [HttpGet("module/option/{id}")]
+        public async Task<IActionResult> GetModuleOptionByDeviceIdAsync(int id)
+        {
+             var res = await device.GetModuleOptionByDeviceIdAsync(id);
+            return Ok(res);
+        }
+
+
          [HttpGet("report")]
         public async Task<IActionResult> GetIdReportsAsync()
         {
@@ -67,7 +82,7 @@ namespace Host.Controllers
         }
 
         [HttpPost("aero/command/{id}")]
-        public async Task<IActionResult> AsciiAsync(int id,string Command)
+        public async Task<IActionResult> AsciiAsync(int id,[FromBody]string Command)
         {
             var res = await device.AsciiCommandAsync(id,Command);
             return Ok(res);

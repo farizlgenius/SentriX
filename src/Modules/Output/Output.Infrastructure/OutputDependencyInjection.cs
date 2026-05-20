@@ -2,7 +2,10 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Output.Application.Behaviors;
+using Output.Application.Interfaces;
 using Output.Infrastructure.Persistences;
+using Output.Infrastructure.Repositories;
 
 namespace Output.Infrastructure;
 
@@ -13,7 +16,8 @@ public static class OutputDependencyInjection
         IConfiguration configuration)
       {
 
-
+            services.AddScoped<IOutputRepository,OutputRepository>();
+            services.AddScoped<IOutput,OutputBehavior>();
 
             // ==========================
             // Database

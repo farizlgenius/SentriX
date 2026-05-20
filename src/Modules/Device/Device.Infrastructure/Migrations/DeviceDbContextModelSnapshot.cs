@@ -31,6 +31,9 @@ namespace Device.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
 
+                    b.Property<short>("component_id")
+                        .HasColumnType("smallint");
+
                     b.Property<DateTime>("created_at")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
@@ -98,8 +101,11 @@ namespace Device.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
 
-                    b.Property<int>("address")
-                        .HasColumnType("integer");
+                    b.Property<short>("address")
+                        .HasColumnType("smallint");
+
+                    b.Property<short>("component_id")
+                        .HasColumnType("smallint");
 
                     b.Property<DateTime>("created_at")
                         .ValueGeneratedOnAdd()
@@ -116,6 +122,9 @@ namespace Device.Infrastructure.Migrations
                     b.Property<bool>("is_active")
                         .HasColumnType("boolean");
 
+                    b.Property<int>("location_id")
+                        .HasColumnType("integer");
+
                     b.Property<string>("mac")
                         .IsRequired()
                         .HasColumnType("text");
@@ -128,10 +137,14 @@ namespace Device.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("port")
-                        .HasColumnType("integer");
+                    b.Property<short>("port")
+                        .HasColumnType("smallint");
 
                     b.Property<string>("serial_number")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("type")
                         .IsRequired()
                         .HasColumnType("text");
 

@@ -8,7 +8,7 @@ namespace Output.Infrastructure.Persistences;
 public sealed class OutputDbContext(DbContextOptions<OutputDbContext> options) : DbContext(options)
 {
       public const string Schema = "output";
-      public DbSet<Outputs> Outputs {get; set;}
+      public DbSet<Outputs> Outputs { get; set; }
 
       protected override void OnModelCreating(ModelBuilder modelBuilder)
       {
@@ -46,6 +46,8 @@ public sealed class OutputDbContext(DbContextOptions<OutputDbContext> options) :
                             .ValueGeneratedOnAdd();
                   }
             }
+
+           
 
       }
 }

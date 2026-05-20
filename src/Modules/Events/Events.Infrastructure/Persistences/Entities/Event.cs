@@ -13,7 +13,6 @@ public sealed class Event : BaseEntity
       public string mac {get; set;} = string.Empty;
       public string name {get; set;} = string.Empty;
       public string remarks {get; set;} = string.Empty;
-      public int location_id {get; set;}
 
       public Event(){}
 

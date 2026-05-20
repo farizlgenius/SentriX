@@ -1,6 +1,4 @@
-using System;
-using Adapter.Aero.Enums;
-using Adapter.Aero.Helpers;
+
 using Adapter.Aero.Persistences.Entities;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel.Domain;
@@ -11,19 +9,10 @@ namespace Adapter.Aero.Persistences;
 public sealed class AeroDbContext(DbContextOptions<AeroDbContext> options) : DbContext(options)
 {
       public const string Schema = "aero";
-      public DbSet<SystemLevelSpecification> SystemLevelSpecifications { get; set; }
-      public DbSet<CreateChannel> CreateChannels { get; set; }
       public DbSet<ScpDeviceSpecification> ScpDeviceSpecifications { get; set; }
       public DbSet<AccessDatabaseSpecification> AccessDatabaseSpecifications { get; set; }
-      public DbSet<WriterAudit> WriterAudits { get; set; }
-      public DbSet<DriverConfiguration> DriverConfigurations { get; set; }
-      public DbSet<SioPanelConfiguration> SioPanelConfigurations { get; set; }
-      public DbSet<InputPointSpecification> InputPointSpecifications { get; set; }
-      public DbSet<Aeros> Aeros {get; set;}
-      public DbSet<OutputPointSpecification> OutputPointSpecifications {get; set;}
-      public DbSet<ControlPointConfiguration> ControlPointConfigurations {get; set;}
-
       public DbSet<ElevatorAccessLevelSpecification> ElevatorAccessLevelSpecifications { get; set; }
+      public DbSet<RelayMode> RelayModes {get; set;}
       protected override void OnModelCreating(ModelBuilder modelBuilder)
       {
             base.OnModelCreating(modelBuilder);
@@ -92,36 +81,6 @@ public sealed class AeroDbContext(DbContextOptions<AeroDbContext> options) : DbC
             .HasForeignKey(x => x.aero_id)
             .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<SystemLevelSpecification>()
-        .HasData(
-            new SystemLevelSpecification
-            {
-                  id = 1,
-                  n_ports = 1024,
-                  n_scps = 1024,
-                  n_timezones = 0,
-                  n_holidays = 0,
-                  b_direct_mode = 1,
-                  debug_rq = 0,
-                  n_debug_arg = 0,
-            }
-        );
-
-            modelBuilder.Entity<CreateChannel>()
-            .HasData(
-                new CreateChannel
-                {
-                      id = 1,
-                      n_channel_id = 1,
-                      c_type = 7,
-                      c_port = 0,
-                      baudrate = 0,
-                      timer_1 = 3000,
-                      timer_2 = 0,
-                      c_model_id = 0,
-                      c_rts_mode = 0
-                }
-            );
 
             modelBuilder.Entity<ScpDeviceSpecification>()
             .HasData(
@@ -181,58 +140,17 @@ public sealed class AeroDbContext(DbContextOptions<AeroDbContext> options) : DbC
 
             );
 
-            // modelBuilder.Entity<DriverConfiguration>()
-            // .HasData(
-            //     new DriverConfiguration
-            //     {
-            //           id = 1,
-            //           scp_id = 0,
-            //           mac = string.Empty,
-            //           msp1_number = 0,
-            //           port_number = 3,
-            //           baudrate = -1,
-            //           reply_time = 0,
-            //           n_protocol = 0,
-            //           n_dialect = 0
-            //     }
-            // );
+            modelBuilder.Entity<RelayMode>()
+            .HasData(
+                  new RelayMode(1,"Normal / No Change",0),
+                  new RelayMode(2,"Inverted / No Change",1),
+                  new RelayMode(3,"Normal / Inactive",16),
+                  new RelayMode(4,"Inverted / Inactive",17),
+                  new RelayMode(5,"Normal / Active",32),
+                  new RelayMode(6,"Inverted / Active",33)
+            );
 
-            // modelBuilder.Entity<SioPanelConfiguration>()
-            // .HasData(
-            //     new SioPanelConfiguration
-            //     {
-            //           id = 1,
-            //           scp_id = 0,
-            //           mac = string.Empty,
-            //           n_inputs = SioModelHelper.nInputByModel(SioModel.x1100),
-            //           n_outputs = SioModelHelper.nOutputByModel(SioModel.x1100),
-            //           n_readers = SioModelHelper.nReaderByModel(SioModel.x1100),
-            //           model = (short)SioModel.x1100,
-            //           enable = 1,
-            //           port = 0,
-            //           address = 0,
-            //           emax = 3,
-            //           flags = 0,
-            //           n_sio_next_in = -1,
-            //           n_sio_next_out = -1,
-            //           n_sio_next_rdr = -1
-            //     }
-            // );
-
-            // modelBuilder.Entity<InputPointSpecification>()
-            // .HasData(
-            //     new InputPointSpecification
-            //     {
-            //           id = 1,
-            //           scp_id = 0,
-            //           mac = string.Empty,
-            //           sio_number = 0,
-            //           input_number = 0,
-            //           icvt_num = 0,
-            //           debounce = 2,
-            //           hold_time = 5
-            //     }
-            // );
+          
 
             modelBuilder.Entity<ElevatorAccessLevelSpecification>()
                 .HasData(

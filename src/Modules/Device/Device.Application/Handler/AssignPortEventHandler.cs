@@ -9,6 +9,6 @@ public sealed class AssignPortEventHandler(IDeviceRepository repo) : IEventHandl
 {
       public async Task HandleAsync(AssignPortEvent @event, CancellationToken ct)
       {
-            await repo.UpdatePortByMacAsync(@event.Mac, @event.Port, ct);
+            await repo.UpdatePortByMacAsync(@event.ComponentId, @event.Port, ct);
       }
 }

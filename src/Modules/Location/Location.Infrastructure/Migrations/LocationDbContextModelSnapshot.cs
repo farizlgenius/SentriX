@@ -35,6 +35,9 @@ namespace Location.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<short>("component_id")
+                        .HasColumnType("smallint");
+
                     b.Property<DateTime>("created_at")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
@@ -42,6 +45,9 @@ namespace Location.Infrastructure.Migrations
 
                     b.Property<bool>("is_active")
                         .HasColumnType("boolean");
+
+                    b.Property<int>("location_id")
+                        .HasColumnType("integer");
 
                     b.Property<string>("name")
                         .IsRequired()
@@ -61,8 +67,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 1,
                             code = "AD",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Andorra",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -70,8 +78,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 2,
                             code = "AE",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "United Arab Emirates",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -79,8 +89,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 3,
                             code = "AF",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Afghanistan",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -88,8 +100,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 4,
                             code = "AG",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Antigua and Barbuda",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -97,8 +111,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 5,
                             code = "AI",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Anguilla",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -106,8 +122,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 6,
                             code = "AL",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Albania",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -115,8 +133,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 7,
                             code = "AM",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Armenia",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -124,8 +144,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 8,
                             code = "AN",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Netherlands Antilles",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -133,8 +155,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 9,
                             code = "AO",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Angola",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -142,8 +166,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 10,
                             code = "AQ",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Antarctica",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -151,8 +177,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 11,
                             code = "AR",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Argentina",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -160,8 +188,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 12,
                             code = "AS",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "American Samoa",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -169,8 +199,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 13,
                             code = "AT",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Austria",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -178,8 +210,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 14,
                             code = "AU",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Australia",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -187,8 +221,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 15,
                             code = "AW",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Aruba",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -196,8 +232,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 16,
                             code = "AZ",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Azerbaijan",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -205,8 +243,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 17,
                             code = "BA",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Bosnia and Herzegovina",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -214,8 +254,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 18,
                             code = "BB",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Barbados",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -223,8 +265,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 19,
                             code = "BD",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Bangladesh",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -232,8 +276,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 20,
                             code = "BE",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Belgium",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -241,8 +287,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 21,
                             code = "BF",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Burkina Faso",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -250,8 +298,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 22,
                             code = "BG",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Bulgaria",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -259,8 +309,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 23,
                             code = "BH",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Bahrain",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -268,8 +320,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 24,
                             code = "BI",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Burundi",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -277,8 +331,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 25,
                             code = "BJ",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Benin",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -286,8 +342,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 26,
                             code = "BM",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Bermuda",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -295,8 +353,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 27,
                             code = "BN",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Brunei",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -304,8 +364,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 28,
                             code = "BO",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Bolivia",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -313,8 +375,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 29,
                             code = "BR",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Brazil",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -322,8 +386,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 30,
                             code = "BS",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Bahamas",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -331,8 +397,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 31,
                             code = "BT",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Bhutan",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -340,8 +408,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 32,
                             code = "BV",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Bouvet Island",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -349,8 +419,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 33,
                             code = "BW",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Botswana",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -358,8 +430,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 34,
                             code = "BY",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Belarus",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -367,8 +441,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 35,
                             code = "BZ",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Belize",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -376,8 +452,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 36,
                             code = "CA",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Canada",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -385,8 +463,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 37,
                             code = "CC",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Cocos (Keeling) Islands",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -394,8 +474,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 38,
                             code = "CD",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Congo (DRC)",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -403,8 +485,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 39,
                             code = "CF",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Central African Republic",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -412,8 +496,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 40,
                             code = "CG",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Congo (Republic)",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -421,8 +507,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 41,
                             code = "CH",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Switzerland",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -430,8 +518,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 42,
                             code = "CI",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Côte d'Ivoire",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -439,8 +529,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 43,
                             code = "CK",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Cook Islands",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -448,8 +540,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 44,
                             code = "CL",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Chile",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -457,8 +551,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 45,
                             code = "CM",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Cameroon",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -466,8 +562,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 46,
                             code = "CN",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "China",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -475,8 +573,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 47,
                             code = "CO",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Colombia",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -484,8 +584,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 48,
                             code = "CR",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Costa Rica",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -493,8 +595,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 49,
                             code = "CU",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Cuba",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -502,8 +606,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 50,
                             code = "CV",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Cape Verde",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -511,8 +617,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 51,
                             code = "CX",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Christmas Island",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -520,8 +628,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 52,
                             code = "CY",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Cyprus",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -529,8 +639,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 53,
                             code = "CZ",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Czech Republic",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -538,8 +650,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 54,
                             code = "DE",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Germany",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -547,8 +661,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 55,
                             code = "DJ",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Djibouti",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -556,8 +672,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 56,
                             code = "DK",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Denmark",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -565,8 +683,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 57,
                             code = "DM",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Dominica",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -574,8 +694,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 58,
                             code = "DO",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Dominican Republic",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -583,8 +705,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 59,
                             code = "DZ",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Algeria",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -592,8 +716,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 60,
                             code = "EC",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Ecuador",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -601,8 +727,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 61,
                             code = "EE",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Estonia",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -610,8 +738,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 62,
                             code = "EG",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Egypt",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -619,8 +749,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 63,
                             code = "EH",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Western Sahara",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -628,8 +760,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 64,
                             code = "ER",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Eritrea",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -637,8 +771,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 65,
                             code = "ES",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Spain",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -646,8 +782,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 66,
                             code = "ET",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Ethiopia",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -655,8 +793,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 67,
                             code = "FI",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Finland",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -664,8 +804,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 68,
                             code = "FJ",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Fiji",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -673,8 +815,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 69,
                             code = "FK",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Falkland Islands",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -682,8 +826,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 70,
                             code = "FM",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Micronesia",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -691,8 +837,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 71,
                             code = "FO",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Faroe Islands",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -700,8 +848,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 72,
                             code = "FR",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "France",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -709,8 +859,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 73,
                             code = "GA",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Gabon",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -718,8 +870,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 74,
                             code = "GB",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "United Kingdom",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -727,8 +881,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 75,
                             code = "GD",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Grenada",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -736,8 +892,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 76,
                             code = "GE",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Georgia",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -745,8 +903,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 77,
                             code = "GF",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "French Guiana",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -754,8 +914,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 78,
                             code = "GG",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Guernsey",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -763,8 +925,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 79,
                             code = "GH",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Ghana",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -772,8 +936,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 80,
                             code = "GI",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Gibraltar",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -781,8 +947,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 81,
                             code = "GL",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Greenland",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -790,8 +958,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 82,
                             code = "GM",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Gambia",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -799,8 +969,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 83,
                             code = "GN",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Guinea",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -808,8 +980,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 84,
                             code = "GP",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Guadeloupe",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -817,8 +991,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 85,
                             code = "GQ",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Equatorial Guinea",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -826,8 +1002,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 86,
                             code = "GR",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Greece",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -835,8 +1013,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 87,
                             code = "GT",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Guatemala",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -844,8 +1024,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 88,
                             code = "GU",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Guam",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -853,8 +1035,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 89,
                             code = "GW",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Guinea-Bissau",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -862,8 +1046,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 90,
                             code = "GY",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Guyana",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -871,8 +1057,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 91,
                             code = "HK",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Hong Kong",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -880,8 +1068,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 92,
                             code = "HN",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Honduras",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -889,8 +1079,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 93,
                             code = "HR",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Croatia",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -898,8 +1090,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 94,
                             code = "HT",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Haiti",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -907,8 +1101,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 95,
                             code = "HU",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Hungary",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -916,8 +1112,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 96,
                             code = "ID",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Indonesia",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -925,8 +1123,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 97,
                             code = "IE",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Ireland",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -934,8 +1134,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 98,
                             code = "IL",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Israel",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -943,8 +1145,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 99,
                             code = "IN",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "India",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -952,8 +1156,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 100,
                             code = "IQ",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Iraq",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -961,8 +1167,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 101,
                             code = "IR",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Iran",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -970,8 +1178,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 102,
                             code = "IS",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Iceland",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -979,8 +1189,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 103,
                             code = "IT",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Italy",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -988,8 +1200,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 104,
                             code = "JM",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Jamaica",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -997,8 +1211,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 105,
                             code = "JO",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Jordan",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1006,8 +1222,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 106,
                             code = "JP",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Japan",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1015,8 +1233,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 107,
                             code = "KE",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Kenya",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1024,8 +1244,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 108,
                             code = "KH",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Cambodia",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1033,8 +1255,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 109,
                             code = "KR",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "South Korea",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1042,8 +1266,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 110,
                             code = "KW",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Kuwait",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1051,8 +1277,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 111,
                             code = "KZ",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Kazakhstan",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1060,8 +1288,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 112,
                             code = "LA",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Laos",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1069,8 +1299,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 113,
                             code = "LB",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Lebanon",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1078,8 +1310,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 114,
                             code = "LK",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Sri Lanka",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1087,8 +1321,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 115,
                             code = "LR",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Liberia",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1096,8 +1332,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 116,
                             code = "LS",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Lesotho",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1105,8 +1343,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 117,
                             code = "LT",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Lithuania",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1114,8 +1354,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 118,
                             code = "LU",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Luxembourg",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1123,8 +1365,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 119,
                             code = "LV",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Latvia",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1132,8 +1376,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 120,
                             code = "LY",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Libya",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1141,8 +1387,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 121,
                             code = "MA",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Morocco",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1150,8 +1398,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 122,
                             code = "MC",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Monaco",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1159,8 +1409,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 123,
                             code = "MD",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Moldova",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1168,8 +1420,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 124,
                             code = "ME",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Montenegro",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1177,8 +1431,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 125,
                             code = "MG",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Madagascar",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1186,8 +1442,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 126,
                             code = "MV",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Maldives",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1195,8 +1453,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 127,
                             code = "MX",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Mexico",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1204,8 +1464,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 128,
                             code = "MY",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Malaysia",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1213,8 +1475,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 129,
                             code = "MZ",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Mozambique",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1222,8 +1486,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 130,
                             code = "NA",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Namibia",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1231,8 +1497,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 131,
                             code = "NG",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Nigeria",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1240,8 +1508,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 132,
                             code = "NL",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Netherlands",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1249,8 +1519,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 133,
                             code = "NO",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Norway",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1258,8 +1530,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 134,
                             code = "NP",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Nepal",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1267,8 +1541,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 135,
                             code = "NZ",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "New Zealand",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1276,8 +1552,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 136,
                             code = "OM",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Oman",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1285,8 +1563,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 137,
                             code = "PA",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Panama",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1294,8 +1574,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 138,
                             code = "PE",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Peru",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1303,8 +1585,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 139,
                             code = "PH",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Philippines",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1312,8 +1596,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 140,
                             code = "PK",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Pakistan",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1321,8 +1607,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 141,
                             code = "PL",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Poland",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1330,8 +1618,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 142,
                             code = "PT",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Portugal",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1339,8 +1629,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 143,
                             code = "QA",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Qatar",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1348,8 +1640,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 144,
                             code = "RO",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Romania",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1357,8 +1651,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 145,
                             code = "RS",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Serbia",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1366,8 +1662,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 146,
                             code = "RU",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Russia",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1375,8 +1673,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 147,
                             code = "RW",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Rwanda",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1384,8 +1684,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 148,
                             code = "SA",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Saudi Arabia",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1393,8 +1695,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 149,
                             code = "SE",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Sweden",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1402,8 +1706,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 150,
                             code = "SG",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Singapore",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1411,8 +1717,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 151,
                             code = "SI",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Slovenia",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1420,8 +1728,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 152,
                             code = "SK",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Slovakia",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1429,8 +1739,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 153,
                             code = "SN",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Senegal",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1438,8 +1750,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 154,
                             code = "SO",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Somalia",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1447,8 +1761,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 155,
                             code = "SR",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Suriname",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1456,8 +1772,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 156,
                             code = "SV",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "El Salvador",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1465,8 +1783,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 157,
                             code = "SY",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Syria",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1474,8 +1794,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 158,
                             code = "TH",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Thailand",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1483,8 +1805,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 159,
                             code = "TJ",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Tajikistan",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1492,8 +1816,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 160,
                             code = "TL",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Timor-Leste",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1501,8 +1827,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 161,
                             code = "TM",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Turkmenistan",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1510,8 +1838,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 162,
                             code = "TN",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Tunisia",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1519,8 +1849,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 163,
                             code = "TR",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Turkey",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1528,8 +1860,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 164,
                             code = "TW",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Taiwan",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1537,8 +1871,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 165,
                             code = "TZ",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Tanzania",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1546,8 +1882,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 166,
                             code = "UA",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Ukraine",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1555,8 +1893,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 167,
                             code = "UG",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Uganda",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1564,8 +1904,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 168,
                             code = "US",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "United States",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1573,8 +1915,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 169,
                             code = "UY",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Uruguay",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1582,8 +1926,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 170,
                             code = "UZ",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Uzbekistan",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1591,8 +1937,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 171,
                             code = "VA",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Vatican City",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1600,8 +1948,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 172,
                             code = "VE",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Venezuela",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1609,8 +1959,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 173,
                             code = "VN",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Vietnam",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1618,8 +1970,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 174,
                             code = "YE",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Yemen",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1627,8 +1981,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 175,
                             code = "ZA",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "South Africa",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1636,8 +1992,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 176,
                             code = "ZM",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Zambia",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1645,8 +2003,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 177,
                             code = "ZW",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Zimbabwe",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1654,8 +2014,10 @@ namespace Location.Infrastructure.Migrations
                         {
                             id = 178,
                             code = "",
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            location_id = 0,
                             name = "Default",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         });
@@ -1668,6 +2030,9 @@ namespace Location.Infrastructure.Migrations
                         .HasColumnType("integer");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<short>("component_id")
+                        .HasColumnType("smallint");
 
                     b.Property<int>("country_id")
                         .HasColumnType("integer");
@@ -1683,6 +2048,9 @@ namespace Location.Infrastructure.Migrations
 
                     b.Property<bool>("is_active")
                         .HasColumnType("boolean");
+
+                    b.Property<int>("location_id")
+                        .HasColumnType("integer");
 
                     b.Property<string>("name")
                         .IsRequired()
@@ -1703,10 +2071,12 @@ namespace Location.Infrastructure.Migrations
                         new
                         {
                             id = 1,
+                            component_id = (short)0,
                             country_id = 178,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "Main location descriptions",
                             is_active = true,
+                            location_id = 0,
                             name = "Main Location",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         });

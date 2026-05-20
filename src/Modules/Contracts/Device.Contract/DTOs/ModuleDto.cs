@@ -1,14 +1,20 @@
 using System;
+using SharedKernel.Domain;
 
 namespace Device.Contract.DTOs;
 
 public sealed record ModuleDto(
       int Id,
+      short ComponentId,
       string Name,
       string Fw,
       string SerialNumber,
-      int Port,
-      int Address,
+      short Port,
+      short Address,
       string Mac,
       string Model,
-      int DeviceId);
+      string Type,
+      int DeviceComponentId,
+      int LocationId,
+      bool IsActive
+      ) : BaseDto(ComponentId,LocationId,Type,IsActive);

@@ -10,7 +10,8 @@
         "dependencies": {
           "Adapter.Abstraction": "1.0.0",
           "Device.Contract": "1.0.0",
-          "Device.Domain": "1.0.0"
+          "Device.Domain": "1.0.0",
+          "Location.Contract": "1.0.0"
         },
         "runtime": {
           "Device.Application.dll": {}
@@ -224,6 +225,17 @@
           }
         }
       },
+      "Location.Contract/1.0.0": {
+        "dependencies": {
+          "SharedKernel": "1.0.0"
+        },
+        "runtime": {
+          "Location.Contract.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
       "Output.Contract/1.0.0": {
         "dependencies": {
           "SharedKernel": "1.0.0"
@@ -381,6 +393,11 @@
       "sha512": ""
     },
     "Device.Domain/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Location.Contract/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

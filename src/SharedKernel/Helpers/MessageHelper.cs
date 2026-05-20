@@ -64,4 +64,14 @@ public static class MessageHelper
             public static string LocationNotAllow = "Location not allowed.";
       }
 
+      public static class Device
+      {
+            public static string DeviceIdNotFound(int id) => $"Device with 'id {id}' not found.";
+      }
+
+      public static class Output
+      {
+            public static string OutputIdNotFound(int id) => $"Output with 'id {id}' not found.";
+      }
+
 }

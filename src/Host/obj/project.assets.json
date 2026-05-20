@@ -1302,7 +1302,8 @@
         "dependencies": {
           "Adapter.Abstraction": "1.0.0",
           "Device.Contract": "1.0.0",
-          "Device.Domain": "1.0.0"
+          "Device.Domain": "1.0.0",
+          "Location.Contract": "1.0.0"
         },
         "compile": {
           "bin/placeholder/Device.Application.dll": {}
@@ -1546,6 +1547,21 @@
           "bin/placeholder/Operator.Infrastructure.dll": {}
         }
       },
+      "Output.Application/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v10.0",
+        "dependencies": {
+          "Adapter.Abstraction": "1.0.0",
+          "Output.Contract": "1.0.0",
+          "Output.Domain": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/Output.Application.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Output.Application.dll": {}
+        }
+      },
       "Output.Contract/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v10.0",
@@ -1557,6 +1573,34 @@
         },
         "runtime": {
           "bin/placeholder/Output.Contract.dll": {}
+        }
+      },
+      "Output.Domain/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v10.0",
+        "dependencies": {
+          "SharedKernel": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/Output.Domain.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Output.Domain.dll": {}
+        }
+      },
+      "Output.Infrastructure/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v10.0",
+        "dependencies": {
+          "Npgsql.EntityFrameworkCore.PostgreSQL": "10.0.1",
+          "Output.Application": "1.0.0",
+          "SharedKernel": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/Output.Infrastructure.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Output.Infrastructure.dll": {}
         }
       },
       "Role.Application/1.0.0": {
@@ -2935,7 +2979,8 @@
         "dependencies": {
           "Adapter.Abstraction": "1.0.0",
           "Device.Contract": "1.0.0",
-          "Device.Domain": "1.0.0"
+          "Device.Domain": "1.0.0",
+          "Location.Contract": "1.0.0"
         },
         "compile": {
           "bin/placeholder/Device.Application.dll": {}
@@ -3179,6 +3224,21 @@
           "bin/placeholder/Operator.Infrastructure.dll": {}
         }
       },
+      "Output.Application/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v10.0",
+        "dependencies": {
+          "Adapter.Abstraction": "1.0.0",
+          "Output.Contract": "1.0.0",
+          "Output.Domain": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/Output.Application.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Output.Application.dll": {}
+        }
+      },
       "Output.Contract/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v10.0",
@@ -3190,6 +3250,34 @@
         },
         "runtime": {
           "bin/placeholder/Output.Contract.dll": {}
+        }
+      },
+      "Output.Domain/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v10.0",
+        "dependencies": {
+          "SharedKernel": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/Output.Domain.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Output.Domain.dll": {}
+        }
+      },
+      "Output.Infrastructure/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v10.0",
+        "dependencies": {
+          "Npgsql.EntityFrameworkCore.PostgreSQL": "10.0.1",
+          "Output.Application": "1.0.0",
+          "SharedKernel": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/Output.Infrastructure.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Output.Infrastructure.dll": {}
         }
       },
       "Role.Application/1.0.0": {
@@ -4568,7 +4656,8 @@
         "dependencies": {
           "Adapter.Abstraction": "1.0.0",
           "Device.Contract": "1.0.0",
-          "Device.Domain": "1.0.0"
+          "Device.Domain": "1.0.0",
+          "Location.Contract": "1.0.0"
         },
         "compile": {
           "bin/placeholder/Device.Application.dll": {}
@@ -4812,6 +4901,21 @@
           "bin/placeholder/Operator.Infrastructure.dll": {}
         }
       },
+      "Output.Application/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v10.0",
+        "dependencies": {
+          "Adapter.Abstraction": "1.0.0",
+          "Output.Contract": "1.0.0",
+          "Output.Domain": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/Output.Application.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Output.Application.dll": {}
+        }
+      },
       "Output.Contract/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v10.0",
@@ -4823,6 +4927,34 @@
         },
         "runtime": {
           "bin/placeholder/Output.Contract.dll": {}
+        }
+      },
+      "Output.Domain/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v10.0",
+        "dependencies": {
+          "SharedKernel": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/Output.Domain.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Output.Domain.dll": {}
+        }
+      },
+      "Output.Infrastructure/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v10.0",
+        "dependencies": {
+          "Npgsql.EntityFrameworkCore.PostgreSQL": "10.0.1",
+          "Output.Application": "1.0.0",
+          "SharedKernel": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/Output.Infrastructure.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Output.Infrastructure.dll": {}
         }
       },
       "Role.Application/1.0.0": {
@@ -7249,10 +7381,25 @@
       "path": "../Modules/Operator/Operator.Infrastructure/Operator.Infrastructure.csproj",
       "msbuildProject": "../Modules/Operator/Operator.Infrastructure/Operator.Infrastructure.csproj"
     },
+    "Output.Application/1.0.0": {
+      "type": "project",
+      "path": "../Modules/Output/Output.Application/Output.Application.csproj",
+      "msbuildProject": "../Modules/Output/Output.Application/Output.Application.csproj"
+    },
     "Output.Contract/1.0.0": {
       "type": "project",
       "path": "../Modules/Contracts/Output.Contract/Output.Contract.csproj",
       "msbuildProject": "../Modules/Contracts/Output.Contract/Output.Contract.csproj"
+    },
+    "Output.Domain/1.0.0": {
+      "type": "project",
+      "path": "../Modules/Output/Output.Domain/Output.Domain.csproj",
+      "msbuildProject": "../Modules/Output/Output.Domain/Output.Domain.csproj"
+    },
+    "Output.Infrastructure/1.0.0": {
+      "type": "project",
+      "path": "../Modules/Output/Output.Infrastructure/Output.Infrastructure.csproj",
+      "msbuildProject": "../Modules/Output/Output.Infrastructure/Output.Infrastructure.csproj"
     },
     "Role.Application/1.0.0": {
       "type": "project",
@@ -7302,6 +7449,7 @@
       "Notifier.Client >= 1.0.0",
       "Operator.Infrastructure >= 1.0.0",
       "Output.Contract >= 1.0.0",
+      "Output.Infrastructure >= 1.0.0",
       "Role.Infrastructure >= 1.0.0",
       "Scalar.AspNetCore >= 2.14.11",
       "Serilog.AspNetCore >= 10.0.0",
@@ -7390,6 +7538,9 @@
             },
             "D:\\code\\sentrix\\src\\Modules\\Operator\\Operator.Infrastructure\\Operator.Infrastructure.csproj": {
               "projectPath": "D:\\code\\sentrix\\src\\Modules\\Operator\\Operator.Infrastructure\\Operator.Infrastructure.csproj"
+            },
+            "D:\\code\\sentrix\\src\\Modules\\Output\\Output.Infrastructure\\Output.Infrastructure.csproj": {
+              "projectPath": "D:\\code\\sentrix\\src\\Modules\\Output\\Output.Infrastructure\\Output.Infrastructure.csproj"
             },
             "D:\\code\\sentrix\\src\\Modules\\Role\\Role.Infrastructure\\Role.Infrastructure.csproj": {
               "projectPath": "D:\\code\\sentrix\\src\\Modules\\Role\\Role.Infrastructure\\Role.Infrastructure.csproj"
@@ -7939,13 +8090,5 @@
         "#import": []
       }
     }
-  },
-  "logs": [
-    {
-      "code": "NU1900",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "Error occurred while getting package vulnerability data: Unable to load the service index for source https://api.nuget.org/v3/index.json."
-    }
-  ]
+  }
 }

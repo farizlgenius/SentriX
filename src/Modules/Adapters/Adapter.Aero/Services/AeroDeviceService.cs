@@ -10,16 +10,18 @@ using Adapter.Aero.Persistences.Entities;
 using AeroAdapter.Application.Interfaces;
 using Device.Contract.DTOs;
 using Device.Contract.Queries;
+using Events.Contract.Command;
 using HID.Aero.ScpdNet.Wrapper;
 using Microsoft.Extensions.Logging;
 using SharedKernel.Enums;
+using SharedKernel.Helpers;
 using SharedKernel.Messaging;
 
 namespace Adapter.Aero.Services;
 
 public sealed class AeroDeviceService(
       ILogger<AeroDeviceService> logger,
-      IScpRepository repo,ISioRepository sioRepo, IScpWriter writer, IIdReportService idReport, ISioWriter sioWriter
+      IScpCommand writer, IIdReportService idReport, IModuleCommand sioWriter,IMessageBus bus
       ) : IDeviceAdapter
 {
       public async Task<List<IdReportDto>> GetIdReportsAsync()
@@ -30,43 +32,11 @@ public sealed class AeroDeviceService(
       public async Task CreateDeviceAsync(DeviceDto dto)
       {
 
-            var Metadata = JsonSerializer.Deserialize<AeroMetadata>(dto.Metadata);
-            var aero_id = await repo.GetAeroIdByMacAsync(dto.Mac);
-            var scp_id = await repo.GetScpIdByMacAsync(dto.Mac);
-
-            // Save Driver Configuration to Database
-            if (Metadata != null && Metadata.PortOne)
-            {
-                  await repo.AddDriverConfigurationAsync(
-                        new Persistences.Entities.DriverConfiguration(
-                              aero_id,
-                              1,
-                              1,
-                              (short)Metadata.BaudRateOne,
-                              90,
-                              (short)Metadata.ProtocolOne,
-                              0
-                        )
-                  );
-            }
-
-            if (Metadata != null && Metadata.PortTwo)
-            {
-                  await repo.AddDriverConfigurationAsync(
-                        new Persistences.Entities.DriverConfiguration(
-                              aero_id,
-                              2,
-                              2,
-                              (short)Metadata.BaudRateTwo,
-                              90,
-                              (short)Metadata.ProtocolTwo,
-                              0
-                        )
-                  );
-            }
 
              // Read Structure 
-            if (!await writer.SCPStructureStatusRead((short)scp_id,dto.Mac,
+            var res = writer.ScpStructureStatusRead(
+                  dto.Mac,
+                  dto.ComponentId,
                   [
                         (short)SCPStructure.SCPSID_TRAN,
                         (short)SCPStructure.SCPSID_TZ,
@@ -84,71 +54,65 @@ public sealed class AeroDeviceService(
                         (short)SCPStructure.SCPSID_EAL,
                         (short)SCPStructure.SCPSID_CRDB
                   ]
-            ))
-                  return;
+            );
+
+            await bus.SendAsync(new AddCommandEvent(res));
 
 
             idReport.IdReportInMemory.RemoveAll(x => x.Mac.Equals(dto.Mac));
 
-            // Add to Scp 
-            
-
 
       }
 
-      public async Task<bool> GetDeviceStatusByMacAsync(string mac)
+      public async Task<bool> GetDeviceStatusAsync(int ComponentId)
       {
-            var ScpId = await repo.ScpIdByMacAsync(mac);
-            return SCPDLL.scpCheckOnline((short)ScpId) == 1;
+            return SCPDLL.scpCheckOnline((short)ComponentId) == 1;
       }
 
-      public async Task<bool> ResetDeviceAsync(string Mac)
+      public async Task<bool> ResetDeviceAsync(string Mac,short ScpId)
       {
-            var ScpId = await repo.ScpIdByMacAsync(Mac);
-            return await writer.SCPReset((short)ScpId, Mac);
+            var res = writer.ScpReset(Mac,ScpId);
+             await bus.SendAsync(new AddCommandEvent(res));
+
+             return res.IsSend;
       }
 
-      public async Task CreateModuleAsync(CreateModuleDto dto)
+      public async Task CreateModuleAsync(
+            string Mac,
+            short ScpId,
+            short SioNumber,
+            short Model,
+            short Address,
+            short Port
+            )
       {
-            int ScpId = await repo.ScpIdByMacAsync(dto.Mac);
-            var aero_id = await repo.GetAeroIdByMacAsync(dto.Mac);
-            var sio = new SioPanelConfiguration(
-                  aero_id,
-                  0,
-                  SioModelHelper.nInputByModel((SioModel)dto.Model),
-                  SioModelHelper.nOutputByModel((SioModel)dto.Model),
-                  SioModelHelper.nReaderByModel((SioModel)dto.Model),
-                  (short)dto.Model,
+
+            var res = sioWriter.SioPanelConfiguration(
+                  Mac,
+                  ScpId,
+                  SioNumber,
+                  AeroModuleModelHelper.nInputByModel((SioModel)Model),
+                  AeroModuleModelHelper.nOutputByModel((SioModel)Model),
+                  AeroModuleModelHelper.nReaderByModel((SioModel)Model),
+                  Model,
                   1,
-                  (short)dto.Port,
-                  (short)dto.Address,
+                  Address,
+                  Port,
                   3,
-                  1,
+                  0,
                   -1,
                   -1,
-                  -1,
-                  dto.Module_id);
+                  -1
+            );
 
-            var config = await sioRepo.AddSioPanelConfigurationAsync(sio);
-
-            if(config.id == 0)
-            {
-                  logger.LogError("Sio panel configuration add failed.");
-                  throw new Exception("Sio panel configuration add failed.");
-            }
-
-            if(!await sioWriter.SioPanelConfiguration((short)ScpId, dto.Mac, config))
-            {
-                  logger.LogError("Sio panel configuration send failed.");
-                  throw new Exception("Sio panel configuration send failed.");
-            }
-
+            await bus.SendAsync(new AddCommandEvent(res));
       }
 
-      public async Task<bool> AsciiCommandAsync(string Mac,string Command)
+      public async Task<bool> AsciiCommandAsync(string Mac,int ScpId,string Command)
       {
-            var ScpId = await repo.ScpIdByMacAsync(Mac);
-            return await writer.AsciiCommandAsync(ScpId,Command);
+            var res = writer.AsciiCommandAsync(Mac,(short)ScpId,Command);
+            await bus.SendAsync(new AddCommandEvent(res));
+            return res.IsSend;
       }
 }
 

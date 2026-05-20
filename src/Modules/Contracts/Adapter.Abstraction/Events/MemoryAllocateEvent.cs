@@ -3,4 +3,4 @@ using SharedKernel.Messaging;
 
 namespace Adapter.Abstraction.Events;
 
-public sealed record MemoryAllocateEvent(string Mac,string Status) : IEvent;
+public sealed record MemoryAllocateEvent(int ComponentId,string Status) : IEvent;

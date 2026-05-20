@@ -9,14 +9,15 @@ public sealed class Module : BaseEntity
       public string serial_number {get; set;} = string.Empty;
       public string fw {get; set;} = string.Empty;
       public string mac {get; set;} = string.Empty;
-      public int port {get; set;}
-      public int address {get; set;}
+      public short port {get; set;}
+      public short address {get; set;}
+      public string type {get; set;} = string.Empty;
       public string model {get; set;} = string.Empty;
       public int device_id {get; set;}
       public Devices devices {get; set; } = default!;
 
       public Module(){}
-      public Module(Domain.Entities.Module domain)
+      public Module(Domain.Entities.Module domain) : base(domain.ComponentId,domain.LocationId,domain.IsActive)
       {
             name = domain.Name;
             serial_number = domain.SerialNumber;

@@ -4,6 +4,8 @@ public sealed record CreateOutputDto(
       string Name,
       int ModuleId,
       short OutputNo,
+      string Model,
+      short RelayMode,
       int LocationId,
-      string Metadata
+      short DefaultPulse
       );

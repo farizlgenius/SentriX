@@ -31,6 +31,9 @@ namespace Operator.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
 
+                    b.Property<short>("component_id")
+                        .HasColumnType("smallint");
+
                     b.Property<DateTime>("created_at")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
@@ -60,6 +63,7 @@ namespace Operator.Infrastructure.Migrations
                         new
                         {
                             id = 1,
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
                             location_id = 1,
@@ -75,6 +79,9 @@ namespace Operator.Infrastructure.Migrations
                         .HasColumnType("integer");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<short>("component_id")
+                        .HasColumnType("smallint");
 
                     b.Property<DateTime>("created_at")
                         .ValueGeneratedOnAdd()
@@ -99,6 +106,9 @@ namespace Operator.Infrastructure.Migrations
                     b.Property<string>("lastname")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<int>("location_id")
+                        .HasColumnType("integer");
 
                     b.Property<string>("middlename")
                         .IsRequired()
@@ -136,12 +146,14 @@ namespace Operator.Infrastructure.Migrations
                         new
                         {
                             id = 1,
+                            component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             email = "admin@sentrix.com",
                             firstname = "Administrator",
                             gender = "M",
                             is_active = true,
                             lastname = "",
+                            location_id = 0,
                             middlename = "",
                             mobile = "1234567890",
                             password = "100000.lG1/4V/VRPZsbhf/Zqc4xw==.6vYcf+wEMSgqcaNhoZEdM9PaPxx2ZUErZhQbeMxo5OY=",

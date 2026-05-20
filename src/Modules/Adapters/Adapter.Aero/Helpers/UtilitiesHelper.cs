@@ -17,33 +17,7 @@ public sealed class UtilitiesHelper
             return dto.ToUnixTimeSeconds();
       }
 
-      public static short OutputModeResolver(RelayMode relay,RelayOfflineMode offline)
-      {
-            if(relay == RelayMode.Normal && offline == RelayOfflineMode.NoChange)
-            {
-                  return 0;
-
-            }else if (relay == RelayMode.Normal && offline == RelayOfflineMode.Inactive)
-            {
-                  return 16;
-            }else if (relay == RelayMode.Normal && offline == RelayOfflineMode.Active)
-            {
-                  return 32;
-            }else if (relay == RelayMode.Inverted && offline == RelayOfflineMode.NoChange)
-            {
-                  return 1;
-            }else if (relay == RelayMode.Inverted && offline == RelayOfflineMode.Inactive)
-            {
-                  return 17;
-            }else if (relay == RelayMode.Inverted && offline == RelayOfflineMode.Active)
-            {
-                  return 33;
-            }
-            else
-            {
-                  return -1;
-            }
-      } 
+    
 
 
       public static int ConvertTimeToEndMinute(string timeString)

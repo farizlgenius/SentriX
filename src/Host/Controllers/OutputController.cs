@@ -8,7 +8,7 @@ namespace Host.Controllers
       [ApiController]
       public class OutputController(IOutput output) : ControllerBase
       {
-            [HttpGet]
+            [HttpGet("pagination")]
             public async Task<IActionResult> GetPagination([FromQuery]PaginationParams param)
             {
                   var res = await output.GetPaginationAsync(param);
@@ -21,6 +21,28 @@ namespace Host.Controllers
                   var res = await output.CreateAsync(dto);
                   return Ok(res);
             }
+
+            [HttpGet("relay/{id}")]
+            public async Task<IActionResult> GetAvailalbleOutputByModuleIdAsync(int id)
+            {
+                  var res = await output.GetAvailalbleOutputByModuleIdAsync(id);
+                  return Ok(res);
+            }
+
+            [HttpGet("relay/mode")]
+            public async Task<IActionResult> GetRelayModeAsync()
+            {
+                  var res = await output.GetRelayModeAsync();
+                  return Ok(res);
+            }
+
+            [HttpPost("{id}")]
+            public async Task<IActionResult> TriggerOutputAsync(int id,[FromQuery]int Command)
+            {
+                  var res = await output.TriggerOutputAsync(id,Command);
+                  return Ok(res);
+            }
+
 
       }
 

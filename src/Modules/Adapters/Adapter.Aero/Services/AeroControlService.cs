@@ -9,50 +9,24 @@ using Adapter.Aero.Persistences.Entities;
 using AeroAdapter.Application.Interfaces;
 using Microsoft.Extensions.Logging;
 using Output.Contract.DTOs;
+using SharedKernel.Domain;
 
 namespace Adapter.Aero.Services;
 
-public sealed class AeroControlService(ILogger<AeroControlService> logger,ISioRepository sioRepository,ICpRepository repo,ICpWriter writer) : IControlAdapter
+public sealed class AeroControlService(ILogger<AeroControlService> logger,IOutputCommand writer) : IControlAdapter
 {
       public async Task CreateAsync(CreateOutputDto dto)
       {
-            var cpMetadata = JsonSerializer.Deserialize<CpMetadata>(dto.Metadata);
-            if(cpMetadata == null)
-            {
-                  logger.LogError("Deserialize metadata failed.");
-                  throw new Exception("Deserialize metadata failed.");
-            }
-            var aero_id = await sioRepository.GetAeroIdByModuleIdAsync(dto.ModuleId);
-            var sio = await sioRepository.GetSioPanelConfigurationByModuleIdAsync(dto.ModuleId);
-            // Create Outout Spec
-            var oSpec = new OutputPointSpecification(
-                  aero_id,
-                  sio.sio_number,
-                  cpMetadata.OutputNo,
-                  UtilitiesHelper.OutputModeResolver(
-                        (RelayMode)cpMetadata.RelayMode,
-                        (RelayOfflineMode)cpMetadata.OfflineMode
-                        )
-            );
-            var oRes = await repo.AddOutputPointSpeicificationAsync(oSpec);
+            throw new NotImplementedException();
+      }
 
-            // Send Command here
-            await writer.OutputPointSpecification(oRes);
-            
+      public Task<IEnumerable<OptionDto>> GetRelayModeAsync()
+      {
+            throw new NotImplementedException();
+      }
 
-
-            // Create Control point
-            var cSpec = new ControlPointConfiguration(
-                  aero_id,
-                  0,
-                  sio.sio_number,
-                  cpMetadata.OutputNo,
-                  (short)cpMetadata.DefaultPulse
-            );
-            var cRes = await repo.AddControlPointConfigurationAsync(cSpec);
-
-            // Send Comand here
-            await writer.ControlPointConfiguration(cRes);
-
+      public Task TriggerOutputAsync(int moduleId, int Command)
+      {
+            throw new NotImplementedException();
       }
 }

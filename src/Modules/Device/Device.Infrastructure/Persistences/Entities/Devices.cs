@@ -15,13 +15,12 @@ public sealed class Devices : BaseEntity
   public string type { get; set; } = string.Empty;
   public DateTime synced_at { get; set; }
   public string metadata { get; set; } = string.Empty;
-  public int location_id { get; set; }
   public ICollection<Module> modules {get;set;} = new List<Module>();
 
 
   public Devices() { }
 
-  public Devices(Device.Domain.Entities.Devices domain)
+  public Devices(Device.Domain.Entities.Devices domain) : base(domain.ComponentId,domain.LocationId,domain.IsActive)
   {
     this.name = domain.Name;
     this.serial_number = domain.SerialNumber;

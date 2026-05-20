@@ -31,6 +31,9 @@ namespace Auth.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
 
+                    b.Property<short>("component_id")
+                        .HasColumnType("smallint");
+
                     b.Property<DateTime>("created_at")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
@@ -47,6 +50,9 @@ namespace Auth.Infrastructure.Migrations
                     b.Property<string>("key")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<int>("location_id")
+                        .HasColumnType("integer");
 
                     b.Property<string>("owner")
                         .IsRequired()
@@ -74,6 +80,9 @@ namespace Auth.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<short>("component_id")
+                        .HasColumnType("smallint");
+
                     b.Property<DateTime>("created_at")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
@@ -88,6 +97,9 @@ namespace Auth.Infrastructure.Migrations
 
                     b.Property<bool>("is_active")
                         .HasColumnType("boolean");
+
+                    b.Property<int>("location_id")
+                        .HasColumnType("integer");
 
                     b.Property<DateTime>("updated_at")
                         .ValueGeneratedOnAdd()

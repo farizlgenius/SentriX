@@ -1693,11 +1693,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "d:\\code\\sentrix\\src\\Modules\\Auth\\Auth.Application\\Auth.Application.csproj",
+      "projectUniqueName": "D:\\code\\sentrix\\src\\Modules\\Auth\\Auth.Application\\Auth.Application.csproj",
       "projectName": "Auth.Application",
-      "projectPath": "d:\\code\\sentrix\\src\\Modules\\Auth\\Auth.Application\\Auth.Application.csproj",
+      "projectPath": "D:\\code\\sentrix\\src\\Modules\\Auth\\Auth.Application\\Auth.Application.csproj",
       "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-      "outputPath": "d:\\code\\sentrix\\src\\Modules\\Auth\\Auth.Application\\obj\\",
+      "outputPath": "D:\\code\\sentrix\\src\\Modules\\Auth\\Auth.Application\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

@@ -5,14 +5,33 @@ using Events.Infrastructure.Persistences;
 using Events.Infrastructure.Persistences.Entities;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel.Domain;
+using SharedKernel.Model;
 
 namespace Events.Infrastructure.Repositories;
 
 public sealed class EventRepository(EventDbContext context) : IEventRepository
 {
+      public async Task AddCommandEvent(CommandResponse response)
+      {
+            await context.CommandEvents.AddAsync(
+                  new CommandEvent(
+                        response.Mac,
+                        response.ScpId,
+                        response.Command,
+                        response.Tag,
+                        response.SendAt,
+                        response.ReceivedAt,
+                        response.Body,
+                        response.Status,
+                        response.Reason
+                        )
+            );
+
+            await context.SaveChangesAsync();
+      }
       public async Task AddAsync(DateTime timeStamp, string actor, string module, string type, string image, string mac, string name, string remarks, int locationId)
       {
-            await context.events.AddAsync(new Event
+            await context.Events.AddAsync(new Event
             {
                   timestamp = timeStamp,
                   actor = actor,
@@ -30,7 +49,7 @@ public sealed class EventRepository(EventDbContext context) : IEventRepository
 
       public async Task<Pagination<EventDto>> GetPaginationByLocationIdAsync(PaginationParams param)
       {
-            var query = context.events.AsNoTracking().AsQueryable();
+            var query = context.Events.AsNoTracking().AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(param.search))
             {

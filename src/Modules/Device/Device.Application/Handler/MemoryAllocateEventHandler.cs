@@ -9,6 +9,6 @@ public sealed class MemoryAllocateEventHandler(IDeviceRepository repo) : IEventH
 {
       public async Task HandleAsync(MemoryAllocateEvent @event, CancellationToken ct)
       {
-            await repo.VerifyDeviceMemoryAllocateStatusAsync(@event.Mac, @event.Status, ct);
+            await repo.VerifyDeviceMemoryAllocateStatusAsync(@event.ComponentId, @event.Status, ct);
       }
 }

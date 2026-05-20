@@ -1,6 +1,7 @@
 using System;
 using Events.Contract.DTOs;
 using SharedKernel.Domain;
+using SharedKernel.Model;
 
 namespace Events.Application.Interfaces;
 
@@ -18,4 +19,6 @@ public interface IEventRepository
             string remarks,
             int locationId
             );
+
+      Task AddCommandEvent(CommandResponse response);
 }

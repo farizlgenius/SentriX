@@ -1,27 +1,21 @@
 import { PropsWithChildren, useEffect, useState } from "react";
-import HttpRequest from "../../utility/HttpRequest";
 import Label from "../../components/form/Label";
 import Input from "../../components/form/input/InputField";
-import ComponentCard from "../../components/common/ComponentCard";
 import Select from "../../components/form/Select";
-import Button from "../../components/ui/button/Button";
-import { DeviceDto } from "../../model/Device/DeviceDto";
-import { ModuleDto } from "../../model/Module/ModuleDto";
 import { Options } from "../../model/Options";
 import { ControlPointDto } from "../../model/ControlPoint/ControlPointDto";
-import { ModeDto } from "../../model/ModeDto";
 import { DeviceEndpoint } from "../../endpoint/HardwareEndpoint";
-import { HttpMethod } from "../../enum/HttpMethod";
 import { ControlPointEndpoint } from "../../endpoint/ControlPointEndpoint";
 import { ModuleEndpoint } from "../../endpoint/ModuleEndpoint";
 import api, { send } from "../../api/api";
 import { useLocation } from "../../context/LocationContext";
 import { FormProp, FormType } from "../../model/Form/FormProp";
+import { FormActions, FormField, FormSection } from "../../components/form/template/FormTemplate";
 
 
 
-const ControlPointForm: React.FC<PropsWithChildren<FormProp<ControlPointDto>>> = ({ handleClick, dto, setDto,type }) => {
-  const {locationId} = useLocation();
+const ControlPointForm: React.FC<PropsWithChildren<FormProp<ControlPointDto>>> = ({ handleClick, dto, setDto, type }) => {
+  const { locationId } = useLocation();
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDto(prev => ({ ...prev, [e.target.name]: e.target.value }))
   }
@@ -31,23 +25,21 @@ const ControlPointForm: React.FC<PropsWithChildren<FormProp<ControlPointDto>>> =
   const [moduleOption, setModuleOption] = useState<Options[]>([]);
   const [relayOption, setRelayOption] = useState<Options[]>([]);
   const [relayModeOption, setRelyModeOption] = useState<Options[]>([]);
-  const [offlineModeOption, setOfflineModeOption] = useState<Options[]>([]);
+  const [controller,setController] = useState<number>(-1);
 
   const handleSelect = async (value: string, e: React.ChangeEvent<HTMLSelectElement>) => {
     switch (e.target.name) {
       case "driverId":
         fetchModuleByDeviceId(Number(value))
-        setDto((prev) => ({...prev,scpId:Number(value),hardwareName:controllerOption.find(a => a.value == value)?.label ?? ""}))
         break;
       case "moduleId":
         fetchOutput(Number(value));
-        setDto((prev) => ({...prev,moduleId:Number(value),moduleDriverId:moduleOption.find(a => a.value == Number(value))?.additionalInfo ?? -1,moduleDetail:moduleOption.find(a => a.value == Number(value))?.label ?? ""}))
+        setDto((prev) => ({ ...prev, moduleId: Number(value), model: moduleOption.find(a => a.value == Number(value))?.label ?? "" }))
         break;
       case "relayMode":
-        setDto(prev => ({...prev,relayMode:Number(value),relayModeDetail:relayModeOption.find(a => a.value == Number(value))?.label ?? ""}))
-        break;
-      case "offlineMode":
-        setDto(prev => ({...prev,offlineMode:Number(value),offlineModeDetail:offlineModeOption.find(a => a.value == Number(value))?.label ?? ""}))
+        console.log(value);
+        setDto(prev => ({ ...prev, relayMode: Number(value) }))
+        // setOfflineModeOption()
         break;
       default:
         setDto((prev) => ({ ...prev, [e.target.name]: value }));
@@ -56,13 +48,16 @@ const ControlPointForm: React.FC<PropsWithChildren<FormProp<ControlPointDto>>> =
   }
 
   {/* Controller Data */ }
-  const fetchController = async () => {
+  const fetchDevice = async () => {
     const res = await send.get(DeviceEndpoint.GET(locationId));
-    if (res && res.data.data) {
-      res.data.data.map((a: DeviceDto) => {
+    console.log(res);
+    if (res.data) {
+      res.data.map((a: Options) => {
         setControllerOption(prev => [...prev, {
-          label: a.name,
-          value: a.componentId
+          label: a.label,
+          value: a.value,
+          description:a.description,
+          isTaken:a.isTaken
         }])
       })
     }
@@ -71,44 +66,38 @@ const ControlPointForm: React.FC<PropsWithChildren<FormProp<ControlPointDto>>> =
   const fetchRelayMode = async () => {
 
     let res = await api.get(ControlPointEndpoint.GET_RELAY_OP_MODE);
-    if (res && res.data.data) {
-      res.data.data.map((a: ModeDto) => {
+    if (res.data) {
+      res.data.map((a: Options) => {
         setRelyModeOption((prev) => [...prev, {
-          label: a.description,
-          value: a.value.toString()
+          label: a.label,
+          value: a.value,
+          description:a.description
         }]);
       });
     }
 
-    res = await send.get(ControlPointEndpoint.GET_OFFLINE_OP_MODE);
-    if (res && res.data.data) {
-      res.data.data.map((a: ModeDto) => {
-        setOfflineModeOption((prev) => [...prev, {
-          label: a.description,
-          value: a.value.toString()
-        }]);
-      });
-    }
 
   }
 
   const fetchModuleByDeviceId = async (value: number) => {
     const res = await send.get(ModuleEndpoint.GET_BY_DEVICE_ID(value));
-    if (res) {
-      res.data.data.map((a: ModuleDto) => {
+    console.log(res)
+    if (res.data) {
+      res.data.map((a: Options) => {
         setModuleOption((prev) => [...prev, {
-          label: `${a.modelDetail} ( ${a.address} )`,
-          value: a.id,
-          additionalInfo:a.driverId,
+          label: a.label,
+          value: a.value,
+          description:a.description,
+          isTaken:a.isTaken
         }])
       })
     }
   }
 
   const fetchOutput = async (value: number) => {
-    var res = await send.get(ControlPointEndpoint.OUTPUT(dto.scpId,value));
+    var res = await send.get(ControlPointEndpoint.OUTPUT(value));
     if (res) {
-      res.data.data.map((a: number) => {
+      res.data.map((a: number) => {
         setRelayOption((prev) => [...prev, {
           label: `Relay ${a + 1}`,
           value: a.toString()
@@ -119,61 +108,61 @@ const ControlPointForm: React.FC<PropsWithChildren<FormProp<ControlPointDto>>> =
 
   {/* UseEffect */ }
   useEffect(() => {
-    fetchController();
+    fetchDevice();
     fetchRelayMode();
-    if(type == FormType.INFO || type == FormType.UPDATE){
-      fetchModuleByDeviceId(dto.cpId);
+    if (type == FormType.INFO || type == FormType.UPDATE) {
+      fetchModuleByDeviceId(dto.moduleId);
       fetchOutput(dto.moduleId);
     }
   }, []);
 
   return (
-    <div className="flex flex-col gap-5 justify-center items-center p-5 border border-gray-200 rounded-2xl dark:border-gray-800 lg:p-6">
-      <div className="space-y-6">
-        <div>
-          <Label htmlFor="name">Control Point Name</Label>
-          <Input disabled={type == FormType.INFO} name="name" value={dto.name} type="text" id="name" onChange={handleChange} />
-        </div>
-        <div>
-          <Label>Controller</Label>
-          <Select
-            isString={false}
-            name="driverId"
-            options={controllerOption}
-            placeholder="Select Option"
-            onChangeWithEvent={handleSelect}
-            className="dark:bg-dark-900"
-            defaultValue={dto.scpId}
-            disabled={type == FormType.INFO}
-          />
-        </div>
-        <div>
-          <Label>Module</Label>
-          <Select
-          isString={false}
-            name="moduleId"
-            options={moduleOption}
-            placeholder="Select Option"
-            onChangeWithEvent={handleSelect}
-            className="dark:bg-dark-900"
-            defaultValue={dto.moduleId}
-            disabled={type == FormType.INFO}
-          />
-        </div>
-        <div>
-          <Label>Relay</Label>
-          <Select
-            name="outputNo"
-            options={relayOption}
-            placeholder="Select Option"
-            onChangeWithEvent={handleSelect}
-            className="dark:bg-dark-900"
-            defaultValue={dto.outputNo}
-            disabled={type == FormType.INFO}
-          />
-        </div>
-        <div className="flex gap-2">
-          <div className="w-full">
+    <>
+      <FormSection title="Control Point Details" description="Name the location, assign its country, and add a short description." className="pb-10 mb-5">
+        <div className="grid gap-5 grid-cols-2 md:grid-cols-2 gap-x-10 gap-y-6 mb-8 p-5">
+          <FormField>
+            <Label htmlFor="name">Control Point Name</Label>
+            <Input disabled={type == FormType.INFO} name="name" value={dto.name} type="text" id="name" onChange={handleChange} />
+          </FormField>
+          <FormField>
+            <Label>Controller</Label>
+            <Select
+              isString={false}
+              name="driverId"
+              options={controllerOption}
+              placeholder="Select Option"
+              onChangeWithEvent={handleSelect}
+              className="dark:bg-dark-900"
+              defaultValue={controller}
+              disabled={type == FormType.INFO}
+            />
+          </FormField>
+          <FormField>
+            <Label>Module</Label>
+            <Select
+              isString={false}
+              name="moduleId"
+              options={moduleOption}
+              placeholder="Select Option"
+              onChangeWithEvent={handleSelect}
+              className="dark:bg-dark-900"
+              defaultValue={dto.moduleId}
+              disabled={type == FormType.INFO}
+            />
+          </FormField>
+          <FormField>
+            <Label>Relay</Label>
+            <Select
+              name="outputNo"
+              options={relayOption}
+              placeholder="Select Option"
+              onChangeWithEvent={handleSelect}
+              className="dark:bg-dark-900"
+              defaultValue={dto.outputNo}
+              disabled={type == FormType.INFO}
+            />
+          </FormField>
+          <FormField>
             <Label>Relay Mode</Label>
             <Select
               name="relayMode"
@@ -184,32 +173,27 @@ const ControlPointForm: React.FC<PropsWithChildren<FormProp<ControlPointDto>>> =
               defaultValue={dto.relayMode}
               disabled={type == FormType.INFO}
             />
-          </div>
-          <div className="w-full">
-            <Label>Offline Mode</Label>
-            <Select
-              name="offlineMode"
-              options={offlineModeOption}
-              placeholder="Select Option"
-              onChangeWithEvent={handleSelect}
-              className="dark:bg-dark-900"
-              defaultValue={dto.offlineMode}
-              disabled={type == FormType.INFO}
-            />
-          </div>
 
+          </FormField>
+          <FormField>
+            <Label htmlFor="defaultPulseTime">Pulse Time (second)</Label>
+            <Input disabled={type == FormType.INFO} defaultValue={0} value={dto.defaultPulse} min="0" max="500" name="defaultPulse" type="number" id="defaultPulse" onChange={handleChange} />
+          </FormField>
         </div>
 
-        <div>
-          <Label htmlFor="defaultPulseTime">Pulse Time (second)</Label>
-          <Input disabled={type == FormType.INFO} defaultValue={0} value={dto.defaultPulse} min="0" max="500" name="defaultPulse" type="number" id="defaultPulse" onChange={handleChange} />
-        </div>
-        <div className="flex justify-center gap-4">
-          <Button disabled={type == FormType.INFO} name={type == FormType.CREATE ? "create" : "update"} className="w-50" size="sm" onClickWithEvent={handleClick}>{type == FormType.UPDATE ? "Update" : "Create"}</Button>
-          <Button name="close" className="w-50" variant="danger" size="sm" onClickWithEvent={handleClick}>Cancel </Button>
-        </div>
-      </div>
-    </div>
+      </FormSection>
+      <FormActions
+        // disabled={isReadOnly}
+        onSubmit={handleClick}
+        onCancel={handleClick}
+        cancelName="close"
+        submitName={type == FormType.UPDATE ? "update" : "create"}
+        typeLabel={type == FormType.UPDATE ? "Update" : "Create"}
+      />
+
+
+    </>
+
 
   );
 }

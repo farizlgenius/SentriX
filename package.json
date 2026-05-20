@@ -27,6 +27,9 @@
     "aero:migremove": "dotnet ef migrations remove --project src/Modules/Adapters/Adapter.Aero --startup-project src/Host",
     "events:migadd": "dotnet ef migrations add --project src/Modules/Events/Events.Infrastructure --startup-project src/Host",
     "events:migup" : "dotnet ef database update --project src/Modules/Events/Events.Infrastructure --startup-project src/Host",
-    "events:migremove": "dotnet ef migrations remove --project src/Modules/Events/Events.Infrastructure --startup-project src/Host"
+    "events:migremove": "dotnet ef migrations remove --project src/Modules/Events/Events.Infrastructure --startup-project src/Host",
+    "output:migadd": "dotnet ef migrations add --project src/Modules/Output/Output.Infrastructure --startup-project src/Host",
+    "output:migup" : "dotnet ef database update --project src/Modules/Output/Output.Infrastructure --startup-project src/Host",
+    "output:migremove": "dotnet ef migrations remove --project src/Modules/Output/Output.Infrastructure --startup-project src/Host"
   }
 }

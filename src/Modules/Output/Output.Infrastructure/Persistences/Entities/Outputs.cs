@@ -8,7 +8,9 @@ public sealed class Outputs : BaseEntity
 {
       public string name { get; set; } = string.Empty;
       public int module_id { get; set; }
-      public string metadata { get; set; } = string.Empty;
+      public short output_no {get; set;}
+      public string model {get; set;} = string.Empty;
+      public short default_pulse { get; set; } 
       public int location_id { get; set; }
 
 
@@ -18,7 +20,9 @@ public sealed class Outputs : BaseEntity
       {
             name = domain.Name;
             module_id = domain.ModuleId;
-            metadata = domain.Metadata;
+            output_no = domain.OutputNo;
+            model = domain.Model;
+            default_pulse = domain.DefaultPulse;
             this.updated_at = DateTime.UtcNow;
             this.created_at = DateTime.UtcNow;
       }

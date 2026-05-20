@@ -7,7 +7,6 @@ public sealed class Aeros : BaseEntity
 {
       public int scp_id {get; set;}
       public string mac {get; set;} = string.Empty;
-      public int location_id {get; set;} 
       public ICollection<DriverConfiguration> driver_configurations {get; set;} = new List<DriverConfiguration>();
       public ICollection<SioPanelConfiguration> sio_panel_configurations {get; set;} = new List<SioPanelConfiguration>();
       public ICollection<InputPointSpecification> input_point_specifications {get; set;} = new List<InputPointSpecification>();

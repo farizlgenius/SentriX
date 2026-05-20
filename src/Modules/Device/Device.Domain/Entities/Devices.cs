@@ -1,11 +1,12 @@
 using System;
+using SharedKernel.Domain;
 using SharedKernel.Helpers;
 
 namespace Device.Domain.Entities;
 
-public sealed class Devices
+public sealed class Devices : BaseDomain
 {
-  public int Id { get; private set; }
+
   public string Name { get; private set; } = string.Empty;
   public string SerialNumber { get; private set; } = string.Empty;
   public string Mac { get; private set; } = string.Empty;
@@ -15,10 +16,9 @@ public sealed class Devices
   public string Type { get; private set; }
   public string Status {get; private set;}
   public DateTime SyncedAt {get; private set;}
-  public int LocationId { get; private set; }
   public string Metadata { get; private set; } = string.Empty;
 
-  public Devices(int id, string name, string serialnumber, string mac,string ip,int port,string fw,string type,string status,DateTime synced_at,int locationid,string metadata)
+  public Devices(int id,short componetId,string name, string serialnumber, string mac,string ip,int port,string fw,string type,string status,DateTime synced_at,int locationid,string metadata,bool isactive) : base(id,componetId,locationid,isactive)
   {
     ValidationHelper.ValidateNotMinus(id, nameof(Id));
     ValidationHelper.ValidateNotNullOrEmpty(name, nameof(Name));
@@ -26,6 +26,7 @@ public sealed class Devices
     ValidationHelper.ValidateNotNullOrEmpty(mac, nameof(Mac));
     ValidationHelper.ValidateNotMinus(locationid, nameof(LocationId));
     this.Id = id;
+    this.ComponentId = componetId;
     this.Name = name;
     this.SerialNumber = serialnumber;
     this.Mac = mac;

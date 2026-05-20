@@ -9,6 +9,6 @@ public sealed class AssignIpEventHandler(IDeviceRepository repo) : IEventHandler
 {
       public async Task HandleAsync(AssignIpEvent @event, CancellationToken ct)
       {
-           await repo.UpdateIpByMacAsync(@event.Mac, @event.IpAddress, ct);
+           await repo.UpdateIpByMacAsync(@event.ComponentId, @event.IpAddress, ct);
       }
 }

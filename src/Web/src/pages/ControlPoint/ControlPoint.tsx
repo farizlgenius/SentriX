@@ -72,39 +72,31 @@ const ControlPoint = () => {
 
     {/* Output Data */ }
     const defaultOutputDto: ControlPointDto = {
-    // Base
-    locationId: locationId,
-    isActive: true,
-
-    // Detail
-    id: 0,
-    cpId: 0,
-    name: "",
-    moduleId: -1,
-    moduleDriverId:-1,
-    moduleDetail: "",
-    outputNo: -1,
-    relayMode: -1,
-    offlineMode: -1,
-    defaultPulse: 1,
-    relayModeDetail: "",
-    offlineModeDetail: "",
-    scpId: -1
-}
+        // Base
+        locationId: locationId,
+        // Detail
+        id: 0,
+        name: "",
+        moduleId: -1,
+        outputNo: -1,
+        defaultPulse: 1,
+        model: '',
+        relayMode: 0
+    }
     const [controlPointDto, setControlPointDto] = useState<ControlPointDto>(defaultOutputDto);
     const [outputsDto, setOutputsDto] = useState<ControlPointDto[]>([]);
     const [status, setStatus] = useState<StatusDto[]>([]);
     const fetchData = async (pageNumber: number, pageSize: number,locationId?:number,search?: string, startDate?: string, endDate?: string) => {
         const res = await send.get(ControlPointEndpoint.PAGINATION(pageNumber,pageSize,locationId,search, startDate, endDate));
         if (res && res.data.data) {
-            console.log(res.data.data)
+            console.log(res.data)
             setOutputsDto(res.data.data.data);
             setPagination(res.data.data.page)
 
             // Batch set state
             const newStatuses = res.data.data.data.map((a: ControlPointDto) => ({
-                deviceId:a.scpId,
-                driverId: a.cpId,
+                id:a.id,
+                componentId: 0,
                 status: 0
             }));
 
@@ -113,15 +105,15 @@ const ControlPoint = () => {
             setStatus((prev) => [...prev, ...newStatuses]);
 
             // Fetch status for each
-            res.data.data.data.forEach((a: ControlPointDto) => {
-                fetchStatus(a.scpId, a.cpId);
+            res.data.item.forEach((a: ControlPointDto) => {
+                fetchStatus(a.id);
             });
 
         }
     };
 
-    const fetchStatus = async (deviceId: number, driverId: number) => {
-        const res = send.get(ControlPointEndpoint.STATUS(deviceId,driverId));
+    const fetchStatus = async (outputId:number) => {
+        const res = send.get(ControlPointEndpoint.STATUS(outputId));
         Logger.info(res);
     };
 
@@ -190,6 +182,7 @@ const ControlPoint = () => {
                 setRemove(true);
                 break;
             case "create":
+                console.log(controlPointDto)
                 setConfirmCreate(() => async () => {
                     const res = await send.post(ControlPointEndpoint.CREATE, controlPointDto)
                     if (Helper.handleToastByResCode(res, ControlPointToast.CREATE, toggleToast)) {
@@ -317,11 +310,11 @@ const ControlPoint = () => {
                 form
                     ?
                     <>
-                        <BaseForm tabContent={formContent} />
+                        <BaseForm tabContent={formContent} header={''} desc={''} />
                     </>
 
                     :
-                    <BaseTable<ControlPointDto> headers={OUTPUT_TABLE_HEADER} keys={OUTPUT_KEY} status={status} data={outputsDto} onEdit={handleEdit} onRemove={handleRemove} select={selectedObjects} setSelect={setSelectedObjects} onClick={handleClick} permission={filterPermission(FeatureId.CONTROL)} renderOptionalComponent={renderOptionalComponent} action={action} onInfo={handleInfo} fetchData={fetchData} locationId={locationId} refresh={refresh} />
+                    <BaseTable<ControlPointDto> headers={OUTPUT_TABLE_HEADER} keys={OUTPUT_KEY} status={status} data={outputsDto} onEdit={handleEdit} onRemove={handleRemove} select={selectedObjects} setSelect={setSelectedObjects} onClick={handleClick} permission={filterPermission(FeatureId.control)} renderOptionalComponent={renderOptionalComponent} action={action} onInfo={handleInfo} fetchData={fetchData} locationId={locationId} refresh={refresh} />
 
 
             }

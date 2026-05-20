@@ -1,4 +1,5 @@
 using System.Data.Common;
+using Device.Contract.DTOs;
 using Microsoft.EntityFrameworkCore;
 using Output.Application.Interfaces;
 using Output.Contract.DTOs;
@@ -25,9 +26,30 @@ public sealed class OutputRepository(OutputDbContext context) : IOutputRepositor
             return new OutputDto(
                   data.Entity.id,
                   data.Entity.name,
-                  data.Entity.metadata,
-                  data.Entity.location_id
+                  data.Entity.module_id,
+                  data.Entity.output_no,
+                  data.Entity.model,
+                  data.Entity.location_id,
+                  data.Entity.default_pulse
+
             );
+      }
+
+      public async Task<OutputDto> GetByIdAsync(int id, CancellationToken ct = default)
+      {
+            return await context.Outputs.AsNoTracking()
+            .OrderByDescending(x => x.id)
+            .Where(x => x.id == id)
+            .Select(e => new OutputDto(
+                  e.id,
+                  e.name,
+                  e.module_id,
+                  e.output_no,
+                  e.model,
+                  e.location_id,
+                  e.default_pulse
+            ))
+            .FirstOrDefaultAsync(ct) ?? new OutputDto(0,string.Empty,0,0,string.Empty,0,0);
       }
 
       public async Task<Pagination<OutputDto>> GetPaginationAsync(PaginationParams param,CancellationToken ct = default)
@@ -84,10 +106,25 @@ public sealed class OutputRepository(OutputDbContext context) : IOutputRepositor
             .Select(e => new OutputDto(
                   e.id,
                   e.name,
-                  e.metadata,
-                  e.location_id
+                  e.module_id,
+                  e.output_no,
+                  e.model,
+                  e.location_id,
+                  e.default_pulse
             )).ToListAsync(ct);
 
             return new Pagination<OutputDto>(param.pageNumber,param.pageSize,count,(int)Math.Ceiling(count / (double)param.pageSize),res);
+      }
+
+
+
+      public async Task<IEnumerable<short>> GetUnavailableOutputByModuleIdAsync(int moduleId, CancellationToken ct = default)
+      {
+            return await context.Outputs.AsNoTracking().Where(x => x.module_id == moduleId).Select(x => x.output_no).ToArrayAsync();
+      }
+
+      public async Task<bool> IsAnyWithIdAsync(int Id, CancellationToken ct = default)
+      {
+            return await context.Outputs.AsNoTracking().AnyAsync(x => x.id == Id,ct);
       }
 }

@@ -19,6 +19,7 @@ using Microsoft.IdentityModel.Tokens;
 using Notifier.Client;
 using Notifier.Client.Hubs;
 using Operator.Infrastructure;
+using Output.Infrastructure;
 using Role.Infrastructure;
 using Scalar.AspNetCore;
 using Serilog;
@@ -74,6 +75,7 @@ public class Program
         builder.Services.AddNotifyModule(builder.Configuration);
         builder.Services.AddEvents(builder.Configuration);
         builder.Services.AddAdapter(builder.Configuration);
+        builder.Services.AddOutput(builder.Configuration);
 
 
         // Replace default logging with Serilog
@@ -239,8 +241,8 @@ public class Program
 
         using (var scope = app.Services.CreateScope())
         {
-            var w = scope.ServiceProvider.GetRequiredService<IDriverWriter>();
-            var w2 = scope.ServiceProvider.GetRequiredService<IScpWriter>();
+            var w = scope.ServiceProvider.GetRequiredService<IDriverCommand>();
+            var w2 = scope.ServiceProvider.GetRequiredService<IScpCommand>();
 
             // Now you can safely use sys here
             if (!w.SystemLevelSpecification())

@@ -7,43 +7,56 @@ using Adapter.Aero.Helpers;
 using Adapter.Aero.Interfaces;
 using Adapter.Aero.Model;
 using Adapter.Aero.Persistences.Entities;
-using Adapter.Aero.Repositories;
 using AeroAdapter.Application.Interfaces;
 using Device.Contract.Command;
 using Device.Contract.DTOs;
 using Device.Contract.Events;
 using Device.Contract.Queries;
+using Events.Contract.Command;
 using HID.Aero.ScpdNet.Wrapper;
 using Microsoft.Extensions.Logging;
 using SharedKernel.Enums;
+using SharedKernel.Helpers;
 using SharedKernel.Logging;
 using SharedKernel.Messaging;
 
 namespace Adapter.Aero.Services;
 
-public sealed class ScpService(ILogger<ScpService> logger,IScpRepository repo,ISioRepository sioRepo,IMessageBus bus,IScpWriter writer,IIdReportService idReport,ISioWriter sioWriter,IMpWriter mpWriter,IMpRepository mpRepository) : IScp
+public sealed class ScpService(ILogger<ScpService> logger, IMessageBus bus, IScpCommand scpCommand, IIdReportService idReport, IModuleCommand sioWriter, IInputCommand mpWriter,IAeroRepository repo) : IScp
 {
 
-      
+
 
       public async Task HandleIdReport(SCPReplyMessageDto.SCPReplyIDReportDto id)
       {
             // Get Default Settings           
-            var spec = await repo.GetScpDeviceSpecificationByIdAndMacAsync(0, string.Empty);
-            if (spec.n_msp1_port == 0)
-            {
-                  // Log here that no database detail
-                  logger.LogError("Scp Device Specification Setting not found.");
-                  return;
-            }
-                  
 
-            if (!await writer.ScpDeviceSpecification(id.scp_id, UtilitiesHelper.ByteToHexStr(id.mac_addr), spec))
-            {
-                  logger.LogError("Scp Device Specification send failed.");
-                   return;
-            }
-                 
+            var res = scpCommand.ScpDeviceSpecification(
+                  UtilitiesHelper.ByteToHexStr(id.mac_addr),
+                  id.scp_id,
+                  3,
+                  60000,
+                  33,
+                  615,
+                  388,
+                  64,
+                  32000,
+                  1024,
+                  1024,
+                  -25200,
+                  0,
+                  255,
+                  255,
+                  128,
+                  60000,
+                  0,
+                  1,
+                  0
+                  );
+
+
+            await bus.SendAsync(new AddCommandEvent(res));
+
 
             if (!await bus.QueryAsync(new IsAnyWithMacQuery(UtilitiesHelper.ByteToHexStr(id.mac_addr))))
             {
@@ -58,37 +71,31 @@ public sealed class ScpService(ILogger<ScpService> logger,IScpRepository repo,IS
                         $"{id.sft_rev_major}.{id.sft_rev_minor}"
                         );
 
-                  if(!idReport.IsMacExist(UtilitiesHelper.ByteToHexStr(id.mac_addr)))
+                  if (!idReport.IsMacExist(UtilitiesHelper.ByteToHexStr(id.mac_addr)))
                   {
                         idReport.AddIdReport(report);
-                        
+
                   }
 
-                  // Add Scp
-                  if(!await repo.AddScpAsync(id.scp_id, UtilitiesHelper.ByteToHexStr(id.mac_addr)))
-                  {
-                        logger.LogError("Add Scp failed.");
-                        return;  
-                  }
 
                   await bus.PublishAsync(new IdReportUpdatedEvent(idReport.IdReportInMemory.Select(x => new IdReportDto(x.ScpId, x.SerialNumber, x.Mac, x.Ip, x.Port, x.Fw)).ToList()));
 
-                 
+
             }
             else
             {
 
+                  var scp_id = await bus.QueryAsync(new ComponentIdByMacQuery(UtilitiesHelper.ByteToHexStr(id.mac_addr)));
 
-                  // Update Scp
-                  if(!await repo.UpdateScpAsync(id.scp_id, UtilitiesHelper.ByteToHexStr(id.mac_addr)))
+
+                  if (scp_id != id.scp_id)
                   {
-                        logger.LogError("Update Scp Id failed.");
-                        return;
+                        res = scpCommand.SetScpId(UtilitiesHelper.ByteToHexStr(id.mac_addr), id.scp_id, (short)scp_id);
                   }
 
 
-                        // Read Structure 
-                  if (!await writer.SCPStructureStatusRead(id.scp_id,UtilitiesHelper.ByteToHexStr(id.mac_addr),
+                  // Read Structure 
+                  res = scpCommand.ScpStructureStatusRead(UtilitiesHelper.ByteToHexStr(id.mac_addr), (short)scp_id,
                         [
                               (short)SCPStructure.SCPSID_TRAN,
                               (short)SCPStructure.SCPSID_TZ,
@@ -106,105 +113,78 @@ public sealed class ScpService(ILogger<ScpService> logger,IScpRepository repo,IS
                               (short)SCPStructure.SCPSID_EAL,
                               (short)SCPStructure.SCPSID_CRDB
                         ]
-                  ))
-                  {
-                        logger.LogError("Scp Structure Status Read send failed.");
-                         return;
-                  }
-                        
-                  
+                  );
+
+                  await bus.SendAsync(new AddCommandEvent(res));
+
+
+
             }
 
       }
 
       public async Task InitialScpConfigurationAsync(int ScpId)
       {
-            string Mac = await repo.MacByScpIdAsync(ScpId);
-            var aero_id = await repo.GetAeroIdByScpIdAsync(ScpId);
-            var ModuleId = await bus.QueryAsync(new ModuleIdByMacAndAddressQuery(Mac,0));
 
-            var db = await repo.GetAccessDatabaseSpecificationByIdAndMacAsync(0, string.Empty);
-            if (db.n_card == 0)
-            {
-                  logger.LogError("Access database specification setting not found.");
-                  return;     
-            }
+            var device = await bus.QueryAsync(new DeviceByComponentIdQuery(ScpId));
 
 
-            if (!await writer.AccessDatabaseSpecification((short)ScpId, Mac, db))
-            {
-                  logger.LogError("Access database specification send failed.");
-                  return;
-            }
-                  
-
-
-            var elev = await repo.GetElevatorAccessLevelSpecificationByIdAndMacAsync(0, string.Empty);
-            if (elev.max_ealvl == 0)
-            {
-                  logger.LogError("Elevator access level specification setting not found.");
-                  return;     
-            }
-
-            // if (!await writer.ElevatorAccessLevelSpecification(id.scp_id, elev))
-            //       return;
-
-            if (!await writer.TimeSet((short)ScpId, Mac))
-            {
-                  logger.LogError("Time set send failed.");
-                  return;
-            }
-                  
-
-            // Send to get IP and Port 
-            if(!await writer.ReadsConfiguration((short)ScpId, Mac, WebConfigReadType.NetworkSettingss))
-            {
-                  logger.LogError("Read configuration send failed.");
-            }
-
-            if(!await writer.ReadsConfiguration((short)ScpId, Mac, WebConfigReadType.HostCommunicationPrimarySettings))
-            {
-                  logger.LogError("Read configuration send failed.");
-            }
-
-
-
-            // Save Driver Configuration to DB
-            var driverConfig = new DriverConfiguration(
-                  aero_id,
+            var res = scpCommand.AccessDatabaseSpecification(
+                  device.Mac,
+                  (short)ScpId,
+                  1000,
+                  8,
+                  324,
+                  1,
+                  1,
+                  2,
+                  2,
+                  1,
+                  1,
+                  7,
+                  1,
+                  1,
+                  64,
                   0,
-                  3,
-                  -1,
+                  5,
                   0,
-                  0,
-                  0
+                  15,
+                  15
                   );
 
-            var drivCon = await repo.AddDriverConfigurationAsync(driverConfig);
 
-            if(drivCon.id == 0)
-            {
-                  logger.LogError("Driver configuration save failed.");
-                  return;
-            }
-
-                  
-
-            if (!await writer.DriverConfiguration((short)ScpId, Mac, driverConfig))
-            {
-                  logger.LogError("Driver configuration send failed.");
-                  return;
-            }
-                  
+            await bus.SendAsync(new AddCommandEvent(res));
 
 
+            res = scpCommand.ElevatorAccessLevelSpecification(device.Mac, (short)ScpId, 256, 128);
+            await bus.SendAsync(new AddCommandEvent(res));
 
-            var sioConfig = new SioPanelConfiguration(
-                  aero_id,
+            res = scpCommand.TimeSet(device.Mac, (short)ScpId);
+
+            await bus.SendAsync(new AddCommandEvent(res));
+
+
+            res = scpCommand.ReadsConfiguration(device.Mac, (short)ScpId, WebConfigReadType.NetworkSettingss);
+
+            await bus.SendAsync(new AddCommandEvent(res));
+
+            res = scpCommand.ReadsConfiguration(device.Mac, (short)ScpId, WebConfigReadType.HostCommunicationPrimarySettings);
+
+            await bus.SendAsync(new AddCommandEvent(res));
+
+
+            res = scpCommand.DriverConfiguration(device.Mac, device.ComponentId, 0, 3, -1, 0, 0, 0);
+
+            await bus.SendAsync(new AddCommandEvent(res));
+
+
+            res = sioWriter.SioPanelConfiguration(
+                  device.Mac,
+                  (short)ScpId,
                   0,
-                  SioModelHelper.nInputByModel(SioModel.x1100),
-                  SioModelHelper.nOutputByModel(SioModel.x1100),
-                  SioModelHelper.nReaderByModel(SioModel.x1100),
+                  AeroModuleModelHelper.nInputByModel(SioModel.x1100),
+                  AeroModuleModelHelper.nOutputByModel(SioModel.x1100),
+                  AeroModuleModelHelper.nReaderByModel(SioModel.x1100),
                   (short)SioModel.x1100,
                   1,
                   0,
@@ -212,60 +192,58 @@ public sealed class ScpService(ILogger<ScpService> logger,IScpRepository repo,IS
                   3,
                   0,
                   -1,
-                  -1
                   -1,
-                  -1,
-                  ModuleId
-            );
+                  -1);
 
-            var config = await sioRepo.AddSioPanelConfigurationAsync(sioConfig);
-
-            if(config.id == 0)
-            {
-                  logger.LogError("Sio pane configuration add failed.");
-                  return;
-            }
+            await bus.SendAsync(new AddCommandEvent(res));
 
 
-                  
 
-            if (!await sioWriter.SioPanelConfiguration((short)ScpId, Mac, config))
-            {
-                  logger.LogError("Sio panel configuration send failed.");
-                   return;
-            }
-                 
 
-            List<int> inputs = Enumerable.Range(SioModelHelper.nInputByModel(SioModel.x1100) - 3, 3).ToList();
+
+            List<int> inputs = Enumerable.Range(AeroModuleModelHelper.nInputByModel(SioModel.x1100) - 3, 3).ToList();
 
 
 
             // Setting Input for Alarm 
             foreach (var i in inputs)
             {
-                  var cInput = new InputPointSpecification(
-                        aero_id,
+
+                  res = mpWriter.InputPointSpecification(
+                        device.Mac,
+                        device.ComponentId,
                         0,
                         (short)i,
                         0,
                         2,
                         0
-                        );
+                  );
 
-                  var sInput = await mpRepository.AddInputPointSpecificationAsync(cInput);
+                  await bus.SendAsync(new AddCommandEvent(res));
 
-                  if (!await mpWriter.InputPointSpecification((short)ScpId, Mac, sInput))
+
+            }
+
+
+            var Metadata = JsonSerializer.Deserialize<AeroMetadata>(device.Metadata);
+            if (Metadata != null)
+            {
+                  if (Metadata.PortOne)
                   {
-                        logger.LogError("Input point specification send failed.");
+                        res = scpCommand.DriverConfiguration(device.Mac, device.ComponentId,1,1,Metadata.BaudRateOne, 0, Metadata.ProtocolOne, 0);
+
+                        await bus.SendAsync(new AddCommandEvent(res));
                   }
-                        
+
+                  if (Metadata.PortTwo)
+                  {
+                        res = scpCommand.DriverConfiguration(device.Mac, device.ComponentId,2,2,Metadata.BaudRateTwo, 0, Metadata.ProtocolTwo,0);
+
+                        await bus.SendAsync(new AddCommandEvent(res));
+                  }
             }
       }
 
-      public async Task<bool> SendASCIICommandAsync(string Command)
-      {
-            return writer.SendASCIICommandAsync(Command);
-      }
 
       public async Task<bool> UploadScpComponentAsync(int ScpId)
       {
@@ -284,15 +262,15 @@ public sealed class ScpService(ILogger<ScpService> logger,IScpRepository repo,IS
       {
             bool isVerify = true;
 
-            var spec = await repo.GetScpDeviceSpecificationByIdAndMacAsync(0, string.Empty);
+            var spec = await repo.GetScpDeviceSpecificationAsync();
             if (spec.n_msp1_port == 0)
             {
                   logger.LogError("Scp device specification setting not found.");
                   return false;
             }
-                  
 
-            var db = await repo.GetAccessDatabaseSpecificationByIdAndMacAsync(0, string.Empty);
+
+            var db = await repo.GetAccessDatabaseSpecificationAsync();
             if (db.n_card == 0)
             {
                   logger.LogError("Access database specification setting not found.");
@@ -300,13 +278,13 @@ public sealed class ScpService(ILogger<ScpService> logger,IScpRepository repo,IS
             }
 
 
-            var elev = await repo.GetElevatorAccessLevelSpecificationByIdAndMacAsync(0, string.Empty);
+            var elev = await repo.GetElevatorAccessLevelSpecificationAsync();
             if (elev.max_ealvl == 0)
             {
                   logger.LogError("Elevator access level specification setting not found.");
                   return false;
             }
-                  
+
 
             // Switch
             foreach (var str in message.sStrSpec)
@@ -403,17 +381,17 @@ public sealed class ScpService(ILogger<ScpService> logger,IScpRepository repo,IS
                         break;
             }
 
-            string Mac = await repo.MacByScpIdAsync(ScpId);
+
             if (isVerify)
             {
                   // Publish verify 
-                  await bus.PublishAsync(new MemoryAllocateEvent(Mac, ScpSyncStatus.SYNC.ToString()));
+                  await bus.PublishAsync(new MemoryAllocateEvent(ScpId, ScpSyncStatus.SYNC.ToString()));
 
             }
             else
             {
                   // Publish verify 
-                  await bus.PublishAsync(new MemoryAllocateEvent(Mac, ScpSyncStatus.RESET.ToString()));
+                  await bus.PublishAsync(new MemoryAllocateEvent(ScpId, ScpSyncStatus.RESET.ToString()));
             }
 
 
