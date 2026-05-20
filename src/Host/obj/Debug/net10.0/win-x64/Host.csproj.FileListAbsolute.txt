@@ -188,6 +188,10 @@ D:\code\sentrix\src\Host\bin\Debug\net10.0\win-x64\Role.Contract.dll
 D:\code\sentrix\src\Host\bin\Debug\net10.0\win-x64\Role.Domain.dll
 D:\code\sentrix\src\Host\bin\Debug\net10.0\win-x64\Role.Infrastructure.dll
 D:\code\sentrix\src\Host\bin\Debug\net10.0\win-x64\SharedKernel.dll
+D:\code\sentrix\src\Host\bin\Debug\net10.0\win-x64\Time.Application.dll
+D:\code\sentrix\src\Host\bin\Debug\net10.0\win-x64\Time.Contract.dll
+D:\code\sentrix\src\Host\bin\Debug\net10.0\win-x64\Time.Domain.dll
+D:\code\sentrix\src\Host\bin\Debug\net10.0\win-x64\Time.Infrastructure.dll
 D:\code\sentrix\src\Host\bin\Debug\net10.0\win-x64\Adapter.Aero.pdb
 D:\code\sentrix\src\Host\bin\Debug\net10.0\win-x64\Adapter.Amico.pdb
 D:\code\sentrix\src\Host\bin\Debug\net10.0\win-x64\Auth.Infrastructure.pdb
@@ -198,6 +202,7 @@ D:\code\sentrix\src\Host\bin\Debug\net10.0\win-x64\Device.Contract.pdb
 D:\code\sentrix\src\Host\bin\Debug\net10.0\win-x64\Events.Contract.pdb
 D:\code\sentrix\src\Host\bin\Debug\net10.0\win-x64\Location.Contract.pdb
 D:\code\sentrix\src\Host\bin\Debug\net10.0\win-x64\Output.Contract.pdb
+D:\code\sentrix\src\Host\bin\Debug\net10.0\win-x64\Time.Contract.pdb
 D:\code\sentrix\src\Host\bin\Debug\net10.0\win-x64\Device.Infrastructure.pdb
 D:\code\sentrix\src\Host\bin\Debug\net10.0\win-x64\Events.Infrastructure.pdb
 D:\code\sentrix\src\Host\bin\Debug\net10.0\win-x64\Location.Infrastructure.pdb
@@ -205,6 +210,7 @@ D:\code\sentrix\src\Host\bin\Debug\net10.0\win-x64\Notifier.Client.pdb
 D:\code\sentrix\src\Host\bin\Debug\net10.0\win-x64\Operator.Infrastructure.pdb
 D:\code\sentrix\src\Host\bin\Debug\net10.0\win-x64\Output.Infrastructure.pdb
 D:\code\sentrix\src\Host\bin\Debug\net10.0\win-x64\Role.Infrastructure.pdb
+D:\code\sentrix\src\Host\bin\Debug\net10.0\win-x64\Time.Infrastructure.pdb
 D:\code\sentrix\src\Host\bin\Debug\net10.0\win-x64\SharedKernel.pdb
 D:\code\sentrix\src\Host\bin\Debug\net10.0\win-x64\Auth.Application.pdb
 D:\code\sentrix\src\Host\bin\Debug\net10.0\win-x64\Auth.Domain.pdb
@@ -226,6 +232,8 @@ D:\code\sentrix\src\Host\bin\Debug\net10.0\win-x64\Output.Domain.pdb
 D:\code\sentrix\src\Host\bin\Debug\net10.0\win-x64\Role.Application.pdb
 D:\code\sentrix\src\Host\bin\Debug\net10.0\win-x64\Role.Contract.pdb
 D:\code\sentrix\src\Host\bin\Debug\net10.0\win-x64\Role.Domain.pdb
+D:\code\sentrix\src\Host\bin\Debug\net10.0\win-x64\Time.Application.pdb
+D:\code\sentrix\src\Host\bin\Debug\net10.0\win-x64\Time.Domain.pdb
 D:\code\sentrix\src\Host\obj\Debug\net10.0\win-x64\Host.csproj.AssemblyReference.cache
 D:\code\sentrix\src\Host\obj\Debug\net10.0\win-x64\rpswa.dswa.cache.json
 D:\code\sentrix\src\Host\obj\Debug\net10.0\win-x64\Host.GeneratedMSBuildEditorConfig.editorconfig

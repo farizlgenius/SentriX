@@ -3,7 +3,7 @@ import PageBreadcrumb from '../../components/common/PageBreadCrumb'
 import { AddIcon, ControlIcon, OffIcon, OnIcon, ToggleIcon } from '../../icons';
 import ControlPointForm from './ControlPointForm';
 import Logger from '../../utility/Logger';
-import { ControlPointDto } from '../../model/ControlPoint/ControlPointDto';
+import { OutputDto } from '../../model/ControlPoint/OutputDto';
 import { StatusDto } from '../../model/StatusDto';
 import { OutputTrigger } from '../../model/ControlPoint/OutputTrigger';
 import Helper from '../../utility/Helper';
@@ -25,16 +25,19 @@ import { usePopup } from '../../context/PopupContext';
 import { FormType } from '../../model/Form/FormProp';
 import { CpStatus } from '../../model/ControlPoint/CpStatus';
 import { usePagination } from '../../context/PaginationContext';
+import { DeviceType } from '../../enum/DeviceType';
+import { SignalRTopic } from '../../constants/signalr-constant';
 
 // Define Global Variable
 
 
 
-export const OUTPUT_TABLE_HEADER: string[] = ["Name", "Module", "Mode","Offline","Pulse Time", "Status", "Action"]
-export const OUTPUT_KEY: string[] = ["name", "moduleDetail", "relayModeDetail","offlineModeDetail","defaultPulse"];
+export const OUTPUT_TABLE_HEADER: string[] = ["Name","Pulse Time", "Status", "Action"]
+export const OUTPUT_KEY: string[] = ["name","defaultPulse"];
 
 const ControlPoint = () => {
     const { toggleToast } = useToast();
+    const {token} = useAuth();
     const { setPagination } = usePagination();
     const { locationId } = useLocation();
     const { filterPermission } = useAuth();
@@ -46,20 +49,20 @@ const ControlPoint = () => {
 
 
     {/* handle Table Action */ }
-    const handleEdit = (data: ControlPointDto) => {
+    const handleEdit = (data: OutputDto) => {
         setControlPointDto(data)
         setFormType(FormType.UPDATE)
         setForm(true)
     }
 
-    const handleInfo = (data:ControlPointDto) => {
+    const handleInfo = (data:OutputDto) => {
         console.log(data)
         setControlPointDto(data);
         setFormType(FormType.INFO);
         setForm(true);
     }
 
-    const handleRemove = (data: ControlPointDto) => {
+    const handleRemove = (data: OutputDto) => {
         setConfirmRemove(() => async () => {
             const res = await send.delete(ControlPointEndpoint.DELETE(data.id))
             if(Helper.handleToastByResCode(res,ControlPointToast.DELETE,toggleToast)){
@@ -71,30 +74,35 @@ const ControlPoint = () => {
 
 
     {/* Output Data */ }
-    const defaultOutputDto: ControlPointDto = {
+    const defaultOutputDto: OutputDto = {
         // Base
         locationId: locationId,
         // Detail
         id: 0,
         name: "",
-        moduleId: -1,
         outputNo: -1,
         defaultPulse: 1,
         model: '',
-        relayMode: 0
+        relayMode: 0,
+        mac: '',
+        componentId: -1,
+        deviceComponentId: -1,
+        moduleComponentId: -1,
+        type: DeviceType.AERO,
+        isActive: false
     }
-    const [controlPointDto, setControlPointDto] = useState<ControlPointDto>(defaultOutputDto);
-    const [outputsDto, setOutputsDto] = useState<ControlPointDto[]>([]);
+    const [controlPointDto, setControlPointDto] = useState<OutputDto>(defaultOutputDto);
+    const [outputsDto, setOutputsDto] = useState<OutputDto[]>([]);
     const [status, setStatus] = useState<StatusDto[]>([]);
     const fetchData = async (pageNumber: number, pageSize: number,locationId?:number,search?: string, startDate?: string, endDate?: string) => {
         const res = await send.get(ControlPointEndpoint.PAGINATION(pageNumber,pageSize,locationId,search, startDate, endDate));
-        if (res && res.data.data) {
+        if (res && res.data) {
             console.log(res.data)
-            setOutputsDto(res.data.data.data);
-            setPagination(res.data.data.page)
+            setOutputsDto(res.data.items);
+            setPagination(res.data);
 
             // Batch set state
-            const newStatuses = res.data.data.data.map((a: ControlPointDto) => ({
+            const newStatuses = res.data.items.map((a: OutputDto) => ({
                 id:a.id,
                 componentId: 0,
                 status: 0
@@ -105,7 +113,7 @@ const ControlPoint = () => {
             setStatus((prev) => [...prev, ...newStatuses]);
 
             // Fetch status for each
-            res.data.item.forEach((a: ControlPointDto) => {
+            res.data.item.forEach((a: OutputDto) => {
                 fetchStatus(a.id);
             });
 
@@ -123,31 +131,33 @@ const ControlPoint = () => {
 
     {/* UseEffect */ }
     useEffect(() => {
-        // Initialize SignalR as soon as app starts
-        var connection = SignalRService.getConnection();
-        connection.on("CP.STATUS",
-            (status:CpStatus) => {
-                console.log(">>>>>>>>>>>>>>>> " + status.first);
-                setStatus((prev) =>
-                    prev.map((a) =>
-                        a.componentId == status.deviceId && a.id == status.first
-                            ? {
-                                ...a,
-                                status: status.status,
-                            }
-                            : {
-                                // scpIp:ScpIp,
-                                // cpNumber:first,
-                                // status:status[0]
-                                ...a
-                            }
-                    )
-                );
-                toggleRefresh();
-            });
-        return () => {
-            //SignalRService.stopConnection()
-        };
+        const initSignalR = async () => {
+              if (!token) return;
+        
+              await SignalRService.startConnection();
+              const connection = SignalRService.getConnection();
+              if (!connection) return;
+        
+              connection.on(SignalRTopic.CP_STATUS, (reports: StatusDto) => {
+                // setIdReports(reports);
+              });
+        
+              try {
+                await SignalRService.joinGroup(SignalRTopic.CP_STATUS);
+              } catch (err) {
+                console.error("Subscribe error:", err);
+              }
+        
+            //   const res = await send.get(DeviceEndpoint.ID_REPORT);
+            //   setIdReports(res.data);
+            };
+        
+            initSignalR();
+        
+            return () => {
+              const connection = SignalRService.getConnection();
+              connection?.off(SignalRTopic.CP_STATUS);
+            };
 
     }, []);
 
@@ -170,7 +180,7 @@ const ControlPoint = () => {
                 }
                 setConfirmRemove(() => async () => {
                     var data:number[] = [];
-                    selectedObjects.map(async (a:ControlPointDto) => {
+                    selectedObjects.map(async (a:OutputDto) => {
                         data.push(a.id)
                     })
                     var res = await send.post(ControlPointEndpoint.DELETE_RANGE,data)
@@ -210,13 +220,8 @@ const ControlPoint = () => {
             case "on":
                 console.log(selectedObjects);
                 if (selectedObjects.length > 0) {
-                    selectedObjects.map(async (a: ControlPointDto) => {
-                        let data: OutputTrigger = {
-                            deviceId: a.scpId,
-                            driverId: a.cpId,
-                            command: 2
-                        }
-                        const res = await send.post(ControlPointEndpoint.TRIGGER, data);
+                    selectedObjects.map(async (a: OutputDto) => {
+                        const res = await send.post(ControlPointEndpoint.TRIGGER(a.id,2));
                         Helper.handleToastByResCode(res, ControlPointToast.TOGGLE, toggleToast)
                     });
                 }
@@ -224,26 +229,16 @@ const ControlPoint = () => {
                 break;
             case "off":
                 if (selectedObjects.length > 0) {
-                    selectedObjects.map(async (a: ControlPointDto) => {
-                        let data: OutputTrigger = {
-                            deviceId: a.scpId,
-                            driverId: a.cpId,
-                            command: 1
-                        }
-                        const res = await send.post(ControlPointEndpoint.TRIGGER, data);
+                    selectedObjects.map(async (a: OutputDto) => {
+                        const res = await send.post(ControlPointEndpoint.TRIGGER(a.id,1));
                         Helper.handleToastByResCode(res,  ControlPointToast.TOGGLE, toggleToast)
                     });
                 }
                 break;
             case "toggle":
                 if (selectedObjects.length > 0) {
-                    selectedObjects.map(async (a: ControlPointDto) => {
-                        let data: OutputTrigger = {
-                            deviceId: a.scpId,
-                            driverId: a.cpId,
-                            command: 3
-                        }
-                        const res = await send.post(ControlPointEndpoint.TRIGGER, data);
+                    selectedObjects.map(async (a: OutputDto) => {
+                        const res = await send.post(ControlPointEndpoint.TRIGGER(a.id,3));
                         Helper.handleToastByResCode(res,  ControlPointToast.TOGGLE, toggleToast)
                     });
                 }
@@ -254,7 +249,7 @@ const ControlPoint = () => {
     };
 
     {/* checkBox */ }
-    const [selectedObjects, setSelectedObjects] = useState<ControlPointDto[]>([]);
+    const [selectedObjects, setSelectedObjects] = useState<OutputDto[]>([]);
    
 
     const action: ActionButton[] = [
@@ -314,7 +309,7 @@ const ControlPoint = () => {
                     </>
 
                     :
-                    <BaseTable<ControlPointDto> headers={OUTPUT_TABLE_HEADER} keys={OUTPUT_KEY} status={status} data={outputsDto} onEdit={handleEdit} onRemove={handleRemove} select={selectedObjects} setSelect={setSelectedObjects} onClick={handleClick} permission={filterPermission(FeatureId.control)} renderOptionalComponent={renderOptionalComponent} action={action} onInfo={handleInfo} fetchData={fetchData} locationId={locationId} refresh={refresh} />
+                    <BaseTable<OutputDto> headers={OUTPUT_TABLE_HEADER} keys={OUTPUT_KEY} status={status} data={outputsDto} onEdit={handleEdit} onRemove={handleRemove} select={selectedObjects} setSelect={setSelectedObjects} onClick={handleClick} permission={filterPermission(FeatureId.control)} renderOptionalComponent={renderOptionalComponent} action={action} onInfo={handleInfo} fetchData={fetchData} locationId={locationId} refresh={refresh} />
 
 
             }

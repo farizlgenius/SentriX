@@ -6,7 +6,7 @@ public interface IOutput
       Task<Pagination<OutputDto>> GetPaginationAsync(PaginationParams param);
       Task<OutputDto> CreateAsync(CreateOutputDto dto);
       Task<IEnumerable<short>> GetAvailalbleOutputByModuleIdAsync(int ModuleId);
-      Task<IEnumerable<OptionDto>> GetRelayModeAsync();
-      Task<BaseResponse> TriggerOutputAsync(int id,int Command);
+      Task<IEnumerable<OptionDto>> GetRelayModeAsync(string Type);
+      Task<BaseResponse> TriggerOutputAsync(int id,short Command);
 
 }

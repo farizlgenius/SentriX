@@ -14,14 +14,18 @@ public sealed class AmicoAdapter : IAdapter
 
       public IControlAdapter Control { get; }
 
+      public ITimeAdapter Time {get;}
+
       public AmicoAdapter(
             IDeviceAdapter devices,
             IMonitorAdapter monitors,
-            IControlAdapter controls
+            IControlAdapter controls,
+            ITimeAdapter time
       )
       {
             Device = devices;
             Monitor = monitors;
             Control = controls;
+            Time = time;
       }
 }

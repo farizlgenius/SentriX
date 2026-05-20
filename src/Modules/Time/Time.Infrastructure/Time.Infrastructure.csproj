@@ -15,6 +15,7 @@
   </ItemGroup>
 
       <ItemGroup>
+        <ProjectReference Include="..\..\..\SharedKernel\SharedKernel.csproj" />
         <ProjectReference Include="..\Time.Application\Time.Application.csproj" />
       </ItemGroup>
 

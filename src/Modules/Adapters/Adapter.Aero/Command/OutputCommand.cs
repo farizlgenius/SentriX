@@ -30,7 +30,7 @@ public sealed class OutputCommand(ILogger<OutputCommand> logger) : BaseCommand,I
             var result = Send((short)enCfgCmnd.enCcOutput,c);
             if (result)
             {
-                  logger.LogInformation(MessageHelper.CommandSuccess(CommandConstant.OutputPointSpecification, ScpId));
+                  logger.LogInformation(LogMessageHelper.CommandSuccess(CommandConstant.OutputPointSpecification, ScpId));
 
                   return new CommandResponse(
                         Mac,
@@ -48,7 +48,7 @@ public sealed class OutputCommand(ILogger<OutputCommand> logger) : BaseCommand,I
             }
             else
             {
-                  logger.LogError(MessageHelper.CommandUnsuccess(CommandConstant.OutputPointSpecification, ScpId));
+                  logger.LogError(LogMessageHelper.CommandUnsuccess(CommandConstant.OutputPointSpecification, ScpId));
                   return new CommandResponse(
                         Mac,
                        ScpId,
@@ -84,7 +84,7 @@ public sealed class OutputCommand(ILogger<OutputCommand> logger) : BaseCommand,I
              var result = Send((short)enCfgCmnd.enCcCP,c);
             if (result)
             {
-                  logger.LogInformation(MessageHelper.CommandSuccess(CommandConstant.ControlPointConfiguration, ScpId));
+                  logger.LogInformation(LogMessageHelper.CommandSuccess(CommandConstant.ControlPointConfiguration, ScpId));
 
                   return new CommandResponse(
                         Mac,
@@ -102,7 +102,7 @@ public sealed class OutputCommand(ILogger<OutputCommand> logger) : BaseCommand,I
             }
             else
             {
-                  logger.LogError(MessageHelper.CommandUnsuccess(CommandConstant.ControlPointConfiguration, ScpId));
+                  logger.LogError(LogMessageHelper.CommandUnsuccess(CommandConstant.ControlPointConfiguration, ScpId));
                   return new CommandResponse(
                         Mac,
                        ScpId,
@@ -130,7 +130,7 @@ public sealed class OutputCommand(ILogger<OutputCommand> logger) : BaseCommand,I
              var result = Send((short)enCfgCmnd.enCcCpCtl,c);
             if (result)
             {
-                  logger.LogInformation(MessageHelper.CommandSuccess(CommandConstant.ControlPointCommand, ScpId));
+                  logger.LogInformation(LogMessageHelper.CommandSuccess(CommandConstant.ControlPointCommand, ScpId));
 
                   return new CommandResponse(
                         Mac,
@@ -148,7 +148,7 @@ public sealed class OutputCommand(ILogger<OutputCommand> logger) : BaseCommand,I
             }
             else
             {
-                  logger.LogError(MessageHelper.CommandUnsuccess(CommandConstant.ControlPointCommand, ScpId));
+                  logger.LogError(LogMessageHelper.CommandUnsuccess(CommandConstant.ControlPointCommand, ScpId));
                   return new CommandResponse(
                         Mac,
                        ScpId,

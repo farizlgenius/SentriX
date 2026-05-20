@@ -14,4 +14,13 @@ public interface IEvent
             string Module,
             string Type,
             string Remarks);
+
+      Task UpdateCommandEvent(
+            int ComponentId,
+            int Tag,
+            short CommandStatus,
+            string Reason
+            );
+
+      
 }

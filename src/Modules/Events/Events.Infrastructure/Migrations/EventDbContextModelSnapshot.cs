@@ -23,6 +23,67 @@ namespace Events.Infrastructure.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("Events.Infrastructure.Persistences.Entities.CommandEvent", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<string>("body")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("command")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<short>("component_id")
+                        .HasColumnType("smallint");
+
+                    b.Property<DateTime>("created_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.Property<bool>("is_active")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("location_id")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("mac")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("reason")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("received_at")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("send_at")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("status")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("tag")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("updated_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.HasKey("id");
+
+                    b.ToTable("CommandEvents", "events");
+                });
+
             modelBuilder.Entity("Events.Infrastructure.Persistences.Entities.Event", b =>
                 {
                     b.Property<int>("id")
@@ -34,6 +95,9 @@ namespace Events.Infrastructure.Migrations
                     b.Property<string>("actor")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<short>("component_id")
+                        .HasColumnType("smallint");
 
                     b.Property<DateTime>("created_at")
                         .ValueGeneratedOnAdd()
@@ -80,7 +144,7 @@ namespace Events.Infrastructure.Migrations
 
                     b.HasKey("id");
 
-                    b.ToTable("events", "events");
+                    b.ToTable("Events", "events");
                 });
 #pragma warning restore 612, 618
         }

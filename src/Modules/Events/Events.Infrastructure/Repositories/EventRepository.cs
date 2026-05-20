@@ -11,7 +11,7 @@ namespace Events.Infrastructure.Repositories;
 
 public sealed class EventRepository(EventDbContext context) : IEventRepository
 {
-      public async Task AddCommandEvent(CommandResponse response)
+      public async Task AddCommandEvent(CommandResponse response,CancellationToken ct = default)
       {
             await context.CommandEvents.AddAsync(
                   new CommandEvent(
@@ -27,9 +27,9 @@ public sealed class EventRepository(EventDbContext context) : IEventRepository
                         )
             );
 
-            await context.SaveChangesAsync();
+            await context.SaveChangesAsync(ct);
       }
-      public async Task AddAsync(DateTime timeStamp, string actor, string module, string type, string image, string mac, string name, string remarks, int locationId)
+      public async Task AddAsync(DateTime timeStamp, string actor, string module, string type, string image, string mac, string name, string remarks, int locationId,CancellationToken ct = default)
       {
             await context.Events.AddAsync(new Event
             {
@@ -44,10 +44,10 @@ public sealed class EventRepository(EventDbContext context) : IEventRepository
                   location_id = locationId
             });
 
-            await context.SaveChangesAsync();
+            await context.SaveChangesAsync(ct);
       }
 
-      public async Task<Pagination<EventDto>> GetPaginationByLocationIdAsync(PaginationParams param)
+      public async Task<Pagination<EventDto>> GetPaginationByLocationIdAsync(PaginationParams param,CancellationToken ct = default)
       {
             var query = context.Events.AsNoTracking().AsQueryable();
 
@@ -117,8 +117,31 @@ public sealed class EventRepository(EventDbContext context) : IEventRepository
                   e.name,
                   e.remarks,
                   e.location_id
-            )).ToListAsync();
+            )).ToListAsync(ct);
 
             return new Pagination<EventDto>(param.pageNumber,param.pageSize,count,(int)Math.Ceiling(count / (double)param.pageSize),res);
+      }
+
+      public async Task UpdateCommandEvent(string Mac, int Tag, short CommandStatus, string Reason,CancellationToken ct = default)
+      {
+            var entity = await context.CommandEvents
+            .OrderByDescending(x => x.id)
+            .Where(x => x.tag == Tag && x.mac.Equals(Mac) && x.status.Equals(SharedKernel.Enums.CommandStatus.PENDING.ToString()))
+            .FirstOrDefaultAsync();
+
+            if(entity == null)
+                  return;
+
+            entity.status = CommandStatus == 1 ? SharedKernel.Enums.CommandStatus.SUCCESSED.ToString() : SharedKernel.Enums.CommandStatus.FAILED.ToString();
+            if(string.IsNullOrWhiteSpace(Reason))
+                  entity.reason = Reason;
+
+            
+
+            context.CommandEvents.Update(entity);
+
+            await context.SaveChangesAsync(ct);
+
+
       }
 }

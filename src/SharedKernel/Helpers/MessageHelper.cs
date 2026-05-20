@@ -24,6 +24,7 @@ public static class MessageHelper
             public static string DepartmentInvalid = "Department invalid.";
             public static string PasswordLenEmpty = "Passowrd length must more than zero";
             public static string Success = "Success.";
+            public static string DeserializeFailed(string Method) => $"Deserialize {Method} unsuccessful";
       }
       public static class Role
       {

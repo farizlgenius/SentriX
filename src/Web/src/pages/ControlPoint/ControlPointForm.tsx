@@ -3,7 +3,7 @@ import Label from "../../components/form/Label";
 import Input from "../../components/form/input/InputField";
 import Select from "../../components/form/Select";
 import { Options } from "../../model/Options";
-import { ControlPointDto } from "../../model/ControlPoint/ControlPointDto";
+import { OutputDto } from "../../model/ControlPoint/OutputDto";
 import { DeviceEndpoint } from "../../endpoint/HardwareEndpoint";
 import { ControlPointEndpoint } from "../../endpoint/ControlPointEndpoint";
 import { ModuleEndpoint } from "../../endpoint/ModuleEndpoint";
@@ -11,10 +11,11 @@ import api, { send } from "../../api/api";
 import { useLocation } from "../../context/LocationContext";
 import { FormProp, FormType } from "../../model/Form/FormProp";
 import { FormActions, FormField, FormSection } from "../../components/form/template/FormTemplate";
+import { DeviceType } from "../../enum/DeviceType";
 
 
 
-const ControlPointForm: React.FC<PropsWithChildren<FormProp<ControlPointDto>>> = ({ handleClick, dto, setDto, type }) => {
+const ControlPointForm: React.FC<PropsWithChildren<FormProp<OutputDto>>> = ({ handleClick, dto, setDto, type }) => {
   const { locationId } = useLocation();
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDto(prev => ({ ...prev, [e.target.name]: e.target.value }))
@@ -30,11 +31,12 @@ const ControlPointForm: React.FC<PropsWithChildren<FormProp<ControlPointDto>>> =
   const handleSelect = async (value: string, e: React.ChangeEvent<HTMLSelectElement>) => {
     switch (e.target.name) {
       case "driverId":
-        fetchModuleByDeviceId(Number(value))
+        fetchModuleByDeviceId(controllerOption.find(a => a.value == Number(value))?.additionalInfo)
+        setDto((prev) => ({ ...prev, deviceComponentId: Number(value), mac: controllerOption.find(a => a.value == Number(value))?.description ?? "" }))
         break;
       case "moduleId":
-        fetchOutput(Number(value));
-        setDto((prev) => ({ ...prev, moduleId: Number(value), model: moduleOption.find(a => a.value == Number(value))?.label ?? "" }))
+        fetchOutput(moduleOption.find(a => a.value == Number(value))?.additionalInfo);
+        setDto((prev) => ({ ...prev, moduleComponentId: Number(value), model: moduleOption.find(a => a.value == Number(value))?.label ?? "" }))
         break;
       case "relayMode":
         console.log(value);
@@ -56,6 +58,7 @@ const ControlPointForm: React.FC<PropsWithChildren<FormProp<ControlPointDto>>> =
         setControllerOption(prev => [...prev, {
           label: a.label,
           value: a.value,
+          additionalInfo:a.additionalInfo,
           description:a.description,
           isTaken:a.isTaken
         }])
@@ -65,12 +68,13 @@ const ControlPointForm: React.FC<PropsWithChildren<FormProp<ControlPointDto>>> =
 
   const fetchRelayMode = async () => {
 
-    let res = await api.get(ControlPointEndpoint.GET_RELAY_OP_MODE);
+    let res = await api.get(ControlPointEndpoint.GET_RELAY_OP_MODE(DeviceType.AERO));
     if (res.data) {
       res.data.map((a: Options) => {
         setRelyModeOption((prev) => [...prev, {
           label: a.label,
           value: a.value,
+          additionalInfo:a.additionalInfo,
           description:a.description
         }]);
       });
@@ -87,6 +91,7 @@ const ControlPointForm: React.FC<PropsWithChildren<FormProp<ControlPointDto>>> =
         setModuleOption((prev) => [...prev, {
           label: a.label,
           value: a.value,
+          additionalInfo:a.additionalInfo,
           description:a.description,
           isTaken:a.isTaken
         }])
@@ -111,8 +116,8 @@ const ControlPointForm: React.FC<PropsWithChildren<FormProp<ControlPointDto>>> =
     fetchDevice();
     fetchRelayMode();
     if (type == FormType.INFO || type == FormType.UPDATE) {
-      fetchModuleByDeviceId(dto.moduleId);
-      fetchOutput(dto.moduleId);
+      // fetchModuleByDeviceId(dto.moduleId);
+      // fetchOutput(dto.moduleId);
     }
   }, []);
 
@@ -133,7 +138,7 @@ const ControlPointForm: React.FC<PropsWithChildren<FormProp<ControlPointDto>>> =
               placeholder="Select Option"
               onChangeWithEvent={handleSelect}
               className="dark:bg-dark-900"
-              defaultValue={controller}
+              defaultValue={dto.deviceComponentId}
               disabled={type == FormType.INFO}
             />
           </FormField>
@@ -146,7 +151,7 @@ const ControlPointForm: React.FC<PropsWithChildren<FormProp<ControlPointDto>>> =
               placeholder="Select Option"
               onChangeWithEvent={handleSelect}
               className="dark:bg-dark-900"
-              defaultValue={dto.moduleId}
+              defaultValue={dto.moduleComponentId}
               disabled={type == FormType.INFO}
             />
           </FormField>

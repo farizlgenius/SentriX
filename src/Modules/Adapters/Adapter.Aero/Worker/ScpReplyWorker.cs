@@ -302,14 +302,13 @@ public sealed class ScpReplyWorker(Channel<SCPReplyMessageDto> queue, ILogger<Sc
                             }
                             break;
                         case (int)enSCPReplyType.enSCPReplyCmndStatus:
-                            // var writer = scope.ServiceProvider.GetRequiredService<IWriterRepository>();
-                            // repo = scope.ServiceProvider.GetRequiredService<IScpRepository>();
-                            // await writer.UpdateWriterAuditAsync(
-                            //     message.SCPId,
-                            //     await repo.MacByScpIdAsync(message.SCPId,ct),
-                            //     message.cmnd_sts.sequence_number,
-                            //     message.cmnd_sts
-                            // );
+                            var eve = scope.ServiceProvider.GetRequiredService<Events.Contract.Interfaces.IEvent>();
+                            await eve.UpdateCommandEvent(
+                                message.SCPId,
+                                message.cmnd_sts.sequence_number,
+                                message.cmnd_sts.status,
+                                message.cmnd_sts.nak != null ? DescriptionHelper.GetNakReasonDescription(message.cmnd_sts.nak.reason) : string.Empty
+                            );
                             // var cstatus = new CmndStatus(await qhw.GetMacFromComponentAsync((short)message.ScpId), message.cmnd_sts.sequence_number);
                             // await publisher.CmndNotifyStatus(cstatus);
                             break;

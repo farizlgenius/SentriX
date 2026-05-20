@@ -1813,11 +1813,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\code\\sentrix\\src\\Modules\\Device\\Device.Infrastructure\\Device.Infrastructure.csproj",
+      "projectUniqueName": "d:\\code\\sentrix\\src\\Modules\\Device\\Device.Infrastructure\\Device.Infrastructure.csproj",
       "projectName": "Device.Infrastructure",
-      "projectPath": "D:\\code\\sentrix\\src\\Modules\\Device\\Device.Infrastructure\\Device.Infrastructure.csproj",
+      "projectPath": "d:\\code\\sentrix\\src\\Modules\\Device\\Device.Infrastructure\\Device.Infrastructure.csproj",
       "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-      "outputPath": "D:\\code\\sentrix\\src\\Modules\\Device\\Device.Infrastructure\\obj\\",
+      "outputPath": "d:\\code\\sentrix\\src\\Modules\\Device\\Device.Infrastructure\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

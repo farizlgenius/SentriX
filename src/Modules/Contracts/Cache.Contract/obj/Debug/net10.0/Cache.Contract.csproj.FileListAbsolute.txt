@@ -1,4 +1,4 @@
-D:\code\sentrix\src\Modules\Contracts\Cache.Contract\bin\Debug\net10.0\Cache.Contract.deps.json
+d:\code\sentrix\src\Modules\Contracts\Cache.Contract\bin\Debug\net10.0\Cache.Contract.deps.json
 D:\code\sentrix\src\Modules\Contracts\Cache.Contract\bin\Debug\net10.0\Cache.Contract.dll
 D:\code\sentrix\src\Modules\Contracts\Cache.Contract\bin\Debug\net10.0\Cache.Contract.pdb
 D:\code\sentrix\src\Modules\Contracts\Cache.Contract\obj\Debug\net10.0\Cache.Contract.GeneratedMSBuildEditorConfig.editorconfig
@@ -9,4 +9,4 @@ D:\code\sentrix\src\Modules\Contracts\Cache.Contract\obj\Debug\net10.0\Cache.Con
 D:\code\sentrix\src\Modules\Contracts\Cache.Contract\obj\Debug\net10.0\Cache.Contract.dll
 D:\code\sentrix\src\Modules\Contracts\Cache.Contract\obj\Debug\net10.0\refint\Cache.Contract.dll
 D:\code\sentrix\src\Modules\Contracts\Cache.Contract\obj\Debug\net10.0\Cache.Contract.pdb
-D:\code\sentrix\src\Modules\Contracts\Cache.Contract\obj\Debug\net10.0\ref\Cache.Contract.dll
+d:\code\sentrix\src\Modules\Contracts\Cache.Contract\obj\Debug\net10.0\ref\Cache.Contract.dll

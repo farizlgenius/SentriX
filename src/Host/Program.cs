@@ -24,6 +24,7 @@ using Role.Infrastructure;
 using Scalar.AspNetCore;
 using Serilog;
 using SharedKernel;
+using Time.Infrastructure;
 
 
 namespace Host;
@@ -76,6 +77,7 @@ public class Program
         builder.Services.AddEvents(builder.Configuration);
         builder.Services.AddAdapter(builder.Configuration);
         builder.Services.AddOutput(builder.Configuration);
+        builder.Services.AddTime(builder.Configuration);
 
 
         // Replace default logging with Serilog

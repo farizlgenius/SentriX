@@ -6,7 +6,15 @@ namespace Adapter.Abstraction.Interfaces;
 
 public interface IControlAdapter
 {
-      Task CreateAsync(CreateOutputDto dto);
+      Task CreateAsync(
+             string Mac,
+            short ComponentId,
+            short DeviceComponentId,
+            short ModuleComponentId,
+            short OutputNo,
+            short Mode,
+            short DefaultPulse
+      );
       Task<IEnumerable<OptionDto>> GetRelayModeAsync();
-      Task TriggerOutputAsync(int moduleId,int Command);
+      Task TriggerOutputAsync(string Mac,short ScpId,short CpId,short Command);
 }

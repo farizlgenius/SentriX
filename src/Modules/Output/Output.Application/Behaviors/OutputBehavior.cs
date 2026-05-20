@@ -16,16 +16,32 @@ public sealed class OutputBehavior(IOutputRepository repo,IAdapterFactory factor
 {
       public async Task<OutputDto> CreateAsync(CreateOutputDto dto)
       {
+
             var domain = new Outputs(
+                  0,
+                  await repo.GetLowestOutputComponentIdByMacAsync(dto.Mac),
+                  dto.Mac,
                   dto.Name,
-                  dto.ModuleId,
+                  dto.DeviceComponentId,
+                  dto.ModuleComponentId,
                   dto.OutputNo,
                   dto.Model,
+                  dto.RelayMode,
+                  dto.Type,
                   dto.LocationId,
-                  dto.DefaultPulse
+                  dto.DefaultPulse,
+                  true
                   );
 
-            await factory.GetAdapter(Venders.AERO).Control.CreateAsync(dto);
+            await factory.GetAdapter(Venders.AERO).Control.CreateAsync(
+                  domain.Mac,
+                  domain.ComponentId,
+                  domain.DeviceComponentId,
+                  domain.ModuleComponentId,
+                  domain.OutputNo,
+                  domain.Mode,
+                  domain.DefaultPulse
+                  );
 
             var res = await repo.CreateAsync(domain);
 
@@ -48,13 +64,20 @@ public sealed class OutputBehavior(IOutputRepository repo,IAdapterFactory factor
             return res;
       }
 
-      public async Task<IEnumerable<OptionDto>> GetRelayModeAsync()
+      public async Task<IEnumerable<OptionDto>> GetRelayModeAsync(string Type)
       {
-            var res = await factory.GetAdapter(Venders.AERO).Control.GetRelayModeAsync();
-            return res;
+            switch (Type)
+            {
+                  case Venders.AERO:
+                        return await factory.GetAdapter(Venders.AERO).Control.GetRelayModeAsync();
+                  case Venders.AMICO:
+                        return await factory.GetAdapter(Venders.AMICO).Control.GetRelayModeAsync();
+                  default:
+                        return new List<OptionDto>();
+            }
       }
 
-      public async Task<BaseResponse> TriggerOutputAsync(int id, int Command)
+      public async Task<BaseResponse> TriggerOutputAsync(int id, short Command)
       {
             // Check that any output with id
             if(!await repo.IsAnyWithIdAsync(id))
@@ -62,7 +85,7 @@ public sealed class OutputBehavior(IOutputRepository repo,IAdapterFactory factor
 
             var output = await repo.GetByIdAsync(id);
                   
-            await factory.GetAdapter(Venders.AERO).Control.TriggerOutputAsync(output.ModuleId,Command);
+            await factory.GetAdapter(Venders.AERO).Control.TriggerOutputAsync(output.Mac,output.DeviceComponentId,output.ComponentId,Command);
             return new BaseResponse(System.Net.HttpStatusCode.OK,MessageHelper.Common.Success,DateTime.UtcNow);
       }
 }

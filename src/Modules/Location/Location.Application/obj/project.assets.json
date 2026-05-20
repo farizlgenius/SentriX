@@ -1430,11 +1430,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\code\\sentrix\\src\\Modules\\Location\\Location.Application\\Location.Application.csproj",
+      "projectUniqueName": "d:\\code\\sentrix\\src\\Modules\\Location\\Location.Application\\Location.Application.csproj",
       "projectName": "Location.Application",
-      "projectPath": "D:\\code\\sentrix\\src\\Modules\\Location\\Location.Application\\Location.Application.csproj",
+      "projectPath": "d:\\code\\sentrix\\src\\Modules\\Location\\Location.Application\\Location.Application.csproj",
       "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-      "outputPath": "D:\\code\\sentrix\\src\\Modules\\Location\\Location.Application\\obj\\",
+      "outputPath": "d:\\code\\sentrix\\src\\Modules\\Location\\Location.Application\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

@@ -8,4 +8,5 @@ public interface IAdapter
       IDeviceAdapter Device {get;}
       IMonitorAdapter Monitor {get;}
       IControlAdapter Control {get;}
+      ITimeAdapter Time {get;}
 }

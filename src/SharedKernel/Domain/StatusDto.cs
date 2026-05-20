@@ -1,7 +1,7 @@
 namespace SharedKernel.Domain;
 
 public sealed record StatusDto(
-      int Id,
+      int DeviceComponentId,
       int ComponentId,
       string Status,
       string Tamper,

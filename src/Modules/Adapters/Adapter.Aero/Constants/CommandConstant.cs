@@ -18,6 +18,7 @@ public static class CommandConstant
       public static string ControlPointCommand = "307 : Control Point Command";
       public static string AsciiCommandAsync = "ASCII : Command";
       public static string ScpSetId = "318 : Set SCP Id";
+      public static string HolidayConfiguration ="1104 : Holiday Configuration";
 }
 
 

@@ -1,4 +1,4 @@
-D:\code\sentrix\src\Modules\Events\Events.Domain\bin\Debug\net10.0\Events.Domain.deps.json
+d:\code\sentrix\src\Modules\Events\Events.Domain\bin\Debug\net10.0\Events.Domain.deps.json
 D:\code\sentrix\src\Modules\Events\Events.Domain\bin\Debug\net10.0\Events.Domain.dll
 D:\code\sentrix\src\Modules\Events\Events.Domain\bin\Debug\net10.0\Events.Domain.pdb
 D:\code\sentrix\src\Modules\Events\Events.Domain\obj\Debug\net10.0\Events.Domain.GeneratedMSBuildEditorConfig.editorconfig
@@ -9,4 +9,4 @@ D:\code\sentrix\src\Modules\Events\Events.Domain\obj\Debug\net10.0\Events.Domain
 D:\code\sentrix\src\Modules\Events\Events.Domain\obj\Debug\net10.0\Events.Domain.dll
 D:\code\sentrix\src\Modules\Events\Events.Domain\obj\Debug\net10.0\refint\Events.Domain.dll
 D:\code\sentrix\src\Modules\Events\Events.Domain\obj\Debug\net10.0\Events.Domain.pdb
-D:\code\sentrix\src\Modules\Events\Events.Domain\obj\Debug\net10.0\ref\Events.Domain.dll
+d:\code\sentrix\src\Modules\Events\Events.Domain\obj\Debug\net10.0\ref\Events.Domain.dll

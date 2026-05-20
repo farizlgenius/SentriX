@@ -156,8 +156,8 @@ public sealed class ScpService(ILogger<ScpService> logger, IMessageBus bus, IScp
             await bus.SendAsync(new AddCommandEvent(res));
 
 
-            res = scpCommand.ElevatorAccessLevelSpecification(device.Mac, (short)ScpId, 256, 128);
-            await bus.SendAsync(new AddCommandEvent(res));
+            // res = scpCommand.ElevatorAccessLevelSpecification(device.Mac, (short)ScpId, 256, 128);
+            // await bus.SendAsync(new AddCommandEvent(res));
 
             res = scpCommand.TimeSet(device.Mac, (short)ScpId);
 

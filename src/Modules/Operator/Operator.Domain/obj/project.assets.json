@@ -1393,11 +1393,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\code\\sentrix\\src\\Modules\\Operator\\Operator.Domain\\Operator.Domain.csproj",
+      "projectUniqueName": "d:\\code\\sentrix\\src\\Modules\\Operator\\Operator.Domain\\Operator.Domain.csproj",
       "projectName": "Operator.Domain",
-      "projectPath": "D:\\code\\sentrix\\src\\Modules\\Operator\\Operator.Domain\\Operator.Domain.csproj",
+      "projectPath": "d:\\code\\sentrix\\src\\Modules\\Operator\\Operator.Domain\\Operator.Domain.csproj",
       "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-      "outputPath": "D:\\code\\sentrix\\src\\Modules\\Operator\\Operator.Domain\\obj\\",
+      "outputPath": "d:\\code\\sentrix\\src\\Modules\\Operator\\Operator.Domain\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

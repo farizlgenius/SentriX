@@ -337,8 +337,20 @@
           }
         }
       },
+      "Device.Contract/1.0.0": {
+        "dependencies": {
+          "SharedKernel": "1.0.0"
+        },
+        "runtime": {
+          "Device.Contract.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
       "Events.Application/1.0.0": {
         "dependencies": {
+          "Device.Contract": "1.0.0",
           "Events.Contract": "1.0.0",
           "Events.Domain": "1.0.0"
         },
@@ -586,6 +598,11 @@
       "sha512": "sha512-fKL7mXv7qaiNBUC71ssvn/dU0k9t0o45+qm2XgKAlSt19xF+ijjxyA3R6HmCgfKEKwfcfkwWjayuQtRueZFkYw==",
       "path": "serilog.sinks.file/7.0.0",
       "hashPath": "serilog.sinks.file.7.0.0.nupkg.sha512"
+    },
+    "Device.Contract/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
     },
     "Events.Application/1.0.0": {
       "type": "project",

@@ -35,7 +35,7 @@ public sealed class InputCommand(ILogger<InputCommand> logger) : BaseCommand, II
             var result = Send((short)enCfgCmnd.enCcInput, c);
             if (result)
             {
-                  logger.LogInformation(MessageHelper.CommandSuccess(CommandConstant.InputPointSpecification, ScpId));
+                  logger.LogInformation(LogMessageHelper.CommandSuccess(CommandConstant.InputPointSpecification, ScpId));
 
                   return new CommandResponse(
                         Mac,
@@ -53,7 +53,7 @@ public sealed class InputCommand(ILogger<InputCommand> logger) : BaseCommand, II
             }
             else
             {
-                  logger.LogError(MessageHelper.CommandUnsuccess(CommandConstant.InputPointSpecification, ScpId));
+                  logger.LogError(LogMessageHelper.CommandUnsuccess(CommandConstant.InputPointSpecification, ScpId));
                   return new CommandResponse(
                         Mac,
                        ScpId,

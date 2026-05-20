@@ -144,8 +144,8 @@ const Device = () => {
       setData(res.data.items);
       setPagination(res.data);
 
-      const newStatuses = res.data.items.map((item: StatusDto) => ({
-        id: item.id,
+      const newStatuses = res.data.items.map((item: DeviceDto) => ({
+        deviceComponentId: item.id,
         componentId: item.componentId,
         status: -1,
         tamper: -1,
@@ -184,7 +184,7 @@ const Device = () => {
     if (res.data) {
       setStatus((prev) =>
         prev.map((item) =>
-          item.id === res.data.id
+          item.deviceComponentId === res.data.id
             ? {
                 ...item,
                 status: res.data.status
@@ -402,9 +402,9 @@ const Device = () => {
       <TableCell key={index + 1} className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
         <Badge
           size="sm"
-          color={statusDto.find((statusItem) => statusItem.id === item.id)?.status ? "success" : "error"}
+          color={statusDto.find((statusItem) => statusItem.deviceComponentId === item.id)?.status ? "success" : "error"}
         >
-          {statusDto.find((statusItem) => statusItem.id === item.id)?.status
+          {statusDto.find((statusItem) => statusItem.deviceComponentId === item.id)?.status
             ? "Online"
             : "Offline"}
         </Badge>

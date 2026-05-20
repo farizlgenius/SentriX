@@ -1,9 +1,3 @@
-D:\code\sentrix\src\Modules\Adapters\Adapter.Aero\obj\Debug\net10.0\Adapter.Aero.csproj.AssemblyReference.cache
-D:\code\sentrix\src\Modules\Adapters\Adapter.Aero\obj\Debug\net10.0\Adapter.Aero.GeneratedMSBuildEditorConfig.editorconfig
-D:\code\sentrix\src\Modules\Adapters\Adapter.Aero\obj\Debug\net10.0\Adapter.Aero.AssemblyInfoInputs.cache
-D:\code\sentrix\src\Modules\Adapters\Adapter.Aero\obj\Debug\net10.0\Adapter.Aero.AssemblyInfo.cs
-D:\code\sentrix\src\Modules\Adapters\Adapter.Aero\obj\Debug\net10.0\Adapter.Aero.csproj.CoreCompileInputs.cache
-D:\code\sentrix\src\Modules\Adapters\Adapter.Aero\obj\Debug\net10.0\Adapter.Aero.sourcelink.json
 D:\code\sentrix\src\Modules\Adapters\Adapter.Aero\bin\Debug\net10.0\Adapter.Aero.deps.json
 D:\code\sentrix\src\Modules\Adapters\Adapter.Aero\bin\Debug\net10.0\Adapter.Aero.dll
 D:\code\sentrix\src\Modules\Adapters\Adapter.Aero\bin\Debug\net10.0\Adapter.Aero.pdb
@@ -21,6 +15,12 @@ D:\code\sentrix\src\Modules\Adapters\Adapter.Aero\bin\Debug\net10.0\Events.Contr
 D:\code\sentrix\src\Modules\Adapters\Adapter.Aero\bin\Debug\net10.0\Notifier.Contract.pdb
 D:\code\sentrix\src\Modules\Adapters\Adapter.Aero\bin\Debug\net10.0\Output.Contract.pdb
 D:\code\sentrix\src\Modules\Adapters\Adapter.Aero\bin\Debug\net10.0\HIDAeroWrap64.xml
+D:\code\sentrix\src\Modules\Adapters\Adapter.Aero\obj\Debug\net10.0\Adapter.Aero.csproj.AssemblyReference.cache
+D:\code\sentrix\src\Modules\Adapters\Adapter.Aero\obj\Debug\net10.0\Adapter.Aero.GeneratedMSBuildEditorConfig.editorconfig
+D:\code\sentrix\src\Modules\Adapters\Adapter.Aero\obj\Debug\net10.0\Adapter.Aero.AssemblyInfoInputs.cache
+D:\code\sentrix\src\Modules\Adapters\Adapter.Aero\obj\Debug\net10.0\Adapter.Aero.AssemblyInfo.cs
+D:\code\sentrix\src\Modules\Adapters\Adapter.Aero\obj\Debug\net10.0\Adapter.Aero.csproj.CoreCompileInputs.cache
+D:\code\sentrix\src\Modules\Adapters\Adapter.Aero\obj\Debug\net10.0\Adapter.Aero.sourcelink.json
 D:\code\sentrix\src\Modules\Adapters\Adapter.Aero\obj\Debug\net10.0\Adapter..1C1D7F6F.Up2Date
 D:\code\sentrix\src\Modules\Adapters\Adapter.Aero\obj\Debug\net10.0\Adapter.Aero.dll
 D:\code\sentrix\src\Modules\Adapters\Adapter.Aero\obj\Debug\net10.0\refint\Adapter.Aero.dll

@@ -1,6 +1,7 @@
 export enum SignalRTopic {
       IDREPORT = "DEVICE.IDREPORT",
-      MODULE_STATUS = "DEVICE.MODULE.STATUS"
+      MODULE_STATUS = "DEVICE.MODULE.STATUS",
+      CP_STATUS = "DEVICE.OUTPUT.STATUS"
 }
 
 export enum SignalRHub {

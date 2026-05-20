@@ -8,7 +8,7 @@ using Adapter.Aero.Enums;
 
 namespace Adapter.Aero.Helpers;
 
-public sealed class MessageHelper
+public sealed class LogMessageHelper
 {
   public static byte[] Serialize<T>(T obj)
         => Encoding.UTF8.GetBytes(JsonSerializer.Serialize(obj));

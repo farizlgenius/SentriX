@@ -206,7 +206,7 @@ const MonitorPoint = () => {
             (status:MpStatus) => {
                 setStatus((prev) =>
                     prev.map((a) =>
-                        a.componentId == status.deviceId && a.id == status.first
+                        a.componentId == status.deviceId && a.deviceComponentId == status.first
                             ? {
                                 ...a,
                                 status: status.status,

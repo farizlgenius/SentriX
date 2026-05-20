@@ -143,7 +143,7 @@ public sealed class ReplyMessageListener(ILogger<ReplyMessageListener> logger,Ch
                         break;
                   case (int)enSCPReplyType.enSCPReplySrSio:
                         await queue.Writer.WriteAsync(message);
-                        logger.LogInformation(MessageHelper.ToString(message.sts_sio));
+                        logger.LogInformation(LogMessageHelper.ToString(message.sts_sio));
                         break;
                   case (int)enSCPReplyType.enSCPReplySrMp:
                         await queue.Writer.WriteAsync(message);
@@ -175,7 +175,7 @@ public sealed class ReplyMessageListener(ILogger<ReplyMessageListener> logger,Ch
                   case (int)enSCPReplyType.enSCPReplyStrStatus:
                         await queue.Writer.WriteAsync(message);
                         // MessageHandlerHelper.SCPReplyStrStatus(message);
-                        Console.WriteLine(MessageHelper.ToString(message.str_sts));
+                        Console.WriteLine(LogMessageHelper.ToString(message.str_sts));
                         break;
                   case (int)enSCPReplyType.enSCPReplyCmndStatus:
                         await queue.Writer.WriteAsync(message);
@@ -183,7 +183,7 @@ public sealed class ReplyMessageListener(ILogger<ReplyMessageListener> logger,Ch
                   case (int)enSCPReplyType.enSCPReplyWebConfigNetwork:
                         // MessageHandlerHelper.SCPReplyWebConfigNetwork(message);
                         await queue.Writer.WriteAsync(message);
-                        Console.WriteLine(MessageHelper.ToString(message.web_network));
+                        Console.WriteLine(LogMessageHelper.ToString(message.web_network));
                         break;
                   case (int)enSCPReplyType.enSCPReplyWebConfigNotes:
                         break;
@@ -201,7 +201,7 @@ public sealed class ReplyMessageListener(ILogger<ReplyMessageListener> logger,Ch
                         break;
                   case (int)enSCPReplyType.enSCPReplyWebConfigHostCommPrim:
                         await queue.Writer.WriteAsync(message);
-                        Console.WriteLine(MessageHelper.ToString(message.web_host_comm_prim));
+                        Console.WriteLine(LogMessageHelper.ToString(message.web_host_comm_prim));
                         break;
 
                   default:

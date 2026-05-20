@@ -9,8 +9,8 @@ public interface IDeviceRepository
 {
       Task<bool> IsAnyWithMacAsync(string macAddress, CancellationToken ct=default);
       Task<DeviceDto> CreateAsync(Domain.Entities.Devices domain, CancellationToken ct = default);
-      Task UpdatePortByMacAsync(int componentId, int port, CancellationToken ct = default);
-      Task UpdateIpByMacAsync(int componentId, string ip, CancellationToken ct = default);
+      Task UpdatePortByComponentIdAsync(int componentId, int port, CancellationToken ct = default);
+      Task UpdateIpByComponentIdAsync(int componentId, string ip, CancellationToken ct = default);
       Task VerifyDeviceMemoryAllocateStatusAsync(int componentId, string status, CancellationToken ct = default);
       Task<Pagination<DeviceDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default);
       Task<List<ModuleDto>> GetModuleByDeviceIdAsync(int id, CancellationToken ct = default);
@@ -30,5 +30,7 @@ public interface IDeviceRepository
       Task<int> GetLowestModuleComponentIdByDeviceIdAsync(int DeviceId,CancellationToken ct = default);
       Task<DeviceDto> GetDeviceByComponentIdAsync(int ComponentId,CancellationToken ct = default);
       Task<short> GetComponentIdByIdAsync(int id,CancellationToken ct = default);
+      Task<IEnumerable<(string Mac,short ComponentId)>> MacAndComponentIdListAsync(int LocationId,CancellationToken ct = default);
+      Task<string> GetMacByComponentIdAsync(int ComponentId);
 
 }

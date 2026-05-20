@@ -186,6 +186,11 @@ public sealed class DeviceRepository(DeviceDbContext context) : IDeviceRepositor
             ct);
       }
 
+      public async Task<string> GetMacByComponentIdAsync(int ComponentId)
+      {
+            return await context.Devices.AsNoTracking().Where(x => x.component_id == ComponentId).Select(x => x.mac).FirstOrDefaultAsync() ?? string.Empty;
+      }
+
       public async Task<string> GetMacByIdAsync(int id, CancellationToken ct = default)
       {
             return await context.Devices.AsNoTracking()
@@ -272,7 +277,7 @@ public sealed class DeviceRepository(DeviceDbContext context) : IDeviceRepositor
             return await context.Modules.AsNoTracking()
                   .OrderByDescending(x => x.id)
                   .Where(x => x.device_id == DeviceId)
-                  .Select(x => new OptionDto(x.name, x.id, string.Empty, false))
+                  .Select(x => new OptionDto(x.name, x.component_id, string.Empty,x.id, false))
                   .ToArrayAsync();
       }
 
@@ -281,7 +286,7 @@ public sealed class DeviceRepository(DeviceDbContext context) : IDeviceRepositor
             return await context.Devices.AsNoTracking()
             .OrderByDescending(x => x.id)
             .Where(x => x.location_id == locationId)
-            .Select(x => new OptionDto(x.name, x.id, string.Empty, false))
+            .Select(x => new OptionDto(x.name, x.component_id,x.mac,x.id,false))
             .ToArrayAsync();
       }
 
@@ -387,9 +392,18 @@ public sealed class DeviceRepository(DeviceDbContext context) : IDeviceRepositor
             return await context.Devices.AsNoTracking().AnyAsync(d => d.mac.Equals(macAddress), ct);
       }
 
+      public async Task<IEnumerable<(string Mac, short ComponentId)>> MacAndComponentIdListAsync(int LocationId,CancellationToken ct = default)
+      {
+            var list = await context.Devices.AsNoTracking()
+            .Where(x => x.location_id == LocationId)
+                  .Select(x => new { x.mac, x.component_id })
+                  .ToListAsync(ct);
 
+            return list.Select(x => (x.mac, x.component_id));
 
-      public async Task UpdateIpByMacAsync(int componentId, string ip, CancellationToken ct = default)
+      }
+
+      public async Task UpdateIpByComponentIdAsync(int componentId, string ip, CancellationToken ct = default)
       {
             var entity = await context.Devices.FirstOrDefaultAsync(d => d.component_id == componentId, ct);
             if (entity is null)
@@ -417,7 +431,7 @@ public sealed class DeviceRepository(DeviceDbContext context) : IDeviceRepositor
 
       }
 
-      public async Task UpdatePortByMacAsync(int componentId, int port, CancellationToken ct = default)
+      public async Task UpdatePortByComponentIdAsync(int componentId, int port, CancellationToken ct = default)
       {
             var entity = await context.Devices.FirstOrDefaultAsync(d => d.component_id == componentId, ct);
             if (entity is null)

@@ -30,14 +30,14 @@ namespace Host.Controllers
             }
 
             [HttpGet("relay/mode")]
-            public async Task<IActionResult> GetRelayModeAsync()
+            public async Task<IActionResult> GetRelayModeAsync([FromQuery]string Type)
             {
-                  var res = await output.GetRelayModeAsync();
+                  var res = await output.GetRelayModeAsync(Type);
                   return Ok(res);
             }
 
             [HttpPost("{id}")]
-            public async Task<IActionResult> TriggerOutputAsync(int id,[FromQuery]int Command)
+            public async Task<IActionResult> TriggerOutputAsync(int id,[FromQuery]short Command)
             {
                   var res = await output.TriggerOutputAsync(id,Command);
                   return Ok(res);

@@ -105,7 +105,7 @@ export default function Module() {
         console.log(status);
         setStatus((prev) =>
           prev.map((a) =>
-            a.id == status.driverId 
+            a.deviceComponentId == status.driverId 
               ? {
                 ...a,
                 status: status.status,

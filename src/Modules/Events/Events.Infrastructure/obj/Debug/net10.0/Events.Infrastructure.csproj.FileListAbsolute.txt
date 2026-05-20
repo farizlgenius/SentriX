@@ -1,12 +1,14 @@
 D:\code\sentrix\src\Modules\Events\Events.Infrastructure\bin\Debug\net10.0\Events.Infrastructure.deps.json
 D:\code\sentrix\src\Modules\Events\Events.Infrastructure\bin\Debug\net10.0\Events.Infrastructure.dll
 D:\code\sentrix\src\Modules\Events\Events.Infrastructure\bin\Debug\net10.0\Events.Infrastructure.pdb
+D:\code\sentrix\src\Modules\Events\Events.Infrastructure\bin\Debug\net10.0\Device.Contract.dll
 D:\code\sentrix\src\Modules\Events\Events.Infrastructure\bin\Debug\net10.0\Events.Application.dll
 D:\code\sentrix\src\Modules\Events\Events.Infrastructure\bin\Debug\net10.0\Events.Contract.dll
 D:\code\sentrix\src\Modules\Events\Events.Infrastructure\bin\Debug\net10.0\Events.Domain.dll
 D:\code\sentrix\src\Modules\Events\Events.Infrastructure\bin\Debug\net10.0\SharedKernel.dll
 D:\code\sentrix\src\Modules\Events\Events.Infrastructure\bin\Debug\net10.0\SharedKernel.pdb
 D:\code\sentrix\src\Modules\Events\Events.Infrastructure\bin\Debug\net10.0\Events.Application.pdb
+D:\code\sentrix\src\Modules\Events\Events.Infrastructure\bin\Debug\net10.0\Device.Contract.pdb
 D:\code\sentrix\src\Modules\Events\Events.Infrastructure\bin\Debug\net10.0\Events.Contract.pdb
 D:\code\sentrix\src\Modules\Events\Events.Infrastructure\bin\Debug\net10.0\Events.Domain.pdb
 D:\code\sentrix\src\Modules\Events\Events.Infrastructure\obj\Debug\net10.0\Events.Infrastructure.csproj.AssemblyReference.cache

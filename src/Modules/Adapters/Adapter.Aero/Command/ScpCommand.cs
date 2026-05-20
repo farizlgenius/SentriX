@@ -65,11 +65,11 @@ public sealed class ScpCommand(ILogger<ScpCommand> logger) : BaseCommand, IScpCo
             c.oper_type = operType;
             c.nLanguages = nLanguage;
             c.nSrvcType = 0;
-            var command = MessageHelper.ToString(c);
+            var command = LogMessageHelper.ToString(c);
             var result = Send((short)enCfgCmnd.enCcScpScp, c);
             if (result)
             {
-                  logger.LogInformation(MessageHelper.CommandSuccess(CommandConstant.ScpDeviceSpecification, ScpId));
+                  logger.LogInformation(LogMessageHelper.CommandSuccess(CommandConstant.ScpDeviceSpecification, ScpId));
 
                   return new CommandResponse(
                         Mac,
@@ -87,7 +87,7 @@ public sealed class ScpCommand(ILogger<ScpCommand> logger) : BaseCommand, IScpCo
             }
             else
             {
-                  logger.LogError(MessageHelper.CommandUnsuccess(CommandConstant.ScpDeviceSpecification, ScpId));
+                  logger.LogError(LogMessageHelper.CommandUnsuccess(CommandConstant.ScpDeviceSpecification, ScpId));
                   return new CommandResponse(
                         Mac,
                        ScpId,
@@ -154,7 +154,7 @@ public sealed class ScpCommand(ILogger<ScpCommand> logger) : BaseCommand, IScpCo
             var result = Send((short)enCfgCmnd.enCcScpAdbSpec, c);
             if (result)
             {
-                  logger.LogInformation(MessageHelper.CommandSuccess(CommandConstant.AccessDatabaseSpecification, ScpId));
+                  logger.LogInformation(LogMessageHelper.CommandSuccess(CommandConstant.AccessDatabaseSpecification, ScpId));
 
                   return new CommandResponse(
                         Mac,
@@ -172,7 +172,7 @@ public sealed class ScpCommand(ILogger<ScpCommand> logger) : BaseCommand, IScpCo
             }
             else
             {
-                  logger.LogError(MessageHelper.CommandUnsuccess(CommandConstant.AccessDatabaseSpecification, ScpId));
+                  logger.LogError(LogMessageHelper.CommandUnsuccess(CommandConstant.AccessDatabaseSpecification, ScpId));
                   return new CommandResponse(
                         Mac,
                        ScpId,
@@ -196,7 +196,7 @@ public sealed class ScpCommand(ILogger<ScpCommand> logger) : BaseCommand, IScpCo
             var result = SCPDLL.scpConfigCommand(Command);
             if (result)
             {
-                  logger.LogInformation(MessageHelper.CommandSuccess(CommandConstant.AsciiCommandAsync, ScpId));
+                  logger.LogInformation(LogMessageHelper.CommandSuccess(CommandConstant.AsciiCommandAsync, ScpId));
 
                   return new CommandResponse(
                         Mac,
@@ -214,7 +214,7 @@ public sealed class ScpCommand(ILogger<ScpCommand> logger) : BaseCommand, IScpCo
             }
             else
             {
-                  logger.LogError(MessageHelper.CommandUnsuccess(CommandConstant.AsciiCommandAsync, ScpId));
+                  logger.LogError(LogMessageHelper.CommandUnsuccess(CommandConstant.AsciiCommandAsync, ScpId));
                   return new CommandResponse(
                         Mac,
                        ScpId,
@@ -276,7 +276,7 @@ public sealed class ScpCommand(ILogger<ScpCommand> logger) : BaseCommand, IScpCo
             var result = Send((short)enCfgCmnd.enCcMsp1, c);
             if (result)
             {
-                  logger.LogInformation(MessageHelper.CommandSuccess(CommandConstant.DriverConfiguration, ScpId));
+                  logger.LogInformation(LogMessageHelper.CommandSuccess(CommandConstant.DriverConfiguration, ScpId));
 
                   return new CommandResponse(
                         Mac,
@@ -294,7 +294,7 @@ public sealed class ScpCommand(ILogger<ScpCommand> logger) : BaseCommand, IScpCo
             }
             else
             {
-                  logger.LogError(MessageHelper.CommandUnsuccess(CommandConstant.DriverConfiguration, ScpId));
+                  logger.LogError(LogMessageHelper.CommandUnsuccess(CommandConstant.DriverConfiguration, ScpId));
                   return new CommandResponse(
                         Mac,
                        ScpId,
@@ -348,7 +348,7 @@ public sealed class ScpCommand(ILogger<ScpCommand> logger) : BaseCommand, IScpCo
             var result = Send((short)enCfgCmnd.enCcWebConfigRead, c);
             if (result)
             {
-                  logger.LogInformation(MessageHelper.CommandSuccess(CommandConstant.ReadsConfiguration, ScpId));
+                  logger.LogInformation(LogMessageHelper.CommandSuccess(CommandConstant.ReadsConfiguration, ScpId));
 
                   return new CommandResponse(
                         Mac,
@@ -366,7 +366,7 @@ public sealed class ScpCommand(ILogger<ScpCommand> logger) : BaseCommand, IScpCo
             }
             else
             {
-                  logger.LogError(MessageHelper.CommandUnsuccess(CommandConstant.ReadsConfiguration, ScpId));
+                  logger.LogError(LogMessageHelper.CommandUnsuccess(CommandConstant.ReadsConfiguration, ScpId));
                   return new CommandResponse(
                         Mac,
                        ScpId,
@@ -391,11 +391,11 @@ public sealed class ScpCommand(ILogger<ScpCommand> logger) : BaseCommand, IScpCo
 
             CC_RESET c = new CC_RESET();
             c.scp_number = ScpId;
-            var command = MessageHelper.ToString(c);
+            var command = LogMessageHelper.ToString(c);
             var result = Send((short)enCfgCmnd.enCcReset, c);
             if (result)
             {
-                  logger.LogInformation(MessageHelper.CommandSuccess(CommandConstant.ScpReset, ScpId));
+                  logger.LogInformation(LogMessageHelper.CommandSuccess(CommandConstant.ScpReset, ScpId));
 
                   return new CommandResponse(
                         Mac,
@@ -413,7 +413,7 @@ public sealed class ScpCommand(ILogger<ScpCommand> logger) : BaseCommand, IScpCo
             }
             else
             {
-                  logger.LogError(MessageHelper.CommandUnsuccess(CommandConstant.ScpReset, ScpId));
+                  logger.LogError(LogMessageHelper.CommandUnsuccess(CommandConstant.ScpReset, ScpId));
                   return new CommandResponse(
                         Mac,
                        ScpId,
@@ -440,11 +440,11 @@ public sealed class ScpCommand(ILogger<ScpCommand> logger) : BaseCommand, IScpCo
             {
                   c.nStructId[i] = StructureList.ElementAt(i);
             }
-            var command = MessageHelper.ToString(c);
+            var command = LogMessageHelper.ToString(c);
             var result = Send((short)enCfgCmnd.enCcStrSRq, c);
             if (result)
             {
-                  logger.LogInformation(MessageHelper.CommandSuccess(CommandConstant.ScpStructureStatusRead, ScpId));
+                  logger.LogInformation(LogMessageHelper.CommandSuccess(CommandConstant.ScpStructureStatusRead, ScpId));
 
                   return new CommandResponse(
                         Mac,
@@ -462,7 +462,7 @@ public sealed class ScpCommand(ILogger<ScpCommand> logger) : BaseCommand, IScpCo
             }
             else
             {
-                  logger.LogError(MessageHelper.CommandUnsuccess(CommandConstant.ScpStructureStatusRead, ScpId));
+                  logger.LogError(LogMessageHelper.CommandUnsuccess(CommandConstant.ScpStructureStatusRead, ScpId));
                   return new CommandResponse(
                         Mac,
                        ScpId,
@@ -488,7 +488,7 @@ public sealed class ScpCommand(ILogger<ScpCommand> logger) : BaseCommand, IScpCo
             var result = Send((short)enCfgCmnd.enCcTime, c);
             if (result)
             {
-                  logger.LogInformation(MessageHelper.CommandSuccess(CommandConstant.TimeSet, ScpId));
+                  logger.LogInformation(LogMessageHelper.CommandSuccess(CommandConstant.TimeSet, ScpId));
 
                   return new CommandResponse(
                         Mac,
@@ -506,7 +506,7 @@ public sealed class ScpCommand(ILogger<ScpCommand> logger) : BaseCommand, IScpCo
             }
             else
             {
-                  logger.LogError(MessageHelper.CommandUnsuccess(CommandConstant.TimeSet, ScpId));
+                  logger.LogError(LogMessageHelper.CommandUnsuccess(CommandConstant.TimeSet, ScpId));
                   return new CommandResponse(
                         Mac,
                        ScpId,
@@ -531,7 +531,7 @@ public sealed class ScpCommand(ILogger<ScpCommand> logger) : BaseCommand, IScpCo
             var result = Send((short)enCfgCmnd.enCcScpID, c);
             if (result)
             {
-                  logger.LogInformation(MessageHelper.CommandSuccess(CommandConstant.ScpSetId, ScpId));
+                  logger.LogInformation(LogMessageHelper.CommandSuccess(CommandConstant.ScpSetId, ScpId));
 
                   return new CommandResponse(
                         Mac,
@@ -549,7 +549,7 @@ public sealed class ScpCommand(ILogger<ScpCommand> logger) : BaseCommand, IScpCo
             }
             else
             {
-                  logger.LogError(MessageHelper.CommandUnsuccess(CommandConstant.ScpSetId, ScpId));
+                  logger.LogError(LogMessageHelper.CommandUnsuccess(CommandConstant.ScpSetId, ScpId));
                   return new CommandResponse(
                         Mac,
                        ScpId,

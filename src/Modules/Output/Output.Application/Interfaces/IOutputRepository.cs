@@ -11,6 +11,7 @@ public interface IOutputRepository
       Task<IEnumerable<short>> GetUnavailableOutputByModuleIdAsync(int moduleId,CancellationToken ct = default);
       Task<bool> IsAnyWithIdAsync(int Id,CancellationToken ct = default);
       Task<OutputDto> GetByIdAsync(int id,CancellationToken ct = default);
+      Task<short> GetLowestOutputComponentIdByMacAsync(string Mac,CancellationToken ct = default);
 
 
 }

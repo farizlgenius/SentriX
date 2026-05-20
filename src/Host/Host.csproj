@@ -60,6 +60,7 @@
     <ProjectReference Include="..\Modules\Contracts\Events.Contract\Events.Contract.csproj" />
     <ProjectReference Include="..\Modules\Contracts\Location.Contract\Location.Contract.csproj" />
     <ProjectReference Include="..\Modules\Contracts\Output.Contract\Output.Contract.csproj" />
+    <ProjectReference Include="..\Modules\Contracts\Time.Contract\Time.Contract.csproj" />
     <ProjectReference Include="..\Modules\Device\Device.Infrastructure\Device.Infrastructure.csproj" />
     <ProjectReference Include="..\Modules\Events\Events.Infrastructure\Events.Infrastructure.csproj" />
     <ProjectReference Include="..\Modules\Location\Location.Infrastructure\Location.Infrastructure.csproj" />
@@ -67,6 +68,7 @@
     <ProjectReference Include="..\Modules\Operator\Operator.Infrastructure\Operator.Infrastructure.csproj" />
     <ProjectReference Include="..\Modules\Output\Output.Infrastructure\Output.Infrastructure.csproj" />
     <ProjectReference Include="..\Modules\Role\Role.Infrastructure\Role.Infrastructure.csproj" />
+    <ProjectReference Include="..\Modules\Time\Time.Infrastructure\Time.Infrastructure.csproj" />
     <ProjectReference Include="..\SharedKernel\SharedKernel.csproj" />
   </ItemGroup>
 

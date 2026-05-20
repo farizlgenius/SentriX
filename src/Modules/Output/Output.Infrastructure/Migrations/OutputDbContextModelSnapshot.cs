@@ -31,6 +31,9 @@ namespace Output.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
 
+                    b.Property<short>("component_id")
+                        .HasColumnType("smallint");
+
                     b.Property<DateTime>("created_at")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
@@ -39,18 +42,28 @@ namespace Output.Infrastructure.Migrations
                     b.Property<short>("default_pulse")
                         .HasColumnType("smallint");
 
+                    b.Property<short>("device_component_id")
+                        .HasColumnType("smallint");
+
                     b.Property<bool>("is_active")
                         .HasColumnType("boolean");
 
                     b.Property<int>("location_id")
                         .HasColumnType("integer");
 
+                    b.Property<string>("mac")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<short>("mode")
+                        .HasColumnType("smallint");
+
                     b.Property<string>("model")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("module_id")
-                        .HasColumnType("integer");
+                    b.Property<short>("module_component_id")
+                        .HasColumnType("smallint");
 
                     b.Property<string>("name")
                         .IsRequired()
@@ -58,6 +71,10 @@ namespace Output.Infrastructure.Migrations
 
                     b.Property<short>("output_no")
                         .HasColumnType("smallint");
+
+                    b.Property<string>("type")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<DateTime>("updated_at")
                         .ValueGeneratedOnAdd()

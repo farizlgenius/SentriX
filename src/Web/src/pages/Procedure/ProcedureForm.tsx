@@ -17,7 +17,7 @@ import Button from "../../components/ui/button/Button"
 import { MonitorPointEndpoint } from "../../endpoint/MonitorPointEndpoint"
 import { MonitorPointDto } from "../../model/MonitorPoint/MonitorPointDto"
 import { ControlPointEndpoint } from "../../endpoint/ControlPointEndpoint"
-import { ControlPointDto } from "../../model/ControlPoint/ControlPointDto"
+import { OutputDto } from "../../model/ControlPoint/OutputDto"
 import { MonitorMaskForm } from "../../components/form/command/MonitorMaskForm"
 import { ControlCommandForm } from "../../components/form/command/ControlCommandForm"
 import { DoorModeForm } from "../../components/form/command/DoorModeForm"
@@ -188,7 +188,7 @@ export const ProcedureForm: React.FC<PropsWithChildren<FormProp<ProcedureDto>>> 
     const fetchCp = async () => {
         var res = await api.get(ControlPointEndpoint.GET(locationId));
         if(res && res.data.data){
-            res.data.data.map((a:ControlPointDto) => {
+            res.data.data.map((a:OutputDto) => {
                 setCp(prev => ([...prev,{
                     label:a.name,
                     value:a.componentId,

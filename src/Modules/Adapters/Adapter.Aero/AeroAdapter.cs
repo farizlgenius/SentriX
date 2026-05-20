@@ -14,14 +14,18 @@ public sealed class AeroAdapter : IAdapter
 
       public IControlAdapter Control { get; }
 
+      public ITimeAdapter Time {get;}
+
       public AeroAdapter(
             IDeviceAdapter devices,
             IControlAdapter controls,
-            IMonitorAdapter monitor
+            IMonitorAdapter monitor,
+            ITimeAdapter time
       )
       {
             Device = devices;
             Control = controls;
             Monitor = monitor;
+            Time = time;
       }
 }

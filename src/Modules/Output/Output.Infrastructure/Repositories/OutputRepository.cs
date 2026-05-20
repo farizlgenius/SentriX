@@ -26,12 +26,17 @@ public sealed class OutputRepository(OutputDbContext context) : IOutputRepositor
             return new OutputDto(
                   data.Entity.id,
                   data.Entity.name,
-                  data.Entity.module_id,
+                  data.Entity.mac,
+                  data.Entity.component_id,
+                  data.Entity.device_component_id,
+                  data.Entity.module_component_id,
                   data.Entity.output_no,
                   data.Entity.model,
+                  data.Entity.mode,
                   data.Entity.location_id,
-                  data.Entity.default_pulse
-
+                  data.Entity.default_pulse,
+                  data.Entity.type,
+                  data.Entity.is_active
             );
       }
 
@@ -43,13 +48,30 @@ public sealed class OutputRepository(OutputDbContext context) : IOutputRepositor
             .Select(e => new OutputDto(
                   e.id,
                   e.name,
-                  e.module_id,
+                  e.mac,
+                  e.component_id,
+                  e.device_component_id,
+                  e.module_component_id,
                   e.output_no,
                   e.model,
+                  e.mode,
                   e.location_id,
-                  e.default_pulse
+                  e.default_pulse,
+                  e.type,
+                  e.is_active
             ))
-            .FirstOrDefaultAsync(ct) ?? new OutputDto(0,string.Empty,0,0,string.Empty,0,0);
+            .FirstOrDefaultAsync(ct) ?? new OutputDto(0,string.Empty,string.Empty,0,0,0,0,string.Empty,0,0,0,string.Empty,false);
+      }
+
+      public async Task<short> GetLowestOutputComponentIdByMacAsync(string Mac, CancellationToken ct = default)
+      {
+            return (short)await ComponentHelper.LowestUnassignedNumberAsync<Persistences.Entities.Outputs>(
+                  context,
+                  x => x.mac.Equals(Mac),
+                  x => x.component_id,
+                  10,
+                  ct
+            );
       }
 
       public async Task<Pagination<OutputDto>> GetPaginationAsync(PaginationParams param,CancellationToken ct = default)
@@ -106,11 +128,17 @@ public sealed class OutputRepository(OutputDbContext context) : IOutputRepositor
             .Select(e => new OutputDto(
                   e.id,
                   e.name,
-                  e.module_id,
+                  e.mac,
+                  e.component_id,
+                  e.device_component_id,
+                  e.module_component_id,
                   e.output_no,
                   e.model,
+                  e.mode,
                   e.location_id,
-                  e.default_pulse
+                  e.default_pulse,
+                  e.type,
+                  e.is_active
             )).ToListAsync(ct);
 
             return new Pagination<OutputDto>(param.pageNumber,param.pageSize,count,(int)Math.Ceiling(count / (double)param.pageSize),res);
@@ -120,7 +148,7 @@ public sealed class OutputRepository(OutputDbContext context) : IOutputRepositor
 
       public async Task<IEnumerable<short>> GetUnavailableOutputByModuleIdAsync(int moduleId, CancellationToken ct = default)
       {
-            return await context.Outputs.AsNoTracking().Where(x => x.module_id == moduleId).Select(x => x.output_no).ToArrayAsync();
+            return await context.Outputs.AsNoTracking().Where(x => x.module_component_id == moduleId).Select(x => x.output_no).ToArrayAsync();
       }
 
       public async Task<bool> IsAnyWithIdAsync(int Id, CancellationToken ct = default)

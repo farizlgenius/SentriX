@@ -58,7 +58,7 @@ public sealed class ModuleCommand(ILogger<ModuleCommand> logger) : BaseCommand, 
             var result = Send((short)enCfgCmnd.enCcSio, c);
             if (result)
             {
-                  logger.LogInformation(MessageHelper.CommandSuccess(CommandConstant.SioPanelConfiguration, ScpId));
+                  logger.LogInformation(LogMessageHelper.CommandSuccess(CommandConstant.SioPanelConfiguration, ScpId));
 
                   return new CommandResponse(
                         Mac,
@@ -76,7 +76,7 @@ public sealed class ModuleCommand(ILogger<ModuleCommand> logger) : BaseCommand, 
             }
             else
             {
-                  logger.LogError(MessageHelper.CommandUnsuccess(CommandConstant.SioPanelConfiguration, ScpId));
+                  logger.LogError(LogMessageHelper.CommandUnsuccess(CommandConstant.SioPanelConfiguration, ScpId));
                   return new CommandResponse(
                         Mac,
                        ScpId,
@@ -102,7 +102,7 @@ public sealed class ModuleCommand(ILogger<ModuleCommand> logger) : BaseCommand, 
             var result = Send((short)enCfgCmnd.enCcSioSrq, c);
             if (result)
             {
-                  logger.LogInformation(MessageHelper.CommandSuccess(CommandConstant.SioStatusReq, ScpId));
+                  logger.LogInformation(LogMessageHelper.CommandSuccess(CommandConstant.SioStatusReq, ScpId));
 
                   return new CommandResponse(
                         Mac,
@@ -120,7 +120,7 @@ public sealed class ModuleCommand(ILogger<ModuleCommand> logger) : BaseCommand, 
             }
             else
             {
-                  logger.LogError(MessageHelper.CommandUnsuccess(CommandConstant.SioStatusReq, ScpId));
+                  logger.LogError(LogMessageHelper.CommandUnsuccess(CommandConstant.SioStatusReq, ScpId));
                   return new CommandResponse(
                         Mac,
                        ScpId,

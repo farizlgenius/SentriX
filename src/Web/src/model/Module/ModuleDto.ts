@@ -1,6 +1,8 @@
 export interface ModuleDto
 {
     id:number,
+    componentId:number;
+    deviceComponentId:number;
     name:string,
     fw:string,
     serialNumber:string,
@@ -8,5 +10,7 @@ export interface ModuleDto
     address:number,
     mac:string,
     model:string,
-    deviceId:number
+    locationId:number;
+    type:string;
+    isActive:boolean;
 }
