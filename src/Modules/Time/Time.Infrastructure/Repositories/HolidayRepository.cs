@@ -46,6 +46,59 @@ public sealed class HolidayRepository(TimeDbContext context) : IHolidayRepositor
             
       }
 
+      public async Task<HolidayDto> DeleteByIdAsync(int id, CancellationToken ct = default)
+      {
+            var data = await context.Holidays.OrderByDescending(x => x.id)
+            .Where(x => x.id == id)
+            .FirstOrDefaultAsync();
+
+            if(data == null)
+                  throw new Exception(MessageHelper.DB.RecordNotFound);
+
+            var res = context.Holidays.Remove(data);
+            return new HolidayDto(
+                  res.Entity.id,
+                  res.Entity.component_id,
+                  res.Entity.name,
+                  res.Entity.year,
+                  res.Entity.month,
+                  res.Entity.day,
+                  res.Entity.metadata,
+                  res.Entity.location_id,
+                  res.Entity.is_active
+                  );
+      }
+
+      public async Task<HolidayDto> GetByIdAsync(int id, CancellationToken ct = default)
+      {
+            return await context.Holidays.AsNoTracking()
+            .OrderByDescending(x => x.id)
+            .Where(x => x.id == id)
+            .Select(x => new HolidayDto(
+                  x.id,
+                  x.component_id,
+                  x.name,
+                  x.year,
+                  x.month,
+                  x.day,
+                  x.metadata,
+                  x.location_id,
+                  x.is_active
+            ))
+            .FirstOrDefaultAsync() ?? new HolidayDto(
+                  0,
+                  0,
+                  string.Empty,
+                  0,
+                  0,
+                  0,
+                  string.Empty,
+                  0,
+                  false
+                  );
+            
+      }
+
       public async Task<int> GetLowestHolidayComponentIdAsync(CancellationToken ct = default)
       {
             return await ComponentHelper.LowestUnassignedNumberAsync<Persistences.Entities.Holiday>
@@ -57,7 +110,7 @@ public sealed class HolidayRepository(TimeDbContext context) : IHolidayRepositor
             );
       }
 
-      public async Task<Pagination<HolidayDto>> HolidayPaginationAsync(PaginationParams param, CancellationToken ct = default)
+      public async Task<Pagination<HolidayDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
       {
             var query = context.Holidays.AsNoTracking().AsQueryable();
 

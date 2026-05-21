@@ -387,7 +387,7 @@ var defaultReader: ReaderDto = {
       res.data.data.map((a: TimeZoneDto) => {
         setTimeZoneOption(prev => [...prev, {
           label: a.name,
-          value: a.timezoneId,
+          value: a.componentId,
           isTaken: false
         }])
       })

@@ -37,14 +37,15 @@ const TimeZone = () => {
     {/* Data */ }
     const defaultDto: TimeZoneDto = {
         locationId: locationId,
-        timezoneId: -1,
+        componentId: -1,
         isActive: true,
         name: "",
         mode: -1,
         active: "",
         deactive: "",
         intervals: [],
-        id: 0
+        id: 0,
+        type: ''
     }
 
     const [timeZoneDto, setTimeZoneDto] = useState<TimeZoneDto>(defaultDto);
@@ -161,10 +162,10 @@ const TimeZone = () => {
         <>
             <PageBreadcrumb pageTitle="Time Zone" />
             {form ?
-                <BaseForm tabContent={tabContent} />
+                <BaseForm tabContent={tabContent} header={''} desc={''} />
 
                 :
-                <BaseTable<TimeZoneDto> keys={TIMEZONE_KEY} headers={TIMEZONE_TABLE_HEAD} data={timeZonesDto} onRemove={handleRemove} onEdit={handleEdit} onInfo={handleInfo} onClick={handleClick} select={selectedObjects} setSelect={setSelectedObjects}  permission={filterPermission(FeatureId.TIME)} fetchData={fetchData} locationId={locationId} refresh={refresh}/>
+                <BaseTable<TimeZoneDto> keys={TIMEZONE_KEY} headers={TIMEZONE_TABLE_HEAD} data={timeZonesDto} onRemove={handleRemove} onEdit={handleEdit} onInfo={handleInfo} onClick={handleClick} select={selectedObjects} setSelect={setSelectedObjects}  permission={filterPermission(FeatureId.time)} fetchData={fetchData} locationId={locationId} refresh={refresh}/>
 
             }
 

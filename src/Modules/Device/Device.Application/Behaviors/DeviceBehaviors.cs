@@ -43,6 +43,9 @@ public sealed class DeviceBehaviors(IDeviceRepository repo,IMessageBus bus,IAdap
                   dto.Metadata,
                   dto.IsActive);
 
+            // TODO: Map domain to dto using AutoMapper or similar library
+            await adapterFactory.GetAdapter(dto.Type).Device.CreateDeviceAsync(dto.Mac,dto.ComponentId);
+
             var res = await repo.CreateAsync(device,ct);
 
             var module = new Device.Domain.Entities.Module(
@@ -61,20 +64,17 @@ public sealed class DeviceBehaviors(IDeviceRepository repo,IMessageBus bus,IAdap
                   dto.IsActive
                   );
 
-            await repo.CreateModuleAsync(module);
-            
-            // TODO: Map domain to dto using AutoMapper or similar library
-            await adapterFactory.GetAdapter(Venders.AERO).Device.CreateDeviceAsync(res);
+            await repo.CreateModuleAsync(module);   
 
             return res;
       }
 
-      public async Task<ModuleDto> CreateModuleAsync(CreateModuleDto dto,CancellationToken ct = default)
+      public async Task<ModuleDto> CreateModuleAsync(CreateModuleDto dto, CancellationToken ct = default)
       {
             var deviceId = await repo.GetIdByMacAsync(dto.Mac);
             var module = new Device.Domain.Entities.Module(
                   0,
-                  (short)await repo.GetLowestModuleComponentIdByDeviceIdAsync(deviceId,ct),
+                  (short)await repo.GetLowestModuleComponentIdByDeviceIdAsync(deviceId, ct),
                   $"{((SioModel)dto.Model).ToString()}",
                   string.Empty,
                   string.Empty,
@@ -87,19 +87,20 @@ public sealed class DeviceBehaviors(IDeviceRepository repo,IMessageBus bus,IAdap
                   dto.LocationId,
                   true
                   );
-            var res = await repo.CreateModuleAsync(module,ct);
 
-            dto.Module_id = res.Id;
-            dto.Mac = res.Mac;
 
-            await adapterFactory.GetAdapter(Venders.AERO).Device.CreateModuleAsync(
-                  res.Mac,
-                  (short)res.DeviceComponentId,
-                  res.ComponentId,
-                  dto.Model,
-                  res.Address,
-                  res.Port
-            );
+            await adapterFactory.GetAdapter(dto.Type).Device.CreateModuleAsync(
+                 dto.Mac,
+                 (short)dto.DeviceComponentId,
+                 dto.ComponentId,
+                 dto.Model,
+                 dto.Address,
+                 dto.Port
+           );
+
+
+            var res = await repo.CreateModuleAsync(module, ct);
+
 
             return res;
       }

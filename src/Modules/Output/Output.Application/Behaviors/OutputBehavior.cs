@@ -1,6 +1,7 @@
 using Adapter.Abstraction.Constants;
 using Adapter.Abstraction.Interfaces;
 using Device.Contract.Queries;
+using Microsoft.AspNetCore.Mvc;
 using Output.Application.Interfaces;
 using Output.Contract.DTOs;
 using Output.Domain.Entities;
@@ -33,19 +34,32 @@ public sealed class OutputBehavior(IOutputRepository repo,IAdapterFactory factor
                   true
                   );
 
-            await factory.GetAdapter(Venders.AERO).Control.CreateAsync(
-                  domain.Mac,
-                  domain.ComponentId,
-                  domain.DeviceComponentId,
-                  domain.ModuleComponentId,
-                  domain.OutputNo,
-                  domain.Mode,
-                  domain.DefaultPulse
-                  );
+             await factory.GetAdapter(dto.Type).Control.CreateAsync(
+                              domain.Mac,
+                              domain.ComponentId,
+                              domain.DeviceComponentId,
+                              domain.ModuleComponentId,
+                              domain.OutputNo,
+                              domain.Mode,
+                              domain.DefaultPulse
+                              );  
 
             var res = await repo.CreateAsync(domain);
 
             return res;
+      }
+
+      public async Task<OutputDto> DeleteByIdAsync(int id)
+      {
+            var res = await repo.GetByIdAsync(id);
+            
+            if(res.Id == 0)
+                  throw new BadRequestException(MessageHelper.Output.OutputIdNotFound(id));
+
+           await factory.GetAdapter(res.Type).Control.DeleteAsync(res.Mac,res.ComponentId,res.ComponentId,res.OutputNo,res.DefaultPulse);
+
+            return await repo.DeleteByIdAsync(id);
+            
       }
 
       public async Task<IEnumerable<short>> GetAvailalbleOutputByModuleIdAsync(int ModuleId)
@@ -58,6 +72,8 @@ public sealed class OutputBehavior(IOutputRepository repo,IAdapterFactory factor
             return outputList.Except(res);
       }
 
+
+
       public async Task<Pagination<OutputDto>> GetPaginationAsync(PaginationParams param)
       {
             var res = await repo.GetPaginationAsync(param);
@@ -66,15 +82,7 @@ public sealed class OutputBehavior(IOutputRepository repo,IAdapterFactory factor
 
       public async Task<IEnumerable<OptionDto>> GetRelayModeAsync(string Type)
       {
-            switch (Type)
-            {
-                  case Venders.AERO:
-                        return await factory.GetAdapter(Venders.AERO).Control.GetRelayModeAsync();
-                  case Venders.AMICO:
-                        return await factory.GetAdapter(Venders.AMICO).Control.GetRelayModeAsync();
-                  default:
-                        return new List<OptionDto>();
-            }
+            return await factory.GetAdapter(Type).Control.GetRelayModeAsync();
       }
 
       public async Task<BaseResponse> TriggerOutputAsync(int id, short Command)
@@ -84,8 +92,38 @@ public sealed class OutputBehavior(IOutputRepository repo,IAdapterFactory factor
                   throw new BadRequestException(MessageHelper.Output.OutputIdNotFound(id));
 
             var output = await repo.GetByIdAsync(id);
+
+            await factory.GetAdapter(output.Type).Control.TriggerOutputAsync(output.Mac,output.DeviceComponentId,output.ComponentId,Command);
+            
                   
-            await factory.GetAdapter(Venders.AERO).Control.TriggerOutputAsync(output.Mac,output.DeviceComponentId,output.ComponentId,Command);
+            
             return new BaseResponse(System.Net.HttpStatusCode.OK,MessageHelper.Common.Success,DateTime.UtcNow);
+      }
+
+      public async Task<OutputDto> UpdateAsync(OutputDto dto)
+      {
+            var res = await repo.GetByIdAsync(dto.Id);
+            if(res.Id == 0)
+                  throw new BadRequestException(MessageHelper.Common.RecordNotFound);
+
+            var domain = new Outputs(
+                  0,
+                  dto.ComponentId,
+                  dto.Mac,
+                  dto.Name,
+                  dto.DeviceComponentId,
+                  dto.ModuleComponentId,
+                  dto.OutputNo,
+                  dto.Model,
+                  dto.RelayMode,
+                  dto.Type,
+                  dto.LocationId,
+                  dto.DefaultPulse,
+                  dto.IsActive
+                  );
+
+           await factory.GetAdapter(domain.Type).Control.UpdateAsync(domain.Mac,domain.ComponentId,domain.ComponentId,domain.ModuleComponentId,domain.OutputNo,domain.Mode,domain.DefaultPulse);
+
+            return await repo.UpdateAsync(domain);
       }
 }

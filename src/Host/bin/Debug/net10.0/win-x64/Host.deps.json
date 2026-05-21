@@ -852,7 +852,8 @@
       "Adapter.Abstraction/1.0.0": {
         "dependencies": {
           "Device.Contract": "1.0.0",
-          "Output.Contract": "1.0.0"
+          "Output.Contract": "1.0.0",
+          "Time.Contract": "1.0.0"
         },
         "runtime": {
           "Adapter.Abstraction.dll": {
@@ -1335,7 +1336,8 @@
       },
       "Time.Domain/1.0.0": {
         "dependencies": {
-          "SharedKernel": "1.0.0"
+          "SharedKernel": "1.0.0",
+          "Time.Contract": "1.0.0"
         },
         "runtime": {
           "Time.Domain.dll": {

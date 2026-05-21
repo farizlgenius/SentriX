@@ -33,6 +33,17 @@ public sealed class AeroRepository(AeroDbContext context) : IAeroRepository
             )).ToArrayAsync();
       }
 
+      public async Task<IEnumerable<OptionDto>> GetTimezoneModeAsync(CancellationToken ct = default)
+      {
+            return await context.TimezoneModes.AsNoTracking().Select(x => new OptionDto(
+                  x.label,
+                  x.value,
+                  x.description,
+                  0,
+                  false
+            )).ToArrayAsync();
+      }
+
       public async Task<ScpDeviceSpecification> GetScpDeviceSpecificationAsync(CancellationToken ct = default)
       {
             return await context.ScpDeviceSpecifications.AsNoTracking()

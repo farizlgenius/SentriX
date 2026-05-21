@@ -12,6 +12,8 @@ public interface IOutputRepository
       Task<bool> IsAnyWithIdAsync(int Id,CancellationToken ct = default);
       Task<OutputDto> GetByIdAsync(int id,CancellationToken ct = default);
       Task<short> GetLowestOutputComponentIdByMacAsync(string Mac,CancellationToken ct = default);
+      Task<OutputDto> DeleteByIdAsync(int id,CancellationToken ct= default);
+      Task<OutputDto> UpdateAsync(Outputs dto,CancellationToken ct = default);
 
 
 }

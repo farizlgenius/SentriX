@@ -1,5 +1,6 @@
 using System.Data.Common;
 using Device.Contract.DTOs;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Output.Application.Interfaces;
 using Output.Contract.DTOs;
@@ -38,6 +39,36 @@ public sealed class OutputRepository(OutputDbContext context) : IOutputRepositor
                   data.Entity.type,
                   data.Entity.is_active
             );
+      }
+
+      public async Task<OutputDto> DeleteByIdAsync(int id, CancellationToken ct = default)
+      {
+            var entity = await context.Outputs.OrderByDescending(x => x.id).Where(x => x.id == id).FirstOrDefaultAsync();
+
+            if(entity == null)
+                  return new OutputDto(0,string.Empty,string.Empty,0,0,0,0,string.Empty,0,0,0,string.Empty,false);
+
+            var data = context.Outputs.Remove(entity);
+            var save = await context.SaveChangesAsync(ct);
+
+            if(data.Entity == null || save <= 0)
+                  throw new Exception(MessageHelper.DB.DeleteRecordUnsuccessful);
+
+            return new OutputDto(
+                  data.Entity.id,
+                  data.Entity.name,
+                  data.Entity.mac,
+                  data.Entity.component_id,
+                  data.Entity.device_component_id,
+                  data.Entity.module_component_id,
+                  data.Entity.output_no,
+                  data.Entity.model,
+                  data.Entity.mode,
+                  data.Entity.location_id,
+                  data.Entity.default_pulse,
+                  data.Entity.type,
+                  data.Entity.is_active);
+
       }
 
       public async Task<OutputDto> GetByIdAsync(int id, CancellationToken ct = default)
@@ -154,5 +185,35 @@ public sealed class OutputRepository(OutputDbContext context) : IOutputRepositor
       public async Task<bool> IsAnyWithIdAsync(int Id, CancellationToken ct = default)
       {
             return await context.Outputs.AsNoTracking().AnyAsync(x => x.id == Id,ct);
+      }
+
+      public async Task<OutputDto> UpdateAsync(Outputs domain, CancellationToken ct = default)
+      {
+            var entity = await context.Outputs.Where(x => x.id == domain.Id).FirstOrDefaultAsync();
+            if(entity == null)
+                  throw new Exception(MessageHelper.DB.RecordNotFound);
+
+            entity.Update(domain);
+            var data = context.Outputs.Update(entity);
+            var save = await context.SaveChangesAsync(ct);
+
+            if(data.Entity == null || save <= 0)
+                  throw new Exception(MessageHelper.DB.UpdateRecordUnsuccessful);
+
+            return new OutputDto(
+                  data.Entity.id,
+                  data.Entity.name,
+                  data.Entity.mac,
+                  data.Entity.component_id,
+                  data.Entity.device_component_id,
+                  data.Entity.module_component_id,
+                  data.Entity.output_no,
+                  data.Entity.model,
+                  data.Entity.mode,
+                  data.Entity.location_id,
+                  data.Entity.default_pulse,
+                  data.Entity.type,
+                  data.Entity.is_active
+                  );
       }
 }

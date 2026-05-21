@@ -21,4 +21,13 @@ public interface IOutputCommand
             short DefaultPulse
       );
       CommandResponse ControlPointCommand(short ScpId,string Mac,int CpId,short Command);
+      CommandResponse DeleteControlPoint(
+             string Mac,
+            short ScpId,
+            short CpNumber,
+            short OpNumber,
+            short DefaultPulse
+      );
+
+
 }

@@ -1776,11 +1776,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\code\\sentrix\\src\\Modules\\Role\\Role.Infrastructure\\Role.Infrastructure.csproj",
+      "projectUniqueName": "d:\\code\\sentrix\\src\\Modules\\Role\\Role.Infrastructure\\Role.Infrastructure.csproj",
       "projectName": "Role.Infrastructure",
-      "projectPath": "D:\\code\\sentrix\\src\\Modules\\Role\\Role.Infrastructure\\Role.Infrastructure.csproj",
+      "projectPath": "d:\\code\\sentrix\\src\\Modules\\Role\\Role.Infrastructure\\Role.Infrastructure.csproj",
       "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-      "outputPath": "D:\\code\\sentrix\\src\\Modules\\Role\\Role.Infrastructure\\obj\\",
+      "outputPath": "d:\\code\\sentrix\\src\\Modules\\Role\\Role.Infrastructure\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -1801,8 +1801,8 @@
         "net10.0": {
           "targetAlias": "net10.0",
           "projectReferences": {
-            "D:\\code\\sentrix\\src\\Modules\\Contracts\\Location.Contract\\Location.Contract.csproj": {
-              "projectPath": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Location.Contract\\Location.Contract.csproj"
+            "d:\\code\\sentrix\\src\\Modules\\Contracts\\Location.Contract\\Location.Contract.csproj": {
+              "projectPath": "d:\\code\\sentrix\\src\\Modules\\Contracts\\Location.Contract\\Location.Contract.csproj"
             },
             "D:\\code\\sentrix\\src\\Modules\\Role\\Role.Application\\Role.Application.csproj": {
               "projectPath": "D:\\code\\sentrix\\src\\Modules\\Role\\Role.Application\\Role.Application.csproj"

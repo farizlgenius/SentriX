@@ -164,4 +164,57 @@ public sealed class OutputCommand(ILogger<OutputCommand> logger) : BaseCommand,I
 
             }
       }
+
+      public CommandResponse DeleteControlPoint(
+             string Mac,
+            short ScpId,
+            short CpNumber,
+            short OpNumber,
+            short DefaultPulse
+      )
+      {
+            CC_CP c = new CC_CP();
+            c.lastModified = 0;
+            c.scp_number = ScpId;
+            c.cp_number = CpNumber;
+            c.sio_number = -1;
+            c.op_number = OpNumber;
+            c.dflt_pulse = DefaultPulse;
+            var result = Send((short)enCfgCmnd.enCcCP,c);
+            if (result)
+            {
+                  logger.LogInformation(LogMessageHelper.CommandSuccess(CommandConstant.ControlPointConfiguration, ScpId));
+
+                  return new CommandResponse(
+                        Mac,
+                        ScpId,
+                        CommandConstant.ControlPointConfiguration,
+                        SCPDLL.scpGetTagLastPosted(ScpId),
+                        DateTime.UtcNow,
+                        DateTime.UtcNow,
+                        string.Empty,
+                        CommandStatus.PENDING.ToString(),
+                        string.Empty,
+                        true
+                        );
+
+            }
+            else
+            {
+                  logger.LogError(LogMessageHelper.CommandUnsuccess(CommandConstant.ControlPointConfiguration, ScpId));
+                  return new CommandResponse(
+                        Mac,
+                       ScpId,
+                       CommandConstant.ControlPointConfiguration,
+                       -1,
+                       DateTime.UtcNow,
+                       DateTime.UtcNow,
+                       string.Empty,
+                       CommandStatus.FAILED.ToString(),
+                       string.Empty,
+                       false
+                       );
+
+            }
+      }
 }

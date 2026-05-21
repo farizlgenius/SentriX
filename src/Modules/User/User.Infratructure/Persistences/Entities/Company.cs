@@ -8,7 +8,6 @@ public sealed class Company : BaseEntity
       public string name { get; set; } = string.Empty;
       public string description { get; set; } = string.Empty;
       public ICollection<Users> users { get; set; } = new List<Users>();
-      public int location_id {get; set;}
 
       public Company() { }
 

@@ -43,6 +43,21 @@ namespace Host.Controllers
                   return Ok(res);
             }
 
+            [HttpDelete("{id}")]
+            public async Task<IActionResult> DeleteOutputByIdAsync(int id)
+            {
+                  var res = await output.DeleteByIdAsync(id);
+                  return Ok(res);
+            }
+
+            [HttpPut]
+            public async Task<IActionResult> UpdateAsync([FromBody]OutputDto dto )
+            {
+                  var res = await output.UpdateAsync(dto);
+                  return Ok(res);
+            }
+
+
 
       }
 

@@ -30,7 +30,7 @@ public interface IDeviceRepository
       Task<int> GetLowestModuleComponentIdByDeviceIdAsync(int DeviceId,CancellationToken ct = default);
       Task<DeviceDto> GetDeviceByComponentIdAsync(int ComponentId,CancellationToken ct = default);
       Task<short> GetComponentIdByIdAsync(int id,CancellationToken ct = default);
-      Task<IEnumerable<(string Mac,short ComponentId)>> MacAndComponentIdListAsync(int LocationId,CancellationToken ct = default);
+      Task<IEnumerable<(string Mac,short ComponentId,string Type)>> MacAndComponentIdListAsync(int LocationId,CancellationToken ct = default);
       Task<string> GetMacByComponentIdAsync(int ComponentId);
 
 }

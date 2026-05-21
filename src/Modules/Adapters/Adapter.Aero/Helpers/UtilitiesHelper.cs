@@ -17,6 +17,36 @@ public sealed class UtilitiesHelper
             return dto.ToUnixTimeSeconds();
       }
 
+      public static int ConvertDayToBinary(
+            bool Sunday,
+            bool Monday,
+            bool Tuesday,
+            bool Wednesday,
+            bool Thursday,
+            bool Friday,
+            bool Saturday
+            )
+      {
+            int result = 0;
+            result |= (Sunday ? 1 : 0) << 0;
+            result |= (Monday ? 1 : 0) << 1;
+            result |= (Tuesday ? 1 : 0) << 2;
+            result |= (Wednesday ? 1 : 0) << 3;
+            result |= (Thursday ? 1 : 0) << 4;
+            result |= (Friday ? 1 : 0) << 5;
+            result |= (Saturday ? 1 : 0) << 6;
+            // Holiday
+            //result |= 0 << 8;
+            //result |= 0 << 9;
+            //result |= 0 << 10;
+            //result |= 0 << 11;
+            //result |= 0 << 12;
+            //result |= 0 << 13;
+            //result |= 0 << 14;
+            //result |= 0 << 15;
+            return result;
+      }
+
     
 
 

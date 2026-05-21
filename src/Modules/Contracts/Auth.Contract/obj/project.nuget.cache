@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "4iQ8p9DyFTE=",
+  "dgSpecHash": "gscdlJiGVZg=",
   "success": true,
-  "projectFilePath": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Auth.Contract\\Auth.Contract.csproj",
+  "projectFilePath": "d:\\code\\sentrix\\src\\Modules\\Contracts\\Auth.Contract\\Auth.Contract.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\User\\.nuget\\packages\\microsoft.entityframeworkcore\\10.0.4\\microsoft.entityframeworkcore.10.0.4.nupkg.sha512",
     "C:\\Users\\User\\.nuget\\packages\\microsoft.entityframeworkcore.abstractions\\10.0.4\\microsoft.entityframeworkcore.abstractions.10.0.4.nupkg.sha512",

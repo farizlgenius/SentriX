@@ -4,8 +4,10 @@ D:\code\sentrix\src\Modules\Contracts\Adapter.Abstraction\bin\Debug\net10.0\Adap
 D:\code\sentrix\src\Modules\Contracts\Adapter.Abstraction\bin\Debug\net10.0\Device.Contract.dll
 D:\code\sentrix\src\Modules\Contracts\Adapter.Abstraction\bin\Debug\net10.0\Output.Contract.dll
 D:\code\sentrix\src\Modules\Contracts\Adapter.Abstraction\bin\Debug\net10.0\SharedKernel.dll
+D:\code\sentrix\src\Modules\Contracts\Adapter.Abstraction\bin\Debug\net10.0\Time.Contract.dll
 D:\code\sentrix\src\Modules\Contracts\Adapter.Abstraction\bin\Debug\net10.0\Device.Contract.pdb
 D:\code\sentrix\src\Modules\Contracts\Adapter.Abstraction\bin\Debug\net10.0\Output.Contract.pdb
+D:\code\sentrix\src\Modules\Contracts\Adapter.Abstraction\bin\Debug\net10.0\Time.Contract.pdb
 D:\code\sentrix\src\Modules\Contracts\Adapter.Abstraction\bin\Debug\net10.0\SharedKernel.pdb
 D:\code\sentrix\src\Modules\Contracts\Adapter.Abstraction\obj\Debug\net10.0\Adapter.Abstraction.csproj.AssemblyReference.cache
 D:\code\sentrix\src\Modules\Contracts\Adapter.Abstraction\obj\Debug\net10.0\Adapter.Abstraction.GeneratedMSBuildEditorConfig.editorconfig

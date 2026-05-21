@@ -9,6 +9,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Device.Contract\Device.Contract.csproj" />
     <ProjectReference Include="..\Output.Contract\Output.Contract.csproj" />
+    <ProjectReference Include="..\Time.Contract\Time.Contract.csproj" />
   </ItemGroup>
 
   <ItemGroup>

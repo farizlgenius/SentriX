@@ -1782,8 +1782,8 @@
         "net10.0": {
           "targetAlias": "net10.0",
           "projectReferences": {
-            "D:\\code\\sentrix\\src\\Modules\\Contracts\\Location.Contract\\Location.Contract.csproj": {
-              "projectPath": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Location.Contract\\Location.Contract.csproj"
+            "d:\\code\\sentrix\\src\\Modules\\Contracts\\Location.Contract\\Location.Contract.csproj": {
+              "projectPath": "d:\\code\\sentrix\\src\\Modules\\Contracts\\Location.Contract\\Location.Contract.csproj"
             },
             "D:\\code\\sentrix\\src\\Modules\\Location\\Location.Application\\Location.Application.csproj": {
               "projectPath": "D:\\code\\sentrix\\src\\Modules\\Location\\Location.Application\\Location.Application.csproj"

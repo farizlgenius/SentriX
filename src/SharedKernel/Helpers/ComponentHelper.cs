@@ -23,7 +23,7 @@ public static class ComponentHelper
 
             // If table is empty → start from 1
             if (!await query.AnyAsync(ct))
-                  return 0;
+                  return 1;
 
             // Load only the number column
             var numbers = await query

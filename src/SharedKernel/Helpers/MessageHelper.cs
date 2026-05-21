@@ -49,7 +49,7 @@ public static class MessageHelper
       public static class DB
       {
             public static string SaveRecordUnsuccessful = "Save record unsuccessful.";
-            public static string RecordNotFound = "Record not found.";
+            public static string RecordNotFound = "Record not found in DB.";
             public static string DeleteRecordUnsuccessful = "Delete record unsuccessful.";
             public static string UpdateRecordUnsuccessful = "Update record unsuccessful.";
             public static string QueryIdInvalid = "Query id invalid.";
@@ -74,5 +74,12 @@ public static class MessageHelper
       {
             public static string OutputIdNotFound(int id) => $"Output with 'id {id}' not found.";
       }
+
+      public static class Time
+      {
+            public static string HolidayNotFound(int id) => $"Holiday with 'id {id}' not found.";
+            public static string TimezoneNotFound(int id) => $"Timezone with 'id {id}' not found.";
+      }
+
 
 }

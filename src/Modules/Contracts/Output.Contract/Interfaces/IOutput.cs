@@ -8,5 +8,8 @@ public interface IOutput
       Task<IEnumerable<short>> GetAvailalbleOutputByModuleIdAsync(int ModuleId);
       Task<IEnumerable<OptionDto>> GetRelayModeAsync(string Type);
       Task<BaseResponse> TriggerOutputAsync(int id,short Command);
+      Task<OutputDto> DeleteByIdAsync(int id);
+      Task<OutputDto> UpdateAsync(OutputDto dto);
+
 
 }

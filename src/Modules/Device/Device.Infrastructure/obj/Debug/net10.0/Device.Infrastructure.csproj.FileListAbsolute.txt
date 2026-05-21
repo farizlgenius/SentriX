@@ -8,6 +8,7 @@ D:\code\sentrix\src\Modules\Device\Device.Infrastructure\bin\Debug\net10.0\Devic
 D:\code\sentrix\src\Modules\Device\Device.Infrastructure\bin\Debug\net10.0\Location.Contract.dll
 D:\code\sentrix\src\Modules\Device\Device.Infrastructure\bin\Debug\net10.0\Output.Contract.dll
 D:\code\sentrix\src\Modules\Device\Device.Infrastructure\bin\Debug\net10.0\SharedKernel.dll
+D:\code\sentrix\src\Modules\Device\Device.Infrastructure\bin\Debug\net10.0\Time.Contract.dll
 D:\code\sentrix\src\Modules\Device\Device.Infrastructure\bin\Debug\net10.0\SharedKernel.pdb
 D:\code\sentrix\src\Modules\Device\Device.Infrastructure\bin\Debug\net10.0\Device.Application.pdb
 D:\code\sentrix\src\Modules\Device\Device.Infrastructure\bin\Debug\net10.0\Adapter.Abstraction.pdb
@@ -15,6 +16,7 @@ D:\code\sentrix\src\Modules\Device\Device.Infrastructure\bin\Debug\net10.0\Devic
 D:\code\sentrix\src\Modules\Device\Device.Infrastructure\bin\Debug\net10.0\Device.Domain.pdb
 D:\code\sentrix\src\Modules\Device\Device.Infrastructure\bin\Debug\net10.0\Location.Contract.pdb
 D:\code\sentrix\src\Modules\Device\Device.Infrastructure\bin\Debug\net10.0\Output.Contract.pdb
+D:\code\sentrix\src\Modules\Device\Device.Infrastructure\bin\Debug\net10.0\Time.Contract.pdb
 D:\code\sentrix\src\Modules\Device\Device.Infrastructure\obj\Debug\net10.0\Device.Infrastructure.csproj.AssemblyReference.cache
 D:\code\sentrix\src\Modules\Device\Device.Infrastructure\obj\Debug\net10.0\Device.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
 D:\code\sentrix\src\Modules\Device\Device.Infrastructure\obj\Debug\net10.0\Device.Infrastructure.AssemblyInfoInputs.cache

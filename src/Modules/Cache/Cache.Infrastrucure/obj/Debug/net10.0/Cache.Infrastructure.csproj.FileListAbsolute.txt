@@ -1,4 +1,4 @@
-D:\code\sentrix\src\Modules\Cache\Cache.Infrastrucure\bin\Debug\net10.0\Cache.Infrastructure.deps.json
+d:\code\sentrix\src\Modules\Cache\Cache.Infrastrucure\bin\Debug\net10.0\Cache.Infrastructure.deps.json
 D:\code\sentrix\src\Modules\Cache\Cache.Infrastrucure\bin\Debug\net10.0\Cache.Infrastructure.dll
 D:\code\sentrix\src\Modules\Cache\Cache.Infrastrucure\bin\Debug\net10.0\Cache.Infrastructure.pdb
 D:\code\sentrix\src\Modules\Cache\Cache.Infrastrucure\bin\Debug\net10.0\Cache.Application.dll
@@ -13,8 +13,8 @@ D:\code\sentrix\src\Modules\Cache\Cache.Infrastrucure\obj\Debug\net10.0\Cache.In
 D:\code\sentrix\src\Modules\Cache\Cache.Infrastrucure\obj\Debug\net10.0\Cache.Infrastructure.AssemblyInfo.cs
 D:\code\sentrix\src\Modules\Cache\Cache.Infrastrucure\obj\Debug\net10.0\Cache.Infrastructure.csproj.CoreCompileInputs.cache
 D:\code\sentrix\src\Modules\Cache\Cache.Infrastrucure\obj\Debug\net10.0\Cache.Infrastructure.sourcelink.json
-D:\code\sentrix\src\Modules\Cache\Cache.Infrastrucure\obj\Debug\net10.0\Cache.In.A4075B54.Up2Date
+d:\code\sentrix\src\Modules\Cache\Cache.Infrastrucure\obj\Debug\net10.0\Cache.In.A4075B54.Up2Date
 D:\code\sentrix\src\Modules\Cache\Cache.Infrastrucure\obj\Debug\net10.0\Cache.Infrastructure.dll
 D:\code\sentrix\src\Modules\Cache\Cache.Infrastrucure\obj\Debug\net10.0\refint\Cache.Infrastructure.dll
 D:\code\sentrix\src\Modules\Cache\Cache.Infrastrucure\obj\Debug\net10.0\Cache.Infrastructure.pdb
-D:\code\sentrix\src\Modules\Cache\Cache.Infrastrucure\obj\Debug\net10.0\ref\Cache.Infrastructure.dll
+d:\code\sentrix\src\Modules\Cache\Cache.Infrastrucure\obj\Debug\net10.0\ref\Cache.Infrastructure.dll

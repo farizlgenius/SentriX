@@ -8,6 +8,9 @@ public sealed class TimeDbContext(DbContextOptions<TimeDbContext> options) : DbC
 {
       public const string Schema = "time";
       public DbSet<Holiday> Holidays { get; set; }
+      public DbSet<Timezone> Timezones {get; set;}
+      public DbSet<Interval> Intervals {get; set;}
+      public DbSet<DayInWeek> DayInWeeks {get; set;}
 
       protected override void OnModelCreating(ModelBuilder modelBuilder)
       {
@@ -45,6 +48,18 @@ public sealed class TimeDbContext(DbContextOptions<TimeDbContext> options) : DbC
                             .ValueGeneratedOnAdd();
                   }
             }
+
+            modelBuilder.Entity<Timezone>()
+            .HasMany(x => x.intervals)
+            .WithOne(x => x.timezone)
+            .HasForeignKey(x => x.timezone_id)
+            .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Interval>()
+            .HasOne(x => x.days)
+            .WithOne(x => x.interval)
+            .HasForeignKey<DayInWeek>(x => x.interval_id)
+            .OnDelete(DeleteBehavior.Cascade);
 
            
 

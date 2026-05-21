@@ -23,6 +23,65 @@ namespace Time.Infrastructure.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("Time.Infrastructure.Persistences.Entities.DayInWeek", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<short>("component_id")
+                        .HasColumnType("smallint");
+
+                    b.Property<DateTime>("created_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.Property<bool>("friday")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("interval_id")
+                        .HasColumnType("integer");
+
+                    b.Property<bool>("is_active")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("location_id")
+                        .HasColumnType("integer");
+
+                    b.Property<bool>("monday")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("saturday")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("sunday")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("thursday")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("tuesday")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime>("updated_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.Property<bool>("wednesday")
+                        .HasColumnType("boolean");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("interval_id")
+                        .IsUnique();
+
+                    b.ToTable("DayInWeeks", "time");
+                });
+
             modelBuilder.Entity("Time.Infrastructure.Persistences.Entities.Holiday", b =>
                 {
                     b.Property<int>("id")
@@ -70,6 +129,138 @@ namespace Time.Infrastructure.Migrations
                     b.HasKey("id");
 
                     b.ToTable("Holidays", "time");
+                });
+
+            modelBuilder.Entity("Time.Infrastructure.Persistences.Entities.Interval", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<short>("component_id")
+                        .HasColumnType("smallint");
+
+                    b.Property<DateTime>("created_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.Property<int>("day_in_week_id")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("days_detail")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("end")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("is_active")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("location_id")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("start")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("timezone_id")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("updated_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("timezone_id");
+
+                    b.ToTable("Intervals", "time");
+                });
+
+            modelBuilder.Entity("Time.Infrastructure.Persistences.Entities.Timezone", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<string>("active")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<short>("component_id")
+                        .HasColumnType("smallint");
+
+                    b.Property<DateTime>("created_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.Property<string>("deactive")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("is_active")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("location_id")
+                        .HasColumnType("integer");
+
+                    b.Property<short>("mode")
+                        .HasColumnType("smallint");
+
+                    b.Property<string>("name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("updated_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.HasKey("id");
+
+                    b.ToTable("Timezones", "time");
+                });
+
+            modelBuilder.Entity("Time.Infrastructure.Persistences.Entities.DayInWeek", b =>
+                {
+                    b.HasOne("Time.Infrastructure.Persistences.Entities.Interval", "interval")
+                        .WithOne("days")
+                        .HasForeignKey("Time.Infrastructure.Persistences.Entities.DayInWeek", "interval_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("interval");
+                });
+
+            modelBuilder.Entity("Time.Infrastructure.Persistences.Entities.Interval", b =>
+                {
+                    b.HasOne("Time.Infrastructure.Persistences.Entities.Timezone", "timezone")
+                        .WithMany("intervals")
+                        .HasForeignKey("timezone_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("timezone");
+                });
+
+            modelBuilder.Entity("Time.Infrastructure.Persistences.Entities.Interval", b =>
+                {
+                    b.Navigation("days")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Time.Infrastructure.Persistences.Entities.Timezone", b =>
+                {
+                    b.Navigation("intervals");
                 });
 #pragma warning restore 612, 618
         }

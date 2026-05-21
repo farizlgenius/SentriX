@@ -59,4 +59,50 @@ public sealed class AeroControlService(IAeroRepository repo,IOutputCommand write
       {
            var res = writer.ControlPointCommand(ScpId,Mac,CpId,Command);
       }
+
+      public async Task DeleteAsync(
+              string Mac,
+            short ScpId,
+            short CpNumber,
+            short OpNumber,
+            short DefaultPulse
+      )
+      {
+            var res = writer.DeleteControlPoint(Mac,ScpId,CpNumber,OpNumber,DefaultPulse);
+
+            await bus.SendAsync(new AddCommandEvent(res));
+      }
+
+      public async Task UpdateAsync(
+              string Mac,
+            short ComponentId,
+            short DeviceComponentId,
+            short ModuleComponentId,
+            short OutputNo,
+            short Mode,
+            short DefaultPulse
+      )
+      {
+            
+             var res = writer.OutputPointSpecification(
+                  Mac,
+                  DeviceComponentId,
+                  ModuleComponentId,
+                  OutputNo,
+                  Mode
+                  );
+
+            await bus.SendAsync(new AddCommandEvent(res));
+
+            res = writer.ControlPointConfiguration(
+                  Mac,
+                  DeviceComponentId,
+                  ComponentId,
+                  ModuleComponentId,
+                  OutputNo,
+                  DefaultPulse
+            );
+
+             await bus.SendAsync(new AddCommandEvent(res));
+      }
 }

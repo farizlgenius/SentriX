@@ -133,7 +133,7 @@ public sealed class EventRepository(EventDbContext context) : IEventRepository
                   return;
 
             entity.status = CommandStatus == 1 ? SharedKernel.Enums.CommandStatus.SUCCESSED.ToString() : SharedKernel.Enums.CommandStatus.FAILED.ToString();
-            if(string.IsNullOrWhiteSpace(Reason))
+            if(!string.IsNullOrWhiteSpace(Reason) && CommandStatus != 1)
                   entity.reason = Reason;
 
             

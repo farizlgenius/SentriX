@@ -18,6 +18,7 @@ public static class TimeDependencyInjection
 
             services.AddScoped<ITime,TimeBehavior>();
             services.AddScoped<IHolidayRepository,HolidayRepository>();
+            services.AddScoped<ITimezoneRepository,TimezoneRepository>();
 
             // ==========================
             // Database

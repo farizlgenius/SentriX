@@ -392,14 +392,14 @@ public sealed class DeviceRepository(DeviceDbContext context) : IDeviceRepositor
             return await context.Devices.AsNoTracking().AnyAsync(d => d.mac.Equals(macAddress), ct);
       }
 
-      public async Task<IEnumerable<(string Mac, short ComponentId)>> MacAndComponentIdListAsync(int LocationId,CancellationToken ct = default)
+      public async Task<IEnumerable<(string Mac, short ComponentId,string Type)>> MacAndComponentIdListAsync(int LocationId,CancellationToken ct = default)
       {
             var list = await context.Devices.AsNoTracking()
             .Where(x => x.location_id == LocationId)
-                  .Select(x => new { x.mac, x.component_id })
+                  .Select(x => new { x.mac, x.component_id,x.type })
                   .ToListAsync(ct);
 
-            return list.Select(x => (x.mac, x.component_id));
+            return list.Select(x => (x.mac, x.component_id,x.type));
 
       }
 

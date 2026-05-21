@@ -688,6 +688,74 @@ namespace Adapter.Aero.Migrations
                     b.ToTable("SioPanelConfiguration", "aero");
                 });
 
+            modelBuilder.Entity("Adapter.Aero.Persistences.Entities.TimezoneMode", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<string>("description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("label")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("value")
+                        .HasColumnType("integer");
+
+                    b.HasKey("id");
+
+                    b.ToTable("TimezoneModes", "aero");
+
+                    b.HasData(
+                        new
+                        {
+                            id = 1,
+                            description = "The time zone is always inactive, regardless of the time zone intervals specified or the holidays in effect.",
+                            label = "Off",
+                            value = 0
+                        },
+                        new
+                        {
+                            id = 2,
+                            description = "The time zone is always active, regardless of the time zone intervals specified or the holidays in effect.",
+                            label = "On",
+                            value = 1
+                        },
+                        new
+                        {
+                            id = 3,
+                            description = "The Time Zone state is decided using either the Day Mask or the Holiday Mask. If the current day is specified as a Holiday, the state relies only on whether the Holiday Mask Flag for that Holiday is set (if today is Holiday 1, and the Holiday Mask sets flag H1, then the state is active. If today is Holiday 1, and the Holiday Mask does not have flag H1 set, then the state is inactive). Holidays override the standard accessibility rules. If the current day is not specified as a Holiday, the Time Zone is active or inactive depending on whether the current day/time falls within the Day Mask. If Day Mask is M-F, 8-5, the Time Zone is active during those times, and inactive on the weekend and outside working hours.",
+                            label = "Scan",
+                            value = 2
+                        },
+                        new
+                        {
+                            id = 4,
+                            description = "Scan time zone interval list and apply only if the date string in expTest matches the current date",
+                            label = "One Time Event",
+                            value = 3
+                        },
+                        new
+                        {
+                            id = 5,
+                            description = "This mode is similar to mode 2, but instead of only checking the Holiday Mask if it is a Holiday, and only checking the Day Mask if not, this mode checks both. If it is not a Holiday, this mode functions normally, only checking the Day Mask. If it is a Holiday, this mode performs a logical OR on the Holiday and Day Masks. If either or both are active, the Time Zone is active, otherwise if neither is active, the Time Zone is inactive.",
+                            label = "Scan, Always Honor Day of Week (OR)",
+                            value = 4
+                        },
+                        new
+                        {
+                            id = 6,
+                            description = "This mode is similar to mode 4, but it performs a logical AND instead of a logical OR. If it is not a Holiday, this mode functions normally, only checking the Day Mask. If it is a Holiday, this mode is only active if BOTH the Day Mask and Holiday Mask are active. If either one is inactive, the entire Time Zone is inactive.",
+                            label = "Scan, Always Honor Day of Week (AND) ",
+                            value = 5
+                        });
+                });
+
             modelBuilder.Entity("Adapter.Aero.Persistences.Entities.ControlPointConfiguration", b =>
                 {
                     b.HasOne("Adapter.Aero.Persistences.Entities.Aeros", "aero")

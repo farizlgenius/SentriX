@@ -29,14 +29,17 @@ public sealed class AeroDeviceService(
             return idReport.IdReportInMemory.Select(x => new IdReportDto(x.ScpId, x.SerialNumber, x.Mac, x.Ip, x.Port, x.Fw)).ToList();
       }
 
-      public async Task CreateDeviceAsync(DeviceDto dto)
+      public async Task CreateDeviceAsync(
+            string Mac,
+            short ComponentId
+      )
       {
 
 
              // Read Structure 
             var res = writer.ScpStructureStatusRead(
-                  dto.Mac,
-                  dto.ComponentId,
+                  Mac,
+                 ComponentId,
                   [
                         (short)SCPStructure.SCPSID_TRAN,
                         (short)SCPStructure.SCPSID_TZ,
@@ -59,7 +62,7 @@ public sealed class AeroDeviceService(
             await bus.SendAsync(new AddCommandEvent(res));
 
 
-            idReport.IdReportInMemory.RemoveAll(x => x.Mac.Equals(dto.Mac));
+            idReport.IdReportInMemory.RemoveAll(x => x.Mac.Equals(Mac));
 
 
       }

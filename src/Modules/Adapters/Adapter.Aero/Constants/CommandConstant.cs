@@ -15,10 +15,12 @@ public static class CommandConstant
       public static string SioStatusReq = "404 : Sio Status Req";
       public static string OutputPointSpecification = "111 : Output Point Specification";
       public static string ControlPointConfiguration = "114 : Control Point Configuration";
+      public static string ControlPointConfigurationDelete = "Delete : Control Point Configuration";
       public static string ControlPointCommand = "307 : Control Point Command";
       public static string AsciiCommandAsync = "ASCII : Command";
       public static string ScpSetId = "318 : Set SCP Id";
       public static string HolidayConfiguration ="1104 : Holiday Configuration";
+      public static string ExtendedTimeZoneActSpecification = "3103 : Extended TimeZone Act Specification";
 }
 
 

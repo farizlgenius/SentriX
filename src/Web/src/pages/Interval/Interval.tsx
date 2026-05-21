@@ -224,7 +224,7 @@ const Interval = () => {
             <PageBreadcrumb pageTitle="Interval" />
             {form ?
                 <>
-                    <BaseForm tabContent={tabContent} />
+                    <BaseForm tabContent={tabContent} header={''} desc={''} />
                 </>
 
                 :
@@ -258,7 +258,7 @@ const Interval = () => {
                                 </div>
                             </TableCell>
                         }
-                    ]} onClick={handleClickWithEvent} permission={filterPermission(FeatureId.TIME)} fetchData={fetchData} locationId={locationId} />
+                    ]} onClick={handleClickWithEvent} permission={filterPermission(FeatureId.time)} fetchData={fetchData} locationId={locationId} />
                 </div>
             }
 

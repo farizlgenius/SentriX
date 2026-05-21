@@ -34,6 +34,15 @@ public sealed class Outputs : BaseEntity
             this.created_at = DateTime.UtcNow;
       }
 
+      public void Update(Domain.Entities.Outputs domain)
+      {
+            name = domain.Name;
+            output_no = domain.OutputNo;
+            mode = domain.Mode;
+            default_pulse = domain.DefaultPulse;
+            this.updated_at = DateTime.UtcNow;
+      }
+
 
 
 }

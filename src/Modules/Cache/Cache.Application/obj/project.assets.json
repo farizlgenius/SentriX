@@ -33,11 +33,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\code\\sentrix\\src\\Modules\\Cache\\Cache.Application\\Cache.Application.csproj",
+      "projectUniqueName": "d:\\code\\sentrix\\src\\Modules\\Cache\\Cache.Application\\Cache.Application.csproj",
       "projectName": "Cache.Application",
-      "projectPath": "D:\\code\\sentrix\\src\\Modules\\Cache\\Cache.Application\\Cache.Application.csproj",
+      "projectPath": "d:\\code\\sentrix\\src\\Modules\\Cache\\Cache.Application\\Cache.Application.csproj",
       "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-      "outputPath": "D:\\code\\sentrix\\src\\Modules\\Cache\\Cache.Application\\obj\\",
+      "outputPath": "d:\\code\\sentrix\\src\\Modules\\Cache\\Cache.Application\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

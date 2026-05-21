@@ -1,15 +1,18 @@
 using System;
+using SharedKernel.Domain;
 
 namespace Device.Contract.DTOs;
 
-public sealed class CreateModuleDto
-{
-      public int Module_id { get; set; }
-      public string Mac { get; set; } = string.Empty;
-      public short Model { get; set; }
-      public short Port { get; set; }
-      public short Address { get; set; }
-      public int DeviceId { get; set; }
-      public int LocationId {get; set;}
+public sealed record CreateModuleDto(
+      short ComponentId,
+      string Mac,
+      short Model,
+      short Port,
+      short Address,
+      int DeviceComponentId,
+      int DeviceId,
+      int LocationId,
+      string Type,
+      bool IsActive
+) : BaseDto(ComponentId,LocationId,Type,IsActive);
 
-}

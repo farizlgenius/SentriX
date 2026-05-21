@@ -347,14 +347,14 @@
         }
       }
     },
-    "D:\\code\\sentrix\\src\\Modules\\Contracts\\Events.Contract\\Events.Contract.csproj": {
+    "d:\\code\\sentrix\\src\\Modules\\Contracts\\Events.Contract\\Events.Contract.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Events.Contract\\Events.Contract.csproj",
+        "projectUniqueName": "d:\\code\\sentrix\\src\\Modules\\Contracts\\Events.Contract\\Events.Contract.csproj",
         "projectName": "Events.Contract",
-        "projectPath": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Events.Contract\\Events.Contract.csproj",
+        "projectPath": "d:\\code\\sentrix\\src\\Modules\\Contracts\\Events.Contract\\Events.Contract.csproj",
         "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-        "outputPath": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Events.Contract\\obj\\",
+        "outputPath": "d:\\code\\sentrix\\src\\Modules\\Contracts\\Events.Contract\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -721,8 +721,8 @@
               "D:\\code\\sentrix\\src\\Modules\\Contracts\\Device.Contract\\Device.Contract.csproj": {
                 "projectPath": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Device.Contract\\Device.Contract.csproj"
               },
-              "D:\\code\\sentrix\\src\\Modules\\Contracts\\Events.Contract\\Events.Contract.csproj": {
-                "projectPath": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Events.Contract\\Events.Contract.csproj"
+              "d:\\code\\sentrix\\src\\Modules\\Contracts\\Events.Contract\\Events.Contract.csproj": {
+                "projectPath": "d:\\code\\sentrix\\src\\Modules\\Contracts\\Events.Contract\\Events.Contract.csproj"
               },
               "D:\\code\\sentrix\\src\\Modules\\Events\\Events.Domain\\Events.Domain.csproj": {
                 "projectPath": "D:\\code\\sentrix\\src\\Modules\\Events\\Events.Domain\\Events.Domain.csproj"

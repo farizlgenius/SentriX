@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "Ga5Ci1K24XQ=",
+  "dgSpecHash": "OQAf5+RzY2U=",
   "success": true,
-  "projectFilePath": "D:\\code\\sentrix\\src\\Modules\\Operator\\Operator.Application\\Operator.Application.csproj",
+  "projectFilePath": "d:\\code\\sentrix\\src\\Modules\\Operator\\Operator.Application\\Operator.Application.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\User\\.nuget\\packages\\mediatr\\14.1.0\\mediatr.14.1.0.nupkg.sha512",
     "C:\\Users\\User\\.nuget\\packages\\mediatr.contracts\\2.0.1\\mediatr.contracts.2.0.1.nupkg.sha512",

@@ -38,32 +38,32 @@
               "D:\\code\\sentrix\\src\\Modules\\Adapters\\Adapter.Amico\\Adapter.Amico.csproj": {
                 "projectPath": "D:\\code\\sentrix\\src\\Modules\\Adapters\\Adapter.Amico\\Adapter.Amico.csproj"
               },
-              "D:\\code\\sentrix\\src\\Modules\\Auth\\Auth.Infrastructure\\Auth.Infrastructure.csproj": {
-                "projectPath": "D:\\code\\sentrix\\src\\Modules\\Auth\\Auth.Infrastructure\\Auth.Infrastructure.csproj"
+              "d:\\code\\sentrix\\src\\Modules\\Auth\\Auth.Infrastructure\\Auth.Infrastructure.csproj": {
+                "projectPath": "d:\\code\\sentrix\\src\\Modules\\Auth\\Auth.Infrastructure\\Auth.Infrastructure.csproj"
               },
-              "D:\\code\\sentrix\\src\\Modules\\Cache\\Cache.Infrastrucure\\Cache.Infrastructure.csproj": {
-                "projectPath": "D:\\code\\sentrix\\src\\Modules\\Cache\\Cache.Infrastrucure\\Cache.Infrastructure.csproj"
+              "d:\\code\\sentrix\\src\\Modules\\Cache\\Cache.Infrastrucure\\Cache.Infrastructure.csproj": {
+                "projectPath": "d:\\code\\sentrix\\src\\Modules\\Cache\\Cache.Infrastrucure\\Cache.Infrastructure.csproj"
               },
-              "D:\\code\\sentrix\\src\\Modules\\Contracts\\Adapter.Abstraction\\Adapter.Abstraction.csproj": {
-                "projectPath": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Adapter.Abstraction\\Adapter.Abstraction.csproj"
+              "d:\\code\\sentrix\\src\\Modules\\Contracts\\Adapter.Abstraction\\Adapter.Abstraction.csproj": {
+                "projectPath": "d:\\code\\sentrix\\src\\Modules\\Contracts\\Adapter.Abstraction\\Adapter.Abstraction.csproj"
               },
-              "D:\\code\\sentrix\\src\\Modules\\Contracts\\Auth.Contract\\Auth.Contract.csproj": {
-                "projectPath": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Auth.Contract\\Auth.Contract.csproj"
+              "d:\\code\\sentrix\\src\\Modules\\Contracts\\Auth.Contract\\Auth.Contract.csproj": {
+                "projectPath": "d:\\code\\sentrix\\src\\Modules\\Contracts\\Auth.Contract\\Auth.Contract.csproj"
               },
               "D:\\code\\sentrix\\src\\Modules\\Contracts\\Device.Contract\\Device.Contract.csproj": {
                 "projectPath": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Device.Contract\\Device.Contract.csproj"
               },
-              "D:\\code\\sentrix\\src\\Modules\\Contracts\\Events.Contract\\Events.Contract.csproj": {
-                "projectPath": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Events.Contract\\Events.Contract.csproj"
+              "d:\\code\\sentrix\\src\\Modules\\Contracts\\Events.Contract\\Events.Contract.csproj": {
+                "projectPath": "d:\\code\\sentrix\\src\\Modules\\Contracts\\Events.Contract\\Events.Contract.csproj"
               },
-              "D:\\code\\sentrix\\src\\Modules\\Contracts\\Location.Contract\\Location.Contract.csproj": {
-                "projectPath": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Location.Contract\\Location.Contract.csproj"
+              "d:\\code\\sentrix\\src\\Modules\\Contracts\\Location.Contract\\Location.Contract.csproj": {
+                "projectPath": "d:\\code\\sentrix\\src\\Modules\\Contracts\\Location.Contract\\Location.Contract.csproj"
               },
               "D:\\code\\sentrix\\src\\Modules\\Contracts\\Output.Contract\\Output.Contract.csproj": {
                 "projectPath": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Output.Contract\\Output.Contract.csproj"
               },
-              "D:\\code\\sentrix\\src\\Modules\\Contracts\\Time.Contract\\Time.Contract.csproj": {
-                "projectPath": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Time.Contract\\Time.Contract.csproj"
+              "d:\\code\\sentrix\\src\\Modules\\Contracts\\Time.Contract\\Time.Contract.csproj": {
+                "projectPath": "d:\\code\\sentrix\\src\\Modules\\Contracts\\Time.Contract\\Time.Contract.csproj"
               },
               "D:\\code\\sentrix\\src\\Modules\\Device\\Device.Infrastructure\\Device.Infrastructure.csproj": {
                 "projectPath": "D:\\code\\sentrix\\src\\Modules\\Device\\Device.Infrastructure\\Device.Infrastructure.csproj"
@@ -80,11 +80,11 @@
               "D:\\code\\sentrix\\src\\Modules\\Operator\\Operator.Infrastructure\\Operator.Infrastructure.csproj": {
                 "projectPath": "D:\\code\\sentrix\\src\\Modules\\Operator\\Operator.Infrastructure\\Operator.Infrastructure.csproj"
               },
-              "D:\\code\\sentrix\\src\\Modules\\Output\\Output.Infrastructure\\Output.Infrastructure.csproj": {
-                "projectPath": "D:\\code\\sentrix\\src\\Modules\\Output\\Output.Infrastructure\\Output.Infrastructure.csproj"
+              "d:\\code\\sentrix\\src\\Modules\\Output\\Output.Infrastructure\\Output.Infrastructure.csproj": {
+                "projectPath": "d:\\code\\sentrix\\src\\Modules\\Output\\Output.Infrastructure\\Output.Infrastructure.csproj"
               },
-              "D:\\code\\sentrix\\src\\Modules\\Role\\Role.Infrastructure\\Role.Infrastructure.csproj": {
-                "projectPath": "D:\\code\\sentrix\\src\\Modules\\Role\\Role.Infrastructure\\Role.Infrastructure.csproj"
+              "d:\\code\\sentrix\\src\\Modules\\Role\\Role.Infrastructure\\Role.Infrastructure.csproj": {
+                "projectPath": "d:\\code\\sentrix\\src\\Modules\\Role\\Role.Infrastructure\\Role.Infrastructure.csproj"
               },
               "D:\\code\\sentrix\\src\\Modules\\Time\\Time.Infrastructure\\Time.Infrastructure.csproj": {
                 "projectPath": "D:\\code\\sentrix\\src\\Modules\\Time\\Time.Infrastructure\\Time.Infrastructure.csproj"
@@ -663,14 +663,14 @@
           "net10.0": {
             "targetAlias": "net10.0",
             "projectReferences": {
-              "D:\\code\\sentrix\\src\\Modules\\Contracts\\Adapter.Abstraction\\Adapter.Abstraction.csproj": {
-                "projectPath": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Adapter.Abstraction\\Adapter.Abstraction.csproj"
+              "d:\\code\\sentrix\\src\\Modules\\Contracts\\Adapter.Abstraction\\Adapter.Abstraction.csproj": {
+                "projectPath": "d:\\code\\sentrix\\src\\Modules\\Contracts\\Adapter.Abstraction\\Adapter.Abstraction.csproj"
               },
               "D:\\code\\sentrix\\src\\Modules\\Contracts\\Device.Contract\\Device.Contract.csproj": {
                 "projectPath": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Device.Contract\\Device.Contract.csproj"
               },
-              "D:\\code\\sentrix\\src\\Modules\\Contracts\\Events.Contract\\Events.Contract.csproj": {
-                "projectPath": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Events.Contract\\Events.Contract.csproj"
+              "d:\\code\\sentrix\\src\\Modules\\Contracts\\Events.Contract\\Events.Contract.csproj": {
+                "projectPath": "d:\\code\\sentrix\\src\\Modules\\Contracts\\Events.Contract\\Events.Contract.csproj"
               },
               "D:\\code\\sentrix\\src\\Modules\\Contracts\\Notifier.Contract\\Notifier.Contract.csproj": {
                 "projectPath": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Notifier.Contract\\Notifier.Contract.csproj"
@@ -1048,8 +1048,8 @@
           "net10.0": {
             "targetAlias": "net10.0",
             "projectReferences": {
-              "D:\\code\\sentrix\\src\\Modules\\Contracts\\Adapter.Abstraction\\Adapter.Abstraction.csproj": {
-                "projectPath": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Adapter.Abstraction\\Adapter.Abstraction.csproj"
+              "d:\\code\\sentrix\\src\\Modules\\Contracts\\Adapter.Abstraction\\Adapter.Abstraction.csproj": {
+                "projectPath": "d:\\code\\sentrix\\src\\Modules\\Contracts\\Adapter.Abstraction\\Adapter.Abstraction.csproj"
               },
               "D:\\code\\sentrix\\src\\SharedKernel\\SharedKernel.csproj": {
                 "projectPath": "D:\\code\\sentrix\\src\\SharedKernel\\SharedKernel.csproj"
@@ -1423,8 +1423,8 @@
               "D:\\code\\sentrix\\src\\Modules\\Auth\\Auth.Domain\\Auth.Domain.csproj": {
                 "projectPath": "D:\\code\\sentrix\\src\\Modules\\Auth\\Auth.Domain\\Auth.Domain.csproj"
               },
-              "D:\\code\\sentrix\\src\\Modules\\Contracts\\Auth.Contract\\Auth.Contract.csproj": {
-                "projectPath": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Auth.Contract\\Auth.Contract.csproj"
+              "d:\\code\\sentrix\\src\\Modules\\Contracts\\Auth.Contract\\Auth.Contract.csproj": {
+                "projectPath": "d:\\code\\sentrix\\src\\Modules\\Contracts\\Auth.Contract\\Auth.Contract.csproj"
               },
               "D:\\code\\sentrix\\src\\Modules\\Contracts\\Cache.Contract\\Cache.Contract.csproj": {
                 "projectPath": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Cache.Contract\\Cache.Contract.csproj"
@@ -2096,14 +2096,14 @@
         }
       }
     },
-    "D:\\code\\sentrix\\src\\Modules\\Auth\\Auth.Infrastructure\\Auth.Infrastructure.csproj": {
+    "d:\\code\\sentrix\\src\\Modules\\Auth\\Auth.Infrastructure\\Auth.Infrastructure.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\code\\sentrix\\src\\Modules\\Auth\\Auth.Infrastructure\\Auth.Infrastructure.csproj",
+        "projectUniqueName": "d:\\code\\sentrix\\src\\Modules\\Auth\\Auth.Infrastructure\\Auth.Infrastructure.csproj",
         "projectName": "Auth.Infrastructure",
-        "projectPath": "D:\\code\\sentrix\\src\\Modules\\Auth\\Auth.Infrastructure\\Auth.Infrastructure.csproj",
+        "projectPath": "d:\\code\\sentrix\\src\\Modules\\Auth\\Auth.Infrastructure\\Auth.Infrastructure.csproj",
         "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-        "outputPath": "D:\\code\\sentrix\\src\\Modules\\Auth\\Auth.Infrastructure\\obj\\",
+        "outputPath": "d:\\code\\sentrix\\src\\Modules\\Auth\\Auth.Infrastructure\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -3150,14 +3150,14 @@
         }
       }
     },
-    "D:\\code\\sentrix\\src\\Modules\\Cache\\Cache.Infrastrucure\\Cache.Infrastructure.csproj": {
+    "d:\\code\\sentrix\\src\\Modules\\Cache\\Cache.Infrastrucure\\Cache.Infrastructure.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\code\\sentrix\\src\\Modules\\Cache\\Cache.Infrastrucure\\Cache.Infrastructure.csproj",
+        "projectUniqueName": "d:\\code\\sentrix\\src\\Modules\\Cache\\Cache.Infrastrucure\\Cache.Infrastructure.csproj",
         "projectName": "Cache.Infrastructure",
-        "projectPath": "D:\\code\\sentrix\\src\\Modules\\Cache\\Cache.Infrastrucure\\Cache.Infrastructure.csproj",
+        "projectPath": "d:\\code\\sentrix\\src\\Modules\\Cache\\Cache.Infrastrucure\\Cache.Infrastructure.csproj",
         "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-        "outputPath": "D:\\code\\sentrix\\src\\Modules\\Cache\\Cache.Infrastrucure\\obj\\",
+        "outputPath": "d:\\code\\sentrix\\src\\Modules\\Cache\\Cache.Infrastrucure\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -3518,14 +3518,14 @@
         }
       }
     },
-    "D:\\code\\sentrix\\src\\Modules\\Contracts\\Adapter.Abstraction\\Adapter.Abstraction.csproj": {
+    "d:\\code\\sentrix\\src\\Modules\\Contracts\\Adapter.Abstraction\\Adapter.Abstraction.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Adapter.Abstraction\\Adapter.Abstraction.csproj",
+        "projectUniqueName": "d:\\code\\sentrix\\src\\Modules\\Contracts\\Adapter.Abstraction\\Adapter.Abstraction.csproj",
         "projectName": "Adapter.Abstraction",
-        "projectPath": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Adapter.Abstraction\\Adapter.Abstraction.csproj",
+        "projectPath": "d:\\code\\sentrix\\src\\Modules\\Contracts\\Adapter.Abstraction\\Adapter.Abstraction.csproj",
         "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-        "outputPath": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Adapter.Abstraction\\obj\\",
+        "outputPath": "d:\\code\\sentrix\\src\\Modules\\Contracts\\Adapter.Abstraction\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -3551,6 +3551,9 @@
               },
               "D:\\code\\sentrix\\src\\Modules\\Contracts\\Output.Contract\\Output.Contract.csproj": {
                 "projectPath": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Output.Contract\\Output.Contract.csproj"
+              },
+              "d:\\code\\sentrix\\src\\Modules\\Contracts\\Time.Contract\\Time.Contract.csproj": {
+                "projectPath": "d:\\code\\sentrix\\src\\Modules\\Contracts\\Time.Contract\\Time.Contract.csproj"
               }
             }
           }
@@ -3864,14 +3867,14 @@
         }
       }
     },
-    "D:\\code\\sentrix\\src\\Modules\\Contracts\\Auth.Contract\\Auth.Contract.csproj": {
+    "d:\\code\\sentrix\\src\\Modules\\Contracts\\Auth.Contract\\Auth.Contract.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Auth.Contract\\Auth.Contract.csproj",
+        "projectUniqueName": "d:\\code\\sentrix\\src\\Modules\\Contracts\\Auth.Contract\\Auth.Contract.csproj",
         "projectName": "Auth.Contract",
-        "projectPath": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Auth.Contract\\Auth.Contract.csproj",
+        "projectPath": "d:\\code\\sentrix\\src\\Modules\\Contracts\\Auth.Contract\\Auth.Contract.csproj",
         "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-        "outputPath": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Auth.Contract\\obj\\",
+        "outputPath": "d:\\code\\sentrix\\src\\Modules\\Contracts\\Auth.Contract\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -3892,8 +3895,8 @@
           "net10.0": {
             "targetAlias": "net10.0",
             "projectReferences": {
-              "D:\\code\\sentrix\\src\\Modules\\Contracts\\Role.Contract\\Role.Contract.csproj": {
-                "projectPath": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Role.Contract\\Role.Contract.csproj"
+              "d:\\code\\sentrix\\src\\Modules\\Contracts\\Role.Contract\\Role.Contract.csproj": {
+                "projectPath": "d:\\code\\sentrix\\src\\Modules\\Contracts\\Role.Contract\\Role.Contract.csproj"
               },
               "D:\\code\\sentrix\\src\\SharedKernel\\SharedKernel.csproj": {
                 "projectPath": "D:\\code\\sentrix\\src\\SharedKernel\\SharedKernel.csproj"
@@ -4892,14 +4895,14 @@
         }
       }
     },
-    "D:\\code\\sentrix\\src\\Modules\\Contracts\\Events.Contract\\Events.Contract.csproj": {
+    "d:\\code\\sentrix\\src\\Modules\\Contracts\\Events.Contract\\Events.Contract.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Events.Contract\\Events.Contract.csproj",
+        "projectUniqueName": "d:\\code\\sentrix\\src\\Modules\\Contracts\\Events.Contract\\Events.Contract.csproj",
         "projectName": "Events.Contract",
-        "projectPath": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Events.Contract\\Events.Contract.csproj",
+        "projectPath": "d:\\code\\sentrix\\src\\Modules\\Contracts\\Events.Contract\\Events.Contract.csproj",
         "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-        "outputPath": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Events.Contract\\obj\\",
+        "outputPath": "d:\\code\\sentrix\\src\\Modules\\Contracts\\Events.Contract\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -5235,14 +5238,14 @@
         }
       }
     },
-    "D:\\code\\sentrix\\src\\Modules\\Contracts\\Location.Contract\\Location.Contract.csproj": {
+    "d:\\code\\sentrix\\src\\Modules\\Contracts\\Location.Contract\\Location.Contract.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Location.Contract\\Location.Contract.csproj",
+        "projectUniqueName": "d:\\code\\sentrix\\src\\Modules\\Contracts\\Location.Contract\\Location.Contract.csproj",
         "projectName": "Location.Contract",
-        "projectPath": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Location.Contract\\Location.Contract.csproj",
+        "projectPath": "d:\\code\\sentrix\\src\\Modules\\Contracts\\Location.Contract\\Location.Contract.csproj",
         "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-        "outputPath": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Location.Contract\\obj\\",
+        "outputPath": "d:\\code\\sentrix\\src\\Modules\\Contracts\\Location.Contract\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -6610,14 +6613,14 @@
         }
       }
     },
-    "D:\\code\\sentrix\\src\\Modules\\Contracts\\Role.Contract\\Role.Contract.csproj": {
+    "d:\\code\\sentrix\\src\\Modules\\Contracts\\Role.Contract\\Role.Contract.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Role.Contract\\Role.Contract.csproj",
+        "projectUniqueName": "d:\\code\\sentrix\\src\\Modules\\Contracts\\Role.Contract\\Role.Contract.csproj",
         "projectName": "Role.Contract",
-        "projectPath": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Role.Contract\\Role.Contract.csproj",
+        "projectPath": "d:\\code\\sentrix\\src\\Modules\\Contracts\\Role.Contract\\Role.Contract.csproj",
         "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-        "outputPath": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Role.Contract\\obj\\",
+        "outputPath": "d:\\code\\sentrix\\src\\Modules\\Contracts\\Role.Contract\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -6953,14 +6956,14 @@
         }
       }
     },
-    "D:\\code\\sentrix\\src\\Modules\\Contracts\\Time.Contract\\Time.Contract.csproj": {
+    "d:\\code\\sentrix\\src\\Modules\\Contracts\\Time.Contract\\Time.Contract.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Time.Contract\\Time.Contract.csproj",
+        "projectUniqueName": "d:\\code\\sentrix\\src\\Modules\\Contracts\\Time.Contract\\Time.Contract.csproj",
         "projectName": "Time.Contract",
-        "projectPath": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Time.Contract\\Time.Contract.csproj",
+        "projectPath": "d:\\code\\sentrix\\src\\Modules\\Contracts\\Time.Contract\\Time.Contract.csproj",
         "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-        "outputPath": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Time.Contract\\obj\\",
+        "outputPath": "d:\\code\\sentrix\\src\\Modules\\Contracts\\Time.Contract\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -7324,14 +7327,14 @@
           "net10.0": {
             "targetAlias": "net10.0",
             "projectReferences": {
-              "D:\\code\\sentrix\\src\\Modules\\Contracts\\Adapter.Abstraction\\Adapter.Abstraction.csproj": {
-                "projectPath": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Adapter.Abstraction\\Adapter.Abstraction.csproj"
+              "d:\\code\\sentrix\\src\\Modules\\Contracts\\Adapter.Abstraction\\Adapter.Abstraction.csproj": {
+                "projectPath": "d:\\code\\sentrix\\src\\Modules\\Contracts\\Adapter.Abstraction\\Adapter.Abstraction.csproj"
               },
               "D:\\code\\sentrix\\src\\Modules\\Contracts\\Device.Contract\\Device.Contract.csproj": {
                 "projectPath": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Device.Contract\\Device.Contract.csproj"
               },
-              "D:\\code\\sentrix\\src\\Modules\\Contracts\\Location.Contract\\Location.Contract.csproj": {
-                "projectPath": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Location.Contract\\Location.Contract.csproj"
+              "d:\\code\\sentrix\\src\\Modules\\Contracts\\Location.Contract\\Location.Contract.csproj": {
+                "projectPath": "d:\\code\\sentrix\\src\\Modules\\Contracts\\Location.Contract\\Location.Contract.csproj"
               },
               "D:\\code\\sentrix\\src\\Modules\\Device\\Device.Domain\\Device.Domain.csproj": {
                 "projectPath": "D:\\code\\sentrix\\src\\Modules\\Device\\Device.Domain\\Device.Domain.csproj"
@@ -8390,8 +8393,8 @@
               "D:\\code\\sentrix\\src\\Modules\\Contracts\\Device.Contract\\Device.Contract.csproj": {
                 "projectPath": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Device.Contract\\Device.Contract.csproj"
               },
-              "D:\\code\\sentrix\\src\\Modules\\Contracts\\Events.Contract\\Events.Contract.csproj": {
-                "projectPath": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Events.Contract\\Events.Contract.csproj"
+              "d:\\code\\sentrix\\src\\Modules\\Contracts\\Events.Contract\\Events.Contract.csproj": {
+                "projectPath": "d:\\code\\sentrix\\src\\Modules\\Contracts\\Events.Contract\\Events.Contract.csproj"
               },
               "D:\\code\\sentrix\\src\\Modules\\Events\\Events.Domain\\Events.Domain.csproj": {
                 "projectPath": "D:\\code\\sentrix\\src\\Modules\\Events\\Events.Domain\\Events.Domain.csproj"
@@ -9443,11 +9446,11 @@
           "net10.0": {
             "targetAlias": "net10.0",
             "projectReferences": {
-              "D:\\code\\sentrix\\src\\Modules\\Contracts\\Location.Contract\\Location.Contract.csproj": {
-                "projectPath": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Location.Contract\\Location.Contract.csproj"
+              "d:\\code\\sentrix\\src\\Modules\\Contracts\\Location.Contract\\Location.Contract.csproj": {
+                "projectPath": "d:\\code\\sentrix\\src\\Modules\\Contracts\\Location.Contract\\Location.Contract.csproj"
               },
-              "D:\\code\\sentrix\\src\\Modules\\Location\\Location.Domain\\Location.Domain.csproj": {
-                "projectPath": "D:\\code\\sentrix\\src\\Modules\\Location\\Location.Domain\\Location.Domain.csproj"
+              "d:\\code\\sentrix\\src\\Modules\\Location\\Location.Domain\\Location.Domain.csproj": {
+                "projectPath": "d:\\code\\sentrix\\src\\Modules\\Location\\Location.Domain\\Location.Domain.csproj"
               }
             }
           }
@@ -9761,14 +9764,14 @@
         }
       }
     },
-    "D:\\code\\sentrix\\src\\Modules\\Location\\Location.Domain\\Location.Domain.csproj": {
+    "d:\\code\\sentrix\\src\\Modules\\Location\\Location.Domain\\Location.Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\code\\sentrix\\src\\Modules\\Location\\Location.Domain\\Location.Domain.csproj",
+        "projectUniqueName": "d:\\code\\sentrix\\src\\Modules\\Location\\Location.Domain\\Location.Domain.csproj",
         "projectName": "Location.Domain",
-        "projectPath": "D:\\code\\sentrix\\src\\Modules\\Location\\Location.Domain\\Location.Domain.csproj",
+        "projectPath": "d:\\code\\sentrix\\src\\Modules\\Location\\Location.Domain\\Location.Domain.csproj",
         "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-        "outputPath": "D:\\code\\sentrix\\src\\Modules\\Location\\Location.Domain\\obj\\",
+        "outputPath": "d:\\code\\sentrix\\src\\Modules\\Location\\Location.Domain\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -10132,8 +10135,8 @@
           "net10.0": {
             "targetAlias": "net10.0",
             "projectReferences": {
-              "D:\\code\\sentrix\\src\\Modules\\Contracts\\Location.Contract\\Location.Contract.csproj": {
-                "projectPath": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Location.Contract\\Location.Contract.csproj"
+              "d:\\code\\sentrix\\src\\Modules\\Contracts\\Location.Contract\\Location.Contract.csproj": {
+                "projectPath": "d:\\code\\sentrix\\src\\Modules\\Contracts\\Location.Contract\\Location.Contract.csproj"
               },
               "D:\\code\\sentrix\\src\\Modules\\Location\\Location.Application\\Location.Application.csproj": {
                 "projectPath": "D:\\code\\sentrix\\src\\Modules\\Location\\Location.Application\\Location.Application.csproj"
@@ -10824,14 +10827,14 @@
         }
       }
     },
-    "D:\\code\\sentrix\\src\\Modules\\Operator\\Operator.Application\\Operator.Application.csproj": {
+    "d:\\code\\sentrix\\src\\Modules\\Operator\\Operator.Application\\Operator.Application.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\code\\sentrix\\src\\Modules\\Operator\\Operator.Application\\Operator.Application.csproj",
+        "projectUniqueName": "d:\\code\\sentrix\\src\\Modules\\Operator\\Operator.Application\\Operator.Application.csproj",
         "projectName": "Operator.Application",
-        "projectPath": "D:\\code\\sentrix\\src\\Modules\\Operator\\Operator.Application\\Operator.Application.csproj",
+        "projectPath": "d:\\code\\sentrix\\src\\Modules\\Operator\\Operator.Application\\Operator.Application.csproj",
         "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-        "outputPath": "D:\\code\\sentrix\\src\\Modules\\Operator\\Operator.Application\\obj\\",
+        "outputPath": "d:\\code\\sentrix\\src\\Modules\\Operator\\Operator.Application\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -10852,8 +10855,8 @@
           "net10.0": {
             "targetAlias": "net10.0",
             "projectReferences": {
-              "D:\\code\\sentrix\\src\\Modules\\Contracts\\Location.Contract\\Location.Contract.csproj": {
-                "projectPath": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Location.Contract\\Location.Contract.csproj"
+              "d:\\code\\sentrix\\src\\Modules\\Contracts\\Location.Contract\\Location.Contract.csproj": {
+                "projectPath": "d:\\code\\sentrix\\src\\Modules\\Contracts\\Location.Contract\\Location.Contract.csproj"
               },
               "D:\\code\\sentrix\\src\\Modules\\Contracts\\Operator.Contract\\Operator.Contract.csproj": {
                 "projectPath": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Operator.Contract\\Operator.Contract.csproj"
@@ -11550,11 +11553,11 @@
           "net10.0": {
             "targetAlias": "net10.0",
             "projectReferences": {
-              "D:\\code\\sentrix\\src\\Modules\\Contracts\\Role.Contract\\Role.Contract.csproj": {
-                "projectPath": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Role.Contract\\Role.Contract.csproj"
+              "d:\\code\\sentrix\\src\\Modules\\Contracts\\Role.Contract\\Role.Contract.csproj": {
+                "projectPath": "d:\\code\\sentrix\\src\\Modules\\Contracts\\Role.Contract\\Role.Contract.csproj"
               },
-              "D:\\code\\sentrix\\src\\Modules\\Operator\\Operator.Application\\Operator.Application.csproj": {
-                "projectPath": "D:\\code\\sentrix\\src\\Modules\\Operator\\Operator.Application\\Operator.Application.csproj"
+              "d:\\code\\sentrix\\src\\Modules\\Operator\\Operator.Application\\Operator.Application.csproj": {
+                "projectPath": "d:\\code\\sentrix\\src\\Modules\\Operator\\Operator.Application\\Operator.Application.csproj"
               },
               "D:\\code\\sentrix\\src\\Modules\\Operator\\Operator.Domain\\Operator.Domain.csproj": {
                 "projectPath": "D:\\code\\sentrix\\src\\Modules\\Operator\\Operator.Domain\\Operator.Domain.csproj"
@@ -11920,14 +11923,14 @@
           "net10.0": {
             "targetAlias": "net10.0",
             "projectReferences": {
-              "D:\\code\\sentrix\\src\\Modules\\Contracts\\Adapter.Abstraction\\Adapter.Abstraction.csproj": {
-                "projectPath": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Adapter.Abstraction\\Adapter.Abstraction.csproj"
+              "d:\\code\\sentrix\\src\\Modules\\Contracts\\Adapter.Abstraction\\Adapter.Abstraction.csproj": {
+                "projectPath": "d:\\code\\sentrix\\src\\Modules\\Contracts\\Adapter.Abstraction\\Adapter.Abstraction.csproj"
               },
               "D:\\code\\sentrix\\src\\Modules\\Contracts\\Output.Contract\\Output.Contract.csproj": {
                 "projectPath": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Output.Contract\\Output.Contract.csproj"
               },
-              "D:\\code\\sentrix\\src\\Modules\\Output\\Output.Domain\\Output.Domain.csproj": {
-                "projectPath": "D:\\code\\sentrix\\src\\Modules\\Output\\Output.Domain\\Output.Domain.csproj"
+              "d:\\code\\sentrix\\src\\Modules\\Output\\Output.Domain\\Output.Domain.csproj": {
+                "projectPath": "d:\\code\\sentrix\\src\\Modules\\Output\\Output.Domain\\Output.Domain.csproj"
               }
             }
           }
@@ -12241,14 +12244,14 @@
         }
       }
     },
-    "D:\\code\\sentrix\\src\\Modules\\Output\\Output.Domain\\Output.Domain.csproj": {
+    "d:\\code\\sentrix\\src\\Modules\\Output\\Output.Domain\\Output.Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\code\\sentrix\\src\\Modules\\Output\\Output.Domain\\Output.Domain.csproj",
+        "projectUniqueName": "d:\\code\\sentrix\\src\\Modules\\Output\\Output.Domain\\Output.Domain.csproj",
         "projectName": "Output.Domain",
-        "projectPath": "D:\\code\\sentrix\\src\\Modules\\Output\\Output.Domain\\Output.Domain.csproj",
+        "projectPath": "d:\\code\\sentrix\\src\\Modules\\Output\\Output.Domain\\Output.Domain.csproj",
         "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-        "outputPath": "D:\\code\\sentrix\\src\\Modules\\Output\\Output.Domain\\obj\\",
+        "outputPath": "d:\\code\\sentrix\\src\\Modules\\Output\\Output.Domain\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -12584,14 +12587,14 @@
         }
       }
     },
-    "D:\\code\\sentrix\\src\\Modules\\Output\\Output.Infrastructure\\Output.Infrastructure.csproj": {
+    "d:\\code\\sentrix\\src\\Modules\\Output\\Output.Infrastructure\\Output.Infrastructure.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\code\\sentrix\\src\\Modules\\Output\\Output.Infrastructure\\Output.Infrastructure.csproj",
+        "projectUniqueName": "d:\\code\\sentrix\\src\\Modules\\Output\\Output.Infrastructure\\Output.Infrastructure.csproj",
         "projectName": "Output.Infrastructure",
-        "projectPath": "D:\\code\\sentrix\\src\\Modules\\Output\\Output.Infrastructure\\Output.Infrastructure.csproj",
+        "projectPath": "d:\\code\\sentrix\\src\\Modules\\Output\\Output.Infrastructure\\Output.Infrastructure.csproj",
         "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-        "outputPath": "D:\\code\\sentrix\\src\\Modules\\Output\\Output.Infrastructure\\obj\\",
+        "outputPath": "d:\\code\\sentrix\\src\\Modules\\Output\\Output.Infrastructure\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -12980,11 +12983,11 @@
           "net10.0": {
             "targetAlias": "net10.0",
             "projectReferences": {
-              "D:\\code\\sentrix\\src\\Modules\\Contracts\\Role.Contract\\Role.Contract.csproj": {
-                "projectPath": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Role.Contract\\Role.Contract.csproj"
+              "d:\\code\\sentrix\\src\\Modules\\Contracts\\Role.Contract\\Role.Contract.csproj": {
+                "projectPath": "d:\\code\\sentrix\\src\\Modules\\Contracts\\Role.Contract\\Role.Contract.csproj"
               },
-              "D:\\code\\sentrix\\src\\Modules\\Role\\Role.Domain\\Role.Domain.csproj": {
-                "projectPath": "D:\\code\\sentrix\\src\\Modules\\Role\\Role.Domain\\Role.Domain.csproj"
+              "d:\\code\\sentrix\\src\\Modules\\Role\\Role.Domain\\Role.Domain.csproj": {
+                "projectPath": "d:\\code\\sentrix\\src\\Modules\\Role\\Role.Domain\\Role.Domain.csproj"
               },
               "D:\\code\\sentrix\\src\\SharedKernel\\SharedKernel.csproj": {
                 "projectPath": "D:\\code\\sentrix\\src\\SharedKernel\\SharedKernel.csproj"
@@ -13301,14 +13304,14 @@
         }
       }
     },
-    "D:\\code\\sentrix\\src\\Modules\\Role\\Role.Domain\\Role.Domain.csproj": {
+    "d:\\code\\sentrix\\src\\Modules\\Role\\Role.Domain\\Role.Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\code\\sentrix\\src\\Modules\\Role\\Role.Domain\\Role.Domain.csproj",
+        "projectUniqueName": "d:\\code\\sentrix\\src\\Modules\\Role\\Role.Domain\\Role.Domain.csproj",
         "projectName": "Role.Domain",
-        "projectPath": "D:\\code\\sentrix\\src\\Modules\\Role\\Role.Domain\\Role.Domain.csproj",
+        "projectPath": "d:\\code\\sentrix\\src\\Modules\\Role\\Role.Domain\\Role.Domain.csproj",
         "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-        "outputPath": "D:\\code\\sentrix\\src\\Modules\\Role\\Role.Domain\\obj\\",
+        "outputPath": "d:\\code\\sentrix\\src\\Modules\\Role\\Role.Domain\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -13644,14 +13647,14 @@
         }
       }
     },
-    "D:\\code\\sentrix\\src\\Modules\\Role\\Role.Infrastructure\\Role.Infrastructure.csproj": {
+    "d:\\code\\sentrix\\src\\Modules\\Role\\Role.Infrastructure\\Role.Infrastructure.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\code\\sentrix\\src\\Modules\\Role\\Role.Infrastructure\\Role.Infrastructure.csproj",
+        "projectUniqueName": "d:\\code\\sentrix\\src\\Modules\\Role\\Role.Infrastructure\\Role.Infrastructure.csproj",
         "projectName": "Role.Infrastructure",
-        "projectPath": "D:\\code\\sentrix\\src\\Modules\\Role\\Role.Infrastructure\\Role.Infrastructure.csproj",
+        "projectPath": "d:\\code\\sentrix\\src\\Modules\\Role\\Role.Infrastructure\\Role.Infrastructure.csproj",
         "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-        "outputPath": "D:\\code\\sentrix\\src\\Modules\\Role\\Role.Infrastructure\\obj\\",
+        "outputPath": "d:\\code\\sentrix\\src\\Modules\\Role\\Role.Infrastructure\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -13672,8 +13675,8 @@
           "net10.0": {
             "targetAlias": "net10.0",
             "projectReferences": {
-              "D:\\code\\sentrix\\src\\Modules\\Contracts\\Location.Contract\\Location.Contract.csproj": {
-                "projectPath": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Location.Contract\\Location.Contract.csproj"
+              "d:\\code\\sentrix\\src\\Modules\\Contracts\\Location.Contract\\Location.Contract.csproj": {
+                "projectPath": "d:\\code\\sentrix\\src\\Modules\\Contracts\\Location.Contract\\Location.Contract.csproj"
               },
               "D:\\code\\sentrix\\src\\Modules\\Role\\Role.Application\\Role.Application.csproj": {
                 "projectPath": "D:\\code\\sentrix\\src\\Modules\\Role\\Role.Application\\Role.Application.csproj"
@@ -14043,14 +14046,14 @@
           "net10.0": {
             "targetAlias": "net10.0",
             "projectReferences": {
-              "D:\\code\\sentrix\\src\\Modules\\Contracts\\Adapter.Abstraction\\Adapter.Abstraction.csproj": {
-                "projectPath": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Adapter.Abstraction\\Adapter.Abstraction.csproj"
+              "d:\\code\\sentrix\\src\\Modules\\Contracts\\Adapter.Abstraction\\Adapter.Abstraction.csproj": {
+                "projectPath": "d:\\code\\sentrix\\src\\Modules\\Contracts\\Adapter.Abstraction\\Adapter.Abstraction.csproj"
               },
               "D:\\code\\sentrix\\src\\Modules\\Contracts\\Device.Contract\\Device.Contract.csproj": {
                 "projectPath": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Device.Contract\\Device.Contract.csproj"
               },
-              "D:\\code\\sentrix\\src\\Modules\\Contracts\\Time.Contract\\Time.Contract.csproj": {
-                "projectPath": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Time.Contract\\Time.Contract.csproj"
+              "d:\\code\\sentrix\\src\\Modules\\Contracts\\Time.Contract\\Time.Contract.csproj": {
+                "projectPath": "d:\\code\\sentrix\\src\\Modules\\Contracts\\Time.Contract\\Time.Contract.csproj"
               },
               "D:\\code\\sentrix\\src\\Modules\\Time\\Time.Domain\\Time.Domain.csproj": {
                 "projectPath": "D:\\code\\sentrix\\src\\Modules\\Time\\Time.Domain\\Time.Domain.csproj"
@@ -14395,6 +14398,9 @@
           "net10.0": {
             "targetAlias": "net10.0",
             "projectReferences": {
+              "d:\\code\\sentrix\\src\\Modules\\Contracts\\Time.Contract\\Time.Contract.csproj": {
+                "projectPath": "d:\\code\\sentrix\\src\\Modules\\Contracts\\Time.Contract\\Time.Contract.csproj"
+              },
               "D:\\code\\sentrix\\src\\SharedKernel\\SharedKernel.csproj": {
                 "projectPath": "D:\\code\\sentrix\\src\\SharedKernel\\SharedKernel.csproj"
               }
