@@ -4,14 +4,14 @@
     "D:\\code\\sentrix\\src\\Modules\\Location\\Location.Infrastructure\\Location.Infrastructure.csproj": {}
   },
   "projects": {
-    "d:\\code\\sentrix\\src\\Modules\\Contracts\\Location.Contract\\Location.Contract.csproj": {
+    "D:\\code\\sentrix\\src\\Modules\\Contracts\\Location.Contract\\Location.Contract.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "d:\\code\\sentrix\\src\\Modules\\Contracts\\Location.Contract\\Location.Contract.csproj",
+        "projectUniqueName": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Location.Contract\\Location.Contract.csproj",
         "projectName": "Location.Contract",
-        "projectPath": "d:\\code\\sentrix\\src\\Modules\\Contracts\\Location.Contract\\Location.Contract.csproj",
+        "projectPath": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Location.Contract\\Location.Contract.csproj",
         "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-        "outputPath": "d:\\code\\sentrix\\src\\Modules\\Contracts\\Location.Contract\\obj\\",
+        "outputPath": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Location.Contract\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -375,11 +375,11 @@
           "net10.0": {
             "targetAlias": "net10.0",
             "projectReferences": {
-              "d:\\code\\sentrix\\src\\Modules\\Contracts\\Location.Contract\\Location.Contract.csproj": {
-                "projectPath": "d:\\code\\sentrix\\src\\Modules\\Contracts\\Location.Contract\\Location.Contract.csproj"
+              "D:\\code\\sentrix\\src\\Modules\\Contracts\\Location.Contract\\Location.Contract.csproj": {
+                "projectPath": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Location.Contract\\Location.Contract.csproj"
               },
-              "d:\\code\\sentrix\\src\\Modules\\Location\\Location.Domain\\Location.Domain.csproj": {
-                "projectPath": "d:\\code\\sentrix\\src\\Modules\\Location\\Location.Domain\\Location.Domain.csproj"
+              "D:\\code\\sentrix\\src\\Modules\\Location\\Location.Domain\\Location.Domain.csproj": {
+                "projectPath": "D:\\code\\sentrix\\src\\Modules\\Location\\Location.Domain\\Location.Domain.csproj"
               }
             }
           }
@@ -693,14 +693,14 @@
         }
       }
     },
-    "d:\\code\\sentrix\\src\\Modules\\Location\\Location.Domain\\Location.Domain.csproj": {
+    "D:\\code\\sentrix\\src\\Modules\\Location\\Location.Domain\\Location.Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "d:\\code\\sentrix\\src\\Modules\\Location\\Location.Domain\\Location.Domain.csproj",
+        "projectUniqueName": "D:\\code\\sentrix\\src\\Modules\\Location\\Location.Domain\\Location.Domain.csproj",
         "projectName": "Location.Domain",
-        "projectPath": "d:\\code\\sentrix\\src\\Modules\\Location\\Location.Domain\\Location.Domain.csproj",
+        "projectPath": "D:\\code\\sentrix\\src\\Modules\\Location\\Location.Domain\\Location.Domain.csproj",
         "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-        "outputPath": "d:\\code\\sentrix\\src\\Modules\\Location\\Location.Domain\\obj\\",
+        "outputPath": "D:\\code\\sentrix\\src\\Modules\\Location\\Location.Domain\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -1064,8 +1064,8 @@
           "net10.0": {
             "targetAlias": "net10.0",
             "projectReferences": {
-              "d:\\code\\sentrix\\src\\Modules\\Contracts\\Location.Contract\\Location.Contract.csproj": {
-                "projectPath": "d:\\code\\sentrix\\src\\Modules\\Contracts\\Location.Contract\\Location.Contract.csproj"
+              "D:\\code\\sentrix\\src\\Modules\\Contracts\\Location.Contract\\Location.Contract.csproj": {
+                "projectPath": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Location.Contract\\Location.Contract.csproj"
               },
               "D:\\code\\sentrix\\src\\Modules\\Location\\Location.Application\\Location.Application.csproj": {
                 "projectPath": "D:\\code\\sentrix\\src\\Modules\\Location\\Location.Application\\Location.Application.csproj"

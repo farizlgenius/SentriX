@@ -1,3 +1,5 @@
+using SharedKernel.Helpers;
+
 namespace SharedKernel.Domain;
 
 public class BaseDomain
@@ -10,6 +12,7 @@ public class BaseDomain
 
       public BaseDomain(int id,short componentId,int locationId,bool IsActive)
       {
+            ValidationHelper.ValidateNotMinus(locationId,nameof(LocationId));
             this.Id = id;
             this.ComponentId = componentId;
             this.LocationId = locationId;

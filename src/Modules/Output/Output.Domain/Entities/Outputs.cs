@@ -19,8 +19,8 @@ public sealed class Outputs : BaseDomain
 
         public Outputs(int id,short componentId,string mac,string name,short deviceComponentId, short moduleComponentId,short outputNo,string model,short mode,string type,int location,short pulse,bool isActive) : base(id,componentId,location,isActive)
       {
-            ValidationHelper.ValidateNotNullOrEmpty(name,nameof(Name));
-            ValidationHelper.ValidateNotNullOrEmpty(mac,nameof(Mac));
+            ValidationHelper.IsValidName(name);
+            ValidationHelper.IsNullOrEmpty(mac,nameof(Mac));
             ValidationHelper.ValidateNotMinus(deviceComponentId,nameof(DeviceComponentId));
             ValidationHelper.ValidateNotMinus(moduleComponentId,nameof(ModuleComponentId));
             ValidationHelper.ValidateNotMinus(location,nameof(LocationId));

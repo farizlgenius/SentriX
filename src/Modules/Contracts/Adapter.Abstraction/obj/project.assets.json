@@ -1449,11 +1449,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "d:\\code\\sentrix\\src\\Modules\\Contracts\\Adapter.Abstraction\\Adapter.Abstraction.csproj",
+      "projectUniqueName": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Adapter.Abstraction\\Adapter.Abstraction.csproj",
       "projectName": "Adapter.Abstraction",
-      "projectPath": "d:\\code\\sentrix\\src\\Modules\\Contracts\\Adapter.Abstraction\\Adapter.Abstraction.csproj",
+      "projectPath": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Adapter.Abstraction\\Adapter.Abstraction.csproj",
       "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-      "outputPath": "d:\\code\\sentrix\\src\\Modules\\Contracts\\Adapter.Abstraction\\obj\\",
+      "outputPath": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Adapter.Abstraction\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -1480,8 +1480,8 @@
             "D:\\code\\sentrix\\src\\Modules\\Contracts\\Output.Contract\\Output.Contract.csproj": {
               "projectPath": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Output.Contract\\Output.Contract.csproj"
             },
-            "d:\\code\\sentrix\\src\\Modules\\Contracts\\Time.Contract\\Time.Contract.csproj": {
-              "projectPath": "d:\\code\\sentrix\\src\\Modules\\Contracts\\Time.Contract\\Time.Contract.csproj"
+            "D:\\code\\sentrix\\src\\Modules\\Contracts\\Time.Contract\\Time.Contract.csproj": {
+              "projectPath": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Time.Contract\\Time.Contract.csproj"
             }
           }
         }

@@ -14,7 +14,7 @@ public sealed class Country
   public Country(int id, string name, string description, DateTime createdAt, DateTime updatedAt)
   {
     ValidationHelper.ValidateNotMinus(id, nameof(id));
-    ValidationHelper.ValidateNotNullOrEmpty(name, nameof(name));
+    ValidationHelper.IsNullOrEmpty(name, nameof(name));
     Id = id;
     Name = name;
     Description = description;

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "kd/pYx1x1D8=",
+  "dgSpecHash": "sa1vM+62CIQ=",
   "success": true,
-  "projectFilePath": "d:\\code\\sentrix\\src\\Modules\\Role\\Role.Domain\\Role.Domain.csproj",
+  "projectFilePath": "D:\\code\\sentrix\\src\\Modules\\Role\\Role.Domain\\Role.Domain.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\User\\.nuget\\packages\\microsoft.entityframeworkcore\\10.0.4\\microsoft.entityframeworkcore.10.0.4.nupkg.sha512",
     "C:\\Users\\User\\.nuget\\packages\\microsoft.entityframeworkcore.abstractions\\10.0.4\\microsoft.entityframeworkcore.abstractions.10.0.4.nupkg.sha512",

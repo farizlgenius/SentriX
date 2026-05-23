@@ -14,6 +14,7 @@ public sealed class AeroDbContext(DbContextOptions<AeroDbContext> options) : DbC
       public DbSet<ElevatorAccessLevelSpecification> ElevatorAccessLevelSpecifications { get; set; }
       public DbSet<RelayMode> RelayModes {get; set;}
       public DbSet<TimezoneMode> TimezoneModes {get; set;}
+      public DbSet<DoorMode> DoorModes {get; set;}
       protected override void OnModelCreating(ModelBuilder modelBuilder)
       {
             base.OnModelCreating(modelBuilder);
@@ -159,6 +160,15 @@ public sealed class AeroDbContext(DbContextOptions<AeroDbContext> options) : DbC
                   new TimezoneMode(4,"One Time Event",3,"Scan time zone interval list and apply only if the date string in expTest matches the current date"),
                   new TimezoneMode(5,"Scan, Always Honor Day of Week (OR)",4,"This mode is similar to mode 2, but instead of only checking the Holiday Mask if it is a Holiday, and only checking the Day Mask if not, this mode checks both. If it is not a Holiday, this mode functions normally, only checking the Day Mask. If it is a Holiday, this mode performs a logical OR on the Holiday and Day Masks. If either or both are active, the Time Zone is active, otherwise if neither is active, the Time Zone is inactive."),
                   new TimezoneMode(6,"Scan, Always Honor Day of Week (AND) ",5,"This mode is similar to mode 4, but it performs a logical AND instead of a logical OR. If it is not a Holiday, this mode functions normally, only checking the Day Mask. If it is a Holiday, this mode is only active if BOTH the Day Mask and Holiday Mask are active. If either one is inactive, the entire Time Zone is inactive.")
+            );
+
+            modelBuilder.Entity<DoorMode>()
+            .HasData(
+                  new DoorMode(1,"Single",0,"Single reader, controlling the door"),
+                  new DoorMode(2,"Dual",1,"In/Out Reader"),
+                  new DoorMode(3,"Turnstile",3,"Turnstile Reader"),
+                  new DoorMode(4,"Elevator no floor",4,"Elevator, no floor select feedback"),
+                  new DoorMode(5,"Elevator with floor",5,"Elevator with floor select feedback")
             );
 
           

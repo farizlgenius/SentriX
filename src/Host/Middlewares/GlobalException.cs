@@ -24,6 +24,7 @@ public sealed class GlobalException : IMiddleware
             switch (ex)
             {
                   case BadRequestException:
+                  case ArgumentException:
                         await BadRequestExceptionHandler(context, ex);
                         break;
                   case UnauthorizedAccessException:
@@ -55,6 +56,7 @@ public sealed class GlobalException : IMiddleware
 
 
       }
+
 
       private Task UnauthorizedAccessExceptionHandler(HttpContext context, Exception ex)
       {

@@ -25,4 +25,16 @@ public class BaseEntity
     this.is_active = isactive;
   }
 
+  public void Disable()
+  {
+    this.is_active = false;
+    this.updated_at = DateTime.UtcNow;
+  }
+
+  public void Enable()
+  {
+    this.is_active = true;
+    this.updated_at = DateTime.UtcNow;
+  }
+
 }

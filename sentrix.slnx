@@ -13,6 +13,16 @@
 <Project Path="src/Modules/Events/Events.Domain/Events.Domain.csproj" />
 <Project Path="src/Modules/Events/Events.Infrastructure/Events.Infrastructure.csproj" />
 </Folder>
+<Folder Name="/src/Modules/Group/">
+<Project Path="src/Modules/Group/Group.Application/Group.Application.csproj" />
+<Project Path="src/Modules/Group/Group.Domain/Group.Domain.csproj" />
+<Project Path="src/Modules/Group/Group.Infrastructure/Group.Infrastructure.csproj" />
+</Folder>
+<Folder Name="/src/Modules/Input/">
+<Project Path="src/Modules/Input/Input.Application/Input.Application.csproj" />
+<Project Path="src/Modules/Input/Input.Domain/Input.Domain.csproj" />
+<Project Path="src/Modules/Input/Input.Infrastructure/Input.Infrastructure.csproj" />
+</Folder>
 <Folder Name="/src/Modules/Location/">
 <Project Path="src/Modules/Location/Location.Application/Location.Application.csproj" />
 
@@ -66,7 +76,10 @@
 </Folder>
 <Folder Name="/src/Modules/Contracts/">
 <Project Path="src/Modules/Contracts/Core.Contract/Core.Contract.csproj" />
+<Project Path="src/Modules/Contracts/Door.Contract/Door.Contract.csproj" />
 <Project Path="src/Modules/Contracts/Events.Contract/Events.Contract.csproj" />
+<Project Path="src/Modules/Contracts/Group.Contract/Group.Contract.csproj" />
+<Project Path="src/Modules/Contracts/Input.Contract/Input.Contract.csproj" />
 <Project Path="src/Modules/Contracts/License.Contract/License.Contract.csproj" />
 <Project Path="src/Modules/Contracts/Location.Contract/Location.Contract.csproj" />
 <Project Path="src/Modules/Contracts/Notifier.Contract/Notifier.Contract.csproj" />

@@ -1996,11 +1996,11 @@
         "net10.0": {
           "targetAlias": "net10.0",
           "projectReferences": {
-            "d:\\code\\sentrix\\src\\Modules\\Contracts\\Role.Contract\\Role.Contract.csproj": {
-              "projectPath": "d:\\code\\sentrix\\src\\Modules\\Contracts\\Role.Contract\\Role.Contract.csproj"
+            "D:\\code\\sentrix\\src\\Modules\\Contracts\\Role.Contract\\Role.Contract.csproj": {
+              "projectPath": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Role.Contract\\Role.Contract.csproj"
             },
-            "d:\\code\\sentrix\\src\\Modules\\Operator\\Operator.Application\\Operator.Application.csproj": {
-              "projectPath": "d:\\code\\sentrix\\src\\Modules\\Operator\\Operator.Application\\Operator.Application.csproj"
+            "D:\\code\\sentrix\\src\\Modules\\Operator\\Operator.Application\\Operator.Application.csproj": {
+              "projectPath": "D:\\code\\sentrix\\src\\Modules\\Operator\\Operator.Application\\Operator.Application.csproj"
             },
             "D:\\code\\sentrix\\src\\Modules\\Operator\\Operator.Domain\\Operator.Domain.csproj": {
               "projectPath": "D:\\code\\sentrix\\src\\Modules\\Operator\\Operator.Domain\\Operator.Domain.csproj"

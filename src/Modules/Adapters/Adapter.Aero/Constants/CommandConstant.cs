@@ -21,6 +21,12 @@ public static class CommandConstant
       public static string ScpSetId = "318 : Set SCP Id";
       public static string HolidayConfiguration ="1104 : Holiday Configuration";
       public static string ExtendedTimeZoneActSpecification = "3103 : Extended TimeZone Act Specification";
+      public static string MonitorPointConfiguration = "113 : Monitor Point Configuration";
+      public static string MonitorPointMask = "306 : Monitor Point Mask";
+      public static string ConfigureMonitorPointGroup = "120 : Configure Monitor Point Group";
+      public static string AccessControlReaderConfiguration = "115 : Access Control Reader Configuration";
+      public static string ReaderSpecification = "112 : Reader Specification";
+      public static string AccessLevelConfigurationExtended = "2116 : Access Level Configuration Extended";
 }
 
 

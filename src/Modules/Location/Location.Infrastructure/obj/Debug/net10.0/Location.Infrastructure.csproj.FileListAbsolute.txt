@@ -1,4 +1,4 @@
-d:\code\sentrix\src\Modules\Location\Location.Infrastructure\bin\Debug\net10.0\Location.Infrastructure.deps.json
+D:\code\sentrix\src\Modules\Location\Location.Infrastructure\bin\Debug\net10.0\Location.Infrastructure.deps.json
 D:\code\sentrix\src\Modules\Location\Location.Infrastructure\bin\Debug\net10.0\Location.Infrastructure.dll
 D:\code\sentrix\src\Modules\Location\Location.Infrastructure\bin\Debug\net10.0\Location.Infrastructure.pdb
 D:\code\sentrix\src\Modules\Location\Location.Infrastructure\bin\Debug\net10.0\Location.Application.dll
@@ -15,8 +15,8 @@ D:\code\sentrix\src\Modules\Location\Location.Infrastructure\obj\Debug\net10.0\L
 D:\code\sentrix\src\Modules\Location\Location.Infrastructure\obj\Debug\net10.0\Location.Infrastructure.AssemblyInfo.cs
 D:\code\sentrix\src\Modules\Location\Location.Infrastructure\obj\Debug\net10.0\Location.Infrastructure.csproj.CoreCompileInputs.cache
 D:\code\sentrix\src\Modules\Location\Location.Infrastructure\obj\Debug\net10.0\Location.Infrastructure.sourcelink.json
-d:\code\sentrix\src\Modules\Location\Location.Infrastructure\obj\Debug\net10.0\Location.89C67BF6.Up2Date
+D:\code\sentrix\src\Modules\Location\Location.Infrastructure\obj\Debug\net10.0\Location.89C67BF6.Up2Date
 D:\code\sentrix\src\Modules\Location\Location.Infrastructure\obj\Debug\net10.0\Location.Infrastructure.dll
 D:\code\sentrix\src\Modules\Location\Location.Infrastructure\obj\Debug\net10.0\refint\Location.Infrastructure.dll
 D:\code\sentrix\src\Modules\Location\Location.Infrastructure\obj\Debug\net10.0\Location.Infrastructure.pdb
-d:\code\sentrix\src\Modules\Location\Location.Infrastructure\obj\Debug\net10.0\ref\Location.Infrastructure.dll
+D:\code\sentrix\src\Modules\Location\Location.Infrastructure\obj\Debug\net10.0\ref\Location.Infrastructure.dll

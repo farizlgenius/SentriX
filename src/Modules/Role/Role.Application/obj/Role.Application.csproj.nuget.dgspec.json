@@ -4,14 +4,14 @@
     "D:\\code\\sentrix\\src\\Modules\\Role\\Role.Application\\Role.Application.csproj": {}
   },
   "projects": {
-    "d:\\code\\sentrix\\src\\Modules\\Contracts\\Role.Contract\\Role.Contract.csproj": {
+    "D:\\code\\sentrix\\src\\Modules\\Contracts\\Role.Contract\\Role.Contract.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "d:\\code\\sentrix\\src\\Modules\\Contracts\\Role.Contract\\Role.Contract.csproj",
+        "projectUniqueName": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Role.Contract\\Role.Contract.csproj",
         "projectName": "Role.Contract",
-        "projectPath": "d:\\code\\sentrix\\src\\Modules\\Contracts\\Role.Contract\\Role.Contract.csproj",
+        "projectPath": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Role.Contract\\Role.Contract.csproj",
         "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-        "outputPath": "d:\\code\\sentrix\\src\\Modules\\Contracts\\Role.Contract\\obj\\",
+        "outputPath": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Role.Contract\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -375,11 +375,11 @@
           "net10.0": {
             "targetAlias": "net10.0",
             "projectReferences": {
-              "d:\\code\\sentrix\\src\\Modules\\Contracts\\Role.Contract\\Role.Contract.csproj": {
-                "projectPath": "d:\\code\\sentrix\\src\\Modules\\Contracts\\Role.Contract\\Role.Contract.csproj"
+              "D:\\code\\sentrix\\src\\Modules\\Contracts\\Role.Contract\\Role.Contract.csproj": {
+                "projectPath": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Role.Contract\\Role.Contract.csproj"
               },
-              "d:\\code\\sentrix\\src\\Modules\\Role\\Role.Domain\\Role.Domain.csproj": {
-                "projectPath": "d:\\code\\sentrix\\src\\Modules\\Role\\Role.Domain\\Role.Domain.csproj"
+              "D:\\code\\sentrix\\src\\Modules\\Role\\Role.Domain\\Role.Domain.csproj": {
+                "projectPath": "D:\\code\\sentrix\\src\\Modules\\Role\\Role.Domain\\Role.Domain.csproj"
               },
               "D:\\code\\sentrix\\src\\SharedKernel\\SharedKernel.csproj": {
                 "projectPath": "D:\\code\\sentrix\\src\\SharedKernel\\SharedKernel.csproj"
@@ -696,14 +696,14 @@
         }
       }
     },
-    "d:\\code\\sentrix\\src\\Modules\\Role\\Role.Domain\\Role.Domain.csproj": {
+    "D:\\code\\sentrix\\src\\Modules\\Role\\Role.Domain\\Role.Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "d:\\code\\sentrix\\src\\Modules\\Role\\Role.Domain\\Role.Domain.csproj",
+        "projectUniqueName": "D:\\code\\sentrix\\src\\Modules\\Role\\Role.Domain\\Role.Domain.csproj",
         "projectName": "Role.Domain",
-        "projectPath": "d:\\code\\sentrix\\src\\Modules\\Role\\Role.Domain\\Role.Domain.csproj",
+        "projectPath": "D:\\code\\sentrix\\src\\Modules\\Role\\Role.Domain\\Role.Domain.csproj",
         "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-        "outputPath": "d:\\code\\sentrix\\src\\Modules\\Role\\Role.Domain\\obj\\",
+        "outputPath": "D:\\code\\sentrix\\src\\Modules\\Role\\Role.Domain\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

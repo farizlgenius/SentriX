@@ -57,12 +57,17 @@
     <ProjectReference Include="..\Modules\Contracts\Adapter.Abstraction\Adapter.Abstraction.csproj" />
     <ProjectReference Include="..\Modules\Contracts\Auth.Contract\Auth.Contract.csproj" />
     <ProjectReference Include="..\Modules\Contracts\Device.Contract\Device.Contract.csproj" />
+    <ProjectReference Include="..\Modules\Contracts\Door.Contract\Door.Contract.csproj" />
     <ProjectReference Include="..\Modules\Contracts\Events.Contract\Events.Contract.csproj" />
+    <ProjectReference Include="..\Modules\Contracts\Group.Contract\Group.Contract.csproj" />
+    <ProjectReference Include="..\Modules\Contracts\Input.Contract\Input.Contract.csproj" />
     <ProjectReference Include="..\Modules\Contracts\Location.Contract\Location.Contract.csproj" />
     <ProjectReference Include="..\Modules\Contracts\Output.Contract\Output.Contract.csproj" />
     <ProjectReference Include="..\Modules\Contracts\Time.Contract\Time.Contract.csproj" />
     <ProjectReference Include="..\Modules\Device\Device.Infrastructure\Device.Infrastructure.csproj" />
+    <ProjectReference Include="..\Modules\Door\Door.Infrastructure\Door.Infrastructure.csproj" />
     <ProjectReference Include="..\Modules\Events\Events.Infrastructure\Events.Infrastructure.csproj" />
+    <ProjectReference Include="..\Modules\Group\Group.Infrastructure\Group.Infrastructure.csproj" />
     <ProjectReference Include="..\Modules\Location\Location.Infrastructure\Location.Infrastructure.csproj" />
     <ProjectReference Include="..\Modules\Notifier\Notifier.Client\Notifier.Client.csproj" />
     <ProjectReference Include="..\Modules\Operator\Operator.Infrastructure\Operator.Infrastructure.csproj" />

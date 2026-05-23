@@ -83,6 +83,7 @@ public sealed class ReplyMessageListener(ILogger<ReplyMessageListener> logger,Ch
             if (!message.GetMessage())
                   return false;
 
+
             await ProcessMessageAsync(mapper.Map<SCPReplyMessageDto>(message));
             return true;
       }

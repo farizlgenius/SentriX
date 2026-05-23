@@ -21,9 +21,9 @@ public sealed class Devices : BaseDomain
   public Devices(int id,short componetId,string name, string serialnumber, string mac,string ip,int port,string fw,string type,string status,DateTime synced_at,int locationid,string metadata,bool isactive) : base(id,componetId,locationid,isactive)
   {
     ValidationHelper.ValidateNotMinus(id, nameof(Id));
-    ValidationHelper.ValidateNotNullOrEmpty(name, nameof(Name));
-    ValidationHelper.ValidateNotNullOrEmpty(serialnumber, nameof(SerialNumber));
-    ValidationHelper.ValidateNotNullOrEmpty(mac, nameof(Mac));
+    ValidationHelper.IsValidName(name);
+    ValidationHelper.IsNullOrEmpty(serialnumber, nameof(SerialNumber));
+    ValidationHelper.IsNullOrEmpty(mac, nameof(Mac));
     ValidationHelper.ValidateNotMinus(locationid, nameof(LocationId));
     this.Id = id;
     this.ComponentId = componetId;

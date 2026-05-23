@@ -9,7 +9,9 @@ using AeroAdapter.Application.Interfaces;
 using Auth.Infrastructure;
 using Cache.Infrastructure;
 using Device.Infrastructure;
+using Door.Infrastructure;
 using Events.Infrastructure;
+using Group.Infrastructure;
 using Host.Helpers;
 using Host.Logging;
 using Host.Middlewares;
@@ -78,6 +80,8 @@ public class Program
         builder.Services.AddAdapter(builder.Configuration);
         builder.Services.AddOutput(builder.Configuration);
         builder.Services.AddTime(builder.Configuration);
+        builder.Services.AddDoor(builder.Configuration);
+        builder.Services.AddGroup(builder.Configuration);
 
 
         // Replace default logging with Serilog

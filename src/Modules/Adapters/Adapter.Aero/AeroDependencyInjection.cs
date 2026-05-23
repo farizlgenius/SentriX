@@ -57,6 +57,8 @@ public static class AeroDependencyInjection
             services.AddScoped<IModuleCommand, ModuleCommand>();
             services.AddScoped<IDriverCommand, DriverCommand>();
             services.AddScoped<ITimeCommand,TimeCommand>();
+            services.AddScoped<IDoorCommand,DoorCommand>();
+            services.AddScoped<IGroupCommand,GroupCommand>();
 
 
             services.AddScoped<IScp,ScpService>();
@@ -66,6 +68,8 @@ public static class AeroDependencyInjection
             services.AddScoped<IControlAdapter,AeroControlService>();
             services.AddScoped<IMonitorAdapter,AeroMonitorService>();
             services.AddScoped<ITimeAdapter,AeroTimeService>();
+            services.AddScoped<IDoorAdapter,AeroDoorService>();
+            services.AddScoped<IGroupAdapter,AeroGroupService>();
 
 
             services.AddScoped<IAdapter, AeroAdapter>();

@@ -19,21 +19,11 @@ public sealed class PaginationParams
     {
         this.pageNumber = pageNumber;
         this.pageSize = pageSize;
-        this.search = ValidateRequiredString(search, nameof(search));
+        this.search = search.Trim();
         this.startDate = startDate;
         this.endDate = endDate;
         this.locationId = locationId;
     }
 
-    private static string ValidateRequiredString(string value, string field)
-    {
-        ArgumentException.ThrowIfNullOrWhiteSpace(value, field);
-        var trimmed = value.Trim();
-        if (!RegexHelper.IsValidName(trimmed) && !RegexHelper.IsValidOnlyCharAndDigit(trimmed.Replace("-", string.Empty).Replace("_", string.Empty)))
-        {
-            throw new ArgumentException($"{field} invalid.", field);
-        }
 
-        return value;
-    }
 }

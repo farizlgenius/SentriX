@@ -1,5 +1,6 @@
 using System.Text.Json;
 using Adapter.Abstraction.Interfaces;
+using Adapter.Aero.Constants;
 using Adapter.Aero.Helpers;
 using Adapter.Aero.Interfaces;
 using Adapter.Aero.Model.Metadata;
@@ -37,6 +38,8 @@ public sealed class AeroTimeService(ITimeCommand time,IMessageBus bus,IAeroRepos
                   );
 
             await bus.SendAsync(new AddCommandEvent(res));
+
+
       }
 
       public async Task CreateTimezoneAsync(
@@ -60,8 +63,7 @@ public sealed class AeroTimeService(ITimeCommand time,IMessageBus bus,IAeroRepos
                   );
 
             await bus.SendAsync(new AddCommandEvent(res));
-            if(!res.IsSend)
-                  throw new Exception("FUCKKKKK2");
+
 
       }
 
@@ -89,6 +91,8 @@ public sealed class AeroTimeService(ITimeCommand time,IMessageBus bus,IAeroRepos
                   );
 
             await bus.SendAsync(new AddCommandEvent(res));
+
+
       }
 
       public async Task DeleteTimezone(

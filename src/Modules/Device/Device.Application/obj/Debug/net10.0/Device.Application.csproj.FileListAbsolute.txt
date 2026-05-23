@@ -1,4 +1,4 @@
-d:\code\sentrix\src\Modules\Device\Device.Application\bin\Debug\net10.0\Device.Application.deps.json
+D:\code\sentrix\src\Modules\Device\Device.Application\bin\Debug\net10.0\Device.Application.deps.json
 D:\code\sentrix\src\Modules\Device\Device.Application\bin\Debug\net10.0\Device.Application.dll
 D:\code\sentrix\src\Modules\Device\Device.Application\bin\Debug\net10.0\Device.Application.pdb
 D:\code\sentrix\src\Modules\Device\Device.Application\bin\Debug\net10.0\Adapter.Abstraction.dll
@@ -21,8 +21,8 @@ D:\code\sentrix\src\Modules\Device\Device.Application\obj\Debug\net10.0\Device.A
 D:\code\sentrix\src\Modules\Device\Device.Application\obj\Debug\net10.0\Device.Application.AssemblyInfo.cs
 D:\code\sentrix\src\Modules\Device\Device.Application\obj\Debug\net10.0\Device.Application.csproj.CoreCompileInputs.cache
 D:\code\sentrix\src\Modules\Device\Device.Application\obj\Debug\net10.0\Device.Application.sourcelink.json
-d:\code\sentrix\src\Modules\Device\Device.Application\obj\Debug\net10.0\Device.A.97846DB6.Up2Date
+D:\code\sentrix\src\Modules\Device\Device.Application\obj\Debug\net10.0\Device.A.97846DB6.Up2Date
 D:\code\sentrix\src\Modules\Device\Device.Application\obj\Debug\net10.0\Device.Application.dll
 D:\code\sentrix\src\Modules\Device\Device.Application\obj\Debug\net10.0\refint\Device.Application.dll
 D:\code\sentrix\src\Modules\Device\Device.Application\obj\Debug\net10.0\Device.Application.pdb
-d:\code\sentrix\src\Modules\Device\Device.Application\obj\Debug\net10.0\ref\Device.Application.dll
+D:\code\sentrix\src\Modules\Device\Device.Application\obj\Debug\net10.0\ref\Device.Application.dll

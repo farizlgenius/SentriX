@@ -4,9 +4,14 @@ namespace SharedKernel.Helpers;
 
 public static class MessageHelper
 {
+      public static class Command
+      {
+            public static string Unsuccess(string Type,string Mac,int ComponentId) => $"{Type} [{Mac}] [{ComponentId}] - Unsuccess";
+      }
       public static class Common
       {
             public static string UserIdEmpty = "OperatorId must not be empty.";
+            public static string MacEmpty = "Mac must not be empty.";
             public static string UsernameEmpty = "Username must not be empty.";
             public static string PasswordEmpty = "Password must not be empty.";
             public static string NameEmpty = "Name must not empty.";
@@ -67,6 +72,7 @@ public static class MessageHelper
 
       public static class Device
       {
+            public static string DeviceMacNotFound(string mac) => $"Device with 'mac {mac}' not found.";
             public static string DeviceIdNotFound(int id) => $"Device with 'id {id}' not found.";
       }
 
@@ -75,10 +81,26 @@ public static class MessageHelper
             public static string OutputIdNotFound(int id) => $"Output with 'id {id}' not found.";
       }
 
+      public static class Input
+      {
+            public static string InputIdNotFound(int id) => $"Input with 'id {id}' not found.";
+            public static string GroupIdNotFound(int id) => $"Input group with 'id {id}' not found.";
+      }
+
       public static class Time
       {
             public static string HolidayNotFound(int id) => $"Holiday with 'id {id}' not found.";
             public static string TimezoneNotFound(int id) => $"Timezone with 'id {id}' not found.";
+      }
+
+      public static class Door
+      {
+            public static string DoorIdNotFound(int id) => $"Door with 'id {id}' not found.";
+      }
+
+      public static class Group
+      {
+            public static string GroupIdNotFound(int id) => $"Group with 'id {id}' not found.";
       }
 
 

@@ -16,16 +16,23 @@ public sealed class AmicoAdapter : IAdapter
 
       public ITimeAdapter Time {get;}
 
+      public IDoorAdapter Door {get;}
+      public IGroupAdapter Group {get;}
+
       public AmicoAdapter(
             IDeviceAdapter devices,
             IMonitorAdapter monitors,
             IControlAdapter controls,
-            ITimeAdapter time
+            ITimeAdapter time,
+            IDoorAdapter door,
+            IGroupAdapter group
       )
       {
             Device = devices;
             Monitor = monitors;
             Control = controls;
             Time = time;
+            Door = door;
+            Group = group;
       }
 }

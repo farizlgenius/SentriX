@@ -1,4 +1,4 @@
-d:\code\sentrix\src\Modules\Contracts\Role.Contract\bin\Debug\net10.0\Role.Contract.deps.json
+D:\code\sentrix\src\Modules\Contracts\Role.Contract\bin\Debug\net10.0\Role.Contract.deps.json
 D:\code\sentrix\src\Modules\Contracts\Role.Contract\bin\Debug\net10.0\Role.Contract.dll
 D:\code\sentrix\src\Modules\Contracts\Role.Contract\bin\Debug\net10.0\Role.Contract.pdb
 D:\code\sentrix\src\Modules\Contracts\Role.Contract\bin\Debug\net10.0\SharedKernel.dll
@@ -9,8 +9,8 @@ D:\code\sentrix\src\Modules\Contracts\Role.Contract\obj\Debug\net10.0\Role.Contr
 D:\code\sentrix\src\Modules\Contracts\Role.Contract\obj\Debug\net10.0\Role.Contract.AssemblyInfo.cs
 D:\code\sentrix\src\Modules\Contracts\Role.Contract\obj\Debug\net10.0\Role.Contract.csproj.CoreCompileInputs.cache
 D:\code\sentrix\src\Modules\Contracts\Role.Contract\obj\Debug\net10.0\Role.Contract.sourcelink.json
-d:\code\sentrix\src\Modules\Contracts\Role.Contract\obj\Debug\net10.0\Role.Con.988B58F5.Up2Date
+D:\code\sentrix\src\Modules\Contracts\Role.Contract\obj\Debug\net10.0\Role.Con.988B58F5.Up2Date
 D:\code\sentrix\src\Modules\Contracts\Role.Contract\obj\Debug\net10.0\Role.Contract.dll
 D:\code\sentrix\src\Modules\Contracts\Role.Contract\obj\Debug\net10.0\refint\Role.Contract.dll
 D:\code\sentrix\src\Modules\Contracts\Role.Contract\obj\Debug\net10.0\Role.Contract.pdb
-d:\code\sentrix\src\Modules\Contracts\Role.Contract\obj\Debug\net10.0\ref\Role.Contract.dll
+D:\code\sentrix\src\Modules\Contracts\Role.Contract\obj\Debug\net10.0\ref\Role.Contract.dll

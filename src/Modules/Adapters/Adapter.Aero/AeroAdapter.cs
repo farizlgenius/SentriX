@@ -15,17 +15,23 @@ public sealed class AeroAdapter : IAdapter
       public IControlAdapter Control { get; }
 
       public ITimeAdapter Time {get;}
+      public IDoorAdapter Door {get;}
+      public IGroupAdapter Group {get;}
 
       public AeroAdapter(
             IDeviceAdapter devices,
             IControlAdapter controls,
             IMonitorAdapter monitor,
-            ITimeAdapter time
+            ITimeAdapter time,
+            IDoorAdapter door,
+            IGroupAdapter group
       )
       {
             Device = devices;
             Control = controls;
             Monitor = monitor;
             Time = time;
+            Door = door;
+            Group = group;
       }
 }

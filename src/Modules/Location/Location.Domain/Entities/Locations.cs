@@ -14,7 +14,7 @@ public sealed class Locations
   public Locations(int id, string name, int countryId, string description)
   {
     ValidationHelper.ValidateNotMinus(id, nameof(Id));
-    ValidationHelper.ValidateNotNullOrEmpty(name, nameof(name));
+    ValidationHelper.IsNullOrEmpty(name, nameof(name));
     Id = id;
     Name = name;
     ValidationHelper.ValidateNotMinus(countryId, nameof(CountryId));

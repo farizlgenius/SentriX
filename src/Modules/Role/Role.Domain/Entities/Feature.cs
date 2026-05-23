@@ -13,7 +13,7 @@ public sealed class Feature
   public Feature(int id, string name, DateTime createdAt, DateTime updatedAt)
   {
     ValidationHelper.ValidateNotMinus(id, nameof(id));
-    ValidationHelper.ValidateNotNullOrEmpty(name, nameof(name));
+    ValidationHelper.IsNullOrEmpty(name, nameof(name));
     Id = id;
     Name = name;
     CreatedAt = createdAt;

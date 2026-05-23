@@ -9,4 +9,6 @@ public interface IAdapter
       IMonitorAdapter Monitor {get;}
       IControlAdapter Control {get;}
       ITimeAdapter Time {get;}
+      IDoorAdapter Door {get;}
+      IGroupAdapter Group {get;}
 }

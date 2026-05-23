@@ -22,11 +22,11 @@ public sealed class Operators
 
   public Operators(string username, string password, string title, string firstName, string middleName, string lastName, string gender, string email, string mobile, List<int> locationId, int roleId)
   {
-    ValidationHelper.ValidateNotNullOrEmpty(username, nameof(username));
-    ValidationHelper.ValidateNotNullOrEmpty(password, nameof(password));
-    ValidationHelper.ValidateNotNullOrEmpty(firstName, nameof(firstName));
-    ValidationHelper.ValidateNotNullOrEmpty(lastName, nameof(lastName));
-    ValidationHelper.ValidateNotNullOrEmpty(email, nameof(email));
+    ValidationHelper.IsValidOnlyCharAndDigit(username, nameof(username));
+    ValidationHelper.IsNullOrEmpty(password, nameof(password));
+    ValidationHelper.IsNullOrEmpty(firstName, nameof(firstName));
+    ValidationHelper.IsNullOrEmpty(lastName, nameof(lastName));
+    ValidationHelper.IsNullOrEmpty(email, nameof(email));
     this.Mobile = mobile;
     Username = username;
     Password = password;
@@ -44,10 +44,9 @@ public sealed class Operators
   public Operators(int id, string username, string title, string firstName, string middleName, string lastName, string gender, string email, string mobile, List<int> locationId, int roleId)
   {
     ValidationHelper.ValidateNotMinus(id, nameof(Id));
-    ValidationHelper.ValidateNotNullOrEmpty(username, nameof(username));
-    ValidationHelper.ValidateNotNullOrEmpty(firstName, nameof(firstName));
-    ValidationHelper.ValidateNotNullOrEmpty(lastName, nameof(lastName));
-    ValidationHelper.ValidateNotNullOrEmpty(email, nameof(email));
+    ValidationHelper.IsNullOrEmpty(username, nameof(username));
+    ValidationHelper.IsValidName(firstName);
+    ValidationHelper.IsValidEmail(email, nameof(email));
     Id = id;
     this.Mobile = mobile;
     Username = username;

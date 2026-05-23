@@ -7,7 +7,7 @@ public sealed record CommandResponse(
       int Tag,
       DateTime SendAt,
       DateTime ReceivedAt,
-      string Body,
+      string? Body,
       string Status,
       string Reason,
       bool IsSend

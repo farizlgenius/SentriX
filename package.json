@@ -33,6 +33,12 @@
     "output:migremove": "dotnet ef migrations remove --project src/Modules/Output/Output.Infrastructure --startup-project src/Host",
     "time:migadd": "dotnet ef migrations add --project src/Modules/Time/Time.Infrastructure --startup-project src/Host",
     "time:migup" : "dotnet ef database update --project src/Modules/Time/Time.Infrastructure --startup-project src/Host",
-    "time:migremove": "dotnet ef migrations remove --project src/Modules/Time/Time.Infrastructure --startup-project src/Host"
+    "time:migremove": "dotnet ef migrations remove --project src/Modules/Time/Time.Infrastructure --startup-project src/Host",
+    "door:migadd": "dotnet ef migrations add --project src/Modules/Door/Door.Infrastructure --startup-project src/Host",
+    "door:migup" : "dotnet ef database update --project src/Modules/Door/Door.Infrastructure --startup-project src/Host",
+    "door:migremove": "dotnet ef migrations remove --project src/Modules/Door/Door.Infrastructure --startup-project src/Host",
+    "group:migadd": "dotnet ef migrations add --project src/Modules/Group/Group.Infrastructure --startup-project src/Host",
+    "group:migup" : "dotnet ef database update --project src/Modules/Group/Group.Infrastructure --startup-project src/Host",
+    "group:migremove": "dotnet ef migrations remove --project src/Modules/Group/Group.Infrastructure --startup-project src/Host"
   }
 }

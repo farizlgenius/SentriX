@@ -2,6 +2,7 @@ using System;
 using System.Text.Json;
 using Adapter.Abstraction;
 using Adapter.Abstraction.Interfaces;
+using Adapter.Aero.Constants;
 using Adapter.Aero.Enums;
 using Adapter.Aero.Helpers;
 using Adapter.Aero.Interfaces;
@@ -61,6 +62,9 @@ public sealed class AeroDeviceService(
 
             await bus.SendAsync(new AddCommandEvent(res));
 
+            if(!res.IsSend)
+                  throw new Exception(MessageHelper.Command.Unsuccess(CommandConstant.ScpStructureStatusRead,Mac,ComponentId));
+
 
             idReport.IdReportInMemory.RemoveAll(x => x.Mac.Equals(Mac));
 
@@ -75,6 +79,9 @@ public sealed class AeroDeviceService(
       public async Task<bool> ResetDeviceAsync(string Mac,short ScpId)
       {
             var res = writer.ScpReset(Mac,ScpId);
+            if(!res.IsSend)
+                  throw new Exception(MessageHelper.Command.Unsuccess(CommandConstant.ScpReset,Mac,ScpId));
+
              await bus.SendAsync(new AddCommandEvent(res));
 
              return res.IsSend;
@@ -109,11 +116,16 @@ public sealed class AeroDeviceService(
             );
 
             await bus.SendAsync(new AddCommandEvent(res));
+
+            if(!res.IsSend)
+                  throw new Exception(MessageHelper.Command.Unsuccess(CommandConstant.SioPanelConfiguration,Mac,ScpId));
       }
 
       public async Task<bool> AsciiCommandAsync(string Mac,int ScpId,string Command)
       {
             var res = writer.AsciiCommandAsync(Mac,(short)ScpId,Command);
+            if(!res.IsSend)
+                  throw new Exception(MessageHelper.Command.Unsuccess(CommandConstant.AsciiCommandAsync,Mac,ScpId));
             await bus.SendAsync(new AddCommandEvent(res));
             return res.IsSend;
       }

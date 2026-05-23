@@ -6,4 +6,11 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\Contracts\Adapter.Abstraction\Adapter.Abstraction.csproj" />
+    <ProjectReference Include="..\..\Contracts\Device.Contract\Device.Contract.csproj" />
+    <ProjectReference Include="..\..\Contracts\Door.Contract\Door.Contract.csproj" />
+    <ProjectReference Include="..\Door.Domain\Door.Domain.csproj" />
+  </ItemGroup>
+
 </Project>

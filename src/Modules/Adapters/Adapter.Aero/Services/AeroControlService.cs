@@ -1,6 +1,8 @@
+using System.Data;
 using System.Text.Json;
 using System.Xml;
 using Adapter.Abstraction.Interfaces;
+using Adapter.Aero.Constants;
 using Adapter.Aero.Enums;
 using Adapter.Aero.Helpers;
 using Adapter.Aero.Interfaces;
@@ -11,6 +13,7 @@ using Events.Contract.Command;
 using Microsoft.Extensions.Logging;
 using Output.Contract.DTOs;
 using SharedKernel.Domain;
+using SharedKernel.Helpers;
 using SharedKernel.Messaging;
 
 namespace Adapter.Aero.Services;
@@ -47,6 +50,9 @@ public sealed class AeroControlService(IAeroRepository repo,IOutputCommand write
             );
 
              await bus.SendAsync(new AddCommandEvent(res));
+
+             if(!res.IsSend)
+                  throw new Exception(MessageHelper.Command.Unsuccess(CommandConstant.OutputPointSpecification,Mac,DeviceComponentId));
             
       }
 
@@ -58,6 +64,9 @@ public sealed class AeroControlService(IAeroRepository repo,IOutputCommand write
       public async Task TriggerOutputAsync(string Mac,short ScpId, short CpId, short Command)
       {
            var res = writer.ControlPointCommand(ScpId,Mac,CpId,Command);
+           await bus.SendAsync(new AddCommandEvent(res));
+           if(!res.IsSend)
+                  throw new Exception(MessageHelper.Command.Unsuccess(CommandConstant.ControlPointCommand,Mac,ScpId));
       }
 
       public async Task DeleteAsync(
@@ -69,8 +78,12 @@ public sealed class AeroControlService(IAeroRepository repo,IOutputCommand write
       )
       {
             var res = writer.DeleteControlPoint(Mac,ScpId,CpNumber,OpNumber,DefaultPulse);
+           
 
             await bus.SendAsync(new AddCommandEvent(res));
+
+             if(!res.IsSend)
+                  throw new Exception(MessageHelper.Command.Unsuccess(CommandConstant.ControlPointConfiguration,Mac,ScpId));
       }
 
       public async Task UpdateAsync(
@@ -94,6 +107,9 @@ public sealed class AeroControlService(IAeroRepository repo,IOutputCommand write
 
             await bus.SendAsync(new AddCommandEvent(res));
 
+            if(!res.IsSend)
+                  throw new Exception(MessageHelper.Command.Unsuccess(CommandConstant.OutputPointSpecification,Mac,DeviceComponentId));
+
             res = writer.ControlPointConfiguration(
                   Mac,
                   DeviceComponentId,
@@ -104,5 +120,8 @@ public sealed class AeroControlService(IAeroRepository repo,IOutputCommand write
             );
 
              await bus.SendAsync(new AddCommandEvent(res));
+
+             if(!res.IsSend)
+                  throw new Exception(MessageHelper.Command.Unsuccess(CommandConstant.OutputPointSpecification,Mac,DeviceComponentId));
       }
 }

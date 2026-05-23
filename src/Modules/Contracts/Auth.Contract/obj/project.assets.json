@@ -1412,11 +1412,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "d:\\code\\sentrix\\src\\Modules\\Contracts\\Auth.Contract\\Auth.Contract.csproj",
+      "projectUniqueName": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Auth.Contract\\Auth.Contract.csproj",
       "projectName": "Auth.Contract",
-      "projectPath": "d:\\code\\sentrix\\src\\Modules\\Contracts\\Auth.Contract\\Auth.Contract.csproj",
+      "projectPath": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Auth.Contract\\Auth.Contract.csproj",
       "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-      "outputPath": "d:\\code\\sentrix\\src\\Modules\\Contracts\\Auth.Contract\\obj\\",
+      "outputPath": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Auth.Contract\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -1437,8 +1437,8 @@
         "net10.0": {
           "targetAlias": "net10.0",
           "projectReferences": {
-            "d:\\code\\sentrix\\src\\Modules\\Contracts\\Role.Contract\\Role.Contract.csproj": {
-              "projectPath": "d:\\code\\sentrix\\src\\Modules\\Contracts\\Role.Contract\\Role.Contract.csproj"
+            "D:\\code\\sentrix\\src\\Modules\\Contracts\\Role.Contract\\Role.Contract.csproj": {
+              "projectPath": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Role.Contract\\Role.Contract.csproj"
             },
             "D:\\code\\sentrix\\src\\SharedKernel\\SharedKernel.csproj": {
               "projectPath": "D:\\code\\sentrix\\src\\SharedKernel\\SharedKernel.csproj"
