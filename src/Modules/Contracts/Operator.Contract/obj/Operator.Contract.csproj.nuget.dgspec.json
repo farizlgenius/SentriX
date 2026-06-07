@@ -1,39 +1,33 @@
 {
   "format": 1,
   "restore": {
-    "D:\\code\\sentrix\\src\\Modules\\Contracts\\Operator.Contract\\Operator.Contract.csproj": {}
+    "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\Modules\\Contracts\\Operator.Contract\\Operator.Contract.csproj": {}
   },
   "projects": {
-    "D:\\code\\sentrix\\src\\Modules\\Contracts\\Operator.Contract\\Operator.Contract.csproj": {
+    "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\Modules\\Contracts\\Operator.Contract\\Operator.Contract.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Operator.Contract\\Operator.Contract.csproj",
+        "projectUniqueName": "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\Modules\\Contracts\\Operator.Contract\\Operator.Contract.csproj",
         "projectName": "Operator.Contract",
-        "projectPath": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Operator.Contract\\Operator.Contract.csproj",
-        "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-        "outputPath": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Operator.Contract\\obj\\",
+        "projectPath": "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\Modules\\Contracts\\Operator.Contract\\Operator.Contract.csproj",
+        "packagesPath": "C:\\Users\\fariz\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\Modules\\Contracts\\Operator.Contract\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "C:\\Users\\fariz\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net10.0": {
             "targetAlias": "net10.0",
             "projectReferences": {
-              "D:\\code\\sentrix\\src\\SharedKernel\\SharedKernel.csproj": {
-                "projectPath": "D:\\code\\sentrix\\src\\SharedKernel\\SharedKernel.csproj"
+              "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\SharedKernel\\SharedKernel.csproj": {
+                "projectPath": "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\SharedKernel\\SharedKernel.csproj"
               }
             }
           }
@@ -69,7 +63,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.202/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.201/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",
@@ -347,28 +341,22 @@
         }
       }
     },
-    "D:\\code\\sentrix\\src\\SharedKernel\\SharedKernel.csproj": {
+    "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\SharedKernel\\SharedKernel.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\code\\sentrix\\src\\SharedKernel\\SharedKernel.csproj",
+        "projectUniqueName": "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\SharedKernel\\SharedKernel.csproj",
         "projectName": "SharedKernel",
-        "projectPath": "D:\\code\\sentrix\\src\\SharedKernel\\SharedKernel.csproj",
-        "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-        "outputPath": "D:\\code\\sentrix\\src\\SharedKernel\\obj\\",
+        "projectPath": "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\SharedKernel\\SharedKernel.csproj",
+        "packagesPath": "C:\\Users\\fariz\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\SharedKernel\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "C:\\Users\\fariz\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -430,7 +418,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.202/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.201/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",

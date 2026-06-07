@@ -10,3 +10,15 @@ D:\code\sentrix\src\Modules\Events\Events.Domain\obj\Debug\net10.0\Events.Domain
 D:\code\sentrix\src\Modules\Events\Events.Domain\obj\Debug\net10.0\refint\Events.Domain.dll
 D:\code\sentrix\src\Modules\Events\Events.Domain\obj\Debug\net10.0\Events.Domain.pdb
 D:\code\sentrix\src\Modules\Events\Events.Domain\obj\Debug\net10.0\ref\Events.Domain.dll
+C:\Users\fariz\Desktop\Work\SentriX\src\Modules\Events\Events.Domain\bin\Debug\net10.0\Events.Domain.deps.json
+C:\Users\fariz\Desktop\Work\SentriX\src\Modules\Events\Events.Domain\bin\Debug\net10.0\Events.Domain.dll
+C:\Users\fariz\Desktop\Work\SentriX\src\Modules\Events\Events.Domain\bin\Debug\net10.0\Events.Domain.pdb
+C:\Users\fariz\Desktop\Work\SentriX\src\Modules\Events\Events.Domain\obj\Debug\net10.0\Events.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\fariz\Desktop\Work\SentriX\src\Modules\Events\Events.Domain\obj\Debug\net10.0\Events.Domain.AssemblyInfoInputs.cache
+C:\Users\fariz\Desktop\Work\SentriX\src\Modules\Events\Events.Domain\obj\Debug\net10.0\Events.Domain.AssemblyInfo.cs
+C:\Users\fariz\Desktop\Work\SentriX\src\Modules\Events\Events.Domain\obj\Debug\net10.0\Events.Domain.csproj.CoreCompileInputs.cache
+C:\Users\fariz\Desktop\Work\SentriX\src\Modules\Events\Events.Domain\obj\Debug\net10.0\Events.Domain.sourcelink.json
+C:\Users\fariz\Desktop\Work\SentriX\src\Modules\Events\Events.Domain\obj\Debug\net10.0\Events.Domain.dll
+C:\Users\fariz\Desktop\Work\SentriX\src\Modules\Events\Events.Domain\obj\Debug\net10.0\refint\Events.Domain.dll
+C:\Users\fariz\Desktop\Work\SentriX\src\Modules\Events\Events.Domain\obj\Debug\net10.0\Events.Domain.pdb
+C:\Users\fariz\Desktop\Work\SentriX\src\Modules\Events\Events.Domain\obj\Debug\net10.0\ref\Events.Domain.dll

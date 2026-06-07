@@ -230,6 +230,67 @@ namespace Adapter.Aero.Migrations
                     b.ToTable("ControlPointConfiguration", "aero");
                 });
 
+            modelBuilder.Entity("Adapter.Aero.Persistences.Entities.DoorMode", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<string>("description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("label")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("value")
+                        .HasColumnType("integer");
+
+                    b.HasKey("id");
+
+                    b.ToTable("DoorModes", "aero");
+
+                    b.HasData(
+                        new
+                        {
+                            id = 1,
+                            description = "Single reader, controlling the door",
+                            label = "Single",
+                            value = 0
+                        },
+                        new
+                        {
+                            id = 2,
+                            description = "In/Out Reader",
+                            label = "Dual",
+                            value = 1
+                        },
+                        new
+                        {
+                            id = 3,
+                            description = "Turnstile Reader",
+                            label = "Turnstile",
+                            value = 3
+                        },
+                        new
+                        {
+                            id = 4,
+                            description = "Elevator, no floor select feedback",
+                            label = "Elevator no floor",
+                            value = 4
+                        },
+                        new
+                        {
+                            id = 5,
+                            description = "Elevator with floor select feedback",
+                            label = "Elevator with floor",
+                            value = 5
+                        });
+                });
+
             modelBuilder.Entity("Adapter.Aero.Persistences.Entities.DriverConfiguration", b =>
                 {
                     b.Property<int>("id")

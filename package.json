@@ -1,5 +1,9 @@
 {
   "scripts": {
+    "migadd:all": "node scripts/add-migration-all.js",
+    "migbundle:all": "node scripts/bundle-all.js",
+    "migup:all": "node scripts/update-migration-all.js",
+    "migadd": "node scripts/add-migration.js",
     "dev": "dotnet watch --project src/Host",   
     "auth:migadd": "dotnet ef migrations add --project src/Modules/Auth/Auth.Infrastructure --startup-project src/Host",
     "auth:migup" : "dotnet ef database update --project src/Modules/Auth/Auth.Infrastructure --startup-project src/Host",

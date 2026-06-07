@@ -4,26 +4,36 @@
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <RuntimeIdentifiers>win-x64;linux-arm64</RuntimeIdentifiers>
   </PropertyGroup>
 
-   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
-		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
-	</PropertyGroup>
+  <Target Name="ShowRuntimeInfo" BeforeTargets="Build">
+  <Message Importance="high" Text="RuntimeIdentifier=$(RuntimeIdentifier)" />
+  <Message Importance="high" Text="SdkLibPath=$(SdkLibPath)" />
+</Target>
 
-  <ItemGroup Condition="'$(RuntimeIdentifier)' == 'win-x64'">
-  <None Include="..\Modules\Adapters\Adapter.Aero\Libs\Windows\**\*">
+   <!-- Auto detect runtime for local development -->
+<PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+
+  <RuntimeIdentifier Condition="'$(PROCESSOR_ARCHITECTURE)' == 'ARM64'">win-arm64</RuntimeIdentifier>
+
+  <RuntimeIdentifier Condition="'$(PROCESSOR_ARCHITECTURE)' == 'AMD64'">win-x64</RuntimeIdentifier>
+
+</PropertyGroup>
+
+<PropertyGroup>
+  <SdkLibPath Condition="'$(RuntimeIdentifier)' == 'win-x64'">Windows</SdkLibPath>
+  <SdkLibPath Condition="'$(RuntimeIdentifier)' == 'win-arm64'">Windows</SdkLibPath>
+  <SdkLibPath Condition="'$(RuntimeIdentifier)' == 'linux-arm64'">Linux</SdkLibPath>
+</PropertyGroup>
+
+<ItemGroup Condition="'$(SdkLibPath)' != ''">
+  <None Include="..\Modules\Adapters\Adapter.Aero\Libs\$(SdkLibPath)\**\*">
     <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     <TargetPath>%(Filename)%(Extension)</TargetPath>
   </None>
 </ItemGroup>
 
-<ItemGroup Condition="'$(RuntimeIdentifier)' == 'linux-arm64'">
-  <None Include="..\Modules\Adapters\Adapter.Aero\Libs\Linux\**\*">
-    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    <TargetPath>%(Filename)%(Extension)</TargetPath>
-  </None>
-</ItemGroup>
+
 
   <ItemGroup>
     <PackageReference Include="MediatR" Version="14.1.0" />

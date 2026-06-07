@@ -10,3 +10,15 @@ D:\code\sentrix\src\Modules\Cache\Cache.Domain\obj\Debug\net10.0\Cache.Domain.dl
 D:\code\sentrix\src\Modules\Cache\Cache.Domain\obj\Debug\net10.0\refint\Cache.Domain.dll
 D:\code\sentrix\src\Modules\Cache\Cache.Domain\obj\Debug\net10.0\Cache.Domain.pdb
 D:\code\sentrix\src\Modules\Cache\Cache.Domain\obj\Debug\net10.0\ref\Cache.Domain.dll
+C:\Users\fariz\Desktop\Work\SentriX\src\Modules\Cache\Cache.Domain\bin\Debug\net10.0\Cache.Domain.deps.json
+C:\Users\fariz\Desktop\Work\SentriX\src\Modules\Cache\Cache.Domain\bin\Debug\net10.0\Cache.Domain.dll
+C:\Users\fariz\Desktop\Work\SentriX\src\Modules\Cache\Cache.Domain\bin\Debug\net10.0\Cache.Domain.pdb
+C:\Users\fariz\Desktop\Work\SentriX\src\Modules\Cache\Cache.Domain\obj\Debug\net10.0\Cache.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\fariz\Desktop\Work\SentriX\src\Modules\Cache\Cache.Domain\obj\Debug\net10.0\Cache.Domain.AssemblyInfoInputs.cache
+C:\Users\fariz\Desktop\Work\SentriX\src\Modules\Cache\Cache.Domain\obj\Debug\net10.0\Cache.Domain.AssemblyInfo.cs
+C:\Users\fariz\Desktop\Work\SentriX\src\Modules\Cache\Cache.Domain\obj\Debug\net10.0\Cache.Domain.csproj.CoreCompileInputs.cache
+C:\Users\fariz\Desktop\Work\SentriX\src\Modules\Cache\Cache.Domain\obj\Debug\net10.0\Cache.Domain.sourcelink.json
+C:\Users\fariz\Desktop\Work\SentriX\src\Modules\Cache\Cache.Domain\obj\Debug\net10.0\Cache.Domain.dll
+C:\Users\fariz\Desktop\Work\SentriX\src\Modules\Cache\Cache.Domain\obj\Debug\net10.0\refint\Cache.Domain.dll
+C:\Users\fariz\Desktop\Work\SentriX\src\Modules\Cache\Cache.Domain\obj\Debug\net10.0\Cache.Domain.pdb
+C:\Users\fariz\Desktop\Work\SentriX\src\Modules\Cache\Cache.Domain\obj\Debug\net10.0\ref\Cache.Domain.dll

@@ -10,3 +10,15 @@ D:\code\sentrix\src\Modules\Contracts\Cache.Contract\obj\Debug\net10.0\Cache.Con
 D:\code\sentrix\src\Modules\Contracts\Cache.Contract\obj\Debug\net10.0\refint\Cache.Contract.dll
 D:\code\sentrix\src\Modules\Contracts\Cache.Contract\obj\Debug\net10.0\Cache.Contract.pdb
 D:\code\sentrix\src\Modules\Contracts\Cache.Contract\obj\Debug\net10.0\ref\Cache.Contract.dll
+C:\Users\fariz\Desktop\Work\SentriX\src\Modules\Contracts\Cache.Contract\bin\Debug\net10.0\Cache.Contract.deps.json
+C:\Users\fariz\Desktop\Work\SentriX\src\Modules\Contracts\Cache.Contract\bin\Debug\net10.0\Cache.Contract.dll
+C:\Users\fariz\Desktop\Work\SentriX\src\Modules\Contracts\Cache.Contract\bin\Debug\net10.0\Cache.Contract.pdb
+C:\Users\fariz\Desktop\Work\SentriX\src\Modules\Contracts\Cache.Contract\obj\Debug\net10.0\Cache.Contract.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\fariz\Desktop\Work\SentriX\src\Modules\Contracts\Cache.Contract\obj\Debug\net10.0\Cache.Contract.AssemblyInfoInputs.cache
+C:\Users\fariz\Desktop\Work\SentriX\src\Modules\Contracts\Cache.Contract\obj\Debug\net10.0\Cache.Contract.AssemblyInfo.cs
+C:\Users\fariz\Desktop\Work\SentriX\src\Modules\Contracts\Cache.Contract\obj\Debug\net10.0\Cache.Contract.csproj.CoreCompileInputs.cache
+C:\Users\fariz\Desktop\Work\SentriX\src\Modules\Contracts\Cache.Contract\obj\Debug\net10.0\Cache.Contract.sourcelink.json
+C:\Users\fariz\Desktop\Work\SentriX\src\Modules\Contracts\Cache.Contract\obj\Debug\net10.0\Cache.Contract.dll
+C:\Users\fariz\Desktop\Work\SentriX\src\Modules\Contracts\Cache.Contract\obj\Debug\net10.0\refint\Cache.Contract.dll
+C:\Users\fariz\Desktop\Work\SentriX\src\Modules\Contracts\Cache.Contract\obj\Debug\net10.0\Cache.Contract.pdb
+C:\Users\fariz\Desktop\Work\SentriX\src\Modules\Contracts\Cache.Contract\obj\Debug\net10.0\ref\Cache.Contract.dll

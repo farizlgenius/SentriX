@@ -1,39 +1,33 @@
 {
   "format": 1,
   "restore": {
-    "D:\\code\\sentrix\\src\\Modules\\Cache\\Cache.Infrastrucure\\Cache.Infrastructure.csproj": {}
+    "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\Modules\\Cache\\Cache.Infrastrucure\\Cache.Infrastructure.csproj": {}
   },
   "projects": {
-    "D:\\code\\sentrix\\src\\Modules\\Cache\\Cache.Application\\Cache.Application.csproj": {
+    "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\Modules\\Cache\\Cache.Application\\Cache.Application.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\code\\sentrix\\src\\Modules\\Cache\\Cache.Application\\Cache.Application.csproj",
+        "projectUniqueName": "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\Modules\\Cache\\Cache.Application\\Cache.Application.csproj",
         "projectName": "Cache.Application",
-        "projectPath": "D:\\code\\sentrix\\src\\Modules\\Cache\\Cache.Application\\Cache.Application.csproj",
-        "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-        "outputPath": "D:\\code\\sentrix\\src\\Modules\\Cache\\Cache.Application\\obj\\",
+        "projectPath": "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\Modules\\Cache\\Cache.Application\\Cache.Application.csproj",
+        "packagesPath": "C:\\Users\\fariz\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\Modules\\Cache\\Cache.Application\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "C:\\Users\\fariz\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net10.0": {
             "targetAlias": "net10.0",
             "projectReferences": {
-              "D:\\code\\sentrix\\src\\Modules\\Cache\\Cache.Domain\\Cache.Domain.csproj": {
-                "projectPath": "D:\\code\\sentrix\\src\\Modules\\Cache\\Cache.Domain\\Cache.Domain.csproj"
+              "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\Modules\\Cache\\Cache.Domain\\Cache.Domain.csproj": {
+                "projectPath": "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\Modules\\Cache\\Cache.Domain\\Cache.Domain.csproj"
               }
             }
           }
@@ -69,7 +63,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.202/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.201/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",
@@ -347,28 +341,22 @@
         }
       }
     },
-    "D:\\code\\sentrix\\src\\Modules\\Cache\\Cache.Domain\\Cache.Domain.csproj": {
+    "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\Modules\\Cache\\Cache.Domain\\Cache.Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\code\\sentrix\\src\\Modules\\Cache\\Cache.Domain\\Cache.Domain.csproj",
+        "projectUniqueName": "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\Modules\\Cache\\Cache.Domain\\Cache.Domain.csproj",
         "projectName": "Cache.Domain",
-        "projectPath": "D:\\code\\sentrix\\src\\Modules\\Cache\\Cache.Domain\\Cache.Domain.csproj",
-        "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-        "outputPath": "D:\\code\\sentrix\\src\\Modules\\Cache\\Cache.Domain\\obj\\",
+        "projectPath": "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\Modules\\Cache\\Cache.Domain\\Cache.Domain.csproj",
+        "packagesPath": "C:\\Users\\fariz\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\Modules\\Cache\\Cache.Domain\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "C:\\Users\\fariz\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -408,7 +396,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.202/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.201/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",
@@ -686,39 +674,33 @@
         }
       }
     },
-    "D:\\code\\sentrix\\src\\Modules\\Cache\\Cache.Infrastrucure\\Cache.Infrastructure.csproj": {
+    "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\Modules\\Cache\\Cache.Infrastrucure\\Cache.Infrastructure.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\code\\sentrix\\src\\Modules\\Cache\\Cache.Infrastrucure\\Cache.Infrastructure.csproj",
+        "projectUniqueName": "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\Modules\\Cache\\Cache.Infrastrucure\\Cache.Infrastructure.csproj",
         "projectName": "Cache.Infrastructure",
-        "projectPath": "D:\\code\\sentrix\\src\\Modules\\Cache\\Cache.Infrastrucure\\Cache.Infrastructure.csproj",
-        "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-        "outputPath": "D:\\code\\sentrix\\src\\Modules\\Cache\\Cache.Infrastrucure\\obj\\",
+        "projectPath": "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\Modules\\Cache\\Cache.Infrastrucure\\Cache.Infrastructure.csproj",
+        "packagesPath": "C:\\Users\\fariz\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\Modules\\Cache\\Cache.Infrastrucure\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "C:\\Users\\fariz\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net10.0": {
             "targetAlias": "net10.0",
             "projectReferences": {
-              "D:\\code\\sentrix\\src\\Modules\\Cache\\Cache.Application\\Cache.Application.csproj": {
-                "projectPath": "D:\\code\\sentrix\\src\\Modules\\Cache\\Cache.Application\\Cache.Application.csproj"
+              "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\Modules\\Cache\\Cache.Application\\Cache.Application.csproj": {
+                "projectPath": "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\Modules\\Cache\\Cache.Application\\Cache.Application.csproj"
               },
-              "D:\\code\\sentrix\\src\\Modules\\Contracts\\Cache.Contract\\Cache.Contract.csproj": {
-                "projectPath": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Cache.Contract\\Cache.Contract.csproj"
+              "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\Modules\\Contracts\\Cache.Contract\\Cache.Contract.csproj": {
+                "projectPath": "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\Modules\\Contracts\\Cache.Contract\\Cache.Contract.csproj"
               }
             }
           }
@@ -776,7 +758,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.202/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.201/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",
@@ -1054,28 +1036,22 @@
         }
       }
     },
-    "D:\\code\\sentrix\\src\\Modules\\Contracts\\Cache.Contract\\Cache.Contract.csproj": {
+    "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\Modules\\Contracts\\Cache.Contract\\Cache.Contract.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Cache.Contract\\Cache.Contract.csproj",
+        "projectUniqueName": "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\Modules\\Contracts\\Cache.Contract\\Cache.Contract.csproj",
         "projectName": "Cache.Contract",
-        "projectPath": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Cache.Contract\\Cache.Contract.csproj",
-        "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-        "outputPath": "D:\\code\\sentrix\\src\\Modules\\Contracts\\Cache.Contract\\obj\\",
+        "projectPath": "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\Modules\\Contracts\\Cache.Contract\\Cache.Contract.csproj",
+        "packagesPath": "C:\\Users\\fariz\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\Modules\\Contracts\\Cache.Contract\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "C:\\Users\\fariz\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -1115,7 +1091,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.202/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.201/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",
