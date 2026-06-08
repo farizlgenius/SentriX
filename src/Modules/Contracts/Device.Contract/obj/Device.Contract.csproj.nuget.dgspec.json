@@ -1,33 +1,36 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\Modules\\Contracts\\Device.Contract\\Device.Contract.csproj": {}
+    "C:\\Users\\Farizl\\Desktop\\Work\\SentriX\\src\\Modules\\Contracts\\Device.Contract\\Device.Contract.csproj": {}
   },
   "projects": {
-    "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\Modules\\Contracts\\Device.Contract\\Device.Contract.csproj": {
+    "C:\\Users\\Farizl\\Desktop\\Work\\SentriX\\src\\Modules\\Contracts\\Device.Contract\\Device.Contract.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\Modules\\Contracts\\Device.Contract\\Device.Contract.csproj",
+        "projectUniqueName": "C:\\Users\\Farizl\\Desktop\\Work\\SentriX\\src\\Modules\\Contracts\\Device.Contract\\Device.Contract.csproj",
         "projectName": "Device.Contract",
-        "projectPath": "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\Modules\\Contracts\\Device.Contract\\Device.Contract.csproj",
-        "packagesPath": "C:\\Users\\fariz\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\Modules\\Contracts\\Device.Contract\\obj\\",
+        "projectPath": "C:\\Users\\Farizl\\Desktop\\Work\\SentriX\\src\\Modules\\Contracts\\Device.Contract\\Device.Contract.csproj",
+        "packagesPath": "C:\\Users\\Farizl\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Farizl\\Desktop\\Work\\SentriX\\src\\Modules\\Contracts\\Device.Contract\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\fariz\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\Farizl\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
         ],
         "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net10.0": {
+            "framework": "net10.0",
             "targetAlias": "net10.0",
             "projectReferences": {
-              "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\SharedKernel\\SharedKernel.csproj": {
-                "projectPath": "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\SharedKernel\\SharedKernel.csproj"
+              "C:\\Users\\Farizl\\Desktop\\Work\\SentriX\\src\\SharedKernel\\SharedKernel.csproj": {
+                "projectPath": "C:\\Users\\Farizl\\Desktop\\Work\\SentriX\\src\\SharedKernel\\SharedKernel.csproj"
               }
             }
           }
@@ -42,10 +45,11 @@
           "auditLevel": "low",
           "auditMode": "all"
         },
-        "SdkAnalysisLevel": "10.0.200"
+        "SdkAnalysisLevel": "10.0.300"
       },
       "frameworks": {
         "net10.0": {
+          "framework": "net10.0",
           "targetAlias": "net10.0",
           "imports": [
             "net461",
@@ -63,7 +67,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.201/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\x64\\sdk\\10.0.300/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",
@@ -341,26 +345,29 @@
         }
       }
     },
-    "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\SharedKernel\\SharedKernel.csproj": {
+    "C:\\Users\\Farizl\\Desktop\\Work\\SentriX\\src\\SharedKernel\\SharedKernel.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\SharedKernel\\SharedKernel.csproj",
+        "projectUniqueName": "C:\\Users\\Farizl\\Desktop\\Work\\SentriX\\src\\SharedKernel\\SharedKernel.csproj",
         "projectName": "SharedKernel",
-        "projectPath": "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\SharedKernel\\SharedKernel.csproj",
-        "packagesPath": "C:\\Users\\fariz\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\SharedKernel\\obj\\",
+        "projectPath": "C:\\Users\\Farizl\\Desktop\\Work\\SentriX\\src\\SharedKernel\\SharedKernel.csproj",
+        "packagesPath": "C:\\Users\\Farizl\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Farizl\\Desktop\\Work\\SentriX\\src\\SharedKernel\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\fariz\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\Farizl\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
         ],
         "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net10.0": {
+            "framework": "net10.0",
             "targetAlias": "net10.0",
             "projectReferences": {}
           }
@@ -375,10 +382,11 @@
           "auditLevel": "low",
           "auditMode": "all"
         },
-        "SdkAnalysisLevel": "10.0.200"
+        "SdkAnalysisLevel": "10.0.300"
       },
       "frameworks": {
         "net10.0": {
+          "framework": "net10.0",
           "targetAlias": "net10.0",
           "dependencies": {
             "Npgsql.EntityFrameworkCore.PostgreSQL": {
@@ -418,7 +426,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.201/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\x64\\sdk\\10.0.300/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",

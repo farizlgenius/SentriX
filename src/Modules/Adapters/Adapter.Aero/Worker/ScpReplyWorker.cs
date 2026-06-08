@@ -47,20 +47,21 @@ public sealed class ScpReplyWorker(Channel<SCPReplyMessageDto> queue, ILogger<Sc
                         case (int)enSCPReplyType.enSCPReplyNAK:
                             break;
                         case (int)enSCPReplyType.enSCPReplyTransaction:
+                            var e = scope.ServiceProvider.GetRequiredService<Events.Contract.Interfaces.IEvent>();
                             switch (message.tran.tran_type)
                             {
                                 case (short)tranType.tranTypeSioComm:
-                                    // var @e = scope.ServiceProvider.GetRequiredService<Events.Contract.Interfaces.IEvent>();
-                                    // var b = scope.ServiceProvider.GetRequiredService<IMessageBus>();
-                                    // await @e.AddEventAsync(
-                                    //     DateTimeOffset.FromUnixTimeSeconds(message.tran.time).UtcDateTime,
-                                    //     string.Empty,
-                                    //     EventModule.MODULE,
-                                    //     DescriptionHelper.GetTranTypeDesc(message.tran.tran_type),
-                                    //     string.Empty,
-                                    //     string.Empty,
-                                    //     string.Empty
-                                    // );
+                                    await e.AddEventAsync(
+                                        DateTimeOffset.FromUnixTimeSeconds(message.tran.time).UtcDateTime,
+                                        string.Empty,
+                                        EventModule.MODULE,
+                                        DescriptionHelper.GetTranTypeDesc(message.tran.tran_type),
+                                        string.Empty,
+                                        string.Empty,
+                                        string.Empty,
+                                        string.Empty,
+                                        0
+                                    );
                                     break;
                                 case (short)tranType.tranTypeCardFull:
                                     // if (isWaitingCardScan && ScanScpId == message.ScpId && ScanAcrNo == message.tran.source_number)
@@ -265,7 +266,7 @@ public sealed class ScpReplyWorker(Channel<SCPReplyMessageDto> queue, ILogger<Sc
                             await notifier.SendToTopic(NotifierTopic.MODULE_STATUS,new StatusDto(
                                 message.SCPId,
                                 message.sts_sio.number,
-                                TranCodeHelper.GetDesc(tranType.tranTypeSioComm,message.sts_sio.com_status),
+                                TranHelper.GetCode(tranType.tranTypeSioComm,message.sts_sio.com_status),
                                 DescriptionHelper.DecodeStatusTypeCoS(message.sts_sio.ct_stat),
                                 DescriptionHelper.DecodeStatusTypeCoS(message.sts_sio.pw_stat),
                                 string.Empty

@@ -1,10 +1,12 @@
+using System.Text;
+using Adapter.Aero.Model;
 using HID.Aero.ScpdNet.Wrapper;
 
 namespace Adapter.Aero.Helpers;
 
-public static class TranCodeHelper
+public static class TranHelper
 {
-      public static string GetDesc(tranType Type,int Code)
+      public static string GetCode(tranType Type,int Code)
       {
             switch (Type)
             {
@@ -62,5 +64,65 @@ public static class TranCodeHelper
                  return string.Empty;
                  
             }
+      }
+
+      public static string GetRemark(SCPReplyMessageDto msg)
+      {
+            switch (msg.tran.tran_type)
+            {
+                  case (short)tranType.tranTypeSys:
+                  return TypeSysRemark(msg.tran.tran_code,msg.tran.sys.error_code);
+                  case (short)tranType.tranTypeSioComm:
+                  return TypeSioCommRemark();
+                  case (short)tranType.tranTypeCardBin:
+                  return TypeCardBinRemark(msg.tran.c_bin.bit_count,msg.tran.c_bin.bit_array);
+                  case (short)tranType.tranTypeCardBcd:
+                  return TypeCardBcdRemark(msg.tran.c_bcd.digit_count,msg.tran.c_bcd.bcd_array);
+                  case (short)tranType.tranTypeCardFull:
+                  return TypeCardFullRemark();
+                  default:
+                  return string.Empty;
+            }
+      }
+
+      private static string TypeSysRemark(int Code,int Error)
+      {
+            
+            if(Code == 1)
+            {
+                  StringBuilder result = new StringBuilder();
+                  if((Error & (1 << 2)) != 0) result.Append("External Reset ");
+                  if((Error & (1 << 3)) != 0) result.Append("Power on Reset ");
+                  if((Error & (1 << 4)) != 0) result.Append("Watchdog Timer ");
+                  if((Error & (1 << 5)) != 0) result.Append("Watchdog Timer ");
+                  if((Error & (1 << 6)) != 0) result.Append("Watchdog Timer ");
+                  if((Error & (1 << 7)) != 0) result.Append("Watchdog Timer ");
+                  return result.ToString();
+            }
+            else
+            {
+                  return string.Empty;
+            }
+
+      }
+
+      private static string TypeSioCommRemark()
+      {
+            return string.Empty;
+      }
+
+      private static string TypeCardBinRemark(int bit,byte[] arr)
+      {
+            return $"Bit: {bit}, Data: {UtilitiesHelper.ByteToHexStr(arr)}";
+      }
+
+      private static string TypeCardBcdRemark(int digit,byte[] arr)
+      {
+            return $"Digit: {digit}, Data: {UtilitiesHelper.ByteToHexStr(arr)}";
+      }
+
+      private static string TypeCardFullRemark()
+      {
+            return string.Empty;
       }
 }

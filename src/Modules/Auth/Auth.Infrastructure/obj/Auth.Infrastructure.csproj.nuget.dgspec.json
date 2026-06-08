@@ -1,45 +1,48 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\Modules\\Auth\\Auth.Infrastructure\\Auth.Infrastructure.csproj": {}
+    "C:\\Users\\Farizl\\Desktop\\Work\\SentriX\\src\\Modules\\Auth\\Auth.Infrastructure\\Auth.Infrastructure.csproj": {}
   },
   "projects": {
-    "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\Modules\\Auth\\Auth.Application\\Auth.Application.csproj": {
+    "C:\\Users\\Farizl\\Desktop\\Work\\SentriX\\src\\Modules\\Auth\\Auth.Application\\Auth.Application.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\Modules\\Auth\\Auth.Application\\Auth.Application.csproj",
+        "projectUniqueName": "C:\\Users\\Farizl\\Desktop\\Work\\SentriX\\src\\Modules\\Auth\\Auth.Application\\Auth.Application.csproj",
         "projectName": "Auth.Application",
-        "projectPath": "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\Modules\\Auth\\Auth.Application\\Auth.Application.csproj",
-        "packagesPath": "C:\\Users\\fariz\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\Modules\\Auth\\Auth.Application\\obj\\",
+        "projectPath": "C:\\Users\\Farizl\\Desktop\\Work\\SentriX\\src\\Modules\\Auth\\Auth.Application\\Auth.Application.csproj",
+        "packagesPath": "C:\\Users\\Farizl\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Farizl\\Desktop\\Work\\SentriX\\src\\Modules\\Auth\\Auth.Application\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\fariz\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\Farizl\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
         ],
         "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net10.0": {
+            "framework": "net10.0",
             "targetAlias": "net10.0",
             "projectReferences": {
-              "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\Modules\\Auth\\Auth.Domain\\Auth.Domain.csproj": {
-                "projectPath": "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\Modules\\Auth\\Auth.Domain\\Auth.Domain.csproj"
+              "C:\\Users\\Farizl\\Desktop\\Work\\SentriX\\src\\Modules\\Auth\\Auth.Domain\\Auth.Domain.csproj": {
+                "projectPath": "C:\\Users\\Farizl\\Desktop\\Work\\SentriX\\src\\Modules\\Auth\\Auth.Domain\\Auth.Domain.csproj"
               },
-              "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\Modules\\Contracts\\Auth.Contract\\Auth.Contract.csproj": {
-                "projectPath": "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\Modules\\Contracts\\Auth.Contract\\Auth.Contract.csproj"
+              "C:\\Users\\Farizl\\Desktop\\Work\\SentriX\\src\\Modules\\Contracts\\Auth.Contract\\Auth.Contract.csproj": {
+                "projectPath": "C:\\Users\\Farizl\\Desktop\\Work\\SentriX\\src\\Modules\\Contracts\\Auth.Contract\\Auth.Contract.csproj"
               },
-              "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\Modules\\Contracts\\Cache.Contract\\Cache.Contract.csproj": {
-                "projectPath": "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\Modules\\Contracts\\Cache.Contract\\Cache.Contract.csproj"
+              "C:\\Users\\Farizl\\Desktop\\Work\\SentriX\\src\\Modules\\Contracts\\Cache.Contract\\Cache.Contract.csproj": {
+                "projectPath": "C:\\Users\\Farizl\\Desktop\\Work\\SentriX\\src\\Modules\\Contracts\\Cache.Contract\\Cache.Contract.csproj"
               },
-              "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\Modules\\Contracts\\Operator.Contract\\Operator.Contract.csproj": {
-                "projectPath": "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\Modules\\Contracts\\Operator.Contract\\Operator.Contract.csproj"
+              "C:\\Users\\Farizl\\Desktop\\Work\\SentriX\\src\\Modules\\Contracts\\Operator.Contract\\Operator.Contract.csproj": {
+                "projectPath": "C:\\Users\\Farizl\\Desktop\\Work\\SentriX\\src\\Modules\\Contracts\\Operator.Contract\\Operator.Contract.csproj"
               },
-              "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\SharedKernel\\SharedKernel.csproj": {
-                "projectPath": "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\SharedKernel\\SharedKernel.csproj"
+              "C:\\Users\\Farizl\\Desktop\\Work\\SentriX\\src\\SharedKernel\\SharedKernel.csproj": {
+                "projectPath": "C:\\Users\\Farizl\\Desktop\\Work\\SentriX\\src\\SharedKernel\\SharedKernel.csproj"
               }
             }
           }
@@ -54,10 +57,11 @@
           "auditLevel": "low",
           "auditMode": "all"
         },
-        "SdkAnalysisLevel": "10.0.200"
+        "SdkAnalysisLevel": "10.0.300"
       },
       "frameworks": {
         "net10.0": {
+          "framework": "net10.0",
           "targetAlias": "net10.0",
           "dependencies": {
             "Microsoft.IdentityModel.Tokens": {
@@ -85,7 +89,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.201/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\x64\\sdk\\10.0.300/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",
@@ -363,26 +367,29 @@
         }
       }
     },
-    "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\Modules\\Auth\\Auth.Domain\\Auth.Domain.csproj": {
+    "C:\\Users\\Farizl\\Desktop\\Work\\SentriX\\src\\Modules\\Auth\\Auth.Domain\\Auth.Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\Modules\\Auth\\Auth.Domain\\Auth.Domain.csproj",
+        "projectUniqueName": "C:\\Users\\Farizl\\Desktop\\Work\\SentriX\\src\\Modules\\Auth\\Auth.Domain\\Auth.Domain.csproj",
         "projectName": "Auth.Domain",
-        "projectPath": "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\Modules\\Auth\\Auth.Domain\\Auth.Domain.csproj",
-        "packagesPath": "C:\\Users\\fariz\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\Modules\\Auth\\Auth.Domain\\obj\\",
+        "projectPath": "C:\\Users\\Farizl\\Desktop\\Work\\SentriX\\src\\Modules\\Auth\\Auth.Domain\\Auth.Domain.csproj",
+        "packagesPath": "C:\\Users\\Farizl\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Farizl\\Desktop\\Work\\SentriX\\src\\Modules\\Auth\\Auth.Domain\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\fariz\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\Farizl\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
         ],
         "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net10.0": {
+            "framework": "net10.0",
             "targetAlias": "net10.0",
             "projectReferences": {}
           }
@@ -397,10 +404,11 @@
           "auditLevel": "low",
           "auditMode": "all"
         },
-        "SdkAnalysisLevel": "10.0.200"
+        "SdkAnalysisLevel": "10.0.300"
       },
       "frameworks": {
         "net10.0": {
+          "framework": "net10.0",
           "targetAlias": "net10.0",
           "imports": [
             "net461",
@@ -418,7 +426,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.201/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\x64\\sdk\\10.0.300/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",
@@ -696,33 +704,36 @@
         }
       }
     },
-    "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\Modules\\Auth\\Auth.Infrastructure\\Auth.Infrastructure.csproj": {
+    "C:\\Users\\Farizl\\Desktop\\Work\\SentriX\\src\\Modules\\Auth\\Auth.Infrastructure\\Auth.Infrastructure.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\Modules\\Auth\\Auth.Infrastructure\\Auth.Infrastructure.csproj",
+        "projectUniqueName": "C:\\Users\\Farizl\\Desktop\\Work\\SentriX\\src\\Modules\\Auth\\Auth.Infrastructure\\Auth.Infrastructure.csproj",
         "projectName": "Auth.Infrastructure",
-        "projectPath": "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\Modules\\Auth\\Auth.Infrastructure\\Auth.Infrastructure.csproj",
-        "packagesPath": "C:\\Users\\fariz\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\Modules\\Auth\\Auth.Infrastructure\\obj\\",
+        "projectPath": "C:\\Users\\Farizl\\Desktop\\Work\\SentriX\\src\\Modules\\Auth\\Auth.Infrastructure\\Auth.Infrastructure.csproj",
+        "packagesPath": "C:\\Users\\Farizl\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Farizl\\Desktop\\Work\\SentriX\\src\\Modules\\Auth\\Auth.Infrastructure\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\fariz\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\Farizl\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
         ],
         "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net10.0": {
+            "framework": "net10.0",
             "targetAlias": "net10.0",
             "projectReferences": {
-              "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\Modules\\Auth\\Auth.Application\\Auth.Application.csproj": {
-                "projectPath": "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\Modules\\Auth\\Auth.Application\\Auth.Application.csproj"
+              "C:\\Users\\Farizl\\Desktop\\Work\\SentriX\\src\\Modules\\Auth\\Auth.Application\\Auth.Application.csproj": {
+                "projectPath": "C:\\Users\\Farizl\\Desktop\\Work\\SentriX\\src\\Modules\\Auth\\Auth.Application\\Auth.Application.csproj"
               },
-              "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\SharedKernel\\SharedKernel.csproj": {
-                "projectPath": "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\SharedKernel\\SharedKernel.csproj"
+              "C:\\Users\\Farizl\\Desktop\\Work\\SentriX\\src\\SharedKernel\\SharedKernel.csproj": {
+                "projectPath": "C:\\Users\\Farizl\\Desktop\\Work\\SentriX\\src\\SharedKernel\\SharedKernel.csproj"
               }
             }
           }
@@ -737,10 +748,11 @@
           "auditLevel": "low",
           "auditMode": "all"
         },
-        "SdkAnalysisLevel": "10.0.200"
+        "SdkAnalysisLevel": "10.0.300"
       },
       "frameworks": {
         "net10.0": {
+          "framework": "net10.0",
           "targetAlias": "net10.0",
           "dependencies": {
             "Microsoft.Extensions.Configuration": {
@@ -784,7 +796,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.201/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\x64\\sdk\\10.0.300/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",
@@ -1062,33 +1074,36 @@
         }
       }
     },
-    "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\Modules\\Contracts\\Auth.Contract\\Auth.Contract.csproj": {
+    "C:\\Users\\Farizl\\Desktop\\Work\\SentriX\\src\\Modules\\Contracts\\Auth.Contract\\Auth.Contract.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\Modules\\Contracts\\Auth.Contract\\Auth.Contract.csproj",
+        "projectUniqueName": "C:\\Users\\Farizl\\Desktop\\Work\\SentriX\\src\\Modules\\Contracts\\Auth.Contract\\Auth.Contract.csproj",
         "projectName": "Auth.Contract",
-        "projectPath": "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\Modules\\Contracts\\Auth.Contract\\Auth.Contract.csproj",
-        "packagesPath": "C:\\Users\\fariz\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\Modules\\Contracts\\Auth.Contract\\obj\\",
+        "projectPath": "C:\\Users\\Farizl\\Desktop\\Work\\SentriX\\src\\Modules\\Contracts\\Auth.Contract\\Auth.Contract.csproj",
+        "packagesPath": "C:\\Users\\Farizl\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Farizl\\Desktop\\Work\\SentriX\\src\\Modules\\Contracts\\Auth.Contract\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\fariz\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\Farizl\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
         ],
         "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net10.0": {
+            "framework": "net10.0",
             "targetAlias": "net10.0",
             "projectReferences": {
-              "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\Modules\\Contracts\\Role.Contract\\Role.Contract.csproj": {
-                "projectPath": "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\Modules\\Contracts\\Role.Contract\\Role.Contract.csproj"
+              "C:\\Users\\Farizl\\Desktop\\Work\\SentriX\\src\\Modules\\Contracts\\Role.Contract\\Role.Contract.csproj": {
+                "projectPath": "C:\\Users\\Farizl\\Desktop\\Work\\SentriX\\src\\Modules\\Contracts\\Role.Contract\\Role.Contract.csproj"
               },
-              "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\SharedKernel\\SharedKernel.csproj": {
-                "projectPath": "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\SharedKernel\\SharedKernel.csproj"
+              "C:\\Users\\Farizl\\Desktop\\Work\\SentriX\\src\\SharedKernel\\SharedKernel.csproj": {
+                "projectPath": "C:\\Users\\Farizl\\Desktop\\Work\\SentriX\\src\\SharedKernel\\SharedKernel.csproj"
               }
             }
           }
@@ -1103,10 +1118,11 @@
           "auditLevel": "low",
           "auditMode": "all"
         },
-        "SdkAnalysisLevel": "10.0.200"
+        "SdkAnalysisLevel": "10.0.300"
       },
       "frameworks": {
         "net10.0": {
+          "framework": "net10.0",
           "targetAlias": "net10.0",
           "imports": [
             "net461",
@@ -1124,7 +1140,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.201/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\x64\\sdk\\10.0.300/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",
@@ -1402,26 +1418,29 @@
         }
       }
     },
-    "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\Modules\\Contracts\\Cache.Contract\\Cache.Contract.csproj": {
+    "C:\\Users\\Farizl\\Desktop\\Work\\SentriX\\src\\Modules\\Contracts\\Cache.Contract\\Cache.Contract.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\Modules\\Contracts\\Cache.Contract\\Cache.Contract.csproj",
+        "projectUniqueName": "C:\\Users\\Farizl\\Desktop\\Work\\SentriX\\src\\Modules\\Contracts\\Cache.Contract\\Cache.Contract.csproj",
         "projectName": "Cache.Contract",
-        "projectPath": "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\Modules\\Contracts\\Cache.Contract\\Cache.Contract.csproj",
-        "packagesPath": "C:\\Users\\fariz\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\Modules\\Contracts\\Cache.Contract\\obj\\",
+        "projectPath": "C:\\Users\\Farizl\\Desktop\\Work\\SentriX\\src\\Modules\\Contracts\\Cache.Contract\\Cache.Contract.csproj",
+        "packagesPath": "C:\\Users\\Farizl\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Farizl\\Desktop\\Work\\SentriX\\src\\Modules\\Contracts\\Cache.Contract\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\fariz\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\Farizl\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
         ],
         "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net10.0": {
+            "framework": "net10.0",
             "targetAlias": "net10.0",
             "projectReferences": {}
           }
@@ -1436,10 +1455,11 @@
           "auditLevel": "low",
           "auditMode": "all"
         },
-        "SdkAnalysisLevel": "10.0.200"
+        "SdkAnalysisLevel": "10.0.300"
       },
       "frameworks": {
         "net10.0": {
+          "framework": "net10.0",
           "targetAlias": "net10.0",
           "imports": [
             "net461",
@@ -1457,7 +1477,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.201/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\x64\\sdk\\10.0.300/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",
@@ -1735,30 +1755,33 @@
         }
       }
     },
-    "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\Modules\\Contracts\\Operator.Contract\\Operator.Contract.csproj": {
+    "C:\\Users\\Farizl\\Desktop\\Work\\SentriX\\src\\Modules\\Contracts\\Operator.Contract\\Operator.Contract.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\Modules\\Contracts\\Operator.Contract\\Operator.Contract.csproj",
+        "projectUniqueName": "C:\\Users\\Farizl\\Desktop\\Work\\SentriX\\src\\Modules\\Contracts\\Operator.Contract\\Operator.Contract.csproj",
         "projectName": "Operator.Contract",
-        "projectPath": "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\Modules\\Contracts\\Operator.Contract\\Operator.Contract.csproj",
-        "packagesPath": "C:\\Users\\fariz\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\Modules\\Contracts\\Operator.Contract\\obj\\",
+        "projectPath": "C:\\Users\\Farizl\\Desktop\\Work\\SentriX\\src\\Modules\\Contracts\\Operator.Contract\\Operator.Contract.csproj",
+        "packagesPath": "C:\\Users\\Farizl\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Farizl\\Desktop\\Work\\SentriX\\src\\Modules\\Contracts\\Operator.Contract\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\fariz\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\Farizl\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
         ],
         "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net10.0": {
+            "framework": "net10.0",
             "targetAlias": "net10.0",
             "projectReferences": {
-              "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\SharedKernel\\SharedKernel.csproj": {
-                "projectPath": "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\SharedKernel\\SharedKernel.csproj"
+              "C:\\Users\\Farizl\\Desktop\\Work\\SentriX\\src\\SharedKernel\\SharedKernel.csproj": {
+                "projectPath": "C:\\Users\\Farizl\\Desktop\\Work\\SentriX\\src\\SharedKernel\\SharedKernel.csproj"
               }
             }
           }
@@ -1773,10 +1796,11 @@
           "auditLevel": "low",
           "auditMode": "all"
         },
-        "SdkAnalysisLevel": "10.0.200"
+        "SdkAnalysisLevel": "10.0.300"
       },
       "frameworks": {
         "net10.0": {
+          "framework": "net10.0",
           "targetAlias": "net10.0",
           "imports": [
             "net461",
@@ -1794,7 +1818,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.201/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\x64\\sdk\\10.0.300/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",
@@ -2072,30 +2096,33 @@
         }
       }
     },
-    "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\Modules\\Contracts\\Role.Contract\\Role.Contract.csproj": {
+    "C:\\Users\\Farizl\\Desktop\\Work\\SentriX\\src\\Modules\\Contracts\\Role.Contract\\Role.Contract.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\Modules\\Contracts\\Role.Contract\\Role.Contract.csproj",
+        "projectUniqueName": "C:\\Users\\Farizl\\Desktop\\Work\\SentriX\\src\\Modules\\Contracts\\Role.Contract\\Role.Contract.csproj",
         "projectName": "Role.Contract",
-        "projectPath": "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\Modules\\Contracts\\Role.Contract\\Role.Contract.csproj",
-        "packagesPath": "C:\\Users\\fariz\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\Modules\\Contracts\\Role.Contract\\obj\\",
+        "projectPath": "C:\\Users\\Farizl\\Desktop\\Work\\SentriX\\src\\Modules\\Contracts\\Role.Contract\\Role.Contract.csproj",
+        "packagesPath": "C:\\Users\\Farizl\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Farizl\\Desktop\\Work\\SentriX\\src\\Modules\\Contracts\\Role.Contract\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\fariz\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\Farizl\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
         ],
         "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net10.0": {
+            "framework": "net10.0",
             "targetAlias": "net10.0",
             "projectReferences": {
-              "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\SharedKernel\\SharedKernel.csproj": {
-                "projectPath": "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\SharedKernel\\SharedKernel.csproj"
+              "C:\\Users\\Farizl\\Desktop\\Work\\SentriX\\src\\SharedKernel\\SharedKernel.csproj": {
+                "projectPath": "C:\\Users\\Farizl\\Desktop\\Work\\SentriX\\src\\SharedKernel\\SharedKernel.csproj"
               }
             }
           }
@@ -2110,10 +2137,11 @@
           "auditLevel": "low",
           "auditMode": "all"
         },
-        "SdkAnalysisLevel": "10.0.200"
+        "SdkAnalysisLevel": "10.0.300"
       },
       "frameworks": {
         "net10.0": {
+          "framework": "net10.0",
           "targetAlias": "net10.0",
           "imports": [
             "net461",
@@ -2131,7 +2159,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.201/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\x64\\sdk\\10.0.300/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",
@@ -2409,26 +2437,29 @@
         }
       }
     },
-    "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\SharedKernel\\SharedKernel.csproj": {
+    "C:\\Users\\Farizl\\Desktop\\Work\\SentriX\\src\\SharedKernel\\SharedKernel.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\SharedKernel\\SharedKernel.csproj",
+        "projectUniqueName": "C:\\Users\\Farizl\\Desktop\\Work\\SentriX\\src\\SharedKernel\\SharedKernel.csproj",
         "projectName": "SharedKernel",
-        "projectPath": "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\SharedKernel\\SharedKernel.csproj",
-        "packagesPath": "C:\\Users\\fariz\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\fariz\\Desktop\\Work\\SentriX\\src\\SharedKernel\\obj\\",
+        "projectPath": "C:\\Users\\Farizl\\Desktop\\Work\\SentriX\\src\\SharedKernel\\SharedKernel.csproj",
+        "packagesPath": "C:\\Users\\Farizl\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Farizl\\Desktop\\Work\\SentriX\\src\\SharedKernel\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\fariz\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\Farizl\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
         ],
         "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net10.0": {
+            "framework": "net10.0",
             "targetAlias": "net10.0",
             "projectReferences": {}
           }
@@ -2443,10 +2474,11 @@
           "auditLevel": "low",
           "auditMode": "all"
         },
-        "SdkAnalysisLevel": "10.0.200"
+        "SdkAnalysisLevel": "10.0.300"
       },
       "frameworks": {
         "net10.0": {
+          "framework": "net10.0",
           "targetAlias": "net10.0",
           "dependencies": {
             "Npgsql.EntityFrameworkCore.PostgreSQL": {
@@ -2486,7 +2518,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.201/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\x64\\sdk\\10.0.300/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",
