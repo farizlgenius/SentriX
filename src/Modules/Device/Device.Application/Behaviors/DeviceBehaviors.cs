@@ -15,38 +15,38 @@ using SharedKernel.Messaging;
 
 namespace Device.Application.Behaviors;
 
-public sealed class DeviceBehaviors(IDeviceRepository repo,IMessageBus bus,IAdapterFactory adapterFactory) : IDevice
+public sealed class DeviceBehaviors(IDeviceRepository repo, IMessageBus bus, IAdapterFactory adapterFactory) : IDevice
 {
-      public async Task<BaseResponse> AsciiCommandAsync(int id,string command, CancellationToken ct = default)
+      public async Task<BaseResponse> AsciiCommandAsync(int id, string command, CancellationToken ct = default)
       {
             var Mac = await repo.GetMacByIdAsync(id);
             var ScpId = await repo.GetComponentIdByMacAsync(Mac);
-            await adapterFactory.GetAdapter(Venders.AERO).Device.AsciiCommandAsync(Mac,ScpId,command);
-             return new BaseResponse(System.Net.HttpStatusCode.OK,MessageHelper.Common.Success,DateTime.UtcNow);
+            await adapterFactory.GetAdapter(Venders.AERO).Device.AsciiCommandAsync(Mac, ScpId, command);
+            return new BaseResponse(System.Net.HttpStatusCode.OK, MessageHelper.Common.Success, DateTime.UtcNow);
       }
 
-      public async Task<DeviceDto> CreateAsync(CreateDeviceDto dto,CancellationToken ct=default)
+      public async Task<DeviceDto> CreateAsync(CreateDeviceDto dto, CancellationToken ct = default)
       {
             var device = new Device.Domain.Entities.Devices(
                   0,
-                  dto.ComponentId, 
-                  dto.Name, 
-                  dto.SerialNumber, 
-                  dto.Mac, 
-                  dto.Ip, 
-                  dto.Port, 
-                  dto.Fw, 
-                  dto.Type, 
-                  dto.Status, 
-                  dto.SyncedAt, 
+                  dto.ComponentId,
+                  dto.Name,
+                  dto.SerialNumber,
+                  dto.Mac,
+                  dto.Ip,
+                  dto.Port,
+                  dto.Fw,
+                  dto.Type,
+                  dto.Status,
+                  dto.SyncedAt,
                   dto.LocationId,
                   dto.Metadata,
                   dto.IsActive);
 
             // TODO: Map domain to dto using AutoMapper or similar library
-            await adapterFactory.GetAdapter(dto.Type).Device.CreateDeviceAsync(dto.Mac,dto.ComponentId);
+            await adapterFactory.GetAdapter(dto.Type).Device.CreateDeviceAsync(dto.Mac, dto.ComponentId);
 
-            var res = await repo.CreateAsync(device,ct);
+            var res = await repo.CreateAsync(device, ct);
 
             var module = new Device.Domain.Entities.Module(
                   0,
@@ -64,7 +64,7 @@ public sealed class DeviceBehaviors(IDeviceRepository repo,IMessageBus bus,IAdap
                   dto.IsActive
                   );
 
-            await repo.CreateModuleAsync(module);   
+            await repo.CreateModuleAsync(module);
 
             return res;
       }
@@ -105,16 +105,16 @@ public sealed class DeviceBehaviors(IDeviceRepository repo,IMessageBus bus,IAdap
             return res;
       }
 
-      public async Task<IEnumerable<OptionDto>> GetOptionByLocationIdAsync(int locationId,CancellationToken ct = default)
+      public async Task<IEnumerable<OptionDto>> GetOptionByLocationIdAsync(int locationId, CancellationToken ct = default)
       {
             // Check if locationId is Exists 
             var flag = await bus.QueryAsync(new IsAnyLocationByIdQuery(locationId));
-            if(!flag)
+            if (!flag)
                   throw new BadRequestException(MessageHelper.Location.LocationNotFound);
 
-            var res = await repo.GetOptionByLocationIdAsync(locationId,ct);
+            var res = await repo.GetOptionByLocationIdAsync(locationId, ct);
             return res;
-            
+
       }
 
       public async Task<List<IdReportDto>> GetIdReportsAsync()
@@ -123,48 +123,53 @@ public sealed class DeviceBehaviors(IDeviceRepository repo,IMessageBus bus,IAdap
             return await adapter.Device.GetIdReportsAsync();
       }
 
-      public async Task<List<ModuleDto>> GetModuleByDeviceIdAsync(int id,CancellationToken ct=default)
+      public async Task<List<ModuleDto>> GetModuleByDeviceIdAsync(int id, CancellationToken ct = default)
       {
-            return await repo.GetModuleByDeviceIdAsync(id,ct);
-            
+            return await repo.GetModuleByDeviceIdAsync(id, ct);
+
       }
 
       public async Task<BaseResponse> GetModuleStatusByIdAsync(int id, CancellationToken ct = default)
       {
-            ModuleDto module = await repo.GetModuleByIdAsync(id,ct);
-            await bus.SendAsync(new ModuleStatusCommand(module.DeviceComponentId,module.Mac,module.ComponentId));
-            return new BaseResponse(System.Net.HttpStatusCode.OK,MessageHelper.Common.Success,DateTime.UtcNow);
+            ModuleDto module = await repo.GetModuleByIdAsync(id, ct);
+            await bus.SendAsync(new ModuleStatusCommand(module.DeviceComponentId, module.Mac, module.ComponentId));
+            return new BaseResponse(System.Net.HttpStatusCode.OK, MessageHelper.Common.Success, DateTime.UtcNow);
       }
 
-      public async Task<Pagination<DeviceDto>> GetPaginationAsync(PaginationParams param,CancellationToken ct=default)
+      public async Task<Pagination<DeviceDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
       {
-           return await repo.GetPaginationAsync(param,ct);
+            return await repo.GetPaginationAsync(param, ct);
       }
 
-      public async Task<DeviceStatusDto> GetStatusByIdAsync(int id,CancellationToken ct=default)
+      public async Task<DeviceStatusDto> GetStatusByIdAsync(int id, CancellationToken ct = default)
       {
-            var ComponentId = await repo.GetComponentIdByIdAsync(id,ct);
+            var ComponentId = await repo.GetComponentIdByIdAsync(id, ct);
             var res = await adapterFactory.GetAdapter(Venders.AERO).Device.GetDeviceStatusAsync(ComponentId);
             return new DeviceStatusDto(id, res);
       }
 
-      public async Task<BaseResponse> ResetDeviceAsync(int id,CancellationToken ct =default)
+      public async Task<BaseResponse> ResetDeviceAsync(int id, CancellationToken ct = default)
       {
-            var Mac = await repo.GetMacByIdAsync(id,ct);
-            var ScpId = await repo.GetComponentIdByIdAsync(id,ct);
-            await adapterFactory.GetAdapter(Venders.AERO).Device.ResetDeviceAsync(Mac,ScpId);
+            var Mac = await repo.GetMacByIdAsync(id, ct);
+            var ScpId = await repo.GetComponentIdByIdAsync(id, ct);
+            await adapterFactory.GetAdapter(Venders.AERO).Device.ResetDeviceAsync(Mac, ScpId);
 
-            return new BaseResponse(System.Net.HttpStatusCode.OK,MessageHelper.Common.Success,DateTime.UtcNow);
+            return new BaseResponse(System.Net.HttpStatusCode.OK, MessageHelper.Common.Success, DateTime.UtcNow);
       }
 
       public async Task<IEnumerable<OptionDto>> GetModuleOptionByDeviceIdAsync(int deviceId, CancellationToken ct = default)
       {
             // Check that ModuleId is Exists
             var flag = await repo.IsAnyModuleByIdAsync(deviceId);
-            if(!flag)
+            if (!flag)
                   throw new BadRequestException(MessageHelper.Device.DeviceIdNotFound(deviceId));
 
-            var res = await repo.GetModuleOptionByDeviceIdAsync(deviceId,ct);
+            var res = await repo.GetModuleOptionByDeviceIdAsync(deviceId, ct);
             return res;
+      }
+
+      public async Task<DeviceDto> GetDeviceByComponentIdAsync(int ComponentId, CancellationToken ct = default)
+      {
+            return await repo.GetDeviceByComponentIdAsync(ComponentId, ct);
       }
 }

@@ -43,25 +43,22 @@ public sealed class ScpReplyWorker(Channel<SCPReplyMessageDto> queue, ILogger<Sc
                     Console.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>> Message Type: " + DescriptionHelper.GetMessageTypeDesc(message.ReplyType));
                     switch (message.ReplyType)
                     {
-                        
+
                         case (int)enSCPReplyType.enSCPReplyNAK:
                             break;
                         case (int)enSCPReplyType.enSCPReplyTransaction:
-                            var e = scope.ServiceProvider.GetRequiredService<Events.Contract.Interfaces.IEvent>();
+                            // define mac , name , actor , image
+                            var h = scope.ServiceProvider.GetRequiredService<IDevice>();
+                            var hw = await h.GetDeviceByComponentIdAsync(message.SCPId);
+                            var mac = hw.Mac;
+                            var name = hw.Name;
+                            var actor = string.Empty;
+                            var image = string.Empty;
+                            var locationId = hw.LocationId;
                             switch (message.tran.tran_type)
                             {
+
                                 case (short)tranType.tranTypeSioComm:
-                                    await e.AddEventAsync(
-                                        DateTimeOffset.FromUnixTimeSeconds(message.tran.time).UtcDateTime,
-                                        string.Empty,
-                                        EventModule.MODULE,
-                                        DescriptionHelper.GetTranTypeDesc(message.tran.tran_type),
-                                        string.Empty,
-                                        string.Empty,
-                                        string.Empty,
-                                        string.Empty,
-                                        0
-                                    );
                                     break;
                                 case (short)tranType.tranTypeCardFull:
                                     // if (isWaitingCardScan && ScanScpId == message.ScpId && ScanAcrNo == message.tran.source_number)
@@ -165,7 +162,7 @@ public sealed class ScpReplyWorker(Channel<SCPReplyMessageDto> queue, ILogger<Sc
                                     }
                                     break;
                                 case (short)tranType.tranTypeREX:
-                                    
+
                                     break;
                                 case (short)tranType.tranTypeCoSDoor:
                                     // var doorstatus = new AcrStatus((short)message.ScpId, message.tran.source_number, "", DescriptionHelper.GetAccessPointStatusFlagResult(message.tran.door.ap_status));
@@ -223,6 +220,18 @@ public sealed class ScpReplyWorker(Channel<SCPReplyMessageDto> queue, ILogger<Sc
                                 default:
                                     break;
                             }
+                            var e = scope.ServiceProvider.GetRequiredService<Events.Contract.Interfaces.IEvent>();
+                            await e.AddEventAsync(
+                                        DateTimeOffset.FromUnixTimeSeconds(message.tran.time).UtcDateTime,
+                                        actor,
+                                        TranHelper.GetEventModuleFromTranType((tranSrc)message.tran.source_type),
+                                        DescriptionHelper.GetTranTypeDesc(message.tran.tran_type),
+                                        image,
+                                        mac,
+                                        name,
+                                        TranHelper.GetRemark(message),
+                                        locationId
+                                    );
                             // await publisher.EventNotifyRecieve();
                             break;
                         case (int)enSCPReplyType.enSCPReplyIDReport:
@@ -263,14 +272,14 @@ public sealed class ScpReplyWorker(Channel<SCPReplyMessageDto> queue, ILogger<Sc
                             // var s = scope.ServiceProvider.GetRequiredService<IModule>();
                             var notifier = scope.ServiceProvider.GetRequiredService<INotifier>();
                             // await s.HandleFoundSioAsync(message.SCPId,message.sts_sio);
-                            await notifier.SendToTopic(NotifierTopic.MODULE_STATUS,new StatusDto(
+                            await notifier.SendToTopic(NotifierTopic.MODULE_STATUS, new StatusDto(
                                 message.SCPId,
                                 message.sts_sio.number,
-                                TranHelper.GetCode(tranType.tranTypeSioComm,message.sts_sio.com_status),
+                                TranHelper.GetCode((tranSrc)message.tran.source_type, tranType.tranTypeSioComm, message.sts_sio.com_status),
                                 DescriptionHelper.DecodeStatusTypeCoS(message.sts_sio.ct_stat),
                                 DescriptionHelper.DecodeStatusTypeCoS(message.sts_sio.pw_stat),
                                 string.Empty
-                            ),ct);
+                            ), ct);
                             break;
                         case (int)enSCPReplyType.enSCPReplySrMp:
                             // var mpstatus = new MpStatus(message.ScpId, message.sts_mp.first, DecodeHelper.TypeCosStatusDecode(Convert.ToByte(message.sts_mp.status[0])));
@@ -296,7 +305,7 @@ public sealed class ScpReplyWorker(Channel<SCPReplyMessageDto> queue, ILogger<Sc
                             break;
                         case (int)enSCPReplyType.enSCPReplyStrStatus:
                             scp = scope.ServiceProvider.GetRequiredService<IScp>();
-                            if(await scp.VerifySCPStructureMemoryAllocate(message.SCPId, message.str_sts))
+                            if (await scp.VerifySCPStructureMemoryAllocate(message.SCPId, message.str_sts))
                             {
                                 await scp.InitialScpConfigurationAsync((short)message.SCPId);
                                 await scp.VerifyScpComponentAsync(message.SCPId);
