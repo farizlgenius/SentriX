@@ -2184,26 +2184,24 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Farizl\\.nuget\\packages\\": {}
+    "/Users/mac/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Farizl\\Desktop\\Work\\SentriX\\src\\Modules\\Notifier\\Notifier.Client\\Notifier.Client.csproj",
+      "projectUniqueName": "/Users/mac/Documents/Aero/SentriX/src/Modules/Notifier/Notifier.Client/Notifier.Client.csproj",
       "projectName": "Notifier.Client",
-      "projectPath": "C:\\Users\\Farizl\\Desktop\\Work\\SentriX\\src\\Modules\\Notifier\\Notifier.Client\\Notifier.Client.csproj",
-      "packagesPath": "C:\\Users\\Farizl\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Farizl\\Desktop\\Work\\SentriX\\src\\Modules\\Notifier\\Notifier.Client\\obj\\",
+      "projectPath": "/Users/mac/Documents/Aero/SentriX/src/Modules/Notifier/Notifier.Client/Notifier.Client.csproj",
+      "packagesPath": "/Users/mac/.nuget/packages/",
+      "outputPath": "/Users/mac/Documents/Aero/SentriX/src/Modules/Notifier/Notifier.Client/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\Farizl\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "/Users/mac/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net10.0"
       ],
       "sources": {
-        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -2211,8 +2209,8 @@
           "framework": "net10.0",
           "targetAlias": "net10.0",
           "projectReferences": {
-            "C:\\Users\\Farizl\\Desktop\\Work\\SentriX\\src\\Modules\\Contracts\\Notifier.Contract\\Notifier.Contract.csproj": {
-              "projectPath": "C:\\Users\\Farizl\\Desktop\\Work\\SentriX\\src\\Modules\\Contracts\\Notifier.Contract\\Notifier.Contract.csproj"
+            "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Notifier.Contract/Notifier.Contract.csproj": {
+              "projectPath": "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Notifier.Contract/Notifier.Contract.csproj"
             }
           }
         }
@@ -2255,7 +2253,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\x64\\sdk\\10.0.300/PortableRuntimeIdentifierGraph.json",
+        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.300/PortableRuntimeIdentifierGraph.json",
         "packagesToPrune": {
           "Microsoft.CSharp": "(,4.7.32767]",
           "Microsoft.VisualBasic": "(,10.4.32767]",

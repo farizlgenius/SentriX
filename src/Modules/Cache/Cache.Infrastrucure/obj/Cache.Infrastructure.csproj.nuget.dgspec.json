@@ -1,27 +1,25 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Farizl\\Desktop\\Work\\SentriX\\src\\Modules\\Cache\\Cache.Infrastrucure\\Cache.Infrastructure.csproj": {}
+    "/Users/mac/Documents/Aero/SentriX/src/Modules/Cache/Cache.Infrastrucure/Cache.Infrastructure.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Farizl\\Desktop\\Work\\SentriX\\src\\Modules\\Cache\\Cache.Application\\Cache.Application.csproj": {
+    "/Users/mac/Documents/Aero/SentriX/src/Modules/Cache/Cache.Application/Cache.Application.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Farizl\\Desktop\\Work\\SentriX\\src\\Modules\\Cache\\Cache.Application\\Cache.Application.csproj",
+        "projectUniqueName": "/Users/mac/Documents/Aero/SentriX/src/Modules/Cache/Cache.Application/Cache.Application.csproj",
         "projectName": "Cache.Application",
-        "projectPath": "C:\\Users\\Farizl\\Desktop\\Work\\SentriX\\src\\Modules\\Cache\\Cache.Application\\Cache.Application.csproj",
-        "packagesPath": "C:\\Users\\Farizl\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Farizl\\Desktop\\Work\\SentriX\\src\\Modules\\Cache\\Cache.Application\\obj\\",
+        "projectPath": "/Users/mac/Documents/Aero/SentriX/src/Modules/Cache/Cache.Application/Cache.Application.csproj",
+        "packagesPath": "/Users/mac/.nuget/packages/",
+        "outputPath": "/Users/mac/Documents/Aero/SentriX/src/Modules/Cache/Cache.Application/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Farizl\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "/Users/mac/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -29,8 +27,8 @@
             "framework": "net10.0",
             "targetAlias": "net10.0",
             "projectReferences": {
-              "C:\\Users\\Farizl\\Desktop\\Work\\SentriX\\src\\Modules\\Cache\\Cache.Domain\\Cache.Domain.csproj": {
-                "projectPath": "C:\\Users\\Farizl\\Desktop\\Work\\SentriX\\src\\Modules\\Cache\\Cache.Domain\\Cache.Domain.csproj"
+              "/Users/mac/Documents/Aero/SentriX/src/Modules/Cache/Cache.Domain/Cache.Domain.csproj": {
+                "projectPath": "/Users/mac/Documents/Aero/SentriX/src/Modules/Cache/Cache.Domain/Cache.Domain.csproj"
               }
             }
           }
@@ -67,7 +65,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\x64\\sdk\\10.0.300/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.300/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",
@@ -345,24 +343,22 @@
         }
       }
     },
-    "C:\\Users\\Farizl\\Desktop\\Work\\SentriX\\src\\Modules\\Cache\\Cache.Domain\\Cache.Domain.csproj": {
+    "/Users/mac/Documents/Aero/SentriX/src/Modules/Cache/Cache.Domain/Cache.Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Farizl\\Desktop\\Work\\SentriX\\src\\Modules\\Cache\\Cache.Domain\\Cache.Domain.csproj",
+        "projectUniqueName": "/Users/mac/Documents/Aero/SentriX/src/Modules/Cache/Cache.Domain/Cache.Domain.csproj",
         "projectName": "Cache.Domain",
-        "projectPath": "C:\\Users\\Farizl\\Desktop\\Work\\SentriX\\src\\Modules\\Cache\\Cache.Domain\\Cache.Domain.csproj",
-        "packagesPath": "C:\\Users\\Farizl\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Farizl\\Desktop\\Work\\SentriX\\src\\Modules\\Cache\\Cache.Domain\\obj\\",
+        "projectPath": "/Users/mac/Documents/Aero/SentriX/src/Modules/Cache/Cache.Domain/Cache.Domain.csproj",
+        "packagesPath": "/Users/mac/.nuget/packages/",
+        "outputPath": "/Users/mac/Documents/Aero/SentriX/src/Modules/Cache/Cache.Domain/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Farizl\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "/Users/mac/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -404,7 +400,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\x64\\sdk\\10.0.300/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.300/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",
@@ -682,24 +678,22 @@
         }
       }
     },
-    "C:\\Users\\Farizl\\Desktop\\Work\\SentriX\\src\\Modules\\Cache\\Cache.Infrastrucure\\Cache.Infrastructure.csproj": {
+    "/Users/mac/Documents/Aero/SentriX/src/Modules/Cache/Cache.Infrastrucure/Cache.Infrastructure.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Farizl\\Desktop\\Work\\SentriX\\src\\Modules\\Cache\\Cache.Infrastrucure\\Cache.Infrastructure.csproj",
+        "projectUniqueName": "/Users/mac/Documents/Aero/SentriX/src/Modules/Cache/Cache.Infrastrucure/Cache.Infrastructure.csproj",
         "projectName": "Cache.Infrastructure",
-        "projectPath": "C:\\Users\\Farizl\\Desktop\\Work\\SentriX\\src\\Modules\\Cache\\Cache.Infrastrucure\\Cache.Infrastructure.csproj",
-        "packagesPath": "C:\\Users\\Farizl\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Farizl\\Desktop\\Work\\SentriX\\src\\Modules\\Cache\\Cache.Infrastrucure\\obj\\",
+        "projectPath": "/Users/mac/Documents/Aero/SentriX/src/Modules/Cache/Cache.Infrastrucure/Cache.Infrastructure.csproj",
+        "packagesPath": "/Users/mac/.nuget/packages/",
+        "outputPath": "/Users/mac/Documents/Aero/SentriX/src/Modules/Cache/Cache.Infrastrucure/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Farizl\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "/Users/mac/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -707,11 +701,11 @@
             "framework": "net10.0",
             "targetAlias": "net10.0",
             "projectReferences": {
-              "C:\\Users\\Farizl\\Desktop\\Work\\SentriX\\src\\Modules\\Cache\\Cache.Application\\Cache.Application.csproj": {
-                "projectPath": "C:\\Users\\Farizl\\Desktop\\Work\\SentriX\\src\\Modules\\Cache\\Cache.Application\\Cache.Application.csproj"
+              "/Users/mac/Documents/Aero/SentriX/src/Modules/Cache/Cache.Application/Cache.Application.csproj": {
+                "projectPath": "/Users/mac/Documents/Aero/SentriX/src/Modules/Cache/Cache.Application/Cache.Application.csproj"
               },
-              "C:\\Users\\Farizl\\Desktop\\Work\\SentriX\\src\\Modules\\Contracts\\Cache.Contract\\Cache.Contract.csproj": {
-                "projectPath": "C:\\Users\\Farizl\\Desktop\\Work\\SentriX\\src\\Modules\\Contracts\\Cache.Contract\\Cache.Contract.csproj"
+              "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Cache.Contract/Cache.Contract.csproj": {
+                "projectPath": "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Cache.Contract/Cache.Contract.csproj"
               }
             }
           }
@@ -770,7 +764,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\x64\\sdk\\10.0.300/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.300/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",
@@ -1048,24 +1042,22 @@
         }
       }
     },
-    "C:\\Users\\Farizl\\Desktop\\Work\\SentriX\\src\\Modules\\Contracts\\Cache.Contract\\Cache.Contract.csproj": {
+    "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Cache.Contract/Cache.Contract.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Farizl\\Desktop\\Work\\SentriX\\src\\Modules\\Contracts\\Cache.Contract\\Cache.Contract.csproj",
+        "projectUniqueName": "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Cache.Contract/Cache.Contract.csproj",
         "projectName": "Cache.Contract",
-        "projectPath": "C:\\Users\\Farizl\\Desktop\\Work\\SentriX\\src\\Modules\\Contracts\\Cache.Contract\\Cache.Contract.csproj",
-        "packagesPath": "C:\\Users\\Farizl\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Farizl\\Desktop\\Work\\SentriX\\src\\Modules\\Contracts\\Cache.Contract\\obj\\",
+        "projectPath": "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Cache.Contract/Cache.Contract.csproj",
+        "packagesPath": "/Users/mac/.nuget/packages/",
+        "outputPath": "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Cache.Contract/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Farizl\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "/Users/mac/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -1107,7 +1099,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\x64\\sdk\\10.0.300/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.300/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",
