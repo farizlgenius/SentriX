@@ -47,6 +47,8 @@ public static class TranHelper
                         _ => string.Empty
                         
                   };
+                  case tranType.tranTypeCardFull:
+                  case tranType.tranTypeDblCardFull:
                   case tranType.tranTypeCoS:
                   return Code switch
                   {
