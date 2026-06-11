@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Device.Contract/Device.Contract.csproj": {}
+    "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Device.Contract\\Device.Contract.csproj": {}
   },
   "projects": {
-    "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Device.Contract/Device.Contract.csproj": {
+    "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Device.Contract\\Device.Contract.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Device.Contract/Device.Contract.csproj",
+        "projectUniqueName": "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Device.Contract\\Device.Contract.csproj",
         "projectName": "Device.Contract",
-        "projectPath": "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Device.Contract/Device.Contract.csproj",
-        "packagesPath": "/Users/mac/.nuget/packages/",
-        "outputPath": "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Device.Contract/obj/",
+        "projectPath": "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Device.Contract\\Device.Contract.csproj",
+        "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
+        "outputPath": "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Device.Contract\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/mac/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
@@ -27,8 +27,8 @@
             "framework": "net10.0",
             "targetAlias": "net10.0",
             "projectReferences": {
-              "/Users/mac/Documents/Aero/SentriX/src/SharedKernel/SharedKernel.csproj": {
-                "projectPath": "/Users/mac/Documents/Aero/SentriX/src/SharedKernel/SharedKernel.csproj"
+              "D:\\aero\\SentriX\\src\\SharedKernel\\SharedKernel.csproj": {
+                "projectPath": "D:\\aero\\SentriX\\src\\SharedKernel\\SharedKernel.csproj"
               }
             }
           }
@@ -65,7 +65,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.300/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.301/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",
@@ -343,17 +343,17 @@
         }
       }
     },
-    "/Users/mac/Documents/Aero/SentriX/src/SharedKernel/SharedKernel.csproj": {
+    "D:\\aero\\SentriX\\src\\SharedKernel\\SharedKernel.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/mac/Documents/Aero/SentriX/src/SharedKernel/SharedKernel.csproj",
+        "projectUniqueName": "D:\\aero\\SentriX\\src\\SharedKernel\\SharedKernel.csproj",
         "projectName": "SharedKernel",
-        "projectPath": "/Users/mac/Documents/Aero/SentriX/src/SharedKernel/SharedKernel.csproj",
-        "packagesPath": "/Users/mac/.nuget/packages/",
-        "outputPath": "/Users/mac/Documents/Aero/SentriX/src/SharedKernel/obj/",
+        "projectPath": "D:\\aero\\SentriX\\src\\SharedKernel\\SharedKernel.csproj",
+        "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
+        "outputPath": "D:\\aero\\SentriX\\src\\SharedKernel\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/mac/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
@@ -422,7 +422,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.300/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.301/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",

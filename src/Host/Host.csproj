@@ -73,7 +73,9 @@
     <ProjectReference Include="..\Modules\Contracts\Input.Contract\Input.Contract.csproj" />
     <ProjectReference Include="..\Modules\Contracts\Location.Contract\Location.Contract.csproj" />
     <ProjectReference Include="..\Modules\Contracts\Output.Contract\Output.Contract.csproj" />
+    <ProjectReference Include="..\Modules\Contracts\Storage.Contract\Storage.Contract.csproj" />
     <ProjectReference Include="..\Modules\Contracts\Time.Contract\Time.Contract.csproj" />
+    <ProjectReference Include="..\Modules\Contracts\User.Contract\User.Contract.csproj" />
     <ProjectReference Include="..\Modules\Device\Device.Infrastructure\Device.Infrastructure.csproj" />
     <ProjectReference Include="..\Modules\Door\Door.Infrastructure\Door.Infrastructure.csproj" />
     <ProjectReference Include="..\Modules\Events\Events.Infrastructure\Events.Infrastructure.csproj" />

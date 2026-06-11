@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "/Users/mac/Documents/Aero/SentriX/src/Modules/Role/Role.Infrastructure/Role.Infrastructure.csproj": {}
+    "D:\\aero\\SentriX\\src\\Modules\\Role\\Role.Infrastructure\\Role.Infrastructure.csproj": {}
   },
   "projects": {
-    "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Location.Contract/Location.Contract.csproj": {
+    "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Location.Contract\\Location.Contract.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Location.Contract/Location.Contract.csproj",
+        "projectUniqueName": "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Location.Contract\\Location.Contract.csproj",
         "projectName": "Location.Contract",
-        "projectPath": "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Location.Contract/Location.Contract.csproj",
-        "packagesPath": "/Users/mac/.nuget/packages/",
-        "outputPath": "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Location.Contract/obj/",
+        "projectPath": "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Location.Contract\\Location.Contract.csproj",
+        "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
+        "outputPath": "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Location.Contract\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/mac/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
@@ -27,8 +27,8 @@
             "framework": "net10.0",
             "targetAlias": "net10.0",
             "projectReferences": {
-              "/Users/mac/Documents/Aero/SentriX/src/SharedKernel/SharedKernel.csproj": {
-                "projectPath": "/Users/mac/Documents/Aero/SentriX/src/SharedKernel/SharedKernel.csproj"
+              "D:\\aero\\SentriX\\src\\SharedKernel\\SharedKernel.csproj": {
+                "projectPath": "D:\\aero\\SentriX\\src\\SharedKernel\\SharedKernel.csproj"
               }
             }
           }
@@ -65,7 +65,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.300/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.301/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",
@@ -343,17 +343,17 @@
         }
       }
     },
-    "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Role.Contract/Role.Contract.csproj": {
+    "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Role.Contract\\Role.Contract.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Role.Contract/Role.Contract.csproj",
+        "projectUniqueName": "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Role.Contract\\Role.Contract.csproj",
         "projectName": "Role.Contract",
-        "projectPath": "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Role.Contract/Role.Contract.csproj",
-        "packagesPath": "/Users/mac/.nuget/packages/",
-        "outputPath": "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Role.Contract/obj/",
+        "projectPath": "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Role.Contract\\Role.Contract.csproj",
+        "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
+        "outputPath": "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Role.Contract\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/mac/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
@@ -366,8 +366,8 @@
             "framework": "net10.0",
             "targetAlias": "net10.0",
             "projectReferences": {
-              "/Users/mac/Documents/Aero/SentriX/src/SharedKernel/SharedKernel.csproj": {
-                "projectPath": "/Users/mac/Documents/Aero/SentriX/src/SharedKernel/SharedKernel.csproj"
+              "D:\\aero\\SentriX\\src\\SharedKernel\\SharedKernel.csproj": {
+                "projectPath": "D:\\aero\\SentriX\\src\\SharedKernel\\SharedKernel.csproj"
               }
             }
           }
@@ -404,7 +404,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.300/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.301/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",
@@ -682,17 +682,17 @@
         }
       }
     },
-    "/Users/mac/Documents/Aero/SentriX/src/Modules/Role/Role.Application/Role.Application.csproj": {
+    "D:\\aero\\SentriX\\src\\Modules\\Role\\Role.Application\\Role.Application.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/mac/Documents/Aero/SentriX/src/Modules/Role/Role.Application/Role.Application.csproj",
+        "projectUniqueName": "D:\\aero\\SentriX\\src\\Modules\\Role\\Role.Application\\Role.Application.csproj",
         "projectName": "Role.Application",
-        "projectPath": "/Users/mac/Documents/Aero/SentriX/src/Modules/Role/Role.Application/Role.Application.csproj",
-        "packagesPath": "/Users/mac/.nuget/packages/",
-        "outputPath": "/Users/mac/Documents/Aero/SentriX/src/Modules/Role/Role.Application/obj/",
+        "projectPath": "D:\\aero\\SentriX\\src\\Modules\\Role\\Role.Application\\Role.Application.csproj",
+        "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
+        "outputPath": "D:\\aero\\SentriX\\src\\Modules\\Role\\Role.Application\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/mac/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
@@ -705,14 +705,14 @@
             "framework": "net10.0",
             "targetAlias": "net10.0",
             "projectReferences": {
-              "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Role.Contract/Role.Contract.csproj": {
-                "projectPath": "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Role.Contract/Role.Contract.csproj"
+              "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Role.Contract\\Role.Contract.csproj": {
+                "projectPath": "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Role.Contract\\Role.Contract.csproj"
               },
-              "/Users/mac/Documents/Aero/SentriX/src/Modules/Role/Role.Domain/Role.Domain.csproj": {
-                "projectPath": "/Users/mac/Documents/Aero/SentriX/src/Modules/Role/Role.Domain/Role.Domain.csproj"
+              "D:\\aero\\SentriX\\src\\Modules\\Role\\Role.Domain\\Role.Domain.csproj": {
+                "projectPath": "D:\\aero\\SentriX\\src\\Modules\\Role\\Role.Domain\\Role.Domain.csproj"
               },
-              "/Users/mac/Documents/Aero/SentriX/src/SharedKernel/SharedKernel.csproj": {
-                "projectPath": "/Users/mac/Documents/Aero/SentriX/src/SharedKernel/SharedKernel.csproj"
+              "D:\\aero\\SentriX\\src\\SharedKernel\\SharedKernel.csproj": {
+                "projectPath": "D:\\aero\\SentriX\\src\\SharedKernel\\SharedKernel.csproj"
               }
             }
           }
@@ -749,7 +749,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.300/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.301/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",
@@ -1027,17 +1027,17 @@
         }
       }
     },
-    "/Users/mac/Documents/Aero/SentriX/src/Modules/Role/Role.Domain/Role.Domain.csproj": {
+    "D:\\aero\\SentriX\\src\\Modules\\Role\\Role.Domain\\Role.Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/mac/Documents/Aero/SentriX/src/Modules/Role/Role.Domain/Role.Domain.csproj",
+        "projectUniqueName": "D:\\aero\\SentriX\\src\\Modules\\Role\\Role.Domain\\Role.Domain.csproj",
         "projectName": "Role.Domain",
-        "projectPath": "/Users/mac/Documents/Aero/SentriX/src/Modules/Role/Role.Domain/Role.Domain.csproj",
-        "packagesPath": "/Users/mac/.nuget/packages/",
-        "outputPath": "/Users/mac/Documents/Aero/SentriX/src/Modules/Role/Role.Domain/obj/",
+        "projectPath": "D:\\aero\\SentriX\\src\\Modules\\Role\\Role.Domain\\Role.Domain.csproj",
+        "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
+        "outputPath": "D:\\aero\\SentriX\\src\\Modules\\Role\\Role.Domain\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/mac/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
@@ -1050,8 +1050,8 @@
             "framework": "net10.0",
             "targetAlias": "net10.0",
             "projectReferences": {
-              "/Users/mac/Documents/Aero/SentriX/src/SharedKernel/SharedKernel.csproj": {
-                "projectPath": "/Users/mac/Documents/Aero/SentriX/src/SharedKernel/SharedKernel.csproj"
+              "D:\\aero\\SentriX\\src\\SharedKernel\\SharedKernel.csproj": {
+                "projectPath": "D:\\aero\\SentriX\\src\\SharedKernel\\SharedKernel.csproj"
               }
             }
           }
@@ -1088,7 +1088,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.300/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.301/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",
@@ -1366,17 +1366,17 @@
         }
       }
     },
-    "/Users/mac/Documents/Aero/SentriX/src/Modules/Role/Role.Infrastructure/Role.Infrastructure.csproj": {
+    "D:\\aero\\SentriX\\src\\Modules\\Role\\Role.Infrastructure\\Role.Infrastructure.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/mac/Documents/Aero/SentriX/src/Modules/Role/Role.Infrastructure/Role.Infrastructure.csproj",
+        "projectUniqueName": "D:\\aero\\SentriX\\src\\Modules\\Role\\Role.Infrastructure\\Role.Infrastructure.csproj",
         "projectName": "Role.Infrastructure",
-        "projectPath": "/Users/mac/Documents/Aero/SentriX/src/Modules/Role/Role.Infrastructure/Role.Infrastructure.csproj",
-        "packagesPath": "/Users/mac/.nuget/packages/",
-        "outputPath": "/Users/mac/Documents/Aero/SentriX/src/Modules/Role/Role.Infrastructure/obj/",
+        "projectPath": "D:\\aero\\SentriX\\src\\Modules\\Role\\Role.Infrastructure\\Role.Infrastructure.csproj",
+        "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
+        "outputPath": "D:\\aero\\SentriX\\src\\Modules\\Role\\Role.Infrastructure\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/mac/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
@@ -1389,14 +1389,14 @@
             "framework": "net10.0",
             "targetAlias": "net10.0",
             "projectReferences": {
-              "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Location.Contract/Location.Contract.csproj": {
-                "projectPath": "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Location.Contract/Location.Contract.csproj"
+              "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Location.Contract\\Location.Contract.csproj": {
+                "projectPath": "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Location.Contract\\Location.Contract.csproj"
               },
-              "/Users/mac/Documents/Aero/SentriX/src/Modules/Role/Role.Application/Role.Application.csproj": {
-                "projectPath": "/Users/mac/Documents/Aero/SentriX/src/Modules/Role/Role.Application/Role.Application.csproj"
+              "D:\\aero\\SentriX\\src\\Modules\\Role\\Role.Application\\Role.Application.csproj": {
+                "projectPath": "D:\\aero\\SentriX\\src\\Modules\\Role\\Role.Application\\Role.Application.csproj"
               },
-              "/Users/mac/Documents/Aero/SentriX/src/SharedKernel/SharedKernel.csproj": {
-                "projectPath": "/Users/mac/Documents/Aero/SentriX/src/SharedKernel/SharedKernel.csproj"
+              "D:\\aero\\SentriX\\src\\SharedKernel\\SharedKernel.csproj": {
+                "projectPath": "D:\\aero\\SentriX\\src\\SharedKernel\\SharedKernel.csproj"
               }
             }
           }
@@ -1455,7 +1455,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.300/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.301/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",
@@ -1733,17 +1733,17 @@
         }
       }
     },
-    "/Users/mac/Documents/Aero/SentriX/src/SharedKernel/SharedKernel.csproj": {
+    "D:\\aero\\SentriX\\src\\SharedKernel\\SharedKernel.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/mac/Documents/Aero/SentriX/src/SharedKernel/SharedKernel.csproj",
+        "projectUniqueName": "D:\\aero\\SentriX\\src\\SharedKernel\\SharedKernel.csproj",
         "projectName": "SharedKernel",
-        "projectPath": "/Users/mac/Documents/Aero/SentriX/src/SharedKernel/SharedKernel.csproj",
-        "packagesPath": "/Users/mac/.nuget/packages/",
-        "outputPath": "/Users/mac/Documents/Aero/SentriX/src/SharedKernel/obj/",
+        "projectPath": "D:\\aero\\SentriX\\src\\SharedKernel\\SharedKernel.csproj",
+        "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
+        "outputPath": "D:\\aero\\SentriX\\src\\SharedKernel\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/mac/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
@@ -1812,7 +1812,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.300/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.301/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",

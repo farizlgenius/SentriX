@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "/Users/mac/Documents/Aero/SentriX/src/Modules/Events/Events.Domain/Events.Domain.csproj": {}
+    "D:\\aero\\SentriX\\src\\Modules\\Events\\Events.Domain\\Events.Domain.csproj": {}
   },
   "projects": {
-    "/Users/mac/Documents/Aero/SentriX/src/Modules/Events/Events.Domain/Events.Domain.csproj": {
+    "D:\\aero\\SentriX\\src\\Modules\\Events\\Events.Domain\\Events.Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/mac/Documents/Aero/SentriX/src/Modules/Events/Events.Domain/Events.Domain.csproj",
+        "projectUniqueName": "D:\\aero\\SentriX\\src\\Modules\\Events\\Events.Domain\\Events.Domain.csproj",
         "projectName": "Events.Domain",
-        "projectPath": "/Users/mac/Documents/Aero/SentriX/src/Modules/Events/Events.Domain/Events.Domain.csproj",
-        "packagesPath": "/Users/mac/.nuget/packages/",
-        "outputPath": "/Users/mac/Documents/Aero/SentriX/src/Modules/Events/Events.Domain/obj/",
+        "projectPath": "D:\\aero\\SentriX\\src\\Modules\\Events\\Events.Domain\\Events.Domain.csproj",
+        "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
+        "outputPath": "D:\\aero\\SentriX\\src\\Modules\\Events\\Events.Domain\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/mac/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
@@ -61,7 +61,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.300/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.301/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",

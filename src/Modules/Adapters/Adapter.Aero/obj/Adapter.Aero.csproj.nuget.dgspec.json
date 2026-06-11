@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "/Users/mac/Documents/Aero/SentriX/src/Modules/Adapters/Adapter.Aero/Adapter.Aero.csproj": {}
+    "D:\\aero\\SentriX\\src\\Modules\\Adapters\\Adapter.Aero\\Adapter.Aero.csproj": {}
   },
   "projects": {
-    "/Users/mac/Documents/Aero/SentriX/src/Modules/Adapters/Adapter.Aero/Adapter.Aero.csproj": {
+    "D:\\aero\\SentriX\\src\\Modules\\Adapters\\Adapter.Aero\\Adapter.Aero.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/mac/Documents/Aero/SentriX/src/Modules/Adapters/Adapter.Aero/Adapter.Aero.csproj",
+        "projectUniqueName": "D:\\aero\\SentriX\\src\\Modules\\Adapters\\Adapter.Aero\\Adapter.Aero.csproj",
         "projectName": "Adapter.Aero",
-        "projectPath": "/Users/mac/Documents/Aero/SentriX/src/Modules/Adapters/Adapter.Aero/Adapter.Aero.csproj",
-        "packagesPath": "/Users/mac/.nuget/packages/",
-        "outputPath": "/Users/mac/Documents/Aero/SentriX/src/Modules/Adapters/Adapter.Aero/obj/",
+        "projectPath": "D:\\aero\\SentriX\\src\\Modules\\Adapters\\Adapter.Aero\\Adapter.Aero.csproj",
+        "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
+        "outputPath": "D:\\aero\\SentriX\\src\\Modules\\Adapters\\Adapter.Aero\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/mac/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
@@ -27,20 +27,20 @@
             "framework": "net10.0",
             "targetAlias": "net10.0",
             "projectReferences": {
-              "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Adapter.Abstraction/Adapter.Abstraction.csproj": {
-                "projectPath": "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Adapter.Abstraction/Adapter.Abstraction.csproj"
+              "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Adapter.Abstraction\\Adapter.Abstraction.csproj": {
+                "projectPath": "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Adapter.Abstraction\\Adapter.Abstraction.csproj"
               },
-              "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Device.Contract/Device.Contract.csproj": {
-                "projectPath": "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Device.Contract/Device.Contract.csproj"
+              "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Device.Contract\\Device.Contract.csproj": {
+                "projectPath": "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Device.Contract\\Device.Contract.csproj"
               },
-              "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Events.Contract/Events.Contract.csproj": {
-                "projectPath": "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Events.Contract/Events.Contract.csproj"
+              "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Events.Contract\\Events.Contract.csproj": {
+                "projectPath": "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Events.Contract\\Events.Contract.csproj"
               },
-              "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Notifier.Contract/Notifier.Contract.csproj": {
-                "projectPath": "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Notifier.Contract/Notifier.Contract.csproj"
+              "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Notifier.Contract\\Notifier.Contract.csproj": {
+                "projectPath": "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Notifier.Contract\\Notifier.Contract.csproj"
               },
-              "/Users/mac/Documents/Aero/SentriX/src/SharedKernel/SharedKernel.csproj": {
-                "projectPath": "/Users/mac/Documents/Aero/SentriX/src/SharedKernel/SharedKernel.csproj"
+              "D:\\aero\\SentriX\\src\\SharedKernel\\SharedKernel.csproj": {
+                "projectPath": "D:\\aero\\SentriX\\src\\SharedKernel\\SharedKernel.csproj"
               }
             }
           }
@@ -107,7 +107,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.300/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.301/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",
@@ -385,17 +385,17 @@
         }
       }
     },
-    "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Adapter.Abstraction/Adapter.Abstraction.csproj": {
+    "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Adapter.Abstraction\\Adapter.Abstraction.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Adapter.Abstraction/Adapter.Abstraction.csproj",
+        "projectUniqueName": "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Adapter.Abstraction\\Adapter.Abstraction.csproj",
         "projectName": "Adapter.Abstraction",
-        "projectPath": "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Adapter.Abstraction/Adapter.Abstraction.csproj",
-        "packagesPath": "/Users/mac/.nuget/packages/",
-        "outputPath": "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Adapter.Abstraction/obj/",
+        "projectPath": "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Adapter.Abstraction\\Adapter.Abstraction.csproj",
+        "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
+        "outputPath": "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Adapter.Abstraction\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/mac/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
@@ -408,14 +408,14 @@
             "framework": "net10.0",
             "targetAlias": "net10.0",
             "projectReferences": {
-              "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Device.Contract/Device.Contract.csproj": {
-                "projectPath": "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Device.Contract/Device.Contract.csproj"
+              "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Device.Contract\\Device.Contract.csproj": {
+                "projectPath": "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Device.Contract\\Device.Contract.csproj"
               },
-              "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Output.Contract/Output.Contract.csproj": {
-                "projectPath": "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Output.Contract/Output.Contract.csproj"
+              "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Output.Contract\\Output.Contract.csproj": {
+                "projectPath": "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Output.Contract\\Output.Contract.csproj"
               },
-              "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Time.Contract/Time.Contract.csproj": {
-                "projectPath": "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Time.Contract/Time.Contract.csproj"
+              "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Time.Contract\\Time.Contract.csproj": {
+                "projectPath": "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Time.Contract\\Time.Contract.csproj"
               }
             }
           }
@@ -452,7 +452,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.300/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.301/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",
@@ -730,17 +730,17 @@
         }
       }
     },
-    "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Device.Contract/Device.Contract.csproj": {
+    "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Device.Contract\\Device.Contract.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Device.Contract/Device.Contract.csproj",
+        "projectUniqueName": "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Device.Contract\\Device.Contract.csproj",
         "projectName": "Device.Contract",
-        "projectPath": "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Device.Contract/Device.Contract.csproj",
-        "packagesPath": "/Users/mac/.nuget/packages/",
-        "outputPath": "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Device.Contract/obj/",
+        "projectPath": "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Device.Contract\\Device.Contract.csproj",
+        "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
+        "outputPath": "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Device.Contract\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/mac/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
@@ -753,8 +753,8 @@
             "framework": "net10.0",
             "targetAlias": "net10.0",
             "projectReferences": {
-              "/Users/mac/Documents/Aero/SentriX/src/SharedKernel/SharedKernel.csproj": {
-                "projectPath": "/Users/mac/Documents/Aero/SentriX/src/SharedKernel/SharedKernel.csproj"
+              "D:\\aero\\SentriX\\src\\SharedKernel\\SharedKernel.csproj": {
+                "projectPath": "D:\\aero\\SentriX\\src\\SharedKernel\\SharedKernel.csproj"
               }
             }
           }
@@ -791,7 +791,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.300/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.301/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",
@@ -1069,17 +1069,17 @@
         }
       }
     },
-    "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Events.Contract/Events.Contract.csproj": {
+    "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Events.Contract\\Events.Contract.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Events.Contract/Events.Contract.csproj",
+        "projectUniqueName": "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Events.Contract\\Events.Contract.csproj",
         "projectName": "Events.Contract",
-        "projectPath": "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Events.Contract/Events.Contract.csproj",
-        "packagesPath": "/Users/mac/.nuget/packages/",
-        "outputPath": "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Events.Contract/obj/",
+        "projectPath": "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Events.Contract\\Events.Contract.csproj",
+        "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
+        "outputPath": "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Events.Contract\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/mac/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
@@ -1092,8 +1092,8 @@
             "framework": "net10.0",
             "targetAlias": "net10.0",
             "projectReferences": {
-              "/Users/mac/Documents/Aero/SentriX/src/SharedKernel/SharedKernel.csproj": {
-                "projectPath": "/Users/mac/Documents/Aero/SentriX/src/SharedKernel/SharedKernel.csproj"
+              "D:\\aero\\SentriX\\src\\SharedKernel\\SharedKernel.csproj": {
+                "projectPath": "D:\\aero\\SentriX\\src\\SharedKernel\\SharedKernel.csproj"
               }
             }
           }
@@ -1130,7 +1130,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.300/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.301/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",
@@ -1408,17 +1408,17 @@
         }
       }
     },
-    "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Notifier.Contract/Notifier.Contract.csproj": {
+    "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Notifier.Contract\\Notifier.Contract.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Notifier.Contract/Notifier.Contract.csproj",
+        "projectUniqueName": "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Notifier.Contract\\Notifier.Contract.csproj",
         "projectName": "Notifier.Contract",
-        "projectPath": "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Notifier.Contract/Notifier.Contract.csproj",
-        "packagesPath": "/Users/mac/.nuget/packages/",
-        "outputPath": "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Notifier.Contract/obj/",
+        "projectPath": "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Notifier.Contract\\Notifier.Contract.csproj",
+        "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
+        "outputPath": "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Notifier.Contract\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/mac/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
@@ -1431,11 +1431,11 @@
             "framework": "net10.0",
             "targetAlias": "net10.0",
             "projectReferences": {
-              "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Device.Contract/Device.Contract.csproj": {
-                "projectPath": "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Device.Contract/Device.Contract.csproj"
+              "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Device.Contract\\Device.Contract.csproj": {
+                "projectPath": "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Device.Contract\\Device.Contract.csproj"
               },
-              "/Users/mac/Documents/Aero/SentriX/src/SharedKernel/SharedKernel.csproj": {
-                "projectPath": "/Users/mac/Documents/Aero/SentriX/src/SharedKernel/SharedKernel.csproj"
+              "D:\\aero\\SentriX\\src\\SharedKernel\\SharedKernel.csproj": {
+                "projectPath": "D:\\aero\\SentriX\\src\\SharedKernel\\SharedKernel.csproj"
               }
             }
           }
@@ -1472,7 +1472,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.300/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.301/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",
@@ -1750,17 +1750,17 @@
         }
       }
     },
-    "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Output.Contract/Output.Contract.csproj": {
+    "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Output.Contract\\Output.Contract.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Output.Contract/Output.Contract.csproj",
+        "projectUniqueName": "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Output.Contract\\Output.Contract.csproj",
         "projectName": "Output.Contract",
-        "projectPath": "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Output.Contract/Output.Contract.csproj",
-        "packagesPath": "/Users/mac/.nuget/packages/",
-        "outputPath": "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Output.Contract/obj/",
+        "projectPath": "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Output.Contract\\Output.Contract.csproj",
+        "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
+        "outputPath": "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Output.Contract\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/mac/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
@@ -1773,8 +1773,8 @@
             "framework": "net10.0",
             "targetAlias": "net10.0",
             "projectReferences": {
-              "/Users/mac/Documents/Aero/SentriX/src/SharedKernel/SharedKernel.csproj": {
-                "projectPath": "/Users/mac/Documents/Aero/SentriX/src/SharedKernel/SharedKernel.csproj"
+              "D:\\aero\\SentriX\\src\\SharedKernel\\SharedKernel.csproj": {
+                "projectPath": "D:\\aero\\SentriX\\src\\SharedKernel\\SharedKernel.csproj"
               }
             }
           }
@@ -1811,7 +1811,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.300/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.301/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",
@@ -2089,17 +2089,17 @@
         }
       }
     },
-    "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Time.Contract/Time.Contract.csproj": {
+    "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Time.Contract\\Time.Contract.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Time.Contract/Time.Contract.csproj",
+        "projectUniqueName": "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Time.Contract\\Time.Contract.csproj",
         "projectName": "Time.Contract",
-        "projectPath": "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Time.Contract/Time.Contract.csproj",
-        "packagesPath": "/Users/mac/.nuget/packages/",
-        "outputPath": "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Time.Contract/obj/",
+        "projectPath": "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Time.Contract\\Time.Contract.csproj",
+        "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
+        "outputPath": "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Time.Contract\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/mac/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
@@ -2112,8 +2112,8 @@
             "framework": "net10.0",
             "targetAlias": "net10.0",
             "projectReferences": {
-              "/Users/mac/Documents/Aero/SentriX/src/SharedKernel/SharedKernel.csproj": {
-                "projectPath": "/Users/mac/Documents/Aero/SentriX/src/SharedKernel/SharedKernel.csproj"
+              "D:\\aero\\SentriX\\src\\SharedKernel\\SharedKernel.csproj": {
+                "projectPath": "D:\\aero\\SentriX\\src\\SharedKernel\\SharedKernel.csproj"
               }
             }
           }
@@ -2150,7 +2150,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.300/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.301/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",
@@ -2428,17 +2428,17 @@
         }
       }
     },
-    "/Users/mac/Documents/Aero/SentriX/src/SharedKernel/SharedKernel.csproj": {
+    "D:\\aero\\SentriX\\src\\SharedKernel\\SharedKernel.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/mac/Documents/Aero/SentriX/src/SharedKernel/SharedKernel.csproj",
+        "projectUniqueName": "D:\\aero\\SentriX\\src\\SharedKernel\\SharedKernel.csproj",
         "projectName": "SharedKernel",
-        "projectPath": "/Users/mac/Documents/Aero/SentriX/src/SharedKernel/SharedKernel.csproj",
-        "packagesPath": "/Users/mac/.nuget/packages/",
-        "outputPath": "/Users/mac/Documents/Aero/SentriX/src/SharedKernel/obj/",
+        "projectPath": "D:\\aero\\SentriX\\src\\SharedKernel\\SharedKernel.csproj",
+        "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
+        "outputPath": "D:\\aero\\SentriX\\src\\SharedKernel\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/mac/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
@@ -2507,7 +2507,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.300/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.301/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",

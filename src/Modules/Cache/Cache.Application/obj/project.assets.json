@@ -27,19 +27,19 @@
     ]
   },
   "packageFolders": {
-    "/Users/mac/.nuget/packages/": {}
+    "C:\\Users\\User\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/mac/Documents/Aero/SentriX/src/Modules/Cache/Cache.Application/Cache.Application.csproj",
+      "projectUniqueName": "D:\\aero\\SentriX\\src\\Modules\\Cache\\Cache.Application\\Cache.Application.csproj",
       "projectName": "Cache.Application",
-      "projectPath": "/Users/mac/Documents/Aero/SentriX/src/Modules/Cache/Cache.Application/Cache.Application.csproj",
-      "packagesPath": "/Users/mac/.nuget/packages/",
-      "outputPath": "/Users/mac/Documents/Aero/SentriX/src/Modules/Cache/Cache.Application/obj/",
+      "projectPath": "D:\\aero\\SentriX\\src\\Modules\\Cache\\Cache.Application\\Cache.Application.csproj",
+      "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
+      "outputPath": "D:\\aero\\SentriX\\src\\Modules\\Cache\\Cache.Application\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/Users/mac/.nuget/NuGet/NuGet.Config"
+        "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net10.0"
@@ -52,8 +52,8 @@
           "framework": "net10.0",
           "targetAlias": "net10.0",
           "projectReferences": {
-            "/Users/mac/Documents/Aero/SentriX/src/Modules/Cache/Cache.Domain/Cache.Domain.csproj": {
-              "projectPath": "/Users/mac/Documents/Aero/SentriX/src/Modules/Cache/Cache.Domain/Cache.Domain.csproj"
+            "D:\\aero\\SentriX\\src\\Modules\\Cache\\Cache.Domain\\Cache.Domain.csproj": {
+              "projectPath": "D:\\aero\\SentriX\\src\\Modules\\Cache\\Cache.Domain\\Cache.Domain.csproj"
             }
           }
         }
@@ -90,7 +90,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.300/PortableRuntimeIdentifierGraph.json",
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.301/PortableRuntimeIdentifierGraph.json",
         "packagesToPrune": {
           "Microsoft.CSharp": "(,4.7.32767]",
           "Microsoft.VisualBasic": "(,10.4.32767]",

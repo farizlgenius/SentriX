@@ -1687,19 +1687,19 @@
     ]
   },
   "packageFolders": {
-    "/Users/mac/.nuget/packages/": {}
+    "C:\\Users\\User\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/mac/Documents/Aero/SentriX/src/Modules/Auth/Auth.Application/Auth.Application.csproj",
+      "projectUniqueName": "D:\\aero\\SentriX\\src\\Modules\\Auth\\Auth.Application\\Auth.Application.csproj",
       "projectName": "Auth.Application",
-      "projectPath": "/Users/mac/Documents/Aero/SentriX/src/Modules/Auth/Auth.Application/Auth.Application.csproj",
-      "packagesPath": "/Users/mac/.nuget/packages/",
-      "outputPath": "/Users/mac/Documents/Aero/SentriX/src/Modules/Auth/Auth.Application/obj/",
+      "projectPath": "D:\\aero\\SentriX\\src\\Modules\\Auth\\Auth.Application\\Auth.Application.csproj",
+      "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
+      "outputPath": "D:\\aero\\SentriX\\src\\Modules\\Auth\\Auth.Application\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/Users/mac/.nuget/NuGet/NuGet.Config"
+        "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net10.0"
@@ -1712,20 +1712,20 @@
           "framework": "net10.0",
           "targetAlias": "net10.0",
           "projectReferences": {
-            "/Users/mac/Documents/Aero/SentriX/src/Modules/Auth/Auth.Domain/Auth.Domain.csproj": {
-              "projectPath": "/Users/mac/Documents/Aero/SentriX/src/Modules/Auth/Auth.Domain/Auth.Domain.csproj"
+            "D:\\aero\\SentriX\\src\\Modules\\Auth\\Auth.Domain\\Auth.Domain.csproj": {
+              "projectPath": "D:\\aero\\SentriX\\src\\Modules\\Auth\\Auth.Domain\\Auth.Domain.csproj"
             },
-            "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Auth.Contract/Auth.Contract.csproj": {
-              "projectPath": "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Auth.Contract/Auth.Contract.csproj"
+            "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Auth.Contract\\Auth.Contract.csproj": {
+              "projectPath": "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Auth.Contract\\Auth.Contract.csproj"
             },
-            "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Cache.Contract/Cache.Contract.csproj": {
-              "projectPath": "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Cache.Contract/Cache.Contract.csproj"
+            "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Cache.Contract\\Cache.Contract.csproj": {
+              "projectPath": "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Cache.Contract\\Cache.Contract.csproj"
             },
-            "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Operator.Contract/Operator.Contract.csproj": {
-              "projectPath": "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Operator.Contract/Operator.Contract.csproj"
+            "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Operator.Contract\\Operator.Contract.csproj": {
+              "projectPath": "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Operator.Contract\\Operator.Contract.csproj"
             },
-            "/Users/mac/Documents/Aero/SentriX/src/SharedKernel/SharedKernel.csproj": {
-              "projectPath": "/Users/mac/Documents/Aero/SentriX/src/SharedKernel/SharedKernel.csproj"
+            "D:\\aero\\SentriX\\src\\SharedKernel\\SharedKernel.csproj": {
+              "projectPath": "D:\\aero\\SentriX\\src\\SharedKernel\\SharedKernel.csproj"
             }
           }
         }
@@ -1772,7 +1772,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.300/PortableRuntimeIdentifierGraph.json",
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.301/PortableRuntimeIdentifierGraph.json",
         "packagesToPrune": {
           "Microsoft.CSharp": "(,4.7.32767]",
           "Microsoft.VisualBasic": "(,10.4.32767]",

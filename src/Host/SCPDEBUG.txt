@@ -28,3 +28,13 @@ Begin - SCP Driver DLL (64-bit) version 4.7.1.43
 03962.502 Listen Successful, port: 3333
 06222.764 Shutting down debug Thread...
 File closed Mon Jun  8 15:10:22 2026
+Debug file SCPDEBUG.txt <SCPDEBUGc.txt> <SCPDEBUG.TXT> opened Thu Jun 11 09:48:28 2026
+Begin - SCP Driver DLL (64-bit) version 4.7.1.43
+46108.948 WSAStartup ok
+46108.952 RNG_X931A24 Initialized
+46108.954 1, enCcSystem: 011 1024 1024 0 0 1
+46109.031 1, enCcCreateChannel: 0012 1 7 3333 0 3000 0 "" 0
+46109.263 listen(lsock) created socket=3548 on port 3333
+46109.263 Listen Successful, port: 3333
+55949.406 Shutting down debug Thread...
+File closed Thu Jun 11 12:32:29 2026

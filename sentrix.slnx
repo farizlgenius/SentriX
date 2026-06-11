@@ -61,7 +61,9 @@
  <Folder Name="/src/SharedKernel/">
  <Project Path="src/SharedKernel/SharedKernel.csproj" />
  </Folder>
-<Folder Name="/src/Modules/" />
+<Folder Name="/src/Modules/">
+<Project Path="src/Modules/Storage/Storage.csproj" />
+</Folder>
 <Folder Name="/src/Modules/Auth/">
 <Project Path="src/Modules/Auth/Auth.Application/Auth.Application.csproj" />
 
@@ -90,6 +92,7 @@
 <Project Path="src/Modules/Contracts/Adapter.Abstraction/Adapter.Abstraction.csproj" />
 <Project Path="src/Modules/Contracts/Output.Contract/Output.Contract.csproj" />
 <Project Path="src/Modules/Contracts/Role.Contract/Role.Contract.csproj" />
+<Project Path="src/Modules/Contracts/Storage.Contract/Storage.Contract.csproj" />
 <Project Path="src/Modules/Contracts/Time.Contract/Time.Contract.csproj" />
 <Project Path="src/Modules/Contracts/User.Contract/User.Contract.csproj" />
 </Folder>
