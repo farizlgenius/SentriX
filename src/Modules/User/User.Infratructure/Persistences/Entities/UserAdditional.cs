@@ -8,13 +8,13 @@ public sealed class UserAdditional : BaseEntity
 {
 
       public string additional { get; set; } = string.Empty;
-      public string user_id { get; set; } = string.Empty;
+      public int user_id { get; set; }
       public Users user { get; set; } = new Users();
 
       public UserAdditional() { }
 
 
-      public UserAdditional(string userid, string additional)
+      public UserAdditional(int userid, string additional)
       {
             this.user_id = userid;
             this.additional = additional;

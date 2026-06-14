@@ -14,13 +14,22 @@ public sealed class Company : BaseEntity
       public Company() { }
 
 
-      public Company(string name,string address,string description,int location) : base(0,location,true)
+      public Company(Domain.Entities.Company company) : base(0, company.LocationId, company.IsActive)
       {
-            this.name = name;
-            this.address = address;
-            this.description = description;
+            this.name = company.Name;
+            this.address = company.Address;
+            this.description = company.Description;
 
       }
+
+      public void Update(Domain.Entities.Company company)
+      {
+            this.name = company.Name;
+            this.address = company.Address;
+            this.description = company.Description;
+            this.updated_at = DateTime.UtcNow;
+      }
+
 
 
 }

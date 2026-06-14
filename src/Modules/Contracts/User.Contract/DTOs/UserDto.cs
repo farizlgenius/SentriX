@@ -18,11 +18,10 @@ public sealed record UserDto(
       int DepartmentId,
       int PositionId,
       string Address,
-      short Flag,
-      List<string> additionals,
+      List<string> Additionals,
       string Image,
-      List<CredentialDto> credentials,
-      List<int> user_groups,
+      List<CredentialDto> Credentials,
+      List<int> Groups,
       int LocationId,
       bool IsActive
 ) : BaseDto(

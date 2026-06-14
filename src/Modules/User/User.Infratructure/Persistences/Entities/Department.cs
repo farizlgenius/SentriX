@@ -13,9 +13,16 @@ public sealed class Department : BaseEntity
       public Department() { }
 
 
-      public Department(string name, string description,int location) : base(0,location,true)
+      public Department(Domain.Entities.Department department) : base(0, department.LocationId, department.IsActive)
       {
-            this.name = name;
-            this.description = description;
+            this.name = department.Name;
+            this.description = department.Description;
+      }
+
+      public void Update(Domain.Entities.Department department)
+      {
+            this.name = department.Name;
+            this.description = department.Description;
+            this.updated_at = DateTime.UtcNow;
       }
 }

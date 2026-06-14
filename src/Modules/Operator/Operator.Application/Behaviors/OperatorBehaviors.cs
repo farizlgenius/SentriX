@@ -16,28 +16,28 @@ public sealed class OperatorBehaviors(IOperatorRepository repo) : IOperator
       {
 
             if (string.IsNullOrWhiteSpace(dto.Username))
-                  throw new BadRequestException(MessageHelper.Common.UsernameEmpty);
+                  throw new BadRequestException(MessageHelper.Common.Empty(nameof(dto.Username)));
 
             if (string.IsNullOrWhiteSpace(dto.Password))
-                  throw new BadRequestException(MessageHelper.Common.PasswordEmpty);
+                  throw new BadRequestException(MessageHelper.Common.Empty(nameof(dto.Password)));
 
             if (await repo.IsOperatorExistsByUsernameAsync(dto.Username))
-                  throw new BadRequestException(MessageHelper.Common.DuplicatedUsername);
+                  throw new BadRequestException(MessageHelper.Common.Duplicate(nameof(dto.Username)));
 
             if (string.IsNullOrWhiteSpace(dto.Firstname))
-                  throw new BadRequestException(MessageHelper.Common.FirstnameEmpty);
+                  throw new BadRequestException(MessageHelper.Common.Empty(nameof(dto.Firstname)));
 
             if (string.IsNullOrWhiteSpace(dto.Lastname))
-                  throw new BadRequestException(MessageHelper.Common.LastnameEmpty);
+                  throw new BadRequestException(MessageHelper.Common.Empty(nameof(dto.Lastname)));
 
             if (string.IsNullOrWhiteSpace(dto.Email))
-                  throw new BadRequestException(MessageHelper.Common.EmailEmpty);
+                  throw new BadRequestException(MessageHelper.Common.Empty(nameof(dto.Email)));
 
             if (!await repo.IsLocationIdsValidAsync(dto.LocationId))
-                  throw new BadRequestException(MessageHelper.Location.LocationInvalid);
+                  throw new BadRequestException(MessageHelper.Common.NotFound("Location", dto.LocationId));
 
             if (!await repo.IsValidRoleIdAsync(dto.RoleId))
-                  throw new BadRequestException(MessageHelper.Role.RoleInvalid);
+                  throw new BadRequestException(MessageHelper.Common.NotFound("Role", dto.RoleId));
 
 
             var domain = new Operators(
@@ -62,7 +62,7 @@ public sealed class OperatorBehaviors(IOperatorRepository repo) : IOperator
       public async Task<OperatorDto> DeleteByIdAsync(int id)
       {
             if (!await repo.IsAnyByIdAsync(id))
-                  throw new BadRequestException(MessageHelper.Common.RecordNotFound);
+                  throw new BadRequestException(MessageHelper.Common.NotFound("Operator", id));
 
             return await repo.DeleteByIdAsync(id);
       }
@@ -78,22 +78,22 @@ public sealed class OperatorBehaviors(IOperatorRepository repo) : IOperator
       {
 
             if (string.IsNullOrWhiteSpace(dto.Username))
-                  throw new BadRequestException(MessageHelper.Common.UsernameEmpty);
+                  throw new BadRequestException(MessageHelper.Common.Empty(nameof(dto.Username)));
 
             if (string.IsNullOrWhiteSpace(dto.Firstname))
-                  throw new BadRequestException(MessageHelper.Common.FirstnameEmpty);
+                  throw new BadRequestException(MessageHelper.Common.Empty(nameof(dto.Firstname)));
 
             if (string.IsNullOrWhiteSpace(dto.Lastname))
-                  throw new BadRequestException(MessageHelper.Common.LastnameEmpty);
+                  throw new BadRequestException(MessageHelper.Common.Empty(nameof(dto.Lastname)));
 
             if (string.IsNullOrWhiteSpace(dto.Email))
-                  throw new BadRequestException(MessageHelper.Common.EmailEmpty);
+                  throw new BadRequestException(MessageHelper.Common.Empty(nameof(dto.Email)));
 
-            if (await repo.IsLocationIdsValidAsync(dto.LocationId))
-                  throw new BadRequestException(MessageHelper.Location.LocationInvalid);
+            if (!await repo.IsLocationIdsValidAsync(dto.LocationId))
+                  throw new BadRequestException(MessageHelper.Common.NotFound("Location", dto.LocationId));
 
             if (!await repo.IsValidRoleIdAsync(dto.RoleId))
-                  throw new BadRequestException(MessageHelper.Role.RoleInvalid);
+                  throw new BadRequestException(MessageHelper.Common.NotFound("Role", dto.RoleId));
 
             var domain = new Operators(
                   dto.Id,

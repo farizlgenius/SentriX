@@ -15,10 +15,10 @@ public sealed class InputBehavior(IInputRepository repo,IAdapterFactory factory)
       public async Task<InputDto> CreateInputAsync(CreateInputDto dto)
       {
             if(string.IsNullOrWhiteSpace(dto.Name))
-                  throw new BadRequestException(MessageHelper.Common.NameEmpty);
+                  throw new BadRequestException(MessageHelper.Common.Empty(nameof(dto.Name)));
 
             if(string.IsNullOrWhiteSpace(dto.Mac))
-                  throw new BadRequestException(MessageHelper.Common.MacEmpty);
+                  throw new BadRequestException(MessageHelper.Common.Empty(nameof(dto.Mac)));
 
             var componentId = await repo.GetLowestInputComponentIdAsync(dto.Mac);
 
@@ -51,10 +51,10 @@ public sealed class InputBehavior(IInputRepository repo,IAdapterFactory factory)
       public async Task<InputGroupDto> CreateInputGroupAsync(CreateInputGroupDto dto)
       {
             if(string.IsNullOrWhiteSpace(dto.Name))
-                  throw new BadRequestException(MessageHelper.Common.NameEmpty);
+                  throw new BadRequestException(MessageHelper.Common.Empty(nameof(dto.Name)));
 
             if(string.IsNullOrWhiteSpace(dto.Mac))
-                  throw new BadRequestException(MessageHelper.Common.MacEmpty);
+                  throw new BadRequestException(MessageHelper.Common.Empty(nameof(dto.Mac)));
 
             var componentId = await repo.GetLowestInputGroupComponentIdAsync(dto.Mac);
 
@@ -84,7 +84,7 @@ public sealed class InputBehavior(IInputRepository repo,IAdapterFactory factory)
             var entity = await repo.GetByIdAsync(id);
 
             if(entity.Id == 0)
-                  throw new BadRequestException(MessageHelper.Input.InputIdNotFound(id));
+                  throw new BadRequestException(MessageHelper.Common.NotFound("Input", id));
 
             await factory.GetAdapter(entity.Type).Monitor.DeleteMonitorPoint(
                   entity.Mac,
@@ -102,7 +102,7 @@ public sealed class InputBehavior(IInputRepository repo,IAdapterFactory factory)
             var entity = await repo.GetGroupByIdAsync(id);
 
             if(entity.Id == 0)
-                  throw new BadRequestException(MessageHelper.Input.GroupIdNotFound(id));
+                  throw new BadRequestException(MessageHelper.Common.NotFound("Input Group", id));
 
             await factory.GetAdapter(entity.Type).Monitor.DeleteMonitorGroup(
                   entity.Mac,
@@ -128,7 +128,7 @@ public sealed class InputBehavior(IInputRepository repo,IAdapterFactory factory)
             var entity = await repo.GetByIdAsync(id);
 
             if(entity.Id == 0)
-                  throw new BadRequestException(MessageHelper.Input.InputIdNotFound(id));
+                  throw new BadRequestException(MessageHelper.Common.NotFound("Input", id));
 
             await factory.GetAdapter(entity.Type).Monitor.MaskMonitorPoint(
                   entity.Mac,
@@ -143,10 +143,10 @@ public sealed class InputBehavior(IInputRepository repo,IAdapterFactory factory)
       public async Task<InputDto> UpdateInputAsync(InputDto dto)
       {
             if(string.IsNullOrWhiteSpace(dto.Name))
-                  throw new BadRequestException(MessageHelper.Common.NameEmpty);
+                  throw new BadRequestException(MessageHelper.Common.Empty(nameof(dto.Name)));
 
             if(string.IsNullOrWhiteSpace(dto.Mac))
-                  throw new BadRequestException(MessageHelper.Common.MacEmpty);
+                  throw new BadRequestException(MessageHelper.Common.Empty(nameof(dto.Mac)));
 
 
             var domain = new Inputs(
@@ -176,10 +176,10 @@ public sealed class InputBehavior(IInputRepository repo,IAdapterFactory factory)
       public async Task<InputGroupDto> UpdateInputGroupAsync(InputGroupDto dto)
       {
             if(string.IsNullOrWhiteSpace(dto.Name))
-                  throw new BadRequestException(MessageHelper.Common.NameEmpty);
+                  throw new BadRequestException(MessageHelper.Common.Empty(nameof(dto.Name)));
 
             if(string.IsNullOrWhiteSpace(dto.Mac))
-                  throw new BadRequestException(MessageHelper.Common.MacEmpty);
+                  throw new BadRequestException(MessageHelper.Common.Empty(nameof(dto.Mac)));
 
             var domain = new InputGroups(
                   dto.Id,

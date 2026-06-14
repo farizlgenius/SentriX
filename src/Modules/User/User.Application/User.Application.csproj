@@ -7,6 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Contracts\Adapter.Abstraction\Adapter.Abstraction.csproj" />
+    <ProjectReference Include="..\..\Contracts\Storage.Contract\Storage.Contract.csproj" />
+    <ProjectReference Include="..\..\Contracts\User.Contract\User.Contract.csproj" />
     <ProjectReference Include="..\User.Domain\User.Domain.csproj" />
   </ItemGroup>
 

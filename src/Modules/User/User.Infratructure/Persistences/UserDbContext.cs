@@ -14,6 +14,8 @@ public sealed class UserDbContext(DbContextOptions<UserDbContext> options) : DbC
       public DbSet<Department> Departments {get; set;}
       public DbSet<Position> Positions {get; set;}
       public DbSet<Credential> Credentials {get; set;}
+      public DbSet<UserAdditional> UserAdditionals {get; set;}
+      public DbSet<UserGroup> UserGroups {get; set;}
 
       protected override void OnModelCreating(ModelBuilder modelBuilder)
       {

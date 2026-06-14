@@ -10,32 +10,18 @@ public static class MessageHelper
       }
       public static class Common
       {
-            public static string UserIdEmpty = "OperatorId must not be empty.";
-            public static string MacEmpty = "Mac must not be empty.";
-            public static string UsernameEmpty = "Username must not be empty.";
-            public static string PasswordEmpty = "Password must not be empty.";
-            public static string NameEmpty = "Name must not empty.";
-            public static string FirstnameEmpty = "Firstname must not empty.";
-            public static string LastnameEmpty = "Lastname must not empty.";
-            public static string EmailEmpty = "Email must not empty.";
-            public static string DuplicatedName = "Found duplicate name.";
-            public static string DuplicatedUsername = "Found duplicate username.";
-            public static string DuplicatedUserId = "Found duplicate operatorid.";
-            public static string RecordNotFound = "Record not found.";
-            public static string QueryIdInvalid = "Query id invalid.";
-            public static string CompanyInvalid = "Company invalid.";
-            public static string CompanyNotFound = "Company not found.";
-            public static string PositionInvalid = "Position invalid.";
-            public static string DepartmentInvalid = "Department invalid.";
-            public static string PasswordLenEmpty = "Passowrd length must more than zero";
+
+            public static string Empty(string field) => $"{field} must not be empty.";
+            public static string Duplicate(string field) => $"Found duplicate {field}.";
+            public static string NotFound(string field, int id) => $"{field} not found with ID {id}.";
+            public static string NotFound(string field, string value) => $"{field} not found with value {value}.";
+            public static string NotFound(string field, List<int> ids) => $"{field} not found with IDs {string.Join(", ", ids)}.";
+            public static string PasswordLenEmpty = "Password length must be more than zero.";
             public static string Success = "Success.";
             public static string DeserializeFailed(string Method) => $"Deserialize {Method} unsuccessful";
+            public static string FoundRelatedRecord(string Type) => $"Found related {Type} record.";
       }
-      public static class Role
-      {
-            public static string RoleInvalid = "Role invalid.";
-            public static string RoleNotFound = "Role not found.";
-      }
+
       public static class Auth
       {
             public const string LoginSuccess = "Login successful.";
@@ -64,44 +50,15 @@ public static class MessageHelper
 
       public static class Location
       {
-            public static string LocationNotFound = "Location not found.";
-            public static string LocationInvalid = "Location invalid.";
-            public static string CountryInvalid = "Country invalid.";
             public static string LocationNotAllow = "Location not allowed.";
       }
 
       public static class Device
       {
             public static string DeviceMacNotFound(string mac) => $"Device with 'mac {mac}' not found.";
-            public static string DeviceIdNotFound(int id) => $"Device with 'id {id}' not found.";
-      }
-
-      public static class Output
-      {
-            public static string OutputIdNotFound(int id) => $"Output with 'id {id}' not found.";
-      }
-
-      public static class Input
-      {
-            public static string InputIdNotFound(int id) => $"Input with 'id {id}' not found.";
-            public static string GroupIdNotFound(int id) => $"Input group with 'id {id}' not found.";
-      }
-
-      public static class Time
-      {
-            public static string HolidayNotFound(int id) => $"Holiday with 'id {id}' not found.";
-            public static string TimezoneNotFound(int id) => $"Timezone with 'id {id}' not found.";
-      }
-
-      public static class Door
-      {
-            public static string DoorIdNotFound(int id) => $"Door with 'id {id}' not found.";
-      }
-
-      public static class Group
-      {
-            public static string GroupIdNotFound(int id) => $"Group with 'id {id}' not found.";
       }
 
 
+
+      
 }

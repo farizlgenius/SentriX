@@ -26,13 +26,13 @@ public sealed class LocationBehavior(ILocationRepository repo) : ILocation
       {
             // Name must not be the same
             if (string.IsNullOrWhiteSpace(dto.Name))
-                  throw new BadRequestException(MessageHelper.Common.NameEmpty);
+                  throw new BadRequestException(MessageHelper.Common.Empty(nameof(dto.Name)));
             if (await repo.IsAnyNameAsync(dto.Name))
-                  throw new BadRequestException(MessageHelper.Common.DuplicatedName);
+                  throw new BadRequestException(MessageHelper.Common.Duplicate(nameof(dto.Name)));
 
             // Check country id is valid
             if (!await repo.IsValidCountryAsync(dto.CountryId))
-                  throw new BadRequestException(MessageHelper.Location.CountryInvalid);
+                  throw new BadRequestException(MessageHelper.Common.NotFound("Country", dto.CountryId));
 
             var domain = new Domain.Entities.Locations(0, StringHelper.ToCapital(dto.Name.Trim()), dto.CountryId, dto.Description);
 
@@ -48,7 +48,7 @@ public sealed class LocationBehavior(ILocationRepository repo) : ILocation
       public async Task<LocationDto> DeleteByIdAsync(int id)
       {
             if (!await repo.IsAnyByIdAsync(id))
-                  throw new NotFoundException(MessageHelper.Location.LocationNotFound);
+                  throw new NotFoundException(MessageHelper.Common.NotFound("Location", id));
 
             return await repo.DeleteByIdAsync(id);
       }
@@ -57,14 +57,14 @@ public sealed class LocationBehavior(ILocationRepository repo) : ILocation
       {
 
             if (!await repo.IsAnyByIdAsync(dto.Id))
-                  throw new NotFoundException(MessageHelper.Location.LocationNotFound);
+                  throw new NotFoundException(MessageHelper.Common.NotFound("Location", dto.Id));
 
             if (string.IsNullOrWhiteSpace(dto.Name))
-                  throw new BadRequestException(MessageHelper.Common.NameEmpty);
+                  throw new BadRequestException(MessageHelper.Common.Empty(nameof(dto.Name)));
 
             // Check country id is valid
             if (!await repo.IsValidCountryAsync(dto.CountryId))
-                  throw new BadRequestException(MessageHelper.Location.CountryInvalid);
+                  throw new BadRequestException(MessageHelper.Common.NotFound("Country", dto.CountryId));
 
             var domain = new Domain.Entities.Locations(dto.Id, StringHelper.ToCapital(dto.Name.Trim()), dto.CountryId, dto.Description);
 
@@ -76,7 +76,7 @@ public sealed class LocationBehavior(ILocationRepository repo) : ILocation
       public async Task<List<LocationDto>> GetRangeLocationAsync(RangeIdDto dto)
       {
             if (dto.Ids == null || dto.Ids.Count == 0)
-                  throw new BadRequestException(MessageHelper.Location.LocationInvalid);
+                  throw new BadRequestException(MessageHelper.Common.NotFound("Location", dto.Ids ?? new List<int>()));
 
             return await repo.GetRangeLocationAsync(dto.Ids);
       }
@@ -89,10 +89,10 @@ public sealed class LocationBehavior(ILocationRepository repo) : ILocation
       public async Task<List<LocationDto>> DeleteRangeAsync(RangeIdDto dto)
       {
             if (dto.Ids == null || dto.Ids.Count == 0)
-                  throw new BadRequestException(MessageHelper.Location.LocationInvalid);
+                  throw new BadRequestException(MessageHelper.Common.NotFound("Location", dto.Ids ?? new List<int>()));
 
             if (!await repo.IsAllExistByIdsAsync(dto.Ids))
-                  throw new NotFoundException(MessageHelper.Location.LocationNotFound);
+                  throw new NotFoundException(MessageHelper.Common.NotFound("Location", dto.Ids ?? new List<int>()));
 
             return await repo.DeleteRangeAsync(dto.Ids);
       }

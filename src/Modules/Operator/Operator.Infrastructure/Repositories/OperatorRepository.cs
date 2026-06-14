@@ -285,7 +285,7 @@ public sealed class OperatorRepository(OperatorDbContext context, IMessageBus bu
       {
             var entity = await context.operators.OrderByDescending(u => u.id).Where(u => u.id == domain.Id).FirstOrDefaultAsync();
             if (entity == null)
-                  throw new Exception(MessageHelper.Common.RecordNotFound);
+                  throw new Exception(MessageHelper.Common.NotFound("Operator", domain.Id));
 
             entity.Update(domain);
             var data = context.operators.Update(entity);

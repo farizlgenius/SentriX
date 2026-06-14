@@ -110,7 +110,7 @@ public sealed class DeviceBehaviors(IDeviceRepository repo, IMessageBus bus, IAd
             // Check if locationId is Exists 
             var flag = await bus.QueryAsync(new IsAnyLocationByIdQuery(locationId));
             if (!flag)
-                  throw new BadRequestException(MessageHelper.Location.LocationNotFound);
+                  throw new BadRequestException(MessageHelper.Common.NotFound("Location", locationId));
 
             var res = await repo.GetOptionByLocationIdAsync(locationId, ct);
             return res;
@@ -162,7 +162,7 @@ public sealed class DeviceBehaviors(IDeviceRepository repo, IMessageBus bus, IAd
             // Check that ModuleId is Exists
             var flag = await repo.IsAnyModuleByIdAsync(deviceId);
             if (!flag)
-                  throw new BadRequestException(MessageHelper.Device.DeviceIdNotFound(deviceId));
+                  throw new BadRequestException(MessageHelper.Common.NotFound("Module", deviceId));
 
             var res = await repo.GetModuleOptionByDeviceIdAsync(deviceId, ct);
             return res;

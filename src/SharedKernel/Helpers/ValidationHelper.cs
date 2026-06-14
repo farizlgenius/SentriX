@@ -9,7 +9,10 @@ public static partial class ValidationHelper
   private static partial Regex EmailRegex();
 
   [GeneratedRegex(@"^[a-zA-Z0-9]*$")]
-  public static partial Regex CharAndDigitRegex();
+  private static partial Regex CharAndDigitRegex();
+
+  [GeneratedRegex(@"^[0-9]*$")]
+  private static partial Regex DigitRegex();
 
   [GeneratedRegex(@"^[\p{L}\p{M}\p{N} ()]+$")]
   private static partial Regex NameRegex();
@@ -57,6 +60,12 @@ public static partial class ValidationHelper
     {
       throw new ArgumentException($"'{parameterName}' cannot be zero.", parameterName);
     }
+  }
+
+  public static void ValidateDigit(string value,string param)
+  {
+    if(!DigitRegex().IsMatch(value))
+      throw new ArgumentException($"'{value}' must be only digit.", param);
   }
 
   public static bool ValidateTenants(string Tenants, int LocationId)

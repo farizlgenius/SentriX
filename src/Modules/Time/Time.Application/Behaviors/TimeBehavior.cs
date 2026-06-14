@@ -118,7 +118,7 @@ public sealed class TimeBehavior(
       {
             var entity = await holRepo.GetByIdAsync(id);
             if(entity.Id == 0)
-                  throw new BadRequestException(MessageHelper.Time.HolidayNotFound(id));
+                  throw new BadRequestException(MessageHelper.Common.NotFound("Holiday", id));
 
             var datas = await bus.QueryAsync(new MacAndComponentIdListByLocationIdQuery(entity.LocationId));
 
@@ -142,7 +142,7 @@ public sealed class TimeBehavior(
       {
             var entity = await timezoneRepo.GetByIdAsync(id);
             if(entity.Id == 0)
-                  throw new BadRequestException(MessageHelper.Time.TimezoneNotFound(id));
+                  throw new BadRequestException(MessageHelper.Common.NotFound("Timezone", id));
 
             var datas = await bus.QueryAsync(new MacAndComponentIdListByLocationIdQuery(entity.LocationId));
 

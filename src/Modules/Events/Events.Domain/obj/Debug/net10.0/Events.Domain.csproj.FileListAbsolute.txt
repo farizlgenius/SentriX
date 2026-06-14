@@ -34,15 +34,3 @@ C:\Users\Farizl\Desktop\Work\SentriX\src\Modules\Events\Events.Domain\obj\Debug\
 C:\Users\Farizl\Desktop\Work\SentriX\src\Modules\Events\Events.Domain\obj\Debug\net10.0\refint\Events.Domain.dll
 C:\Users\Farizl\Desktop\Work\SentriX\src\Modules\Events\Events.Domain\obj\Debug\net10.0\Events.Domain.pdb
 C:\Users\Farizl\Desktop\Work\SentriX\src\Modules\Events\Events.Domain\obj\Debug\net10.0\ref\Events.Domain.dll
-D:\aero\SentriX\src\Modules\Events\Events.Domain\bin\Debug\net10.0\Events.Domain.deps.json
-D:\aero\SentriX\src\Modules\Events\Events.Domain\bin\Debug\net10.0\Events.Domain.dll
-D:\aero\SentriX\src\Modules\Events\Events.Domain\bin\Debug\net10.0\Events.Domain.pdb
-D:\aero\SentriX\src\Modules\Events\Events.Domain\obj\Debug\net10.0\Events.Domain.GeneratedMSBuildEditorConfig.editorconfig
-D:\aero\SentriX\src\Modules\Events\Events.Domain\obj\Debug\net10.0\Events.Domain.AssemblyInfoInputs.cache
-D:\aero\SentriX\src\Modules\Events\Events.Domain\obj\Debug\net10.0\Events.Domain.AssemblyInfo.cs
-D:\aero\SentriX\src\Modules\Events\Events.Domain\obj\Debug\net10.0\Events.Domain.csproj.CoreCompileInputs.cache
-D:\aero\SentriX\src\Modules\Events\Events.Domain\obj\Debug\net10.0\Events.Domain.sourcelink.json
-D:\aero\SentriX\src\Modules\Events\Events.Domain\obj\Debug\net10.0\Events.Domain.dll
-D:\aero\SentriX\src\Modules\Events\Events.Domain\obj\Debug\net10.0\refint\Events.Domain.dll
-D:\aero\SentriX\src\Modules\Events\Events.Domain\obj\Debug\net10.0\Events.Domain.pdb
-D:\aero\SentriX\src\Modules\Events\Events.Domain\obj\Debug\net10.0\ref\Events.Domain.dll

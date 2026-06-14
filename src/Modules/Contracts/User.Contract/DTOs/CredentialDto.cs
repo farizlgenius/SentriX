@@ -4,13 +4,18 @@ namespace User.Contract.DTOs;
 
 public sealed record CredentialDto(
       int Id,
-      string UserId,
-      string Password,
-      string Salt,
-      short Flag
+      short Flag,
+      long CardNumber,
+      int IssueCode,
+      string Pin,
+      short UseCount,
+      DateTime Active,
+      DateTime Expire,
+      int LocationId,
+      bool IsActive
 ) : BaseDto(
       0,
-      0,
+      LocationId,
       string.Empty,
-      true
+      IsActive
 );

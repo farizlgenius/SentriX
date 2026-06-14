@@ -47,7 +47,7 @@ public sealed class GroupBehavior(IGroupRepository repo,IAdapterFactory factory,
             var entity = await repo.GetByIdAsync(id);
 
             if(entity == null)
-                  throw new BadRequestException(MessageHelper.Group.GroupIdNotFound(id));
+                  throw new BadRequestException(MessageHelper.Common.NotFound("Group", id));
 
             var datas = await bus.QueryAsync(new MacAndComponentIdListByLocationIdQuery(entity.LocationId));
 
@@ -75,7 +75,7 @@ public sealed class GroupBehavior(IGroupRepository repo,IAdapterFactory factory,
             var entity = await repo.GetByIdAsync(dto.Id);
 
             if(entity == null)
-                  throw new BadRequestException(MessageHelper.Group.GroupIdNotFound(dto.Id));
+                  throw new BadRequestException(MessageHelper.Common.NotFound("Group", dto.Id));
 
             var domain = new Groups(
                   dto.Id,

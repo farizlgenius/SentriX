@@ -54,7 +54,7 @@ public sealed class OutputBehavior(IOutputRepository repo,IAdapterFactory factor
             var res = await repo.GetByIdAsync(id);
             
             if(res.Id == 0)
-                  throw new BadRequestException(MessageHelper.Output.OutputIdNotFound(id));
+                  throw new BadRequestException(MessageHelper.Common.NotFound("Output", id));
 
            await factory.GetAdapter(res.Type).Control.DeleteAsync(res.Mac,res.ComponentId,res.ComponentId,res.OutputNo,res.DefaultPulse);
 
@@ -89,7 +89,7 @@ public sealed class OutputBehavior(IOutputRepository repo,IAdapterFactory factor
       {
             // Check that any output with id
             if(!await repo.IsAnyWithIdAsync(id))
-                  throw new BadRequestException(MessageHelper.Output.OutputIdNotFound(id));
+                  throw new BadRequestException(MessageHelper.Common.NotFound("Output", id));
 
             var output = await repo.GetByIdAsync(id);
 
@@ -104,7 +104,7 @@ public sealed class OutputBehavior(IOutputRepository repo,IAdapterFactory factor
       {
             var res = await repo.GetByIdAsync(dto.Id);
             if(res.Id == 0)
-                  throw new BadRequestException(MessageHelper.Common.RecordNotFound);
+                  throw new BadRequestException(MessageHelper.Common.NotFound("Output", dto.Id));
 
             var domain = new Outputs(
                   0,

@@ -12,9 +12,16 @@ public sealed class Position : BaseEntity
       public Position() { }
 
 
-      public Position(string name, string description, int location) : base(0, location, true)
+      public Position(Domain.Entities.Position position) : base(0, position.LocationId, position.IsActive)
       {
-            this.name = name;
-            this.description = description;
+            this.name = position.Name;
+            this.description = position.Description;
+      }
+
+      public void Update(Domain.Entities.Position position)
+      {
+            this.name = position.Name;
+            this.description = position.Description;
+            this.updated_at = DateTime.UtcNow;
       }
 }

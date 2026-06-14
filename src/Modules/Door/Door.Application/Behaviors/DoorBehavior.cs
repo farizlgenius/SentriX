@@ -62,7 +62,7 @@ public sealed class DoorBehavior(IDoorRepository repo,IMessageBus bus,IAdapterFa
       {
             var entity = await repo.GetByIdAsync(id);
             if(entity == null)
-                  throw new BadRequestException(MessageHelper.Door.DoorIdNotFound(id));
+                  throw new BadRequestException(MessageHelper.Common.NotFound("Door", id));
 
             
             await factory.GetAdapter(entity.Type).Door.DeleteDoorAsync(
@@ -87,7 +87,7 @@ public sealed class DoorBehavior(IDoorRepository repo,IMessageBus bus,IAdapterFa
       public async Task<DoorDto> UpdateAsync(DoorDto dto)
       {
             if(!await repo.IsAnyByIdAsync(dto.Id))
-                  throw new BadRequestException(MessageHelper.Door.DoorIdNotFound(dto.Id));
+                  throw new BadRequestException(MessageHelper.Common.NotFound("Door", dto.Id));
 
             short SecondComponentId = -1;
             if (dto.DoorType.Equals(DoorType.DUAL) && dto.SecondComponentId == -1)

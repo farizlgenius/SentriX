@@ -19,7 +19,6 @@ public sealed class Users : BaseDomain
       public int DepartmentId { get; set; }
       public int PositionId { get; set; }
       public string Address { get; set; } = string.Empty;
-      public short Flag { get; set; }
       public List<string> additionals { get; set; } = new List<string>();
       public string Image { get; set; } = string.Empty;
       public List<Credential> credentials { get; set; } = new List<Credential>();
@@ -38,7 +37,6 @@ public sealed class Users : BaseDomain
       int DepartmentId,
       int PositionId,
       string Address,
-      short Flag,
       List<string> additionals,
       string Image,
       List<Credential> credentials,
@@ -68,7 +66,6 @@ public sealed class Users : BaseDomain
             this.DepartmentId = DepartmentId;
             this.PositionId = PositionId;
             this.Address = Address;
-            this.Flag = Flag;
             this.additionals = additionals;
             this.Image = Image;
             this.credentials = credentials;

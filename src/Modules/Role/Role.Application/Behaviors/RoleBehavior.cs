@@ -14,13 +14,13 @@ public sealed class RoleBehavior(IRoleRepository repo) : IRole
       public async Task<RoleDto> CreateAsync(CreateRoleDto dto)
       {
             if (string.IsNullOrWhiteSpace(dto.Name))
-                  throw new BadRequestException(MessageHelper.Common.NameEmpty);
+                  throw new BadRequestException(MessageHelper.Common.Empty(nameof(dto.Name)));
 
             if (!await repo.IsAnyLocationIdAsync(dto.LocationId))
-                  throw new BadRequestException(MessageHelper.Location.LocationInvalid);
+                  throw new BadRequestException(MessageHelper.Common.NotFound("Location", dto.LocationId));
 
             if (await repo.IsAnyNameWithLocationIdAsync(dto.LocationId, dto.Name))
-                  throw new BadRequestException(MessageHelper.Common.DuplicatedName);
+                  throw new BadRequestException(MessageHelper.Common.Duplicate(nameof(dto.Name)));
 
             var domain = new Roles(0, dto.Name, dto.Permissions.Select(r => new Permission(
               r.FeatureId,
@@ -38,7 +38,7 @@ public sealed class RoleBehavior(IRoleRepository repo) : IRole
       public async Task<RoleDto> DeleteByIdAsync(int id)
       {
             if (!await repo.IsAnyWithIdAsync(id))
-                  throw new BadRequestException(MessageHelper.Common.RecordNotFound);
+                  throw new BadRequestException(MessageHelper.Common.NotFound("Role", id));
 
             return await repo.DeleteByIdAsync(id);
       }
@@ -46,10 +46,10 @@ public sealed class RoleBehavior(IRoleRepository repo) : IRole
       public async Task<List<RoleDto>> DeleteRangeAsync(RangeIdDto dto)
       {
             if (dto.Ids == null || dto.Ids.Count <= 0)
-                  throw new BadRequestException(MessageHelper.Role.RoleInvalid);
+                  throw new BadRequestException(MessageHelper.Common.NotFound("Role", dto.Ids ?? new List<int>()));
 
             if (!await repo.IsAllExistByIdsAsync(dto.Ids))
-                  throw new BadRequestException(MessageHelper.Role.RoleNotFound);
+                  throw new BadRequestException(MessageHelper.Common.NotFound("Role", dto.Ids ?? new List<int>()));
 
 
             return await repo.DeleteRangeAsync(dto.Ids);
@@ -77,10 +77,10 @@ public sealed class RoleBehavior(IRoleRepository repo) : IRole
       public async Task<RoleDto> UpdateAsync(UpdateRoleDto dto)
       {
             if (string.IsNullOrWhiteSpace(dto.Name))
-                  throw new BadRequestException(MessageHelper.Common.NameEmpty);
+                  throw new BadRequestException(MessageHelper.Common.Empty(nameof(dto.Name)));
 
             if (!await repo.IsAnyLocationIdAsync(dto.LocationId))
-                  throw new BadRequestException(MessageHelper.Location.LocationInvalid);
+                  throw new BadRequestException(MessageHelper.Common.NotFound("Location", dto.LocationId));
 
             var domain = new Domain.Entities.Roles(dto.Id, dto.Name, dto.Permissions.Select(r =>
               new Permission(r.FeatureId, r.FeatureName, r.IsEnabled, r.IsCreated, r.IsUpdated, r.IsDeleted)

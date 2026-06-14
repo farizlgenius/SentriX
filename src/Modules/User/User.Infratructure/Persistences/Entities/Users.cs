@@ -23,7 +23,6 @@ public sealed class Users : BaseEntity
   public int position_id { get; set; }
   public Position position { get; set; } = new Position();
   public string address { get; set; } = string.Empty;
-  public short flag { get; set; }
   public ICollection<UserAdditional> additionals { get; set; } = new List<UserAdditional>();
   public string image { get; set; } = string.Empty;
   public ICollection<Credential> credentials { get; set; } = new List<Credential>();
@@ -44,6 +43,24 @@ public sealed class Users : BaseEntity
       this.department_id = users.DepartmentId;
       this.position_id = users.PositionId;
       this.address = users.Address;
-      this.flag = users.Flag;
   }
+
+  public void Update(Domain.Entities.Users users)
+  {
+      this.title = users.Title;
+      this.first_name = users.FirstName;
+      this.middle_name = users.MiddleName;
+      this.last_name = users.LastName;
+      this.gender = users.Gender;
+      this.date_of_birth = users.DateOfBirth;
+      this.email = users.Email;
+      this.phone = users.Phone;
+      this.company_id = users.CompanyId;
+      this.department_id = users.DepartmentId;
+      this.position_id = users.PositionId;
+      this.address = users.Address;
+      this.updated_at = DateTime.UtcNow;
+  }
+
+
 }
