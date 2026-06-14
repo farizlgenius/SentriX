@@ -8,7 +8,6 @@ public sealed class Roles : BaseEntity
   public string name { get; set; } = string.Empty;
 
   // Relation here
-  public int location_id { get; set; }
   public ICollection<RoleOperator> role_operators { get; set; } = new List<RoleOperator>();
   public ICollection<Permission> permissions { get; set; } = new List<Permission>();
   public Roles() { }

@@ -43,6 +43,9 @@
     "door:migremove": "dotnet ef migrations remove --project src/Modules/Door/Door.Infrastructure --startup-project src/Host",
     "group:migadd": "dotnet ef migrations add --project src/Modules/Group/Group.Infrastructure --startup-project src/Host",
     "group:migup" : "dotnet ef database update --project src/Modules/Group/Group.Infrastructure --startup-project src/Host",
-    "group:migremove": "dotnet ef migrations remove --project src/Modules/Group/Group.Infrastructure --startup-project src/Host"
+    "group:migremove": "dotnet ef migrations remove --project src/Modules/Group/Group.Infrastructure --startup-project src/Host",
+    "user:migadd": "dotnet ef migrations add --project src/Modules/User/User.Infrastructure --startup-project src/Host",
+    "user:migup" : "dotnet ef database update --project src/Modules/User/User.Infrastructure --startup-project src/Host",
+    "user:migremove": "dotnet ef migrations remove --project src/Modules/User/User.Infrastructure --startup-project src/Host"
   }
 }

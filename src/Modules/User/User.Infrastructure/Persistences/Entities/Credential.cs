@@ -1,7 +1,7 @@
 using System;
 using SharedKernel.Domain;
 
-namespace User.Infratructure.Persistences.Entities;
+namespace User.Infrastructure.Persistences.Entities;
 
 public sealed class Credential : BaseEntity
 {

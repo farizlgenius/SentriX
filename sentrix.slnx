@@ -56,7 +56,7 @@
 <Folder Name="/src/Modules/User/">
 <Project Path="src/Modules/User/User.Application/User.Application.csproj" />
 <Project Path="src/Modules/User/User.Domain/User.Domain.csproj" />
-<Project Path="src/Modules/User/User.Infratructure/User.Infratructure.csproj" />
+<Project Path="src/Modules/User/User.Infrastructure/User.Infrastructure.csproj" />
 </Folder>
  <Folder Name="/src/SharedKernel/">
  <Project Path="src/SharedKernel/SharedKernel.csproj" />

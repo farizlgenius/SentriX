@@ -105,7 +105,6 @@ export const BaseTable = <T extends { id: number | string }>({ id, headers, keys
         if(locationId != -1){
             fetchData(1, pageSize,locationId,search, startDate,endDate);
         }
-        console.log(permission);
     }, [refresh,pageSize,search,startDate,endDate,locationId])
 
 

@@ -26,7 +26,7 @@ public sealed class UserBehavior(IUserRepository repo,IStorage file,IAdapterFact
 
             // Check that Company already exists with the same name
 
-            if(!await repo.IsCompanyNameExistAsync(dto.Name.Trim()))
+            if(await repo.IsCompanyNameExistAsync(dto.Name.Trim()))
                   throw new BadRequestException(MessageHelper.Common.Duplicate(nameof(dto.Name)));
 
             return await repo.CreateCompanyAsync(domain);
@@ -38,13 +38,14 @@ public sealed class UserBehavior(IUserRepository repo,IStorage file,IAdapterFact
                   0,
                   dto.Name.Trim(),
                   dto.Description,
+                  dto.CompanyId,
                   dto.LocationId,
                   dto.IsActive
             );
 
             // Check that Department already exists with the same name
 
-            if(!await repo.IsDepartmentExistAsync(dto.Name.Trim()))
+            if(await repo.IsDepartmentExistAsync(dto.Name.Trim()))
                   throw new BadRequestException(MessageHelper.Common.Duplicate(nameof(dto.Name)));
 
             
@@ -58,13 +59,14 @@ public sealed class UserBehavior(IUserRepository repo,IStorage file,IAdapterFact
                   0,
                   dto.Name.Trim(),
                   dto.Description,
+                  dto.DepartmentId,
                   dto.LocationId,
                   dto.IsActive
             );
 
             // Check that Position already exists with the same name
 
-            if(!await repo.IsPositionExistAsync(dto.Name.Trim()))
+            if(await repo.IsPositionExistAsync(dto.Name.Trim()))
                   throw new BadRequestException(MessageHelper.Common.Duplicate(nameof(dto.Name)));
 
             
@@ -232,6 +234,7 @@ public sealed class UserBehavior(IUserRepository repo,IStorage file,IAdapterFact
                   dto.Id,
                   dto.Name,
                   dto.Description,
+                  dto.CompanyId,
                   dto.LocationId,
                   dto.IsActive
             );
@@ -251,6 +254,7 @@ public sealed class UserBehavior(IUserRepository repo,IStorage file,IAdapterFact
                   dto.Id,
                   dto.Name,
                   dto.Description,
+                  dto.DepartmentId,
                   dto.LocationId,
                   dto.IsActive
             );
@@ -314,5 +318,27 @@ public sealed class UserBehavior(IUserRepository repo,IStorage file,IAdapterFact
                   throw new BadRequestException(MessageHelper.Common.Empty(nameof(userid)));
 
             return await file.ReadUserAsync(userid);
+      }
+
+      public async Task<IEnumerable<CompanyDto>> GetCompanyByLocationIdAsync(int LocationId)
+      {
+            return await repo.GetCompanyByLocationIdAsync(LocationId);
+      }
+
+      public async Task<Pagination<DepartmentDto>> GetDepartmentByCompanyAsync(PaginationParams param, int CompanyId)
+      {
+            var res = await repo.GetDepartmentByCompanyAsync(param,CompanyId);
+            return res;
+      }
+
+      public async Task<IEnumerable<DepartmentDto>> GetDepartmentByCompanyAsync(int CompanyId)
+      {
+            var res = await repo.GetDepartmentByCompanyAsync(CompanyId);
+            return res;
+      }
+
+      public async Task<Pagination<PositionDto>> GetPositionByDepartmentAsync(PaginationParams param, int DepartmentId)
+      {
+            return await repo.GetPositionByDepartmentAsync(param,DepartmentId);
       }
 }

@@ -1,13 +1,13 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel.Domain;
-using User.Infratructure.Persistences.Entities;
+using User.Infrastructure.Persistences.Entities;
 
-namespace User.Infratructure.Persistences;
+namespace User.Infrastructure.Persistences;
 
 public sealed class UserDbContext(DbContextOptions<UserDbContext> options) : DbContext(options)
 {
-      public const string Schema = "device";
+      public const string Schema = "user";
 
       public DbSet<Users> Users { get; set; }
       public DbSet<Company> Companies {get; set;}
@@ -53,6 +53,37 @@ public sealed class UserDbContext(DbContextOptions<UserDbContext> options) : DbC
                             .ValueGeneratedOnAdd();
                   }
             }
+
+
+            modelBuilder.Entity<Company>()
+            .HasMany(x => x.users)
+            .WithOne(x => x.company)
+            .HasForeignKey(x => x.company_id)
+            .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Company>()
+            .HasMany(x => x.departments)
+            .WithOne(x => x.company)
+            .HasForeignKey(x => x.company_id)
+            .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Department>()
+            .HasMany(x => x.users)
+            .WithOne(x => x.department)
+            .HasForeignKey(x => x.department_id)
+            .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Department>()
+            .HasMany(x => x.positions)
+            .WithOne(x => x.department)
+            .HasForeignKey(x => x.department_id)
+            .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Position>()
+            .HasMany(x => x.users)
+            .WithOne(x => x.position)
+            .HasForeignKey(x => x.position_id)
+            .OnDelete(DeleteBehavior.Cascade);
 
       }
 }

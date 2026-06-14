@@ -23,6 +23,7 @@ import { DepartmentEndpoint } from "../../endpoint/DepartmentEndpoint";
 import { CompanyDto } from "../../model/Company/CompanyDto";
 import { CompanyEndpoint } from "../../endpoint/CompanyEndpoint";
 import { DepartmentDto } from "../../model/Department/DepartmentDto";
+import { useLocation } from "../../context/LocationContext";
 
 var removeTarget: number = 0;
 
@@ -32,6 +33,7 @@ export const HEADER: string[] = ["Name", "Action"]
 export const KEY: string[] = ["name"];
 
 export const Position = () => {
+    const { locationId } = useLocation();
         const [selectedDepartment,setSelectedDepartment] = useState<number>(-1);
     const [departmentOptions,setDepartmentOptions] = useState<Options[]>([]);
     const [selectedCompany,setSelectedCompany] = useState<number>(-1);
@@ -41,7 +43,8 @@ export const Position = () => {
         name: "",
         description: "",
         departmentId: selectedDepartment,
-        departmentName: ""
+        locationId:locationId,
+        isActive:true
     }
 
     const { toggleToast, updateToast } = useToast();
@@ -153,8 +156,16 @@ export const Position = () => {
         }
     }
 
-    const fetchData = async (pageNumber: number, pageSize: number, locationId?: number, search?: string, startDate?: string, endDate?: string) => {
-        const res = await send.get(PositionEndpoint.PAGINATION(pageNumber, pageSize, locationId, search, startDate, endDate));
+    const fetchData = async (pageNumber: number, pageSize: number,locationId?: number, search?: string, startDate?: string, endDate?: string) => {
+        const res = await send.get(PositionEndpoint.PAGINATION_BY_DEPART(pageNumber, pageSize,selectedDepartment, locationId, search, startDate, endDate));
+        if (res && res.data) {
+            setPositionsDto(res.data.items);
+            setPagination(res.data);
+        }
+    }
+
+    const fetchDataImd = async (pageNumber: number, pageSize: number,departmentId:number,locationId?: number, search?: string, startDate?: string, endDate?: string) => {
+        const res = await send.get(PositionEndpoint.PAGINATION_BY_DEPART(pageNumber, pageSize, departmentId,locationId, search, startDate, endDate));
         if (res && res.data) {
             setPositionsDto(res.data.items);
             setPagination(res.data);
@@ -170,7 +181,8 @@ export const Position = () => {
     ];
 
     const fetchCompany = async () => {
-            var res = await send.get(CompanyEndpoint.GET);
+        setCompanyOptions([])
+            var res = await send.get(CompanyEndpoint.GET_BY_LOCATION(locationId));
             res.data.map((a:CompanyDto) => {
                 setCompanyOptions((prev) => ([...prev,{
                     label:a.name,
@@ -181,6 +193,7 @@ export const Position = () => {
         }
 
     const fetchDepartments = async (company:number) => {
+        setDepartmentOptions([])
         const res = await send.get(DepartmentEndpoint.GET_BY_COMPANY(company));
         if (res && res.data) {
             res.data.map((a:DepartmentDto) => {
@@ -201,24 +214,29 @@ export const Position = () => {
         <>
             <PageBreadcrumb pageTitle="Positions" />
             {form ?
-                <BaseForm tabContent={tabContent} />
+                <BaseForm tabContent={tabContent} header={""} desc={""} />
                 :
                 <div className="space-y-6">
                      <div className="rounded-xl border border-gray-200 p-6 dark:border-gray-800 border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03] " >
                               <div className="flex gap-10"> 
                                     <Label>Company Selector</Label>
                                     <Select options={companyOptions} name="Company" defaultValue={selectedCompany} onChange={e => {
+                                        setPositionsDto([])
                                         setSelectedCompany(Number(e));
+                                        setSelectedDepartment(-1);
                                         fetchDepartments(Number(e));
                                     } }/>
                                     <Label>Department Selector</Label>
                                     <Select options={departmentOptions} name="Department" defaultValue={selectedDepartment} onChange={e => {
                                         setSelectedDepartment(Number(e));
                                         setPositionDto(prev => ({ ...prev, departmentId: Number(e) }))
+                                        if(locationId != -1){
+                                            fetchDataImd(1,10,Number(e),locationId);
+                                        }
                                     } }/>
                               </div>
                         </div>
-                    <BaseTable<PositionDto> headers={HEADER} keys={KEY} data={positionsDto} select={select} setSelect={setSelect} onEdit={handleEdit} onRemove={handleRemove} onClick={handleClickWithEvent} permission={filterPermission(FeatureId.location)} onInfo={handleInfo} fetchData={fetchData} refresh={refresh} locationId={selectedDepartment}  />
+                    <BaseTable<PositionDto> headers={HEADER} keys={KEY} data={positionsDto} select={select} setSelect={setSelect} onEdit={handleEdit} onRemove={handleRemove} onClick={handleClickWithEvent} permission={filterPermission(FeatureId.location)} onInfo={handleInfo} fetchData={fetchData} refresh={refresh} locationId={ selectedCompany == -1 || selectedDepartment == -1 ? -1 :  locationId}  />
                 </div>
             }
         </>

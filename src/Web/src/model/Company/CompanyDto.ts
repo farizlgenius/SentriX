@@ -3,4 +3,6 @@ export interface CompanyDto {
     name:string;
     description:string;
     address:string;
+    locationId:number;
+    isActive:boolean;
 }

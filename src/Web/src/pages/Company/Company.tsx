@@ -38,7 +38,9 @@ export const Company = () => {
         id: 0,
         name: "",
         description: "",
-        address: ""
+        address: "",
+        locationId:locationId,
+        isActive:true
     }
 
     const [dto, setDto] = useState<CompanyDto>(defaultDto);
@@ -168,7 +170,7 @@ export const Company = () => {
             <PageBreadcrumb pageTitle="Companies" />
             {form ?
 
-                <BaseForm tabContent={tabContent} />
+                <BaseForm tabContent={tabContent} header={""} desc={""} />
                 :
                 <div className="space-y-6">
                     <BaseTable<CompanyDto> headers={HEADER} keys={KEY} data={dtos} select={select} setSelect={setSelect} onEdit={handleEdit} onRemove={handleRemove} onClick={handleClickWithEvent} permission={filterPermission(FeatureId.location)} onInfo={handleInfo} fetchData={fetchData} refresh={refresh} locationId={locationId} />

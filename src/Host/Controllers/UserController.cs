@@ -56,28 +56,35 @@ public class UserController(IUser user) : ControllerBase
       }
 
       // Company
-      [HttpGet("company/pagination")]
+      [HttpGet("/api/company/pagination")]
       public async Task<IActionResult> GetCompanyPaginationAsync([FromQuery] PaginationParams param)
       {
             var res = await user.GetCompanyPaginationAsync(param);
             return Ok(res);
       }
 
-      [HttpPost("company")]
+      [HttpGet("/api/company")]
+      public async Task<IActionResult> GetCompanyByLocationIdAsync([FromQuery]int LocationId)
+      {
+            var res = await user.GetCompanyByLocationIdAsync(LocationId);
+            return Ok(res);
+      }
+
+      [HttpPost("/api/company")]
       public async Task<IActionResult> CreateCompanyAsync([FromBody] CreateCompanyDto dto)
       {
             var res = await user.CreateCompanyAsync(dto);
             return Ok(res);
       }
 
-      [HttpPut("company")]
+      [HttpPut("/api/company")]
       public async Task<IActionResult> UpdateCompanyAsync([FromBody] CompanyDto dto)
       {
             var res = await user.UpdateCompanyAsync(dto);
             return Ok(res);
       }
 
-      [HttpDelete("company/{id}")]
+      [HttpDelete("/api/company/{id}")]
       public async Task<IActionResult> DeleteCompanyAsync(int id)
       {
             var res = await user.DeleteCompanyAsync(id);
@@ -85,28 +92,42 @@ public class UserController(IUser user) : ControllerBase
       }
 
       // Department
-      [HttpGet("department/pagination")]
+      [HttpGet("/api/department/pagination")]
       public async Task<IActionResult> GetDepartmentPaginationAsync([FromQuery] PaginationParams param)
       {
             var res = await user.GetDepartmentPaginationAsync(param);
             return Ok(res);
       }
 
-      [HttpPost("department")]
+      [HttpGet("/api/department/pagination/{companyId}")]
+      public async Task<IActionResult> GetDepartmentByCompanyAsync(int companyId,[FromQuery] PaginationParams param)
+      {
+            var res = await user.GetDepartmentByCompanyAsync(param,companyId);
+            return Ok(res);            
+      }
+
+      [HttpGet("/api/department/company/{companyId}")]
+      public async Task<IActionResult> GetDepartmentByCompanyAsync(int companyId)
+      {
+            var res = await user.GetDepartmentByCompanyAsync(companyId);
+            return Ok(res);
+      }
+
+      [HttpPost("/api/department")]
       public async Task<IActionResult> CreateDepartmentAsync([FromBody] CreateDepartmentDto dto)
       {
             var res = await user.CreateDepartmentAsync(dto);
             return Ok(res);
       }
 
-      [HttpPut("department")]
+      [HttpPut("/api/department")]
       public async Task<IActionResult> UpdateDepartmentAsync([FromBody] DepartmentDto dto)
       {
             var res = await user.UpdateDepartmentAsync(dto);
             return Ok(res);
       }
 
-      [HttpDelete("department/{id}")]
+      [HttpDelete("/api/department/{id}")]
       public async Task<IActionResult> DeleteDepartmentAsync(int id)
       {
             var res = await user.DeleteDepartmentAsync(id);
@@ -114,28 +135,35 @@ public class UserController(IUser user) : ControllerBase
       }
 
       // Position
-      [HttpGet("position/pagination")]
+      [HttpGet("/api/position/pagination")]
       public async Task<IActionResult> GetPositionPaginationAsync([FromQuery] PaginationParams param)
       {
             var res = await user.GetPositionPaginationAsync(param);
             return Ok(res);
       }
 
-      [HttpPost("position")]
+      [HttpGet("/api/position/pagination/{departmentId}")]
+      public async Task<IActionResult> GetPositionByDepartmentAsync(int departmentId,[FromQuery] PaginationParams param)
+      {
+            var res = await user.GetPositionByDepartmentAsync(param,departmentId);
+            return Ok(res);
+      }
+
+      [HttpPost("/api/position")]
       public async Task<IActionResult> CreatePositionAsync([FromBody] CreatePositionDto dto)
       {
             var res = await user.CreatePositionAsync(dto);
             return Ok(res);
       }
 
-      [HttpPut("position")]
+      [HttpPut("/api/position")]
       public async Task<IActionResult> UpdatePositionAsync([FromBody] PositionDto dto)
       {
             var res = await user.UpdatePositionAsync(dto);
             return Ok(res);
       }
 
-      [HttpDelete("position/{id}")]
+      [HttpDelete("/api/position/{id}")]
       public async Task<IActionResult> DeletePositionAsync(int id)
       {
             var res = await user.DeletePositionAsync(id);

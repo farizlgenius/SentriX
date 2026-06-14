@@ -34,4 +34,8 @@ public interface IUserRepository
       Task<DepartmentDto> UpdateDepartmentAsync(Domain.Entities.Department department,CancellationToken ct = default);
       Task<PositionDto> UpdatePositionAsync(Domain.Entities.Position position,CancellationToken ct = default);
       Task<UserDto> UpdateUserAsync(Domain.Entities.Users user,CancellationToken ct = default);
+      Task<IEnumerable<CompanyDto>> GetCompanyByLocationIdAsync(int LocationId,CancellationToken ct = default);
+      Task<Pagination<DepartmentDto>> GetDepartmentByCompanyAsync(PaginationParams param,int companyId,CancellationToken ct = default);
+      Task<IEnumerable<DepartmentDto>> GetDepartmentByCompanyAsync(int companyId,CancellationToken ct = default);
+      Task<Pagination<PositionDto>> GetPositionByDepartmentAsync(PaginationParams param,int departmentId,CancellationToken ct = default);
 }

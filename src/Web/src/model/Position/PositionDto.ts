@@ -5,5 +5,6 @@ export interface PositionDto {
     name:string;
     description: string;
     departmentId: number;
-    departmentName: string;
+    locationId:number;
+    isActive:boolean;
 }

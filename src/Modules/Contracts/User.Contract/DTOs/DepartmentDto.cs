@@ -6,6 +6,7 @@ public sealed record DepartmentDto(
       int Id,
       string Name,
       string Description,
+      int CompanyId,
       int LocationId,
       bool IsActive
 ) : BaseDto(

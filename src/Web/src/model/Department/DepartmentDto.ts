@@ -3,5 +3,6 @@ export interface DepartmentDto {
     name:string;
     description: string;
     companyId: number;
-    companyName:string;
+    locationId:number;
+    isActive:boolean;
 }

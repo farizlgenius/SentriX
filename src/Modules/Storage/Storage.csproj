@@ -6,8 +6,18 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+    <ItemGroup>
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.1" />
+  <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="10.0.7" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="10.0.7" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="10.0.7" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="10.0.7" />
+  </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\Contracts\Storage.Contract\Storage.Contract.csproj" />
   </ItemGroup>
+
+
 
 </Project>

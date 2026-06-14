@@ -85,7 +85,9 @@
     <ProjectReference Include="..\Modules\Operator\Operator.Infrastructure\Operator.Infrastructure.csproj" />
     <ProjectReference Include="..\Modules\Output\Output.Infrastructure\Output.Infrastructure.csproj" />
     <ProjectReference Include="..\Modules\Role\Role.Infrastructure\Role.Infrastructure.csproj" />
+    <ProjectReference Include="..\Modules\Storage\Storage.csproj" />
     <ProjectReference Include="..\Modules\Time\Time.Infrastructure\Time.Infrastructure.csproj" />
+    <ProjectReference Include="..\Modules\User\User.Infrastructure\User.Infrastructure.csproj" />
     <ProjectReference Include="..\SharedKernel\SharedKernel.csproj" />
   </ItemGroup>
 

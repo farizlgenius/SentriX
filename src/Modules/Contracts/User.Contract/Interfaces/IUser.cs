@@ -17,14 +17,18 @@ public interface IUser
       Task<CompanyDto> CreateCompanyAsync(CreateCompanyDto dto);
       Task<CompanyDto> UpdateCompanyAsync(CompanyDto dto);
       Task<CompanyDto> DeleteCompanyAsync(int id);
+      Task<IEnumerable<CompanyDto>> GetCompanyByLocationIdAsync(int LocationId);
 
       // Department
       Task<Pagination<DepartmentDto>> GetDepartmentPaginationAsync(PaginationParams param);
+      Task<Pagination<DepartmentDto>> GetDepartmentByCompanyAsync(PaginationParams param,int CompanyId);
+      Task<IEnumerable<DepartmentDto>> GetDepartmentByCompanyAsync(int CompanyId);
       Task<DepartmentDto> CreateDepartmentAsync(CreateDepartmentDto dto);
       Task<DepartmentDto> UpdateDepartmentAsync(DepartmentDto dto);
       Task<DepartmentDto> DeleteDepartmentAsync(int id);
       // Position
       Task<Pagination<PositionDto>> GetPositionPaginationAsync(PaginationParams param);
+      Task<Pagination<PositionDto>> GetPositionByDepartmentAsync(PaginationParams param,int DepartmentId);
       Task<PositionDto> CreatePositionAsync(CreatePositionDto dto);
       Task<PositionDto> UpdatePositionAsync(PositionDto dto);
       Task<PositionDto> DeletePositionAsync(int id);

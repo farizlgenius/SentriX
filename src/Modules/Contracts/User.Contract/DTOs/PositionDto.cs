@@ -6,6 +6,7 @@ public sealed record PositionDto(
       int Id,
       string Name,
       string Description,
+      int DepartmentId,
       int LocationId,
       bool IsActive
 ) : BaseDto(

@@ -21,6 +21,7 @@ import Label from "../../components/form/Label";
 import { Options } from "../../model/Options";
 import { CompanyEndpoint } from "../../endpoint/CompanyEndpoint";
 import { CompanyDto } from "../../model/Company/CompanyDto";
+import { useLocation } from "../../context/LocationContext";
 
 var removeTarget: number = 0;
 
@@ -29,16 +30,18 @@ export const HEADER: string[] = ["Name", "Action"]
 export const KEY: string[] = ["name"];
 
 export const Department = () => {
+    const {locationId} = useLocation();
         const [selectedCompany,setSelectedCompany] = useState<number>(-1);
     const [companyOptions,setCompanyOptions] = useState<Options[]>([]);
 
     const defaultDto: DepartmentDto = {
-    id: 0,
-    name: "",
-    description: "",
-    companyId: selectedCompany,
-    companyName: ""
-}
+        id: 0,
+        name: "",
+        description: "",
+        companyId: selectedCompany,
+        locationId: locationId,
+        isActive: true
+    }
 
     const { toggleToast } = useToast();
     const { setPagination } = usePagination();
@@ -136,12 +139,22 @@ export const Department = () => {
     }
 
     const fetchData = async (pageNumber: number, pageSize: number, locationId?: number, search?: string, startDate?: string, endDate?: string) => {
-        const res = await send.get(DepartmentEndpoint.PAGINATION(pageNumber, pageSize, locationId, search, startDate, endDate));
+        console.log(locationId);
+        const res = await send.get(DepartmentEndpoint.PAGINATION_BY_COMPANY(pageNumber, pageSize,selectedCompany,locationId,search, startDate, endDate));
         if (res && res.data) {
             setDepartmentsDto(res.data.items);
             setPagination(res.data);
         }
     }
+
+    const fetchDataImd = async (pageNumber: number, pageSize: number,companyId:number, locationId?: number, search?: string, startDate?: string, endDate?: string) => {
+        console.log(locationId);
+        const res = await send.get(DepartmentEndpoint.PAGINATION_BY_COMPANY(pageNumber, pageSize,companyId,locationId,search, startDate, endDate));
+        if (res && res.data) {
+            setDepartmentsDto(res.data.items);
+            setPagination(res.data);
+        }
+    } 
 
     const tabContent: FormContent[] = [
         {
@@ -152,7 +165,7 @@ export const Department = () => {
     ];
 
     const fetchCompany = async () => {
-        var res = await send.get(CompanyEndpoint.GET);
+        var res = await send.get(CompanyEndpoint.GET_BY_LOCATION(locationId));
         res.data.map((a:CompanyDto) => {
             setCompanyOptions((prev) => ([...prev,{
                 label:a.name,
@@ -170,7 +183,7 @@ export const Department = () => {
         <>
             <PageBreadcrumb pageTitle="Departments" />
             {form ?
-                <BaseForm tabContent={tabContent} />
+                <BaseForm tabContent={tabContent} header={""} desc={""} />
                 :
                 <div className="space-y-6">
                     <div className="rounded-xl border border-gray-200 p-6 dark:border-gray-800 border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03] " >
@@ -195,10 +208,11 @@ export const Department = () => {
                                     <Select options={companyOptions} name="Company" defaultValue={selectedCompany} onChange={e => {
                                         setSelectedCompany(Number(e));
                                         setDepartmentDto(prev => ({ ...prev, companyId: Number(e) }))
+                                        fetchDataImd(1,10,Number(e),locationId);
                                     } }/>
                               </div>
                         </div>
-                    <BaseTable<DepartmentDto> headers={HEADER} keys={KEY} data={departmentsDto} select={select} setSelect={setSelect} onEdit={handleEdit} onRemove={handleRemove} onClick={handleClickWithEvent} permission={filterPermission(FeatureId.location)} onInfo={handleInfo} fetchData={fetchData} refresh={refresh} locationId={selectedCompany} />
+                    <BaseTable<DepartmentDto> headers={HEADER} keys={KEY} data={departmentsDto} select={select} setSelect={setSelect} onEdit={handleEdit} onRemove={handleRemove} onClick={handleClickWithEvent} permission={filterPermission(FeatureId.user)} onInfo={handleInfo} fetchData={fetchData} refresh={refresh} locationId={selectedCompany == -1 ? -1 : locationId} />
                 </div>
             }
         </>

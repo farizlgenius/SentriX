@@ -5,6 +5,7 @@ namespace User.Contract.DTOs;
 public sealed record CreatePositionDto(
       string Name,
       string Description,
+      int DepartmentId,
       int LocationId,
       bool IsActive
 ) : BaseDto(

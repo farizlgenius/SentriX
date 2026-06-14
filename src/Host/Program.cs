@@ -26,7 +26,9 @@ using Role.Infrastructure;
 using Scalar.AspNetCore;
 using Serilog;
 using SharedKernel;
+using Storage;
 using Time.Infrastructure;
+using User.Infrastructure;
 
 
 namespace Host;
@@ -82,6 +84,8 @@ public class Program
         builder.Services.AddTime(builder.Configuration);
         builder.Services.AddDoor(builder.Configuration);
         builder.Services.AddGroup(builder.Configuration);
+        builder.Services.AddUser(builder.Configuration);
+        builder.Services.AddStorage(builder.Configuration);
 
 
         // Replace default logging with Serilog

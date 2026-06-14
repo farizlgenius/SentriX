@@ -226,11 +226,11 @@ const User = () => {
             {form ?
 
                 
-                <BaseForm tabContent={content} />
+                <BaseForm tabContent={content} header={''} desc={''} />
 
                 :
 
-                <BaseTable<UserDto> headers={CARDHOLDER_HEAD} keys={CARDHOLDER_KEY} data={cardHoldersDto} select={selectedObjects} setSelect={setSelectedObjects} onClick={handleClick} onRemove={handleRemove} onEdit={handleEdit} onInfo={handleInfo} permission={filterPermission(FeatureId.CARDHODLER)} action={action} fetchData={fetchData} locationId={locationId} refresh={refresh} specialDisplay={[
+                <BaseTable<UserDto> headers={CARDHOLDER_HEAD} keys={CARDHOLDER_KEY} data={cardHoldersDto} select={selectedObjects} setSelect={setSelectedObjects} onClick={handleClick} onRemove={handleRemove} onEdit={handleEdit} onInfo={handleInfo} permission={filterPermission(FeatureId.user)} action={action} fetchData={fetchData} locationId={locationId} refresh={refresh} specialDisplay={[
                     {
                         key: "avatar",
                         content: (d, i) => <TableCell key={i} className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">

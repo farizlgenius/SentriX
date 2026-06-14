@@ -5,10 +5,10 @@ using SharedKernel.Helpers;
 using User.Application.Interfaces;
 using User.Contract.DTOs;
 using User.Domain.Entities;
-using User.Infratructure.Persistences;
-using User.Infratructure.Persistences.Entities;
+using User.Infrastructure.Persistences;
+using User.Infrastructure.Persistences.Entities;
 
-namespace User.Infratructure.Repositories;
+namespace User.Infrastructure.Repositories;
 
 public sealed class UserRepository(UserDbContext context) : IUserRepository
 {
@@ -83,6 +83,7 @@ public sealed class UserRepository(UserDbContext context) : IUserRepository
                   data.Entity.id,
                   data.Entity.name,
                   data.Entity.description,
+                  data.Entity.company_id,
                   data.Entity.location_id,
                   data.Entity.is_active
             );
@@ -101,6 +102,7 @@ public sealed class UserRepository(UserDbContext context) : IUserRepository
                   data.Entity.id,
                   data.Entity.name,
                   data.Entity.description,
+                  data.Entity.component_id,
                   data.Entity.location_id,
                   data.Entity.is_active
             );
@@ -231,6 +233,7 @@ public sealed class UserRepository(UserDbContext context) : IUserRepository
                   entity.id,
                   entity.name,
                   entity.description,
+                  entity.company_id,
                   entity.location_id,
                   entity.is_active
             );
@@ -253,6 +256,7 @@ public sealed class UserRepository(UserDbContext context) : IUserRepository
                   entity.id,
                   entity.name,
                   entity.description,
+                  entity.department_id,
                   entity.location_id,
                   entity.is_active
             );
@@ -261,6 +265,22 @@ public sealed class UserRepository(UserDbContext context) : IUserRepository
       public async Task<UserDto> DeleteUserAsync(int id, CancellationToken ct = default)
       {
             throw new NotImplementedException();
+      }
+
+      public async Task<IEnumerable<CompanyDto>> GetCompanyByLocationIdAsync(int LocationId, CancellationToken ct = default)
+      {
+            var res = await context.Companies.AsNoTracking()
+            .Where(x => x.location_id == LocationId)
+            .Select(x => new CompanyDto(
+                  x.id,
+                  x.name,
+                  x.address,
+                  x.description,
+                  x.location_id,
+                  x.is_active
+                  )).ToArrayAsync();
+
+            return res;
       }
 
       public async Task<Pagination<CompanyDto>> GetCompanyPaginationAsync(PaginationParams param, CancellationToken ct = default)
@@ -327,6 +347,82 @@ public sealed class UserRepository(UserDbContext context) : IUserRepository
            
       }
 
+      public async Task<Pagination<DepartmentDto>> GetDepartmentByCompanyAsync(PaginationParams param, int companyId, CancellationToken ct = default)
+      {
+            var query = context.Departments.AsNoTracking().Where(x => x.location_id == param.locationId && x.company_id == companyId).AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(param.search))
+            {
+                  if (!string.IsNullOrWhiteSpace(param.search))
+                  {
+                        var search = param.search.Trim();
+
+                        if (context.Database.IsNpgsql())
+                        {
+                              var pattern = $"%{search}%";
+
+                              query = query.Where(x =>
+                                  EF.Functions.ILike(x.name, pattern) ||
+                                  EF.Functions.ILike(x.description, pattern) 
+                              );
+                        }
+                        else // SQL Server
+                        {
+                              query = query.Where(x =>
+                                  x.name.Contains(search) ||
+                                  x.description.Contains(search) 
+                              );
+                        }
+                  }
+            }
+
+
+            if (param.startDate != null)
+            {
+                  var startUtc = DateTime.SpecifyKind(param.startDate.Value, DateTimeKind.Utc);
+                  query = query.Where(x => x.created_at >= startUtc);
+            }
+
+            if (param.endDate != null)
+            {
+                  var endUtc = DateTime.SpecifyKind(param.endDate.Value, DateTimeKind.Utc);
+                  query = query.Where(x => x.created_at <= endUtc);
+            }
+
+            var totalItems = await query.CountAsync();
+            var items = await query.OrderByDescending(r => r.id)
+            .Skip((param.pageNumber - 1) * param.pageSize)
+            .Take(param.pageSize)
+            .Select(u => new DepartmentDto(
+                  u.id,
+                  u.name,
+                  u.description,
+                  u.company_id,
+                  u.location_id,
+                  u.is_active
+                  ))
+            .ToListAsync(ct);
+
+            return new Pagination<DepartmentDto>(param.pageNumber, param.pageSize, totalItems,
+            (int)Math.Ceiling(totalItems / (double)param.pageSize)
+            , items);
+      }
+
+      public async Task<IEnumerable<DepartmentDto>> GetDepartmentByCompanyAsync(int companyId, CancellationToken ct = default)
+      {
+            var res = await context.Departments.AsNoTracking()
+            .Where(x => x.company_id == companyId)
+            .Select(x => new DepartmentDto(
+                  x.id,
+                  x.name,
+                  x.description,
+                  x.company_id,
+                  x.location_id,
+                  x.is_active
+            )).ToArrayAsync();
+
+            return res;
+      }
 
       public async Task<Pagination<DepartmentDto>> GetDepartmentPaginationAsync(PaginationParams param, CancellationToken ct = default)
       {
@@ -378,6 +474,7 @@ public sealed class UserRepository(UserDbContext context) : IUserRepository
                   u.id,
                   u.name,
                   u.description,
+                  u.company_id,
                   u.location_id,
                   u.is_active
                   ))
@@ -388,6 +485,66 @@ public sealed class UserRepository(UserDbContext context) : IUserRepository
             , items);
       }
 
+      public async Task<Pagination<PositionDto>> GetPositionByDepartmentAsync(PaginationParams param, int departmentId, CancellationToken ct = default)
+      {
+            var query = context.Positions.AsNoTracking().Where(x => x.location_id == param.locationId && x.department_id == departmentId).AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(param.search))
+            {
+                  if (!string.IsNullOrWhiteSpace(param.search))
+                  {
+                        var search = param.search.Trim();
+
+                        if (context.Database.IsNpgsql())
+                        {
+                              var pattern = $"%{search}%";
+
+                              query = query.Where(x =>
+                                  EF.Functions.ILike(x.name, pattern) ||
+                                  EF.Functions.ILike(x.description, pattern) 
+                              );
+                        }
+                        else // SQL Server
+                        {
+                              query = query.Where(x =>
+                                  x.name.Contains(search) ||
+                                  x.description.Contains(search) 
+                              );
+                        }
+                  }
+            }
+
+
+            if (param.startDate != null)
+            {
+                  var startUtc = DateTime.SpecifyKind(param.startDate.Value, DateTimeKind.Utc);
+                  query = query.Where(x => x.created_at >= startUtc);
+            }
+
+            if (param.endDate != null)
+            {
+                  var endUtc = DateTime.SpecifyKind(param.endDate.Value, DateTimeKind.Utc);
+                  query = query.Where(x => x.created_at <= endUtc);
+            }
+
+            var totalItems = await query.CountAsync();
+            var items = await query.OrderByDescending(r => r.id)
+            .Skip((param.pageNumber - 1) * param.pageSize)
+            .Take(param.pageSize)
+            .Select(u => new PositionDto(
+                  u.id,
+                  u.name,
+                  u.description,
+                  u.department_id,
+                  u.location_id,
+                  u.is_active
+                  ))
+            .ToListAsync(ct);
+
+            return new Pagination<PositionDto>(param.pageNumber, param.pageSize, totalItems,
+            (int)Math.Ceiling(totalItems / (double)param.pageSize)
+            , items);
+      }
 
       public async Task<Pagination<PositionDto>> GetPositionPaginationAsync(PaginationParams param, CancellationToken ct = default)
       {
@@ -439,6 +596,7 @@ public sealed class UserRepository(UserDbContext context) : IUserRepository
                   u.id,
                   u.name,
                   u.description,
+                  u.department_id,
                   u.location_id,
                   u.is_active
                   ))
@@ -638,6 +796,7 @@ public sealed class UserRepository(UserDbContext context) : IUserRepository
                   data.Entity.id,
                   data.Entity.name,
                   data.Entity.description,
+                  data.Entity.company_id,
                   data.Entity.location_id,
                   data.Entity.is_active
             );
@@ -679,6 +838,7 @@ public sealed class UserRepository(UserDbContext context) : IUserRepository
                   data.Entity.id,
                   data.Entity.name,
                   data.Entity.description,
+                  data.Entity.department_id,
                   data.Entity.location_id,
                   data.Entity.is_active
             );

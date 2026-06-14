@@ -112,6 +112,7 @@ public sealed class GlobalException : IMiddleware
             }
             else
             {
+                  Console.WriteLine(ex.StackTrace);
                   return context.Response.WriteAsJsonAsync(
                     new
                     {
