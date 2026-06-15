@@ -31,7 +31,7 @@ public class TimeController(ITime time) : ControllerBase
             return Ok(res);
       }
 
-      [HttpPut]
+      [HttpPut("holiday")]
       public async Task<IActionResult> UpdateHolidayAsync([FromBody]HolidayDto dto)
       {
             var res = await time.UpdateHolidayAsync(dto);

@@ -138,12 +138,11 @@ const TimeZone = () => {
     const [timeZonesDto, setTimeZonesDto] = useState<TimeZoneDto[]>([]);
     const fetchData = async (pageNumber: number, pageSize: number,locationId?:number,search?: string, startDate?: string, endDate?: string) => {
             const res = await send.get(TimeZoneEndPoint.PAGINATION(pageNumber,pageSize,locationId,search, startDate, endDate));
-            console.log(res?.data.data)
-            if (res && res.data.data) {
-                console.log(res.data.data)
-                setTimeZonesDto(res.data.data.data);
-                setPagination(res.data.data.page);
-            }
+            console.log(res.data)
+        if (res && res.data) {
+            setTimeZonesDto(res.data.items);
+            setPagination(res.data);
+        }
         }
 
 

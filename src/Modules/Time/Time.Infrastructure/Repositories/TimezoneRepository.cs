@@ -177,7 +177,7 @@ public sealed class TimezoneRepository(TimeDbContext context) : ITimezoneReposit
 
       public async Task<Pagination<TimezoneDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
       {
-            var query = context.Timezones.AsNoTracking().AsQueryable();
+            var query = context.Timezones.AsNoTracking().Where(x => x.location_id == param.locationId || x.location_id == 0).AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(param.search))
             {

@@ -1,5 +1,4 @@
-const API_VERSION = import.meta.env.VITE_API_VERSION;
-const CONTROLLER = `Holiday`;
+const CONTROLLER = `time/holiday`;
 
 
 export const HolidayEndpoint = {

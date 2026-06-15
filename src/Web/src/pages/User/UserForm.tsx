@@ -13,7 +13,6 @@ interface UserFormProps extends FormProp<UserDto> {
 }
 
 enum UserFormStep {
-  Image,
   Personal,
   AccessLevel,
   Credential,
@@ -21,15 +20,14 @@ enum UserFormStep {
 }
 
 const userFormSteps = [
-  { step: UserFormStep.Image, title: 'User Image', detail: 'Upload or capture cardholder photo' },
-  { step: UserFormStep.Personal, title: 'Personal Information', detail: 'Identity, contact and company details' },
-  { step: UserFormStep.AccessLevel, title: 'Level & Credential', detail: 'Assign access levels for this cardholder' },
-  { step: UserFormStep.Credential, title: 'Credentials', detail: 'Manage cards and activation dates' },
+  { step: UserFormStep.Personal, title: 'Personal Information', detail: 'Identity, contact and company details.' },
+  { step: UserFormStep.AccessLevel, title: 'Access Group', detail: 'Assign access groups for this user.' },
+  { step: UserFormStep.Credential, title: 'Credentials', detail: 'Manage cards and activation dates.' },
   { step: UserFormStep.Setting, title: 'Settings', detail: 'Set cardholder behavior flags' }
 ];
 
 const UserForm: React.FC<PropsWithChildren<UserFormProps>> = ({ dto, setDto, handleClick, image, setImage, type }) => {
-  const [activeStep, setActiveStep] = useState<number>(UserFormStep.Image);
+  const [activeStep, setActiveStep] = useState<number>(UserFormStep.Personal);
   const currentStepIndex = userFormSteps.findIndex((x) => x.step === activeStep);
   const progress = ((currentStepIndex + 1) / userFormSteps.length) * 100;
   const currentStep = userFormSteps[currentStepIndex];
@@ -79,18 +77,6 @@ const UserForm: React.FC<PropsWithChildren<UserFormProps>> = ({ dto, setDto, han
           <p className="text-sm text-gray-500 dark:text-gray-400">{currentStep?.detail}</p>
         </div>
 
-        {activeStep === UserFormStep.Image && (
-          <PersonalInformationForm
-            type={type}
-            dto={dto}
-            setDto={setDto}
-            handleClick={handleClick}
-            image={image}
-            setImage={setImage}
-            section="image"
-          />
-        )}
-
         {activeStep === UserFormStep.Personal && (
           <PersonalInformationForm
             type={type}
@@ -99,7 +85,6 @@ const UserForm: React.FC<PropsWithChildren<UserFormProps>> = ({ dto, setDto, han
             handleClick={handleClick}
             image={image}
             setImage={setImage}
-            section="personal"
           />
         )}
 

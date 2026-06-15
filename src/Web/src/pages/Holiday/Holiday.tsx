@@ -155,9 +155,9 @@ const Holiday = () => {
         <>
             <PageBreadcrumb pageTitle="Holiday" />
             {form ?
-                <BaseForm tabContent={content} />
+                <BaseForm tabContent={content} header={''} desc={''} />
                 :
-                <BaseTable<HolidayDto> headers={HEADER} keys={KEY} data={holidaysDto} select={selectedObjects} setSelect={setSelectedObjects} onInfo={handleInfo} onEdit={handleEdit} onRemove={handleRemove} onClick={handleClick} refresh={refresh} permission={filterPermission(FeatureId.TIME)} fetchData={fetchData} locationId={locationId}/>
+                <BaseTable<HolidayDto> headers={HEADER} keys={KEY} data={holidaysDto} select={selectedObjects} setSelect={setSelectedObjects} onInfo={handleInfo} onEdit={handleEdit} onRemove={handleRemove} onClick={handleClick} refresh={refresh} permission={filterPermission(FeatureId.time)} fetchData={fetchData} locationId={locationId}/>
 
 
             }
