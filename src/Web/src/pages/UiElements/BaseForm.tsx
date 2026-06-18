@@ -1,17 +1,22 @@
 import React, { PropsWithChildren, useState } from "react"
 import { FormContent } from "../../model/Form/FormContent";
+import StepProgress from "../../components/form/StepProgress";
 
 
 interface FormProp {
   tabContent: FormContent[];
-  header:string;
-  desc:string;
+  header?:string;
+  desc?:string;
 }
 
-export const BaseForm: React.FC<PropsWithChildren<FormProp>> = ({ tabContent,header,desc }) => {
+export const BaseForm: React.FC<PropsWithChildren<FormProp>> = ({ tabContent,header = "",desc = "" }) => {
   const [activeTab, setActiveTab] = useState<string>(tabContent[0].label);
-  const activeStyle = "border-brand-500 bg-brand-50 text-brand-600 shadow-sm dark:border-brand-400 dark:bg-brand-400/20 dark:text-brand-300";
-  const inactiveStyle = "border-transparent bg-transparent text-gray-500 hover:border-brand-200 hover:bg-[var(--app-panel-muted)] hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200";
+  const currentStepIndex = Math.max(0, tabContent.findIndex((tab) => tab.label === activeTab));
+
+  const goToStep = (stepIndex: number) => {
+    if (stepIndex < 0 || stepIndex >= tabContent.length) return;
+    setActiveTab(tabContent[stepIndex].label);
+  }
 
 
   return (
@@ -24,20 +29,11 @@ export const BaseForm: React.FC<PropsWithChildren<FormProp>> = ({ tabContent,hea
         </p>
       </div>
 
-      <div className="border-b border-[var(--app-panel-border)]">
-        <nav className="flex space-x-2 overflow-x-auto pb-2 [&;::-webkit-scrollbar-thumb]:rounded-full [&;::-webkit-scrollbar-thumb]:bg-gray-200 dark:[&;::-webkit-scrollbar-thumb]:bg-gray-600 dark:[&;::-webkit-scrollbar-track]:bg-transparent [&;::-webkit-scrollbar]:h-1.5">
-          {
-            tabContent.map((a: FormContent,i:number) => {
-              return (<div key={i}>
-                <button onClick={(e) => setActiveTab(e.currentTarget.name)} name={a.label} className={`inline-flex items-center gap-2 rounded-2xl border px-4 py-2.5 text-sm font-medium transition-colors duration-200 ease-in-out ${activeTab == a.label ? activeStyle : inactiveStyle}`}>
-                  {a.icon}
-                  {a.label}
-                </button>
-              </div>)
-            })
-          }
-        </nav>
-      </div>
+      <StepProgress
+        steps={tabContent.map((tab) => ({ key: tab.label, title: tab.label, detail: tab.label, icon: tab.icon }))}
+        activeIndex={currentStepIndex}
+        onStepClick={goToStep}
+      />
 
       <div className="pt-6 dark:border-gray-800">
 

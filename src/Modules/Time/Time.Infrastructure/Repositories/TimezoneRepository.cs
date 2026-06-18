@@ -265,4 +265,16 @@ public sealed class TimezoneRepository(TimeDbContext context) : ITimezoneReposit
             (int)Math.Ceiling(totalItems / (double)param.pageSize)
             , items);
       }
+
+      public async Task<IEnumerable<OptionDto>> GetTimezoneOptionByLocationIdAsync(int locationId, CancellationToken ct = default)
+      {
+            return await context.Timezones.AsNoTracking()
+            .OrderByDescending(x => x.id)
+            .Where(x => x.location_id == locationId || x.location_id == 0)
+            .Select(x => new OptionDto(
+                  x.name,
+                  x.component_id,
+                  x.name
+                  )).ToArrayAsync();
+      }
 }

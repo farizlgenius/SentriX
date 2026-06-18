@@ -14,7 +14,7 @@ namespace Time.Application.Behaviors;
 
 public sealed class TimeBehavior(
       IHolidayRepository holRepo,
-      ITimezoneRepository timezoneRepo,
+      ITimezoneRepository repo,
       IMessageBus bus,
       IAdapterFactory factory) : ITime
 {
@@ -58,7 +58,7 @@ public sealed class TimeBehavior(
 
       public async Task<TimezoneDto> CreateTimezoneAsync(CreateTimezoneDto dto)
       {
-            var componentId = await timezoneRepo.GetLowestTimezoneComponentIdAsync();
+            var componentId = await repo.GetLowestTimezoneComponentIdAsync();
             var domain = new Timezone(
                   0,
                   componentId,
@@ -110,7 +110,7 @@ public sealed class TimeBehavior(
 
             } 
 
-            return await timezoneRepo.CreateAsync(domain);
+            return await repo.CreateAsync(domain);
 
       }
 
@@ -140,7 +140,7 @@ public sealed class TimeBehavior(
 
       public async Task<TimezoneDto> DeleteTimezoneAsync(int id)
       {
-            var entity = await timezoneRepo.GetByIdAsync(id);
+            var entity = await repo.GetByIdAsync(id);
             if(entity.Id == 0)
                   throw new BadRequestException(MessageHelper.Common.NotFound("Timezone", id));
 
@@ -155,7 +155,7 @@ public sealed class TimeBehavior(
                         );
             }
 
-            return await timezoneRepo.DeleteByIdAsync(id);
+            return await repo.DeleteByIdAsync(id);
 
             
       }
@@ -163,6 +163,11 @@ public sealed class TimeBehavior(
       public async Task<IEnumerable<OptionDto>> GetTimezoneModeAsync(string Type)
       {
             return await factory.GetAdapter(Type).Time.GetTimezoneMode();
+      }
+
+      public async Task<IEnumerable<OptionDto>> GetTimezoneOptionByLocationIdAsync(int locationId)
+      {
+            return await repo.GetTimezoneOptionByLocationIdAsync(locationId);
       }
 
       public async Task<Pagination<HolidayDto>> HolidayPaginationAsync(PaginationParams param)
@@ -173,7 +178,7 @@ public sealed class TimeBehavior(
 
       public async Task<Pagination<TimezoneDto>> TimezonePaginationAsync(PaginationParams param)
       {
-            var res = await timezoneRepo.GetPaginationAsync(param);
+            var res = await repo.GetPaginationAsync(param);
             return res;
       }
 

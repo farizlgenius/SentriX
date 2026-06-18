@@ -7,6 +7,7 @@ using Device.Infrastructure.Persistences;
 using Microsoft.AspNetCore.Mvc.TagHelpers;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel.Domain;
+using SharedKernel.Enums;
 using SharedKernel.Helpers;
 
 namespace Device.Infrastructure.Repositories;
@@ -281,11 +282,20 @@ public sealed class DeviceRepository(DeviceDbContext context) : IDeviceRepositor
                   .ToArrayAsync();
       }
 
-      public async Task<IEnumerable<OptionDto>> GetOptionByLocationIdAsync(int locationId, CancellationToken ct = default)
+      public async Task<IEnumerable<OptionDto>> GetOptionByLocationIdTypeAeroAsync(int locationId,string type, CancellationToken ct = default)
       {
             return await context.Devices.AsNoTracking()
             .OrderByDescending(x => x.id)
-            .Where(x => x.location_id == locationId)
+            .Where(x => x.location_id == locationId && x.type == DeviceType.AERO.ToString())
+            .Select(x => new OptionDto(x.name, x.component_id,x.mac,x.id,false))
+            .ToArrayAsync();
+      }
+
+      public async Task<IEnumerable<OptionDto>> GetOptionByLocationIdTypeAmicoAsync(int locationId,string type, CancellationToken ct = default)
+      {
+            return await context.Devices.AsNoTracking()
+            .OrderByDescending(x => x.id)
+            .Where(x => x.location_id == locationId && x.type == DeviceType.AMICO.ToString())
             .Select(x => new OptionDto(x.name, x.component_id,x.mac,x.id,false))
             .ToArrayAsync();
       }

@@ -11,6 +11,7 @@ import Switch from "../switch/Switch";
 import { Info2Icon } from "../../../icons";
 import { AreaEndpoint } from "../../../endpoint/AreaEndpoint";
 import { send } from "../../../api/api";
+import StepProgress from "../StepProgress";
 
 enum FormTab {
   General, Occupancy
@@ -81,7 +82,6 @@ export const AreaForm: React.FC<PropsWithChildren<FormProp<AreaDto>>> = ({ handl
     }
   }
   const currentStepIndex = formSteps.findIndex((step) => step.tab === activeTab);
-  const progress = ((currentStepIndex + 1) / formSteps.length) * 100;
   const currentStep = formSteps[currentStepIndex];
   const isFirstStep = currentStepIndex === 0;
   const isLastStep = currentStepIndex === formSteps.length - 1;
@@ -102,34 +102,11 @@ export const AreaForm: React.FC<PropsWithChildren<FormProp<AreaDto>>> = ({ handl
   return (
     <>
       <div className="flex flex-col gap-5 justify-center items-center p-5 border border-gray-200 rounded-2xl dark:border-gray-800 lg:p-6">
-        <div className="w-full">
-          <div className="mb-2 flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
-            <span>Step {currentStepIndex + 1} of {formSteps.length}</span>
-            <span>{Math.round(progress)}%</span>
-          </div>
-          <div className="h-2 w-full rounded-full bg-gray-200 dark:bg-gray-800">
-            <div className="h-2 rounded-full bg-brand-500 transition-all duration-300" style={{ width: `${progress}%` }} />
-          </div>
-        </div>
-
-        <div className="overflow-x-auto pb-2">
-          <div className="flex min-w-max gap-2">
-            {formSteps.map((step, index) => (
-              <button
-                key={step.tab}
-                type="button"
-                onClick={() => goToStep(index)}
-                className={`inline-flex items-center gap-2 rounded-lg border px-3 py-2 text-sm transition-colors ${activeTab === step.tab
-                  ? 'border-brand-500 bg-brand-50 text-brand-600 dark:border-brand-400 dark:bg-brand-400/20 dark:text-brand-300'
-                  : 'border-gray-200 text-gray-600 hover:border-brand-300 hover:text-brand-600 dark:border-gray-700 dark:text-gray-300'
-                  }`}
-              >
-                <span>{index + 1}.</span>
-                <span>{step.title}</span>
-              </button>
-            ))}
-          </div>
-        </div>
+        <StepProgress
+          steps={formSteps.map((step) => ({ key: step.tab, title: step.title, detail: step.detail }))}
+          activeIndex={currentStepIndex}
+          onStepClick={goToStep}
+        />
         <div className="rounded-xl border border-gray-200 p-4 dark:border-gray-800 lg:p-6 w-full">
           <div className="mb-4">
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{currentStep?.title}</h3>

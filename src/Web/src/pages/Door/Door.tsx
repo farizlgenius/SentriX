@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react'
 import PageBreadcrumb from '../../components/common/PageBreadCrumb';
 import {  ControlIcon, DisableIcon, DoorIcon,   DoorInIcon,  DoorOutIcon,  LockIcon, MomentIcon, UnlockIcon } from '../../icons';
 import Logger from '../../utility/Logger';
-import DoorForm from './DoorForm';
+import AeroDoorForm from './AeroDoorForm';
 import Helper from '../../utility/Helper';
-import { DoorDto } from '../../model/Door/DoorDto';
+import { AeroDoorMetadata, AltrReader, Antipassback, DoorDto, ReaderIn, ReaderOut, Relay, Rex, Sensor } from '../../model/Door/DoorDto';
 import { StatusDto } from '../../model/StatusDto';
 import { useToast } from '../../context/ToastContext';
 import { DoorEndpoint } from '../../endpoint/DoorEndpoint';
@@ -25,6 +25,7 @@ import { FormType } from '../../model/Form/FormProp';
 import { usePopup } from '../../context/PopupContext';
 import { AcrStatus as AcrStatus } from '../../model/Door/AcrStatus';
 import { DoorDirection } from '../../enum/DoorDirection';
+import DoorForm from './DoorForm';
 
 
 
@@ -32,158 +33,31 @@ import { DoorDirection } from '../../enum/DoorDirection';
 export const DOOR_TABLE_HEADER: string[] = ["Name","Type", "Mode", "Status", "Action"]
 export const DOOR_KEY: string[] = ["name","direction"];
 
+// Default Value 
+
+
+
+
+
 const Door = () => {
     const { filterPermission } = useAuth();
     const { toggleToast } = useToast();
     const { locationId } = useLocation();
     const {setPagination} = usePagination();
     const { setRemove, setConfirmRemove,setConfirmCreate ,setCreate,setUpdate,setConfirmUpdate,setInfo,setMessage} = usePopup();
-    const defaultDto: DoorDto = {
-        name: '',
-        acrId: -1,
-        accessConfig: -1,
-        pairDoorNo: -1,
-        readers: [
-            {
-                // base 
-                locationId: locationId,
-                isActive: true,
-
-                // Detail
-                moduleId: -1,
-                moduleDriverId: -1,
-                readerNo: -1,
-                dataFormat: 1,
-                keypadMode: 0,
-                ledDriveMode: 1,
-                osdpFlag: false,
-                osdpAddress: 0x00,
-                osdpDiscover: 0x00,
-                osdpTracing: 0x00,
-                osdpBaudrate: 0x00,
-                osdpSecureChannel: 0x00,
-                scpId: 0
-            },
-            {
-                // base 
-                locationId: locationId,
-                isActive: true,
-
-                // Detail
-                moduleId: -1,
-                moduleDriverId: -1,
-                readerNo: -1,
-                dataFormat: 1,
-                keypadMode: 0,
-                ledDriveMode: 1,
-                osdpFlag: false,
-                osdpAddress: 0x00,
-                osdpDiscover: 0x00,
-                osdpTracing: 0x00,
-                osdpBaudrate: 0x00,
-                osdpSecureChannel: 0x00,
-                scpId: 0
-            }
-        ],
-        strk: {
-            scpId: 0,
-            moduleId: -1,
-            outputNo: -1,
-            relayMode: -1,
-            offlineMode: -1,
-
-            // base
-            locationId: locationId,
-            isActive: true,
-            strkMax: 5,
-            strkMin: 1,
-            strkMode: -1,
-            moduleDriverId: -1
-        },
-        sensor: {
-            scpId: 0,
-            moduleId: -1,
-            moduleDriverId: -1,
-            inputNo: -1,
-            inputMode: -1,
-            holdTime: 0,
-
-            // base
-            locationId: locationId,
-            isActive: true,
-            debounce: 0,
-            dcHeld: 0,
-        },
-        requestExits: [
-            {
-                // base 
-                locationId: locationId,
-                isActive: true,
-
-                // Detail
-                scpId: 0,
-                moduleId: -1,
-                moduleDriverId: -1,
-                inputNo: -1,
-                inputMode: -1,
-                debounce: 0,
-                holdTime: 0,
-                maskTimeZone: -1,
-            },
-            {
-                // base 
-                locationId: locationId,
-                isActive: true,
-
-                // Detail
-                scpId: 0,
-                moduleId: -1,
-                moduleDriverId: -1,
-                inputNo: -1,
-                inputMode: -1,
-                debounce: 0,
-                holdTime: 0,
-                maskTimeZone: -1,
-            }
-        ],
-        readerOutConfiguration: 1,
-        // Notused
-        cardFormat: 255,
-        areaInId: -1,
-        areaOutId: 1,
-        spareTags: -1,
-        accessControlFlags: -1,
-        mode: -1,
-        modeDesc: '',
-        offlineModeDesc: '',
-        defaultModeDesc: '',
-        defaultLEDMode: 0,
-        preAlarm: 0,
-        antiPassbackDelay: 0,
-        strkT2: 0,
-        dcHeld2: 0,
-        strkFollowPulse: -1,
-        strkFollowDelay: -1,
-        nExtFeatureType: -1,
-        ilPBSio: -1,
-        ilPBNumber: -1,
-        ilPBLongPress: -1,
-        ilPBOutSio: -1,
-        ilPBOutNum: -1,
-        dfOfFilterTime: 0,
-        antiPassbackMode: -1,
-        offlineMode: -1,
-        defaultMode: -1,
-        maskForceOpen: false,
-        maskHeldOpen: false,
-        // base
-        locationId: locationId,
-        isActive: true,
+    const defaultDoorDto: DoorDto = {
         id: 0,
-        scpId: -1,
-        direction: DoorDirection.IN
+        componentId: -1,
+        name: '',
+        deviceComponentId: -1,
+        mac: '',
+        doorType: '',
+        metadata: {},
+        locationId: locationId,
+        type: '',
+        isActive: false
     }
-    const [doorDto, setDoorDto] = useState<DoorDto>(defaultDto)
+    const [doorDto, setDoorDto] = useState<DoorDto>(defaultDoorDto)
     const [refresh, setRefresh] = useState(false);
     const toggleRefresh = () => setRefresh(!refresh);
     {/* Modal */ }
@@ -221,7 +95,7 @@ const Door = () => {
                     const res = await send.post(DoorEndpoint.CREATE,doorDto);
                     if (Helper.handleToastByResCode(res, DoorToast.CREATE, toggleToast)) {
                         setForm(false)
-                        setDoorDto(defaultDto)
+                        setDoorDto(defaultDoorDto)
                         toggleRefresh();
                     }
                 })
@@ -232,7 +106,7 @@ const Door = () => {
                     const res = await send.put(DoorEndpoint.UPDATE,doorDto)
                     if (Helper.handleToastByResCode(res, DoorToast.UPDATE, toggleToast)) {
                         setForm(false)
-                        setDoorDto(defaultDto)
+                        setDoorDto(defaultDoorDto)
                         toggleRefresh();
                     }
                 });
@@ -240,7 +114,7 @@ const Door = () => {
                 break;
             case "close":
             case "cancel":
-                setDoorDto(defaultDto)
+                setDoorDto(defaultDoorDto)
                 setForm(false);
                 break;
            case "unlock":
@@ -437,7 +311,7 @@ const Door = () => {
         <>
             <PageBreadcrumb pageTitle="Doors" />
             {form ?
-                <BaseForm tabContent={content} />
+                <BaseForm tabContent={content} header={''} desc={''} />
 
                 :
                 <BaseTable<DoorDto> headers={DOOR_TABLE_HEADER} keys={DOOR_KEY} select={selectedObjects} setSelect={setSelectedObjects} onInfo={handleInfo} onClick={handleClick} onEdit={handleEdit} onRemove={handleRemove} data={doorsDto} status={status} action={action} permission={filterPermission(FeatureId.acr)} renderOptionalComponent={filterComponet} fetchData={fetchData} locationId={locationId} refresh={refresh} specialDisplay={[

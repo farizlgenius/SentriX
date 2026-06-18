@@ -47,6 +47,13 @@ public class TimeController(ITime time) : ControllerBase
             return Ok(res);
       }
 
+      [HttpGet("timezone/option/{locationId}")]
+      public async Task<IActionResult> GetTimezoneOptionByLocationIdAsync(int locationId)
+      {
+            var res = await time.GetTimezoneOptionByLocationIdAsync(locationId);
+            return Ok(res);
+      }
+
       [HttpPost("timezone")]
       public async Task<IActionResult> CreateTimezoneAsync([FromBody]CreateTimezoneDto dto)
       {

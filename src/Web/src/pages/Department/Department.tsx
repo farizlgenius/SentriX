@@ -188,22 +188,6 @@ export const Department = () => {
                 <div className="space-y-6">
                     <div className="rounded-xl border border-gray-200 p-6 dark:border-gray-800 border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03] " >
                               <div className="gap-3"> 
-                                    {/* <MultiSelect
-
-                                          label="Report Header Template"
-                                          options={headerOptions}
-                                          defaultSelected={headerOptions.filter(opt => opt.selected).map(opt => opt.value)}
-                                          onChange={(values) => {
-                                                // values.map(a => {
-                                                //   setDto(prev => ({ ...prev, cardFormat: prev.cardFormat | Number(a) }))
-                                                // })
-                                                setHeader(values.map(value => {
-                                                      return headerOptions.find(option => option.value === value)?.text || ""
-                                                }));
-                                                setKeys(values);
-                                                console.log(values)
-                                          }}
-                                    /> */}
                                     <Label>Company Selector</Label>
                                     <Select options={companyOptions} name="Company" defaultValue={selectedCompany} onChange={e => {
                                         setSelectedCompany(Number(e));

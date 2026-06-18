@@ -78,9 +78,45 @@ public sealed class DoorBehavior(IDoorRepository repo,IMessageBus bus,IAdapterFa
             
       }
 
+      public async Task<IEnumerable<OptionDto>> GetAccessControlFlagAsync()
+      {
+            var res = await repo.GetAccessControlFlagAsync();
+            return res;
+      }
+
+      public async Task<IEnumerable<OptionDto>> GetSpareFlagAsync()
+      {
+            var res = await repo.GetSpareFlagAsync();
+            return res;
+      }
+
+      public async Task<IEnumerable<OptionDto>> GetApbModeAsync()
+      {
+            var res = await repo.GetApbModeAsync();
+            return res;
+      }
+
+      public async Task<IEnumerable<OptionDto>> GetDoorModeAsync()
+      {
+             var res = await repo.GetDoorModeAsync();
+            return res;
+      }
+
       public async Task<Pagination<DoorDto>> GetDoorPaginationAsync(PaginationParams param)
       {
             var res = await repo.GetDoorPaginationAsync(param);
+            return res;
+      }
+
+      public async Task<IEnumerable<OptionDto>> GetReaderModeAsync()
+      {
+            var res = await repo.GetReaderModeAsync();
+            return res;
+      }
+
+      public async Task<IEnumerable<OptionDto>> GetStrikeModeAsync()
+      {
+             var res = await repo.GetStrikeModeAsync();
             return res;
       }
 
@@ -124,5 +160,10 @@ public sealed class DoorBehavior(IDoorRepository repo,IMessageBus bus,IAdapterFa
             return await repo.UpdateAsync(domain);
 
             
+      }
+
+      public async Task<IEnumerable<OptionDto>> GetOsdpBaudrateAsync()
+      {
+            return await repo.GetOsdpBaudrateAsync();
       }
 }

@@ -14,4 +14,13 @@ public interface IDoorRepository
       Task<DoorDto> DeleteAsync(int id,CancellationToken ct = default);
       Task<DoorDto> UpdateAsync(Doors domain,CancellationToken ct = default);
       Task<Pagination<DoorDto>> GetDoorPaginationAsync(PaginationParams param,CancellationToken ct = default);
+      Task<IEnumerable<OptionDto>> GetReaderModeAsync(CancellationToken ct = default);
+      Task<IEnumerable<OptionDto>> GetStrikeModeAsync(CancellationToken ct = default);
+      Task<IEnumerable<OptionDto>> GetApbModeAsync(CancellationToken ct = default);
+      Task<IEnumerable<OptionDto>> GetDoorModeAsync(CancellationToken ct = default);
+      Task<IEnumerable<OptionDto>> GetAccessControlFlagAsync(CancellationToken ct = default);
+      Task<IEnumerable<OptionDto>> GetSpareFlagAsync(CancellationToken ct = default);
+      Task<IEnumerable<OptionDto>> GetOsdpBaudrateAsync(CancellationToken ct = default);
+      
+      
 }

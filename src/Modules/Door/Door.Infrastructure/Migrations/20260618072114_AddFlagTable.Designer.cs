@@ -3,6 +3,7 @@ using System;
 using Door.Infrastructure.Persistences;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Door.Infrastructure.Migrations
 {
     [DbContext(typeof(DoorDbContext))]
-    partial class DoorDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260618072114_AddFlagTable")]
+    partial class AddFlagTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -562,123 +565,6 @@ namespace Door.Infrastructure.Migrations
                     b.HasKey("id");
 
                     b.ToTable("Doors", "door");
-                });
-
-            modelBuilder.Entity("Door.Infrastructure.Persistences.Entities.OsdpBaudrate", b =>
-                {
-                    b.Property<int>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
-
-                    b.Property<short>("component_id")
-                        .HasColumnType("smallint");
-
-                    b.Property<DateTime>("created_at")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
-                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
-
-                    b.Property<string>("description")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<bool>("is_active")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("label")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int>("location_id")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime>("updated_at")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
-                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
-
-                    b.Property<int>("value")
-                        .HasColumnType("integer");
-
-                    b.HasKey("id");
-
-                    b.ToTable("OsdpBaudrates", "door");
-
-                    b.HasData(
-                        new
-                        {
-                            id = 1,
-                            component_id = (short)0,
-                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            description = "",
-                            is_active = true,
-                            label = "9600",
-                            location_id = 0,
-                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            value = 9600
-                        },
-                        new
-                        {
-                            id = 2,
-                            component_id = (short)0,
-                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            description = "",
-                            is_active = true,
-                            label = "19200",
-                            location_id = 0,
-                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            value = 19200
-                        },
-                        new
-                        {
-                            id = 3,
-                            component_id = (short)0,
-                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            description = "",
-                            is_active = true,
-                            label = "38400",
-                            location_id = 0,
-                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            value = 38400
-                        },
-                        new
-                        {
-                            id = 4,
-                            component_id = (short)0,
-                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            description = "",
-                            is_active = true,
-                            label = "115200",
-                            location_id = 0,
-                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            value = 115200
-                        },
-                        new
-                        {
-                            id = 5,
-                            component_id = (short)0,
-                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            description = "",
-                            is_active = true,
-                            label = "57600",
-                            location_id = 0,
-                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            value = 57600
-                        },
-                        new
-                        {
-                            id = 6,
-                            component_id = (short)0,
-                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            description = "",
-                            is_active = true,
-                            label = "230400",
-                            location_id = 0,
-                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            value = 230400
-                        });
                 });
 
             modelBuilder.Entity("Door.Infrastructure.Persistences.Entities.ReaderMode", b =>

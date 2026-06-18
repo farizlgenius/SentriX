@@ -105,15 +105,32 @@ public sealed class DeviceBehaviors(IDeviceRepository repo, IMessageBus bus, IAd
             return res;
       }
 
-      public async Task<IEnumerable<OptionDto>> GetOptionByLocationIdAsync(int locationId, CancellationToken ct = default)
+      public async Task<IEnumerable<OptionDto>> GetOptionByLocationIdAsync(int locationId, string type, CancellationToken ct = default)
       {
             // Check if locationId is Exists 
             var flag = await bus.QueryAsync(new IsAnyLocationByIdQuery(locationId));
             if (!flag)
                   throw new BadRequestException(MessageHelper.Common.NotFound("Location", locationId));
 
-            var res = await repo.GetOptionByLocationIdAsync(locationId, ct);
-            return res;
+            if (string.IsNullOrWhiteSpace(type))
+                  throw new BadRequestException(MessageHelper.Common.Empty(type));
+
+            if (!type.Equals(DeviceType.AERO.ToString()) && !type.Equals(DeviceType.AMICO.ToString()))
+                  throw new BadRequestException(MessageHelper.Common.NotFound("Type", type));
+
+            if (type.Equals(DeviceType.AERO.ToString()))
+            {
+                  var res = await repo.GetOptionByLocationIdTypeAeroAsync(locationId, type, ct);
+                  return res;
+            }
+            else if (type.Equals(DeviceType.AMICO.ToString()))
+            {
+                  var res = await repo.GetOptionByLocationIdTypeAmicoAsync(locationId, type, ct);
+                  return res;
+            }
+
+            return new List<OptionDto>();
+
 
       }
 

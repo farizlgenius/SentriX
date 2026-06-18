@@ -22,7 +22,10 @@ public interface IDeviceRepository
       Task<ModuleDto> GetModuleByIdAsync(int id,CancellationToken ct = default);
       Task<DeviceDto> GetByMacAsync(string Mac,CancellationToken ct= default);
       Task<int> GetModuleIdByMacAndAddressAsync(string Mac,int Address,CancellationToken ct =default);
-      Task<IEnumerable<OptionDto>> GetOptionByLocationIdAsync(int locationId,CancellationToken ct = default);
+
+      Task<IEnumerable<OptionDto>> GetOptionByLocationIdTypeAeroAsync(int locationId,string type,CancellationToken ct = default);
+      Task<IEnumerable<OptionDto>> GetOptionByLocationIdTypeAmicoAsync(int locationId,string type,CancellationToken ct = default);
+
       Task<bool> IsAnyModuleByIdAsync(int ModuleId,CancellationToken ct = default);
       Task<IEnumerable<OptionDto>> GetModuleOptionByDeviceIdAsync(int ModuleId,CancellationToken ct = default);
       Task<string> GetModelByModuleIdAsync(int ModuleId,CancellationToken ct = default);

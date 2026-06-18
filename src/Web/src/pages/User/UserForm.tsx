@@ -6,6 +6,7 @@ import { PersonalInformationForm } from '../../components/form/card-holder/Perso
 import { UserSettingForm } from '../../components/form/card-holder/UserSettingForm';
 import { UserDto } from '../../model/User/UserDto';
 import { FormProp, FormType } from '../../model/Form/FormProp';
+import StepProgress from '../../components/form/StepProgress';
 
 interface UserFormProps extends FormProp<UserDto> {
   image: File | undefined;
@@ -29,7 +30,6 @@ const userFormSteps = [
 const UserForm: React.FC<PropsWithChildren<UserFormProps>> = ({ dto, setDto, handleClick, image, setImage, type }) => {
   const [activeStep, setActiveStep] = useState<number>(UserFormStep.Personal);
   const currentStepIndex = userFormSteps.findIndex((x) => x.step === activeStep);
-  const progress = ((currentStepIndex + 1) / userFormSteps.length) * 100;
   const currentStep = userFormSteps[currentStepIndex];
   const isFirstStep = currentStepIndex === 0;
   const isLastStep = currentStepIndex === userFormSteps.length - 1;
@@ -41,35 +41,11 @@ const UserForm: React.FC<PropsWithChildren<UserFormProps>> = ({ dto, setDto, han
 
   return (
     <div className="flex flex-col gap-5 p-5 border border-gray-200 rounded-2xl dark:border-gray-800 lg:p-6">
-      <div className="w-full">
-        <div className="mb-2 flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
-          <span>Step {currentStepIndex + 1} of {userFormSteps.length}</span>
-          <span>{Math.round(progress)}%</span>
-        </div>
-        <div className="h-2 w-full rounded-full bg-gray-200 dark:bg-gray-800">
-          <div className="h-2 rounded-full bg-brand-500 transition-all duration-300" style={{ width: `${progress}%` }} />
-        </div>
-      </div>
-
-      <div className="overflow-x-auto pb-2">
-        <div className="flex min-w-max gap-2">
-          {userFormSteps.map((step, index) => (
-            <button
-              key={step.step}
-              type="button"
-              onClick={() => goToStep(index)}
-              className={`inline-flex items-center gap-2 rounded-lg border px-3 py-2 text-sm transition-colors ${
-                activeStep === step.step
-                  ? 'border-brand-500 bg-brand-50 text-brand-600 dark:border-brand-400 dark:bg-brand-400/20 dark:text-brand-300'
-                  : 'border-gray-200 text-gray-600 hover:border-brand-300 hover:text-brand-600 dark:border-gray-700 dark:text-gray-300'
-              }`}
-            >
-              <span>{index + 1}.</span>
-              <span>{step.title}</span>
-            </button>
-          ))}
-        </div>
-      </div>
+      <StepProgress
+        steps={userFormSteps.map((step) => ({ key: step.step, title: step.title, detail: step.detail }))}
+        activeIndex={currentStepIndex}
+        onStepClick={goToStep}
+      />
 
       <div className="rounded-xl border border-gray-200 p-4 dark:border-gray-800 lg:p-6">
         <div className="mb-4">

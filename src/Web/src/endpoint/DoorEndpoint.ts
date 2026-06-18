@@ -1,4 +1,3 @@
-const API_VERSION = import.meta.env.VITE_API_VERSION;
 const CONTROLLER = `Door`;
 
 export const DoorEndpoint = {
@@ -21,6 +20,6 @@ export const DoorEndpoint = {
     GET_BAUD_RATE : `/api/${CONTROLLER}/osdp/baudrate`,
     GET_READER_OUT_CONFIG : `/api/${CONTROLLER}/readerout/mode`,
     GET_SPARE_FLAG : `/api/${CONTROLLER}/spareflag`,
-    GET_ACCESS_CONTROL_FLAG : `/api/${CONTROLLER}/accesscontrolflag`,
+    GET_ACCESS_CONTROL_FLAG : `/api/${CONTROLLER}/acsflag`,
     GET_OSDP_ADDRESS_BY_MODULE :(module:number) => `/api/${CONTROLLER}/osdp/address/${module}`
 } as const;

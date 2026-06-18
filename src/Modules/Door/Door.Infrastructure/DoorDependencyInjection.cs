@@ -1,5 +1,9 @@
 using System;
+using Door.Application.Behaviors;
+using Door.Application.Interfaces;
+using Door.Contract.Interfaces;
 using Door.Infrastructure.Persistences;
+using Door.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,6 +17,8 @@ public static class InputDependencyInjection
         IConfiguration configuration)
       {
 
+            services.AddScoped<IDoor,DoorBehavior>();
+            services.AddScoped<IDoorRepository,DoorRepository>();
 
             // ==========================
             // Database

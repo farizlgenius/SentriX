@@ -12,6 +12,7 @@ public interface ITime
 
       // Timezone
       Task<Pagination<TimezoneDto>> TimezonePaginationAsync(PaginationParams param);
+      Task<IEnumerable<OptionDto>> GetTimezoneOptionByLocationIdAsync(int locationId);
       Task<TimezoneDto> CreateTimezoneAsync(CreateTimezoneDto dto);
       Task<TimezoneDto> UpdateTimezoneAsync(TimezoneDto dto);
       Task<TimezoneDto> DeleteTimezoneAsync(int id);

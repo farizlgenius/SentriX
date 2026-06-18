@@ -37,4 +37,53 @@ public class DoorController(IDoor door) : ControllerBase
             return Ok(res);
       }
 
+      [HttpGet("reader/mode")]
+      public async Task<IActionResult> GetReaderModeAsync()
+      {
+            var res = await door.GetReaderModeAsync();
+            return Ok(res);
+      }
+
+      [HttpGet("strike/mode")]
+      public async Task<IActionResult> GetStrikeModeAsync()
+      {
+            var res = await door.GetStrikeModeAsync();
+            return Ok(res);
+      }
+
+      [HttpGet("apb/mode")]
+      public async Task<IActionResult> GetApbModeAsync()
+      {
+            var res = await door.GetApbModeAsync();
+            return Ok(res);
+      }
+
+      [HttpGet("mode")]
+      public async Task<IActionResult> GetDoorModeAsync()
+      {
+            var res = await door.GetDoorModeAsync();
+            return Ok(res);
+      }
+
+      [HttpGet("acsflag")]
+      public async Task<IActionResult> GetAccessControlFlagAsync()
+      {
+            var res = await door.GetAccessControlFlagAsync();
+            return Ok(res);
+      }
+
+      [HttpGet("spareflag")]
+      public async Task<IActionResult> GetSpareFlagAsync()
+      {
+            var res = await door.GetSpareFlagAsync();
+            return Ok(res);
+      }
+
+      [HttpGet("osdp/baudrate")]
+      public async Task<IActionResult> GetOsdpBaudrateAsync()
+      {
+            var res = await door.GetOsdpBaudrateAsync();
+            return Ok(res);
+      }
+
 }

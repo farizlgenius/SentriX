@@ -9,7 +9,7 @@ export const ControlPointEndpoint = {
     UPDATE : `/api/${CONTROLLER}`,
     STATUS :(outputId:number)=> `/api/${CONTROLLER}/status/${outputId}`,
     OUTPUT : (module:number) => `/api/${CONTROLLER}/relay/${module}`,
-    GET_RELAY_OP_MODE : (type:string) => `/api/${CONTROLLER}/relay/mode?Type=${type}`,
+    GET_RELAY_OP_MODE : (type:string) => `/api/${CONTROLLER}/relay/mode/${type}`,
     DELETE_RANGE: `/api/${CONTROLLER}/delete/range`
 } as const;
 

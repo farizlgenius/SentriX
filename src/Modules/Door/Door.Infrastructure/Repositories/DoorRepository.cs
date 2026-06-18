@@ -65,6 +65,36 @@ public sealed class DoorRepository(DoorDbContext context) : IDoorRepository
             );
       }
 
+      public async Task<IEnumerable<OptionDto>> GetAccessControlFlagAsync(CancellationToken ct = default)
+      {
+            return await context.AccessControlFlags.AsNoTracking()
+           .Select(x => new OptionDto(
+            x.label,
+            x.value,
+            x.description
+            )).ToArrayAsync();
+      }
+
+      public async Task<IEnumerable<OptionDto>> GetSpareFlagAsync(CancellationToken ct = default)
+      {
+            return await context.SpareFlags.AsNoTracking()
+           .Select(x => new OptionDto(
+            x.label,
+            x.value,
+            x.description
+            )).ToArrayAsync();
+      }
+
+      public async Task<IEnumerable<OptionDto>> GetApbModeAsync(CancellationToken ct = default)
+      {
+             return await context.ApbModes.AsNoTracking()
+           .Select(x => new OptionDto(
+            x.label,
+            x.value,
+            x.description
+            )).ToArrayAsync();
+      }
+
       public async Task<DoorDto> GetByIdAsync(int id, CancellationToken ct = default)
       {
             return await context.Doors.AsNoTracking()
@@ -99,9 +129,19 @@ public sealed class DoorRepository(DoorDbContext context) : IDoorRepository
                   ;
       }
 
+      public async Task<IEnumerable<OptionDto>> GetDoorModeAsync(CancellationToken ct = default)
+      {
+             return await context.DoorModes.AsNoTracking()
+           .Select(x => new OptionDto(
+            x.label,
+            x.value,
+            x.description
+            )).ToArrayAsync();
+      }
+
       public async Task<Pagination<DoorDto>> GetDoorPaginationAsync(PaginationParams param, CancellationToken ct = default)
       {
-            var query = context.Doors.AsNoTracking().AsQueryable();
+            var query = context.Doors.AsNoTracking().Where(x => x.location_id == param.locationId).AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(param.search))
             {
@@ -200,6 +240,26 @@ public sealed class DoorRepository(DoorDbContext context) : IDoorRepository
                   );
       }
 
+      public async Task<IEnumerable<OptionDto>> GetReaderModeAsync(CancellationToken ct = default)
+      {
+           return await context.ReaderModes.AsNoTracking()
+           .Select(x => new OptionDto(
+            x.label,
+            x.value,
+            x.description
+            )).ToArrayAsync();
+      }
+
+      public async Task<IEnumerable<OptionDto>> GetStrikeModeAsync(CancellationToken ct = default)
+      {
+            return await context.StrikeModes.AsNoTracking()
+           .Select(x => new OptionDto(
+            x.label,
+            x.value,
+            x.description
+            )).ToArrayAsync();
+      }
+
       public async Task<bool> IsAnyByIdAsync(int id, CancellationToken ct = default)
       {
             return await context.Doors.AsNoTracking().AnyAsync(x => x.id == id);
@@ -235,5 +295,15 @@ public sealed class DoorRepository(DoorDbContext context) : IDoorRepository
             );
 
 
+      }
+
+      public async Task<IEnumerable<OptionDto>> GetOsdpBaudrateAsync(CancellationToken ct = default)
+      {
+             return await context.OsdpBaudrates.AsNoTracking()
+           .Select(x => new OptionDto(
+            x.label,
+            x.value,
+            x.description
+            )).ToArrayAsync();
       }
 }
