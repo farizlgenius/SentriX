@@ -3,31 +3,32 @@ import PageBreadcrumb from '../../components/common/PageBreadCrumb'
 import TransactionTable from '../../components/tables/Tables/TransactionTable'
 import Pagination from '../../components/ui/table/Pagination'
 import { send } from '../../api/api'
-import { TransactionEndpoint } from '../../endpoint/TransactionEndpoint'
-import { TransactionDto } from '../../model/Transaction/TransactionDto'
+import { EventEndpoint } from '../../endpoint/TransactionEndpoint'
+import { EventDto } from '../../model/Event/EventDto'
 import SignalRService from '../../services/SignalRService'
 import DatePicker from '../../components/form/date-picker'
 import { PageProp } from '../../model/PageProp'
 import { useLocation } from '../../context/LocationContext'
 import { TableCell } from '../../components/ui/table'
 import { Avatar } from '../UiElements/Avatar'
+import Helper from '../../utility/Helper'
 
 
 
 // Define header Table 
 const headers: string[] = [
-  "Date", "Source", "Device", "Actor", "Description", "More Detail", "Remark"
+  "Date", "Source","Type","Device","Avatar","Actor","Remark"
 ]
 
 // Define kwy Table 
 const keys: string[] = [
-  "dateTime", "sourceModule", "origin", "actor", "tranCodeDesc", "extendDesc", "remark"
+  "dateTime","module","type","name","image", "actor", "remarks"
 ]
 
 
 
 
-const Transaction = () => {
+const Event = () => {
   {/* Pagination */ }
   const { locationId } = useLocation();
   const [search, setSearch] = useState<string | undefined>();
@@ -65,14 +66,14 @@ const Transaction = () => {
 
 
   {/* Event Data */ }
-  const [tableDatas, setTablesData] = useState<TransactionDto[]>([]);
+  const [tableDatas, setTablesData] = useState<EventDto[]>([]);
   async function fetchData(pageNumber: number, pageSize: number, search?: string, startDate?: string, endDate?: string) {
-    const res = await send.get(TransactionEndpoint.GET(pageNumber, pageSize, locationId, search, startDate, endDate));
-    if (res && res.data.data) {
-      console.log(res.data.data)
-      setTablesData(res.data.data.data);
-      setPagination(res.data.data.page);
+    const res = await send.get(EventEndpoint.GET_PAGINATION(pageNumber, pageSize, locationId, search, startDate, endDate));
+    if (res && res.data) {
+      setTablesData(res.data.items);
+      setPagination(res.data);
     }
+    
   }
 
   {/* UseEffect */ }
@@ -197,7 +198,7 @@ const Transaction = () => {
                     {<TimeIcon className="w-5 h-5" />} {new Date(data.dateTime).toTimeString().split(" ")[0]}
                   </span> */}
                   <span className='flex gap-2'>
-                   {new Intl.DateTimeFormat("en-GB").format(new Date(data.dateTime))}  {new Date(data.dateTime).toTimeString().split(" ")[0]}
+                   {new Intl.DateTimeFormat("en-GB").format(new Date(data.timestamp))}  {new Date(data.timestamp).toTimeString().split(" ")[0]}
                   </span>
                   
                 </TableCell>
@@ -228,5 +229,5 @@ const Transaction = () => {
   )
 }
 
-export default Transaction
+export default Event
 

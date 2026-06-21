@@ -4,6 +4,7 @@ using Adapter.Aero.Constants;
 using Adapter.Aero.Interfaces;
 using Adapter.Aero.Model.Metadata;
 using AeroAdapter.Application.Interfaces;
+using Door.Contract.DTOs;
 using Events.Contract.Command;
 using SharedKernel.Helpers;
 using SharedKernel.Messaging;
@@ -293,6 +294,7 @@ public sealed class AeroDoorService(IDoorCommand door, IOutputCommand output, II
 
       }
 
+      
       public async Task DeleteDoorAsync(
             string Mac,
             short DeviceComponentId,

@@ -35,5 +35,8 @@ public interface IDeviceRepository
       Task<short> GetComponentIdByIdAsync(int id,CancellationToken ct = default);
       Task<IEnumerable<(string Mac,short ComponentId,string Type)>> MacAndComponentIdListAsync(int LocationId,CancellationToken ct = default);
       Task<string> GetMacByComponentIdAsync(int ComponentId);
+      Task<bool> AddReaderAsync(Reader domain,CancellationToken ct = default);
+      Task<bool> AddInputAsync(Input domain,CancellationToken ct = default);
+      Task<bool> AddRelayAsync(Relay domain,CancellationToken ct = default);
 
 }

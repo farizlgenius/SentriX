@@ -21,6 +21,9 @@ public sealed class DoorRepository(DoorDbContext context) : IDoorRepository
             if (data.Entity == null || save <= 0)
                   throw new Exception(MessageHelper.DB.SaveRecordUnsuccessful);
 
+
+            save = await context.SaveChangesAsync(ct);
+
             return new DoorDto(
                   data.Entity.id,
                   data.Entity.component_id,

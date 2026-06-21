@@ -3,11 +3,11 @@ import PageBreadcrumb from "../../components/common/PageBreadCrumb";
 import { useLocation } from "../../context/LocationContext";
 import { useEffect, useState } from "react";
 import { PageProp } from "../../model/PageProp";
-import { TransactionEndpoint } from "../../endpoint/TransactionEndpoint";
+import { EventEndpoint } from "../../endpoint/TransactionEndpoint";
 import TransactionTable from "../../components/tables/Tables/TransactionTable";
 import { TableCell } from "../../components/ui/table";
 import { send } from "../../api/api";
-import { TransactionDto } from "../../model/Transaction/TransactionDto";
+import { EventDto } from "../../model/Event/EventDto";
 import DatePicker from "../../components/form/date-picker";
 import Pagination from "../../components/ui/table/Pagination";
 import { Avatar } from "../UiElements/Avatar";
@@ -67,9 +67,9 @@ export const Reports = () => {
       }
 
       {/* Event Data */ }
-      const [tableDatas, setTablesData] = useState<TransactionDto[]>([]);
+      const [tableDatas, setTablesData] = useState<EventDto[]>([]);
       async function fetchData(pageNumber: number, pageSize: number, search?: string, startDate?: string, endDate?: string) {
-            const res = await send.get(TransactionEndpoint.GET(pageNumber, pageSize, locationId, search, startDate, endDate));
+            const res = await send.get(EventEndpoint.GET_PAGINATION(pageNumber, pageSize, locationId, search, startDate, endDate));
             if (res && res.data.data) {
                   console.log(res.data.data)
                   setTablesData(res.data.data.data);
@@ -116,13 +116,13 @@ export const Reports = () => {
       const [deviceOption, setDeviceOption] = useState<Options[]>([]);
       const [device, setDevice] = useState<number>(-1);
       const fetchSource = async () => {
-            const res = await send.get(TransactionEndpoint.SOURCE);
+            const res = await send.get(EventEndpoint.SOURCE);
             res.data.data.map((a: ModeDto) => {
                   setSourceOption(prev => [...prev, { value: a.value, label: a.name }]);
             })
       }
       const fetchDevice = async (sourceValue: number) => {
-            const res = await send.get(TransactionEndpoint.DEVICE(sourceValue));
+            const res = await send.get(EventEndpoint.DEVICE(sourceValue));
             res.data.data.map((a: ModeDto) => {
                   setDeviceOption(prev => [...prev, { value: a.value, label: a.name }]);
             })

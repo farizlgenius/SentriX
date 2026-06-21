@@ -10,6 +10,9 @@ public sealed class DeviceDbContext(DbContextOptions<DeviceDbContext> options) :
       public const string Schema = "device";
       public DbSet<Devices> Devices { get; set; }
       public DbSet<Module> Modules {get; set;}
+      public DbSet<Reader> Readers {get; set;}
+      public DbSet<Input> Inputs {get; set;}
+      public DbSet<Relay> Relays {get; set;}
 
       protected override void OnModelCreating(ModelBuilder modelBuilder)
       {
@@ -53,6 +56,25 @@ public sealed class DeviceDbContext(DbContextOptions<DeviceDbContext> options) :
             .WithOne(x => x.devices)
             .HasForeignKey(x => x.device_id)
             .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Module>()
+            .HasMany(x => x.inputs)
+            .WithOne(x => x.module)
+            .HasForeignKey(x => x.module_id)
+            .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Module>()
+            .HasMany(x => x.relays)
+            .WithOne(x => x.module)
+            .HasForeignKey(x => x.module_id)
+            .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Module>()
+            .HasMany(x => x.readers)
+            .WithOne(x => x.module)
+            .HasForeignKey(x => x.module_id)
+            .OnDelete(DeleteBehavior.Cascade);
+
       }
 
 }

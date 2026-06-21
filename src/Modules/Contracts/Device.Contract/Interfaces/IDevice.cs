@@ -7,7 +7,7 @@ namespace Device.Contract.Interfaces;
 public interface IDevice
 {
       Task<List<IdReportDto>> GetIdReportsAsync();
-      Task<IEnumerable<OptionDto>> GetOptionByLocationIdAsync(int locationId,string type, CancellationToken ct = default);
+      Task<IEnumerable<OptionDto>> GetOptionByTypeAndLocationIdAsync(int locationId,string type, CancellationToken ct = default);
       Task<DeviceDto> CreateAsync(CreateDeviceDto dto, CancellationToken ct = default);
       Task<DeviceStatusDto> GetStatusByIdAsync(int id, CancellationToken ct = default);
       Task<Pagination<DeviceDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default);

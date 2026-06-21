@@ -10,10 +10,10 @@ namespace Host.Controllers
     [ApiController]
     public class DeviceController(IDevice device) : ControllerBase
     {
-        [HttpGet("option/{id}/{type}")]
-        public async Task<IActionResult> GetOptionByLocationIdAsync(int id,string type)
+        [HttpGet("option/{type}/{id}")]
+        public async Task<IActionResult> GetOptionByTypeAndLocationIdAsync(int id,string type)
         {
-            var res = await device.GetOptionByLocationIdAsync(id,type);
+            var res = await device.GetOptionByTypeAndLocationIdAsync(id,type);
             return Ok(res);
         }
 

@@ -75,7 +75,7 @@ public static partial class ValidationHelper
 
     var arr = Tenants.Split(",").Select(x => int.Parse(x)).ToList();
 
-    return arr.Contains(LocationId);
+    return arr.Contains(LocationId) || LocationId == 0;
   }
 
 }

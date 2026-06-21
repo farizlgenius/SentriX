@@ -1,5 +1,5 @@
 import { BaseDto } from "../BaseDto";
-import { TransactionCodeDto } from "../Transaction/TransactionCodeDto";
+import { TransactionCodeDto } from "../Event/TransactionCodeDto";
 
 export interface TriggerDto extends BaseDto {
     command:number;

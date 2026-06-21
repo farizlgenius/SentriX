@@ -8,7 +8,7 @@ public sealed class MessageBus : IMessageBus
     private readonly IServiceProvider _provider;
     private readonly ILogger<MessageBus> _logger;
 
-    public MessageBus(IServiceProvider provider,ILogger<MessageBus> logger)
+    public MessageBus(IServiceProvider provider, ILogger<MessageBus> logger)
     {
         _provider = provider;
         _logger = logger;
@@ -25,11 +25,12 @@ public sealed class MessageBus : IMessageBus
             foreach (var handler in handlers)
                 await handler.HandleAsync(@event, ct);
 
-        }catch (Exception ex)
+        }
+        catch (Exception ex)
         {
             _logger.LogError(ex, "Error occurred while publishing event of type {EventType}", typeof(TEvent).Name);
         }
-        
+
     }
 
     // QUERIES
@@ -47,12 +48,13 @@ public sealed class MessageBus : IMessageBus
             // ⭐ THIS WAS THE LAST BUG
             return await handler.HandleAsync((dynamic)query, ct);
 
-        }catch (Exception ex)
+        }
+        catch (Exception ex)
         {
             _logger.LogError(ex, "Error occurred while querying of type {QueryType}", query.GetType().Name);
             throw;
         }
-        
+
     }
 
     // COMMANDS
@@ -63,10 +65,30 @@ public sealed class MessageBus : IMessageBus
         {
             var handler = _provider.GetRequiredService<ICommandHandler<TCommand>>();
             await handler.HandleAsync(command, ct);
-        }catch (Exception ex)
+        }
+        catch (Exception ex)
         {
             _logger.LogError(ex, "Error occurred while sending command of type {CommandType}", typeof(TCommand).Name);
         }
-        
+
+    }
+
+    public async Task<TResult> SendWithResultAsync<TResult>(ICommand<TResult> command, CancellationToken ct = default)
+    {
+        try
+        {
+            var handlerType = typeof(IQueryHandler<,>)
+                .MakeGenericType(command.GetType(), typeof(TResult));
+
+            dynamic handler = _provider.GetRequiredService(handlerType);
+
+            // ⭐ THIS WAS THE LAST BUG
+            return await handler.HandleAsync((dynamic)command, ct);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error occurred while sending command of type {CommandType}", command.GetType().Name);
+            throw;
+        }
     }
 }

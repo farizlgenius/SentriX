@@ -64,9 +64,12 @@ var defaultRex: Rex = {
   rex0HoldTime: 0,
   rex1SensorMode: -1,
   rex1Debounce: 0,
-  rex1HoldTime: 0
+  rex1HoldTime: 0,
+  rex0ModuleId: 0,
+  rex1ModuleId: -1
 }
 var defaultReaderIn: ReaderIn = {
+  readerModuleId:-1,
   readerModuleComponentId: -1,
   readerNumber: -1,
   dataFormat: -1,
@@ -81,6 +84,7 @@ var defaultReaderIn: ReaderIn = {
 }
 
 var defaultReaderOut: ReaderOut = {
+  readerModuleId:-1,
   readerModuleComponentId: -1,
   readerNumber: -1,
   dataFormat: -1,
@@ -95,6 +99,7 @@ var defaultReaderOut: ReaderOut = {
 }
 
 var defaultSensor: Sensor = {
+  sensorModuleId:-1,
   sensorModuleComponentId: -1,
   sensorNumber: -1,
   heldOpenDelay: 0,
@@ -104,6 +109,7 @@ var defaultSensor: Sensor = {
 }
 
 var defaultRelay: Relay = {
+  relayModuleId:-1,
   relayModuleComponentId: -1,
   relayNumber: -1,
   relayMin: 1,
@@ -112,6 +118,7 @@ var defaultRelay: Relay = {
 }
 
 var defaultAltReader: AltrReader = {
+  altrRdrModuleId:-1,
   altrRdrModuleComponentId: -1,
   altrRdrNumber: -1,
   altrRdrConf: -1
@@ -222,12 +229,13 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
   const [moduleOption, setModuleOption] = useState<Options[]>([]);
   const fetchModule = async (value: number) => {
     const res = await send.get(ModuleEndpoint.GET_BY_DEVICE_ID(value));
-    if (res && res.data.data) {
-      res.data.data.map((a: ModuleDto) => {
+    if (res && res.data) {
+      res.data.map((a: Options) => {
         setModuleOption((prev) => [...prev, {
-          label: `${a.name} ( ${a.address} )`,
-          value: a.componentId,
-          additionalInfo: a.id,
+          label: a.label,
+          value: a.value,
+          description:a.description,
+          additionalInfo:a.additionalInfo,
           isTaken: false
         }]);
       });
@@ -287,8 +295,8 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
     if (readerInOption.length !== 0) return;
     const res = await send.get(DoorEndpoint.GET_ACR_READER(module));
     Logger.info(res)
-    if (res && res.data.data) {
-      res.data.data.map((a: number) => {
+    if (res.data) {
+      res.data.map((a: number) => {
         setReaderInOption(prev => [...prev, {
           label: `Reader ${a + 1}`,
           value: a,
@@ -511,18 +519,6 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
     }
   };
 
-  const fetchCardFormat = async () => {
-    const res = await send.get(CardFormatEndpoint.GET);
-    if (res && res.data.data) {
-      res.data.data.map((a: CardFormatDto) => {
-        setFormatsOption(prev => [...prev, {
-          selected: false,
-          value: String(a.cfmtId),
-          text: String(a.name)
-        }])
-      })
-    }
-  }
 
   const fetchSpareMode = async () => {
     const res = await send.get(DoorEndpoint.GET_SPARE_FLAG)
@@ -632,7 +628,6 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
     fetchInputMode();
     fetchOsdpBaudrateOption();
     fetchReaderOutConfigurationOption();
-    fetchCardFormat();
     fetchSpareMode();
     fetchAccessControlMode();
     fetchDoorTypeAsync();
@@ -814,7 +809,8 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
                               ...(prev.metadata as AeroDoorMetadata),
                               readerIn: {
                                 ...(prev.metadata as AeroDoorMetadata).readerIn,
-                                readerModuleComponentId: Number(value)
+                                readerModuleComponentId: Number(value),
+                                readerModuleId:moduleOption.find(x => x.value == Number(value))?.additionalInfo
                               }
                             }
                           }))
@@ -885,15 +881,15 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
                               ...prev,
                               metadata: {
                                 ...(prev.metadata as AeroDoorMetadata),
-                                readerOut: {
-                                  ...(prev.metadata as AeroDoorMetadata).readerOut,
+                                readerIn: {
+                                  ...(prev.metadata as AeroDoorMetadata).readerIn,
                                   osdpBaudrate: Number(value)
                                 }
                               }
                             }))
                           }}
                           className="dark:bg-dark-900"
-                          defaultValue={(data.metadata as AeroDoorMetadata).readerOut?.osdpBaudrate}
+                          defaultValue={(data.metadata as AeroDoorMetadata).readerIn?.osdpBaudrate}
                         />
                         <div className='mt-3'>
                           <Switch
@@ -905,8 +901,8 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
                                 ...prev,
                                 metadata: {
                                   ...(prev.metadata as AeroDoorMetadata),
-                                  readerOut: {
-                                    ...(prev.metadata as AeroDoorMetadata).readerOut,
+                                  readerIn: {
+                                    ...(prev.metadata as AeroDoorMetadata).readerIn,
                                     osdpDiscover: checked ? 0x00 : 0x08
                                   }
                                 }
@@ -924,8 +920,8 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
                                 ...prev,
                                 metadata: {
                                   ...(prev.metadata as AeroDoorMetadata),
-                                  readerOut: {
-                                    ...(prev.metadata as AeroDoorMetadata).readerOut,
+                                  readerIn: {
+                                    ...(prev.metadata as AeroDoorMetadata).readerIn,
                                     osdpTracing: checked ? 0x10 : 0x00
                                   }
                                 }
@@ -943,8 +939,8 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
                                 ...prev,
                                 metadata: {
                                   ...(prev.metadata as AeroDoorMetadata),
-                                  readerOut: {
-                                    ...(prev.metadata as AeroDoorMetadata).readerOut,
+                                  readerIn: {
+                                    ...(prev.metadata as AeroDoorMetadata).readerIn,
                                     osdpTracing: checked ? 0x80 : 0x00
                                   }
                                 }
@@ -1085,7 +1081,8 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
                               ...(prev.metadata as AeroDoorMetadata),
                               readerOut: {
                                 ...(prev.metadata as AeroDoorMetadata).readerOut,
-                                readerModuleComponentId: Number(value)
+                                readerModuleComponentId: Number(value),
+                                readerModuleId:moduleOption.find(x => x.value == Number(value))?.additionalInfo
                               }
                             }
                           }))
@@ -1268,7 +1265,8 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
                             ...(prev.metadata as AeroDoorMetadata),
                             rex: {
                               ...(prev.metadata as AeroDoorMetadata).rex,
-                              rex0ModuleComponentId: Number(value)
+                              rex0ModuleComponentId: Number(value),
+                              rex0ModuleId:moduleOption.find(x => x.value == Number(value))?.additionalInfo
                             }
                           }
                         }))
@@ -1353,7 +1351,8 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
                                 ...(prev.metadata as AeroDoorMetadata),
                                 rex: {
                                   ...(prev.metadata as AeroDoorMetadata).rex,
-                                  rex1ModuleComponentId: Number(value)
+                                  rex1ModuleComponentId: Number(value),
+                                  rex1ModuleId:moduleOption.find(x => x.value == Number(value))?.additionalInfo
                                 }
                               }
                             }))
@@ -1450,9 +1449,10 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
                       ...prev,
                       metadata: {
                         ...(prev.metadata as AeroDoorMetadata),
-                        rex: {
+                        relay: {
                           ...(prev.metadata as AeroDoorMetadata).relay,
-                          relayModuleComponentId: Number(value)
+                          relayModuleComponentId: Number(value),
+                          relayModuleId: moduleOption.find(x => x.value == Number(value))?.additionalInfo
                         }
                       }
                     }))
@@ -1470,7 +1470,7 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
                       ...prev,
                       metadata: {
                         ...(prev.metadata as AeroDoorMetadata),
-                        rex: {
+                        relay: {
                           ...(prev.metadata as AeroDoorMetadata).relay,
                           relayNumber: Number(value)
                         }
@@ -1487,7 +1487,7 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
                       ...prev,
                       metadata: {
                         ...(prev.metadata as AeroDoorMetadata),
-                        rex: {
+                        relay: {
                           ...(prev.metadata as AeroDoorMetadata).relay,
                           relayMin: Number(e.target.value)
                         }
@@ -1500,7 +1500,7 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
                     ...prev,
                     metadata: {
                       ...(prev.metadata as AeroDoorMetadata),
-                      rex: {
+                      relay: {
                         ...(prev.metadata as AeroDoorMetadata).relay,
                         relayMax: Number(e.target.value)
                       }
@@ -1517,7 +1517,7 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
                       ...prev,
                       metadata: {
                         ...(prev.metadata as AeroDoorMetadata),
-                        rex: {
+                        relay: {
                           ...(prev.metadata as AeroDoorMetadata).relay,
                           relayMax: Number(value)
                         }
@@ -1548,7 +1548,8 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
                         ...(prev.metadata as AeroDoorMetadata),
                         sensor: {
                           ...(prev.metadata as AeroDoorMetadata).sensor,
-                          sensorModuleComponentId: Number(value)
+                          sensorModuleComponentId: Number(value),
+                          sensorModuleId:moduleOption.find(x => x.value == Number(value))?.additionalInfo
                         }
                       }
                     }))

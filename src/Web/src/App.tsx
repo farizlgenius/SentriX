@@ -24,7 +24,7 @@ import Home from "./pages/Dashboard/Home";
 
 // ACS
 import Module from "./pages/Module/Module";
-import Transaction from "./pages/Transaction/Transaction";
+import Event from "./pages/Event/Event";
 import ControlPoint from "./pages/ControlPoint/ControlPoint";
 import MonitorPoint from "./pages/MonitorPoint/MonitorPoint";
 import Device from "./pages/Device/Device";
@@ -227,7 +227,7 @@ const fetchIdReport = async () => {
             < Route path="/scan" element={<Scan />}/>
             <Route path="/device" element={<Device />} />
             <Route path="/module" element={<Module />} />
-            <Route path="/event" element={<Transaction />} />
+            <Route path="/event" element={<Event />} />
             <Route path="/control" element={<ControlPoint />} />
             <Route path="/monitor" element={<MonitorPoint />} />
             <Route path="/popup" element={<PopupExample />} />

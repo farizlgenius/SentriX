@@ -93,6 +93,46 @@ namespace Device.Infrastructure.Migrations
                     b.ToTable("Devices", "device");
                 });
 
+            modelBuilder.Entity("Device.Infrastructure.Persistences.Entities.Input", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<short>("component_id")
+                        .HasColumnType("smallint");
+
+                    b.Property<DateTime>("created_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.Property<int>("input_number")
+                        .HasColumnType("integer");
+
+                    b.Property<bool>("is_active")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("location_id")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("module_id")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("updated_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("module_id");
+
+                    b.ToTable("Inputs", "device");
+                });
+
             modelBuilder.Entity("Device.Infrastructure.Persistences.Entities.Module", b =>
                 {
                     b.Property<int>("id")
@@ -160,6 +200,97 @@ namespace Device.Infrastructure.Migrations
                     b.ToTable("Modules", "device");
                 });
 
+            modelBuilder.Entity("Device.Infrastructure.Persistences.Entities.Reader", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<short>("component_id")
+                        .HasColumnType("smallint");
+
+                    b.Property<DateTime>("created_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.Property<bool>("is_active")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("location_id")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("module_id")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("reader_number")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("updated_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("module_id");
+
+                    b.ToTable("Readers", "device");
+                });
+
+            modelBuilder.Entity("Device.Infrastructure.Persistences.Entities.Relay", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<short>("component_id")
+                        .HasColumnType("smallint");
+
+                    b.Property<DateTime>("created_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.Property<bool>("is_active")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("location_id")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("module_id")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("relay_number")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("updated_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("module_id");
+
+                    b.ToTable("Relays", "device");
+                });
+
+            modelBuilder.Entity("Device.Infrastructure.Persistences.Entities.Input", b =>
+                {
+                    b.HasOne("Device.Infrastructure.Persistences.Entities.Module", "module")
+                        .WithMany("inputs")
+                        .HasForeignKey("module_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("module");
+                });
+
             modelBuilder.Entity("Device.Infrastructure.Persistences.Entities.Module", b =>
                 {
                     b.HasOne("Device.Infrastructure.Persistences.Entities.Devices", "devices")
@@ -171,9 +302,40 @@ namespace Device.Infrastructure.Migrations
                     b.Navigation("devices");
                 });
 
+            modelBuilder.Entity("Device.Infrastructure.Persistences.Entities.Reader", b =>
+                {
+                    b.HasOne("Device.Infrastructure.Persistences.Entities.Module", "module")
+                        .WithMany("readers")
+                        .HasForeignKey("module_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("module");
+                });
+
+            modelBuilder.Entity("Device.Infrastructure.Persistences.Entities.Relay", b =>
+                {
+                    b.HasOne("Device.Infrastructure.Persistences.Entities.Module", "module")
+                        .WithMany("relays")
+                        .HasForeignKey("module_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("module");
+                });
+
             modelBuilder.Entity("Device.Infrastructure.Persistences.Entities.Devices", b =>
                 {
                     b.Navigation("modules");
+                });
+
+            modelBuilder.Entity("Device.Infrastructure.Persistences.Entities.Module", b =>
+                {
+                    b.Navigation("inputs");
+
+                    b.Navigation("readers");
+
+                    b.Navigation("relays");
                 });
 #pragma warning restore 612, 618
         }

@@ -5,13 +5,13 @@ namespace Door.Domain.Entities;
 
 public sealed class Doors : BaseDomain
 {
-      public string Name { get; set; } = string.Empty;
-      public string Mac {get; set;} = string.Empty;
-      public short DeviceComponentId {get; set;}
-      public short SecondComponentId {get; set;}
-      public string DoorType {get; set;} = string.Empty;
-      public string Metadata {get; set;} = string.Empty;
-      public string Type {get; set;} = string.Empty;
+      public string Name { get; private set; } = string.Empty;
+      public string Mac {get; private set;} = string.Empty;
+      public short DeviceComponentId {get; private set;}
+      public short SecondComponentId {get; private set;}
+      public string DoorType {get; private set;} = string.Empty;
+      public string Metadata {get; private set;} = string.Empty;
+      public string Type {get; private set;} = string.Empty;
       
       public Doors(
             int id, 

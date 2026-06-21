@@ -14,10 +14,10 @@ namespace Host.Controllers
         [HttpGet("pagination")]
         public async Task<IActionResult> GetPagination([FromQuery] PaginationParams param)
         {
-            var tenants = User.FindFirst("tenants")?.Value ?? "";
+            // var tenants = User.FindFirst("tenants")?.Value ?? "";
 
-            if(!ValidationHelper.ValidateTenants(tenants,param.locationId))
-                throw new ForbiddenException(MessageHelper.Location.LocationNotAllow);
+            // if(!ValidationHelper.ValidateTenants(tenants,param.locationId))
+            //     throw new ForbiddenException(MessageHelper.Location.LocationNotAllow);
 
             var res = await @event.GetPaginationByLocationIdAsync(param);
             return Ok(res);

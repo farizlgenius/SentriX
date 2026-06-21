@@ -49,7 +49,7 @@ public sealed class EventRepository(EventDbContext context) : IEventRepository
 
       public async Task<Pagination<EventDto>> GetPaginationByLocationIdAsync(PaginationParams param,CancellationToken ct = default)
       {
-            var query = context.Events.AsNoTracking().AsQueryable();
+            var query = context.Events.AsNoTracking().Where(x => x.location_id == param.locationId || x.location_id == 0).AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(param.search))
             {
@@ -82,11 +82,6 @@ public sealed class EventRepository(EventDbContext context) : IEventRepository
                               );
                         }
                   }
-            }
-
-            if (param.locationId >= 0)
-            {
-                  query = query.Where(x => x.location_id == param.locationId || x.location_id == 1);
             }
 
             if (param.startDate != null)

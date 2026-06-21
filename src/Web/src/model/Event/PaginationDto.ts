@@ -1,7 +1,7 @@
 import { PaginationData } from "./PaginationData";
-import { TransactionDto } from "./TransactionDto";
+import { EventDto } from "./EventDto";
 
 export interface PaginationDto{
     page:PaginationData;
-    data:TransactionDto[];
+    data:EventDto[];
 }

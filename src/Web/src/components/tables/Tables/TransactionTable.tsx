@@ -1,6 +1,6 @@
 
 import { PropsWithChildren, useMemo, useState } from "react";
-import { TransactionDto } from "../../../model/Transaction/TransactionDto";
+import { EventDto } from "../../../model/Event/EventDto";
 import {
   Table,
   TableBody,
@@ -15,9 +15,9 @@ type SortDirection = "asc" | "desc";
 
 interface TableContents {
   tableHeaders: string[];
-  tableDatas: TransactionDto[];
+  tableDatas: EventDto[];
   tableKeys: string[];
-  specialDisplay?:TableSpecialDisplay<TransactionDto>[];
+  specialDisplay?:TableSpecialDisplay<EventDto>[];
 }
 
 const TransactionTable: React.FC<PropsWithChildren<TableContents>> = ({ tableHeaders, tableDatas, tableKeys, specialDisplay }) => {
@@ -33,8 +33,8 @@ const TransactionTable: React.FC<PropsWithChildren<TableContents>> = ({ tableHea
 
     const data = [...tableDatas];
     data.sort((a, b) => {
-      const aValue = normalizedValue(a[sortKey as keyof TransactionDto]);
-      const bValue = normalizedValue(b[sortKey as keyof TransactionDto]);
+      const aValue = normalizedValue(a[sortKey as keyof EventDto]);
+      const bValue = normalizedValue(b[sortKey as keyof EventDto]);
 
       if (aValue < bValue) return sortDirection === "asc" ? -1 : 1;
       if (aValue > bValue) return sortDirection === "asc" ? 1 : -1;
@@ -95,7 +95,7 @@ const TransactionTable: React.FC<PropsWithChildren<TableContents>> = ({ tableHea
                 </TableCell>
               </TableRow>
             )}
-            {sortedDatas && sortedDatas.map((data: TransactionDto, i: number) => (
+            {sortedDatas && sortedDatas.map((data: EventDto, i: number) => (
               <TableRow key={i} className="transition-colors hover:bg-gray-50 dark:hover:bg-white/[0.02]">
                 {tableKeys.map((key: string, i: number) =>
                   key == "transactionFlags" ?

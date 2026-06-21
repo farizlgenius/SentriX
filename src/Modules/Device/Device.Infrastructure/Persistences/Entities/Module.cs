@@ -15,6 +15,9 @@ public sealed class Module : BaseEntity
       public string model {get; set;} = string.Empty;
       public int device_id {get; set;}
       public Devices devices {get; set; } = default!;
+      public ICollection<Reader> readers {get; set;} = default!;
+      public ICollection<Input> inputs {get; set;} = default!;
+      public ICollection<Relay> relays {get; set;} = default!;
 
       public Module(){}
       public Module(Domain.Entities.Module domain) : base(domain.ComponentId,domain.LocationId,domain.IsActive)

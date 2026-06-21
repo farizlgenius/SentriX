@@ -105,7 +105,7 @@ public sealed class DeviceBehaviors(IDeviceRepository repo, IMessageBus bus, IAd
             return res;
       }
 
-      public async Task<IEnumerable<OptionDto>> GetOptionByLocationIdAsync(int locationId, string type, CancellationToken ct = default)
+      public async Task<IEnumerable<OptionDto>> GetOptionByTypeAndLocationIdAsync(int locationId, string type, CancellationToken ct = default)
       {
             // Check if locationId is Exists 
             var flag = await bus.QueryAsync(new IsAnyLocationByIdQuery(locationId));

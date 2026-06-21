@@ -68,10 +68,12 @@ D:\aero\SentriX\src\Modules\Contracts\Adapter.Abstraction\bin\Debug\net10.0\Adap
 D:\aero\SentriX\src\Modules\Contracts\Adapter.Abstraction\bin\Debug\net10.0\Adapter.Abstraction.dll
 D:\aero\SentriX\src\Modules\Contracts\Adapter.Abstraction\bin\Debug\net10.0\Adapter.Abstraction.pdb
 D:\aero\SentriX\src\Modules\Contracts\Adapter.Abstraction\bin\Debug\net10.0\Device.Contract.dll
+D:\aero\SentriX\src\Modules\Contracts\Adapter.Abstraction\bin\Debug\net10.0\Door.Contract.dll
 D:\aero\SentriX\src\Modules\Contracts\Adapter.Abstraction\bin\Debug\net10.0\Output.Contract.dll
 D:\aero\SentriX\src\Modules\Contracts\Adapter.Abstraction\bin\Debug\net10.0\SharedKernel.dll
 D:\aero\SentriX\src\Modules\Contracts\Adapter.Abstraction\bin\Debug\net10.0\Time.Contract.dll
 D:\aero\SentriX\src\Modules\Contracts\Adapter.Abstraction\bin\Debug\net10.0\Device.Contract.pdb
+D:\aero\SentriX\src\Modules\Contracts\Adapter.Abstraction\bin\Debug\net10.0\Door.Contract.pdb
 D:\aero\SentriX\src\Modules\Contracts\Adapter.Abstraction\bin\Debug\net10.0\Output.Contract.pdb
 D:\aero\SentriX\src\Modules\Contracts\Adapter.Abstraction\bin\Debug\net10.0\Time.Contract.pdb
 D:\aero\SentriX\src\Modules\Contracts\Adapter.Abstraction\bin\Debug\net10.0\SharedKernel.pdb

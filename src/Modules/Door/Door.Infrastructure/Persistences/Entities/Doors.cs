@@ -11,6 +11,7 @@ public sealed class Doors : BaseEntity
       public string door_type {get; set;} = string.Empty;
       public string type {get; set;} = string.Empty;
       public string metadata {get; set;} = string.Empty;
+      
       public Doors()
       {
       }

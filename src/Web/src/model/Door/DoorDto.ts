@@ -104,6 +104,7 @@ export interface AmicoDoorMetadata{
 }
 
 export interface ReaderIn{
+  readerModuleId:number;
   readerModuleComponentId:number;
   readerNumber:number;
   dataFormat:number;
@@ -118,6 +119,7 @@ export interface ReaderIn{
 }
 
 export interface ReaderOut{
+  readerModuleId:number;
   readerModuleComponentId:number;
   readerNumber:number;
   dataFormat:number;
@@ -132,6 +134,7 @@ export interface ReaderOut{
 }
 
 export interface Sensor{
+  sensorModuleId:number;
   sensorModuleComponentId:number;
   sensorNumber:number;
   heldOpenDelay:number;
@@ -141,6 +144,7 @@ export interface Sensor{
 }
 
 export interface Relay{
+  relayModuleId:number;
   relayModuleComponentId:number;
   relayNumber:number;
   relayMin:number;
@@ -149,8 +153,10 @@ export interface Relay{
 }
 
 export interface Rex {
+  rex0ModuleId:number;
   rex0ModuleComponentId:number;
   rex0Number:number;
+  rex1ModuleId:number;
   rex1ModuleComponentId:number;
   rex1Number:number;
   disableRex0Timezone:number;
@@ -164,6 +170,7 @@ export interface Rex {
 }
 
 export interface AltrReader{
+  altrRdrModuleId:number;
   altrRdrModuleComponentId:number;
   altrRdrNumber:number;
   altrRdrConf:number;

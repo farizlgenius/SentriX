@@ -178,10 +178,9 @@ const Door = () => {
     {/* Door Data */ }
     const [doorsDto, setDoorsDto] = useState<DoorDto[]>([]);
     const [status, setStatus] = useState<StatusDto[]>([]);
-    const fetchData = async (pageNumber: number, pageSize: number,locationId?:number,search?: string, startDate?: string, endDate?: string) => {
+    const fetchData = async (pageNumber: number, pageSize: number,search?: string, startDate?: string, endDate?: string) => {
         const res = await send.get(DoorEndpoint.PAGINATION(pageNumber,pageSize,locationId,search, startDate, endDate));
-        Logger.info(res);
-        if (res && res.data.data) {
+        if (res && res.data) {
             console.log(res.data.data)
             setDoorsDto(res.data.data.data);
             setPagination(res.data.data.page);

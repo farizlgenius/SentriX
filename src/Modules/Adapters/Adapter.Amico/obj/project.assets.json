@@ -668,6 +668,7 @@
         "framework": ".NETCoreApp,Version=v10.0",
         "dependencies": {
           "Device.Contract": "1.0.0",
+          "Door.Contract": "1.0.0",
           "Output.Contract": "1.0.0",
           "Time.Contract": "1.0.0"
         },
@@ -689,6 +690,19 @@
         },
         "runtime": {
           "bin/placeholder/Device.Contract.dll": {}
+        }
+      },
+      "Door.Contract/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v10.0",
+        "dependencies": {
+          "SharedKernel": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/Door.Contract.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Door.Contract.dll": {}
         }
       },
       "Output.Contract/1.0.0": {
@@ -1741,6 +1755,11 @@
       "path": "../../Contracts/Device.Contract/Device.Contract.csproj",
       "msbuildProject": "../../Contracts/Device.Contract/Device.Contract.csproj"
     },
+    "Door.Contract/1.0.0": {
+      "type": "project",
+      "path": "../../Contracts/Door.Contract/Door.Contract.csproj",
+      "msbuildProject": "../../Contracts/Door.Contract/Door.Contract.csproj"
+    },
     "Output.Contract/1.0.0": {
       "type": "project",
       "path": "../../Contracts/Output.Contract/Output.Contract.csproj",
@@ -2141,5 +2160,13 @@
         }
       }
     }
-  }
+  },
+  "logs": [
+    {
+      "code": "NU1900",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Error occurred while getting package vulnerability data: Unable to load the service index for source https://api.nuget.org/v3/index.json."
+    }
+  ]
 }

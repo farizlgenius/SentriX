@@ -1,4 +1,6 @@
+using System.Text.Json;
 using Adapter.Abstraction.Interfaces;
+using Device.Contract.Command;
 using Device.Contract.Queries;
 using Door.Application.Interfaces;
 using Door.Contract.DTOs;
@@ -28,8 +30,8 @@ public sealed class DoorBehavior(IDoorRepository repo,IMessageBus bus,IAdapterFa
             {
                   SecondComponentId = await repo.GetLowestDoorComponentIdWithExceptionAsync(dto.Mac,[FirstComponentId]);
             }
-            
 
+           
             
             var domain = new Doors(
                   0,
@@ -53,7 +55,68 @@ public sealed class DoorBehavior(IDoorRepository repo,IMessageBus bus,IAdapterFa
                   SecondComponentId
                   );
 
-            
+            // Save component used
+            DoorMetadata? data = JsonSerializer.Deserialize<DoorMetadata>(dto.Metadata);
+
+            // Redaer in
+            if(data != null)
+            {
+                   await bus.SendWithResultAsync(new AddReaderUsedCommand(
+                        data.ReaderIn.ReaderNumber,
+                        data.ReaderIn.ReaderModuleId,
+                        dto.LocationId
+                  ));
+
+                  await bus.SendWithResultAsync(
+                        new AddReaderUsedCommand(
+                              data.ReaderOut.ReaderNumber,
+                              data.ReaderOut.ReaderModuleId,
+                              dto.LocationId
+                        )
+                  );
+
+                  await bus.SendWithResultAsync(
+                        new AddReaderUsedCommand(
+                              data.AltrReader.AltrRdrNumber,
+                              data.AltrReader.AltrRdrModuleId,
+                              dto.LocationId
+                        )
+                  );
+
+
+                  await bus.SendWithResultAsync(
+                        new AddRelayUsedCommand(
+                              data.Relay.RelayNumber,
+                              data.Relay.RelayModuleId,
+                              dto.LocationId
+                        )
+                  );
+
+                  await bus.SendWithResultAsync(
+                        new AddInputUsedCommand(
+                              data.Sensor.SensorNumber,
+                              data.Sensor.SensorModuleId,
+                              dto.LocationId
+                        )
+                  );
+
+                  await bus.SendWithResultAsync(
+                        new AddInputUsedCommand(
+                              data.Rex.Rex0Number,
+                              data.Rex.Rex0ModuleId,
+                              dto.LocationId
+                        )
+                  );
+
+                   await bus.SendWithResultAsync(
+                        new AddInputUsedCommand(
+                              data.Rex.Rex1Number,
+                              data.Rex.Rex1ModuleId,
+                              dto.LocationId
+                        )
+                  );
+            } 
+           
 
             return await repo.CreateAsync(domain);
       }

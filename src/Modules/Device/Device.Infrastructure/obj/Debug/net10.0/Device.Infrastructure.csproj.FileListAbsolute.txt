@@ -95,6 +95,7 @@ D:\aero\SentriX\src\Modules\Device\Device.Infrastructure\bin\Debug\net10.0\Adapt
 D:\aero\SentriX\src\Modules\Device\Device.Infrastructure\bin\Debug\net10.0\Device.Application.dll
 D:\aero\SentriX\src\Modules\Device\Device.Infrastructure\bin\Debug\net10.0\Device.Contract.dll
 D:\aero\SentriX\src\Modules\Device\Device.Infrastructure\bin\Debug\net10.0\Device.Domain.dll
+D:\aero\SentriX\src\Modules\Device\Device.Infrastructure\bin\Debug\net10.0\Door.Contract.dll
 D:\aero\SentriX\src\Modules\Device\Device.Infrastructure\bin\Debug\net10.0\Location.Contract.dll
 D:\aero\SentriX\src\Modules\Device\Device.Infrastructure\bin\Debug\net10.0\Output.Contract.dll
 D:\aero\SentriX\src\Modules\Device\Device.Infrastructure\bin\Debug\net10.0\SharedKernel.dll
@@ -104,6 +105,7 @@ D:\aero\SentriX\src\Modules\Device\Device.Infrastructure\bin\Debug\net10.0\Devic
 D:\aero\SentriX\src\Modules\Device\Device.Infrastructure\bin\Debug\net10.0\Adapter.Abstraction.pdb
 D:\aero\SentriX\src\Modules\Device\Device.Infrastructure\bin\Debug\net10.0\Device.Contract.pdb
 D:\aero\SentriX\src\Modules\Device\Device.Infrastructure\bin\Debug\net10.0\Device.Domain.pdb
+D:\aero\SentriX\src\Modules\Device\Device.Infrastructure\bin\Debug\net10.0\Door.Contract.pdb
 D:\aero\SentriX\src\Modules\Device\Device.Infrastructure\bin\Debug\net10.0\Location.Contract.pdb
 D:\aero\SentriX\src\Modules\Device\Device.Infrastructure\bin\Debug\net10.0\Output.Contract.pdb
 D:\aero\SentriX\src\Modules\Device\Device.Infrastructure\bin\Debug\net10.0\Time.Contract.pdb

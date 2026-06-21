@@ -30,6 +30,7 @@ public sealed class DoorMetadata
 
 public sealed class ReaderIn
 {
+      public int ReaderModuleId { get; set; }
       public short ReaderModuleComponentId { get; set; }
       public short ReaderNumber { get; set; }
       public short DataFormat { get; set; } = 0x01;
@@ -45,6 +46,7 @@ public sealed class ReaderIn
 
 public sealed class ReaderOut
 {
+      public int ReaderModuleId { get; set; }
       public short ReaderModuleComponentId { get; set; }
       public short ReaderNumber { get; set; }
       public short DataFormat { get; set; } = 0x01;
@@ -60,6 +62,7 @@ public sealed class ReaderOut
 
 public sealed class Relay
 {
+      public int RelayModuelId { get; set; }
       public short RelayModuleComponentId { get; set; }
       public short RelayNumber { get; set; }
       public short RelayMin { get; set; }
@@ -69,6 +72,7 @@ public sealed class Relay
 
 public sealed class Sensor
 {
+      public int SensorModuleId { get; set; }
       public short SensorModuleComponentId { get; set; }
       public short SensorNumber { get; set; }
       public short HeldOpenDelay { get; set; }
@@ -79,8 +83,10 @@ public sealed class Sensor
 
 public sealed class Rex
 {
+      public int Rex0ModuleId { get; set; }
       public short Rex0ModuleComponentId { get; set; }
       public short Rex0Number { get; set; }
+      public int Rex1ModuleId { get; set; }
       public short Rex1ModuleComponentId { get; set; }
       public short Rex1Number { get; set; }
       public short DisableRex0Timezone { get; set; }
@@ -95,6 +101,7 @@ public sealed class Rex
 
 public sealed class AltrReader
 {
+      public int AltrRdrModuleId { get; set; }
       public short AltrRdrModuleComponentId { get; set; }
       public short AltrRdrNumber { get; set; }
       public short AltrRdrConf { get; set; }

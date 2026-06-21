@@ -14,6 +14,42 @@ namespace Device.Infrastructure.Repositories;
 
 public sealed class DeviceRepository(DeviceDbContext context) : IDeviceRepository
 {
+      public async Task<bool> AddReaderAsync(Domain.Entities.Reader domain, CancellationToken ct = default)
+      {
+            var data = await context.Readers.AddAsync(new Persistences.Entities.Reader(domain));
+            var save = await context.SaveChangesAsync();
+
+            if (data.Entity is null || save <= 0)
+                  return false;
+
+            return true;
+
+      }
+
+            public async Task<bool> AddInputAsync(Domain.Entities.Input domain, CancellationToken ct = default)
+      {
+            var data = await context.Inputs.AddAsync(new Persistences.Entities.Input(domain));
+            var save = await context.SaveChangesAsync();
+
+            if (data.Entity is null || save <= 0)
+                  return false;
+
+            return true;
+
+      }
+
+            public async Task<bool> AddRelayAsync(Domain.Entities.Relay domain, CancellationToken ct = default)
+      {
+            var data = await context.Relays.AddAsync(new Persistences.Entities.Relay(domain));
+            var save = await context.SaveChangesAsync();
+
+            if (data.Entity is null || save <= 0)
+                  return false;
+
+            return true;
+
+      }
+
       public async Task<DeviceDto> CreateAsync(Domain.Entities.Devices domain, CancellationToken ct)
       {
             var device = new Persistences.Entities.Devices(domain);
@@ -278,7 +314,7 @@ public sealed class DeviceRepository(DeviceDbContext context) : IDeviceRepositor
             return await context.Modules.AsNoTracking()
                   .OrderByDescending(x => x.id)
                   .Where(x => x.device_id == DeviceId)
-                  .Select(x => new OptionDto(x.name, x.component_id, string.Empty,x.id, false))
+                  .Select(x => new OptionDto(x.name, x.component_id,x.mac,x.id, false))
                   .ToArrayAsync();
       }
 
