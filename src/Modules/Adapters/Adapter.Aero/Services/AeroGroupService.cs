@@ -10,17 +10,15 @@ namespace Adapter.Aero.Services;
 
 public sealed class AeroGroupService(IGroupCommand group,IMessageBus bus) : IGroupAdapter
 {
-      public async Task CreateUpdateLevel(string Mac, short DeviceComponentId, short ComponentId, string Metadata)
+      public async Task CreateUpdateLevel(string Mac, short DeviceComponentId, short ComponentId, List<(short DoorComponentId,short TimeZoneComponentId)> Doors)
       {
-            var metadata = JsonSerializer.Deserialize<GroupMetadata>(Metadata);
-            if(metadata == null)
-                  throw new Exception(MessageHelper.Common.DeserializeFailed("GroupMetadata"));
+
 
             var res = group.AccessLevelConfigurationExtended(
                   Mac,
                   DeviceComponentId,
                   ComponentId,
-                  metadata.Timezones
+                  Doors
             );
 
             await bus.SendAsync(new AddCommandEvent(res));
@@ -33,7 +31,7 @@ public sealed class AeroGroupService(IGroupCommand group,IMessageBus bus) : IGro
                   Mac,
                   DeviceComponentId,
                   ComponentId,
-                  new short[64]
+                  new List<(short DoorComponentId, short TimeZoneComponentId)>()
             );
 
             await bus.SendAsync(new AddCommandEvent(res));

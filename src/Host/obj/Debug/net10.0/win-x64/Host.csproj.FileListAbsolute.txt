@@ -1011,7 +1011,10 @@ D:\aero\SentriX\src\Host\bin\Debug\net10.0\win-x64\Group.Application.dll
 D:\aero\SentriX\src\Host\bin\Debug\net10.0\win-x64\Group.Contract.dll
 D:\aero\SentriX\src\Host\bin\Debug\net10.0\win-x64\Group.Domain.dll
 D:\aero\SentriX\src\Host\bin\Debug\net10.0\win-x64\Group.Infrastructure.dll
+D:\aero\SentriX\src\Host\bin\Debug\net10.0\win-x64\Input.Application.dll
 D:\aero\SentriX\src\Host\bin\Debug\net10.0\win-x64\Input.Contract.dll
+D:\aero\SentriX\src\Host\bin\Debug\net10.0\win-x64\Input.Domain.dll
+D:\aero\SentriX\src\Host\bin\Debug\net10.0\win-x64\Input.Infrastructure.dll
 D:\aero\SentriX\src\Host\bin\Debug\net10.0\win-x64\Location.Application.dll
 D:\aero\SentriX\src\Host\bin\Debug\net10.0\win-x64\Location.Contract.dll
 D:\aero\SentriX\src\Host\bin\Debug\net10.0\win-x64\Location.Domain.dll
@@ -1061,6 +1064,7 @@ D:\aero\SentriX\src\Host\bin\Debug\net10.0\win-x64\Device.Infrastructure.pdb
 D:\aero\SentriX\src\Host\bin\Debug\net10.0\win-x64\Door.Infrastructure.pdb
 D:\aero\SentriX\src\Host\bin\Debug\net10.0\win-x64\Events.Infrastructure.pdb
 D:\aero\SentriX\src\Host\bin\Debug\net10.0\win-x64\Group.Infrastructure.pdb
+D:\aero\SentriX\src\Host\bin\Debug\net10.0\win-x64\Input.Infrastructure.pdb
 D:\aero\SentriX\src\Host\bin\Debug\net10.0\win-x64\Location.Infrastructure.pdb
 D:\aero\SentriX\src\Host\bin\Debug\net10.0\win-x64\Notifier.Client.pdb
 D:\aero\SentriX\src\Host\bin\Debug\net10.0\win-x64\Operator.Infrastructure.pdb
@@ -1083,6 +1087,8 @@ D:\aero\SentriX\src\Host\bin\Debug\net10.0\win-x64\Events.Application.pdb
 D:\aero\SentriX\src\Host\bin\Debug\net10.0\win-x64\Events.Domain.pdb
 D:\aero\SentriX\src\Host\bin\Debug\net10.0\win-x64\Group.Application.pdb
 D:\aero\SentriX\src\Host\bin\Debug\net10.0\win-x64\Group.Domain.pdb
+D:\aero\SentriX\src\Host\bin\Debug\net10.0\win-x64\Input.Application.pdb
+D:\aero\SentriX\src\Host\bin\Debug\net10.0\win-x64\Input.Domain.pdb
 D:\aero\SentriX\src\Host\bin\Debug\net10.0\win-x64\Location.Application.pdb
 D:\aero\SentriX\src\Host\bin\Debug\net10.0\win-x64\Location.Domain.pdb
 D:\aero\SentriX\src\Host\bin\Debug\net10.0\win-x64\Notifier.Contract.pdb

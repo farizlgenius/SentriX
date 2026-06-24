@@ -273,8 +273,9 @@ public sealed class TimezoneRepository(TimeDbContext context) : ITimezoneReposit
             .Where(x => x.location_id == locationId || x.location_id == 0)
             .Select(x => new OptionDto(
                   x.name,
-                  x.component_id,
-                  x.name
+                  x.id,
+                  string.Empty,
+                  x.component_id
                   )).ToArrayAsync();
       }
 }

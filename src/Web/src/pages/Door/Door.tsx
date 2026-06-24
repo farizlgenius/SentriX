@@ -26,12 +26,13 @@ import { usePopup } from '../../context/PopupContext';
 import { AcrStatus as AcrStatus } from '../../model/Door/AcrStatus';
 import { DoorDirection } from '../../enum/DoorDirection';
 import DoorForm from './DoorForm';
+import { DoorType } from '../../enum/DoorType';
 
 
 
 // ACR Page
-export const DOOR_TABLE_HEADER: string[] = ["Name","Type", "Mode", "Status", "Action"]
-export const DOOR_KEY: string[] = ["name","direction"];
+export const DOOR_TABLE_HEADER: string[] = ["Name","Door Type", "Status","", "Action"]
+export const DOOR_KEY: string[] = ["name","doorType"];
 
 // Default Value 
 
@@ -52,10 +53,11 @@ const Door = () => {
         deviceComponentId: -1,
         mac: '',
         doorType: '',
-        metadata: {},
+        metadata: "",
         locationId: locationId,
         type: '',
-        isActive: false
+        isActive: false,
+        secondComponentId: -1
     }
     const [doorDto, setDoorDto] = useState<DoorDto>(defaultDoorDto)
     const [refresh, setRefresh] = useState(false);
@@ -92,6 +94,7 @@ const Door = () => {
                 break;
             case "create":
                 setConfirmCreate(() => async () => {
+                    doorDto.metadata = JSON.stringify(doorDto.metadata);
                     const res = await send.post(DoorEndpoint.CREATE,doorDto);
                     if (Helper.handleToastByResCode(res, DoorToast.CREATE, toggleToast)) {
                         setForm(false)
@@ -103,6 +106,7 @@ const Door = () => {
                 break;
             case "update":
                 setConfirmUpdate(() => async () => {
+                    doorDto.metadata = JSON.stringify(doorDto.metadata);
                     const res = await send.put(DoorEndpoint.UPDATE,doorDto)
                     if (Helper.handleToastByResCode(res, DoorToast.UPDATE, toggleToast)) {
                         setForm(false)
@@ -180,10 +184,10 @@ const Door = () => {
     const [status, setStatus] = useState<StatusDto[]>([]);
     const fetchData = async (pageNumber: number, pageSize: number,search?: string, startDate?: string, endDate?: string) => {
         const res = await send.get(DoorEndpoint.PAGINATION(pageNumber,pageSize,locationId,search, startDate, endDate));
+        console.log(res)
         if (res && res.data) {
-            console.log(res.data.data)
-            setDoorsDto(res.data.data.data);
-            setPagination(res.data.data.page);
+            setDoorsDto(res.data.items);
+            setPagination(res.data);
 
             // Batch set state
             const newStatuses = res.data.data.data.map((a: DoorDto) => ({
@@ -315,16 +319,16 @@ const Door = () => {
                 :
                 <BaseTable<DoorDto> headers={DOOR_TABLE_HEADER} keys={DOOR_KEY} select={selectedObjects} setSelect={setSelectedObjects} onInfo={handleInfo} onClick={handleClick} onEdit={handleEdit} onRemove={handleRemove} data={doorsDto} status={status} action={action} permission={filterPermission(FeatureId.acr)} renderOptionalComponent={filterComponet} fetchData={fetchData} locationId={locationId} refresh={refresh} specialDisplay={[
                     {
-                        key:"direction",
+                        key:"doorType",
                         content:(d) => (
                             <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400">
-                                {d.accessConfig == 1 || d.accessConfig == 2 ?
+                                {d.doorType == DoorType[DoorType.Dual] ?
                                 <div className='flex items-center gap-2'>
                                     <DoorInIcon fontSize={20}/>
                                     <DoorOutIcon fontSize={20}/>
                                 </div>
                                 :
-                                d.direction == DoorDirection.IN ?
+                                d.doorType == DoorType[DoorType.Single]?
                                 <div className='flex items-center gap-5'>
                                     <DoorInIcon fontSize={20}/>
                                 </div>

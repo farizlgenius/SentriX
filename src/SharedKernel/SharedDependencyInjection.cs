@@ -17,6 +17,7 @@ public static class SharedDependencyInjection
 
             services.AddScoped<IMessageBus, MessageBus>();
 
+
             services.Scan(scan => scan
                 .FromApplicationDependencies()
                 .AddClasses(c => c.AssignableTo(typeof(ICommandHandler<>)))

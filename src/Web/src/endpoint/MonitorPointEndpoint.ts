@@ -1,5 +1,4 @@
-const API_VERSION = import.meta.env.VITE_API_VERSION;
-const CONTROLLER = `MonitorPoint`;
+const CONTROLLER = `input`;
 
 export const MonitorPointEndpoint = {
     GET:(locationId:number)=> `/api/${locationId}/${CONTROLLER}`,
@@ -13,7 +12,7 @@ export const MonitorPointEndpoint = {
     IP_LIST :(moduleId:number) => `/api/${CONTROLLER}/ip/${moduleId}`,
     MASK : `/api/${CONTROLLER}/mask`,
     UNMASK : `/api/${CONTROLLER}/unmask`,
-    IP_MODE : `/api/${CONTROLLER}/input/mode`,
+    IP_MODE : `/api/${CONTROLLER}/mode`,
     MP_MODE : `/api/${CONTROLLER}/mode`,
     LOG_FUNCTION : `/api/${CONTROLLER}/lf`
 } as const;

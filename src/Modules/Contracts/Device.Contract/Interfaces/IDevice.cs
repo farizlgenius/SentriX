@@ -15,8 +15,11 @@ public interface IDevice
       Task<List<ModuleDto>> GetModuleByDeviceIdAsync(int id, CancellationToken ct = default);
       Task<ModuleDto> CreateModuleAsync(CreateModuleDto dto, CancellationToken ct = default);
       Task<BaseResponse> GetModuleStatusByIdAsync(int id, CancellationToken ct = default);
-      Task<BaseResponse> AsciiCommandAsync(int deviceId, string command, CancellationToken ct = default);
+      Task<BaseResponse> AsciiCommandAsync(int deviceId, AeroCommandDto command, CancellationToken ct = default);
       Task<IEnumerable<OptionDto>> GetModuleOptionByDeviceIdAsync(int moduleId, CancellationToken ct = default);
       Task<DeviceDto> GetDeviceByComponentIdAsync(int ComponentId, CancellationToken ct = default);
+      Task<IEnumerable<OptionDto>> GetReaderOptionsByModuleIdAsync(int id,CancellationToken ct = default);
+      Task<IEnumerable<OptionDto>> GetInputOptionsByModuleIdAsync(int id,CancellationToken ct = default);
+      Task<IEnumerable<OptionDto>> GetRelayOptionsByModuleIdAsync(int id,CancellationToken ct = default);
 
 }

@@ -16,4 +16,5 @@ public interface IDoor
       Task<IEnumerable<OptionDto>> GetAccessControlFlagAsync();
       Task<IEnumerable<OptionDto>> GetSpareFlagAsync();
       Task<IEnumerable<OptionDto>> GetOsdpBaudrateAsync();
+      Task<IEnumerable<OptionDto>> GetDoorOptionByLocationIdAsync(int LocationId);
 }

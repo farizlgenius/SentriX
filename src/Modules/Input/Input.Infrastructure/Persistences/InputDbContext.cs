@@ -1,4 +1,5 @@
 using Input.Domain.Entities;
+using Input.Infrastructure.Persistences.Entities;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel.Domain;
 
@@ -9,6 +10,7 @@ public sealed class InputDbContext(DbContextOptions<InputDbContext> options) : D
       public const string Schema = "input";
       public DbSet<Persistences.Entities.Inputs> Inputs { get; set; }
       public DbSet<Persistences.Entities.InputGroups> InputGroups {get; set;}
+      public DbSet<Persistences.Entities.InputMode> InputModes {get; set;}
 
       protected override void OnModelCreating(ModelBuilder modelBuilder)
       {
@@ -46,6 +48,38 @@ public sealed class InputDbContext(DbContextOptions<InputDbContext> options) : D
                             .ValueGeneratedOnAdd();
                   }
             }
+
+            modelBuilder.Entity<InputMode>()
+            .HasData(
+                  new InputMode
+                  {
+                        id=1,
+                        label="Normally closed",
+                        value=0,
+                        description=""
+                  },
+                   new InputMode
+                  {
+                        id=2,
+                        label="Normally open",
+                        value=1,
+                        description=""
+                  },
+                   new InputMode
+                  {
+                        id=3,
+                        label="EOL: 1 kΩ normal, 2 kΩ active",
+                        value=2,
+                        description=""
+                  },
+                   new InputMode
+                  {
+                        id=4,
+                        label="EOL: 2 kΩ normal, 1 kΩ active",
+                        value=3,
+                        description=""
+                  }
+            );
 
            
 

@@ -341,4 +341,9 @@ public sealed class UserBehavior(IUserRepository repo,IStorage file,IAdapterFact
       {
             return await repo.GetPositionByDepartmentAsync(param,DepartmentId);
       }
+
+      public async Task<IEnumerable<OptionDto>> GetCompanyOptionByLocationAsync(int LocationId)
+      {
+            return await repo.GetCompanyOptionByLocationAsync(LocationId);
+      }
 }

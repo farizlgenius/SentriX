@@ -118,6 +118,12 @@ public sealed class InputBehavior(IInputRepository repo,IAdapterFactory factory)
             return res;
       }
 
+      public async Task<IEnumerable<OptionDto>> GetInputModeAsync()
+      {
+            var res = await repo.GetInputModeAsync();
+            return res;
+      }
+
       public async Task<Pagination<InputDto>> GetInputPagination(PaginationParams param)
       {
             return await repo.GetInputPaginationAsync(param);

@@ -56,6 +56,13 @@ public class UserController(IUser user) : ControllerBase
       }
 
       // Company
+      [HttpGet("/api/company/option/{location}")]
+      public async Task<IActionResult> GetCompanyOptionByLocationAsync(int location)
+      {
+            var res = await user.GetCompanyOptionByLocationAsync(location);
+            return Ok(res);
+      }
+
       [HttpGet("/api/company/pagination")]
       public async Task<IActionResult> GetCompanyPaginationAsync([FromQuery] PaginationParams param)
       {
@@ -90,6 +97,7 @@ public class UserController(IUser user) : ControllerBase
             var res = await user.DeleteCompanyAsync(id);
             return Ok(res);
       }
+
 
       // Department
       [HttpGet("/api/department/pagination")]

@@ -6,10 +6,10 @@ using SharedKernel.Messaging;
 
 namespace Device.Application.Handler;
 
-public sealed class AddRelayUsedCommandHandler(IDeviceRepository repo) : ICommandHandlerWithResult<AddRelayUsedCommand,bool>
+public sealed class AddRelayUsedCommandHandler(IDeviceRepository repo) : ICommandHandler<AddRelayUsedCommand>
 {
 
-      public async Task<bool> HandleAsync(AddRelayUsedCommand command, CancellationToken ct)
+      public async Task HandleAsync(AddRelayUsedCommand command, CancellationToken ct)
       {
             var domain = new Relay(
                   0,
@@ -19,6 +19,6 @@ public sealed class AddRelayUsedCommandHandler(IDeviceRepository repo) : IComman
                   true
                   );
                   
-            return await repo.AddRelayAsync(domain);
+            await repo.AddRelayAsync(domain);
       }
 }

@@ -6,10 +6,10 @@ using SharedKernel.Messaging;
 
 namespace Device.Application.Handler;
 
-public sealed class AddReaderUsedCommandHandler(IDeviceRepository repo) : ICommandHandlerWithResult<AddReaderUsedCommand,bool>
+public sealed class AddReaderUsedCommandHandler(IDeviceRepository repo) : ICommandHandler<AddReaderUsedCommand>
 {
 
-      public async Task<bool> HandleAsync(AddReaderUsedCommand command, CancellationToken ct)
+      public async Task HandleAsync(AddReaderUsedCommand command, CancellationToken ct)
       {
             var domain = new Reader(
                   0,
@@ -19,6 +19,6 @@ public sealed class AddReaderUsedCommandHandler(IDeviceRepository repo) : IComma
                   true
                   );
                   
-            return await repo.AddReaderAsync(domain);
+            await repo.AddReaderAsync(domain);
       }
 }

@@ -57,6 +57,20 @@ namespace Host.Controllers
                   return Ok(res);
             }
 
+            [HttpGet("relay/drive/mode")]
+            public async Task<IActionResult> GetRelayDriveModeAsync()
+            {
+                  var res = await output.GetRelayDriveModeAsync();
+                  return Ok(res);
+            }
+
+            [HttpGet("relay/offline/mode")]
+            public async Task<IActionResult> GetRelayOfflineModeAsync()
+            {
+                  var res = await output.GetRelayOfflineModeAsync();
+                  return Ok(res);
+            }
+
 
 
       }

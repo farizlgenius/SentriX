@@ -78,12 +78,13 @@ export const PersonalInformationForm: React.FC<PersonalInformationFormProp> = ({
     }
 
     const fetchCompany = async () => {
-        const res = await send.get(CompanyEndpoint.GET_BY_LOCATION(locationId));
-        if (res.data.data != null) {
-            res.data.data.data.map((a: CompanyDto) => {
+        const res = await send.get(CompanyEndpoint.GET_OPTION_BY_LOCATION(locationId));
+        if (res.data) {
+            res.data.map((a: Options) => {
                 setCom(prev => ([...prev, {
-                    label: a.name,
-                    value: a.id,
+                    label: a.label,
+                    value: a.value,
+                    additionalInfo:a.additionalInfo,
                     description: a.description,
                     isTaken: false
                 }]))

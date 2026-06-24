@@ -18,5 +18,6 @@ public interface IInputRepository
       Task<InputGroupDto> DeleteInputGroupAsync(int id,CancellationToken ct = default);
       Task<InputGroupDto> GetGroupByIdAsync(int id,CancellationToken ct = default);
       Task<Pagination<InputGroupDto>> GetInputGroupPaginationAsync(PaginationParams param,CancellationToken ct = default);
+      Task<IEnumerable<OptionDto>> GetInputModeAsync(CancellationToken ct = default);
       
 }

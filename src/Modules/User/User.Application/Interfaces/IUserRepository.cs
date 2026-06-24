@@ -38,4 +38,5 @@ public interface IUserRepository
       Task<Pagination<DepartmentDto>> GetDepartmentByCompanyAsync(PaginationParams param,int companyId,CancellationToken ct = default);
       Task<IEnumerable<DepartmentDto>> GetDepartmentByCompanyAsync(int companyId,CancellationToken ct = default);
       Task<Pagination<PositionDto>> GetPositionByDepartmentAsync(PaginationParams param,int departmentId,CancellationToken ct = default);
+      Task<IEnumerable<OptionDto>> GetCompanyOptionByLocationAsync(int locationId,CancellationToken ct = default);
 }

@@ -309,4 +309,16 @@ public sealed class DoorRepository(DoorDbContext context) : IDoorRepository
             x.description
             )).ToArrayAsync();
       }
+
+      public async Task<IEnumerable<OptionDto>> GetDoorOptionByLocationIdAsync(int LocationId, CancellationToken ct = default)
+      {
+            return await context.Doors.AsNoTracking()
+            .Where(x => x.location_id == LocationId)
+            .Select(x => new OptionDto(
+                  x.name,
+                  x.id,
+                  x.mac,
+                  x.component_id
+            )).ToListAsync();
+      }
 }

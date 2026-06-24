@@ -179,7 +179,7 @@ public static class ComponentHelper
                 {
                       return x.GetType()
                   .GetProperties()
-                  .Select(p => (int)p.GetValue(x)!);
+                  .Select(p => Convert.ToInt32(p.GetValue(x)));
                 })
                 .Distinct()
                 .OrderBy(x => x)

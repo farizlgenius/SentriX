@@ -86,4 +86,11 @@ public class DoorController(IDoor door) : ControllerBase
             return Ok(res);
       }
 
+      [HttpGet("option/{LocationId}")]
+      public async Task<IActionResult> GetDoorOptionByLocationIdAsync(int LocationId)
+      {
+            var res = await door.GetDoorOptionByLocationIdAsync(LocationId);
+            return Ok(res);
+      }
+
 }

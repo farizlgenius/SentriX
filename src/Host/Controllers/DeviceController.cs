@@ -82,9 +82,32 @@ namespace Host.Controllers
         }
 
         [HttpPost("aero/command/{id}")]
-        public async Task<IActionResult> AsciiAsync(int id,[FromBody]string Command)
+        public async Task<IActionResult> AsciiAsync(int id,[FromBody] AeroCommandDto Command)
         {
             var res = await device.AsciiCommandAsync(id,Command);
+            return Ok(res);
+
+        }
+
+        // Get Reader Number nad Input Number
+        [HttpGet("module/reader/options/{id}")]
+        public async Task<IActionResult> GetReaderOptionsByModuleIdAsync(int id)
+        {
+            var res = await device.GetReaderOptionsByModuleIdAsync(id);
+            return Ok(res);
+        }
+
+        [HttpGet("module/input/options/{id}")]
+        public async Task<IActionResult> GetInputOptionsByModuleIdAsync(int id)
+        {
+            var res = await device.GetInputOptionsByModuleIdAsync(id);
+            return Ok(res);
+        }
+
+        [HttpGet("module/relay/options/{id}")]
+        public async Task<IActionResult> GetRelayOptionsByModuleIdAsync(int id)
+        {
+            var res = await device.GetRelayOptionsByModuleIdAsync(id);
             return Ok(res);
         }
 

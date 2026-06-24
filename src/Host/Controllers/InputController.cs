@@ -75,4 +75,11 @@ public sealed class InputController(IInput input) : ControllerBase
             var res = await input.UpdateInputGroupAsync(dto);
             return Ok(res);
       }
+
+      [HttpGet("mode")]
+      public async Task<IActionResult> GetInputModeAsync()
+      {
+            var res = await input.GetInputModeAsync();
+            return Ok(res);
+      }
 }

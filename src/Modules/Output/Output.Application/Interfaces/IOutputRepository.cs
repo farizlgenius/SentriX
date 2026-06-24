@@ -14,6 +14,8 @@ public interface IOutputRepository
       Task<short> GetLowestOutputComponentIdByMacAsync(string Mac,CancellationToken ct = default);
       Task<OutputDto> DeleteByIdAsync(int id,CancellationToken ct= default);
       Task<OutputDto> UpdateAsync(Outputs dto,CancellationToken ct = default);
+      Task<IEnumerable<OptionDto>> GetRelayDriveModeAsync(CancellationToken ct= default);
+      Task<IEnumerable<OptionDto>> GetRelayOfflineModeAsync(CancellationToken ct = default);
 
 
 }

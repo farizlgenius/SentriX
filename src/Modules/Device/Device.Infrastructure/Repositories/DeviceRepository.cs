@@ -497,4 +497,140 @@ public sealed class DeviceRepository(DeviceDbContext context) : IDeviceRepositor
             entity.UpdateMemoryAllocateStatus(status);
             await context.SaveChangesAsync(ct);
       }
+
+      public async Task<IEnumerable<OptionDto>> GetReaderOptionsByModuleIdAsync(int id, CancellationToken ct = default)
+      {
+            var data = await context.Modules.AsNoTracking()
+            .Where(x => x.id == id)
+            .OrderByDescending(x => x.id)
+            .Select(x => new {x.id,x.component_id,x.mac,x.model})
+            .FirstOrDefaultAsync();
+
+            if(data == null)
+                  return new List<OptionDto>();
+
+            if (Enum.TryParse<SioModel>(data.model, out var sioModel))
+            {
+                  var res = new List<OptionDto>();
+                  int value = (int)sioModel;
+                  int max = AeroModuleModelHelper.nReaderByModel((SioModel)value);
+
+                  IEnumerable<int> unavailable = await context.Readers.AsNoTracking()
+                  .Where(x => x.component_id == data.component_id && x.module.mac == data.mac && x.module_id == data.id)
+                  .Select(x => x.reader_number)
+                  .ToArrayAsync();
+
+                  int[] arr = Enumerable.Range(0, max).ToArray();
+                  int[] available = arr.Except(unavailable).ToArray();
+                  foreach(int a in available)
+                  {
+                        res.Add(
+                              new OptionDto(
+                                    $"Reader {a + 1}",
+                                    a,
+                                    string.Empty,
+                                    0,
+                                    false
+                                    )
+                        );
+                  }
+                  return res;
+            }
+            else
+            {
+                  return new List<OptionDto>();
+            }
+
+            
+      }
+
+      public async Task<IEnumerable<OptionDto>> GetRelayOptionsByModuleIdAsync(int id, CancellationToken ct = default)
+      {
+            var data = await context.Modules.AsNoTracking()
+            .Where(x => x.id == id)
+            .OrderByDescending(x => x.id)
+            .Select(x => new {x.id,x.component_id,x.mac,x.model})
+            .FirstOrDefaultAsync();
+
+            if(data == null)
+                  return new List<OptionDto>();
+
+            if (Enum.TryParse<SioModel>(data.model, out var sioModel))
+            {
+                  var res = new List<OptionDto>();
+                  int value = (int)sioModel;
+                  int max = AeroModuleModelHelper.nReaderByModel((SioModel)value);
+
+                  IEnumerable<int> unavailable = await context.Relays.AsNoTracking()
+                  .Where(x => x.component_id == data.component_id && x.module.mac == data.mac && x.module_id == data.id)
+                  .Select(x => x.relay_number)
+                  .ToArrayAsync();
+
+                  int[] arr = Enumerable.Range(0, max).ToArray();
+                  int[] available = arr.Except(unavailable).ToArray();
+                  foreach(int a in available)
+                  {
+                        res.Add(
+                              new OptionDto(
+                                    $"Relay {a + 1}",
+                                    a,
+                                    string.Empty,
+                                    0,
+                                    false
+                                    )
+                        );
+                  }
+                  return res;
+            }
+            else
+            {
+                  return new List<OptionDto>();
+            }
+
+      }
+
+      public async Task<IEnumerable<OptionDto>> GetInputOptionsByModuleIdAsync(int id, CancellationToken ct = default)
+      {
+            var data = await context.Modules.AsNoTracking()
+            .Where(x => x.id == id)
+            .OrderByDescending(x => x.id)
+            .Select(x => new {x.id,x.component_id,x.mac,x.model})
+            .FirstOrDefaultAsync();
+
+            if(data == null)
+                  return new List<OptionDto>();
+
+            if (Enum.TryParse<SioModel>(data.model, out var sioModel))
+            {
+                  var res = new List<OptionDto>();
+                  int value = (int)sioModel;
+                  int max = AeroModuleModelHelper.nReaderByModel((SioModel)value);
+
+                  IEnumerable<int> unavailable = await context.Inputs.AsNoTracking()
+                  .Where(x => x.component_id == data.component_id && x.module.mac == data.mac && x.module_id == data.id)
+                  .Select(x => x.input_number)
+                  .ToArrayAsync();
+
+                  int[] arr = Enumerable.Range(0, max).ToArray();
+                  int[] available = arr.Except(unavailable).ToArray();
+                  foreach(int a in available)
+                  {
+                        res.Add(
+                              new OptionDto(
+                                    $"Input {a + 1}",
+                                    a,
+                                    string.Empty,
+                                    0,
+                                    false
+                                    )
+                        );
+                  }
+                  return res;
+            }
+            else
+            {
+                  return new List<OptionDto>();
+            }
+
+      }
 }

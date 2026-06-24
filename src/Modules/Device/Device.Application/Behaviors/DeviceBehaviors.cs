@@ -17,11 +17,11 @@ namespace Device.Application.Behaviors;
 
 public sealed class DeviceBehaviors(IDeviceRepository repo, IMessageBus bus, IAdapterFactory adapterFactory) : IDevice
 {
-      public async Task<BaseResponse> AsciiCommandAsync(int id, string command, CancellationToken ct = default)
+      public async Task<BaseResponse> AsciiCommandAsync(int id, AeroCommandDto command, CancellationToken ct = default)
       {
             var Mac = await repo.GetMacByIdAsync(id);
             var ScpId = await repo.GetComponentIdByMacAsync(Mac);
-            await adapterFactory.GetAdapter(Venders.AERO).Device.AsciiCommandAsync(Mac, ScpId, command);
+            await adapterFactory.GetAdapter(Venders.AERO).Device.AsciiCommandAsync(Mac, ScpId, command.Command);
             return new BaseResponse(System.Net.HttpStatusCode.OK, MessageHelper.Common.Success, DateTime.UtcNow);
       }
 
@@ -188,5 +188,20 @@ public sealed class DeviceBehaviors(IDeviceRepository repo, IMessageBus bus, IAd
       public async Task<DeviceDto> GetDeviceByComponentIdAsync(int ComponentId, CancellationToken ct = default)
       {
             return await repo.GetDeviceByComponentIdAsync(ComponentId, ct);
+      }
+
+      public async Task<IEnumerable<OptionDto>> GetReaderOptionsByModuleIdAsync(int id, CancellationToken ct = default)
+      {
+            return await repo.GetReaderOptionsByModuleIdAsync(id,ct);
+      }
+
+      public async Task<IEnumerable<OptionDto>> GetInputOptionsByModuleIdAsync(int id, CancellationToken ct = default)
+      {
+            return await repo.GetInputOptionsByModuleIdAsync(id,ct);
+      }
+
+      public async Task<IEnumerable<OptionDto>> GetRelayOptionsByModuleIdAsync(int id, CancellationToken ct = default)
+      {
+            return await repo.GetRelayOptionsByModuleIdAsync(id,ct);
       }
 }

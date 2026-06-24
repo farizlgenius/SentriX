@@ -1,5 +1,5 @@
 import { Gender } from "../../enum/Gender";
-import { AccessLevelDto } from "../AccessGroup/AccessLevelDto";
+import { AccessLevelDto } from "../Group/AccessLevelDto";
 import { BaseDto } from "../BaseDto";
 import { CredentialDto } from "./CredentialDto";
 

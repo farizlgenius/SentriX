@@ -17,7 +17,11 @@ public sealed class LogMessageHelper
       {
             var message = Encoding.UTF8.GetString(body);
             Console.WriteLine($"Deserialized message: {message}");
-            return JsonSerializer.Deserialize<T>(message)!;
+            var options = new JsonSerializerOptions
+{
+    PropertyNameCaseInsensitive = true
+};
+            return JsonSerializer.Deserialize<T>(message,options)!;
       }
 
       public static string CommandSuccess(string type,short ScpId) => $"{type} on ScpId {ScpId}  - Successfully.";

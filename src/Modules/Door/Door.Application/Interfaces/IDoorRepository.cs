@@ -21,6 +21,7 @@ public interface IDoorRepository
       Task<IEnumerable<OptionDto>> GetAccessControlFlagAsync(CancellationToken ct = default);
       Task<IEnumerable<OptionDto>> GetSpareFlagAsync(CancellationToken ct = default);
       Task<IEnumerable<OptionDto>> GetOsdpBaudrateAsync(CancellationToken ct = default);
+      Task<IEnumerable<OptionDto>> GetDoorOptionByLocationIdAsync(int LocationId,CancellationToken ct= default);
       
       
 }

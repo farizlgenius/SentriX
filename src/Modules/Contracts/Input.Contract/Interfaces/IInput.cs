@@ -14,4 +14,5 @@ public interface IInput
       Task<InputGroupDto> UpdateInputGroupAsync(InputGroupDto dto);
       Task<InputGroupDto> DeleteInputGroupAsync(int id);
       Task<Pagination<InputGroupDto>> GetGroupPaginationAsync(PaginationParams param);
+      Task<IEnumerable<OptionDto>> GetInputModeAsync();
 }

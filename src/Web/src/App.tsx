@@ -53,7 +53,7 @@ import { ProtectedRoute } from "./components/ProtectedRoute";
 import { useAuth } from "./context/AuthContext";
 import { useLoading } from "./context/LoadingContext";
 import { MonitorGroup } from "./pages/MonitorGroup/MonitorGroup";
-import AccessLevel from "./pages/AccessGroup/AccessLevel";
+import Group from "./pages/Group/Group";
 import { Procedure } from "./pages/Procedure/Procedure";
 import { Trigger } from "./pages/Trigger/Trigger";
 import { usePopup } from "./context/PopupContext";
@@ -232,7 +232,7 @@ const fetchIdReport = async () => {
             <Route path="/monitor" element={<MonitorPoint />} />
             <Route path="/popup" element={<PopupExample />} />
             <Route path="/door" element={<Door />} />
-            <Route path="/level" element={<AccessLevel />} />
+            <Route path="/level" element={<Group />} />
             <Route path="/area" element={<Area />} />
             <Route path="/timezone" element={<TimeZone />} />
             <Route path="/cardholder" element={<User />} />

@@ -251,6 +251,19 @@ public sealed class InputRepository(InputDbContext context) : IInputRepository
             return new Pagination<InputGroupDto>(param.pageNumber, param.pageSize, count, (int)Math.Ceiling(count / (double)param.pageSize), res);
       }
 
+      public async Task<IEnumerable<OptionDto>> GetInputModeAsync(CancellationToken ct = default)
+      {
+            return await context.InputModes.AsNoTracking()
+            .Select(x => new OptionDto(
+                  x.label,
+                  x.value,
+                  x.description,
+                  0,
+                  false
+            )).ToArrayAsync();
+
+      }
+
       public async Task<Pagination<InputDto>> GetInputPaginationAsync(PaginationParams param,CancellationToken ct = default)
       {
             var query = context.Inputs.AsNoTracking().AsQueryable();
@@ -376,7 +389,7 @@ public sealed class InputRepository(InputDbContext context) : IInputRepository
                   );
       }
 
-      public Task<InputGroupDto> UpdateInputGroupAsync(Domain.Entities.InputGroups domain, CancellationToken ct = default)
+      public async Task<InputGroupDto> UpdateInputGroupAsync(Domain.Entities.InputGroups domain, CancellationToken ct = default)
       {
             throw new NotImplementedException();
       }

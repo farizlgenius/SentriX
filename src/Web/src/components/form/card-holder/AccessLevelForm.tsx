@@ -1,7 +1,7 @@
 import { PropsWithChildren, useEffect, useState } from "react";
 import { FormProp } from "../../../model/Form/FormProp";
 import { UserDto } from "../../../model/User/UserDto";
-import { AccessLevelDto } from "../../../model/AccessGroup/AccessLevelDto";
+import { AccessLevelDto } from "../../../model/Group/AccessLevelDto";
 import { useLocation } from "../../../context/LocationContext";
 import { send } from "../../../api/api";
 import { AccessLevelEndPoint } from "../../../endpoint/AccessLevelEndpoint";

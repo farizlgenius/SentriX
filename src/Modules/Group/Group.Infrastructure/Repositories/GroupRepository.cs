@@ -24,7 +24,7 @@ public sealed class GroupRepository(GroupDbContext context) : IGroupRepository
                   data.Entity.id,
                   data.Entity.component_id,
                   data.Entity.name,
-                  data.Entity.metadata,
+                  new List<GroupDootDto>(),
                   data.Entity.location_id,
                   data.Entity.is_active
             );
@@ -49,7 +49,7 @@ public sealed class GroupRepository(GroupDbContext context) : IGroupRepository
                   data.Entity.id,
                   data.Entity.component_id,
                   data.Entity.name,
-                  data.Entity.metadata,
+                  new List<GroupDootDto>(),
                   data.Entity.location_id,
                   data.Entity.is_active
             );
@@ -63,7 +63,7 @@ public sealed class GroupRepository(GroupDbContext context) : IGroupRepository
                   x.id,
                   x.component_id,
                   x.name,
-                  x.metadata,
+                  new List<GroupDootDto>(),
                   x.location_id,
                   x.is_active
             ))
@@ -71,7 +71,7 @@ public sealed class GroupRepository(GroupDbContext context) : IGroupRepository
                   0,
                   0,
                   string.Empty,
-                  string.Empty,
+                  new List<GroupDootDto>(),
                   0,
                   false
                   );
@@ -94,7 +94,10 @@ public sealed class GroupRepository(GroupDbContext context) : IGroupRepository
 
       public async Task<GroupDto> UpdateAsync(Groups dto, CancellationToken ct = default)
       {
-            var entity = await context.Groups.OrderByDescending(x => x.id == dto.Id)
+            var entity = await context.Groups
+            .Include(x => x.group_doors)
+            .ThenInclude(x => x.group_door_detail)
+            .OrderByDescending(x => x.id == dto.Id)
             .Where(x => x.id == dto.Id)
             .FirstOrDefaultAsync();
 
@@ -102,6 +105,10 @@ public sealed class GroupRepository(GroupDbContext context) : IGroupRepository
                   throw new Exception(MessageHelper.DB.RecordNotFound);
 
             entity.Update(dto);
+
+            context.GroupDoors.RemoveRange(entity.group_doors);
+
+            entity.group_doors = dto.GroupDoors.Select(x => new Persistences.Entities.GroupDoor(x)).ToList();
 
             var data = context.Groups.Update(entity);
             var save = await context.SaveChangesAsync(ct);
@@ -113,7 +120,7 @@ public sealed class GroupRepository(GroupDbContext context) : IGroupRepository
                   data.Entity.id,
                   data.Entity.component_id,
                   data.Entity.name,
-                  data.Entity.metadata,
+                  new List<GroupDootDto>(),
                   data.Entity.location_id,
                   data.Entity.is_active
             );

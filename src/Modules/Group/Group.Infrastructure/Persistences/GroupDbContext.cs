@@ -7,8 +7,10 @@ namespace Group.Infrastructure.Persistences;
 
 public sealed class GroupDbContext(DbContextOptions<GroupDbContext> options) : DbContext(options)
 {
-      public const string Schema = "door";
+      public const string Schema = "group";
       public DbSet<Persistences.Entities.Groups> Groups { get; set; }
+      public DbSet<Persistences.Entities.GroupDoor> GroupDoors { get; set; }
+      public DbSet<Persistences.Entities.GroupDoorDetail> GroupDoorDetails { get; set; }
 
       protected override void OnModelCreating(ModelBuilder modelBuilder)
       {
@@ -46,6 +48,18 @@ public sealed class GroupDbContext(DbContextOptions<GroupDbContext> options) : D
                             .ValueGeneratedOnAdd();
                   }
             }
+
+            modelBuilder.Entity<Persistences.Entities.Groups>()
+            .HasMany(x => x.group_doors)
+            .WithOne(x => x.groups)
+            .HasForeignKey(x => x.group_id)
+            .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Persistences.Entities.GroupDoor>()
+            .HasMany(x => x.group_door_detail)
+            .WithOne(x => x.group_door)
+            .HasForeignKey(x => x.group_door_id)
+            .OnDelete(DeleteBehavior.Cascade);
 
 
 

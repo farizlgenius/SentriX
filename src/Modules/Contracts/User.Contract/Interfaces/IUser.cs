@@ -18,6 +18,7 @@ public interface IUser
       Task<CompanyDto> UpdateCompanyAsync(CompanyDto dto);
       Task<CompanyDto> DeleteCompanyAsync(int id);
       Task<IEnumerable<CompanyDto>> GetCompanyByLocationIdAsync(int LocationId);
+      Task<IEnumerable<OptionDto>> GetCompanyOptionByLocationAsync(int LocationId);
 
       // Department
       Task<Pagination<DepartmentDto>> GetDepartmentPaginationAsync(PaginationParams param);

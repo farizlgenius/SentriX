@@ -2,32 +2,36 @@ import { PropsWithChildren, useState } from "react";
 import Label from "../../components/form/Label";
 import Select from "../../components/form/Select";
 import { Options } from "../../model/Options";
-import { FormProp } from "../../model/Form/FormProp";
-import { DoorDto } from "../../model/Door/DoorDto";
+import { FormProp, FormType } from "../../model/Form/FormProp";
+import { AeroDoorDto, AeroDoorMetadata, AltrReader, Antipassback, DoorDto } from "../../model/Door/DoorDto";
 import AeroDoorForm from "./AeroDoorForm";
 import { DeviceType } from "../../enum/DeviceType";
 import AmicoDoorForm from "./AmicoDoorForm";
+import { useLocation } from "../../context/LocationContext";
 
-const typeOption:Options[] = [
+const typeOption: Options[] = [
       {
-                  label:"Aero",
-                  value:DeviceType.AERO
-            },{
-                  label:"Amico",
-                  value:DeviceType.AMICO
-            }
+            label: "Aero",
+            value: DeviceType.AERO
+      }, {
+            label: "Amico",
+            value: DeviceType.AMICO
+      }
 ]
 
+
+
 const DoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleClick, dto, setDto, type }) => {
+
       const [selectedType, setSelectedType] = useState("");
-      const FormTypeSwitcher = (value:string) => {
-            switch(value){
+      const FormTypeSwitcher = (value: string) => {
+            switch (value) {
                   case DeviceType.AERO:
                         return <AeroDoorForm handleClick={handleClick} dto={dto} setDto={setDto} type={type} />
                   case DeviceType.AMICO:
-                        return <AmicoDoorForm handleClick={handleClick} dto={dto} setDto={setDto} type={type}/>
+                        return <AmicoDoorForm handleClick={handleClick} dto={dto} setDto={setDto} type={type} />
                   default:
-                  return <></>
+                        return <></>
             }
       }
       return (

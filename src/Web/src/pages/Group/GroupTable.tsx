@@ -1,16 +1,16 @@
 import { PropsWithChildren } from "react";
-import { AccessLevelDto } from "../../model/AccessGroup/AccessLevelDto";
 import { Table, TableBody, TableCell, TableHeader, TableRow } from "../../components/ui/table";
+import { GroupDto } from "../../model/Group/GroupDto";
 
 
 
 interface TableContent {
-    data: AccessLevelDto[]
-    handleEdit: (data: AccessLevelDto) => void
-    handleRemove: (data: AccessLevelDto) => void
-    handleCheck: (data: AccessLevelDto, e: React.ChangeEvent<HTMLInputElement>) => void;
-    handleCheckAll: (data: AccessLevelDto[], e: React.ChangeEvent<HTMLInputElement>) => void;
-    selectedObject: AccessLevelDto[];
+    data: GroupDto[]
+    handleEdit: (data: GroupDto) => void
+    handleRemove: (data: GroupDto) => void
+    handleCheck: (data: GroupDto, e: React.ChangeEvent<HTMLInputElement>) => void;
+    handleCheckAll: (data: GroupDto[], e: React.ChangeEvent<HTMLInputElement>) => void;
+    selectedObject: GroupDto[];
 }
 // Access Group Page 
 export const ACCESSGROUP_TABLE_HEAD: string[] = [
@@ -21,7 +21,7 @@ export const ACCESSGROUP_KEY: string[] = [
     "name"
 ];
 
-export const AccessGroupTable: React.FC<PropsWithChildren<TableContent>> = ({ data,handleEdit,handleCheckAll,handleCheck,handleRemove,selectedObject }) => {
+export const GroupTable: React.FC<PropsWithChildren<TableContent>> = ({ data,handleEdit,handleCheckAll,handleCheck,handleRemove,selectedObject }) => {
     return (
         <>
             <div className="max-h-[70vh] overflow-y-auto hidden-scroll">
@@ -44,7 +44,7 @@ export const AccessGroupTable: React.FC<PropsWithChildren<TableContent>> = ({ da
                         </TableRow>
                     </TableHeader>
                     <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
-                        {data && data.map((data: AccessLevelDto, i: number) => (
+                        {data && data.map((data: GroupDto, i: number) => (
                             <TableRow key={i}>
                                 <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400">
                                     <input checked={selectedObject?.includes(data)} type="checkbox" onChange={(e) => handleCheck(data, e)} />

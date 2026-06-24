@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\SharedKernel\SharedKernel.csproj" />
     <ProjectReference Include="..\..\Contracts\Adapter.Abstraction\Adapter.Abstraction.csproj" />
     <ProjectReference Include="..\..\Contracts\Device.Contract\Device.Contract.csproj" />
     <ProjectReference Include="..\..\Contracts\Door.Contract\Door.Contract.csproj" />

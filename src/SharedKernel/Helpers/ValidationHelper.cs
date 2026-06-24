@@ -1,5 +1,6 @@
 using System;
 using System.Text.RegularExpressions;
+using SharedKernel.Enums;
 
 namespace SharedKernel.Helpers;
 
@@ -76,6 +77,16 @@ public static partial class ValidationHelper
     var arr = Tenants.Split(",").Select(x => int.Parse(x)).ToList();
 
     return arr.Contains(LocationId) || LocationId == 0;
+  }
+
+  public static void ValidateDeviceType(string Type)
+  {
+    if(string.IsNullOrWhiteSpace(Type))
+      throw new ArgumentException("Device Type is empty");
+
+    bool isMatch = Enum.TryParse<DeviceType>(Type, true, out _);
+    if(!isMatch)
+      throw new ArgumentException("Device Type is invalid");
   }
 
 }

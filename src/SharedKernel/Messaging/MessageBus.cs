@@ -73,22 +73,4 @@ public sealed class MessageBus : IMessageBus
 
     }
 
-    public async Task<TResult> SendWithResultAsync<TResult>(ICommand<TResult> command, CancellationToken ct = default)
-    {
-        try
-        {
-            var handlerType = typeof(IQueryHandler<,>)
-                .MakeGenericType(command.GetType(), typeof(TResult));
-
-            dynamic handler = _provider.GetRequiredService(handlerType);
-
-            // ⭐ THIS WAS THE LAST BUG
-            return await handler.HandleAsync((dynamic)command, ct);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error occurred while sending command of type {CommandType}", command.GetType().Name);
-            throw;
-        }
-    }
 }

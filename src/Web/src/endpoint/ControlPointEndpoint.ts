@@ -1,6 +1,6 @@
 const CONTROLLER = `output`;
 
-export const ControlPointEndpoint = {
+export const OutputEndpoint = {
     GET:(location:number) => `/api/${location}/${CONTROLLER}`,
     DELETE :(component:number) => `/api/${CONTROLLER}/${component}`,
     PAGINATION:(pageNumber:number,pageSize:number,locationId?:number | undefined,search?:string | undefined,startDate?:string | undefined,endDate?:string | undefined) => `/api/${CONTROLLER}/pagination?PageNumber=${pageNumber}&PageSize=${pageSize}${search == undefined || search == "" ? "" : `&search=${search}`}${startDate == undefined ? "" : `&startDate=${startDate}`}${endDate == undefined ? "" : `&startDate=${endDate}`}${locationId == undefined ?  "" : `&locationId=${locationId}` }`,
@@ -10,6 +10,8 @@ export const ControlPointEndpoint = {
     STATUS :(outputId:number)=> `/api/${CONTROLLER}/status/${outputId}`,
     OUTPUT : (module:number) => `/api/${CONTROLLER}/relay/${module}`,
     GET_RELAY_OP_MODE : (type:string) => `/api/${CONTROLLER}/relay/mode/${type}`,
-    DELETE_RANGE: `/api/${CONTROLLER}/delete/range`
+    DELETE_RANGE: `/api/${CONTROLLER}/delete/range`,
+    GET_RELAY_DRIVE_MODE:`/api/${CONTROLLER}/relay/drive/mode`,
+    GET_RELAY_OFFLINE_MODE: `/api/${CONTROLLER}/relay/offline/mode`
 } as const;
 

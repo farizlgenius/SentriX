@@ -7,7 +7,7 @@ public interface IGroupAdapter
             string Mac,
             short DeviceComponentId,
             short ComponentId,
-            string Metadata
+            List<(short DoorComponentId,short TimeZoneComponentId)> Doors
       );
 
       Task DeleteLevel(

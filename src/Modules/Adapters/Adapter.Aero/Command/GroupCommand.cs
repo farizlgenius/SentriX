@@ -11,16 +11,20 @@ namespace Adapter.Aero.Command;
 
 public sealed class GroupCommand(ILogger<GroupCommand> logger) : BaseCommand, IGroupCommand
 {
-      public CommandResponse AccessLevelConfigurationExtended(string Mac,short ScpId,short ComponentId,short[] Timezone)
+      public CommandResponse AccessLevelConfigurationExtended(string Mac,short ScpId,short ComponentId,List<(short DoorComponentId,short TimeZoneComponentId)> Doors)
       {
             CC_ALVL_EX c = new CC_ALVL_EX();
             c.lastModified = 0;
             c.scp_number = ScpId;
             c.alvl_number = ComponentId;
             c.oper_mode = 1;
-            for(int i = 0;i < c.tz.Length; i++)
+            // for(int i = 0;i < c.tz.Length; i++)
+            // {
+            //       c.tz[i] = Timezone[i];
+            // }
+            foreach(var d in Doors)
             {
-                  c.tz[i] = Timezone[i];
+                  c.tz[d.DoorComponentId] = d.TimeZoneComponentId;
             }
             var result = Send((short)enCfgCmnd.enCcAlvlEx, c);
             if (result)

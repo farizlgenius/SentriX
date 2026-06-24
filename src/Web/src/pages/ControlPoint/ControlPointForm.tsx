@@ -5,7 +5,7 @@ import Select from "../../components/form/Select";
 import { Options } from "../../model/Options";
 import { OutputDto } from "../../model/ControlPoint/OutputDto";
 import { DeviceEndpoint } from "../../endpoint/HardwareEndpoint";
-import { ControlPointEndpoint } from "../../endpoint/ControlPointEndpoint";
+import { OutputEndpoint } from "../../endpoint/ControlPointEndpoint";
 import { ModuleEndpoint } from "../../endpoint/ModuleEndpoint";
 import api, { send } from "../../api/api";
 import { useLocation } from "../../context/LocationContext";
@@ -68,7 +68,7 @@ const ControlPointForm: React.FC<PropsWithChildren<FormProp<OutputDto>>> = ({ ha
 
   const fetchRelayMode = async () => {
 
-    let res = await api.get(ControlPointEndpoint.GET_RELAY_OP_MODE(DeviceType.AERO));
+    let res = await api.get(OutputEndpoint.GET_RELAY_OP_MODE(DeviceType.AERO));
     if (res.data) {
       res.data.map((a: Options) => {
         setRelyModeOption((prev) => [...prev, {
@@ -100,7 +100,7 @@ const ControlPointForm: React.FC<PropsWithChildren<FormProp<OutputDto>>> = ({ ha
   }
 
   const fetchOutput = async (value: number) => {
-    var res = await send.get(ControlPointEndpoint.OUTPUT(value));
+    var res = await send.get(OutputEndpoint.OUTPUT(value));
     if (res) {
       res.data.map((a: number) => {
         setRelayOption((prev) => [...prev, {

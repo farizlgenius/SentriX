@@ -23,6 +23,281 @@ namespace Output.Infrastructure.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("Output.Infrastructure.Persistences.Entities.OutputDriveMode", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<short>("component_id")
+                        .HasColumnType("smallint");
+
+                    b.Property<DateTime>("created_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.Property<string>("description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("is_active")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("label")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("location_id")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("updated_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.Property<short>("value")
+                        .HasColumnType("smallint");
+
+                    b.HasKey("id");
+
+                    b.ToTable("OutputDriveModes", "output");
+
+                    b.HasData(
+                        new
+                        {
+                            id = 1,
+                            component_id = (short)0,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            description = "",
+                            is_active = true,
+                            label = "Normal",
+                            location_id = 0,
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            value = (short)0
+                        },
+                        new
+                        {
+                            id = 2,
+                            component_id = (short)0,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            description = "",
+                            is_active = true,
+                            label = "Inverted",
+                            location_id = 0,
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            value = (short)1
+                        });
+                });
+
+            modelBuilder.Entity("Output.Infrastructure.Persistences.Entities.OutputMode", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<short>("component_id")
+                        .HasColumnType("smallint");
+
+                    b.Property<DateTime>("created_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.Property<short>("drive")
+                        .HasColumnType("smallint");
+
+                    b.Property<bool>("is_active")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("label")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("location_id")
+                        .HasColumnType("integer");
+
+                    b.Property<short>("offline")
+                        .HasColumnType("smallint");
+
+                    b.Property<DateTime>("updated_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.Property<short>("value")
+                        .HasColumnType("smallint");
+
+                    b.HasKey("id");
+
+                    b.ToTable("OutputModes", "output");
+
+                    b.HasData(
+                        new
+                        {
+                            id = 1,
+                            component_id = (short)0,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            drive = (short)0,
+                            is_active = true,
+                            label = "",
+                            location_id = 0,
+                            offline = (short)0,
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            value = (short)0
+                        },
+                        new
+                        {
+                            id = 2,
+                            component_id = (short)0,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            drive = (short)1,
+                            is_active = true,
+                            label = "",
+                            location_id = 0,
+                            offline = (short)0,
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            value = (short)1
+                        },
+                        new
+                        {
+                            id = 3,
+                            component_id = (short)0,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            drive = (short)0,
+                            is_active = true,
+                            label = "",
+                            location_id = 0,
+                            offline = (short)1,
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            value = (short)16
+                        },
+                        new
+                        {
+                            id = 4,
+                            component_id = (short)0,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            drive = (short)1,
+                            is_active = true,
+                            label = "",
+                            location_id = 0,
+                            offline = (short)1,
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            value = (short)17
+                        },
+                        new
+                        {
+                            id = 5,
+                            component_id = (short)0,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            drive = (short)0,
+                            is_active = true,
+                            label = "",
+                            location_id = 0,
+                            offline = (short)2,
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            value = (short)32
+                        },
+                        new
+                        {
+                            id = 6,
+                            component_id = (short)0,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            drive = (short)1,
+                            is_active = true,
+                            label = "",
+                            location_id = 0,
+                            offline = (short)2,
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            value = (short)33
+                        });
+                });
+
+            modelBuilder.Entity("Output.Infrastructure.Persistences.Entities.OutputOfflineMode", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<short>("component_id")
+                        .HasColumnType("smallint");
+
+                    b.Property<DateTime>("created_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.Property<string>("description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("is_active")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("label")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("location_id")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("updated_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.Property<short>("value")
+                        .HasColumnType("smallint");
+
+                    b.HasKey("id");
+
+                    b.ToTable("OutputOfflineModes", "output");
+
+                    b.HasData(
+                        new
+                        {
+                            id = 1,
+                            component_id = (short)0,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            description = "",
+                            is_active = true,
+                            label = "No Change",
+                            location_id = 0,
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            value = (short)0
+                        },
+                        new
+                        {
+                            id = 2,
+                            component_id = (short)0,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            description = "",
+                            is_active = true,
+                            label = "Inactive",
+                            location_id = 0,
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            value = (short)1
+                        },
+                        new
+                        {
+                            id = 3,
+                            component_id = (short)0,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            description = "",
+                            is_active = true,
+                            label = "Active",
+                            location_id = 0,
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            value = (short)2
+                        });
+                });
+
             modelBuilder.Entity("Output.Infrastructure.Persistences.Entities.Outputs", b =>
                 {
                     b.Property<int>("id")

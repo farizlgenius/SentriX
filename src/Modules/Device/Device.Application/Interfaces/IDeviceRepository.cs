@@ -38,5 +38,8 @@ public interface IDeviceRepository
       Task<bool> AddReaderAsync(Reader domain,CancellationToken ct = default);
       Task<bool> AddInputAsync(Input domain,CancellationToken ct = default);
       Task<bool> AddRelayAsync(Relay domain,CancellationToken ct = default);
+      Task<IEnumerable<OptionDto>> GetReaderOptionsByModuleIdAsync(int id ,CancellationToken ct = default);
+      Task<IEnumerable<OptionDto>> GetRelayOptionsByModuleIdAsync(int id ,CancellationToken ct = default);
+      Task<IEnumerable<OptionDto>> GetInputOptionsByModuleIdAsync(int id ,CancellationToken ct = default);
 
 }

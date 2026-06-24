@@ -26,7 +26,7 @@ public sealed class DoorBehavior(IDoorRepository repo,IMessageBus bus,IAdapterFa
             short FirstComponentId = await repo.GetLowestDoorComponentIdWithExceptionAsync(dto.Mac,[]);
             short SecondComponentId = -1;
 
-            if (dto.DoorType.Equals(DoorType.DUAL))
+            if (dto.DoorType.Equals(DoorType.DUAL.ToString()))
             {
                   SecondComponentId = await repo.GetLowestDoorComponentIdWithExceptionAsync(dto.Mac,[FirstComponentId]);
             }
@@ -47,27 +47,29 @@ public sealed class DoorBehavior(IDoorRepository repo,IMessageBus bus,IAdapterFa
                   dto.IsActive);
 
 
-            await factory.GetAdapter(dto.Type).Door.CreateUpdateDoorAsync(
-                  dto.Mac,
-                  dto.DeviceComponentId,
-                  dto.Metadata,
-                  FirstComponentId,
-                  SecondComponentId
-                  );
+            // await factory.GetAdapter(dto.Type).Door.CreateUpdateDoorAsync(
+            //       dto.Mac,
+            //       dto.DeviceComponentId,
+            //       dto.Metadata,
+            //       FirstComponentId,
+            //       SecondComponentId
+            //       );
 
             // Save component used
-            DoorMetadata? data = JsonSerializer.Deserialize<DoorMetadata>(dto.Metadata);
+
+
+            DoorMetadata? data = JSONHelper.Deserialize<DoorMetadata>(dto.Metadata);
 
             // Redaer in
             if(data != null)
             {
-                   await bus.SendWithResultAsync(new AddReaderUsedCommand(
+                   await bus.SendAsync(new AddReaderUsedCommand(
                         data.ReaderIn.ReaderNumber,
                         data.ReaderIn.ReaderModuleId,
                         dto.LocationId
                   ));
 
-                  await bus.SendWithResultAsync(
+                  await bus.SendAsync(
                         new AddReaderUsedCommand(
                               data.ReaderOut.ReaderNumber,
                               data.ReaderOut.ReaderModuleId,
@@ -75,7 +77,7 @@ public sealed class DoorBehavior(IDoorRepository repo,IMessageBus bus,IAdapterFa
                         )
                   );
 
-                  await bus.SendWithResultAsync(
+                  await bus.SendAsync(
                         new AddReaderUsedCommand(
                               data.AltrReader.AltrRdrNumber,
                               data.AltrReader.AltrRdrModuleId,
@@ -84,7 +86,7 @@ public sealed class DoorBehavior(IDoorRepository repo,IMessageBus bus,IAdapterFa
                   );
 
 
-                  await bus.SendWithResultAsync(
+                  await bus.SendAsync(
                         new AddRelayUsedCommand(
                               data.Relay.RelayNumber,
                               data.Relay.RelayModuleId,
@@ -92,7 +94,7 @@ public sealed class DoorBehavior(IDoorRepository repo,IMessageBus bus,IAdapterFa
                         )
                   );
 
-                  await bus.SendWithResultAsync(
+                  await bus.SendAsync(
                         new AddInputUsedCommand(
                               data.Sensor.SensorNumber,
                               data.Sensor.SensorModuleId,
@@ -100,7 +102,7 @@ public sealed class DoorBehavior(IDoorRepository repo,IMessageBus bus,IAdapterFa
                         )
                   );
 
-                  await bus.SendWithResultAsync(
+                  await bus.SendAsync(
                         new AddInputUsedCommand(
                               data.Rex.Rex0Number,
                               data.Rex.Rex0ModuleId,
@@ -108,7 +110,7 @@ public sealed class DoorBehavior(IDoorRepository repo,IMessageBus bus,IAdapterFa
                         )
                   );
 
-                   await bus.SendWithResultAsync(
+                   await bus.SendAsync(
                         new AddInputUsedCommand(
                               data.Rex.Rex1Number,
                               data.Rex.Rex1ModuleId,
@@ -228,5 +230,10 @@ public sealed class DoorBehavior(IDoorRepository repo,IMessageBus bus,IAdapterFa
       public async Task<IEnumerable<OptionDto>> GetOsdpBaudrateAsync()
       {
             return await repo.GetOsdpBaudrateAsync();
+      }
+
+      public async Task<IEnumerable<OptionDto>> GetDoorOptionByLocationIdAsync(int LocationId)
+      {
+            return await repo.GetDoorOptionByLocationIdAsync(LocationId);
       }
 }

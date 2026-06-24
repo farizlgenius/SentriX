@@ -9,7 +9,7 @@ import { OutputTrigger } from '../../model/ControlPoint/OutputTrigger';
 import Helper from '../../utility/Helper';
 import { useToast } from '../../context/ToastContext';
 import { ControlPointToast } from '../../model/ToastMessage';
-import { ControlPointEndpoint } from '../../endpoint/ControlPointEndpoint';
+import { OutputEndpoint } from '../../endpoint/ControlPointEndpoint';
 import { send } from '../../api/api';
 import { useLocation } from '../../context/LocationContext';
 import { BaseTable } from '../UiElements/BaseTable';
@@ -64,7 +64,7 @@ const ControlPoint = () => {
 
     const handleRemove = (data: OutputDto) => {
         setConfirmRemove(() => async () => {
-            const res = await send.delete(ControlPointEndpoint.DELETE(data.id))
+            const res = await send.delete(OutputEndpoint.DELETE(data.id))
             if(Helper.handleToastByResCode(res,ControlPointToast.DELETE,toggleToast)){
                 toggleRefresh();
             }
@@ -95,7 +95,7 @@ const ControlPoint = () => {
     const [outputsDto, setOutputsDto] = useState<OutputDto[]>([]);
     const [status, setStatus] = useState<StatusDto[]>([]);
     const fetchData = async (pageNumber: number, pageSize: number,locationId?:number,search?: string, startDate?: string, endDate?: string) => {
-        const res = await send.get(ControlPointEndpoint.PAGINATION(pageNumber,pageSize,locationId,search, startDate, endDate));
+        const res = await send.get(OutputEndpoint.PAGINATION(pageNumber,pageSize,locationId,search, startDate, endDate));
         if (res && res.data) {
             console.log(res.data)
             setOutputsDto(res.data.items);
@@ -121,7 +121,7 @@ const ControlPoint = () => {
     };
 
     const fetchStatus = async (outputId:number) => {
-        const res = send.get(ControlPointEndpoint.STATUS(outputId));
+        const res = send.get(OutputEndpoint.STATUS(outputId));
         Logger.info(res);
     };
 
@@ -183,7 +183,7 @@ const ControlPoint = () => {
                     selectedObjects.map(async (a:OutputDto) => {
                         data.push(a.id)
                     })
-                    var res = await send.post(ControlPointEndpoint.DELETE_RANGE,data)
+                    var res = await send.post(OutputEndpoint.DELETE_RANGE,data)
                     if(Helper.handleToastByResCode(res,ControlPointToast.DELETE_RANGE,toggleToast)){
                         setRemove(false);
                         toggleRefresh();
@@ -194,7 +194,7 @@ const ControlPoint = () => {
             case "create":
                 console.log(controlPointDto)
                 setConfirmCreate(() => async () => {
-                    const res = await send.post(ControlPointEndpoint.CREATE, controlPointDto)
+                    const res = await send.post(OutputEndpoint.CREATE, controlPointDto)
                     if (Helper.handleToastByResCode(res, ControlPointToast.CREATE, toggleToast)) {
                         setForm(false);
                         toggleRefresh();
@@ -204,7 +204,7 @@ const ControlPoint = () => {
                 break;
             case "update":
                 setConfirmUpdate(() => async () => {
-                    const res = await send.put(ControlPointEndpoint.UPDATE,controlPointDto)
+                    const res = await send.put(OutputEndpoint.UPDATE,controlPointDto)
                     if(Helper.handleToastByResCode(res,ControlPointToast.UPDATE,toggleToast)){
                         setForm(false);
                         toggleRefresh();
@@ -221,7 +221,7 @@ const ControlPoint = () => {
                 console.log(selectedObjects);
                 if (selectedObjects.length > 0) {
                     selectedObjects.map(async (a: OutputDto) => {
-                        const res = await send.post(ControlPointEndpoint.TRIGGER(a.id,2));
+                        const res = await send.post(OutputEndpoint.TRIGGER(a.id,2));
                         Helper.handleToastByResCode(res, ControlPointToast.TOGGLE, toggleToast)
                     });
                 }
@@ -230,7 +230,7 @@ const ControlPoint = () => {
             case "off":
                 if (selectedObjects.length > 0) {
                     selectedObjects.map(async (a: OutputDto) => {
-                        const res = await send.post(ControlPointEndpoint.TRIGGER(a.id,1));
+                        const res = await send.post(OutputEndpoint.TRIGGER(a.id,1));
                         Helper.handleToastByResCode(res,  ControlPointToast.TOGGLE, toggleToast)
                     });
                 }
@@ -238,7 +238,7 @@ const ControlPoint = () => {
             case "toggle":
                 if (selectedObjects.length > 0) {
                     selectedObjects.map(async (a: OutputDto) => {
-                        const res = await send.post(ControlPointEndpoint.TRIGGER(a.id,3));
+                        const res = await send.post(OutputEndpoint.TRIGGER(a.id,3));
                         Helper.handleToastByResCode(res,  ControlPointToast.TOGGLE, toggleToast)
                     });
                 }

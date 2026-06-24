@@ -283,6 +283,21 @@ public sealed class UserRepository(UserDbContext context) : IUserRepository
             return res;
       }
 
+      public async Task<IEnumerable<OptionDto>> GetCompanyOptionByLocationAsync(int locationId, CancellationToken ct = default)
+      {
+            var res = await context.Companies.AsNoTracking()
+            .Where(x => x.location_id == locationId)
+            .Select(x => new OptionDto(
+                  x.name,
+                  x.id,
+                  string.Empty,
+                  0,
+                  false
+                  )).ToArrayAsync();
+
+            return res;
+      }
+
       public async Task<Pagination<CompanyDto>> GetCompanyPaginationAsync(PaginationParams param, CancellationToken ct = default)
       {
             var query = context.Companies.AsNoTracking().Where(x => x.location_id == param.locationId).AsQueryable();

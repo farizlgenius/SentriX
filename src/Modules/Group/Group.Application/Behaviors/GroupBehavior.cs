@@ -21,20 +21,27 @@ public sealed class GroupBehavior(IGroupRepository repo,IAdapterFactory factory,
                   0,
                   ComponentId,
                   dto.Name,
-                  dto.Metadata,
+                  dto.Doors.GroupBy(
+                        x => (x.Mac,x.DeviceComponentId,x.Type),
+                        x => (x.DoorComponentId,x.TimezoneComponentId)
+                  ).Select(gp => (
+                        gp.Key.Mac,
+                        gp.Key.DeviceComponentId,
+                        gp.Key.Type,
+                        gp.ToList()
+                  )).ToList(),
                   dto.LocationId,
                   dto.IsActive
                   );
 
-            var datas = await bus.QueryAsync(new MacAndComponentIdListByLocationIdQuery(dto.LocationId));
 
-            foreach(var data in datas)
+            foreach(var d in domain.GroupDoors)
             {
-                  await factory.GetAdapter(data.Type).Group.CreateUpdateLevel(
-                        data.Mac,
-                        data.ComponentId,
+                  await factory.GetAdapter(d.Type).Group.CreateUpdateLevel(
+                        d.Mac,
+                        d.DeviceComponentId,
                         ComponentId,
-                        dto.Metadata
+                        d.DoorDetails.Select(x => (x.DoorComponentId,x.TimezoneComponentId)).ToList()
                         );
             }
 
@@ -77,24 +84,41 @@ public sealed class GroupBehavior(IGroupRepository repo,IAdapterFactory factory,
             if(entity == null)
                   throw new BadRequestException(MessageHelper.Common.NotFound("Group", dto.Id));
 
+            // var domain = new Groups(
+            //       dto.Id,
+            //       dto.ComponentId,
+            //       dto.Name,
+            //       dto.Metadata,
+            //       dto.LocationId,
+            //       dto.IsActive
+            //       );
+
             var domain = new Groups(
-                  dto.Id,
+                  0,
                   dto.ComponentId,
                   dto.Name,
-                  dto.Metadata,
+                  dto.Doors.GroupBy(
+                        x => (x.Mac,x.DeviceComponentId,x.Type),
+                        x => (x.DoorComponentId,x.TimezoneComponentId)
+                  ).Select(gp => (
+                        gp.Key.Mac,
+                        gp.Key.DeviceComponentId,
+                        gp.Key.Type,
+                        gp.ToList()
+                  )).ToList(),
                   dto.LocationId,
                   dto.IsActive
                   );
 
             var datas = await bus.QueryAsync(new MacAndComponentIdListByLocationIdQuery(entity.LocationId));
 
-            foreach(var data in datas)
+            foreach(var d in domain.GroupDoors)
             {
-                  await factory.GetAdapter(data.Type).Group.CreateUpdateLevel(
-                        data.Mac,
-                        data.ComponentId,
-                        domain.ComponentId,
-                        domain.Metadata
+                  await factory.GetAdapter(d.Type).Group.CreateUpdateLevel(
+                        d.Mac,
+                        d.DeviceComponentId,
+                        dto.ComponentId,
+                        d.DoorDetails.Select(x => (x.DoorComponentId,x.TimezoneComponentId)).ToList()
                         );
             }
 

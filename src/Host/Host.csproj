@@ -80,6 +80,7 @@
     <ProjectReference Include="..\Modules\Door\Door.Infrastructure\Door.Infrastructure.csproj" />
     <ProjectReference Include="..\Modules\Events\Events.Infrastructure\Events.Infrastructure.csproj" />
     <ProjectReference Include="..\Modules\Group\Group.Infrastructure\Group.Infrastructure.csproj" />
+    <ProjectReference Include="..\Modules\Input\Input.Infrastructure\Input.Infrastructure.csproj" />
     <ProjectReference Include="..\Modules\Location\Location.Infrastructure\Location.Infrastructure.csproj" />
     <ProjectReference Include="..\Modules\Notifier\Notifier.Client\Notifier.Client.csproj" />
     <ProjectReference Include="..\Modules\Operator\Operator.Infrastructure\Operator.Infrastructure.csproj" />

@@ -18,7 +18,9 @@ export const Command = () => {
 
             setIsSending(true);
             const toastId = toggleToast("pending", "Sending command to server...");
-            const res = await send.post("/api/diagnostic/command", { command: command });
+            const res = await send.post(`/api/device/aero/command/${1}`, {
+                  "Command":command
+            } );
             if(Helper.handleToastByResCode(res,"Command Sent Successfully",toggleToast, updateToast, toastId)){
                   console.log("Command Sent")
                   setCommand("");

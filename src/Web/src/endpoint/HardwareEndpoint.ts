@@ -17,6 +17,9 @@ export const DeviceEndpoint = {
     TRAN:(mac:string) => `/api/${CONTROLLER}/tran/${mac}`,
     ID_REPORT: `/api/${CONTROLLER}/report`,
     SET_TRAN : (mac:string,param:number) => `/api/${CONTROLLER}/tran/${mac}/${param}`,
-    TRAN_RANGE: `/api/${CONTROLLER}/tran/range`
+    TRAN_RANGE: `/api/${CONTROLLER}/tran/range`,
+    GET_READER:(moduleId:number) => `/api/${CONTROLLER}/module/reader/options/${moduleId}`,
+    GET_INPUT:(moduleId:number) => `/api/${CONTROLLER}/module/input/options/${moduleId}`,
+    GET_RELAY:(moduleId:number) => `/api/${CONTROLLER}/module/relay/options/${moduleId}`
 } as const
 

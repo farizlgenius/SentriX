@@ -2,30 +2,20 @@ import React, { ChangeEvent, PropsWithChildren, useEffect, useState } from 'reac
 import Select from '../../components/form/Select';
 import Label from '../../components/form/Label';
 import Input from '../../components/form/input/InputField';
-import Radio from '../../components/form/input/Radio';
 import Button from '../../components/ui/button/Button';
 import Logger from '../../utility/Logger';
 import Helper from '../../utility/Helper';
-import { AeroDoorMetadata, AltrReader, Antipassback, DoorDto, ReaderIn, ReaderOut, Relay, Rex, Sensor } from '../../model/Door/DoorDto';
+import { AeroDoorDto, AeroDoorMetadata, AltrReader, Antipassback, DoorDto, ReaderIn, ReaderOut, Relay, Rex, Sensor } from '../../model/Door/DoorDto';
 import { Options } from '../../model/Options';
-import { ModuleDto } from '../../model/Module/ModuleDto';
-import { DeviceDto } from '../../model/Device/DeviceDto';
-import { ModeDto } from '../../model/ModeDto';
-import { TimeZoneDto } from '../../model/TimeZone/TimeZoneDto';
 import Switch from '../../components/form/switch/Switch';
-import { AxiosResponse } from 'axios';
-import { ResponseDto } from '../../model/ResponseDto';
 import { DeviceType } from '../../enum/DeviceType';
 import { ReaderType } from '../../enum/ReaderType';
-import { MultiselectOption } from '../../model/MultiselectOption';
-import { CardFormatDto } from '../../model/CardFormat/CardFormatDto';
 import { ModuleEndpoint } from '../../endpoint/ModuleEndpoint';
 import { DeviceEndpoint } from '../../endpoint/HardwareEndpoint';
 import { DoorEndpoint } from '../../endpoint/DoorEndpoint';
-import { MonitorPointEndpoint } from '../../endpoint/MonitorPointEndpoint';
-import { ControlPointEndpoint } from '../../endpoint/ControlPointEndpoint';
+import { MonitorPointEndpoint as InputEndpoint } from '../../endpoint/MonitorPointEndpoint';
+import { OutputEndpoint } from '../../endpoint/ControlPointEndpoint';
 import { TimeZoneEndPoint } from '../../endpoint/TimezoneEndpoint';
-import { CardFormatEndpoint } from '../../endpoint/CardFormatEndpoint';
 import { useLocation } from '../../context/LocationContext';
 import { send } from '../../api/api';
 import { FormProp, FormType } from '../../model/Form/FormProp';
@@ -114,7 +104,8 @@ var defaultRelay: Relay = {
   relayNumber: -1,
   relayMin: 1,
   relayMax: 5,
-  relayMode: -1
+  relayDriveMode: -1,
+  relayOfflineMode:-1
 }
 
 var defaultAltReader: AltrReader = {
@@ -163,20 +154,19 @@ var defaultMetadata: AeroDoorMetadata = {
 const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleClick, dto, setDto, type }) => {
 
   const { locationId } = useLocation();
-  const defaultDoorDto: DoorDto = {
+  const defaultDoorDto: AeroDoorDto = {
     id: 0,
     componentId: -1,
     name: '',
     deviceComponentId: -1,
+    secondComponentId:-1,
     mac: '',
-    doorType: '',
+    doorType: "",
     metadata: defaultMetadata,
     locationId: locationId,
-    type: '',
+    type: DeviceType.AERO,
     isActive: false
   }
-
-  const [data, setData] = useState<DoorDto>(defaultDoorDto);
 
 
   {/* In */ }
@@ -196,9 +186,6 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
   const [activeTab, setActiveTab] = useState<number>(FormTab.General);
   const [osdpBaudRateOption, setOsdpBaudRateOption] = useState<Options[]>([])
 
-
-  {/* Card format */ }
-  const [formatsOption, setFormatsOption] = useState<MultiselectOption[]>([]);
 
   {/* Advance */ }
   const [spareFlag, setSpareFlag] = useState<Options[]>([]);
@@ -220,7 +207,7 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setData(prev => ({ ...prev, [e.target.name]: e.target.value }));
+    setDto(prev => ({ ...prev, [e.target.name]: e.target.value }));
 
   };
 
@@ -252,6 +239,8 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
         setControllerOption(prev => [...prev, {
           label: a.label,
           value: a.value,
+          additionalInfo:a.additionalInfo,
+          description:a.description,
           isTaken: false
         }])
       });
@@ -269,37 +258,27 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
           label: a.label,
           value: a.value,
           description: a.description,
+          additionalInfo:a.additionalInfo,
           isTaken: false
         }])
       });
     }
   }
-  {/* Pair Reader */ }
-  const fetchDoorByDeviceId = async (deviceId: number) => {
-    const res: AxiosResponse<ResponseDto<DoorDto[]>, any> | null | undefined = await send.get(DoorEndpoint.GET_ACR_BY_DEVICE_ID(deviceId));
-    res?.data.data.map((a: DoorDto) => {
-      setDoorOption(prev => [...prev, {
-        label: a.name,
-        value: a.componentId,
-        description: '',
-        isTaken: false
-      }])
-    })
-  }
+
   {/* Reader In Out*/ }
   const [readerInOption, setReaderInOption] = useState<Options[]>([]);
-  const [doorOption, setDoorOption] = useState<Options[]>([]);
   const [readerOutOption, setReaderOutOption] = useState<Options[]>([]);
-  const [readerOutConfigurationOption, setReaderOutConfigurationOption] = useState<Options[]>([]);
   const fetchReaderIn = async (module: number) => {
     if (readerInOption.length !== 0) return;
-    const res = await send.get(DoorEndpoint.GET_ACR_READER(module));
+    const res = await send.get(DeviceEndpoint.GET_READER(module));
     Logger.info(res)
     if (res.data) {
-      res.data.map((a: number) => {
+      res.data.map((a: Options) => {
         setReaderInOption(prev => [...prev, {
-          label: `Reader ${a + 1}`,
-          value: a,
+          label: a.label,
+          value: a.value,
+          additionalInfo:a.additionalInfo,
+          description:a.description,
           isTaken: false
         }])
       });
@@ -308,17 +287,19 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
   }
   const fetchReaderOut = async (module: number) => {
     if (readerOutOption.length !== 0) return;
-    if ((data.metadata as AeroDoorMetadata).readerIn.readerModuleComponentId == module) {
+    if ((dto.metadata as AeroDoorMetadata).readerIn.readerModuleComponentId == module) {
       setReaderOutOption(readerInOption.filter((a) => a.isTaken === false))
       return;
     }
-    const res = await send.get(DoorEndpoint.GET_ACR_READER(module));
+    const res = await send.get(DeviceEndpoint.GET_READER(module));
     Logger.info(res)
-    if (res && res.data.data) {
-      res.data.data.map((a: number) => {
+    if (res && res.data) {
+      res.data.map((a: Options) => {
         setReaderOutOption(prev => [...prev, {
-          label: `Reader ${a + 1}`,
-          value: a,
+          label: a.label,
+          value: a.value,
+          additionalInfo:a.additionalInfo,
+          description:a.description,
           isTaken: false
         }])
       });
@@ -332,12 +313,12 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
   const [inputModeOption, setInputModeOption] = useState<Options[]>([])
   const fetchInputRex0 = async (sio: number) => {
     if (inputRex0Option.length !== 0) return;
-    const res = await send.get(MonitorPointEndpoint.IP_LIST(sio));
-    if (res && res.data.data) {
-      res.data.data.map((a: number) => {
+    const res = await send.get(DeviceEndpoint.GET_INPUT(sio));
+    if (res && res.data) {
+      res.data.map((a: Options) => {
         setInputRex0Option(prev => [...prev, {
-          label: `Input ${a + 1}`,
-          value: a,
+          label: a.label,
+          value: a.value,
           isTaken: false
         }])
       })
@@ -346,16 +327,16 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
   }
   const fetchInputRex1 = async (sio: number) => {
     if (inputRex1Option.length !== 0) return;
-    if ((data.metadata as AeroDoorMetadata).rex?.rex0ModuleComponentId === sio) {
+    if ((dto.metadata as AeroDoorMetadata).rex?.rex0ModuleComponentId === sio) {
       setInputRex1Option(inputRex0Option.filter((a) => a.isTaken === false));
       return;
     }
-    const res = await send.get(MonitorPointEndpoint.IP_LIST(sio));
+    const res = await send.get(DeviceEndpoint.GET_INPUT(sio));
     if (res && res.data.data) {
-      res.data.data.map((a: number) => {
+      res.data.data.map((a: Options) => {
         setInputRex1Option(prev => [...prev, {
-          label: `Input ${a + 1}`,
-          value: a,
+          label: a.label,
+          value: a.value,
           isTaken: false
         }])
       })
@@ -363,19 +344,19 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
   }
   const fetchInputSensor = async (sio: number) => {
     if (inputSensorOption.length !== 0) return;
-    if ((data.metadata as AeroDoorMetadata).rex?.rex1ModuleComponentId == sio && inputRex1Option.length !== 0) {
+    if ((dto.metadata as AeroDoorMetadata).rex?.rex1ModuleComponentId == sio && inputRex1Option.length !== 0) {
       setInputSensorOption(inputRex1Option.filter(a => a.isTaken == false));
       return;
-    } else if ((data.metadata as AeroDoorMetadata).rex?.rex0ModuleComponentId == sio) {
+    } else if ((dto.metadata as AeroDoorMetadata).rex?.rex0ModuleComponentId == sio) {
       setInputSensorOption(inputRex0Option.filter(a => a.isTaken == false));
       return;
     }
-    const res = await send.get(MonitorPointEndpoint.IP_LIST(sio));
-    if (res && res.data.data) {
-      res.data.data.map((a: number) => {
+    const res = await send.get(DeviceEndpoint.GET_INPUT(sio));
+    if (res && res.data) {
+      res.data.map((a: Options) => {
         setInputSensorOption(prev => [...prev, {
-          label: `Input ${a + 1}`,
-          value: a,
+           label: a.label,
+          value: a.value,
           isTaken: false
         }])
       })
@@ -383,11 +364,11 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
   }
   const fetchInputMode = async () => {
     if (inputModeOption.length !== 0) return;
-    const res = await send.get(MonitorPointEndpoint.IP_MODE)
-    if (res && res.data.data) {
-      res.data.data.map((a: ModeDto) => {
+    const res = await send.get(InputEndpoint.IP_MODE)
+    if (res && res.data) {
+      res.data.map((a: Options) => {
         setInputModeOption(prev => [...prev, {
-          label: a.name,
+           label: a.label,
           value: a.value,
           isTaken: false
         }])
@@ -396,48 +377,48 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
   }
   {/* Output */ }
   const [outputOption, setOutputOption] = useState<Options[]>([])
-  const [relayMode, setRelayMode] = useState<Options[]>([])
-  const [strikeModeOption, setStrikeModeOption] = useState<Options[]>([])
+  const [relayDriveOption, setRelayDriveOption] = useState<Options[]>([])
+  const [relayOfflineOption, setRelayOfflineOption] = useState<Options[]>([])
   const fetchOutput = async (module: number) => {
     if (outputOption.length !== 0) return;
-    const res = await send.get(ControlPointEndpoint.OUTPUT(module))
-    if (res && res.data.data) {
-      res.data.data.map((a: number) => {
-        setOutputOption(prev => [...prev, {
-          label: `Output ${a + 1}`,
-          value: a,
-          isAvailale: true
-        }])
-      })
-    }
-  }
-  const fetchStrikeMode = async () => {
-    if (strikeModeOption.length !== 0) return;
-    const res = await send.get(DoorEndpoint.GET_STRK_MODE)
-    if (res && res.data.data) {
-      res.data.data.map((a: ModeDto) => {
-        setStrikeModeOption(prev => [...prev, {
-          label: a.name,
-          value: a.value,
-          isTaken: false
-        }])
-      })
-    }
-  }
-  const fetchRelayMode = async () => {
-    if (relayMode.length !== 0) return;
-    const res = await send.get(ControlPointEndpoint.GET_RELAY_OP_MODE("AERO"))
-    if (res.data) {
+    const res = await send.get(DeviceEndpoint.GET_RELAY(module))
+    if (res && res.data) {
       res.data.map((a: Options) => {
-        setRelayMode(prev => [...prev, {
+        setOutputOption(prev => [...prev, {
           label: a.label,
           value: a.value,
-          description: a.description,
           isTaken: false
         }])
       })
     }
   }
+  const fetchRelayDriveMode = async () => {
+    if (relayDriveOption.length !== 0) return;
+    const res = await send.get(OutputEndpoint.GET_RELAY_DRIVE_MODE)
+    if (res && res.data) {
+      res.data.map((a: Options) => {
+        setRelayDriveOption(prev => [...prev, {
+          label: a.label,
+          value: a.value,
+          isTaken: false
+        }])
+      })
+    }
+  }
+   const fetchRelayOfflineMode = async () => {
+    if (relayOfflineOption.length !== 0) return;
+    const res = await send.get(OutputEndpoint.GET_RELAY_OFFLINE_MODE)
+    if (res && res.data) {
+      res.data.map((a: Options) => {
+        setRelayOfflineOption(prev => [...prev, {
+          label: a.label,
+          value: a.value,
+          isTaken: false
+        }])
+      })
+    }
+  }
+
   {/* Time Zone */ }
   const [timeZoneOption, setTimeZoneOption] = useState<Options[]>([])
   const fetchTimeZone = async () => {
@@ -506,18 +487,7 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
     }
   }
 
-  const fetchReaderOutConfigurationOption = async () => {
-    const res = await send.get(DoorEndpoint.GET_READER_OUT_CONFIG)
-    if (res && res.data.data) {
-      res.data.data.map((a: ModeDto) => {
-        setReaderOutConfigurationOption(prev => [...prev, {
-          label: a.name,
-          value: a.value,
-          isTaken: false
-        }])
-      })
-    }
-  };
+
 
 
   const fetchSpareMode = async () => {
@@ -544,19 +514,7 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
       })
     }
   }
-  const fetchDoorTypeAsync = async () => {
-    const res = await send.get(DoorEndpoint.GET_DOOR_TYPE)
-    if (res && res.data.data) {
-      res.data.data.map((a: ModeDto) => {
-        setAccessReaderConfigOption(prev => [...prev, {
-          description: a.description,
-          isTaken: false,
-          value: a.value,
-          label: a.name
-        }])
-      })
-    }
-  }
+
   const fetchOsdpAddress = async (module: number) => {
     const res = await send.get(DoorEndpoint.GET_OSDP_ADDRESS_BY_MODULE(module))
     if (res && res.data.data) {
@@ -621,16 +579,15 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
     fetchDevice();
     fetchAccessReaderMode();
     fetchTimeZone()
-    fetchStrikeMode()
+    fetchRelayDriveMode()
+    fetchRelayOfflineMode();
     fetchApbMode();
     fetchDoorMode();
-    fetchRelayMode();
     fetchInputMode();
     fetchOsdpBaudrateOption();
-    fetchReaderOutConfigurationOption();
     fetchSpareMode();
     fetchAccessControlMode();
-    fetchDoorTypeAsync();
+    setDto(defaultDoorDto);
   }, [])
 
   return (
@@ -654,9 +611,9 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
               <div className='flex flex-col gap-5'>
                 <FormField>
                   <Label htmlFor="name">Door Name</Label>
-                  <Input disabled={type == FormType.INFO} value={data.name} name="name" type="text" id="name" onChange={
+                  <Input disabled={type == FormType.INFO} value={dto.name} name="name" type="text" id="name" onChange={
                     (e: React.ChangeEvent<HTMLInputElement>) =>
-                      setData(prev => ({ ...prev, name: e.target.value }))
+                      setDto(prev => ({ ...prev, name: e.target.value }))
                   } placeholder='Door name' />
                 </FormField>
                 <FormField>
@@ -668,16 +625,16 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
                     name="scpId"
                     options={controllerOption}
                     onChange={(value: string) => {
-                      setData(prev => (
+                      setDto(prev => (
                         {
                           ...prev,
-                          deviceComponentId: Number(value)
+                          deviceComponentId: Number(value),
+                          mac:controllerOption.find(x => x.value === Number(value))?.description ?? "not found"
                         }))
-                      fetchModule(Number(value));
-                      fetchDoorByDeviceId(Number(value));
+                      fetchModule(controllerOption.find(x => x.value === Number(value))?.additionalInfo);
                     }}
                     className="dark:bg-dark-900"
-                    defaultValue={data.deviceComponentId}
+                    defaultValue={dto.deviceComponentId}
                   />
                 </FormField>
                 <FormField>
@@ -688,8 +645,9 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
                     name="accessConfig"
                     options={accessReaderConfigOption}
                     onChange={(value: string) => {
-                      setData(prev => ({
+                      setDto(prev => ({
                         ...prev,
+                        doorType:accessReaderConfigOption.find(x => x.value == Number(value))?.label ?? "",
                         metadata: {
                           ...(prev.metadata as AeroDoorMetadata),
                           accessConfig: Number(value)
@@ -698,7 +656,7 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
                       handleDoorModeToggle(Number(value))
                     }}
                     className="dark:bg-dark-900"
-                    defaultValue={(data.metadata as AeroDoorMetadata).accessConfig}
+                    defaultValue={(dto.metadata as AeroDoorMetadata).accessConfig}
                   />
                 </FormField>
               </div>
@@ -707,34 +665,7 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
 
             {activeTab === FormTab.Outside &&
               <div className='flex flex-col gap-5'>
-                {/* <FormField>
-                  <div className="flex justify-around gap-3 pb-3">
-                    <div className="flex flex-col flex-wrap gap-8">
-                      <Radio
-                        id="insideType1"
-                        name="insideType1"
-                        value="None"
-                        disabled={(data.metadata as AeroDoorMetadata).accessConfig == -1}
-                        checked={readerInFlag == false}
-                        onChange={() => setReaderInFlag(false)}
-                        label="None"
-                      />
-                    </div>
 
-                    <div className="flex flex-col flex-wrap gap-8">
-                      <Radio
-                        id="insideType2"
-                        name="insideType2"
-                        value="Reader"
-                        disabled={((data.metadata as AeroDoorMetadata).accessConfig == Number(DoorType.Single) && readerOutFlag) || (data.metadata as AeroDoorMetadata).accessConfig == -1}
-                        checked={readerInFlag == true}
-                        onChange={() => setReaderInFlag(true)}
-                        label="Reader"
-                      />
-                    </div>
-
-                  </div>
-                </FormField> */}
                 {readerInFlag &&
                   <>
                     <FormField>
@@ -758,7 +689,7 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
                         placeholder="Select Option"
                         onChange={(value: string) => {
                           if (value == ReaderType.Wiegand) {
-                            setData(prev => ({
+                            setDto(prev => ({
                               ...prev,
                               metadata: {
                                 ...(prev.metadata as AeroDoorMetadata),
@@ -776,7 +707,7 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
                               }
                             }))
                           } else {
-                            setData(prev => ({
+                            setDto(prev => ({
                               ...prev,
                               metadata: {
                                 ...(prev.metadata as AeroDoorMetadata),
@@ -803,7 +734,7 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
                         options={moduleOption}
                         placeholder="Select Option"
                         onChange={(value: string) => {
-                          setData(prev => ({
+                          setDto(prev => ({
                             ...prev,
                             metadata: {
                               ...(prev.metadata as AeroDoorMetadata),
@@ -814,11 +745,11 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
                               }
                             }
                           }))
-                          fetchReaderIn(Number(value));
+                          fetchReaderIn(moduleOption.find(x => x.value == Number(value))?.additionalInfo);
                           if (readerInType == ReaderType.OSDP) fetchOsdpAddress(Number(value))
                         }}
                         className="dark:bg-dark-900"
-                        defaultValue={(data.metadata as AeroDoorMetadata).readerIn?.readerModuleComponentId ?? ""}
+                        defaultValue={(dto.metadata as AeroDoorMetadata).readerIn?.readerModuleComponentId ?? ""}
                       />
                     </FormField>
                     <FormField>
@@ -829,7 +760,7 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
                         options={readerInOption}
                         placeholder="Select Option"
                         onChange={(value: string) => {
-                          setData(prev => ({
+                          setDto(prev => ({
                             ...prev,
                             metadata: {
                               ...(prev.metadata as AeroDoorMetadata),
@@ -842,7 +773,7 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
                           setReaderInOption(prev => Helper.updateOptionByValue(prev, Number(value), true))
                         }}
                         className="dark:bg-dark-900"
-                        defaultValue={(data.metadata as AeroDoorMetadata).readerIn?.readerNumber}
+                        defaultValue={(dto.metadata as AeroDoorMetadata).readerIn?.readerNumber}
                       />
                     </FormField>
                     {
@@ -855,7 +786,7 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
                           options={osdpAddress}
                           placeholder="Select Option"
                           onChange={(value: string) => {
-                            setData(prev => ({
+                            setDto(prev => ({
                               ...prev,
                               metadata: {
                                 ...(prev.metadata as AeroDoorMetadata),
@@ -868,7 +799,7 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
                             Helper.updateOptionByValue(osdpAddress, Number(value), true);
                           }}
                           className="dark:bg-dark-900"
-                          defaultValue={(data.metadata as AeroDoorMetadata).readerIn?.osdpAddress}
+                          defaultValue={(dto.metadata as AeroDoorMetadata).readerIn?.osdpAddress}
                         />
                         <Label htmlFor='readerOut.osdpBaudrate'>Reader Baud Rate</Label>
                         <Select
@@ -877,7 +808,7 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
                           options={osdpBaudRateOption}
                           placeholder="Select Option"
                           onChange={(value: string) => {
-                            setData(prev => ({
+                            setDto(prev => ({
                               ...prev,
                               metadata: {
                                 ...(prev.metadata as AeroDoorMetadata),
@@ -889,7 +820,7 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
                             }))
                           }}
                           className="dark:bg-dark-900"
-                          defaultValue={(data.metadata as AeroDoorMetadata).readerIn?.osdpBaudrate}
+                          defaultValue={(dto.metadata as AeroDoorMetadata).readerIn?.osdpBaudrate}
                         />
                         <div className='mt-3'>
                           <Switch
@@ -897,7 +828,7 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
                             label="Auto Discover"
                             defaultChecked={true}
                             onChange={(checked: boolean) => {
-                              setData(prev => ({
+                              setDto(prev => ({
                                 ...prev,
                                 metadata: {
                                   ...(prev.metadata as AeroDoorMetadata),
@@ -916,7 +847,7 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
                             label="Tracing"
                             defaultChecked={false}
                             onChange={(checked: boolean) => {
-                              setData(prev => ({
+                              setDto(prev => ({
                                 ...prev,
                                 metadata: {
                                   ...(prev.metadata as AeroDoorMetadata),
@@ -935,7 +866,7 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
                             label="Secure Channel"
                             defaultChecked={false}
                             onChange={(checked: boolean) => {
-                              setData(prev => ({
+                              setDto(prev => ({
                                 ...prev,
                                 metadata: {
                                   ...(prev.metadata as AeroDoorMetadata),
@@ -960,53 +891,7 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
 
             {activeTab === FormTab.Inside &&
 
-              <>
-                {/* <FormField className="flex justify-around gap-3 pb-3">
-                    <div className="flex flex-col flex-wrap gap-8">
-                      <Radio
-                        id="outsideType1"
-                        name="outsideType1"
-                        value=""
-                        checked={readerOutFlag == false}
-                        disabled={(data.metadata as AeroDoorMetadata).accessConfig == -1}
-                        onChange={() => {
-                          setRequestExitOneFlag(false)
-                          setReaderOutFlag(false)
-                        }}
-                        label="None"
-                      />
-                    </div>
-
-                    <div className="flex flex-col flex-wrap gap-8">
-                      <Radio
-                        id="outsideType2"
-                        name="outsideType2"
-                        value=""
-                        disabled={(data.metadata as AeroDoorMetadata).accessConfig != Number(DoorType.Dual) || (data.metadata as AeroDoorMetadata).accessConfig == -1 }
-                        checked={readerOutFlag == true}
-                        onChange={() => {
-                          setRequestExitOneFlag(false)
-                          setReaderOutFlag(true)
-                        }}
-                        label="Reader"
-                      />
-                    </div>
-                    <div className="flex flex-col flex-wrap gap-8">
-                      <Radio
-                        id="outsideType3"
-                        name="outsideType3"
-                        value=""
-                        disabled={(data.metadata as AeroDoorMetadata).accessConfig == -1}
-                        checked={requestExitOneFlag == true}
-                        onChange={() => {
-                          setRequestExitOneFlag(true)
-                          setReaderOutFlag(false)
-                        }}
-                        label="REX"
-                      />
-                    </div>
-
-                  </FormField> */}
+              <div className='flex flex-col gap-5'>
                 {readerOutFlag &&
                   <>
                     <FormField>
@@ -1030,7 +915,7 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
                         placeholder="Select Option"
                         onChange={(value: string) => {
                           if (value == ReaderType.Wiegand) {
-                            setData(prev => ({
+                            setDto(prev => ({
                               ...prev,
                               metadata: {
                                 ...(prev.metadata as AeroDoorMetadata),
@@ -1048,7 +933,7 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
                               }
                             }))
                           } else {
-                            setData(prev => ({
+                            setDto(prev => ({
                               ...prev,
                               metadata: {
                                 ...(prev.metadata as AeroDoorMetadata),
@@ -1075,7 +960,7 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
                         options={moduleOption}
                         placeholder="Select Option"
                         onChangeWithEvent={(value: string) => {
-                          setData(prev => ({
+                          setDto(prev => ({
                             ...prev,
                             metadata: {
                               ...(prev.metadata as AeroDoorMetadata),
@@ -1086,11 +971,11 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
                               }
                             }
                           }))
-                          fetchReaderIn(Number(value));
+                          fetchReaderOut(Number(value));
                           if (readerOutType == ReaderType.OSDP) fetchOsdpAddress(Number(value))
                         }}
                         className="dark:bg-dark-900"
-                        defaultValue={(data.metadata as AeroDoorMetadata).readerOut?.readerModuleComponentId}
+                        defaultValue={(dto.metadata as AeroDoorMetadata).readerOut?.readerModuleComponentId}
                       />
                     </FormField>
                     <FormField>
@@ -1101,7 +986,7 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
                         options={readerOutOption}
                         placeholder="Select Option"
                         onChange={(value: string) => {
-                          setData(prev => ({
+                          setDto(prev => ({
                             ...prev,
                             metadata: {
                               ...(prev.metadata as AeroDoorMetadata),
@@ -1113,44 +998,21 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
                           }))
                         }}
                         className="dark:bg-dark-900"
-                        defaultValue={(data.metadata as AeroDoorMetadata).readerOut?.readerNumber}
+                        defaultValue={(dto.metadata as AeroDoorMetadata).readerOut?.readerNumber}
                       />
                     </FormField>
-                    {/* <FormField>
-                        <Label htmlFor='readerOutConfiguration'>Reader Out - Configuration</Label>
-                        <Select
-                          disabled={type == FormType.INFO}
-                          name="readerOutConfiguration"
-                          options={readerOutConfigurationOption}
-                          placeholder="Select Option"
-                          onChange={(value: string) => {
-                            setData(prev => ({
-                            ...prev,
-                            metadata: {
-                              ...(prev.metadata as AeroDoorMetadata),
-                              readerOut: {
-                                ...(prev.metadata as AeroDoorMetadata).readerOut,
-                                readerNumber: Number(value)
-                              }
-                            }
-                          }))
-                          }}
-                          className="dark:bg-dark-900"
-                          defaultValue={data.readerOutConfiguration}
-                        />
-                      </FormField> */}
+
 
                     {readerOutType == ReaderType.OSDP &&
                       <FormField>
                         <Label htmlFor='readerOut.osdpAddress'>Reader Address</Label>
-                        {/* <Input disabled={type == FormType.INFO} value={data.readers[1].osdpAddress} name="readerOut.osdpAddress" type="number" id="alternateOsdpAddress" onChange={handleChange} /> */}
                         <Select
                           disabled={type == FormType.INFO}
                           name="readerOut.osdpAddress"
                           options={osdpAddress}
                           placeholder="Select Option"
                           onChange={(value: string) => {
-                            setData(prev => ({
+                            setDto(prev => ({
                               ...prev,
                               metadata: {
                                 ...(prev.metadata as AeroDoorMetadata),
@@ -1163,7 +1025,7 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
                             Helper.updateOptionByValue(osdpAddress, Number(value), true);
                           }}
                           className="dark:bg-dark-900"
-                          defaultValue={(data.metadata as AeroDoorMetadata).readerOut?.osdpAddress}
+                          defaultValue={(dto.metadata as AeroDoorMetadata).readerOut?.osdpAddress}
                         />
                         <Label htmlFor='readerOut.osdpBaudrate'>Reader Baud Rate</Label>
                         <Select
@@ -1172,7 +1034,7 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
                           options={osdpBaudRateOption}
                           placeholder="Select Option"
                           onChange={(value: string) => {
-                            setData(prev => ({
+                            setDto(prev => ({
                               ...prev,
                               metadata: {
                                 ...(prev.metadata as AeroDoorMetadata),
@@ -1184,7 +1046,7 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
                             }))
                           }}
                           className="dark:bg-dark-900"
-                          defaultValue={(data.metadata as AeroDoorMetadata).readerOut?.osdpBaudrate}
+                          defaultValue={(dto.metadata as AeroDoorMetadata).readerOut?.osdpBaudrate}
                         />
                         <div className='mt-3'>
                           <Switch
@@ -1192,7 +1054,7 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
                             label="Auto Discover"
                             defaultChecked={true}
                             onChange={(checked: boolean) => {
-                              setData(prev => ({
+                              setDto(prev => ({
                                 ...prev,
                                 metadata: {
                                   ...(prev.metadata as AeroDoorMetadata),
@@ -1211,7 +1073,7 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
                             label="Tracing"
                             defaultChecked={false}
                             onChange={(checked: boolean) => {
-                              setData(prev => ({
+                              setDto(prev => ({
                                 ...prev,
                                 metadata: {
                                   ...(prev.metadata as AeroDoorMetadata),
@@ -1230,7 +1092,7 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
                             label="Secure Channel"
                             defaultChecked={false}
                             onChange={(checked: boolean) => {
-                              setData(prev => ({
+                              setDto(prev => ({
                                 ...prev,
                                 metadata: {
                                   ...(prev.metadata as AeroDoorMetadata),
@@ -1258,8 +1120,8 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
                       name="rex.rex0ModuleComponentId"
                       options={moduleOption}
                       onChange={(value: string) => {
-                        fetchInputRex0(Number(value));
-                        setData(prev => ({
+                        fetchInputRex0(moduleOption.find(x => x.value == Number(value))?.additionalInfo);
+                        setDto(prev => ({
                           ...prev,
                           metadata: {
                             ...(prev.metadata as AeroDoorMetadata),
@@ -1272,7 +1134,7 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
                         }))
                       }}
                       className="dark:bg-dark-900"
-                      defaultValue={(data.metadata as AeroDoorMetadata).rex?.rex0ModuleComponentId ?? ""}
+                      defaultValue={(dto.metadata as AeroDoorMetadata).rex?.rex0ModuleComponentId ?? ""}
                     />
                     <Label htmlFor='rex0.inputNo'>REX - Input No</Label>
                     <Select
@@ -1281,7 +1143,7 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
                       options={inputRex0Option}
                       onChange={(value: string) => {
                         setInputRex0Option(prev => Helper.updateOptionByValue(prev, Number(value), true));
-                        setData(prev => ({
+                        setDto(prev => ({
                           ...prev,
                           metadata: {
                             ...(prev.metadata as AeroDoorMetadata),
@@ -1293,7 +1155,7 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
                         }))
                       }}
                       className="dark:bg-dark-900"
-                      defaultValue={(data.metadata as AeroDoorMetadata).rex?.rex0Number ?? ""}
+                      defaultValue={(dto.metadata as AeroDoorMetadata).rex?.rex0Number ?? ""}
                     />
                     <Label htmlFor="rex0.inputMode">REX - Input Mode</Label>
                     <Select
@@ -1301,7 +1163,7 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
                       name="rex0.inputMode"
                       options={inputModeOption}
                       onChange={(value: string) => {
-                        setData(prev => ({
+                        setDto(prev => ({
                           ...prev,
                           metadata: {
                             ...(prev.metadata as AeroDoorMetadata),
@@ -1313,7 +1175,7 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
                         }))
                       }}
                       className="dark:bg-dark-900"
-                      defaultValue={(data.metadata as AeroDoorMetadata).rex?.rex0SensorMode ?? ""}
+                      defaultValue={(dto.metadata as AeroDoorMetadata).rex?.rex0SensorMode ?? ""}
                     />
                     <Label htmlFor="rex0.MaskTimeZone">REX - Mask Time Zone</Label>
                     <Select
@@ -1321,7 +1183,7 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
                       name="rex0.MaskTimeZone"
                       options={timeZoneOption}
                       onChange={(value: string) => {
-                        setData(prev => ({
+                        setDto(prev => ({
                           ...prev,
                           metadata: {
                             ...(prev.metadata as AeroDoorMetadata),
@@ -1333,7 +1195,7 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
                         }))
                       }}
                       className="dark:bg-dark-900"
-                      defaultValue={(data.metadata as AeroDoorMetadata).rex?.disableRex0Timezone ?? ""}
+                      defaultValue={(dto.metadata as AeroDoorMetadata).rex?.disableRex0Timezone ?? ""}
                     />
 
                     {requestExitTwoFlag &&
@@ -1345,7 +1207,7 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
                           options={moduleOption}
                           onChange={(value: string) => {
                             fetchInputRex1(Number(value));
-                            setData(prev => ({
+                            setDto(prev => ({
                               ...prev,
                               metadata: {
                                 ...(prev.metadata as AeroDoorMetadata),
@@ -1358,7 +1220,7 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
                             }))
                           }}
                           className="dark:bg-dark-900"
-                          defaultValue={(data.metadata as AeroDoorMetadata).rex.rex1ModuleComponentId}
+                          defaultValue={(dto.metadata as AeroDoorMetadata).rex.rex1ModuleComponentId}
                         />
                         <Label htmlFor="rex1.rex1Number">Alter REX - Input No</Label>
                         <Select
@@ -1367,7 +1229,7 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
                           options={inputRex1Option}
                           onChange={(value: string) => {
                             setInputRex1Option(prev => Helper.updateOptionByValue(prev, Number(value), true));
-                            setData(prev => ({
+                            setDto(prev => ({
                               ...prev,
                               metadata: {
                                 ...(prev.metadata as AeroDoorMetadata),
@@ -1379,7 +1241,7 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
                             }))
                           }}
                           className="dark:bg-dark-900"
-                          defaultValue={(data.metadata as AeroDoorMetadata).rex?.rex1Number}
+                          defaultValue={(dto.metadata as AeroDoorMetadata).rex?.rex1Number}
                         />
                         <Label htmlFor="rex.rex1SensorMode">Alter REX - Input Mode</Label>
                         <Select
@@ -1387,7 +1249,7 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
                           name="rex.rex1SensorMode"
                           options={inputModeOption}
                           onChange={(value: string) => {
-                            setData(prev => ({
+                            setDto(prev => ({
                               ...prev,
                               metadata: {
                                 ...(prev.metadata as AeroDoorMetadata),
@@ -1399,7 +1261,7 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
                             }))
                           }}
                           className="dark:bg-dark-900"
-                          defaultValue={(data.metadata as AeroDoorMetadata).rex?.rex1SensorMode}
+                          defaultValue={(dto.metadata as AeroDoorMetadata).rex?.rex1SensorMode}
                         />
                         <Label htmlFor="rex.disableRex1Timezone">Alter REX - Time Zone</Label>
                         <Select
@@ -1407,7 +1269,7 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
                           name="rex.disableRex1Timezone"
                           options={timeZoneOption}
                           onChangeWithEvent={(value: string) => {
-                            setData(prev => ({
+                            setDto(prev => ({
                               ...prev,
                               metadata: {
                                 ...(prev.metadata as AeroDoorMetadata),
@@ -1419,7 +1281,7 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
                             }))
                           }}
                           className="dark:bg-dark-900"
-                          defaultValue={(data.metadata as AeroDoorMetadata).rex?.disableRex1Timezone}
+                          defaultValue={(dto.metadata as AeroDoorMetadata).rex?.disableRex1Timezone}
                         />
                       </>
                     }
@@ -1427,7 +1289,7 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
                   </div>
                 }
 
-              </>
+              </div>
 
 
             }
@@ -1438,14 +1300,14 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
 
 
               <FormField className='flex flex-col gap-1 max-h-[60vh] overflow-y-auto overflow-y-auto hidden-scroll'>
-                <Label htmlFor="relay.relayModuleComponentId">Strike Module</Label>
+                <Label htmlFor="relay.relayModuleComponentId">Relay - Module</Label>
                 <Select
                   disabled={type == FormType.INFO}
                   name="relay.relayModuleComponentId"
                   options={moduleOption}
                   onChange={(value: string) => {
-                    fetchOutput(Number(value))
-                    setData(prev => ({
+                    fetchOutput(moduleOption.find(x => x.value == Number(value))?.additionalInfo)
+                    setDto(prev => ({
                       ...prev,
                       metadata: {
                         ...(prev.metadata as AeroDoorMetadata),
@@ -1458,7 +1320,7 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
                     }))
                   }}
                   className="dark:bg-dark-900"
-                  defaultValue={(data.metadata as AeroDoorMetadata).relay?.relayModuleComponentId ?? ""}
+                  defaultValue={(dto.metadata as AeroDoorMetadata).relay?.relayModuleComponentId ?? ""}
                 />
                 <Label htmlFor="strk.outputNo">Relay No</Label>
                 <Select
@@ -1466,7 +1328,7 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
                   name="strk.outputNo"
                   options={outputOption}
                   onChange={(value: string) => {
-                    setData(prev => ({
+                    setDto(prev => ({
                       ...prev,
                       metadata: {
                         ...(prev.metadata as AeroDoorMetadata),
@@ -1478,12 +1340,12 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
                     }))
                   }}
                   className="dark:bg-dark-900"
-                  defaultValue={(data.metadata as AeroDoorMetadata).relay?.relayNumber ?? ""}
+                  defaultValue={(dto.metadata as AeroDoorMetadata).relay?.relayNumber ?? ""}
                 />
                 <Label htmlFor="relay.relayMin">Minimum Strike Active Time</Label>
-                <Input disabled={type == FormType.INFO} defaultValue={1} value={(data.metadata as AeroDoorMetadata).relay?.relayMin} name="relayMin" type="number" id="strikeMinActiveTime"
+                <Input disabled={type == FormType.INFO} defaultValue={1} value={(dto.metadata as AeroDoorMetadata).relay?.relayMin} name="relayMin" type="number" id="strikeMinActiveTime"
                   onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                    setData(prev => ({
+                    setDto(prev => ({
                       ...prev,
                       metadata: {
                         ...(prev.metadata as AeroDoorMetadata),
@@ -1495,8 +1357,8 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
                     }))
                   }} />
                 <Label htmlFor="strkMax">Maximum Strike Active Time</Label>
-                <Input disabled={type == FormType.INFO} defaultValue={5} value={(data.metadata as AeroDoorMetadata).relay?.relayMax} name="relayMax" type="number" id="strikeMaxActiveTime" onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                  setData(prev => ({
+                <Input disabled={type == FormType.INFO} defaultValue={5} value={(dto.metadata as AeroDoorMetadata).relay?.relayMax} name="relayMax" type="number" id="strikeMaxActiveTime" onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                  setDto(prev => ({
                     ...prev,
                     metadata: {
                       ...(prev.metadata as AeroDoorMetadata),
@@ -1507,25 +1369,45 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
                     }
                   }))
                 }} />
-                <Label htmlFor="relay.relayMode">Relay Mode</Label>
+                <Label htmlFor="relay.relayMode">Drive Mode</Label>
                 <Select
                   disabled={type == FormType.INFO}
                   name="strkMode"
-                  options={strikeModeOption}
+                  options={relayDriveOption}
                   onChange={(value: string) => {
-                    setData(prev => ({
+                    setDto(prev => ({
                       ...prev,
                       metadata: {
                         ...(prev.metadata as AeroDoorMetadata),
                         relay: {
                           ...(prev.metadata as AeroDoorMetadata).relay,
-                          relayMax: Number(value)
+                          relayDriveMode: Number(value)
                         }
                       }
                     }))
                   }}
                   className="dark:bg-dark-900"
-                  defaultValue={(data.metadata as AeroDoorMetadata).relay?.relayMode ?? ""}
+                  defaultValue={(dto.metadata as AeroDoorMetadata).relay?.relayDriveMode ?? ""}
+                />
+                                <Label htmlFor="relay.relayMode">Offline Mode</Label>
+                <Select
+                  disabled={type == FormType.INFO}
+                  name="strkMode"
+                  options={relayOfflineOption}
+                  onChange={(value: string) => {
+                    setDto(prev => ({
+                      ...prev,
+                      metadata: {
+                        ...(prev.metadata as AeroDoorMetadata),
+                        relay: {
+                          ...(prev.metadata as AeroDoorMetadata).relay,
+                          relayOfflineMode: Number(value)
+                        }
+                      }
+                    }))
+                  }}
+                  className="dark:bg-dark-900"
+                  defaultValue={(dto.metadata as AeroDoorMetadata).relay?.relayOfflineMode ?? ""}
                 />
 
               </FormField>
@@ -1541,8 +1423,8 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
                   name="sensor.sensorModuleComponentId"
                   options={moduleOption}
                   onChange={(value: string) => {
-                    fetchInputSensor(Number(value));
-                    setData(prev => ({
+                    fetchInputSensor(moduleOption.find(x => x.value == Number(value))?.additionalInfo );
+                    setDto(prev => ({
                       ...prev,
                       metadata: {
                         ...(prev.metadata as AeroDoorMetadata),
@@ -1555,7 +1437,7 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
                     }))
                   }}
                   className="dark:bg-dark-900"
-                  defaultValue={(data.metadata as AeroDoorMetadata).sensor?.sensorModuleComponentId ?? ""}
+                  defaultValue={(dto.metadata as AeroDoorMetadata).sensor?.sensorModuleComponentId ?? ""}
                 />
                 <Label htmlFor="sensor.sensorNumber">Input No</Label>
                 <Select
@@ -1563,8 +1445,7 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
                   name="sensor.sensorNumber"
                   options={inputSensorOption}
                   onChange={(value: string) => {
-                    fetchInputSensor(Number(value));
-                    setData(prev => ({
+                    setDto(prev => ({
                       ...prev,
                       metadata: {
                         ...(prev.metadata as AeroDoorMetadata),
@@ -1576,7 +1457,7 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
                     }))
                   }}
                   className="dark:bg-dark-900"
-                  defaultValue={(data.metadata as AeroDoorMetadata).sensor?.sensorNumber ?? ""}
+                  defaultValue={(dto.metadata as AeroDoorMetadata).sensor?.sensorNumber ?? ""}
                 />
                 <Label htmlFor="sensor.sensorMode">Input Mode</Label>
                 <Select
@@ -1584,8 +1465,7 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
                   name="sensor.sensorMode"
                   options={inputModeOption}
                   onChange={(value: string) => {
-                    fetchInputSensor(Number(value));
-                    setData(prev => ({
+                    setDto(prev => ({
                       ...prev,
                       metadata: {
                         ...(prev.metadata as AeroDoorMetadata),
@@ -1597,7 +1477,7 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
                     }))
                   }}
                   className="dark:bg-dark-900"
-                  defaultValue={(data.metadata as AeroDoorMetadata).sensor?.sensorMode ?? ""}
+                  defaultValue={(dto.metadata as AeroDoorMetadata).sensor?.sensorMode ?? ""}
                 />
               </FormField>
             }
@@ -1611,7 +1491,7 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
                   name="antiPassbackMode"
                   options={antipassbackOption}
                   onChange={(value: string) => {
-                    setData(prev => ({
+                    setDto(prev => ({
                       ...prev,
                       metadata: {
                         ...(prev.metadata as AeroDoorMetadata),
@@ -1623,7 +1503,7 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
                     }))
                   }}
                   className="dark:bg-dark-900"
-                  defaultValue={(data.metadata as AeroDoorMetadata).antipassback?.antipassbackMode ?? ""}
+                  defaultValue={(dto.metadata as AeroDoorMetadata).antipassback?.antipassbackMode ?? ""}
                 />
                 <Label htmlFor="antiPassBackIn">Area From</Label>
                 <Select
@@ -1632,7 +1512,7 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
                   name="antiPassBackIn"
                   options={areaOption}
                   onChange={(value: string) => {
-                    setData(prev => ({
+                    setDto(prev => ({
                       ...prev,
                       metadata: {
                         ...(prev.metadata as AeroDoorMetadata),
@@ -1644,7 +1524,7 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
                     }))
                   }}
                   className="dark:bg-dark-900"
-                  defaultValue={(data.metadata as AeroDoorMetadata).antipassback?.areaIn ?? ""}
+                  defaultValue={(dto.metadata as AeroDoorMetadata).antipassback?.areaIn ?? ""}
                 />
                 <Label htmlFor="antiPassBackOut">Area To</Label>
                 <Select
@@ -1653,7 +1533,7 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
                   name="antiPassBackOut"
                   options={areaOption}
                   onChange={(value: string) => {
-                    setData(prev => ({
+                    setDto(prev => ({
                       ...prev,
                       metadata: {
                         ...(prev.metadata as AeroDoorMetadata),
@@ -1665,7 +1545,7 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
                     }))
                   }}
                   className="dark:bg-dark-900"
-                  defaultValue={(data.metadata as AeroDoorMetadata).antipassback?.areaOut ?? ""}
+                  defaultValue={(dto.metadata as AeroDoorMetadata).antipassback?.areaOut ?? ""}
                 />
 
               </FormField>
@@ -1680,7 +1560,7 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
                   name="offlineMode"
                   options={doorModeOption}
                   onChange={(value: string) => {
-                    setData(prev => ({
+                    setDto(prev => ({
                       ...prev,
                       metadata: {
                         ...(prev.metadata as AeroDoorMetadata),
@@ -1689,7 +1569,7 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
                     }))
                   }}
                   className="dark:bg-dark-900"
-                  defaultValue={(data.metadata as AeroDoorMetadata).offlineMode ?? ""}
+                  defaultValue={(dto.metadata as AeroDoorMetadata).offlineMode ?? ""}
                 />
                 <Label htmlFor="defaultMode">Default Mode</Label>
                 <Select
@@ -1698,7 +1578,7 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
                   name="defaultMode"
                   options={doorModeOption}
                   onChange={(value: string) => {
-                    setData(prev => ({
+                    setDto(prev => ({
                       ...prev,
                       metadata: {
                         ...(prev.metadata as AeroDoorMetadata),
@@ -1707,7 +1587,7 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
                     }))
                   }}
                   className="dark:bg-dark-900"
-                  defaultValue={(data.metadata as AeroDoorMetadata).defaultMode ?? ""}
+                  defaultValue={(dto.metadata as AeroDoorMetadata).defaultMode ?? ""}
                 />
               </FormField>
 
@@ -1726,7 +1606,7 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
                           label={d.label}
                           defaultChecked={false}
                           onChange={(checked: boolean) => {
-                            setData(prev => ({
+                            setDto(prev => ({
                               ...prev,
                               metadata: {
                                 ...(prev.metadata as AeroDoorMetadata),
@@ -1757,7 +1637,7 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
                           defaultChecked={false}
                           onChange={
                             (checked: boolean) => {
-                              setData(prev => ({
+                              setDto(prev => ({
                                 ...prev,
                                 metadata: {
                                   ...(prev.metadata as AeroDoorMetadata),
@@ -1800,7 +1680,13 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
             {isLastStep ? (
               <Button
                 disabled={type == FormType.INFO}
-                onClickWithEvent={handleClick}
+                onClickWithEvent={(event) => {
+                  // Do something first
+                  setDto(dto)
+
+                  // Then call handleClick
+                  handleClick?.(event);
+                }}
                 name={type == FormType.UPDATE ? "update" : "create"}
                 className="min-w-[120px]"
                 size="sm"

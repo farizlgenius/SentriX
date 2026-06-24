@@ -175,7 +175,29 @@ public sealed class OutputRepository(OutputDbContext context) : IOutputRepositor
             return new Pagination<OutputDto>(param.pageNumber,param.pageSize,count,(int)Math.Ceiling(count / (double)param.pageSize),res);
       }
 
+      public async Task<IEnumerable<OptionDto>> GetRelayDriveModeAsync(CancellationToken ct = default)
+      {
+            return await context.OutputDriveModes.AsNoTracking()
+            .Select(x => new OptionDto(
+                  x.label,
+                  x.value,
+                  string.Empty,
+                  0,
+                  false
+            )).ToArrayAsync();
+      }
 
+      public async Task<IEnumerable<OptionDto>> GetRelayOfflineModeAsync(CancellationToken ct = default)
+      {
+            return await context.OutputOfflineModes.AsNoTracking()
+            .Select(x => new OptionDto(
+                  x.label,
+                  x.value,
+                  string.Empty,
+                  0,
+                  false
+            )).ToArrayAsync();
+      }
 
       public async Task<IEnumerable<short>> GetUnavailableOutputByModuleIdAsync(int moduleId, CancellationToken ct = default)
       {

@@ -6,10 +6,10 @@ using SharedKernel.Messaging;
 
 namespace Device.Application.Handler;
 
-public sealed class AddInputUsedCommandHandler(IDeviceRepository repo) : ICommandHandlerWithResult<AddInputUsedCommand,bool>
+public sealed class AddInputUsedCommandHandler(IDeviceRepository repo) : ICommandHandler<AddInputUsedCommand>
 {
 
-      public async Task<bool> HandleAsync(AddInputUsedCommand command, CancellationToken ct)
+      public async Task HandleAsync(AddInputUsedCommand command, CancellationToken ct)
       {
             var domain = new Input(
                   0,
@@ -19,6 +19,6 @@ public sealed class AddInputUsedCommandHandler(IDeviceRepository repo) : IComman
                   true
                   );
                   
-            return await repo.AddInputAsync(domain);
+            await repo.AddInputAsync(domain);
       }
 }

@@ -15,6 +15,7 @@ using Group.Infrastructure;
 using Host.Helpers;
 using Host.Logging;
 using Host.Middlewares;
+using Input.Infrastructure;
 using Location.Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -81,6 +82,7 @@ public class Program
         builder.Services.AddEvents(builder.Configuration);
         builder.Services.AddAdapter(builder.Configuration);
         builder.Services.AddOutput(builder.Configuration);
+        builder.Services.AddInput(builder.Configuration);
         builder.Services.AddTime(builder.Configuration);
         builder.Services.AddDoor(builder.Configuration);
         builder.Services.AddGroup(builder.Configuration);

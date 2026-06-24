@@ -80,9 +80,21 @@ public sealed class OutputBehavior(IOutputRepository repo,IAdapterFactory factor
             return res;
       }
 
+      public async Task<IEnumerable<OptionDto>> GetRelayDriveModeAsync()
+      {
+            var res = await repo.GetRelayDriveModeAsync();
+            return res;
+      }
+
       public async Task<IEnumerable<OptionDto>> GetRelayModeAsync(string Type)
       {
             return await factory.GetAdapter(Type).Control.GetRelayModeAsync();
+      }
+
+      public async Task<IEnumerable<OptionDto>> GetRelayOfflineModeAsync()
+      {
+            var res = await repo.GetRelayOfflineModeAsync();
+            return res;
       }
 
       public async Task<BaseResponse> TriggerOutputAsync(int id, short Command)
