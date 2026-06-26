@@ -39,4 +39,7 @@ public interface IUserRepository
       Task<IEnumerable<DepartmentDto>> GetDepartmentByCompanyAsync(int companyId,CancellationToken ct = default);
       Task<Pagination<PositionDto>> GetPositionByDepartmentAsync(PaginationParams param,int departmentId,CancellationToken ct = default);
       Task<IEnumerable<OptionDto>> GetCompanyOptionByLocationAsync(int locationId,CancellationToken ct = default);
+      Task<IEnumerable<OptionDto>> GetDepartmentOptionByCompanyAsync(int CompanyId,CancellationToken ct = default);
+       Task<IEnumerable<OptionDto>> GetPositionOptionByDepartmentAsync(int DepartmentId,CancellationToken ct = default);
+       Task<IEnumerable<OptionDto>> GetUserFlagOptionAsync(CancellationToken ct = default);
 }

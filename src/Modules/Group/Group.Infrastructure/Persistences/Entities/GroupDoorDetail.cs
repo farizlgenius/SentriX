@@ -1,9 +1,12 @@
+using System.ComponentModel.DataAnnotations;
 using SharedKernel.Domain;
 
 namespace Group.Infrastructure.Persistences.Entities;
 
 public sealed class GroupDoorDetail 
 {
+            [Key]
+      public int id {get; set;}
       public short door_component_id {get; set;}
       public short timezone_component_id {get; set;}
       public int group_door_id {get; set;}

@@ -1,4 +1,4 @@
 export interface ScanCardDto {
-    scpId:number;
+    deviceId:number;
     doorId:number;
 }

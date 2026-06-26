@@ -19,10 +19,11 @@ public sealed class Users : BaseDomain
       public int DepartmentId { get; set; }
       public int PositionId { get; set; }
       public string Address { get; set; } = string.Empty;
-      public List<string> additionals { get; set; } = new List<string>();
+      public List<string> Additionals { get; set; } = new List<string>();
       public string Image { get; set; } = string.Empty;
-      public List<Credential> credentials { get; set; } = new List<Credential>();
-      public List<int> user_groups { get; set; } = new List<int>();
+      public List<Credential> Credentials { get; set; } = new List<Credential>();
+      public List<int> Groups { get; set; } = new List<int>();
+
       public Users(int id,
       string UserId,
       string Title,
@@ -37,9 +38,9 @@ public sealed class Users : BaseDomain
       int DepartmentId,
       int PositionId,
       string Address,
-      List<string> additionals,
+      List<string> Additionals,
       string Image,
-      List<Credential> credentials,
+      List<Credential> Credentials,
       List<int> UserGroups,
       int locationId, 
       bool IsActive
@@ -66,9 +67,9 @@ public sealed class Users : BaseDomain
             this.DepartmentId = DepartmentId;
             this.PositionId = PositionId;
             this.Address = Address;
-            this.additionals = additionals;
+            this.Additionals = Additionals;
             this.Image = Image;
-            this.credentials = credentials;
-            this.user_groups = UserGroups;
+            this.Credentials = Credentials;
+            this.Groups = UserGroups;
       }
 }

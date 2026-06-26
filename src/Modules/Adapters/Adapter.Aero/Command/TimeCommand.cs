@@ -47,7 +47,7 @@ public sealed class TimeCommand(ILogger<TimeCommand> logger) : BaseCommand,ITime
                   i++;
             }
             var result = Send((short)enCfgCmnd.enCcScpTimezoneExAct, c);
-            if (false)
+            if (result)
             {
                   logger.LogInformation(LogMessageHelper.CommandSuccess(CommandConstant.ExtendedTimeZoneActSpecification, ScpId));
 

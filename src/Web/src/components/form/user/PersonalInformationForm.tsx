@@ -92,28 +92,30 @@ export const PersonalInformationForm: React.FC<PersonalInformationFormProp> = ({
         }
     }
 
-    const fetchDepartment = async () => {
-        const res = await send.get(DepartmentEndpoint.GET_BY_COMPANY(locationId));
+    const fetchDepartment = async (companyId:number) => {
+        const res = await send.get(DepartmentEndpoint.GET_OPTION_BY_COMPANY(companyId));
         console.log(res);
-        if (res.data.data != null) {
-            res.data.data.data.map((a: DepartmentDto) => {
+        if (res.data) {
+            res.data.map((a: Options) => {
                 setDep(prev => ([...prev, {
-                    label: a.name,
-                    value: a.id,
+                    label: a.label,
+                    value: a.value,
                     description: a.description,
+                    additionalInfo:a.additionalInfo,
                     isTaken: false
                 }]))
             })
         }
     }
 
-    const fetchPosition = async () => {
-        const res = await send.get(PositionEndpoint.GET_BY_LOCATION(locationId));
-        if (res.data.data != null) {
-            res.data.data.data.map((a: PositionDto) => {
+    const fetchPosition = async (departmentId:number) => {
+        const res = await send.get(PositionEndpoint.GET_OPTION_BY_DEPARTMENT(departmentId));
+        if (res.data) {
+            res.data.map((a: Options) => {
                 setPos(prev => ([...prev, {
-                    label: a.name,
-                    value: a.id,
+                    label: a.label,
+                    value: a.value,
+                    additionalInfo:a.additionalInfo,
                     description: a.description,
                     isTaken: false
                 }]))
@@ -123,8 +125,6 @@ export const PersonalInformationForm: React.FC<PersonalInformationFormProp> = ({
 
     useEffect(() => {
         fetchCompany();
-        fetchDepartment();
-        fetchPosition();
     }, []);
 
     return (
@@ -154,17 +154,16 @@ export const PersonalInformationForm: React.FC<PersonalInformationFormProp> = ({
                         </FormSection>
                         <FormSection title="Personal Information" description="efwwefwefwef">
                             <div className="grid gap-5 grid-cols-2 md:grid-cols-2 gap-x-10 gap-y-6 mb-8 p-5">
-                                <FormField  >
-                                    <Label htmlFor="userId">Cardholder ID / Employee ID</Label>
-                                    <div className='flex gap-2'>
-                                        <Input disabled={isReadOnly} name="userId" type="text" id="cardHolderId" onChange={handleChange} value={dto.userId} />
-                                        <Button disabled={isReadOnly} onClick={() => setDto((prev) => ({ ...prev, userId: generateEmployeeId() }))}>Auto</Button>
-                                    </div>
-                                </FormField>
-                                <FormField>
-                                    <Label>Identification ( ID Card | Passport )</Label>
-                                    <Input disabled={isReadOnly} type='text' name='identification' onChange={handleChange} value={dto.identification} />
-                                </FormField>
+                                <div className='flex gap-3 mb-3 w-full col-span-2'>
+                                    <FormField className="flex-1">
+                                        <Label htmlFor="userId">Cardholder ID / Employee ID</Label>
+                                        <div className='flex gap-2'>
+                                            <Input disabled={isReadOnly} name="userId" type="text" id="cardHolderId" onChange={handleChange} value={dto.userId} />
+                                            <Button disabled={isReadOnly} onClick={() => setDto((prev) => ({ ...prev, userId: generateEmployeeId() }))}>Auto</Button>
+                                        </div>
+                                    </FormField>
+                                </div>
+
                                 <div className='flex gap-3 mb-3 w-full col-span-2'>
                                     <FormField className="flex-1">
                                         <Label htmlFor="title">Title</Label>
@@ -266,14 +265,24 @@ export const PersonalInformationForm: React.FC<PersonalInformationFormProp> = ({
                                     <FormField className='flex-1'>
                                         <Label>Company</Label>
                                         <Select name={"Company"}
-                                            onChange={e => setDto(prev => ({ ...prev, companyId: Number(e), company: com.find(x => x.value == Number(e))?.label ?? "" }))}
+                                            onChange={e => {
+                                                setDep([]);
+                                                setPos([]);
+                                                setDto(prev => ({ ...prev, companyId: Number(e), company: com.find(x => x.value == Number(e))?.label ?? "" }));
+                                                fetchDepartment(Number(e));
+
+                                            }}
                                             defaultValue={dto.companyId}
                                             options={com} />
                                     </FormField>
                                     <FormField className='flex-1'>
                                         <Label>Department</Label>
                                         <Select name={"Department"} defaultValue={dto.departmentId}
-                                            onChange={e => setDto(prev => ({ ...prev, departmentId: Number(e), department: dep.find(x => x.value == Number(e))?.label ?? "" }))}
+                                            onChange={e => {
+                                                setPos([]);
+                                                setDto(prev => ({ ...prev, departmentId: Number(e), department: dep.find(x => x.value == Number(e))?.label ?? "" }));
+                                                fetchPosition(Number(e))
+                                            }}
                                             options={dep} />
                                     </FormField>
                                     <FormField className="flex-1">

@@ -1,9 +1,9 @@
 import React, { PropsWithChildren, useState } from 'react';
 import Button from '../../components/ui/button/Button';
-import { AccessLevelForm } from '../../components/form/card-holder/AccessLevelForm';
-import { CredentialForm } from '../../components/form/card-holder/CredentialForm';
-import { PersonalInformationForm } from '../../components/form/card-holder/PersonalInformationForm';
-import { UserSettingForm } from '../../components/form/card-holder/UserSettingForm';
+import { GroupForm } from '../../components/form/user/GroupForm';
+import { CredentialForm } from '../../components/form/user/CredentialForm';
+import { PersonalInformationForm } from '../../components/form/user/PersonalInformationForm';
+import { UserSettingForm } from '../../components/form/user/UserSettingForm';
 import { UserDto } from '../../model/User/UserDto';
 import { FormProp, FormType } from '../../model/Form/FormProp';
 import StepProgress from '../../components/form/StepProgress';
@@ -65,7 +65,7 @@ const UserForm: React.FC<PropsWithChildren<UserFormProps>> = ({ dto, setDto, han
         )}
 
         {activeStep === UserFormStep.AccessLevel && (
-          <AccessLevelForm type={type} dto={dto} setDto={setDto} handleClick={handleClick} />
+          <GroupForm type={type} dto={dto} setDto={setDto} handleClick={handleClick} />
         )}
 
         {activeStep === UserFormStep.Credential && (

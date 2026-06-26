@@ -20,6 +20,7 @@ import { DoorEndpoint } from "../../../endpoint/DoorEndpoint";
 import { DoorDto } from "../../../model/Door/DoorDto";
 import { ScanCardDto } from "../../../model/User/ScanCard";
 import { CardIcon } from "../../../icons";
+import { FormField, FormSection } from "../template/FormTemplate";
 
 
 
@@ -33,7 +34,7 @@ export const CredentialForm: React.FC<PropsWithChildren<FormProp<UserDto>>> = ({
     const [spinner, setSpinner] = useState<boolean>(false);
     const [scanForm, setScanForm] = useState<boolean>(false);
     const [scanData, setScanData] = useState<ScanCardDto>({
-        scpId: -1,
+        deviceId: -1,
         doorId: -1
     })
     const [selectedId, setSelectedId] = useState<number | null>(null);
@@ -42,12 +43,11 @@ export const CredentialForm: React.FC<PropsWithChildren<FormProp<UserDto>>> = ({
         setDto(prev => ({
             ...prev,
             credentials: prev.credentials.filter(
-                x => Number(x.cardNo) !== id
+                x => Number(x.cardNumber) !== id
             )
         }));
     };
     var defaultCredential: CredentialDto = {
-        driverId: 0,
         bits: 0,
         issueCode: 0,
         facilityCode: -1,
@@ -64,6 +64,9 @@ export const CredentialForm: React.FC<PropsWithChildren<FormProp<UserDto>>> = ({
     const handleClickInternal = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         switch (e.currentTarget.name) {
             case "add":
+                if(credentialDto.cardNo == 0 || credentialDto.bits == 0 || dto.credentials.some(x => x.cardNo == credentialDto.cardNo || x.facilityCode == credentialDto.facilityCode))
+                    return;
+
                 setDto(prev => ({ ...prev, credentials: [...prev.credentials, credentialDto] }))
                 setCredentialDto(defaultCredential)
                 break;
@@ -115,7 +118,7 @@ export const CredentialForm: React.FC<PropsWithChildren<FormProp<UserDto>>> = ({
         switch (e.currentTarget.name) {
             case "scpId":
                 console.log(value);
-                setScanData(prev => ({ ...prev, scpId: Number(e.target.value) }));
+                setScanData(prev => ({ ...prev, deviceId: Number(e.target.value) }));
                 fetchDoor(Number(value))
                 break;
             case "doorId":
@@ -204,9 +207,12 @@ export const CredentialForm: React.FC<PropsWithChildren<FormProp<UserDto>>> = ({
 
 
     return (
-        <div className="flex">
 
-             <div className='flex flex-1 flex-col w-3/4'>
+        <>
+
+            <FormSection className="flex">
+
+                <div className='flex flex-1 flex-col w-3/4'>
                     <div className="flex items-center justify-between mb-2">
                         <h3 className="flex items-center gap-3 text-base font-medium text-gray-800 dark:text-white/90">
                             Cards
@@ -216,89 +222,77 @@ export const CredentialForm: React.FC<PropsWithChildren<FormProp<UserDto>>> = ({
                         </h3>
 
                     </div>
+                    <div className="flex items-center justify-center p-6 w-full">
+                        <div className="grid grid-cols-[1fr] gap-5 items-center w-full ">
+                            {/* Left Box */}
+                            <div>
+                                <div className="overflow-auto scrollbar-thin scrollbar-transparent h-64 w-full rounded-lg border px-4 py-3 text-sm shadow-theme-xs bg-transparent">
+                                    <div className="space-y-3">
+                                        {dto.credentials.map((item) => {
+                                            const id = Number(item.cardNo);
+                                            const isSelected = selectedId === id;
 
-                    <>
-                        <div className="flex items-center justify-center p-6 w-full">
-                            <div className="grid grid-cols-[1fr] gap-5 items-center w-full ">
-                                {/* Left Box */}
-                                <div>
-                                    <div className="flex justify-between items-center mb-2">
-                                        <Label>Cards</Label>
-
-                                    </div>
-
-                                    <div className="overflow-auto scrollbar-thin scrollbar-transparent h-64 w-full rounded-lg border px-4 py-3 text-sm shadow-theme-xs bg-transparent">
-                                        <div className="space-y-3">
-                                            {dto.credentials.map((item) => {
-                                                const id = Number(item.cardNo);
-                                                const isSelected = selectedId === id;
-
-                                                return (
-                                                    <div
-                                                        key={id}
-                                                        onClick={() => setSelectedId(id)}
-                                                        onDoubleClick={() => handleDelete(id)}
-                                                        className={`flex gap-4 rounded-lg border p-4 cursor-pointer transition select-none
-            ${isSelected
-                                                                ? "border-blue-500 bg-blue-50 dark:bg-blue-500/10"
-                                                                : "border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900"
-                                                            }
-            hover:shadow-md
-          `}
-                                                    >
-                                                        {/* Icon */}
-                                                        <div className="pt-1">
-                                                            <CardIcon className="w-6 h-6 text-gray-500 dark:text-gray-400" />
-                                                        </div>
-
-                                                        {/* Content */}
-                                                        <div className="flex-1 grid grid-cols-2 gap-y-1 gap-x-4">
-                                                            <Info label="Bits" value={item.bits} />
-                                                            <Info label="Facility" value={item.facilityCode} />
-                                                            <Info label="Card No" value={item.cardNo} />
-                                                            <Info label="PIN" value={item.pin || "-"} />
-                                                            <Info
-                                                                label="Active"
-                                                                value={new Date(item.activeDate).toLocaleDateString()}
-                                                            />
-                                                            <Info
-                                                                label="Deactive"
-                                                                value={new Date(item.deactiveDate).toLocaleDateString()}
-                                                            />
-                                                        </div>
+                                            return (
+                                                <div
+                                                    key={id}
+                                                    onClick={() => setSelectedId(id)}
+                                                    onDoubleClick={() => handleDelete(id)}
+                                                    className={`flex gap-4 rounded-lg border p-4 cursor-pointer transition select-none${isSelected
+                                                        ? "border-blue-500 bg-blue-50 dark:bg-blue-500/10"
+                                                        : "border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900"} hover:shadow-md`}
+                                                >
+                                                    {/* Icon */}
+                                                    <div className="pt-1">
+                                                        <CardIcon className="w-6 h-6 text-gray-500 dark:text-gray-400" />
                                                     </div>
-                                                );
-                                            })}
-                                        </div>
+
+                                                    {/* Content */}
+                                                    <div className="flex-1 grid grid-cols-2 gap-y-1 gap-x-4">
+                                                        <Info label="Bits" value={item.bits} />
+                                                        <Info label="Facility" value={item.facilityCode} />
+                                                        <Info label="Card No" value={item.cardNo} />
+                                                        <Info label="PIN" value={item.pin || "-"} />
+                                                        <Info
+                                                            label="Active"
+                                                            value={new Date(item.activeDate).toLocaleDateString()}
+                                                        />
+                                                        <Info
+                                                            label="Deactive"
+                                                            value={new Date(item.deactiveDate).toLocaleDateString()}
+                                                        />
+                                                    </div>
+                                                </div>
+                                            );
+                                        })}
                                     </div>
                                 </div>
                             </div>
                         </div>
-
-                    </>
+                    </div>
                 </div>
-                <div className="flex-1">
-                    {scanForm ?
-                        <div className="flex flex-col gap-4">
-                            <div className="flex flex-col gap-4" >
+                {
+                    scanForm ?
+
+                        <div className="flex justify-center items-center flex-1 flex-col gap-4">
+                            <div className="flex flex-col gap-4 w-1/2" >
                                 <div>
                                     <Label>Select Controller</Label>
                                     <Select
-                                    disabled={type == FormType.INFO}
+                                        disabled={type == FormType.INFO}
                                         isString={true}
                                         name="scpId"
                                         options={controllerOption}
                                         placeholder="Select Option"
                                         onChangeWithEvent={handleSelectChange}
                                         className="dark:bg-dark-900"
-                                        defaultValue={scanData.scpId}
+                                        defaultValue={scanData.deviceId}
                                     />
                                 </div>
                                 <div>
 
                                     <Label>Select Reader</Label>
                                     <Select
-                                    disabled={type == FormType.INFO}
+                                        disabled={type == FormType.INFO}
                                         isString={false}
                                         name="doorId"
                                         options={doorOption}
@@ -322,100 +316,110 @@ export const CredentialForm: React.FC<PropsWithChildren<FormProp<UserDto>>> = ({
 
                             </div>
                         </div>
+
                         :
-                        <div className="flex flex-col justify-center gap-4">
-                            <div>
-                                <Button disabled={type == FormType.INFO} name="scanCard" onClick={() => setScanForm(true)} size='sm'>Scan Card</Button>
-                            </div>
-                            <div className='flex flex-col gap-4'>
 
-                                <div>
-                                    <Label>Bit number</Label>
-                                    <Input
-                                    disabled={type == FormType.INFO}
-                                        name="bits"
-                                        placeholder="26"
-                                        onChange={handleCredentialChange}
-                                        value={credentialDto.bits}
-                                    />
+                        <div className="flex-1 flex flex-col justify-center items-center">
+                            <div className="flex flex-col justify-center gap-4">
+                                <div className='flex flex-col gap-4'>
 
-                                </div>
-                                <div className='flex gap-2'>
-                                    <div className='flex-1'>
-                                        <Label>Facility Code</Label>
-                                        <Input
-                                        disabled={type == FormType.INFO}
-                                            name="facilityCode"
-                                            onChange={handleCredentialChange}
-                                            value={credentialDto.facilityCode}
-                                        />
-                                    </div>
-                                    <div className='flex-3'>
-                                        <Label>Card number</Label>
-                                        <Input
-                                        disabled={type == FormType.INFO}
-                                            name="cardNo"
-                                            onChange={handleCredentialChange}
-                                            value={credentialDto.cardNo}
-                                        />
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <Label>Pin</Label>
-                                    <Input
-                                    disabled={type == FormType.INFO}
-                                        name="pin"
-                                        type="number"
-                                        onChange={handleCredentialChange}
-                                        value={credentialDto.pin}
-                                    />
-                                </div>
-                                <div className='flex gap-2'>
                                     <div>
-                                        <DatePicker
-                                            id="date-picker1"
-                                            label="Activate Date"
-                                            placeholder="Select a date"
-                                            value={credentialDto.activeDate}
-                                            onChange={(dates, currentDateString) => {
-                                                // Handle your logic
-                                                console.log({ dates, currentDateString });
-                                                setCredentialDto(prev => ({ ...prev, activeDate: toLocalISOWithOffset(dates[0]) }));
-
-                                            }}
+                                        <Label>Bit number</Label>
+                                        <Input
+                                            disabled={type == FormType.INFO}
+                                            name="bits"
+                                            placeholder="26"
+                                            onChange={handleCredentialChange}
+                                            value={credentialDto.bits}
                                         />
+
                                     </div>
+                                    <div className='flex gap-2'>
+                                        <div className='flex-1'>
+                                            <Label>Facility Code</Label>
+                                            <Input
+                                                disabled={type == FormType.INFO}
+                                                name="facilityCode"
+                                                onChange={handleCredentialChange}
+                                                value={credentialDto.facilityCode}
+                                            />
+                                        </div>
+                                        <div className='flex-3'>
+                                            <Label>Card number</Label>
+                                            <Input
+                                                disabled={type == FormType.INFO}
+                                                name="cardNo"
+                                                onChange={handleCredentialChange}
+                                                value={credentialDto.cardNo}
+                                            />
+                                        </div>
+                                    </div>
+
                                     <div>
-                                        <DatePicker
-                                            id="date-picker2"
-                                            label="Deactivate Date"
-                                            placeholder="Select a date"
-                                            value={credentialDto.deactiveDate}
-                                            onChange={(dates, currentDateString) => {
-                                                // Handle your logic
-                                                console.log({ dates, currentDateString });
-                                                setCredentialDto(prev => ({ ...prev, deactiveDate: toLocalISOWithOffset(dates[0]) }));
-                                            }}
+                                        <Label>Pin</Label>
+                                        <Input
+                                            disabled={type == FormType.INFO}
+                                            name="pin"
+                                            type="number"
+                                            onChange={handleCredentialChange}
+                                            value={credentialDto.pin}
+                                            placeholder="1234"
                                         />
                                     </div>
-                                </div>
+                                    <div className='flex gap-2'>
+                                        <div>
+                                            <DatePicker
+                                                id="date-picker1"
+                                                label="Activate Date"
+                                                placeholder="Select a date"
+                                                value={credentialDto.activeDate}
+                                                onChange={(dates, currentDateString) => {
+                                                    // Handle your logic
+                                                    console.log({ dates, currentDateString });
+                                                    setCredentialDto(prev => ({ ...prev, activeDate: toLocalISOWithOffset(dates[0]) }));
 
-                                <div className='flex gap-4 justify-center mt-5'>
-                                    <Button disabled={type == FormType.INFO} name='add' onClickWithEvent={handleClickInternal} size='sm'>Add Card</Button>
+                                                }}
+                                            />
+                                        </div>
+                                        <div>
+                                            <DatePicker
+                                                id="date-picker2"
+                                                label="Deactivate Date"
+                                                placeholder="Select a date"
+                                                value={credentialDto.deactiveDate}
+                                                onChange={(dates, currentDateString) => {
+                                                    // Handle your logic
+                                                    console.log({ dates, currentDateString });
+                                                    setCredentialDto(prev => ({ ...prev, deactiveDate: toLocalISOWithOffset(dates[0]) }));
+                                                }}
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div className='flex flex-col gap-4 justify-center mt-5'>
+                                        <Button disabled={type == FormType.INFO} name='add' onClickWithEvent={handleClickInternal} size='sm'>Add Card</Button>
+                                    </div>
+                                    <div className='flex flex-col gap-4 justify-center mt-5'>
+                                        <Button disabled={type == FormType.INFO} name='add' onClickWithEvent={() => setScanForm(true)} size='sm'>Scan Card</Button>
+                                    </div>
+
                                 </div>
 
                             </div>
+
 
                         </div>
 
 
+                }
 
 
-                    }
-                </div>
+            </FormSection>
 
-        </div>
+        </>
+
+
+
 
     )
 }

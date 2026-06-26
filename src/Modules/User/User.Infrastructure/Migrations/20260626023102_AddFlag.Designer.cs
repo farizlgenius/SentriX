@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using User.Infrastructure.Persistences;
@@ -11,9 +12,11 @@ using User.Infrastructure.Persistences;
 namespace User.Infrastructure.Migrations
 {
     [DbContext(typeof(UserDbContext))]
-    partial class UserDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260626023102_AddFlag")]
+    partial class AddFlag
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -78,12 +81,6 @@ namespace User.Infrastructure.Migrations
                     b.Property<DateTime>("act_time")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<short>("apb_loc")
-                        .HasColumnType("smallint");
-
-                    b.Property<short>("bits")
-                        .HasColumnType("smallint");
-
                     b.Property<long>("card_number")
                         .HasColumnType("bigint");
 
@@ -97,9 +94,6 @@ namespace User.Infrastructure.Migrations
 
                     b.Property<DateTime>("deact_time")
                         .HasColumnType("timestamp with time zone");
-
-                    b.Property<short>("fac")
-                        .HasColumnType("smallint");
 
                     b.Property<short>("flag")
                         .HasColumnType("smallint");
@@ -547,9 +541,6 @@ namespace User.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("vacation_id")
-                        .HasColumnType("integer");
-
                     b.HasKey("id");
 
                     b.HasIndex("company_id");
@@ -558,48 +549,7 @@ namespace User.Infrastructure.Migrations
 
                     b.HasIndex("position_id");
 
-                    b.HasIndex("vacation_id")
-                        .IsUnique();
-
                     b.ToTable("Users", "user");
-                });
-
-            modelBuilder.Entity("User.Infrastructure.Persistences.Entities.Vacation", b =>
-                {
-                    b.Property<int>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
-
-                    b.Property<short>("component_id")
-                        .HasColumnType("smallint");
-
-                    b.Property<DateTime>("created_at")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
-                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
-
-                    b.Property<bool>("is_active")
-                        .HasColumnType("boolean");
-
-                    b.Property<int>("location_id")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime>("updated_at")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
-                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
-
-                    b.Property<DateTime>("vacation_date")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<short>("vacation_day")
-                        .HasColumnType("smallint");
-
-                    b.HasKey("id");
-
-                    b.ToTable("Vacation", "user");
                 });
 
             modelBuilder.Entity("User.Infrastructure.Persistences.Entities.Credential", b =>
@@ -677,19 +627,11 @@ namespace User.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("User.Infrastructure.Persistences.Entities.Vacation", "vacation")
-                        .WithOne("users")
-                        .HasForeignKey("User.Infrastructure.Persistences.Entities.Users", "vacation_id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("company");
 
                     b.Navigation("department");
 
                     b.Navigation("position");
-
-                    b.Navigation("vacation");
                 });
 
             modelBuilder.Entity("User.Infrastructure.Persistences.Entities.Company", b =>
@@ -718,12 +660,6 @@ namespace User.Infrastructure.Migrations
                     b.Navigation("credentials");
 
                     b.Navigation("user_groups");
-                });
-
-            modelBuilder.Entity("User.Infrastructure.Persistences.Entities.Vacation", b =>
-                {
-                    b.Navigation("users")
-                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

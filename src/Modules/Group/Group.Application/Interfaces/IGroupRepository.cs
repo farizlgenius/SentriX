@@ -1,5 +1,6 @@
 using Group.Contract.DTOs;
 using Group.Domain.Entities;
+using SharedKernel.Domain;
 
 namespace Group.Application.Interfaces;
 
@@ -11,4 +12,6 @@ public interface IGroupRepository
       Task<GroupDto> DeleteAsync(int id,CancellationToken ct = default);
       Task<bool> IsAnyByIdAsync(int id,CancellationToken ct = default);
       Task<GroupDto> GetByIdAsync(int id,CancellationToken ct = default);
+      Task<Pagination<GroupDto>> GetPaginationAsync(PaginationParams param,CancellationToken ct = default);
+      Task<IEnumerable<GroupDto>> GetByLocationIdAsync(int location,CancellationToken ct = default);
 }

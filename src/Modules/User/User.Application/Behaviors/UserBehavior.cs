@@ -1,4 +1,5 @@
 using System.Net;
+using System.Security.Cryptography.X509Certificates;
 using Adapter.Abstraction.Interfaces;
 using SharedKernel.Domain;
 using SharedKernel.Exceptions;
@@ -99,10 +100,13 @@ public sealed class UserBehavior(IUserRepository repo,IStorage file,IAdapterFact
                         0,
                         0,
                         c.Flag,
+                        c.Bits,
+                        c.Fac,
                         c.CardNumber,
                         c.IssueCode,
                         c.Pin,
                         c.UseCount,
+                        c.ApbLoc,
                         c.Active,
                         c.Expire,
                         c.LocationId,
@@ -290,10 +294,13 @@ public sealed class UserBehavior(IUserRepository repo,IStorage file,IAdapterFact
                               c.Id,
                               dto.Id,
                               c.Flag,
+                              c.Bits,
+                              c.Fac,
                               c.CardNumber,
                               c.IssueCode,
                               c.Pin,
                               c.UseCount,
+                              c.ApbLoc,
                               c.Active,
                               c.Expire,
                               c.LocationId,
@@ -345,5 +352,20 @@ public sealed class UserBehavior(IUserRepository repo,IStorage file,IAdapterFact
       public async Task<IEnumerable<OptionDto>> GetCompanyOptionByLocationAsync(int LocationId)
       {
             return await repo.GetCompanyOptionByLocationAsync(LocationId);
+      }
+
+      public async Task<IEnumerable<OptionDto>> GetDepartmentOptionByCompanyAsync(int CompanyId)
+      {
+            return await repo.GetDepartmentOptionByCompanyAsync(CompanyId);
+      }
+
+      public async Task<IEnumerable<OptionDto>> GetPositionOptionByDepartmentAsync(int CompanyId)
+      {
+            return await repo.GetPositionOptionByDepartmentAsync(CompanyId);
+      }
+
+      public async Task<IEnumerable<OptionDto>> GetUserFlagOptionAsync()
+      {
+            return await repo.GetUserFlagOptionAsync();
       }
 }

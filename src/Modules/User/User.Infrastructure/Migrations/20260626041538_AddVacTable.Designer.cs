@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using User.Infrastructure.Persistences;
@@ -11,9 +12,11 @@ using User.Infrastructure.Persistences;
 namespace User.Infrastructure.Migrations
 {
     [DbContext(typeof(UserDbContext))]
-    partial class UserDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260626041538_AddVacTable")]
+    partial class AddVacTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -79,9 +82,6 @@ namespace User.Infrastructure.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<short>("apb_loc")
-                        .HasColumnType("smallint");
-
-                    b.Property<short>("bits")
                         .HasColumnType("smallint");
 
                     b.Property<long>("card_number")

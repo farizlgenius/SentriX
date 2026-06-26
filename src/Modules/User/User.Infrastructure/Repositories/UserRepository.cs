@@ -115,7 +115,7 @@ public sealed class UserRepository(UserDbContext context) : IUserRepository
 
             // Add Additional
             await context.UserAdditionals.AddRangeAsync(
-                  dto.additionals.Select(
+                  dto.Additionals.Select(
                         x => new UserAdditional(
                               data.Entity.id,
                               x
@@ -126,7 +126,7 @@ public sealed class UserRepository(UserDbContext context) : IUserRepository
             // Credential
 
             await context.Credentials.AddRangeAsync(
-                  dto.credentials.Select(x => new Persistences.Entities.Credential(
+                  dto.Credentials.Select(x => new Persistences.Entities.Credential(
                         x
                   )).ToList()
             );
@@ -135,7 +135,7 @@ public sealed class UserRepository(UserDbContext context) : IUserRepository
 
 
             await context.UserGroups.AddRangeAsync(
-                  dto.user_groups.Select(x => new Persistences.Entities.UserGroup(
+                  dto.Groups.Select(x => new Persistences.Entities.UserGroup(
                         entity.id,
                         x,
                         entity.location_id,
@@ -179,10 +179,13 @@ public sealed class UserRepository(UserDbContext context) : IUserRepository
                   res.credentials.Select(c => new CredentialDto(
                         c.id,
                         c.flag,
+                        c.bits,
+                        c.fac,
                         c.card_number,
                         c.issue_code,
                         c.pin,
                         c.use_count,
+                        c.apb_loc,
                         c.act_time,
                         c.deact_time,
                         c.location_id,
@@ -439,6 +442,19 @@ public sealed class UserRepository(UserDbContext context) : IUserRepository
             return res;
       }
 
+      public async Task<IEnumerable<OptionDto>> GetDepartmentOptionByCompanyAsync(int CompanyId, CancellationToken ct = default)
+      {
+            return await context.Departments.AsNoTracking()
+            .Where(x => x.company_id == CompanyId)
+            .Select(x => new OptionDto(
+                  x.name,
+                  x.id,
+                  string.Empty,
+                  x.component_id,
+                  false
+                  )).ToArrayAsync();
+      }
+
       public async Task<Pagination<DepartmentDto>> GetDepartmentPaginationAsync(PaginationParams param, CancellationToken ct = default)
       {
             var query = context.Departments.AsNoTracking().Where(x => x.location_id == param.locationId).AsQueryable();
@@ -561,6 +577,19 @@ public sealed class UserRepository(UserDbContext context) : IUserRepository
             , items);
       }
 
+      public async Task<IEnumerable<OptionDto>> GetPositionOptionByDepartmentAsync(int DepartmentId, CancellationToken ct = default)
+      {
+            return await context.Positions.AsNoTracking()
+            .Where(x => x.department_id == DepartmentId)
+            .Select(x => new OptionDto(
+                  x.name,
+                  x.id,
+                  string.Empty,
+                  x.component_id,
+                  false
+                  )).ToArrayAsync();
+      }
+
       public async Task<Pagination<PositionDto>> GetPositionPaginationAsync(PaginationParams param, CancellationToken ct = default)
       {
             var query = context.Positions.AsNoTracking().Where(x => x.location_id == param.locationId).AsQueryable();
@@ -620,6 +649,16 @@ public sealed class UserRepository(UserDbContext context) : IUserRepository
             return new Pagination<PositionDto>(param.pageNumber, param.pageSize, totalItems,
             (int)Math.Ceiling(totalItems / (double)param.pageSize)
             , items);
+      }
+
+      public async Task<IEnumerable<OptionDto>> GetUserFlagOptionAsync(CancellationToken ct = default)
+      {
+           return await context.UserFlags.AsNoTracking()
+           .Select(x => new OptionDto(
+            x.label,
+            x.value,
+            x.description))
+           .ToArrayAsync();
       }
 
       public async Task<Pagination<UserDto>> GetUserPaginationAsync(PaginationParams param, CancellationToken ct = default)
@@ -702,10 +741,13 @@ public sealed class UserRepository(UserDbContext context) : IUserRepository
                   u.credentials.Select(c => new CredentialDto(
                         c.id,
                         c.flag,
+                        c.bits,
+                        c.fac,
                         c.card_number,
                         c.issue_code,
                         c.pin,
                         c.use_count,
+                        c.apb_loc,
                         c.act_time,
                         c.deact_time,
                         c.location_id,
@@ -878,7 +920,7 @@ public sealed class UserRepository(UserDbContext context) : IUserRepository
             context.UserAdditionals.RemoveRange(additionals);
 
             await context.UserAdditionals.AddRangeAsync(
-                  user.additionals.Select(x => new UserAdditional(
+                  user.Additionals.Select(x => new UserAdditional(
                         entity.id,
                         x
                   )).ToList()
@@ -893,7 +935,7 @@ public sealed class UserRepository(UserDbContext context) : IUserRepository
             context.Credentials.RemoveRange(credential);
 
             await context.Credentials.AddRangeAsync(
-                  user.credentials.Select(x => new Persistences.Entities.Credential(
+                  user.Credentials.Select(x => new Persistences.Entities.Credential(
                         x
                   )).ToList()
             );
@@ -907,7 +949,7 @@ public sealed class UserRepository(UserDbContext context) : IUserRepository
             context.UserGroups.RemoveRange(group);
 
             await context.UserGroups.AddRangeAsync(
-                  user.user_groups.Select(x => new Persistences.Entities.UserGroup(
+                  user.Groups.Select(x => new Persistences.Entities.UserGroup(
                         user.Id,
                         x,
                         user.LocationId,
@@ -954,10 +996,13 @@ public sealed class UserRepository(UserDbContext context) : IUserRepository
                   res.credentials.Select(c => new CredentialDto(
                         c.id,
                         c.flag,
+                        c.bits,
+                        c.fac,
                         c.card_number,
                         c.issue_code,
                         c.pin,
                         c.use_count,
+                        c.apb_loc,
                         c.act_time,
                         c.deact_time,
                         c.location_id,

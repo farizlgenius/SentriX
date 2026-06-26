@@ -17,6 +17,13 @@ public class GroupController(IGroup group) : ControllerBase
             return Ok(res);
       }
 
+      [HttpGet("{location}")]
+      public async Task<IActionResult> GetByLocationIdAsync(int location)
+      {
+            var res = await group.GetByLocationIdAsync(location);
+            return Ok(res);
+      }
+
       [HttpPost]
       public async Task<IActionResult> CreateAsync([FromBody] CreateGroupDto dto)
       {

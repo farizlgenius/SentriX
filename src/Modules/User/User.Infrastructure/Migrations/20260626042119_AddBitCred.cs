@@ -1,0 +1,31 @@
+﻿using Microsoft.EntityFrameworkCore.Migrations;
+
+#nullable disable
+
+namespace User.Infrastructure.Migrations
+{
+    /// <inheritdoc />
+    public partial class AddBitCred : Migration
+    {
+        /// <inheritdoc />
+        protected override void Up(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.AddColumn<short>(
+                name: "bits",
+                schema: "user",
+                table: "Credentials",
+                type: "smallint",
+                nullable: false,
+                defaultValue: (short)0);
+        }
+
+        /// <inheritdoc />
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.DropColumn(
+                name: "bits",
+                schema: "user",
+                table: "Credentials");
+        }
+    }
+}

@@ -1,11 +1,14 @@
-import { NoMacBaseDto } from "../NoMacBaseDto";
-
-export interface CredentialDto extends NoMacBaseDto{
+export interface CredentialDto {
+    id:number;
     bits:number;
+    flag:number;
+    cardNumber:number;
     issueCode:number;
-    facilityCode:number;
-    cardNo:number;
     pin:string;
-    activeDate:string;
-    deactiveDate:string;
+    useCount:number;
+    apbLoc:number;
+    active:string;
+    expire:string;
+    locationId:number;
+    isActive:boolean;
 }

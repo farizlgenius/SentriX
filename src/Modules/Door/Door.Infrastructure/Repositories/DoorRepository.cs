@@ -317,7 +317,7 @@ public sealed class DoorRepository(DoorDbContext context) : IDoorRepository
             .Select(x => new OptionDto(
                   x.name,
                   x.id,
-                  x.mac,
+                  x.mac+","+x.type,
                   x.component_id
             )).ToListAsync();
       }

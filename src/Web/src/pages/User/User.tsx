@@ -21,7 +21,6 @@ import Switch from '../../components/form/switch/Switch';
 import UserForm from './UserForm';
 import { FormContent } from '../../model/Form/FormContent';
 import { BaseForm } from '../UiElements/BaseForm';
-import { Gender } from '../../enum/Gender';
 
 
 
@@ -47,27 +46,23 @@ const User = () => {
         firstName: '',
         middleName: '',
         lastName: '',
-        gender: Gender.Male.toString(),
+        gender: '',
+        dateOfBirth: '',
         email: '',
         phone: '',
-        company: '',
-        position: '',
-        department: '',
-        additionals: [],
-        credentials: [],
-        accessLevels: [],
-        locationId: locationId,
-        isActive: true,
-        flag: 1,
         companyId: -1,
-        positionId: -1,
         departmentId: -1,
-        identification: '',
-        dateOfBirth: '',
+        positionId: -1,
         address: '',
+        flag: 0,
+        additionals: [],
+        image: '',
+        credentials: [],
+        groups: [],
+        locationId: 0,
         id: 0,
         name: '',
-        image: ''
+        isActive: false
     }
 
     const [cardHolderDto, setCardHolderDto] = useState<UserDto>(defaultDto)

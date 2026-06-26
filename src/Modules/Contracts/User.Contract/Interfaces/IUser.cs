@@ -27,10 +27,15 @@ public interface IUser
       Task<DepartmentDto> CreateDepartmentAsync(CreateDepartmentDto dto);
       Task<DepartmentDto> UpdateDepartmentAsync(DepartmentDto dto);
       Task<DepartmentDto> DeleteDepartmentAsync(int id);
+      Task<IEnumerable<OptionDto>> GetDepartmentOptionByCompanyAsync(int CompanyId);
       // Position
       Task<Pagination<PositionDto>> GetPositionPaginationAsync(PaginationParams param);
       Task<Pagination<PositionDto>> GetPositionByDepartmentAsync(PaginationParams param,int DepartmentId);
       Task<PositionDto> CreatePositionAsync(CreatePositionDto dto);
       Task<PositionDto> UpdatePositionAsync(PositionDto dto);
       Task<PositionDto> DeletePositionAsync(int id);
+      Task<IEnumerable<OptionDto>> GetPositionOptionByDepartmentAsync(int CompanyId);
+
+      Task<IEnumerable<OptionDto>> GetUserFlagOptionAsync();
+      
 }

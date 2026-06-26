@@ -27,6 +27,8 @@ public sealed class Users : BaseEntity
   public string image { get; set; } = string.Empty;
   public ICollection<Credential> credentials { get; set; } = new List<Credential>();
   public ICollection<UserGroup> user_groups { get; set; } = new List<UserGroup>();
+  public int vacation_id {get; set;}
+  public Vacation vacation {get; set;} = default!;
   public Users() { }
   public Users(Domain.Entities.Users users) : base(0,users.LocationId,users.IsActive)
   {

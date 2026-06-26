@@ -4,6 +4,6 @@ namespace Group.Contract.DTOs;
 
 public sealed record CreateGroupDto(
       string Name,
-      List<GroupDootDto> Doors,
+      List<GroupDoorDto> Doors,
       int LocationId, 
       bool IsActive) : BaseDto(0, LocationId, string.Empty, IsActive);

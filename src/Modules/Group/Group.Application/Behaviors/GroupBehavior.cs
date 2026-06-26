@@ -17,16 +17,16 @@ public sealed class GroupBehavior(IGroupRepository repo,IAdapterFactory factory,
       public async Task<GroupDto> CreateAsync(CreateGroupDto dto)
       {
             short ComponentId = await repo.GetLowestGroupComponentIdAsync();
+
             var domain = new Groups(
                   0,
                   ComponentId,
                   dto.Name,
                   dto.Doors.GroupBy(
-                        x => (x.Mac,x.DeviceComponentId,x.Type),
+                        x => (x.Mac,x.Type),
                         x => (x.DoorComponentId,x.TimezoneComponentId)
                   ).Select(gp => (
                         gp.Key.Mac,
-                        gp.Key.DeviceComponentId,
                         gp.Key.Type,
                         gp.ToList()
                   )).ToList(),
@@ -37,9 +37,10 @@ public sealed class GroupBehavior(IGroupRepository repo,IAdapterFactory factory,
 
             foreach(var d in domain.GroupDoors)
             {
+                  var DeviceComponentId = await bus.QueryAsync(new ComponentIdByMacQuery(d.Mac));
                   await factory.GetAdapter(d.Type).Group.CreateUpdateLevel(
                         d.Mac,
-                        d.DeviceComponentId,
+                        (short)DeviceComponentId,
                         ComponentId,
                         d.DoorDetails.Select(x => (x.DoorComponentId,x.TimezoneComponentId)).ToList()
                         );
@@ -72,9 +73,14 @@ public sealed class GroupBehavior(IGroupRepository repo,IAdapterFactory factory,
             
       }
 
+      public async Task<IEnumerable<GroupDto>> GetByLocationIdAsync(int location)
+      {
+            return await repo.GetByLocationIdAsync(location);
+      }
+
       public async Task<Pagination<GroupDto>> GetPaginationAsync(PaginationParams param)
       {
-            throw new NotImplementedException();
+            return await repo.GetPaginationAsync(param);
       }
 
       public async Task<GroupDto> UpdateAsync(GroupDto dto)
@@ -98,11 +104,10 @@ public sealed class GroupBehavior(IGroupRepository repo,IAdapterFactory factory,
                   dto.ComponentId,
                   dto.Name,
                   dto.Doors.GroupBy(
-                        x => (x.Mac,x.DeviceComponentId,x.Type),
+                        x => (x.Mac,x.Type),
                         x => (x.DoorComponentId,x.TimezoneComponentId)
                   ).Select(gp => (
                         gp.Key.Mac,
-                        gp.Key.DeviceComponentId,
                         gp.Key.Type,
                         gp.ToList()
                   )).ToList(),
@@ -114,9 +119,10 @@ public sealed class GroupBehavior(IGroupRepository repo,IAdapterFactory factory,
 
             foreach(var d in domain.GroupDoors)
             {
+                  var DeviceComponentId = await bus.QueryAsync(new ComponentIdByMacQuery(d.Mac));
                   await factory.GetAdapter(d.Type).Group.CreateUpdateLevel(
                         d.Mac,
-                        d.DeviceComponentId,
+                        (short)DeviceComponentId,
                         dto.ComponentId,
                         d.DoorDetails.Select(x => (x.DoorComponentId,x.TimezoneComponentId)).ToList()
                         );

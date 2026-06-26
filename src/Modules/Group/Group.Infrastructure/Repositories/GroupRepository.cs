@@ -1,8 +1,10 @@
+using Door.Contract.DTOs;
 using Group.Application.Interfaces;
 using Group.Contract.DTOs;
 using Group.Domain.Entities;
 using Group.Infrastructure.Persistences;
 using Microsoft.EntityFrameworkCore;
+using SharedKernel.Domain;
 using SharedKernel.Helpers;
 
 namespace Group.Infrastructure.Repositories;
@@ -24,7 +26,7 @@ public sealed class GroupRepository(GroupDbContext context) : IGroupRepository
                   data.Entity.id,
                   data.Entity.component_id,
                   data.Entity.name,
-                  new List<GroupDootDto>(),
+                  new List<GroupDoorDto>(),
                   data.Entity.location_id,
                   data.Entity.is_active
             );
@@ -49,7 +51,7 @@ public sealed class GroupRepository(GroupDbContext context) : IGroupRepository
                   data.Entity.id,
                   data.Entity.component_id,
                   data.Entity.name,
-                  new List<GroupDootDto>(),
+                  new List<GroupDoorDto>(),
                   data.Entity.location_id,
                   data.Entity.is_active
             );
@@ -63,7 +65,7 @@ public sealed class GroupRepository(GroupDbContext context) : IGroupRepository
                   x.id,
                   x.component_id,
                   x.name,
-                  new List<GroupDootDto>(),
+                  new List<GroupDoorDto>(),
                   x.location_id,
                   x.is_active
             ))
@@ -71,10 +73,24 @@ public sealed class GroupRepository(GroupDbContext context) : IGroupRepository
                   0,
                   0,
                   string.Empty,
-                  new List<GroupDootDto>(),
+                  new List<GroupDoorDto>(),
                   0,
                   false
                   );
+      }
+
+      public async Task<IEnumerable<GroupDto>> GetByLocationIdAsync(int location, CancellationToken ct = default)
+      {
+            return await context.Groups.AsNoTracking()
+            .Where(x => x.location_id == location)
+            .Select(x => new GroupDto(
+                  x.id,
+                  x.component_id,
+                  x.name,
+                  new List<GroupDoorDto>(),
+                  x.location_id,
+                  x.is_active
+                  )).ToArrayAsync();
       }
 
       public async Task<short> GetLowestGroupComponentIdAsync(CancellationToken ct = default)
@@ -85,6 +101,68 @@ public sealed class GroupRepository(GroupDbContext context) : IGroupRepository
                   100,
                   ct
             );
+      }
+
+      public async Task<Pagination<GroupDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
+      {
+            var query = context.Groups.AsNoTracking()
+            .Include(x => x.group_doors)
+            .ThenInclude(s => s.group_door_detail)
+            .Where(x => x.location_id == param.locationId || x.location_id == 0).AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(param.search))
+            {
+                  if (!string.IsNullOrWhiteSpace(param.search))
+                  {
+                        var search = param.search.Trim();
+
+                        if (context.Database.IsNpgsql())
+                        {
+                              var pattern = $"%{search}%";
+
+                              query = query.Where(x =>
+                                  EF.Functions.ILike(x.name, pattern) 
+                              );
+                        }
+                        else // SQL Server
+                        {
+                              query = query.Where(x =>
+                                  x.name.Contains(search) 
+                              );
+                        }
+
+                  }
+            }
+
+
+            if (param.startDate != null)
+            {
+                  var startUtc = DateTime.SpecifyKind(param.startDate.Value, DateTimeKind.Utc);
+                  query = query.Where(x => x.created_at >= startUtc);
+            }
+
+            if (param.endDate != null)
+            {
+                  var endUtc = DateTime.SpecifyKind(param.endDate.Value, DateTimeKind.Utc);
+                  query = query.Where(x => x.created_at <= endUtc);
+            }
+
+            var count = await query.CountAsync();
+
+            var res = await query.AsNoTracking()
+            .OrderByDescending(e => e.created_at)
+            .Skip((param.pageNumber - 1) * param.pageSize)
+            .Take(param.pageSize)
+            .Select(e => new GroupDto(
+                  e.id,
+                  e.component_id,
+                  e.name,
+                  new List<GroupDoorDto>(),
+                  e.location_id,
+                  e.is_active
+            )).ToListAsync(ct);
+
+            return new Pagination<GroupDto>(param.pageNumber,param.pageSize,count,(int)Math.Ceiling(count / (double)param.pageSize),res);
       }
 
       public async Task<bool> IsAnyByIdAsync(int id, CancellationToken ct = default)
@@ -120,7 +198,7 @@ public sealed class GroupRepository(GroupDbContext context) : IGroupRepository
                   data.Entity.id,
                   data.Entity.component_id,
                   data.Entity.name,
-                  new List<GroupDootDto>(),
+                  new List<GroupDoorDto>(),
                   data.Entity.location_id,
                   data.Entity.is_active
             );

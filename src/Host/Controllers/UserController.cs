@@ -121,6 +121,13 @@ public class UserController(IUser user) : ControllerBase
             return Ok(res);
       }
 
+      [HttpGet("/api/department/option/company/{companyId}")]
+      public async Task<IActionResult> GetDepartmentOptionByCompanyAsync(int companyId)
+      {
+            var res = await user.GetDepartmentOptionByCompanyAsync(companyId);
+            return Ok(res);
+      }
+
       [HttpPost("/api/department")]
       public async Task<IActionResult> CreateDepartmentAsync([FromBody] CreateDepartmentDto dto)
       {
@@ -176,5 +183,27 @@ public class UserController(IUser user) : ControllerBase
       {
             var res = await user.DeletePositionAsync(id);
             return Ok(res);
+      }
+
+      [HttpGet("/api/position/option/department/{deprtmentId}")]
+      public async Task<IActionResult> GetPositionOptionByDepartmentAsync(int deprtmentId)
+      {
+            var res = await user.GetPositionOptionByDepartmentAsync(deprtmentId);
+            return Ok(res);
+      }
+
+      [HttpGet("flag")]
+      public async Task<IActionResult> GetUserFlagOptionAsync()
+      {
+            var res = await user.GetUserFlagOptionAsync();
+            return Ok(res);
+      }
+
+      [HttpGet("scan")]
+      public async Task<IActionResult> ScanUserAsync()
+      {
+            // var res = await user.ScanUserAsync();
+            // return Ok(res);
+            return Ok();
       }
 }

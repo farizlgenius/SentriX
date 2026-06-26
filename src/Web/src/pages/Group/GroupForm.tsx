@@ -4,15 +4,13 @@ import Input from "../../components/form/input/InputField";
 import Button from "../../components/ui/button/Button";
 import Select from "../../components/form/Select";
 import { Options } from "../../model/Options";
-import { DoorDto } from "../../model/Door/DoorDto";
-import { TimeZoneDto } from "../../model/TimeZone/TimeZoneDto";
 import { TimeZoneEndPoint } from "../../endpoint/TimezoneEndpoint";
 import { DoorEndpoint } from "../../endpoint/DoorEndpoint";
 import { GroupDto } from "../../model/Group/GroupDto";
 import { send } from "../../api/api";
 import { useLocation } from "../../context/LocationContext";
 import { FormProp, FormType } from "../../model/Form/FormProp";
-import { DoorIcon, GroupIcon, TimeIcon } from "../../icons";
+import { DoorIcon, TimeIcon } from "../../icons";
 import React from "react";
 import { GroupDoorDto } from "../../model/Group/GroupDoorDto";
 
@@ -22,7 +20,6 @@ import { GroupDoorDto } from "../../model/Group/GroupDoorDto";
 const GroupForm: React.FC<PropsWithChildren<FormProp<GroupDto>>> = ({ dto, setDto, handleClick, type }) => {
   const defaulComponent: GroupDoorDto = {
     mac: "",
-    deviceComponentId: -1,
     doorComponentId: -1,
     timezoneComponentId: -1,
     type: "",
@@ -47,7 +44,7 @@ const GroupForm: React.FC<PropsWithChildren<FormProp<GroupDto>>> = ({ dto, setDt
     switch (e.target.name) {
       case "door":
         // setDoorTimezone(prev => ({ ...prev, doorId: Number(value), doorName: doorOption.find(a => a.value === Number(value))?.label ?? "", doorMacAddress: doorOption.find(a => a.value === Number(value))?.description ?? "" }))
-        setSelectComponent(prev => ({ ...prev, mac: doorOption.find(a => a.value === Number(value))?.description ?? "", doorId: Number(value), doorComponentId: doorOption.find(a => a.value === Number(value))?.additionalInfo }))
+        setSelectComponent(prev => ({ ...prev,type: doorOption.find(a => a.value === Number(value))?.description?.split(",")[1] ?? "", mac: doorOption.find(a => a.value === Number(value))?.description?.split(",")[0] ?? "", doorId: Number(value), doorComponentId: doorOption.find(a => a.value === Number(value))?.additionalInfo }))
         break;
       case "timezone":
         // setDoorTimezone(prev => ({ ...prev, timeZoneId: Number(value), timeZoneName: timeZoneOption.find(a => a.value === Number(value))?.label ?? "" }))
@@ -117,7 +114,7 @@ const GroupForm: React.FC<PropsWithChildren<FormProp<GroupDto>>> = ({ dto, setDt
           <div className="flex flex-col gap-6 w-full">
             <div className='flex flex-col gap-1'>
               <Label htmlFor="name">Name</Label>
-              <Input disabled={type == FormType.INFO} name="name" type="text" id="name" value={dto.name} onChange={e => setDto(prev => ({ ...prev, name: e.target.value }))} />
+              <Input placeholder="Group Name" disabled={type == FormType.INFO} name="name" type="text" id="name" value={dto.name} onChange={e => setDto(prev => ({ ...prev, name: e.target.value }))} />
             </div>
             {/* List Transfer */}
             <div className='flex gap-2 items-end'>
@@ -130,7 +127,7 @@ const GroupForm: React.FC<PropsWithChildren<FormProp<GroupDto>>> = ({ dto, setDt
                   placeholder="Select Option"
                   onChangeWithEvent={handleSelect}
                   className="dark:bg-dark-900"
-                  defaultValue={selectComponent.doorComponentId}
+                  defaultValue={selectComponent.doorId}
                 />
               </div>
               <div className='flex-2'>
@@ -143,42 +140,28 @@ const GroupForm: React.FC<PropsWithChildren<FormProp<GroupDto>>> = ({ dto, setDt
                   placeholder="Select Option"
                   onChangeWithEvent={handleSelect}
                   className="dark:bg-dark-900"
-                  defaultValue={selectComponent.timezoneComponentId}
+                  defaultValue={selectComponent.timezoneId}
                 />
 
               </div>
               <div>
                 <Button onClickWithEvent={() => {
-
-                  // setDto(prev => ({
-                  //   ...prev,
-                  //   components: prev.components.length === 0 ?
-                  //     [{
-                  //       mac: selectComponent.mac, doorComponent: [{
-                  //         acrId: selectComponent.acrId,
-                  //         doorId: selectComponent.doorId,
-                  //         timezoneId: selectComponent.timezoneId
-                  //       }]
-                  //     }]
-                  //     :
-                  //     prev.components.map(x => x.mac === selectComponent.mac ? {
-                  //       ...x,
-                  //       doorComponent: [...x.doorComponent, selectComponent]
-                  //     } : x)
-                  // }));
+                  if(selectComponent.mac == "" || selectComponent.timezoneId == -1 )
+                    return;
 
                   setDto(prev => ({
                     ...prev,
-                    doors: prev.doors.length != 0 ? [...prev.doors, selectComponent] : [{
+                      doors: prev.doors.length != 0 ? [...prev.doors, selectComponent] : [{
                       mac: selectComponent.mac,
                       doorId: selectComponent.doorId,
                       doorComponentId: selectComponent.doorComponentId,
                       timezoneComponentId: selectComponent.timezoneComponentId,
                       timezoneId: selectComponent.timezoneId,
-                      type:selectComponent.type,
-                      deviceComponentId:selectComponent.deviceComponentId
+                      type:selectComponent.type
                     }]
                   }))
+
+                  setSelectComponent(defaulComponent);
 
                 }} name='addDoor' size='sm'>Add</Button>
               </div>

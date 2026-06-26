@@ -8,7 +8,7 @@ import { useToast } from '../../context/ToastContext';
 import { GroupDto } from '../../model/Group/GroupDto';
 import { useLocation } from '../../context/LocationContext';
 import { send } from '../../api/api';
-import { AccessLevelEndPoint } from '../../endpoint/AccessLevelEndpoint';
+import { GroupEndpoint } from '../../endpoint/GroupEndpoint';
 import { BaseTable } from '../UiElements/BaseTable';
 import { useAuth } from '../../context/AuthContext';
 import { FeatureId } from '../../enum/FeatureId';
@@ -40,7 +40,7 @@ const Group = () => {
         componentId: 0,
         name: '',
         doors: [],
-        locationId: 0,
+        locationId: locationId,
         isActive: false
     }
     const [dto, setDto] = useState<GroupDto>(defaultDto);
@@ -66,9 +66,9 @@ const Group = () => {
                 setConfirmRemove(() => async () => {
                     var data: number[] = [];
                     selectedObjects.map(async (a: GroupDto) => {
-                        data.push(a.componentId)
+                        data.push(a.id)
                     })
-                    var res = await send.post(AccessLevelEndPoint.DELETE_RANGE, data)
+                    var res = await send.post(GroupEndpoint.DELETE_RANGE, data)
                     if (Helper.handleToastByResCode(res, AccessLevelToast.DELETE_RANGE, toggleToast)) {
                         setSelectedObjects([])
                         toggleRefresh();
@@ -78,7 +78,7 @@ const Group = () => {
                 break;
             case "create":
                 setConfirmCreate(() => async () => {
-                    const res = await send.post(AccessLevelEndPoint.CREATE, dto);
+                    const res = await send.post(GroupEndpoint.CREATE, dto);
                     if (Helper.handleToastByResCode(res, AccessLevelToast.CREATE, toggleToast)) {
                         setDto(defaultDto);
                         setForm(false);
@@ -89,7 +89,7 @@ const Group = () => {
                 break;
             case "update":
                 setConfirmUpdate(() => async () => {
-                    const res = await send.put(AccessLevelEndPoint.UPDATE, dto);
+                    const res = await send.put(GroupEndpoint.UPDATE, dto);
                     if (Helper.handleToastByResCode(res, AccessLevelToast.UPDATE, toggleToast)) {
                         setDto(defaultDto)
                         setForm(false);
@@ -123,7 +123,7 @@ const Group = () => {
 
     const handleRemove = (data: GroupDto) => {
         setConfirmRemove(() => async () => {
-            const res = await send.delete(AccessLevelEndPoint.DELETE(data.componentId))
+            const res = await send.delete(GroupEndpoint.DELETE(data.id))
             if (Helper.handleToastByResCode(res, AccessLevelToast.DELETE, toggleToast))
                 toggleRefresh();
         })
@@ -133,12 +133,11 @@ const Group = () => {
 
     {/* Group Data */ }
     const fetchData = async (pageNumber: number, pageSize: number,locationId?:number,search?: string, startDate?: string, endDate?: string) => {
-                const res = await send.get(AccessLevelEndPoint.PAGINATION(pageNumber,pageSize,locationId,search, startDate, endDate));
-                console.log(res?.data.data)
-                if (res && res.data.data) {
-                    console.log(res.data.data)
-                    setGroups(res.data.data.data);
-                    setPagination(res.data.data.page);
+                const res = await send.get(GroupEndpoint.PAGINATION(pageNumber,pageSize,locationId,search, startDate, endDate));
+                console.log(res)
+                if (res && res.data) {
+                    setGroups(res.data.items);
+                    setPagination(res.data);
                 }
             }
 
