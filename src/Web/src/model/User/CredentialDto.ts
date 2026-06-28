@@ -1,7 +1,8 @@
 export interface CredentialDto {
     id:number;
-    bits:number;
     flag:number;
+    bits:number;
+    fac:number;
     cardNumber:number;
     issueCode:number;
     pin:string;

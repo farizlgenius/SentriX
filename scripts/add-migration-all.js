@@ -9,8 +9,8 @@ if (!migrationName) {
 
 const modules = [
     "src/Modules/Auth/Auth.Infrastructure",
-    // "src/Modules/Cache/Cache.Infrastructure",
-    "src/Modules/Core/Core.Infrastructure",
+    "src/Modules/Input/Input.Infrastructure",
+    "src/Modules/User/User.Infrastructure",
     "src/Modules/Location/Location.Infrastructure",
     "src/Modules/Role/Role.Infrastructure",
     "src/Modules/Operator/Operator.Infrastructure",

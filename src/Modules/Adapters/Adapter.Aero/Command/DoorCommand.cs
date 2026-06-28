@@ -5,6 +5,7 @@ using Adapter.Aero.Interfaces;
 using HID.Aero.ScpdNet.Wrapper;
 using Microsoft.Extensions.Logging;
 using Npgsql.Internal;
+using SharedKernel.Helpers;
 using SharedKernel.Model;
 
 namespace Adapter.Aero.Command;
@@ -106,7 +107,7 @@ public sealed class DoorCommand(ILogger<DoorCommand> logger) : BaseCommand,IDoor
             c.uExtFeatureInfo.sIPBoverrides.iIPB_out_sio = InteriorPushButtonOutModuleComponentId;
             c.uExtFeatureInfo.sIPBoverrides.iIPB_out_num = InteriorPushButtonOutRelayNumber;
             c.dfofFilterTime = 0;
-            var result = Send((short)enCfgCmnd.enCcMpg, c);
+            var result = Send((short)enCfgCmnd.enCcACR, c);
             if (result)
             {
                   logger.LogInformation(LogMessageHelper.CommandSuccess(CommandConstant.AccessControlReaderConfiguration, DeviceComponentId));
@@ -165,7 +166,7 @@ public sealed class DoorCommand(ILogger<DoorCommand> logger) : BaseCommand,IDoor
             c.keypad_mode = KeypadMode;
             c.led_drive_mode = LedDriverMode;
             c.osdp_flags = OsdpFlag;
-            var result = Send((short)enCfgCmnd.enCcMpg, c);
+            var result = Send((short)enCfgCmnd.enCcReader, c);
             if (result)
             {
                   logger.LogInformation(LogMessageHelper.CommandSuccess(CommandConstant.ReaderSpecification, DeviceComponentId));
@@ -177,7 +178,7 @@ public sealed class DoorCommand(ILogger<DoorCommand> logger) : BaseCommand,IDoor
                         SCPDLL.scpGetTagLastPosted(DeviceComponentId),
                         DateTime.UtcNow,
                         DateTime.UtcNow,
-                        c.ToString(),
+                         ObjectHelper.ToAsciiString(c),
                         CommandStatus.PENDING.ToString(),
                         string.Empty,
                         true
@@ -194,7 +195,7 @@ public sealed class DoorCommand(ILogger<DoorCommand> logger) : BaseCommand,IDoor
                        -1,
                        DateTime.UtcNow,
                        DateTime.UtcNow,
-                       c.ToString(),
+                        ObjectHelper.ToAsciiString(c),
                        CommandStatus.PENDING.ToString(),
                        string.Empty,
                        false

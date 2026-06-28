@@ -79,32 +79,32 @@ const navItems: NavItem[] = [
     id: 6,
     name: "Devices",
     icon: <ModuleIcon />,
-    subItems: [{ name: "Controller", path: "/device", }, { name: "Module", path: "/module", },{ name: "Lift Controller", path: "/lift", },{ name: "Face Reader", path: "/face", }],
+    subItems: [{ name: "Devices", path: "/device", },{ name: "Lift Controller", path: "/lift", }],
   },{
     id: 7,
-    name:"Control Point",
+    name:"Outputs",
     icon:<ControlIcon />,
     path:"/control"
   },{
     id:8,
-    name:"Monitor Point",
+    name:"Inputs",
     icon:<MonitorIcon/>,
     path:"/monitor"
   },{ 
     id:9,
-    name: "Monitor Point Group",
+    name: "Input Group",
     icon:<GroupIcon/>, 
     path: "/monitorgroup", },
   {
     id: 10,
     icon: <DoorIcon />,
-    name: "ACR",
+    name: "Access Point",
     subItems: [{ name: "Door", path: "/door", }, { name: "Lift", path: "/lift", },{ name: "HL", path: "/hl", },{name:"Time Attendance",path:"/ta"},{name:"Guard Tour",path:"/guard"}],
   }, {
     id: 11,
     icon: <CardIcon />,
     name: "Users",
-    subItems: [{ name: "Users", path: "/cardholder", }, { name: "Company", path: "/company", },{ name: "Department", path: "/department", },{ name: "Position", path: "/position", }],
+    subItems: [{ name: "Users", path: "/user", }, { name: "Company", path: "/company", },{ name: "Department", path: "/department", },{ name: "Position", path: "/position", }],
   }, {
     id: 12,
     icon: <GroupIcon />,

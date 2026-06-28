@@ -8,7 +8,9 @@ using Adapter.Aero.Model;
 using AeroAdapter.Application.Interfaces;
 using Device.Contract.Interfaces;
 using Device.Contract.Queries;
+using Door.Contract.Interfaces;
 using Events.Contract.Constants;
+using Events.Contract.DTOs;
 using Events.Contract.Interfaces;
 using HID.Aero.ScpdNet.Wrapper;
 using Microsoft.Extensions.DependencyInjection;
@@ -51,7 +53,7 @@ public sealed class ScpReplyWorker(Channel<SCPReplyMessageDto> queue, ILogger<Sc
                             var h = scope.ServiceProvider.GetRequiredService<IDevice>();
                             var hw = await h.GetDeviceByComponentIdAsync(message.SCPId);
                             var mac = hw.Mac;
-                            var name = hw.Name;
+                            var name = string.Empty;
                             var actor = string.Empty;
                             var image = string.Empty;
                             var locationId = hw.LocationId;
@@ -77,7 +79,8 @@ public sealed class ScpReplyWorker(Channel<SCPReplyMessageDto> queue, ILogger<Sc
                                     //     ScanAcrNo = -1;
                                     //     ScanScpId = -1;
                                     // }
-
+                                    var door = scope.ServiceProvider.GetRequiredService<IDoor>();
+                                    name = await door.GetNameByMacAndComponentIdAsync(mac,message.tran.source_number);
                                     break;
                                 case (short)tranType.tranTypeDblCardFull:
                                     // if (isWaitingCardScan && ScanScpId == message.ScpId && ScanAcrNo == message.tran.source_number)
@@ -96,7 +99,8 @@ public sealed class ScpReplyWorker(Channel<SCPReplyMessageDto> queue, ILogger<Sc
                                     //     ScanAcrNo = -1;
                                     //     ScanScpId = -1;
                                     // }
-
+                                    door = scope.ServiceProvider.GetRequiredService<IDoor>();
+                                    name = await door.GetNameByMacAndComponentIdAsync(mac,message.tran.source_number);
                                     break;
                                 case (short)tranType.tranTypeI64CardFull:
                                     // if (isWaitingCardScan && ScanScpId == message.ScpId && ScanAcrNo == message.tran.source_number)
@@ -115,7 +119,8 @@ public sealed class ScpReplyWorker(Channel<SCPReplyMessageDto> queue, ILogger<Sc
                                     //     ScanAcrNo = -1;
                                     //     ScanScpId = -1;
                                     // }
-
+                                    door = scope.ServiceProvider.GetRequiredService<IDoor>();
+                                    name = await door.GetNameByMacAndComponentIdAsync(mac,message.tran.source_number);
                                     break;
                                 case (short)tranType.tranTypeI64CardFullIc32:
                                     // if (isWaitingCardScan && ScanScpId == message.ScpId && ScanAcrNo == message.tran.source_number)
@@ -134,13 +139,20 @@ public sealed class ScpReplyWorker(Channel<SCPReplyMessageDto> queue, ILogger<Sc
                                     //     ScanAcrNo = -1;
                                     //     ScanScpId = -1;
                                     // }
-
+                                    door = scope.ServiceProvider.GetRequiredService<IDoor>();
+                                    name = await door.GetNameByMacAndComponentIdAsync(mac,message.tran.source_number);
                                     break;
                                 case (short)tranType.tranTypeCardID:
+                                    door = scope.ServiceProvider.GetRequiredService<IDoor>();
+                                    name = await door.GetNameByMacAndComponentIdAsync(mac,message.tran.source_number);
                                     break;
                                 case (short)tranType.tranTypeDblCardID:
+                                    door = scope.ServiceProvider.GetRequiredService<IDoor>();
+                                    name = await door.GetNameByMacAndComponentIdAsync(mac,message.tran.source_number);
                                     break;
                                 case (short)tranType.tranTypeI64CardID:
+                                    door = scope.ServiceProvider.GetRequiredService<IDoor>();
+                                    name = await door.GetNameByMacAndComponentIdAsync(mac,message.tran.source_number);
                                     break;
                                 case (short)tranType.tranTypeCoS:
                                     switch (message.tran.source_type)
@@ -148,10 +160,13 @@ public sealed class ScpReplyWorker(Channel<SCPReplyMessageDto> queue, ILogger<Sc
                                         case (short)tranSrc.tranSrcSioCom:
                                             // moduleService.TriggerDeviceStatus(message.SCPId, message.tran.source_number, DecodeHelper.TypeSioCommStatusDecode(message.tran.cos.status), null, null, null);
                                             // publisher
+                                            var device = scope.ServiceProvider.GetRequiredService<IDevice>();
+                                            name = await device.GetModuleNameByMacAndComponentIdAsync(mac,message.tran.source_number);
                                             break;
                                         case (short)tranSrc.tranSrcMP:
                                             // var mp = new MpStatus(message.ScpId, message.tran.source_number, DecodeHelper.TypeCosStatusDecode(message.tran.cos.status));
                                             // await publisher.MpNotifyStatus(mp);
+ 
                                             break;
                                         case (short)tranSrc.tranSrcCP:
                                             // var cp = new CpStatus(message.ScpId, message.tran.source_number, DecodeHelper.TypeCosStatusDecode(message.tran.cos.status));
@@ -162,11 +177,14 @@ public sealed class ScpReplyWorker(Channel<SCPReplyMessageDto> queue, ILogger<Sc
                                     }
                                     break;
                                 case (short)tranType.tranTypeREX:
-
+                                    door = scope.ServiceProvider.GetRequiredService<IDoor>();
+                                    name = await door.GetNameByMacAndComponentIdAsync(mac,message.tran.source_number);
                                     break;
                                 case (short)tranType.tranTypeCoSDoor:
                                     // var doorstatus = new AcrStatus((short)message.ScpId, message.tran.source_number, "", DescriptionHelper.GetAccessPointStatusFlagResult(message.tran.door.ap_status));
                                     // await publisher.AcrNotifyStatus(doorstatus);
+                                    door = scope.ServiceProvider.GetRequiredService<IDoor>();
+                                    name = await door.GetNameByMacAndComponentIdAsync(mac,message.tran.source_number);
                                     break;
                                 case (short)tranType.tranTypeProcedure:
 
@@ -180,6 +198,8 @@ public sealed class ScpReplyWorker(Channel<SCPReplyMessageDto> queue, ILogger<Sc
                                 case (short)tranType.tranTypeAcr:
                                     // var modestatus = new AcrStatus((short)message.ScpId, message.tran.source_number, DescriptionHelper.GetAcrModeForStatus(message.tran.tran_code), "");
                                     // await publisher.AcrNotifyStatus(modestatus);
+                                    door = scope.ServiceProvider.GetRequiredService<IDoor>();
+                                    name = await door.GetNameByMacAndComponentIdAsync(mac,message.tran.source_number);
                                     break;
                                 case (short)tranType.tranTypeMpg:
 
@@ -229,10 +249,12 @@ public sealed class ScpReplyWorker(Channel<SCPReplyMessageDto> queue, ILogger<Sc
                                         image,
                                         mac,
                                         name,
+                                        TranHelper.GetCode((tranSrc)message.tran.source_type,(tranType)message.tran.tran_type,message.tran.tran_code),
                                         TranHelper.GetRemark(message),
                                         locationId
                                     );
-                            // await publisher.EventNotifyRecieve();
+                            var notifier = scope.ServiceProvider.GetRequiredService<INotifier>();
+                            await notifier.TriggerToTopic(NotifierTopic.EVENT);
                             break;
                         case (int)enSCPReplyType.enSCPReplyIDReport:
                             var scp = scope.ServiceProvider.GetRequiredService<IScp>();
@@ -255,8 +277,10 @@ public sealed class ScpReplyWorker(Channel<SCPReplyMessageDto> queue, ILogger<Sc
                             // );
                             break;
                         case (int)enSCPReplyType.enSCPReplyTranStatus:
+                            notifier = scope.ServiceProvider.GetRequiredService<INotifier>();
+                            var bus = scope.ServiceProvider.GetRequiredService<IMessageBus>();
                             // TranStatus t = new TranStatus(
-                            //     message.ScpId,
+                            //     message.SCPId,
                             //     message.tran_sts.capacity,
                             //     message.tran_sts.oldest,
                             //      message.tran_sts.last_loggd,
@@ -264,13 +288,19 @@ public sealed class ScpReplyWorker(Channel<SCPReplyMessageDto> queue, ILogger<Sc
                             //      message.tran_sts.disabled,
                             //      message.tran_sts.disabled == 0 ? "Enable" : "Disable"
                             //     );
-                            // await publisher.ScpNotifyTranStatus(t);
+                            await notifier.SendToTopic(
+                                NotifierTopic.EVENT_STATUS,
+                                new EventStatusDto(
+                                    await bus.QueryAsync(new IdByComponentIdQuery(message.SCPId)),
+                                    message.tran_sts.disabled == 0 ? true : false
+                                    )
+                                );
                             break;
                         case (int)enSCPReplyType.enSCPReplySrSio:
                             // var siostatus = new SioStatus(message.ScpId, message.sts_sio.number, DecodeHelper.TypeSioCommTranCodeDecode(message.sts_sio.com_status), DecodeHelper.TypeCosStatusDecode(Convert.ToByte(message.sts_sio.ip_stat[4])), DecodeHelper.TypeCosStatusDecode(Convert.ToByte(message.sts_sio.ip_stat[5])), DecodeHelper.TypeCosStatusDecode(Convert.ToByte(message.sts_sio.ip_stat[6])));
                             // await publisher.SioNotifyStatus(siostatus);
                             // var s = scope.ServiceProvider.GetRequiredService<IModule>();
-                            var notifier = scope.ServiceProvider.GetRequiredService<INotifier>();
+                            notifier = scope.ServiceProvider.GetRequiredService<INotifier>();
                             // await s.HandleFoundSioAsync(message.SCPId,message.sts_sio);
                             await notifier.SendToTopic(NotifierTopic.MODULE_STATUS, new StatusDto(
                                 message.SCPId,
@@ -323,7 +353,7 @@ public sealed class ScpReplyWorker(Channel<SCPReplyMessageDto> queue, ILogger<Sc
                             // await publisher.CmndNotifyStatus(cstatus);
                             break;
                         case (int)enSCPReplyType.enSCPReplyWebConfigNetwork:
-                            var bus = scope.ServiceProvider.GetRequiredService<IMessageBus>();
+                            bus = scope.ServiceProvider.GetRequiredService<IMessageBus>();
                             await bus.PublishAsync(new AssignIpEvent(message.SCPId, UtilitiesHelper.IntegerToIp(message.web_network.cIpAddr)), ct);
                             break;
                         case (int)enSCPReplyType.enSCPReplyWebConfigNotes:

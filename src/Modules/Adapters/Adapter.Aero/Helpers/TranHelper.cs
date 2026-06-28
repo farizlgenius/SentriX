@@ -343,7 +343,12 @@ public static class TranHelper
                   case (short)tranType.tranTypeDblCardFull:
                   case (short)tranType.tranTypeI64CardFull:
                   case (short)tranType.tranTypeI64CardFullIc32:
-                        return TypeCardFullRemark(msg.tran.tran_code);
+                        return TypeCardFullRemark(
+                              msg.tran.tran_code,
+                              msg.tran.c_full.facility_code,
+                              msg.tran.c_full.cardholder_id,
+                              msg.tran.c_full.issue_code,
+                              msg.tran.c_full.floor_number);
                   case (short)tranType.tranTypeCardID:
                   case (short)tranType.tranTypeDblCardID:
                   case (short)tranType.tranTypeI64CardID:
@@ -440,7 +445,7 @@ public static class TranHelper
             }
       }
 
-      private static string TypeCardFullRemark(int Code)
+      private static string TypeCardFullRemark(int Code,int Fac,int Card,short IssueCode,short Floor)
       {
             switch (Code)
             {
@@ -449,13 +454,13 @@ public static class TranHelper
                   case 2:
                         return "Door 'unlocked'";
                   case 3:
-                        return "Invalid facility code";
+                        return $"Invalid facility code [Fac: {Fac}]";
                   case 4:
                         return "Invalid facility code extension";
                   case 5:
-                        return "Card not found";
+                        return $"Card not found [Card: {Card}]";
                   case 6:
-                        return "Invalid issue code";
+                        return $"Invalid issue code [Issue: {IssueCode}]";
                   case 7:
                         return "Facility code verified,not used";
                   case 8:

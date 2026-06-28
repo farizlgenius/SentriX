@@ -50,21 +50,24 @@ export const CredentialForm: React.FC<PropsWithChildren<FormProp<UserDto>>> = ({
     var defaultCredential: CredentialDto = {
         bits: 0,
         issueCode: 0,
-        facilityCode: -1,
-        cardNo: 0,
+        fac: -1,
+        cardNumber: 0,
         pin: "",
-        activeDate: new Date().toISOString(),
-        deactiveDate: new Date(new Date().setFullYear(new Date().getFullYear() + 10)).toISOString(),
+        active: new Date().toISOString(),
+        expire: new Date(new Date().setFullYear(new Date().getFullYear() + 10)).toISOString(),
         locationId: locationId,
         isActive: true,
-        hardwareName: ""
+        id: 0,
+        flag: 0,
+        useCount: 0,
+        apbLoc: 0
     }
     const [credentialDto, setCredentialDto] = useState<CredentialDto>(defaultCredential);
 
     const handleClickInternal = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         switch (e.currentTarget.name) {
             case "add":
-                if(credentialDto.cardNo == 0 || credentialDto.bits == 0 || dto.credentials.some(x => x.cardNo == credentialDto.cardNo || x.facilityCode == credentialDto.facilityCode))
+                if(credentialDto.cardNumber == 0 || credentialDto.bits == 0 || dto.credentials.some(x => x.cardNumber == credentialDto.cardNumber || x.fac == credentialDto.fac))
                     return;
 
                 setDto(prev => ({ ...prev, credentials: [...prev.credentials, credentialDto] }))
@@ -229,7 +232,7 @@ export const CredentialForm: React.FC<PropsWithChildren<FormProp<UserDto>>> = ({
                                 <div className="overflow-auto scrollbar-thin scrollbar-transparent h-64 w-full rounded-lg border px-4 py-3 text-sm shadow-theme-xs bg-transparent">
                                     <div className="space-y-3">
                                         {dto.credentials.map((item) => {
-                                            const id = Number(item.cardNo);
+                                            const id = Number(item.cardNumber);
                                             const isSelected = selectedId === id;
 
                                             return (
@@ -249,16 +252,16 @@ export const CredentialForm: React.FC<PropsWithChildren<FormProp<UserDto>>> = ({
                                                     {/* Content */}
                                                     <div className="flex-1 grid grid-cols-2 gap-y-1 gap-x-4">
                                                         <Info label="Bits" value={item.bits} />
-                                                        <Info label="Facility" value={item.facilityCode} />
-                                                        <Info label="Card No" value={item.cardNo} />
+                                                        <Info label="Facility" value={item.fac} />
+                                                        <Info label="Card No" value={item.cardNumber} />
                                                         <Info label="PIN" value={item.pin || "-"} />
                                                         <Info
                                                             label="Active"
-                                                            value={new Date(item.activeDate).toLocaleDateString()}
+                                                            value={new Date(item.active).toLocaleDateString()}
                                                         />
                                                         <Info
                                                             label="Deactive"
-                                                            value={new Date(item.deactiveDate).toLocaleDateString()}
+                                                            value={new Date(item.expire).toLocaleDateString()}
                                                         />
                                                     </div>
                                                 </div>
@@ -339,18 +342,18 @@ export const CredentialForm: React.FC<PropsWithChildren<FormProp<UserDto>>> = ({
                                             <Label>Facility Code</Label>
                                             <Input
                                                 disabled={type == FormType.INFO}
-                                                name="facilityCode"
+                                                name="fac"
                                                 onChange={handleCredentialChange}
-                                                value={credentialDto.facilityCode}
+                                                value={credentialDto.fac}
                                             />
                                         </div>
                                         <div className='flex-3'>
                                             <Label>Card number</Label>
                                             <Input
                                                 disabled={type == FormType.INFO}
-                                                name="cardNo"
+                                                name="cardNumber"
                                                 onChange={handleCredentialChange}
-                                                value={credentialDto.cardNo}
+                                                value={credentialDto.cardNumber}
                                             />
                                         </div>
                                     </div>
@@ -372,7 +375,7 @@ export const CredentialForm: React.FC<PropsWithChildren<FormProp<UserDto>>> = ({
                                                 id="date-picker1"
                                                 label="Activate Date"
                                                 placeholder="Select a date"
-                                                value={credentialDto.activeDate}
+                                                value={credentialDto.active}
                                                 onChange={(dates, currentDateString) => {
                                                     // Handle your logic
                                                     console.log({ dates, currentDateString });
@@ -386,7 +389,7 @@ export const CredentialForm: React.FC<PropsWithChildren<FormProp<UserDto>>> = ({
                                                 id="date-picker2"
                                                 label="Deactivate Date"
                                                 placeholder="Select a date"
-                                                value={credentialDto.deactiveDate}
+                                                value={credentialDto.expire}
                                                 onChange={(dates, currentDateString) => {
                                                     // Handle your logic
                                                     console.log({ dates, currentDateString });

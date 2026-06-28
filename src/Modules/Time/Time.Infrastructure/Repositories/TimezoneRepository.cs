@@ -167,13 +167,15 @@ public sealed class TimezoneRepository(TimeDbContext context) : ITimezoneReposit
 
       public async Task<short> GetLowestTimezoneComponentIdAsync(CancellationToken ct = default)
       {
-            return (short)await ComponentHelper.LowestUnassignedNumberAsync<Timezone>(
+            return (short)await ComponentHelper.LowestUnassignedNumberStartOneAsync<Timezone>(
                   context,
                   x => x.component_id,
                   10,
                   ct
                   );
       }
+
+
 
       public async Task<Pagination<TimezoneDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
       {

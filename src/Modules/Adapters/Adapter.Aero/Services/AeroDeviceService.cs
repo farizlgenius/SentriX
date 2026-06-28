@@ -129,5 +129,18 @@ public sealed class AeroDeviceService(
             await bus.SendAsync(new AddCommandEvent(res));
             return res.IsSend;
       }
+
+      public async Task<bool> GetEventStatusAsync(string Mac, int ComponentId)
+      {
+            var res = writer.TransactionLogStatusAsync(Mac,(short)ComponentId);
+            return res.IsSend;
+      }
+
+      public async Task<bool> SetEventStatusAsync(string Mac, int ComponentId, bool IsEnable)
+      {
+            var res = writer.SetTransactionLogIndexAsync(Mac,(short)ComponentId,IsEnable);
+            await bus.SendAsync(new AddCommandEvent(res));
+            return res.IsSend;
+      }
 }
 

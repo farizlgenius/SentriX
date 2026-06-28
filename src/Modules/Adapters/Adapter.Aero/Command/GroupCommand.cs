@@ -5,6 +5,7 @@ using Adapter.Aero.Helpers;
 using Adapter.Aero.Interfaces;
 using HID.Aero.ScpdNet.Wrapper;
 using Microsoft.Extensions.Logging;
+using SharedKernel.Helpers;
 using SharedKernel.Model;
 
 namespace Adapter.Aero.Command;
@@ -38,7 +39,7 @@ public sealed class GroupCommand(ILogger<GroupCommand> logger) : BaseCommand, IG
                         SCPDLL.scpGetTagLastPosted(ScpId),
                         DateTime.UtcNow,
                         DateTime.UtcNow,
-                        c.ToString(),
+                         ObjectHelper.ToAsciiString(c),
                         CommandStatus.PENDING.ToString(),
                         string.Empty,
                         true
@@ -55,7 +56,7 @@ public sealed class GroupCommand(ILogger<GroupCommand> logger) : BaseCommand, IG
                        -1,
                        DateTime.UtcNow,
                        DateTime.UtcNow,
-                       c.ToString(),
+                        ObjectHelper.ToAsciiString(c),
                        CommandStatus.PENDING.ToString(),
                        string.Empty,
                        false

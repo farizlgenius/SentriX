@@ -128,12 +128,9 @@ namespace User.Infrastructure.Migrations
                     b.Property<int>("user_id")
                         .HasColumnType("integer");
 
-                    b.Property<int>("userid")
-                        .HasColumnType("integer");
-
                     b.HasKey("id");
 
-                    b.HasIndex("userid");
+                    b.HasIndex("user_id");
 
                     b.ToTable("Credentials", "user");
                 });
@@ -547,7 +544,7 @@ namespace User.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("vacation_id")
+                    b.Property<int?>("vacation_id")
                         .HasColumnType("integer");
 
                     b.HasKey("id");
@@ -599,14 +596,14 @@ namespace User.Infrastructure.Migrations
 
                     b.HasKey("id");
 
-                    b.ToTable("Vacation", "user");
+                    b.ToTable("Vacations", "user");
                 });
 
             modelBuilder.Entity("User.Infrastructure.Persistences.Entities.Credential", b =>
                 {
                     b.HasOne("User.Infrastructure.Persistences.Entities.Users", "user")
                         .WithMany("credentials")
-                        .HasForeignKey("userid")
+                        .HasForeignKey("user_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -680,8 +677,7 @@ namespace User.Infrastructure.Migrations
                     b.HasOne("User.Infrastructure.Persistences.Entities.Vacation", "vacation")
                         .WithOne("users")
                         .HasForeignKey("User.Infrastructure.Persistences.Entities.Users", "vacation_id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("company");
 
@@ -722,8 +718,7 @@ namespace User.Infrastructure.Migrations
 
             modelBuilder.Entity("User.Infrastructure.Persistences.Entities.Vacation", b =>
                 {
-                    b.Navigation("users")
-                        .IsRequired();
+                    b.Navigation("users");
                 });
 #pragma warning restore 612, 618
         }

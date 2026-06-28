@@ -7,6 +7,7 @@ using Adapter.Aero.Persistences.Entities;
 using AeroAdapter.Application.Interfaces;
 using HID.Aero.ScpdNet.Wrapper;
 using Microsoft.Extensions.Logging;
+using SharedKernel.Helpers;
 using SharedKernel.Model;
 
 namespace AeroAdapter.Infrastructure.Writer;
@@ -65,7 +66,6 @@ public sealed class ScpCommand(ILogger<ScpCommand> logger) : BaseCommand, IScpCo
             c.oper_type = operType;
             c.nLanguages = nLanguage;
             c.nSrvcType = 0;
-            var command = LogMessageHelper.ToString(c);
             var result = Send((short)enCfgCmnd.enCcScpScp, c);
             if (result)
             {
@@ -78,7 +78,7 @@ public sealed class ScpCommand(ILogger<ScpCommand> logger) : BaseCommand, IScpCo
                         SCPDLL.scpGetTagLastPosted(ScpId),
                         DateTime.UtcNow,
                         DateTime.UtcNow,
-                        string.Empty,
+                       ObjectHelper.ToAsciiString(c),
                         CommandStatus.PENDING.ToString(),
                         string.Empty,
                         true
@@ -95,7 +95,7 @@ public sealed class ScpCommand(ILogger<ScpCommand> logger) : BaseCommand, IScpCo
                        -1,
                        DateTime.UtcNow,
                        DateTime.UtcNow,
-                       string.Empty,
+                       ObjectHelper.ToAsciiString(c),
                        CommandStatus.FAILED.ToString(),
                        string.Empty,
                        false
@@ -163,7 +163,7 @@ public sealed class ScpCommand(ILogger<ScpCommand> logger) : BaseCommand, IScpCo
                         SCPDLL.scpGetTagLastPosted(ScpId),
                         DateTime.UtcNow,
                         DateTime.UtcNow,
-                        string.Empty,
+                        ObjectHelper.ToAsciiString(c),
                         CommandStatus.PENDING.ToString(),
                         string.Empty,
                         true
@@ -180,7 +180,7 @@ public sealed class ScpCommand(ILogger<ScpCommand> logger) : BaseCommand, IScpCo
                        -1,
                        DateTime.UtcNow,
                        DateTime.UtcNow,
-                       string.Empty,
+                       ObjectHelper.ToAsciiString(c),
                        CommandStatus.FAILED.ToString(),
                        string.Empty,
                        false
@@ -285,7 +285,7 @@ public sealed class ScpCommand(ILogger<ScpCommand> logger) : BaseCommand, IScpCo
                         SCPDLL.scpGetTagLastPosted(ScpId),
                         DateTime.UtcNow,
                         DateTime.UtcNow,
-                        string.Empty,
+                      ObjectHelper.ToAsciiString(c),
                         CommandStatus.PENDING.ToString(),
                         string.Empty,
                         true
@@ -302,7 +302,7 @@ public sealed class ScpCommand(ILogger<ScpCommand> logger) : BaseCommand, IScpCo
                        -1,
                        DateTime.UtcNow,
                        DateTime.UtcNow,
-                       string.Empty,
+                      ObjectHelper.ToAsciiString(c),
                        CommandStatus.FAILED.ToString(),
                        string.Empty,
                        false
@@ -311,7 +311,7 @@ public sealed class ScpCommand(ILogger<ScpCommand> logger) : BaseCommand, IScpCo
             }
       }
 
-      public CommandResponse ElevatorAccessLevelSpecification(string Mac,short ScpId,short MaxEalvl,short MaxFloor)
+      public CommandResponse ElevatorAccessLevelSpecification(string Mac, short ScpId, short MaxEalvl, short MaxFloor)
       {
             // CC_ELALVLSPC c = new CC_ELALVLSPC();
             // c.scp_number = ScpId;
@@ -340,7 +340,7 @@ public sealed class ScpCommand(ILogger<ScpCommand> logger) : BaseCommand, IScpCo
             throw new NotImplementedException();
       }
 
-      public CommandResponse ReadsConfiguration(string Mac,short ScpId, WebConfigReadType Type)
+      public CommandResponse ReadsConfiguration(string Mac, short ScpId, WebConfigReadType Type)
       {
             CC_WEB_CONFIG_READ c = new CC_WEB_CONFIG_READ();
             c.scp_number = ScpId;
@@ -357,7 +357,7 @@ public sealed class ScpCommand(ILogger<ScpCommand> logger) : BaseCommand, IScpCo
                         SCPDLL.scpGetTagLastPosted(ScpId),
                         DateTime.UtcNow,
                         DateTime.UtcNow,
-                        string.Empty,
+                       ObjectHelper.ToAsciiString(c),
                         CommandStatus.PENDING.ToString(),
                         string.Empty,
                         true
@@ -374,7 +374,7 @@ public sealed class ScpCommand(ILogger<ScpCommand> logger) : BaseCommand, IScpCo
                        -1,
                        DateTime.UtcNow,
                        DateTime.UtcNow,
-                       string.Empty,
+                      ObjectHelper.ToAsciiString(c),
                        CommandStatus.FAILED.ToString(),
                        string.Empty,
                        false
@@ -384,14 +384,14 @@ public sealed class ScpCommand(ILogger<ScpCommand> logger) : BaseCommand, IScpCo
 
       }
 
-      
 
-      public CommandResponse ScpReset(string Mac,short ScpId)
+
+      public CommandResponse ScpReset(string Mac, short ScpId)
       {
 
             CC_RESET c = new CC_RESET();
             c.scp_number = ScpId;
-            var command = LogMessageHelper.ToString(c);
+            var command = ObjectHelper.ToAsciiString(c);
             var result = Send((short)enCfgCmnd.enCcReset, c);
             if (result)
             {
@@ -404,7 +404,7 @@ public sealed class ScpCommand(ILogger<ScpCommand> logger) : BaseCommand, IScpCo
                         SCPDLL.scpGetTagLastPosted(ScpId),
                         DateTime.UtcNow,
                         DateTime.UtcNow,
-                        string.Empty,
+                        ObjectHelper.ToAsciiString(c),
                         CommandStatus.PENDING.ToString(),
                         string.Empty,
                         true
@@ -421,7 +421,7 @@ public sealed class ScpCommand(ILogger<ScpCommand> logger) : BaseCommand, IScpCo
                        -1,
                        DateTime.UtcNow,
                        DateTime.UtcNow,
-                       string.Empty,
+                       ObjectHelper.ToAsciiString(c),
                        CommandStatus.FAILED.ToString(),
                        string.Empty,
                        false
@@ -430,7 +430,7 @@ public sealed class ScpCommand(ILogger<ScpCommand> logger) : BaseCommand, IScpCo
             }
       }
 
-      public CommandResponse ScpStructureStatusRead(string Mac,short ScpId, List<short> StructureList)
+      public CommandResponse ScpStructureStatusRead(string Mac, short ScpId, List<short> StructureList)
       {
             CC_STRSRQ c = new CC_STRSRQ();
             c.nScpID = ScpId;
@@ -440,7 +440,7 @@ public sealed class ScpCommand(ILogger<ScpCommand> logger) : BaseCommand, IScpCo
             {
                   c.nStructId[i] = StructureList.ElementAt(i);
             }
-            var command = LogMessageHelper.ToString(c);
+            var command = ObjectHelper.ToAsciiString(c);
             var result = Send((short)enCfgCmnd.enCcStrSRq, c);
             if (result)
             {
@@ -453,7 +453,7 @@ public sealed class ScpCommand(ILogger<ScpCommand> logger) : BaseCommand, IScpCo
                         SCPDLL.scpGetTagLastPosted(ScpId),
                         DateTime.UtcNow,
                         DateTime.UtcNow,
-                        string.Empty,
+                        ObjectHelper.ToAsciiString(c),
                         CommandStatus.PENDING.ToString(),
                         string.Empty,
                         true
@@ -470,7 +470,7 @@ public sealed class ScpCommand(ILogger<ScpCommand> logger) : BaseCommand, IScpCo
                        -1,
                        DateTime.UtcNow,
                        DateTime.UtcNow,
-                       string.Empty,
+                       ObjectHelper.ToAsciiString(c),
                        CommandStatus.FAILED.ToString(),
                        string.Empty,
                        false
@@ -480,7 +480,7 @@ public sealed class ScpCommand(ILogger<ScpCommand> logger) : BaseCommand, IScpCo
       }
 
 
-      public CommandResponse TimeSet(string Mac,short ScpId)
+      public CommandResponse TimeSet(string Mac, short ScpId)
       {
             CC_TIME c = new CC_TIME();
             c.scp_number = ScpId;
@@ -497,7 +497,7 @@ public sealed class ScpCommand(ILogger<ScpCommand> logger) : BaseCommand, IScpCo
                         SCPDLL.scpGetTagLastPosted(ScpId),
                         DateTime.UtcNow,
                         DateTime.UtcNow,
-                        string.Empty,
+                       ObjectHelper.ToAsciiString(c),
                         CommandStatus.PENDING.ToString(),
                         string.Empty,
                         true
@@ -514,7 +514,7 @@ public sealed class ScpCommand(ILogger<ScpCommand> logger) : BaseCommand, IScpCo
                        -1,
                        DateTime.UtcNow,
                        DateTime.UtcNow,
-                       string.Empty,
+                       ObjectHelper.ToAsciiString(c),
                        CommandStatus.FAILED.ToString(),
                        string.Empty,
                        false
@@ -525,7 +525,7 @@ public sealed class ScpCommand(ILogger<ScpCommand> logger) : BaseCommand, IScpCo
 
       public CommandResponse SetScpId(string Mac, short ScpId, short To)
       {
-            CC_SCPID c= new CC_SCPID();
+            CC_SCPID c = new CC_SCPID();
             c.scp_number = ScpId;
             c.scp_id = To;
             var result = Send((short)enCfgCmnd.enCcScpID, c);
@@ -540,7 +540,7 @@ public sealed class ScpCommand(ILogger<ScpCommand> logger) : BaseCommand, IScpCo
                         SCPDLL.scpGetTagLastPosted(ScpId),
                         DateTime.UtcNow,
                         DateTime.UtcNow,
-                        string.Empty,
+                        ObjectHelper.ToAsciiString(c),
                         CommandStatus.PENDING.ToString(),
                         string.Empty,
                         true
@@ -557,7 +557,92 @@ public sealed class ScpCommand(ILogger<ScpCommand> logger) : BaseCommand, IScpCo
                        -1,
                        DateTime.UtcNow,
                        DateTime.UtcNow,
+                       ObjectHelper.ToAsciiString(c),
+                       CommandStatus.FAILED.ToString(),
                        string.Empty,
+                       false
+                       );
+
+            }
+      }
+
+      public CommandResponse TransactionLogStatusAsync(string Mac, short ScpId)
+      {
+            CC_TRANSRQ c = new CC_TRANSRQ();
+            c.scp_number = ScpId;
+            var result = Send((short)enCfgCmnd.enCcTranSrq, c);
+            if (result)
+            {
+                  logger.LogInformation(LogMessageHelper.CommandSuccess(CommandConstant.TransactionLogStatus, ScpId));
+
+                  return new CommandResponse(
+                        Mac,
+                        ScpId,
+                        CommandConstant.ScpSetId,
+                        SCPDLL.scpGetTagLastPosted(ScpId),
+                        DateTime.UtcNow,
+                        DateTime.UtcNow,
+                        ObjectHelper.ToAsciiString(c),
+                        CommandStatus.PENDING.ToString(),
+                        string.Empty,
+                        true
+                        );
+
+            }
+            else
+            {
+                  logger.LogError(LogMessageHelper.CommandUnsuccess(CommandConstant.TransactionLogStatus, ScpId));
+                  return new CommandResponse(
+                        Mac,
+                       ScpId,
+                       CommandConstant.ScpSetId,
+                       -1,
+                       DateTime.UtcNow,
+                       DateTime.UtcNow,
+                       ObjectHelper.ToAsciiString(c),
+                       CommandStatus.FAILED.ToString(),
+                       string.Empty,
+                       false
+                       );
+
+            }
+      }
+
+      public CommandResponse SetTransactionLogIndexAsync(string Mac, short ScpId, bool IsEnable)
+      {
+            CC_TRANINDEX c = new CC_TRANINDEX();
+            c.scp_number = ScpId;
+            c.tran_index = IsEnable ? -2 : -1;
+            var result = Send((short)enCfgCmnd.enCcTranIndex, c);
+            if (result)
+            {
+                  logger.LogInformation(LogMessageHelper.CommandSuccess(CommandConstant.TransactionLogStatus, ScpId));
+
+                  return new CommandResponse(
+                        Mac,
+                        ScpId,
+                        CommandConstant.ScpSetId,
+                        SCPDLL.scpGetTagLastPosted(ScpId),
+                        DateTime.UtcNow,
+                        DateTime.UtcNow,
+                        ObjectHelper.ToAsciiString(c),
+                        CommandStatus.PENDING.ToString(),
+                        string.Empty,
+                        true
+                        );
+
+            }
+            else
+            {
+                  logger.LogError(LogMessageHelper.CommandUnsuccess(CommandConstant.TransactionLogStatus, ScpId));
+                  return new CommandResponse(
+                        Mac,
+                       ScpId,
+                       CommandConstant.ScpSetId,
+                       -1,
+                       DateTime.UtcNow,
+                       DateTime.UtcNow,
+                       ObjectHelper.ToAsciiString(c),
                        CommandStatus.FAILED.ToString(),
                        string.Empty,
                        false

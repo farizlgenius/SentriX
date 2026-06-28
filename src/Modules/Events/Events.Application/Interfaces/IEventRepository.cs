@@ -16,6 +16,7 @@ public interface IEventRepository
             string image,
             string mac,
             string name,
+            string code,
             string remarks,
             int locationId,
             CancellationToken ct = default

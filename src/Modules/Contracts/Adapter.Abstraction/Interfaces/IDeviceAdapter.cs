@@ -19,5 +19,7 @@ public interface IDeviceAdapter
             short Port
       );
       Task<bool> AsciiCommandAsync(string Mac,int ComponentId,string Command);
+      Task<bool> GetEventStatusAsync(string Mac,int ComponentId);
+      Task<bool> SetEventStatusAsync(string Mac,int ComponentId,bool IsEnable);
 
 }

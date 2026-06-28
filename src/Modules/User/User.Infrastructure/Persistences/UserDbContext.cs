@@ -17,6 +17,7 @@ public sealed class UserDbContext(DbContextOptions<UserDbContext> options) : DbC
       public DbSet<UserAdditional> UserAdditionals {get; set;}
       public DbSet<UserGroup> UserGroups {get; set;}
       public DbSet<UserFlag> UserFlags {get; set;}
+      public DbSet<Vacation> Vacations {get; set;}
 
       protected override void OnModelCreating(ModelBuilder modelBuilder)
       {
@@ -55,12 +56,36 @@ public sealed class UserDbContext(DbContextOptions<UserDbContext> options) : DbC
                   }
             }
 
+            modelBuilder.Entity<Users>()
+            .HasMany(x => x.credentials)
+            .WithOne(x => x.user)
+            .HasForeignKey(x => x.user_id)
+            .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<Company>()
-            .HasMany(x => x.users)
-            .WithOne(x => x.company)
+            modelBuilder.Entity<Users>()
+            .HasOne(x => x.company)
+            .WithMany(x => x.users)
             .HasForeignKey(x => x.company_id)
             .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Users>()
+            .HasOne(x => x.department)
+            .WithMany(x => x.users)
+            .HasForeignKey(x => x.department_id)
+            .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Users>()
+            .HasOne(x => x.position)
+            .WithMany(x => x.users)
+            .HasForeignKey(x => x.position_id)
+            .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Users>()
+            .HasOne(x => x.vacation)
+            .WithOne(x => x.users)
+            .HasForeignKey<Users>(x => x.vacation_id)
+            .OnDelete(DeleteBehavior.Cascade);
+
 
             modelBuilder.Entity<Company>()
             .HasMany(x => x.departments)
@@ -69,28 +94,13 @@ public sealed class UserDbContext(DbContextOptions<UserDbContext> options) : DbC
             .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Department>()
-            .HasMany(x => x.users)
-            .WithOne(x => x.department)
-            .HasForeignKey(x => x.department_id)
-            .OnDelete(DeleteBehavior.Cascade);
-
-            modelBuilder.Entity<Department>()
             .HasMany(x => x.positions)
             .WithOne(x => x.department)
             .HasForeignKey(x => x.department_id)
             .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<Position>()
-            .HasMany(x => x.users)
-            .WithOne(x => x.position)
-            .HasForeignKey(x => x.position_id)
-            .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<Users>()
-            .HasOne(x => x.vacation)
-            .WithOne(x => x.users)
-            .HasForeignKey<Users>(s => s.vacation_id)
-            .OnDelete(DeleteBehavior.Cascade);
+            
 
             modelBuilder.Entity<UserFlag>()
             .HasData(

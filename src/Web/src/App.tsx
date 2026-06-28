@@ -23,7 +23,6 @@ import { ScrollToTop } from "./components/common/ScrollToTop";
 import Home from "./pages/Dashboard/Home";
 
 // ACS
-import Module from "./pages/Module/Module";
 import Event from "./pages/Event/Event";
 import ControlPoint from "./pages/ControlPoint/ControlPoint";
 import MonitorPoint from "./pages/MonitorPoint/MonitorPoint";
@@ -226,7 +225,6 @@ const fetchIdReport = async () => {
             <Route path="/position" element={<Position />} />
             < Route path="/scan" element={<Scan />}/>
             <Route path="/device" element={<Device />} />
-            <Route path="/module" element={<Module />} />
             <Route path="/event" element={<Event />} />
             <Route path="/control" element={<ControlPoint />} />
             <Route path="/monitor" element={<MonitorPoint />} />
@@ -235,7 +233,7 @@ const fetchIdReport = async () => {
             <Route path="/level" element={<Group />} />
             <Route path="/area" element={<Area />} />
             <Route path="/timezone" element={<TimeZone />} />
-            <Route path="/cardholder" element={<User />} />
+            <Route path="/user" element={<User />} />
             <Route path="/cardformat" element={<CardFormat />} />
             <Route path="/led" element={<Led />} />
             <Route path="/holiday" element={<Holiday />} />

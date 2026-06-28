@@ -1,4 +1,5 @@
 export interface SetTranDto{
-    macAddress:string;
-    param:number;
+    deviceId:number;
+    type:string;
+    isEnable:boolean;
 }

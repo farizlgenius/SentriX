@@ -10,6 +10,7 @@ public sealed record EventDto(
       string Image,
       string Mac,
       string Name,
+      string Code,
       string Remarks,
       int LocationId
       );

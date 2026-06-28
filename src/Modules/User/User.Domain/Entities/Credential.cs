@@ -38,17 +38,18 @@ public sealed class Credential : BaseDomain
             ValidationHelper.ValidateNotMinus(bits,nameof(Bits));
             ValidationHelper.ValidateNotMinus(userId,nameof(UserId));
             ValidationHelper.ValidateNotMinus((int)cardNumber,nameof(CardNumber));
-            ValidationHelper.ValidateNotMinus((int)fac,nameof(Fac));
             ValidationHelper.ValidateNotMinus(issueCode,nameof(IssueCode));
             ValidationHelper.ValidateDigit(pin,nameof(Pin));
-            if(active < DateTime.UtcNow)
-                  throw new ArgumentException("Active date invalid.");
 
-            if(expire < DateTime.UtcNow || expire < active)
+            if(expire < DateTime.UtcNow)
                   throw new ArgumentException("Deactive date invalid.");
+
+            if(active > expire)
+                  throw new ArgumentException("Deactive date must larger than active.");
 
             this.Flag = flag;
             this.Bits = bits;
+            this.Fac = fac;
             this.UserId = userId;
             this.CardNumber = cardNumber;
             this.IssueCode = issueCode;

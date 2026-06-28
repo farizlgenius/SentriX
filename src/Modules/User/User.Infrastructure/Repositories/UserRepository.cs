@@ -111,72 +111,51 @@ public sealed class UserRepository(UserDbContext context) : IUserRepository
       public async Task<UserDto> CreateUserAsync(Domain.Entities.Users dto, CancellationToken ct = default)
       {
             var entity = new Persistences.Entities.Users(dto);
-            var data = await context.Users.AddAsync(entity, ct);
 
             // Add Additional
-            await context.UserAdditionals.AddRangeAsync(
-                  dto.Additionals.Select(
-                        x => new UserAdditional(
-                              data.Entity.id,
-                              x
-                              )
-                  )
-            );
+            entity.additionals = dto.Additionals.Select(x => new UserAdditional(x)).ToArray();
 
-            // Credential
+            // Add Credential
+            entity.credentials = dto.Credentials.Select(x => new Persistences.Entities.Credential(x)).ToArray();
 
-            await context.Credentials.AddRangeAsync(
-                  dto.Credentials.Select(x => new Persistences.Entities.Credential(
-                        x
-                  )).ToList()
-            );
+            // Add User Group
+            entity.user_groups = dto.Groups.Select(x => new UserGroup(
+                  x,
+                  dto.LocationId,
+                  true
+                  )).ToArray();
 
-            // User Group
-
-
-            await context.UserGroups.AddRangeAsync(
-                  dto.Groups.Select(x => new Persistences.Entities.UserGroup(
-                        entity.id,
-                        x,
-                        entity.location_id,
-                        true
-                  )).ToList()
-            );
+            var data = await context.Users.AddAsync(entity, ct);
 
             var save = await context.SaveChangesAsync(ct);
 
             if(data.Entity == null || save <= 0)
                   throw new Exception(MessageHelper.DB.SaveRecordUnsuccessful);
 
-            var res = await context.Users.AsNoTracking()
+            return await context.Users.AsNoTracking()
             .OrderByDescending(x => x.id)
-            .Include(x => x.credentials)
-            .Include(x => x.additionals)
-            .Include(x => x.user_groups)
             .Where(x => x.id == data.Entity.id && x.user_id == data.Entity.user_id)
-            .FirstOrDefaultAsync();
-
-            if(res == null)
-                  throw new Exception(MessageHelper.DB.RecordNotFound);
-
-            return new UserDto(
-                  res.id,
-                  res.user_id,
-                  res.title,
-                  res.first_name,
-                  res.middle_name,
-                  res.last_name,
-                  res.gender,
-                  res.date_of_birth,
-                  res.email,
-                  res.phone,
-                  res.company_id,
-                  res.department_id,
-                  res.position_id,
-                  res.address,
-                  res.additionals.Select(x => x.additional).ToList(),
-                  res.image,
-                  res.credentials.Select(c => new CredentialDto(
+            .Select(x => new UserDto(
+                  x.id,
+                  x.user_id,
+                  x.title,
+                  x.first_name,
+                  x.middle_name,
+                  x.last_name,
+                  x.gender,
+                  x.date_of_birth,
+                  x.email,
+                  x.phone,
+                  x.company_id,
+                  x.company.name,
+                  x.department_id,
+                  x.department.name,
+                  x.position_id,
+                  x.position.name,
+                  x.address,
+                  x.additionals.Select(x => x.additional).ToList(),
+                  x.image,
+                  x.credentials.Select(c => new CredentialDto(
                         c.id,
                         c.flag,
                         c.bits,
@@ -191,10 +170,14 @@ public sealed class UserRepository(UserDbContext context) : IUserRepository
                         c.location_id,
                         c.is_active
                   )).ToList(),
-                  res.user_groups.Select(x => x.group_id).ToList(),
-                  res.location_id,
-                  res.is_active
-            );
+                  x.user_groups.Select(g => g.group_id).ToList(),
+                  x.vacation_id ?? 0,
+                  x.location_id,
+                  x.is_active
+            ))
+            .FirstOrDefaultAsync() ?? new UserDto();
+
+          
       }
 
       public async Task<CompanyDto> DeleteCompanyAsync(int id, CancellationToken ct = default)
@@ -733,8 +716,11 @@ public sealed class UserRepository(UserDbContext context) : IUserRepository
                   u.email,
                   u.phone,
                   u.company_id,
+                  u.company.name,
                   u.department_id,
+                  u.department.name,
                   u.position_id,
+                  u.position.name,
                   u.address,
                   u.additionals.Select(s => s.additional).ToList(),
                   u.image,
@@ -755,6 +741,7 @@ public sealed class UserRepository(UserDbContext context) : IUserRepository
                   )).ToList(),
                   u.user_groups.Select(ug => ug.group_id).ToList(),
                   u.location_id,
+                  u.vacation_id ?? 0,
                   u.is_active
                   ))
             .ToListAsync(ct);
@@ -904,60 +891,36 @@ public sealed class UserRepository(UserDbContext context) : IUserRepository
       public async Task<UserDto> UpdateUserAsync(Domain.Entities.Users user, CancellationToken ct = default)
       {
 
-            var entity = await context.Users.OrderByDescending(x => x.id)
-            .Where(x => x.id == user.Id)
-            .FirstOrDefaultAsync();
+            var entity = await context.Users
+                        .Include(x => x.credentials)
+                        .Include(x => x.additionals)
+                        .Include(x => x.user_groups)
+                        .FirstOrDefaultAsync(x => x.id == user.Id, ct);
 
             if (entity == null)
                   throw new Exception(MessageHelper.DB.RecordNotFound);
 
-            // Additional
-            var additionals = await context.UserAdditionals
-            .OrderByDescending(x => x.id)
-            .Where(x => x.user_id == user.Id)
-            .ToListAsync();
-
-            context.UserAdditionals.RemoveRange(additionals);
-
-            await context.UserAdditionals.AddRangeAsync(
-                  user.Additionals.Select(x => new UserAdditional(
-                        entity.id,
-                        x
-                  )).ToList()
-            );
-            
-            // Credential
-            var credential = await context.Credentials
-            .OrderByDescending(x => x.id)
-            .Where(x => x.user_id == user.Id)
-            .ToListAsync();
-
-            context.Credentials.RemoveRange(credential);
-
-            await context.Credentials.AddRangeAsync(
-                  user.Credentials.Select(x => new Persistences.Entities.Credential(
-                        x
-                  )).ToList()
-            );
-
-            // User Group
-            var group = await context.UserGroups
-            .OrderByDescending(x => x.id)
-            .Where(x => x.user_id == user.Id)
-            .ToListAsync();
-
-            context.UserGroups.RemoveRange(group);
-
-            await context.UserGroups.AddRangeAsync(
-                  user.Groups.Select(x => new Persistences.Entities.UserGroup(
-                        user.Id,
-                        x,
-                        user.LocationId,
-                        true
-                  )).ToList()
-            );
-
             entity.Update(user);
+
+            context.Credentials.RemoveRange(entity.credentials);
+            context.UserAdditionals.RemoveRange(entity.additionals);
+            context.UserGroups.RemoveRange(entity.user_groups);
+
+            entity.credentials = user.Credentials
+                  .Select(x => new Persistences.Entities.Credential(x))
+                  .ToList();
+
+            entity.additionals = user.Additionals
+                  .Select(x => new UserAdditional( x))
+                  .ToList();
+
+            entity.user_groups = user.Groups
+            .Select(x => new UserGroup(
+                  x,
+                  user.LocationId,
+                  true))
+            .ToList();
+
 
             var data = context.Users.Update(entity);
             var save = await context.SaveChangesAsync();
@@ -965,35 +928,31 @@ public sealed class UserRepository(UserDbContext context) : IUserRepository
             if (data.Entity == null || save <= 0)
                   throw new Exception(MessageHelper.DB.UpdateRecordUnsuccessful);
 
-            var res = await context.Users.AsNoTracking()
+
+            return await context.Users.AsNoTracking()
             .OrderByDescending(x => x.id)
-            .Include(x => x.credentials)
-            .Include(x => x.additionals)
-            .Include(x => x.user_groups)
             .Where(x => x.id == data.Entity.id && x.user_id == data.Entity.user_id)
-            .FirstOrDefaultAsync();
-
-            if(res == null)
-                  throw new Exception(MessageHelper.DB.RecordNotFound);
-
-            return new UserDto(
-                  res.id,
-                  res.user_id,
-                  res.title,
-                  res.first_name,
-                  res.middle_name,
-                  res.last_name,
-                  res.gender,
-                  res.date_of_birth,
-                  res.email,
-                  res.phone,
-                  res.company_id,
-                  res.department_id,
-                  res.position_id,
-                  res.address,
-                  res.additionals.Select(x => x.additional).ToList(),
-                  res.image,
-                  res.credentials.Select(c => new CredentialDto(
+            .Select(x => new UserDto(
+                  x.id,
+                  x.user_id,
+                  x.title,
+                  x.first_name,
+                  x.middle_name,
+                  x.last_name,
+                  x.gender,
+                  x.date_of_birth,
+                  x.email,
+                  x.phone,
+                  x.company_id,
+                  x.company.name,
+                  x.department_id,
+                  x.department.name,
+                  x.position_id,
+                  x.position.name,
+                  x.address,
+                  x.additionals.Select(x => x.additional).ToList(),
+                  x.image,
+                  x.credentials.Select(c => new CredentialDto(
                         c.id,
                         c.flag,
                         c.bits,
@@ -1008,10 +967,12 @@ public sealed class UserRepository(UserDbContext context) : IUserRepository
                         c.location_id,
                         c.is_active
                   )).ToList(),
-                  res.user_groups.Select(x => x.group_id).ToList(),
-                  res.location_id,
-                  res.is_active
-            );
+                  x.user_groups.Select(g => g.group_id).ToList(),
+                  x.vacation_id ?? 0,
+                  x.location_id,
+                  x.is_active
+            ))
+            .FirstOrDefaultAsync() ?? new UserDto();
       }
 
       private async Task<bool> UpdateAdditionalAsync(int UserId,List<string> NewAdditional)
@@ -1026,7 +987,7 @@ public sealed class UserRepository(UserDbContext context) : IUserRepository
             // Dup
             var duplicate = NewAdditional.Where(x => additionals.Any(a => x.Equals(a.additional))).ToArray();
             // Add
-            var add = NewAdditional.Where(x => duplicate.Any(d => !x.Equals(d)) && remove.Any(r => !r.additional.Equals(x))).Select(x => new UserAdditional(UserId,x)).ToArray();
+            var add = NewAdditional.Where(x => duplicate.Any(d => !x.Equals(d)) && remove.Any(r => !r.additional.Equals(x))).Select(x => new UserAdditional(x)).ToArray();
             
             
             context.UserAdditionals.RemoveRange(remove);

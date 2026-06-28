@@ -17,18 +17,18 @@ public sealed class Users : BaseEntity
   public string email { get; set; } = string.Empty;
   public string phone { get; set; } = string.Empty;
   public int company_id { get; set; }
-  public Company company { get; set; } = new Company();
+  public Company company { get; set; } = default!;
   public int department_id { get; set; }
-  public Department department { get; set; } = new Department();
+  public Department department { get; set; } = default!;
   public int position_id { get; set; }
-  public Position position { get; set; } = new Position();
+  public Position position { get; set; } = default!;
   public string address { get; set; } = string.Empty;
-  public ICollection<UserAdditional> additionals { get; set; } = new List<UserAdditional>();
+  public ICollection<UserAdditional> additionals { get; set; } = default!;
   public string image { get; set; } = string.Empty;
-  public ICollection<Credential> credentials { get; set; } = new List<Credential>();
-  public ICollection<UserGroup> user_groups { get; set; } = new List<UserGroup>();
-  public int vacation_id {get; set;}
-  public Vacation vacation {get; set;} = default!;
+  public ICollection<Credential> credentials { get; set; } = default!;
+  public ICollection<UserGroup> user_groups { get; set; } = default!;
+  public int? vacation_id {get; set;}
+  public Vacation? vacation {get; set;}
   public Users() { }
   public Users(Domain.Entities.Users users) : base(0,users.LocationId,users.IsActive)
   {

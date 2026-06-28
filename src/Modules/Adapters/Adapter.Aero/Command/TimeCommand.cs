@@ -4,6 +4,7 @@ using Adapter.Aero.Helpers;
 using Adapter.Aero.Interfaces;
 using HID.Aero.ScpdNet.Wrapper;
 using Microsoft.Extensions.Logging;
+using SharedKernel.Helpers;
 using SharedKernel.Model;
 using Time.Contract.DTOs;
 
@@ -97,7 +98,7 @@ public sealed class TimeCommand(ILogger<TimeCommand> logger) : BaseCommand,ITime
             c.day = Day;
             c.extend = Extend;
             c.type_mask = TypeMask;
-            var command = LogMessageHelper.ToString(c);
+            var command = ObjectHelper.ToAsciiString(c);
             var result = Send((short)enCfgCmnd.enCcScpHoliday, c);
             if (result)
             {
@@ -110,7 +111,7 @@ public sealed class TimeCommand(ILogger<TimeCommand> logger) : BaseCommand,ITime
                         SCPDLL.scpGetTagLastPosted(ScpId),
                         DateTime.UtcNow,
                         DateTime.UtcNow,
-                        string.Empty,
+                       ObjectHelper.ToAsciiString(c),
                         CommandStatus.PENDING.ToString(),
                         string.Empty,
                         true
@@ -127,7 +128,7 @@ public sealed class TimeCommand(ILogger<TimeCommand> logger) : BaseCommand,ITime
                        -1,
                        DateTime.UtcNow,
                        DateTime.UtcNow,
-                       string.Empty,
+                      ObjectHelper.ToAsciiString(c),
                        CommandStatus.FAILED.ToString(),
                        string.Empty,
                        false

@@ -1,4 +1,5 @@
 using System;
+using System.Net;
 using Adapter.Abstraction.Command;
 using Adapter.Abstraction.Constants;
 using Adapter.Abstraction.Events;
@@ -192,16 +193,41 @@ public sealed class DeviceBehaviors(IDeviceRepository repo, IMessageBus bus, IAd
 
       public async Task<IEnumerable<OptionDto>> GetReaderOptionsByModuleIdAsync(int id, CancellationToken ct = default)
       {
-            return await repo.GetReaderOptionsByModuleIdAsync(id,ct);
+            return await repo.GetReaderOptionsByModuleIdAsync(id, ct);
       }
 
       public async Task<IEnumerable<OptionDto>> GetInputOptionsByModuleIdAsync(int id, CancellationToken ct = default)
       {
-            return await repo.GetInputOptionsByModuleIdAsync(id,ct);
+            return await repo.GetInputOptionsByModuleIdAsync(id, ct);
       }
 
       public async Task<IEnumerable<OptionDto>> GetRelayOptionsByModuleIdAsync(int id, CancellationToken ct = default)
       {
-            return await repo.GetRelayOptionsByModuleIdAsync(id,ct);
+            return await repo.GetRelayOptionsByModuleIdAsync(id, ct);
+      }
+
+      public async Task<BaseResponse> GetEventStatusAsync(string type, int id, CancellationToken ct = default)
+      {
+            var mac = await repo.GetMacByIdAsync(id);
+            var scpid = await repo.GetComponentIdByIdAsync(id);
+
+            await adapterFactory.GetAdapter(type).Device.GetEventStatusAsync(mac, scpid);
+
+            return new BaseResponse(HttpStatusCode.OK, MessageHelper.Common.Success, DateTime.UtcNow);
+      }
+
+      public async Task<BaseResponse> SetEventStatusAsync(SetEventDto dto, CancellationToken ct = default)
+      {
+            var mac = await repo.GetMacByIdAsync(dto.DeviceId);
+            var scpid = await repo.GetComponentIdByIdAsync(dto.DeviceId);
+
+            await adapterFactory.GetAdapter(dto.Type).Device.SetEventStatusAsync(mac, scpid, dto.IsEnable);
+
+            return new BaseResponse(HttpStatusCode.OK, MessageHelper.Common.Success, DateTime.UtcNow);
+      }
+
+      public async Task<string> GetModuleNameByMacAndComponentIdAsync(string Mac, short ComponentId, CancellationToken ct = default)
+      {
+            return await repo.GetModuleNameByMacAndComponentIdAsync(Mac,ComponentId,ct);
       }
 }

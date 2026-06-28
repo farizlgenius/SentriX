@@ -29,7 +29,7 @@ public sealed class EventRepository(EventDbContext context) : IEventRepository
 
             await context.SaveChangesAsync(ct);
       }
-      public async Task AddAsync(DateTime timeStamp, string actor, string module, string type, string image, string mac, string name, string remarks, int locationId,CancellationToken ct = default)
+      public async Task AddAsync(DateTime timeStamp, string actor, string module, string type, string image, string mac, string name,string code,string remarks, int locationId,CancellationToken ct = default)
       {
             await context.Events.AddAsync(new Event
             {
@@ -41,6 +41,7 @@ public sealed class EventRepository(EventDbContext context) : IEventRepository
                   mac = mac,
                   name = name,
                   remarks = remarks,
+                  code = code,
                   location_id = locationId
             });
 
@@ -110,6 +111,7 @@ public sealed class EventRepository(EventDbContext context) : IEventRepository
                   e.image,
                   e.mac,
                   e.name,
+                  e.code,
                   e.remarks,
                   e.location_id
             )).ToListAsync(ct);
@@ -119,21 +121,24 @@ public sealed class EventRepository(EventDbContext context) : IEventRepository
 
       public async Task UpdateCommandEvent(string Mac, int Tag, short CommandStatus, string Reason,CancellationToken ct = default)
       {
-            var entity = await context.CommandEvents
+            var entities = await context.CommandEvents
             .OrderByDescending(x => x.id)
             .Where(x => x.tag == Tag && x.mac.Equals(Mac) && x.status.Equals(SharedKernel.Enums.CommandStatus.PENDING.ToString()))
-            .FirstOrDefaultAsync();
+            .ToArrayAsync();
 
-            if(entity == null)
+            if(entities.Count() == 0)
                   return;
 
-            entity.status = CommandStatus == 1 ? SharedKernel.Enums.CommandStatus.SUCCESSED.ToString() : SharedKernel.Enums.CommandStatus.FAILED.ToString();
-            if(!string.IsNullOrWhiteSpace(Reason) && CommandStatus != 1)
-                  entity.reason = Reason;
+            foreach(var entity in entities)
+            {
+                  entity.status = CommandStatus == 1 ? SharedKernel.Enums.CommandStatus.SUCCESSED.ToString() : SharedKernel.Enums.CommandStatus.FAILED.ToString();
+                  if(!string.IsNullOrWhiteSpace(Reason) && CommandStatus != 1)
+                        entity.reason = Reason;
+            }
 
-            
+      
 
-            context.CommandEvents.Update(entity);
+            context.CommandEvents.UpdateRange(entities);
 
             await context.SaveChangesAsync(ct);
 

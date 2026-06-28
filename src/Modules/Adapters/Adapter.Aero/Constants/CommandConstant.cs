@@ -27,6 +27,8 @@ public static class CommandConstant
       public static string AccessControlReaderConfiguration = "115 : Access Control Reader Configuration";
       public static string ReaderSpecification = "112 : Reader Specification";
       public static string AccessLevelConfigurationExtended = "2116 : Access Level Configuration Extended";
+      public static string TransactionLogStatus = "402 : Transaction Log Status";
+      public static string SetTransactionIndex = "303 : Set Transaction Index";
 }
 
 

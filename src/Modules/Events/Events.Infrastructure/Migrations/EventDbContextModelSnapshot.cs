@@ -96,6 +96,10 @@ namespace Events.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("code")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<short>("component_id")
                         .HasColumnType("smallint");
 

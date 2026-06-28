@@ -7,6 +7,7 @@ using Adapter.Aero.Persistences.Entities;
 using AeroAdapter.Application.Interfaces;
 using HID.Aero.ScpdNet.Wrapper;
 using Microsoft.Extensions.Logging;
+using SharedKernel.Helpers;
 using SharedKernel.Model;
 
 namespace AeroAdapter.Infrastructure.Writer;
@@ -67,7 +68,7 @@ public sealed class ModuleCommand(ILogger<ModuleCommand> logger) : BaseCommand, 
                         SCPDLL.scpGetTagLastPosted(ScpId),
                         DateTime.UtcNow,
                         DateTime.UtcNow,
-                        string.Empty,
+                        LogMessageHelper.ToString(c),
                         CommandStatus.PENDING.ToString(),
                         string.Empty,
                         true
@@ -84,7 +85,7 @@ public sealed class ModuleCommand(ILogger<ModuleCommand> logger) : BaseCommand, 
                        -1,
                        DateTime.UtcNow,
                        DateTime.UtcNow,
-                       string.Empty,
+                       LogMessageHelper.ToString(c),
                        CommandStatus.FAILED.ToString(),
                        string.Empty,
                        false
@@ -111,7 +112,7 @@ public sealed class ModuleCommand(ILogger<ModuleCommand> logger) : BaseCommand, 
                         SCPDLL.scpGetTagLastPosted(ScpId),
                         DateTime.UtcNow,
                         DateTime.UtcNow,
-                        string.Empty,
+                         ObjectHelper.ToAsciiString(c),
                         CommandStatus.PENDING.ToString(),
                         string.Empty,
                         true
@@ -128,7 +129,7 @@ public sealed class ModuleCommand(ILogger<ModuleCommand> logger) : BaseCommand, 
                        -1,
                        DateTime.UtcNow,
                        DateTime.UtcNow,
-                       string.Empty,
+                        ObjectHelper.ToAsciiString(c),
                        CommandStatus.FAILED.ToString(),
                        string.Empty,
                        false

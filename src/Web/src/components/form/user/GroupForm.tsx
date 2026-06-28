@@ -1,5 +1,5 @@
 import { PropsWithChildren, useEffect, useState } from "react";
-import { FormProp } from "../../../model/Form/FormProp";
+import { FormProp, FormType } from "../../../model/Form/FormProp";
 import { UserDto } from "../../../model/User/UserDto";
 import { useLocation } from "../../../context/LocationContext";
 import { send } from "../../../api/api";
@@ -8,47 +8,61 @@ import ListTransfer from "../list-transfer/ListTransfer";
 import { GroupDto } from "../../../model/Group/GroupDto";
 import { FormSection } from "../template/FormTemplate";
 
+export const GroupForm: React.FC<
+  PropsWithChildren<FormProp<UserDto>>
+> = ({ dto, setDto,type }) => {
+  const { locationId } = useLocation();
 
-export const GroupForm: React.FC<PropsWithChildren<FormProp<UserDto>>> = ({ dto, setDto, type, handleClick }) => {
-    const { locationId } = useLocation();
-    const [groups, setGroups] = useState<GroupDto[]>([]);
-    const [loading, setLoading] = useState<boolean>(true);
+  const [groups, setGroups] = useState<GroupDto[]>([]);
+  const [loading, setLoading] = useState(true);
 
+  const handleListChange = (data: GroupDto[]) => {
+    setDto(prev => ({
+      ...prev,
+      groups: data.map(x => x.id)
+    }));
+  };
 
-    const handleListChange = (data: GroupDto[]) => {
-        setDto(prev => ({ ...prev, groups: data.map(x => x.id) }))
+  const fetchGroup = async () => {
+    try {
+      const res = await send.get(
+        GroupEndpoint.GET_BY_LOCATION(locationId)
+      );
+
+      if (res?.data) {
+        setGroups(res.data);
+      }
+    } catch (err) {
+      console.error("Failed to load groups", err);
+    } finally {
+      setLoading(false);
     }
+  };
 
+  useEffect(() => {
+    fetchGroup();
+  }, [locationId]);
 
+  const selectedItems = groups.filter(x =>
+    dto.groups.includes(x.id)
+  );
 
-    const fetchGroup = async () => {
-        const res = await send.get(GroupEndpoint.GET_BY_LOCATION(locationId))
-        console.log(res);
-        if (res && res.data) {
-            setGroups(res.data.filter((al: GroupDto) => !dto.groups.some(selected => selected === al.id)));
-            setLoading(false);
-        }
-    }
+  const availableItems = groups.filter(x =>
+    !dto.groups.includes(x.id)
+  );
 
-    useEffect(() => {
-        fetchGroup();
-    }, [])
-
-    return (
-        <FormSection className='flex flex-col'>
-
-            {loading ? (
-                <p>Loading access levels...</p>
-            ) : (
-                <ListTransfer<GroupDto>
-                    availableItems={groups}
-                    selectedItems={groups.filter(x => dto.groups.find(s => x.id == s))}
-                    onChange={handleListChange}
-                />
-            )}
-
-        </FormSection>
-
-    )
-
-}
+  return (
+    <FormSection className="flex flex-col">
+      {loading ? (
+        <p>Loading groups...</p>
+      ) : (
+        <ListTransfer<GroupDto>
+          availableItems={availableItems}
+          selectedItems={selectedItems}
+          onChange={handleListChange}
+          disabled={type == FormType.INFO}
+        />
+      )}
+    </FormSection>
+  );
+};

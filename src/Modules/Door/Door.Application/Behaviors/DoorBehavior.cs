@@ -47,13 +47,13 @@ public sealed class DoorBehavior(IDoorRepository repo,IMessageBus bus,IAdapterFa
                   dto.IsActive);
 
 
-            // await factory.GetAdapter(dto.Type).Door.CreateUpdateDoorAsync(
-            //       dto.Mac,
-            //       dto.DeviceComponentId,
-            //       dto.Metadata,
-            //       FirstComponentId,
-            //       SecondComponentId
-            //       );
+            await factory.GetAdapter(dto.Type).Door.CreateUpdateDoorAsync(
+                  dto.Mac,
+                  dto.DeviceComponentId,
+                  dto.Metadata,
+                  FirstComponentId,
+                  SecondComponentId
+                  );
 
             // Save component used
 
@@ -137,6 +137,60 @@ public sealed class DoorBehavior(IDoorRepository repo,IMessageBus bus,IAdapterFa
                   entity.ComponentId,
                   entity.SecondComponentId
                   );
+
+             DoorMetadata? data = JSONHelper.Deserialize<DoorMetadata>(entity.Metadata);
+
+            // Redaer in
+            if(data != null)
+            {
+                  await bus.SendAsync(new DeleteReaderUsedCommand(
+                        data.ReaderIn.ReaderNumber,
+                        data.ReaderIn.ReaderModuleId
+                  ));
+
+                  await bus.SendAsync(
+                        new DeleteReaderUsedCommand(
+                              data.ReaderOut.ReaderNumber,
+                              data.ReaderOut.ReaderModuleId
+                        )
+                  );
+
+                  await bus.SendAsync(
+                        new DeleteReaderUsedCommand(
+                              data.AltrReader.AltrRdrNumber,
+                              data.AltrReader.AltrRdrModuleId
+                        )
+                  );
+
+
+                  await bus.SendAsync(
+                        new DeleteRelayUsedCommand(
+                              data.Relay.RelayNumber,
+                              data.Relay.RelayModuleId
+                        )
+                  );
+
+                  await bus.SendAsync(
+                        new DeleteInputUsedCommand(
+                              data.Sensor.SensorNumber,
+                              data.Sensor.SensorModuleId
+                        )
+                  );
+
+                  await bus.SendAsync(
+                        new DeleteInputUsedCommand(
+                              data.Rex.Rex0Number,
+                              data.Rex.Rex0ModuleId
+                        )
+                  );
+
+                   await bus.SendAsync(
+                        new DeleteInputUsedCommand(
+                              data.Rex.Rex1Number,
+                              data.Rex.Rex1ModuleId
+                        )
+                  );
+            } 
 
             return await repo.DeleteAsync(entity.Id);
 
@@ -235,5 +289,10 @@ public sealed class DoorBehavior(IDoorRepository repo,IMessageBus bus,IAdapterFa
       public async Task<IEnumerable<OptionDto>> GetDoorOptionByLocationIdAsync(int LocationId)
       {
             return await repo.GetDoorOptionByLocationIdAsync(LocationId);
+      }
+
+      public async Task<string> GetNameByMacAndComponentIdAsync(string Mac, short ComponentId, CancellationToken ct = default)
+      {
+            return await repo.GetNameByMacAndComponentIdAsync(Mac,ComponentId,ct);
       }
 }

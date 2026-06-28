@@ -21,5 +21,8 @@ public interface IDevice
       Task<IEnumerable<OptionDto>> GetReaderOptionsByModuleIdAsync(int id,CancellationToken ct = default);
       Task<IEnumerable<OptionDto>> GetInputOptionsByModuleIdAsync(int id,CancellationToken ct = default);
       Task<IEnumerable<OptionDto>> GetRelayOptionsByModuleIdAsync(int id,CancellationToken ct = default);
+      Task<BaseResponse> GetEventStatusAsync(string type,int id,CancellationToken ct = default);
+      Task<BaseResponse> SetEventStatusAsync(SetEventDto dto,CancellationToken ct= default);
+      Task<string> GetModuleNameByMacAndComponentIdAsync(string Mac,short ComponentId,CancellationToken ct = default);
 
 }

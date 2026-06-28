@@ -16,12 +16,9 @@ import { Gender } from "../../../enum/Gender"
 import { send } from "../../../api/api"
 import { CompanyEndpoint } from "../../../endpoint/CompanyEndpoint"
 import { useLocation } from "../../../context/LocationContext"
-import { CompanyDto } from "../../../model/Company/CompanyDto"
 import { Options } from "../../../model/Options"
 import { DepartmentEndpoint } from "../../../endpoint/DepartmentEndpoint"
-import { DepartmentDto } from "../../../model/Department/DepartmentDto"
 import { PositionEndpoint } from "../../../endpoint/PositionEndpoint"
-import { PositionDto } from "../../../model/Position/PositionDto"
 import Select from "../Select"
 import {  FormField, FormSection } from "../template/FormTemplate"
 
@@ -265,6 +262,7 @@ export const PersonalInformationForm: React.FC<PersonalInformationFormProp> = ({
                                     <FormField className='flex-1'>
                                         <Label>Company</Label>
                                         <Select name={"Company"}
+                                        disabled={type == FormType.INFO}
                                             onChange={e => {
                                                 setDep([]);
                                                 setPos([]);
@@ -277,19 +275,24 @@ export const PersonalInformationForm: React.FC<PersonalInformationFormProp> = ({
                                     </FormField>
                                     <FormField className='flex-1'>
                                         <Label>Department</Label>
-                                        <Select name={"Department"} defaultValue={dto.departmentId}
+                                        <Select name={"Department"} 
+                                            defaultValue={dto.departmentId}
+                                            disabled={type == FormType.INFO}
                                             onChange={e => {
                                                 setPos([]);
                                                 setDto(prev => ({ ...prev, departmentId: Number(e), department: dep.find(x => x.value == Number(e))?.label ?? "" }));
                                                 fetchPosition(Number(e))
                                             }}
+                                            
                                             options={dep} />
                                     </FormField>
                                     <FormField className="flex-1">
                                         <Label>Position</Label>
                                         <Select name={"Position"}
+                                        disabled={type == FormType.INFO}
                                             onChange={e => setDto(prev => ({ ...prev, positionId: Number(e), position: pos.find(x => x.value == Number(e))?.label ?? "" }))}
-                                            defaultValue={dto.positionId} options={pos} />
+                                            defaultValue={dto.positionId} 
+                                            options={pos} />
                                     </FormField>
                                 </div>
 

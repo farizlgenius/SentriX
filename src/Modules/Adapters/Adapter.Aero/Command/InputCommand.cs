@@ -7,6 +7,7 @@ using Adapter.Aero.Persistences.Entities;
 using AeroAdapter.Application.Interfaces;
 using HID.Aero.ScpdNet.Wrapper;
 using Microsoft.Extensions.Logging;
+using SharedKernel.Helpers;
 using SharedKernel.Messaging;
 using SharedKernel.Model;
 
@@ -46,7 +47,7 @@ public sealed class InputCommand(ILogger<InputCommand> logger) : BaseCommand, II
                         SCPDLL.scpGetTagLastPosted(ScpId),
                         DateTime.UtcNow,
                         DateTime.UtcNow,
-                        c.ToString(),
+                        LogMessageHelper.ToString(c),
                         CommandStatus.PENDING.ToString(),
                         string.Empty,
                         true
@@ -63,7 +64,7 @@ public sealed class InputCommand(ILogger<InputCommand> logger) : BaseCommand, II
                        -1,
                        DateTime.UtcNow,
                        DateTime.UtcNow,
-                       c.ToString(),
+                       LogMessageHelper.ToString(c),
                        CommandStatus.PENDING.ToString(),
                        string.Empty,
                        false
@@ -102,7 +103,7 @@ public sealed class InputCommand(ILogger<InputCommand> logger) : BaseCommand, II
                         SCPDLL.scpGetTagLastPosted(ScpId),
                         DateTime.UtcNow,
                         DateTime.UtcNow,
-                        c.ToString(),
+                         ObjectHelper.ToAsciiString(c),
                         CommandStatus.PENDING.ToString(),
                         string.Empty,
                         true
@@ -119,7 +120,7 @@ public sealed class InputCommand(ILogger<InputCommand> logger) : BaseCommand, II
                        -1,
                        DateTime.UtcNow,
                        DateTime.UtcNow,
-                       c.ToString(),
+                        ObjectHelper.ToAsciiString(c),
                        CommandStatus.PENDING.ToString(),
                        string.Empty,
                        false
@@ -162,7 +163,7 @@ public sealed class InputCommand(ILogger<InputCommand> logger) : BaseCommand, II
                         SCPDLL.scpGetTagLastPosted(ScpId),
                         DateTime.UtcNow,
                         DateTime.UtcNow,
-                        c.ToString(),
+                         ObjectHelper.ToAsciiString(c),
                         CommandStatus.PENDING.ToString(),
                         string.Empty,
                         true
@@ -179,7 +180,7 @@ public sealed class InputCommand(ILogger<InputCommand> logger) : BaseCommand, II
                        -1,
                        DateTime.UtcNow,
                        DateTime.UtcNow,
-                       c.ToString(),
+                        ObjectHelper.ToAsciiString(c),
                        CommandStatus.PENDING.ToString(),
                        string.Empty,
                        false
@@ -211,7 +212,7 @@ public sealed class InputCommand(ILogger<InputCommand> logger) : BaseCommand, II
                         SCPDLL.scpGetTagLastPosted(ScpId),
                         DateTime.UtcNow,
                         DateTime.UtcNow,
-                        c.ToString(),
+                         ObjectHelper.ToAsciiString(c),
                         CommandStatus.PENDING.ToString(),
                         string.Empty,
                         true
@@ -228,7 +229,7 @@ public sealed class InputCommand(ILogger<InputCommand> logger) : BaseCommand, II
                        -1,
                        DateTime.UtcNow,
                        DateTime.UtcNow,
-                       c.ToString(),
+                        ObjectHelper.ToAsciiString(c),
                        CommandStatus.PENDING.ToString(),
                        string.Empty,
                        false

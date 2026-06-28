@@ -59,10 +59,14 @@ const User = () => {
         image: '',
         credentials: [],
         groups: [],
-        locationId: 0,
+        locationId: locationId,
         id: 0,
         name: '',
-        isActive: false
+        isActive: false,
+        company: '',
+        department: '',
+        position: '',
+        vacationId: 0
     }
 
     const [cardHolderDto, setCardHolderDto] = useState<UserDto>(defaultDto)
@@ -167,11 +171,10 @@ const User = () => {
     }
     const fetchData = async (pageNumber: number, pageSize: number, locationId?: number, search?: string, startDate?: string, endDate?: string) => {
         const res = await send.get(UserEndpoint.PAGINATION(pageNumber, pageSize, locationId, search, startDate, endDate));
-        console.log(res?.data.data)
-        if (res && res.data.data) {
-            console.log(res.data.data)
-            setCardHoldersDto(res.data.data.data);
-            setPagination(res.data.data.page);
+        console.log(res)
+        if (res.data) {
+            setCardHoldersDto(res.data.items);
+            setPagination(res.data);
         }
     }
 

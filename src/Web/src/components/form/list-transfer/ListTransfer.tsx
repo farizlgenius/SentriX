@@ -15,6 +15,7 @@ interface ListTransferProps<T extends BaseDto> {
       availableItems: T[];
       selectedItems?: T[];
       onChange?: (items: T[]) => void;
+      disabled?:boolean;
 }
 
 
@@ -22,6 +23,7 @@ export default function ListTransfer<T extends BaseDto>({
       availableItems,
       selectedItems = [],
       onChange,
+      disabled = false
 }: ListTransferProps<T>): JSX.Element {
       const [leftItems, setLeftItems] = useState<T[]>(availableItems);
       const [rightItems, setRightItems] = useState<T[]>(selectedItems);
@@ -124,15 +126,16 @@ export default function ListTransfer<T extends BaseDto>({
                               <button
                                     type="button"
                                     onClick={moveToRight}
-                                    disabled={selectedLeft.size === 0}
+                                    disabled={selectedLeft.size === 0 || disabled}
                                     className="px-4 py-2 rounded-lg bg-blue-600 text-white disabled:opacity-40"
+                                    
                               >
                                     →
                               </button>
                               <button
                                     type="button"
                                     onClick={moveToLeft}
-                                    disabled={selectedRight.size === 0}
+                                    disabled={selectedRight.size === 0 || disabled}
                                     className="px-4 py-2 rounded-lg bg-blue-600 text-white disabled:opacity-40"
                               >
                                     ←

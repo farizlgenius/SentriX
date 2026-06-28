@@ -99,6 +99,7 @@ import {ReactComponent as DoorInIcon} from "./in.svg?react";
 import {ReactComponent as DoorOutIcon} from "./out.svg?react";
 import {ReactComponent as LoadIcon} from "./loading.svg?react";
 import {ReactComponent as AmicoIcon} from "./amico.svg?react";
+import {ReactComponent as CancelCircleIcon} from "./cancel-circle.svg?react";
 
 export {
   ErrorHexaIcon,
@@ -199,5 +200,6 @@ export {
   DoorInIcon,
   DoorOutIcon,
   LoadIcon,
-  AmicoIcon
+  AmicoIcon,
+  CancelCircleIcon
 };

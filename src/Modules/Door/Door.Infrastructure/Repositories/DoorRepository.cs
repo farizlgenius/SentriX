@@ -321,4 +321,14 @@ public sealed class DoorRepository(DoorDbContext context) : IDoorRepository
                   x.component_id
             )).ToListAsync();
       }
+
+      public async Task<string> GetNameByMacAndComponentIdAsync(string Mac, short ComponentId, CancellationToken ct = default)
+      {
+            return await context.Doors.AsNoTracking()
+            .OrderByDescending(x => x.id)
+            .Where(x => x.mac.Equals(Mac) && (x.component_id == ComponentId || x.second_component_id == ComponentId))
+            .Select(x => x.name)
+            .FirstOrDefaultAsync() ?? string.Empty;
+            
+      }
 }

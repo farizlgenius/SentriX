@@ -633,4 +633,79 @@ public sealed class DeviceRepository(DeviceDbContext context) : IDeviceRepositor
             }
 
       }
+
+      public async Task<int> GetIdByComponentIdAsync(short ComponentId, CancellationToken ct = default)
+      {
+            return await context.Devices.AsNoTracking()
+            .Where(x => x.component_id == ComponentId)
+            .OrderByDescending(x => x.id)
+            .Select(x => x.id)
+            .FirstOrDefaultAsync();
+      }
+
+      public async Task<string> GetModuleNameByMacAndComponentIdAsync(string Mac, short ComponentId, CancellationToken ct = default)
+      {
+            return await context.Modules.AsNoTracking()
+            .Where(x => x.mac.Equals(Mac) && x.component_id == ComponentId)
+            .OrderByDescending(x => x.id)
+            .Select(x => x.name)
+            .FirstOrDefaultAsync() ?? string.Empty; 
+      }
+
+      public async Task<bool> DeleteReaderAsync(Reader domain, CancellationToken ct = default)
+      {
+            var entity = await context.Readers
+            .Where(x => x.module_id == domain.ModuleId && x.reader_number == domain.ReaderNumber)
+            .OrderByDescending(x => x.id)
+            .FirstOrDefaultAsync();
+
+            if(entity == null)
+                  return false;
+
+            var data = context.Readers.Remove(entity);
+            var save = await context.SaveChangesAsync();
+
+            if(data.Entity == null || save <= 0)
+                  return false;
+
+            return true;
+      }
+
+      public async Task<bool> DeleteInputAsync(Input domain, CancellationToken ct = default)
+      {
+            var entity = await context.Inputs
+            .Where(x => x.module_id == domain.ModuleId && x.input_number == domain.InputNumber)
+            .OrderByDescending(x => x.id)
+            .FirstOrDefaultAsync();
+
+            if(entity == null)
+                  return false;
+
+            var data = context.Inputs.Remove(entity);
+            var save = await context.SaveChangesAsync();
+
+            if(data.Entity == null || save <= 0)
+                  return false;
+
+            return true;
+      }
+
+      public async Task<bool> DeleteRelayAsync(Relay domain, CancellationToken ct = default)
+      {
+            var entity = await context.Relays
+            .Where(x => x.module_id == domain.ModuleId && x.relay_number == domain.RelayNumber)
+            .OrderByDescending(x => x.id)
+            .FirstOrDefaultAsync();
+
+            if(entity == null)
+                  return false;
+
+            var data = context.Relays.Remove(entity);
+            var save = await context.SaveChangesAsync();
+
+            if(data.Entity == null || save <= 0)
+                  return false;
+
+            return true;
+      }
 }

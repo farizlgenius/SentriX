@@ -36,10 +36,16 @@ public interface IDeviceRepository
       Task<IEnumerable<(string Mac,short ComponentId,string Type)>> MacAndComponentIdListAsync(int LocationId,CancellationToken ct = default);
       Task<string> GetMacByComponentIdAsync(int ComponentId);
       Task<bool> AddReaderAsync(Reader domain,CancellationToken ct = default);
+      Task<bool> DeleteReaderAsync(Reader domain,CancellationToken ct = default);
+
       Task<bool> AddInputAsync(Input domain,CancellationToken ct = default);
+      Task<bool> DeleteInputAsync(Input domain,CancellationToken ct = default);
       Task<bool> AddRelayAsync(Relay domain,CancellationToken ct = default);
+      Task<bool> DeleteRelayAsync(Relay domain,CancellationToken ct = default);
       Task<IEnumerable<OptionDto>> GetReaderOptionsByModuleIdAsync(int id ,CancellationToken ct = default);
       Task<IEnumerable<OptionDto>> GetRelayOptionsByModuleIdAsync(int id ,CancellationToken ct = default);
       Task<IEnumerable<OptionDto>> GetInputOptionsByModuleIdAsync(int id ,CancellationToken ct = default);
+      Task<int> GetIdByComponentIdAsync(short ComponentId,CancellationToken ct = default);
+      Task<string> GetModuleNameByMacAndComponentIdAsync(string Mac,short ComponentId,CancellationToken ct = default);
 
 }

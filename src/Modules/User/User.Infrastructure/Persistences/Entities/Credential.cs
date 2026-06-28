@@ -24,7 +24,6 @@ public sealed class Credential : BaseEntity
             credential.IsActive
       )
       {
-            this.user_id = user_id;
             this.flag = credential.Flag;
             this.bits = credential.Bits;
             this.fac = credential.Fac;

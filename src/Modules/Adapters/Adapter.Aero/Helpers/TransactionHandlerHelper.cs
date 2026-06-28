@@ -4,6 +4,7 @@ using Adapter.Aero.Listener;
 using Adapter.Aero.Model;
 using HID.Aero.ScpdNet.Wrapper;
 using Microsoft.Extensions.Logging;
+using SharedKernel.Helpers;
 
 namespace Adapter.Aero.Helpers;
 
@@ -14,7 +15,7 @@ public sealed class TransactionHandlerHelper
             switch (message.tran.tran_type)
             {      
                 case (short)tranType.tranTypeSys:
-                  //   ProcessAeroTransactionHelper.ProcessTypeSys(message);
+                    // ProcessAeroTransactionHelper.ProcessTypeSys(message);
                     break;
                 case (short)tranType.tranTypeSioComm:
                   //   {
@@ -30,6 +31,7 @@ public sealed class TransactionHandlerHelper
                     break;
                 case (short)tranType.tranTypeCardBcd:
                   //   ProcessAeroTransactionHelper.ProcessTypeCardBcd(message);
+                  queue.Writer.TryWrite(message);
                     break;
                 case (short)tranType.tranTypeCardFull:
                   //   ProcessAeroTransactionHelper.ProcessTypeCardFull(message);

@@ -564,53 +564,6 @@ namespace Door.Infrastructure.Migrations
                     b.ToTable("Doors", "door");
                 });
 
-            modelBuilder.Entity("Door.Infrastructure.Persistences.Entities.Input", b =>
-                {
-                    b.Property<int>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
-
-                    b.Property<short>("component_id")
-                        .HasColumnType("smallint");
-
-                    b.Property<DateTime>("created_at")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
-                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
-
-                    b.Property<int>("door_id")
-                        .HasColumnType("integer");
-
-                    b.Property<short>("input_module_component_id")
-                        .HasColumnType("smallint");
-
-                    b.Property<short>("input_number")
-                        .HasColumnType("smallint");
-
-                    b.Property<bool>("is_active")
-                        .HasColumnType("boolean");
-
-                    b.Property<int>("location_id")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("mac")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("updated_at")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
-                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
-
-                    b.HasKey("id");
-
-                    b.HasIndex("door_id");
-
-                    b.ToTable("Inputs", "door");
-                });
-
             modelBuilder.Entity("Door.Infrastructure.Persistences.Entities.OsdpBaudrate", b =>
                 {
                     b.Property<int>("id")
@@ -726,103 +679,6 @@ namespace Door.Infrastructure.Migrations
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             value = 230400
                         });
-                });
-
-            modelBuilder.Entity("Door.Infrastructure.Persistences.Entities.Outputs", b =>
-                {
-                    b.Property<int>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
-
-                    b.Property<short>("component_id")
-                        .HasColumnType("smallint");
-
-                    b.Property<DateTime>("created_at")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
-                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
-
-                    b.Property<int>("door_id")
-                        .HasColumnType("integer");
-
-                    b.Property<bool>("is_active")
-                        .HasColumnType("boolean");
-
-                    b.Property<int>("location_id")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("mac")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<short>("output_module_component_id")
-                        .HasColumnType("smallint");
-
-                    b.Property<short>("output_number")
-                        .HasColumnType("smallint");
-
-                    b.Property<DateTime>("updated_at")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
-                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
-
-                    b.HasKey("id");
-
-                    b.HasIndex("door_id");
-
-                    b.ToTable("Outputs", "door");
-                });
-
-            modelBuilder.Entity("Door.Infrastructure.Persistences.Entities.Reader", b =>
-                {
-                    b.Property<int>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
-
-                    b.Property<short>("component_id")
-                        .HasColumnType("smallint");
-
-                    b.Property<DateTime>("created_at")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
-                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
-
-                    b.Property<int>("door_id")
-                        .HasColumnType("integer");
-
-                    b.Property<bool>("is_active")
-                        .HasColumnType("boolean");
-
-                    b.Property<int>("location_id")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("mac")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<short>("osdp_address")
-                        .HasColumnType("smallint");
-
-                    b.Property<short>("reader_module_component_id")
-                        .HasColumnType("smallint");
-
-                    b.Property<short>("reader_number")
-                        .HasColumnType("smallint");
-
-                    b.Property<DateTime>("updated_at")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
-                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
-
-                    b.HasKey("id");
-
-                    b.HasIndex("door_id");
-
-                    b.ToTable("Readers", "door");
                 });
 
             modelBuilder.Entity("Door.Infrastructure.Persistences.Entities.ReaderMode", b =>
@@ -1234,48 +1090,6 @@ namespace Door.Infrastructure.Migrations
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             value = (short)16
                         });
-                });
-
-            modelBuilder.Entity("Door.Infrastructure.Persistences.Entities.Input", b =>
-                {
-                    b.HasOne("Door.Infrastructure.Persistences.Entities.Doors", "door")
-                        .WithMany("inputs")
-                        .HasForeignKey("door_id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("door");
-                });
-
-            modelBuilder.Entity("Door.Infrastructure.Persistences.Entities.Outputs", b =>
-                {
-                    b.HasOne("Door.Infrastructure.Persistences.Entities.Doors", "door")
-                        .WithMany("outputs")
-                        .HasForeignKey("door_id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("door");
-                });
-
-            modelBuilder.Entity("Door.Infrastructure.Persistences.Entities.Reader", b =>
-                {
-                    b.HasOne("Door.Infrastructure.Persistences.Entities.Doors", "door")
-                        .WithMany("readers")
-                        .HasForeignKey("door_id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("door");
-                });
-
-            modelBuilder.Entity("Door.Infrastructure.Persistences.Entities.Doors", b =>
-                {
-                    b.Navigation("inputs");
-
-                    b.Navigation("outputs");
-
-                    b.Navigation("readers");
                 });
 #pragma warning restore 612, 618
         }

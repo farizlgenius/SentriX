@@ -3,10 +3,13 @@ import PageBreadcrumb from "../../components/common/PageBreadCrumb";
 import {
   AddIcon,
   AmicoIcon,
+  CancelCircleIcon,
+  CheckCircleIcon,
   ControlIcon,
   HardwareIcon,
   Info2Icon,
   ModuleIcon,
+  OnIcon,
   ResetIcon,
   ScanIcon,
   ToggleTranIcon,
@@ -36,7 +39,7 @@ import Badge from "../../components/ui/badge/Badge";
 import { TableCell } from "../../components/ui/table";
 import { HardwareMemAllocForm } from "../../components/form/device/HardwareMemAllocForm";
 import { HardwareComponentForm } from "../../components/form/device/HardwareComponentForm";
-import { TranStatusDto } from "../../model/Device/TranStatusDto";
+import { EventStatusDto } from "../../model/Device/TranStatusDto";
 import { FormType } from "../../model/Form/FormProp";
 import { usePopup } from "../../context/PopupContext";
 import { SetTranDto } from "../../model/Device/SetTranDto";
@@ -50,8 +53,8 @@ import AeroDeviceForm from "../../components/form/device/AeroDeviceForm";
 import { DeviceDtoMetadata as AeroDtoMetadata } from "../../model/Device/DeviceDtoStrMetadata";
 import { mapFields } from "../../utility/Mapper";
 
-const HEADER = ["Type", "Name", "Mac", "Firmware", "IP", "Port", "Configuration", "Status", "Action"];
-const KEY = ["type", "name", "mac", "fw", "ip", "port"];
+const HEADER = ["Type", "Name", "Mac", "Firmware", "IP", "Port","Event", "Configuration", "Status", "Action"];
+const KEY = ["type", "name", "mac", "fw", "ip", "port","tranStatus"];
 
 
 
@@ -125,7 +128,7 @@ const Device = () => {
   const [aeroDto, setAeroDto] = useState<AeroDtoMetadata>(aeroDefault);
   const [data, setData] = useState<DeviceDto[]>([]);
   const [status, setStatus] = useState<StatusDto[]>([]);
-  const [tranStatus, setTranStatus] = useState<TranStatusDto[]>([]);
+  const [tranStatus, setTranStatus] = useState<EventStatusDto[]>([]);
   const [select, setSelect] = useState<DeviceDto[]>([]);
 
   const handleCloseModal = () => setScan(false);
@@ -153,8 +156,8 @@ const Device = () => {
         batt: -1
       }));
 
-      const newTranStatuses = res.data.items.map((item: StatusDto) => ({
-        scpId: item.componentId,
+      const newTranStatuses = res.data.items.map((item: DeviceDto) => ({
+        deviceId: item.id,
         capacity: 0,
         oldest: 0,
         lastReport: 0,
@@ -168,16 +171,33 @@ const Device = () => {
 
       res.data.items.forEach((item: DeviceDto) => {
         fetchStatus(item.id);
+        fetchTranStatus(item.type,item.id);
       });
     }
   };
 
-  const setTran = async (tranData: SetTranDto[]) => {
-    const res = await send.post(DeviceEndpoint.TRAN_RANGE, tranData);
+  const setTran = async (tranData: SetTranDto) => {
+    const res = await send.post(DeviceEndpoint.SET_TRAN, tranData);
     if (Helper.handleToastByResCode(res, HardwareToast.TOGGLE_TRAN, toggleToast)) {
       toggleRefresh();
     }
   };
+
+  const fetchTranStatus = async (type:string,id:number) => {
+    const res = await send.get(DeviceEndpoint.GET_EVENT_STATUS(type,id));
+    if (res.data) {
+      setTranStatus((prev) =>
+        prev.map((item) =>
+          item.deviceId === res.data.id
+            ? {
+                ...item,
+                status: res.data.status
+              }
+            : item
+        )
+      );
+    }
+  }
 
   const fetchStatus = async (id: number) => {
     const res = await send.get(DeviceEndpoint.STATUS(id));
@@ -264,11 +284,13 @@ const Device = () => {
           setMessage("Please select object");
           setInfo(true);
         } else {
-          const tranData = select.map((item: DeviceDto) => ({
-            macAddress: item.mac,
-            param: 1
-          }));
-          setTran(tranData);
+         select.forEach((item: DeviceDto) => (
+            setTran({
+              deviceId:item.id,
+              type:item.type,
+              isEnable:true
+            })
+          ));
         }
         break;
       case "delete":
@@ -346,8 +368,27 @@ const Device = () => {
         setIdReports(reports);
       });
 
+      connection.on(SignalRTopic.EVENT_STATUS, (status: EventStatusDto) => {
+        setTranStatus((prev) =>
+        prev.map((item) =>
+          item.deviceId === status.deviceId
+            ? {
+                ...item,
+                isEnable: status.isEnable
+              }
+            : item
+        )
+      );
+      });
+
       try {
         await SignalRService.joinGroup(SignalRTopic.IDREPORT);
+      } catch (err) {
+        console.error("Subscribe error:", err);
+      }
+
+      try {
+        await SignalRService.joinGroup(SignalRTopic.EVENT_STATUS);
       } catch (err) {
         console.error("Subscribe error:", err);
       }
@@ -494,15 +535,7 @@ const Device = () => {
                 key: "tranStatus",
                 content: (item, index) => (
                   <TableCell key={index} className="px-4 py-3 text-gray-500 text-center text-theme-sm dark:text-gray-400">
-                    <Badge
-                      size="sm"
-                      color={tranStatus.find((tranItem) => tranItem.scpId === item.componentId)?.disabled === 0 &&
-                        tranStatus.find((tranItem) => tranItem.scpId === item.componentId)?.status
-                        ? "success"
-                        : "error"}
-                    >
-                      {tranStatus.find((tranItem) => tranItem.scpId === item.componentId)?.status ?? "Unknown"}
-                    </Badge>
+                    {tranStatus.find((tranItem) => tranItem.deviceId === item.id)?.isEnable ? <CheckCircleIcon className="text-2xl"/> : <CancelCircleIcon className="text-2xl"/>}
                   </TableCell>
                 )
               },

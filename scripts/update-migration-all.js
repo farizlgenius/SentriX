@@ -3,7 +3,7 @@ const { execSync } = require("child_process");
 
 const modules = [
     "src/Modules/Auth/Auth.Infrastructure",
-    // "src/Modules/Cache/Cache.Infrastructure",
+    "src/Modules/User/User.Infrastructure",
     "src/Modules/Location/Location.Infrastructure",
     "src/Modules/Role/Role.Infrastructure",
     "src/Modules/Operator/Operator.Infrastructure",
@@ -13,7 +13,8 @@ const modules = [
     "src/Modules/Output/Output.Infrastructure",
     "src/Modules/Time/Time.Infrastructure",
     "src/Modules/Door/Door.Infrastructure",
-    "src/Modules/Group/Group.Infrastructure"
+    "src/Modules/Group/Group.Infrastructure",
+    "src/Modules/Input/Input.Infrastructure",
 ];
 
 for (const project of modules) {

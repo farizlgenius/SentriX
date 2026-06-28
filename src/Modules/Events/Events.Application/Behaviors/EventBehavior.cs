@@ -18,6 +18,7 @@ public sealed class EventBehavior(IEventRepository repo,IMessageBus bus) : Event
             string image,
             string mac,
             string name,
+            string code,
             string remarks,
             int locationId
       )
@@ -30,6 +31,7 @@ public sealed class EventBehavior(IEventRepository repo,IMessageBus bus) : Event
                   image,
                   mac,
                   name,
+                  code,
                   remarks,
                   locationId
             );

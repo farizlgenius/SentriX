@@ -17,4 +17,5 @@ public interface IDoor
       Task<IEnumerable<OptionDto>> GetSpareFlagAsync();
       Task<IEnumerable<OptionDto>> GetOsdpBaudrateAsync();
       Task<IEnumerable<OptionDto>> GetDoorOptionByLocationIdAsync(int LocationId);
+      Task<string> GetNameByMacAndComponentIdAsync(string Mac,short ComponentId,CancellationToken ct=default);
 }

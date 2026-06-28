@@ -111,6 +111,20 @@ namespace Host.Controllers
             return Ok(res);
         }
 
+        [HttpGet("event/{type}/{id}")]
+        public async Task<IActionResult> GetEventStatusAsync(string type,int id)
+        {
+            var res = await device.GetEventStatusAsync(type,id);
+            return Ok(res);
+        }
+
+        [HttpPost("event")]
+        public async Task<IActionResult> GetEventStatusAsync([FromBody] SetEventDto dto)
+        {
+            var res = await device.SetEventStatusAsync(dto);
+            return Ok(res);
+        }
+
 
 
     }

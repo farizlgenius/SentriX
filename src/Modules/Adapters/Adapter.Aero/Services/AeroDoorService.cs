@@ -23,7 +23,7 @@ public sealed class AeroDoorService(IDoorCommand door, IOutputCommand output, II
       )
       {
 
-            var metadata = JsonSerializer.Deserialize<DoorMetadata>(Metadata);
+            var metadata = JSONHelper.Deserialize<DoorMetadata>(Metadata);
             if (metadata == null)
                   throw new Exception(MessageHelper.Common.DeserializeFailed("DoorMetadata"));
 
@@ -52,7 +52,7 @@ public sealed class AeroDoorService(IDoorCommand door, IOutputCommand output, II
                         DeviceComponentId,
                         metadata.ReaderIn.ReaderModuleComponentId,
                         metadata.ReaderIn.ReaderNumber,
-                        metadata.ReaderIn.DataFormat,
+                        metadata.ReaderIn.DataFormat == -1 ? (short)0x01 : metadata.ReaderIn.DataFormat,
                         metadata.ReaderIn.KeypadMode,
                         metadata.ReaderIn.LedDriveMode,
                        readerInOsdpFlag
@@ -88,7 +88,7 @@ public sealed class AeroDoorService(IDoorCommand door, IOutputCommand output, II
                         DeviceComponentId,
                         metadata.ReaderOut.ReaderModuleComponentId,
                         metadata.ReaderOut.ReaderNumber,
-                        metadata.ReaderOut.DataFormat,
+                         metadata.ReaderOut.DataFormat == -1 ? (short)0x01 : metadata.ReaderOut.DataFormat,
                         metadata.ReaderOut.KeypadMode,
                         metadata.ReaderOut.LedDriveMode,
                        readerOutOsdpFlag

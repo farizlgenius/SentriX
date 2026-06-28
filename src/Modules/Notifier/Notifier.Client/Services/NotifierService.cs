@@ -28,4 +28,10 @@ public sealed class NotifierService : INotifier
         await _hub.Clients.Group($"user-{userId}")
             .SendAsync("private", payload, ct);
     }
+
+      public async Task TriggerToTopic(string topic, CancellationToken ct = default)
+      {
+            await _hub.Clients.Group(topic)
+            .SendAsync(topic, ct);
+      }
 }

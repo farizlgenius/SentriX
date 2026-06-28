@@ -12,13 +12,17 @@ export interface UserDto extends BaseDto {
     email:string;
     phone:string;
     companyId:number;
+    company:string;
     departmentId:number;
+    department:string;
     positionId:number;
+    position:string;
     address:string;
     flag:number;
     additionals:string[];
     image:string;
     credentials:CredentialDto[];
     groups:number[];
+    vacationId:number;
     locationId:number;
 }

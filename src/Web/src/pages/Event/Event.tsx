@@ -11,17 +11,19 @@ import { PageProp } from '../../model/PageProp'
 import { useLocation } from '../../context/LocationContext'
 import { TableCell } from '../../components/ui/table'
 import { Avatar } from '../UiElements/Avatar'
+import { SignalRTopic } from '../../constants/signalr-constant'
+import { useAuth } from '../../context/AuthContext'
 
 
 
 // Define header Table 
 const headers: string[] = [
-  "Date", "Source","Type","Device","Avatar","Actor","Remark"
+  "Date", "Module","Name","Code","Remark"
 ]
 
 // Define kwy Table 
 const keys: string[] = [
-  "dateTime","module","type","name","image", "actor", "remarks"
+  "dateTime","module","name","code" ,"remarks"
 ]
 
 
@@ -30,6 +32,7 @@ const keys: string[] = [
 const Event = () => {
   {/* Pagination */ }
   const { locationId } = useLocation();
+  const {  token } = useAuth();
   const [search, setSearch] = useState<string | undefined>();
   const [startDate, setStartDate] = useState<string | undefined>();
   const [endDate, setEndDate] = useState<string | undefined>();
@@ -75,15 +78,38 @@ const Event = () => {
     
   }
 
-  {/* UseEffect */ }
-  useEffect(() => {
-    fetchData(1, pageSize);
-    const connection = SignalRService.getConnection();
-    connection.on("EVENT.TRIGGER", () => {
-      fetchData(1, pageSize);
-    });
 
-  }, []);
+
+  useEffect(() => {
+      const initSignalR = async () => {
+        if (!token) return;
+  
+        await SignalRService.startConnection();
+        const connection = SignalRService.getConnection();
+        if (!connection) return;
+  
+        connection.on(SignalRTopic.EVENT, () => {
+          fetchData(1, pageSize);
+        });
+  
+  
+        try {
+          await SignalRService.joinGroup(SignalRTopic.EVENT);
+        } catch (err) {
+          console.error("Subscribe error:", err);
+        }
+  
+  
+        fetchData(1, pageSize);
+      };
+  
+      initSignalR();
+  
+      return () => {
+        const connection = SignalRService.getConnection();
+        connection?.off(SignalRTopic.EVENT);
+      };
+    }, [locationId]);
 
   useEffect(() => {
     fetchData(1, pageSize, search, startDate, endDate)

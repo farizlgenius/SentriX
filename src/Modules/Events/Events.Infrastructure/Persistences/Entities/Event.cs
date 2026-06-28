@@ -12,6 +12,7 @@ public sealed class Event : BaseEntity
       public string image {get; set;} = string.Empty;
       public string mac {get; set;} = string.Empty;
       public string name {get; set;} = string.Empty;
+      public string code {get; set;} = string.Empty;
       public string remarks {get; set;} = string.Empty;
 
       public Event(){}
@@ -25,6 +26,7 @@ public sealed class Event : BaseEntity
             string mac,
             string name,
             int location_id,
+            string code = "",
             string remarks = ""
             
       ){
@@ -35,6 +37,7 @@ public sealed class Event : BaseEntity
             this.image = image;
             this.mac = mac;
             this.name = name;
+            this.code = code;
             this.remarks = remarks;
             this.location_id = location_id;
       }
