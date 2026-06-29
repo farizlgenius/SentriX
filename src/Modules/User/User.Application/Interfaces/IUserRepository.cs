@@ -42,4 +42,5 @@ public interface IUserRepository
       Task<IEnumerable<OptionDto>> GetDepartmentOptionByCompanyAsync(int CompanyId,CancellationToken ct = default);
        Task<IEnumerable<OptionDto>> GetPositionOptionByDepartmentAsync(int DepartmentId,CancellationToken ct = default);
        Task<IEnumerable<OptionDto>> GetUserFlagOptionAsync(CancellationToken ct = default);
+       Task<bool> IsAnyCardNumberAsync(int CardNumber,CancellationToken ct = default);
 }

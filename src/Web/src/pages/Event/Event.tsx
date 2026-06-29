@@ -13,17 +13,20 @@ import { TableCell } from '../../components/ui/table'
 import { Avatar } from '../UiElements/Avatar'
 import { SignalRTopic } from '../../constants/signalr-constant'
 import { useAuth } from '../../context/AuthContext'
+import { CalenderIcon, ControlIcon, DoorIcon, HardwareIcon, ModuleIcon, MonitorIcon, TimeIcon, TimezonIcon, UserIcon } from '../../icons'
+import { EventModule } from '../../enum/EventModule'
+import { useTheme } from '../../context/ThemeContext'
 
 
 
 // Define header Table 
 const headers: string[] = [
-  "Date", "Module","Name","Code","Remark"
+  "Date","Name","Status","Remark"
 ]
 
 // Define kwy Table 
 const keys: string[] = [
-  "dateTime","module","name","code" ,"remarks"
+  "dateTime","name","code" ,"remarks"
 ]
 
 
@@ -32,6 +35,7 @@ const keys: string[] = [
 const Event = () => {
   {/* Pagination */ }
   const { locationId } = useLocation();
+  const {accentColor} = useTheme();
   const {  token } = useAuth();
   const [search, setSearch] = useState<string | undefined>();
   const [startDate, setStartDate] = useState<string | undefined>();
@@ -66,6 +70,28 @@ const Event = () => {
     setPageSize(Number(data));
   }
 
+  // const switchModuleIcon = (mod:string) => {
+  //   switch(mod){
+  //     case EventModule.Device.toString():
+  //       return <HardwareIcon />
+  //     case EventModule.Door.toString():
+  //       return <DoorIcon />
+  //     default: 
+  //       return null;
+  //   }
+  // }
+
+  const switchModuleIcon = (mod: string) =>
+  ({
+    [EventModule.Device.toString()]: <ModuleIcon className="w-6 h-6" style={{ color: accentColor }} />,
+    [EventModule.Module.toString()]: <ModuleIcon className="w-6 h-6" style={{ color: accentColor }} />,
+    [EventModule.User.toString()]: <UserIcon className="w-6 h-6" style={{ color: accentColor }} />,
+    [EventModule.Door.toString()]: <DoorIcon className="w-6 h-6" style={{ color: accentColor }} />,
+    [EventModule.Input.toString()]: <MonitorIcon className="w-6 h-6" style={{ color: accentColor }} />,
+    [EventModule.Output.toString()]: <ControlIcon className="w-6 h-6" style={{ color: accentColor }}/>,
+    [EventModule.Timezone.toString()]: <TimezonIcon className="w-6 h-6" style={{ color: accentColor }} />,
+  }[mod] ?? null);
+
 
   {/* Event Data */ }
   const [tableDatas, setTablesData] = useState<EventDto[]>([]);
@@ -81,6 +107,7 @@ const Event = () => {
 
 
   useEffect(() => {
+      console.log(accentColor);
       const initSignalR = async () => {
         if (!token) return;
   
@@ -214,15 +241,27 @@ const Event = () => {
             </div>
             <TransactionTable tableHeaders={headers} tableDatas={tableDatas} tableKeys={keys} specialDisplay={[
               {
+                key: "name",
+                content: (data, i) => <TableCell key={i} className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                  <span className='flex gap-2'>
+                    {switchModuleIcon(data.module)}
+                    {/* {<HardwareIcon/>} */}
+                   {data.name}
+                  </span>
+                  
+                </TableCell>
+              },
+              {
                 key: "dateTime",
                 content: (data, i) => <TableCell key={i} className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
                   {/* <span className='flex gap-2'>
                     {<CalenderIcon className="w-5 h-5" />} {new Intl.DateTimeFormat("en-GB").format(new Date(data.dateTime))}  {<TimeIcon className="w-5 h-5" />}  {new Date(data.dateTime).toTimeString().split(" ")[0]}
                   </span> */}
                   {/* <span className='flex gap-2'>
-                    {<TimeIcon className="w-5 h-5" />} {new Date(data.dateTime).toTimeString().split(" ")[0]}
+                    {<TimeIcon className="w-5 h-5" />} {new Date(data.timestamp).toTimeString().split(" ")[0]}
                   </span> */}
                   <span className='flex gap-2'>
+                    {<CalenderIcon className="w-5 h-5" style={{color:accentColor}} />}
                    {new Intl.DateTimeFormat("en-GB").format(new Date(data.timestamp))}  {new Date(data.timestamp).toTimeString().split(" ")[0]}
                   </span>
                   

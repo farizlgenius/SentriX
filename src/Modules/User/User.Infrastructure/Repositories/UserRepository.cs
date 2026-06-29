@@ -751,6 +751,11 @@ public sealed class UserRepository(UserDbContext context) : IUserRepository
             , items);
       }
 
+      public async Task<bool> IsAnyCardNumberAsync(int CardNumber, CancellationToken ct = default)
+      {
+            return await context.Credentials.AsNoTracking().AnyAsync(x => x.card_number == CardNumber);
+      }
+
       public async Task<bool> IsAnyCompanyByIdAsync(int id, CancellationToken ct = default)
       {
             return await context.Companies.AnyAsync(x => x.id == id, ct);

@@ -14,4 +14,5 @@ public interface IGroupRepository
       Task<GroupDto> GetByIdAsync(int id,CancellationToken ct = default);
       Task<Pagination<GroupDto>> GetPaginationAsync(PaginationParams param,CancellationToken ct = default);
       Task<IEnumerable<GroupDto>> GetByLocationIdAsync(int location,CancellationToken ct = default);
+      Task<IEnumerable<GroupSplitByMacDto>> GetByRangeIdAsync(List<int> Ids,CancellationToken ct= default);
 }

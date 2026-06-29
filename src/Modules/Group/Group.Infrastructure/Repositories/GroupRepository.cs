@@ -93,6 +93,23 @@ public sealed class GroupRepository(GroupDbContext context) : IGroupRepository
                   )).ToArrayAsync();
       }
 
+      public async Task<IEnumerable<GroupSplitByMacDto>> GetByRangeIdAsync(List<int> Ids, CancellationToken ct = default)
+      {
+             return await context.GroupDoors
+                  .AsNoTracking()
+                  .Where(x => Ids.Contains(x.group_id))
+                  .GroupBy(x => new { x.mac, x.type })
+                  .Select(g => new GroupSplitByMacDto(
+                        g.Key.mac,
+                        g.Key.type,
+                        g.Select(x => x.groups.component_id)
+                        .ToList()
+                  ))
+                  .ToArrayAsync(ct);
+
+      }
+
+
       public async Task<short> GetLowestGroupComponentIdAsync(CancellationToken ct = default)
       {
             return (short)await ComponentHelper.LowestUnassignedNumberAsync<Persistences.Entities.Groups>(

@@ -11,4 +11,5 @@ public interface IAdapter
       ITimeAdapter Time {get;}
       IDoorAdapter Door {get;}
       IGroupAdapter Group {get;}
+      IUserAdapter User {get;}
 }

@@ -8,8 +8,8 @@ public sealed class Credential : BaseEntity
       public short flag { get; set; }
       public short bits {get; set;}
       public short fac {get; set;}
-      public long card_number {get; set;}
-      public int issue_code {get; set;}
+      public int card_number {get; set;}
+      public short issue_code {get; set;}
       public string pin {get; set;} = string.Empty;
       public short use_count {get; set;}
       public short apb_loc {get; set;}

@@ -18,13 +18,16 @@ public sealed class AeroAdapter : IAdapter
       public IDoorAdapter Door {get;}
       public IGroupAdapter Group {get;}
 
+      public IUserAdapter User {get;}
+
       public AeroAdapter(
             IDeviceAdapter devices,
             IControlAdapter controls,
             IMonitorAdapter monitor,
             ITimeAdapter time,
             IDoorAdapter door,
-            IGroupAdapter group
+            IGroupAdapter group,
+            IUserAdapter user
       )
       {
             Device = devices;
@@ -33,5 +36,6 @@ public sealed class AeroAdapter : IAdapter
             Time = time;
             Door = door;
             Group = group;
+            User = user;
       }
 }

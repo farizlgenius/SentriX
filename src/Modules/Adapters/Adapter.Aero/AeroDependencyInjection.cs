@@ -59,6 +59,7 @@ public static class AeroDependencyInjection
             services.AddScoped<ITimeCommand,TimeCommand>();
             services.AddScoped<IDoorCommand,DoorCommand>();
             services.AddScoped<IGroupCommand,GroupCommand>();
+            services.AddScoped<IUserCommand,UserCommand>();
 
 
             services.AddScoped<IScp,ScpService>();
@@ -70,6 +71,7 @@ public static class AeroDependencyInjection
             services.AddScoped<ITimeAdapter,AeroTimeService>();
             services.AddScoped<IDoorAdapter,AeroDoorService>();
             services.AddScoped<IGroupAdapter,AeroGroupService>();
+            services.AddScoped<IUserAdapter,AeroUserService>();
 
 
             services.AddScoped<IAdapter, AeroAdapter>();

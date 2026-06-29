@@ -2796,3 +2796,14 @@ WebConfigNetwork: SCP-1, Method2 = 0, IP Address2: 0.0.0.0, Subnet Mask2: 0.0.0.
 56835.783 Jun 28 21:27:13 SCP-1:302 ACCESS READER-0, 5:5 Cfmt: 0, Card = -1.33685700.-1
 57432.077 Shutting down debug Thread...
 File closed Sun Jun 28 21:37:12 2026
+Debug file SCPDEBUG.txt <SCPDEBUGc.txt> <SCPDEBUG.TXT> opened Mon Jun 29 11:00:39 2026
+Begin - SCP Driver DLL (64-bit) version 4.7.1.43
+05639.792 WSAStartup ok
+05639.794 RNG_X931A24 Initialized
+05639.794 1, enCcSystem: 011 1024 1024 0 0 1
+05639.845 1, enCcCreateChannel: 0012 1 7 3333 0 3000 0 "" 0
+05640.166 listen(lsock) created socket=3560 on port 3333
+05640.166 Listen Successful, port: 3333
+08274.082 0(0), enCcTranSrq: 0402 1
+08287.700 Shutting down debug Thread...
+File closed Mon Jun 29 11:44:47 2026

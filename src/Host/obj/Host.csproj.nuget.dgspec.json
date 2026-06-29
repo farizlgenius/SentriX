@@ -20258,6 +20258,9 @@
               "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Adapter.Abstraction\\Adapter.Abstraction.csproj": {
                 "projectPath": "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Adapter.Abstraction\\Adapter.Abstraction.csproj"
               },
+              "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Group.Contract\\Group.Contract.csproj": {
+                "projectPath": "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Group.Contract\\Group.Contract.csproj"
+              },
               "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Storage.Contract\\Storage.Contract.csproj": {
                 "projectPath": "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Storage.Contract\\Storage.Contract.csproj"
               },
@@ -20266,6 +20269,9 @@
               },
               "D:\\aero\\SentriX\\src\\Modules\\User\\User.Domain\\User.Domain.csproj": {
                 "projectPath": "D:\\aero\\SentriX\\src\\Modules\\User\\User.Domain\\User.Domain.csproj"
+              },
+              "D:\\aero\\SentriX\\src\\SharedKernel\\SharedKernel.csproj": {
+                "projectPath": "D:\\aero\\SentriX\\src\\SharedKernel\\SharedKernel.csproj"
               }
             }
           }

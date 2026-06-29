@@ -1,9 +1,12 @@
 using System.Net;
 using System.Security.Cryptography.X509Certificates;
 using Adapter.Abstraction.Interfaces;
+using Device.Contract.Queries;
+using Group.Contract.Queries;
 using SharedKernel.Domain;
 using SharedKernel.Exceptions;
 using SharedKernel.Helpers;
+using SharedKernel.Messaging;
 using Storage.Contract.Interfaces;
 using User.Application.Interfaces;
 using User.Contract.DTOs;
@@ -12,7 +15,7 @@ using User.Domain.Entities;
 
 namespace User.Application.Behaviors;
 
-public sealed class UserBehavior(IUserRepository repo,IStorage file,IAdapterFactory factory) : IUser
+public sealed class UserBehavior(IUserRepository repo,IStorage file,IAdapterFactory factory,IMessageBus bus) : IUser
 {
       public async Task<CompanyDto> CreateCompanyAsync(CreateCompanyDto dto)
       {
@@ -120,11 +123,45 @@ public sealed class UserBehavior(IUserRepository repo,IStorage file,IAdapterFact
 
             // Check userid dup 
 
-            // check credential dup
+            if(await repo.IsAnyUserByUserIdAsync(domain.UserId))
+                  throw new BadRequestException(MessageHelper.Common.Duplicate(nameof(domain.UserId)));
 
-            // Send data to Controller
-            // await factory.GetAdapter()
+            foreach(var c in domain.Credentials)
+            {
+                  if(await repo.IsAnyCardNumberAsync(c.CardNumber))
+                        throw new BadRequestException(MessageHelper.Common.Duplicate(nameof(c.CardNumber)));
+            }
 
+      
+
+            // Query Group
+            var gps = await bus.QueryAsync(new GroupsListByRangeIdQuery(domain.Groups));
+
+            foreach (var g in gps)
+            {
+                  foreach (var c in domain.Credentials)
+                  {
+                        // Send data to Controller
+                        await factory.GetAdapter(g.Type).User.CreateUserAsync(
+                              g.Mac,
+                              (short)await bus.QueryAsync(new ComponentIdByMacQuery(g.Mac)),
+                              c.Flag,
+                              c.CardNumber,
+                              c.IssueCode,
+                              c.Pin,
+                              g.GroupComponentId,
+                              c.ApbLoc,
+                              c.UseCount,
+                              (int)DateTimeHelper.DateTimeToElapeSecond(c.ActiveTime),
+                             (int)DateTimeHelper.DateTimeToElapeSecond(c.DeactiveTime),
+                              -1,
+                              -1,
+                              -1,
+                              -1
+                              );
+                  }
+
+            }
 
             return await repo.CreateUserAsync(domain);
       }

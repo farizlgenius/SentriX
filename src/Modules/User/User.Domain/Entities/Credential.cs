@@ -9,8 +9,8 @@ public sealed class Credential : BaseDomain
       public short Flag { get; private set; }
       public short Bits {get; private set;}
       public short Fac {get; private set;}
-      public long CardNumber { get; private set; }
-      public int IssueCode { get; private set; }
+      public int CardNumber { get; private set; }
+      public short IssueCode { get; private set; }
       public string Pin { get; private set; } = string.Empty;
       public short UseCount { get; private set; }
       public short ApbLoc {get; private set;}
@@ -23,8 +23,8 @@ public sealed class Credential : BaseDomain
             short flag,
             short bits,
             short fac,
-            long cardNumber,
-            int issueCode,
+            int cardNumber,
+            short issueCode,
             string pin,
             short useCount,
             short apbLoc,
@@ -37,7 +37,7 @@ public sealed class Credential : BaseDomain
             ValidationHelper.ValidateNotMinus(flag,nameof(Flag));
             ValidationHelper.ValidateNotMinus(bits,nameof(Bits));
             ValidationHelper.ValidateNotMinus(userId,nameof(UserId));
-            ValidationHelper.ValidateNotMinus((int)cardNumber,nameof(CardNumber));
+            ValidationHelper.ValidateNotMinus(cardNumber,nameof(CardNumber));
             ValidationHelper.ValidateNotMinus(issueCode,nameof(IssueCode));
             ValidationHelper.ValidateDigit(pin,nameof(Pin));
 
