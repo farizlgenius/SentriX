@@ -13,7 +13,7 @@ public interface IDeviceRepository
       Task UpdateIpByComponentIdAsync(int componentId, string ip, CancellationToken ct = default);
       Task VerifyDeviceMemoryAllocateStatusAsync(int componentId, string status, CancellationToken ct = default);
       Task<Pagination<DeviceDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default);
-      Task<List<ModuleDto>> GetModuleByDeviceIdAsync(int id, CancellationToken ct = default);
+      Task<IEnumerable<ModuleDto>> GetModuleByDeviceIdAsync(int id, CancellationToken ct = default);
       Task<bool> IsAnyModuleBySerialNumberAsync(string SerialNumber, CancellationToken ct = default);
       Task<ModuleDto> CreateModuleAsync(Module dto,CancellationToken ct = default);
       Task<int> GetIdByMacAsync(string Mac,CancellationToken ct = default);
@@ -32,6 +32,7 @@ public interface IDeviceRepository
       Task<int> GetComponentIdByMacAsync(string Mac,CancellationToken ct = default);
       Task<int> GetLowestModuleComponentIdByDeviceIdAsync(int DeviceId,CancellationToken ct = default);
       Task<DeviceDto> GetDeviceByComponentIdAsync(int ComponentId,CancellationToken ct = default);
+      Task<DeviceDto> GetDeviceByIdAsync(int id,CancellationToken ct = default);
       Task<short> GetComponentIdByIdAsync(int id,CancellationToken ct = default);
       Task<IEnumerable<(string Mac,short ComponentId,string Type)>> MacAndComponentIdListAsync(int LocationId,CancellationToken ct = default);
       Task<string> GetMacByComponentIdAsync(int ComponentId);
@@ -47,5 +48,6 @@ public interface IDeviceRepository
       Task<IEnumerable<OptionDto>> GetInputOptionsByModuleIdAsync(int id ,CancellationToken ct = default);
       Task<int> GetIdByComponentIdAsync(short ComponentId,CancellationToken ct = default);
       Task<string> GetModuleNameByMacAndComponentIdAsync(string Mac,short ComponentId,CancellationToken ct = default);
+      Task<bool> UploadDeviceAsync(int id ,CancellationToken ct = default);
 
 }

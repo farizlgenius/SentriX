@@ -23,6 +23,7 @@ public interface IDoorRepository
       Task<IEnumerable<OptionDto>> GetOsdpBaudrateAsync(CancellationToken ct = default);
       Task<IEnumerable<OptionDto>> GetDoorOptionByLocationIdAsync(int LocationId,CancellationToken ct= default);
       Task<string> GetNameByMacAndComponentIdAsync(string Mac,short ComponentId,CancellationToken ct= default);
+      Task<IEnumerable<DoorDto>> GetDoorByMacAsync(string Mac,CancellationToken ct = default);
       
       
 }

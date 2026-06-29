@@ -112,3 +112,7 @@ D:\aero\SentriX\src\Modules\Device\Device.Application\obj\Debug\net10.0\Device.A
 D:\aero\SentriX\src\Modules\Device\Device.Application\obj\Debug\net10.0\refint\Device.Application.dll
 D:\aero\SentriX\src\Modules\Device\Device.Application\obj\Debug\net10.0\Device.Application.pdb
 D:\aero\SentriX\src\Modules\Device\Device.Application\obj\Debug\net10.0\ref\Device.Application.dll
+D:\aero\SentriX\src\Modules\Device\Device.Application\bin\Debug\net10.0\Group.Contract.dll
+D:\aero\SentriX\src\Modules\Device\Device.Application\bin\Debug\net10.0\User.Contract.dll
+D:\aero\SentriX\src\Modules\Device\Device.Application\bin\Debug\net10.0\Group.Contract.pdb
+D:\aero\SentriX\src\Modules\Device\Device.Application\bin\Debug\net10.0\User.Contract.pdb

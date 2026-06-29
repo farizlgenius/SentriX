@@ -9,7 +9,9 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Contracts\Adapter.Abstraction\Adapter.Abstraction.csproj" />
     <ProjectReference Include="..\..\Contracts\Device.Contract\Device.Contract.csproj" />
+    <ProjectReference Include="..\..\Contracts\Group.Contract\Group.Contract.csproj" />
     <ProjectReference Include="..\..\Contracts\Location.Contract\Location.Contract.csproj" />
+    <ProjectReference Include="..\..\Contracts\User.Contract\User.Contract.csproj" />
     <ProjectReference Include="..\Device.Domain\Device.Domain.csproj" />
   </ItemGroup>
 

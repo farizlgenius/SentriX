@@ -7,12 +7,16 @@ using Adapter.Abstraction.Interfaces;
 using Device.Application.Interfaces;
 using Device.Contract.DTOs;
 using Device.Contract.Interfaces;
+using Door.Contract.Queries;
+using Group.Contract.Queries;
 using Location.Contract.Queries;
 using SharedKernel.Domain;
 using SharedKernel.Enums;
 using SharedKernel.Exceptions;
 using SharedKernel.Helpers;
 using SharedKernel.Messaging;
+using Time.Contract.Queries;
+using User.Contract.Queries;
 
 namespace Device.Application.Behaviors;
 
@@ -141,7 +145,7 @@ public sealed class DeviceBehaviors(IDeviceRepository repo, IMessageBus bus, IAd
             return await adapter.Device.GetIdReportsAsync();
       }
 
-      public async Task<List<ModuleDto>> GetModuleByDeviceIdAsync(int id, CancellationToken ct = default)
+      public async Task<IEnumerable<ModuleDto>> GetModuleByDeviceIdAsync(int id, CancellationToken ct = default)
       {
             return await repo.GetModuleByDeviceIdAsync(id, ct);
 
@@ -229,5 +233,125 @@ public sealed class DeviceBehaviors(IDeviceRepository repo, IMessageBus bus, IAd
       public async Task<string> GetModuleNameByMacAndComponentIdAsync(string Mac, short ComponentId, CancellationToken ct = default)
       {
             return await repo.GetModuleNameByMacAndComponentIdAsync(Mac,ComponentId,ct);
+      }
+
+      public async Task<BaseResponse> UploadDeviceAsync(int id, CancellationToken ct = default)
+      {
+           // Device
+           var device = await repo.GetDeviceByIdAsync(id);
+
+           if(device.Id == 0)
+                  throw new BadRequestException(MessageHelper.Common.NotFound("Device",id));
+
+           // Module
+           var modules = await repo.GetModuleByDeviceIdAsync(id);
+
+           foreach(var module in modules)
+            {
+                  if (device.Type.Equals(DeviceType.AERO.ToString()))
+                  {
+                        if (Enum.TryParse<SioModel>(module.Model, out var status))
+                        {
+                              short enumValue = (short)status;
+                              await adapterFactory.GetAdapter(device.Type).Device.CreateModuleAsync(
+                              module.Mac,
+                              device.ComponentId,
+                              module.ComponentId,
+                              enumValue,
+                              module.Address,
+                              module.Port
+                              );
+                        }
+                  }
+
+
+            }
+
+            // Card Format
+
+            // Input
+
+            // Output
+
+            // TimeZone
+            var timeZones = await bus.QueryAsync(new TimeZoneByLocationIdQuery(device.LocationId));
+
+            foreach(var time in timeZones)
+            {
+                  await adapterFactory.GetAdapter(device.Type).Time.CreateTimezoneAsync(
+                        device.Mac,
+                        device.ComponentId,
+                        time.ComponentId,
+                        time.Mode,
+                        time.Active,
+                        time.Deactive,
+                        time.Intervals
+                  );
+            }
+
+            // Doors
+            var doors = await bus.QueryAsync(new DoorByMacQuery(device.Mac));
+
+            foreach(var door in doors)
+            {
+                  await adapterFactory.GetAdapter(device.Type).Door.CreateUpdateDoorAsync(
+                        device.Mac,
+                        device.ComponentId,
+                        door.Metadata,
+                        door.ComponentId,
+                        door.SecondComponentId
+                  );
+            }
+
+            // Access Level
+            var groups = await bus.QueryAsync(new GroupByMacAndDeviceTypeQuery(device.Mac,device.Type));
+
+            foreach(var group in groups)
+            {
+                  await adapterFactory.GetAdapter(device.Type).Group.CreateUpdateLevel(
+                        device.Mac,
+                        device.ComponentId,
+                        group.ComponentId,
+                        group.Doors.Select(x => (x.DoorComponentId,x.TimezoneComponentId)).ToList()
+                  );
+            }
+
+            // Users
+            var gpList = await bus.QueryAsync(new GroupIdListByMacQuery(device.Mac));
+            var creds = await bus.QueryAsync(new CredentialByGroupListQuery(gpList.Select(x => x.id).ToList()));
+
+            foreach(var cred in creds)
+            {
+                  await adapterFactory.GetAdapter(device.Type).User.CreateUserAsync(
+                        device.Mac,
+                        device.ComponentId,
+                        cred.Flag,
+                        cred.CardNumber,
+                        cred.IssueCode,
+                        cred.Pin,
+                        gpList.Select(x => x.componentId).ToList(),
+                        cred.ApbLoc,
+                        cred.UseCount,
+                        (short)DateTimeHelper.DateTimeToElapeSecond(cred.Active),
+                        (short)DateTimeHelper.DateTimeToElapeSecond(cred.Expire),
+                        -1,
+                        -1,
+                        -1,
+                        -1
+                  );
+            }
+
+            // Area
+
+
+            // Trigger
+
+
+            return new BaseResponse(
+                  HttpStatusCode.OK,
+                  MessageHelper.Common.Success,
+                  DateTime.UtcNow
+                  );
+           
       }
 }

@@ -634,6 +634,28 @@ public sealed class UserRepository(UserDbContext context) : IUserRepository
             , items);
       }
 
+      public async Task<IEnumerable<CredentialDto>> GetCredentialByGroupListAsync(List<int> Groups, CancellationToken ct = default)
+      {
+            return await context.UserGroups.AsNoTracking()
+            .Where(x => Groups.Contains(x.group_id))
+            .SelectMany(x => x.user.credentials.Select(c => new CredentialDto(
+                  c.id,
+                  c.flag,
+                  c.bits,
+                  c.fac,
+                  c.card_number,
+                  c.issue_code,
+                  c.pin,
+                  c.use_count,
+                  c.apb_loc,
+                  c.act_time,
+                  c.deact_time,
+                  c.location_id,
+                  c.is_active
+            )))
+            .ToArrayAsync();
+      }
+
       public async Task<IEnumerable<OptionDto>> GetUserFlagOptionAsync(CancellationToken ct = default)
       {
            return await context.UserFlags.AsNoTracking()

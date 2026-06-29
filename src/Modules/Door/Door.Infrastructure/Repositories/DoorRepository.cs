@@ -331,4 +331,24 @@ public sealed class DoorRepository(DoorDbContext context) : IDoorRepository
             .FirstOrDefaultAsync() ?? string.Empty;
             
       }
+
+      public async Task<IEnumerable<DoorDto>> GetDoorByMacAsync(string Mac, CancellationToken ct = default)
+      {
+            return await context.Doors.AsNoTracking()
+            .OrderByDescending(x => x.id)
+            .Where(x => x.mac.Equals(Mac))
+            .Select(x => new DoorDto(
+                  x.id,
+                  x.component_id,
+                  x.name,
+                  x.device_component_id,
+                  x.second_component_id,
+                  x.mac,
+                  x.door_type,
+                  x.metadata,
+                  x.location_id,
+                  x.type,
+                  x.is_active
+            )).ToArrayAsync();
+      }
 }

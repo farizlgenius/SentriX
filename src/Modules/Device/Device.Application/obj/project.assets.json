@@ -592,6 +592,19 @@
           "bin/placeholder/Door.Contract.dll": {}
         }
       },
+      "Group.Contract/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v10.0",
+        "dependencies": {
+          "SharedKernel": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/Group.Contract.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Group.Contract.dll": {}
+        }
+      },
       "Location.Contract/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v10.0",
@@ -646,6 +659,19 @@
         },
         "runtime": {
           "bin/placeholder/Time.Contract.dll": {}
+        }
+      },
+      "User.Contract/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v10.0",
+        "dependencies": {
+          "SharedKernel": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/User.Contract.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/User.Contract.dll": {}
         }
       }
     }
@@ -1489,6 +1515,11 @@
       "path": "../../Contracts/Door.Contract/Door.Contract.csproj",
       "msbuildProject": "../../Contracts/Door.Contract/Door.Contract.csproj"
     },
+    "Group.Contract/1.0.0": {
+      "type": "project",
+      "path": "../../Contracts/Group.Contract/Group.Contract.csproj",
+      "msbuildProject": "../../Contracts/Group.Contract/Group.Contract.csproj"
+    },
     "Location.Contract/1.0.0": {
       "type": "project",
       "path": "../../Contracts/Location.Contract/Location.Contract.csproj",
@@ -1508,6 +1539,11 @@
       "type": "project",
       "path": "../../Contracts/Time.Contract/Time.Contract.csproj",
       "msbuildProject": "../../Contracts/Time.Contract/Time.Contract.csproj"
+    },
+    "User.Contract/1.0.0": {
+      "type": "project",
+      "path": "../../Contracts/User.Contract/User.Contract.csproj",
+      "msbuildProject": "../../Contracts/User.Contract/User.Contract.csproj"
     }
   },
   "projectFileDependencyGroups": {
@@ -1515,7 +1551,9 @@
       "Adapter.Abstraction >= 1.0.0",
       "Device.Contract >= 1.0.0",
       "Device.Domain >= 1.0.0",
-      "Location.Contract >= 1.0.0"
+      "Group.Contract >= 1.0.0",
+      "Location.Contract >= 1.0.0",
+      "User.Contract >= 1.0.0"
     ]
   },
   "packageFolders": {
@@ -1552,8 +1590,14 @@
             "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Device.Contract\\Device.Contract.csproj": {
               "projectPath": "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Device.Contract\\Device.Contract.csproj"
             },
+            "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Group.Contract\\Group.Contract.csproj": {
+              "projectPath": "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Group.Contract\\Group.Contract.csproj"
+            },
             "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Location.Contract\\Location.Contract.csproj": {
               "projectPath": "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Location.Contract\\Location.Contract.csproj"
+            },
+            "D:\\aero\\SentriX\\src\\Modules\\Contracts\\User.Contract\\User.Contract.csproj": {
+              "projectPath": "D:\\aero\\SentriX\\src\\Modules\\Contracts\\User.Contract\\User.Contract.csproj"
             },
             "D:\\aero\\SentriX\\src\\Modules\\Device\\Device.Domain\\Device.Domain.csproj": {
               "projectPath": "D:\\aero\\SentriX\\src\\Modules\\Device\\Device.Domain\\Device.Domain.csproj"
@@ -1870,5 +1914,13 @@
         }
       }
     }
-  }
+  },
+  "logs": [
+    {
+      "code": "NU1900",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Error occurred while getting package vulnerability data: Unable to load the service index for source https://api.nuget.org/v3/index.json."
+    }
+  ]
 }

@@ -268,6 +268,44 @@ public sealed class TimezoneRepository(TimeDbContext context) : ITimezoneReposit
             , items);
       }
 
+      public async Task<IEnumerable<TimezoneDto>> GetTimeZoneByLocationIdAsync(int locationId, CancellationToken ct = default)
+      {
+            return await context.Timezones.AsNoTracking()
+            .OrderByDescending(x => x.id)
+            .Where(x => x.location_id == locationId || x.location_id == 0)
+            .Select(x => new TimezoneDto(
+                  x.id,
+                  x.component_id,
+                  x.name,
+                  x.mode,
+                  x.active,
+                  x.deactive,
+                  x.intervals.Select(x => new IntervalDto(
+                        x.id,
+                        x.component_id,
+                        new DaysInWeekDto(
+                              x.days.id,
+                              x.days.component_id,
+                              x.days.sunday,
+                              x.days.monday,
+                              x.days.tuesday,
+                              x.days.wednesday,
+                              x.days.thursday,
+                              x.days.friday,
+                              x.days.saturday,
+                              x.location_id
+                              ),
+                        x.days_detail,
+                        x.start,
+                        x.end,
+                        x.location_id,
+                        x.is_active
+                  )).ToList(),
+                  x.location_id,
+                  x.is_active
+                  )).ToArrayAsync(ct);
+      }
+
       public async Task<IEnumerable<OptionDto>> GetTimezoneOptionByLocationIdAsync(int locationId, CancellationToken ct = default)
       {
             return await context.Timezones.AsNoTracking()
@@ -278,6 +316,6 @@ public sealed class TimezoneRepository(TimeDbContext context) : ITimezoneReposit
                   x.id,
                   string.Empty,
                   x.component_id
-                  )).ToArrayAsync();
+                  )).ToArrayAsync(ct);
       }
 }

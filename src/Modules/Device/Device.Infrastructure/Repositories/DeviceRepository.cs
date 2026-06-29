@@ -242,7 +242,7 @@ public sealed class DeviceRepository(DeviceDbContext context) : IDeviceRepositor
             return await context.Modules.AsNoTracking().OrderByDescending(x => x.id).Where(x => x.id == ModuleId).Select(x => x.model).FirstOrDefaultAsync() ?? string.Empty;
       }
 
-      public async Task<List<ModuleDto>> GetModuleByDeviceIdAsync(int id, CancellationToken ct = default)
+      public async Task<IEnumerable<ModuleDto>> GetModuleByDeviceIdAsync(int id, CancellationToken ct = default)
       {
             return await context.Modules.AsNoTracking()
                   .Where(m => m.device_id == id)
@@ -261,7 +261,7 @@ public sealed class DeviceRepository(DeviceDbContext context) : IDeviceRepositor
                         m.devices.component_id,
                         m.location_id,
                         m.is_active
-                  )).ToListAsync(ct);
+                  )).ToArrayAsync(ct);
       }
 
       public async Task<ModuleDto> GetModuleByIdAsync(int id, CancellationToken ct = default)
@@ -707,5 +707,33 @@ public sealed class DeviceRepository(DeviceDbContext context) : IDeviceRepositor
                   return false;
 
             return true;
+      }
+
+      public async Task<bool> UploadDeviceAsync(int id, CancellationToken ct = default)
+      {
+            throw new NotImplementedException();
+      }
+
+      public async Task<DeviceDto> GetDeviceByIdAsync(int id, CancellationToken ct = default)
+      {
+            return await context.Devices.AsNoTracking()
+            .OrderByDescending(x => x.id)
+            .Where(x => x.id == id)
+            .Select(e => new DeviceDto(
+                  e.id,
+                  e.name,
+                  e.component_id,
+                  e.serial_number,
+                  e.mac.Replace("_", ":"),
+                  e.ip,
+                  e.port,
+                  e.fw,
+                  e.type,
+                  e.status,
+                  e.synced_at,
+                  e.location_id,
+                  e.metadata,
+                  e.is_active
+            )).FirstOrDefaultAsync() ?? new DeviceDto();
       }
 }

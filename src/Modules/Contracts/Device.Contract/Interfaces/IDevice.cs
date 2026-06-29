@@ -12,7 +12,7 @@ public interface IDevice
       Task<DeviceStatusDto> GetStatusByIdAsync(int id, CancellationToken ct = default);
       Task<Pagination<DeviceDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default);
       Task<BaseResponse> ResetDeviceAsync(int id, CancellationToken ct = default);
-      Task<List<ModuleDto>> GetModuleByDeviceIdAsync(int id, CancellationToken ct = default);
+      Task<IEnumerable<ModuleDto>> GetModuleByDeviceIdAsync(int id, CancellationToken ct = default);
       Task<ModuleDto> CreateModuleAsync(CreateModuleDto dto, CancellationToken ct = default);
       Task<BaseResponse> GetModuleStatusByIdAsync(int id, CancellationToken ct = default);
       Task<BaseResponse> AsciiCommandAsync(int deviceId, AeroCommandDto command, CancellationToken ct = default);
@@ -24,5 +24,6 @@ public interface IDevice
       Task<BaseResponse> GetEventStatusAsync(string type,int id,CancellationToken ct = default);
       Task<BaseResponse> SetEventStatusAsync(SetEventDto dto,CancellationToken ct= default);
       Task<string> GetModuleNameByMacAndComponentIdAsync(string Mac,short ComponentId,CancellationToken ct = default);
+      Task<BaseResponse> UploadDeviceAsync(int id,CancellationToken ct = default);
 
 }

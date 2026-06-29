@@ -8995,8 +8995,14 @@
               "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Device.Contract\\Device.Contract.csproj": {
                 "projectPath": "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Device.Contract\\Device.Contract.csproj"
               },
+              "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Group.Contract\\Group.Contract.csproj": {
+                "projectPath": "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Group.Contract\\Group.Contract.csproj"
+              },
               "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Location.Contract\\Location.Contract.csproj": {
                 "projectPath": "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Location.Contract\\Location.Contract.csproj"
+              },
+              "D:\\aero\\SentriX\\src\\Modules\\Contracts\\User.Contract\\User.Contract.csproj": {
+                "projectPath": "D:\\aero\\SentriX\\src\\Modules\\Contracts\\User.Contract\\User.Contract.csproj"
               },
               "D:\\aero\\SentriX\\src\\Modules\\Device\\Device.Domain\\Device.Domain.csproj": {
                 "projectPath": "D:\\aero\\SentriX\\src\\Modules\\Device\\Device.Domain\\Device.Domain.csproj"

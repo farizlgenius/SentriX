@@ -65,11 +65,19 @@ public sealed class GroupRepository(GroupDbContext context) : IGroupRepository
                   x.id,
                   x.component_id,
                   x.name,
-                  new List<GroupDoorDto>(),
+                  x.group_doors
+                  .SelectMany(x => 
+                        x.group_door_detail.Select(s => new GroupDoorDto(
+                              x.mac,
+                              s.door_component_id,
+                              s.timezone_component_id,
+                              x.type
+                              ))
+                  ).ToList(),
                   x.location_id,
                   x.is_active
             ))
-            .FirstOrDefaultAsync() ?? new GroupDto(
+            .FirstOrDefaultAsync(ct) ?? new GroupDto(
                   0,
                   0,
                   string.Empty,
@@ -87,10 +95,18 @@ public sealed class GroupRepository(GroupDbContext context) : IGroupRepository
                   x.id,
                   x.component_id,
                   x.name,
-                  new List<GroupDoorDto>(),
+                  x.group_doors
+                  .SelectMany(x => 
+                        x.group_door_detail.Select(s => new GroupDoorDto(
+                              x.mac,
+                              s.door_component_id,
+                              s.timezone_component_id,
+                              x.type
+                              ))
+                  ).ToList(),
                   x.location_id,
                   x.is_active
-                  )).ToArrayAsync();
+            )).ToArrayAsync();
       }
 
       public async Task<IEnumerable<GroupSplitByMacDto>> GetByRangeIdAsync(List<int> Ids, CancellationToken ct = default)
@@ -109,6 +125,38 @@ public sealed class GroupRepository(GroupDbContext context) : IGroupRepository
 
       }
 
+      public async Task<IEnumerable<GroupDto>> GetGroupByMacAsync(string Mac,string Type,CancellationToken ct = default)
+      {
+            return await context.Groups.AsNoTracking()
+            .Where(x => x.group_doors.Any(g => g.mac.Equals(Mac)))
+            .Select(x => new GroupDto(
+                  x.id,
+                  x.component_id,
+                  x.name,
+                  x.group_doors
+                  .Where(a => a.type.Equals(Type))
+                  .SelectMany(x => 
+                        x.group_door_detail.Select(s => new GroupDoorDto(
+                              x.mac,
+                              s.door_component_id,
+                              s.timezone_component_id,
+                              x.type
+                              ))
+                  ).ToList(),
+                  x.location_id,
+                  x.is_active
+            )).ToArrayAsync(ct);
+      }
+
+      public async Task<IEnumerable<(int id,short componentId)>> GetGroupIdAndComponentIdListByMacAsync(string Mac, CancellationToken ct = default)
+      {
+            var res = await context.Groups.AsNoTracking()
+            .Where(x => x.group_doors.Any(s => s.mac.Equals(Mac)))
+            .Select(x => new {x.id,x.component_id})
+            .ToArrayAsync();
+
+            return res.Select(x => (x.id,x.component_id)).ToArray();
+      }
 
       public async Task<short> GetLowestGroupComponentIdAsync(CancellationToken ct = default)
       {
@@ -170,13 +218,21 @@ public sealed class GroupRepository(GroupDbContext context) : IGroupRepository
             .OrderByDescending(e => e.created_at)
             .Skip((param.pageNumber - 1) * param.pageSize)
             .Take(param.pageSize)
-            .Select(e => new GroupDto(
-                  e.id,
-                  e.component_id,
-                  e.name,
-                  new List<GroupDoorDto>(),
-                  e.location_id,
-                  e.is_active
+            .Select(x => new GroupDto(
+                  x.id,
+                  x.component_id,
+                  x.name,
+                  x.group_doors
+                  .SelectMany(x => 
+                        x.group_door_detail.Select(s => new GroupDoorDto(
+                              x.mac,
+                              s.door_component_id,
+                              s.timezone_component_id,
+                              x.type
+                              ))
+                  ).ToList(),
+                  x.location_id,
+                  x.is_active
             )).ToListAsync(ct);
 
             return new Pagination<GroupDto>(param.pageNumber,param.pageSize,count,(int)Math.Ceiling(count / (double)param.pageSize),res);

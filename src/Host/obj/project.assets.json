@@ -1305,7 +1305,9 @@
           "Adapter.Abstraction": "1.0.0",
           "Device.Contract": "1.0.0",
           "Device.Domain": "1.0.0",
-          "Location.Contract": "1.0.0"
+          "Group.Contract": "1.0.0",
+          "Location.Contract": "1.0.0",
+          "User.Contract": "1.0.0"
         },
         "compile": {
           "bin/placeholder/Device.Application.dll": {}
@@ -3295,7 +3297,9 @@
           "Adapter.Abstraction": "1.0.0",
           "Device.Contract": "1.0.0",
           "Device.Domain": "1.0.0",
-          "Location.Contract": "1.0.0"
+          "Group.Contract": "1.0.0",
+          "Location.Contract": "1.0.0",
+          "User.Contract": "1.0.0"
         },
         "compile": {
           "bin/placeholder/Device.Application.dll": {}

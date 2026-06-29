@@ -125,6 +125,13 @@ namespace Host.Controllers
             return Ok(res);
         }
 
+        [HttpPost("upload/{id}")]
+        public async Task<IActionResult> UploadDeviceAsync(int id)
+        {
+            var res = await device.UploadDeviceAsync(id);
+            return Ok(res);
+        }
+
 
 
     }
