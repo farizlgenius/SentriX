@@ -84,12 +84,12 @@ const navItems: NavItem[] = [
     id: 7,
     name:"Outputs",
     icon:<ControlIcon />,
-    path:"/control"
+    path:"/output"
   },{
     id:8,
     name:"Inputs",
     icon:<MonitorIcon/>,
-    path:"/monitor"
+    path:"/input"
   },{ 
     id:9,
     name: "Input Group",

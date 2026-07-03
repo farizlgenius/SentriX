@@ -6,8 +6,9 @@ import Switch from "../switch/Switch"
 import { send } from "../../../api/api"
 import { CredentialEndpoint } from "../../../endpoint/CredentialEndpoint"
 import { Options } from "../../../model/Options"
+import Button from "../../ui/button/Button"
 
-export const UserSettingForm: React.FC<PropsWithChildren<FormProp<UserDto>>> = ({ setDto, type }) => {
+export const UserSettingForm: React.FC<PropsWithChildren<FormProp<UserDto>>> = ({ dto, setDto, type }) => {
     const [userFlag, setUserFlag] = useState<Options[]>([])
     const fetchUserFlag = async () => {
         const res = await send.get(CredentialEndpoint.GET_FLAG);
@@ -53,6 +54,7 @@ export const UserSettingForm: React.FC<PropsWithChildren<FormProp<UserDto>>> = (
                 </div>
 
             </div>
+            <Button onClick={() => console.log('Current flag value:', dto.flag)}>Check Flag</Button>
         </>
     )
 }

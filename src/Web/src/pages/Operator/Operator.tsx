@@ -17,8 +17,6 @@ import { FeatureId } from "../../enum/FeatureId";
 import { usePopup } from "../../context/PopupContext";
 import { FormType } from "../../model/Form/FormProp";
 import { usePagination } from "../../context/PaginationContext";
-import { CreateOperatorDto } from "../../model/Operator/CreateOperatorDto";
-import { UpdateOperatorDto } from "../../model/Operator/UpdateOperatorDto";
 
 
 const defaultDto: OperatorDto = {
@@ -33,14 +31,16 @@ const defaultDto: OperatorDto = {
     gender: "",
     password: "",
     roleId: 0,
-    locationId: []
+    locationId: [],
+    isActive: true,
+    isDefault: false
 }
 
 
 
 
 
-export const HEADER: string[] = ["Username","Email", "Action"]
+export const HEADER: string[] = ["Username","Email"]
 export const KEY: string[] = ["username","email"];
 
 export const Operator = () => {
@@ -70,14 +70,16 @@ export const Operator = () => {
 
     {/* handle Table Action */ }
     const handleEdit = (data: OperatorDto) => {
+        data.password = "";
         setOperatorDto(data);
-        setFormType(FormType.UPDATE)
+        setFormType(filterPermission(FeatureId.operator)?.isUpdated && !data.isDefault ? FormType.UPDATE : FormType.INFO)
         setForm(true);
     }
 
     const handleInfo = (data:OperatorDto) => {
+        data.password = "";
         setOperatorDto(data);
-        setFormType(FormType.INFO)
+        setFormType(filterPermission(FeatureId.operator)?.isUpdated && !data.isDefault ? FormType.UPDATE : FormType.INFO)
         setForm(true);
     }
 
@@ -93,8 +95,8 @@ export const Operator = () => {
                 if(selectedObjects.length == 0){            
                     setMessage("Please select object")
                     setInfo(true);
-                }
-                setConfirmRemove(() => async () => {
+                }else{
+                    setConfirmRemove(() => async () => {
                     var data:number[] = [];
                     selectedObjects.map(async (a:OperatorDto) => {
                         data.push(a.id)
@@ -106,6 +108,8 @@ export const Operator = () => {
                     }
                 })
                 setRemove(true);
+                }
+                
                 break;
             case "create":
                 setConfirmCreate(() => async () => {

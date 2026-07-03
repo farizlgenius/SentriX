@@ -9,7 +9,7 @@ export const MonitorPointEndpoint = {
     GET_MP_STATUS:(component:number) => `/api/${CONTROLLER}/status/${component}`,
     DELETE :(component:number) => `/api/${CONTROLLER}/${component}`,
     DELETE_RANGE: `/api/${CONTROLLER}/delete/range`,
-    IP_LIST :(moduleId:number) => `/api/${CONTROLLER}/ip/${moduleId}`,
+    IP_LIST :(moduleId:number) => `/api/${CONTROLLER}/input/${moduleId}`,
     MASK : `/api/${CONTROLLER}/mask`,
     UNMASK : `/api/${CONTROLLER}/unmask`,
     IP_MODE : `/api/${CONTROLLER}/mode`,

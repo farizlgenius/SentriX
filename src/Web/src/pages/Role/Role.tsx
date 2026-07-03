@@ -1,11 +1,11 @@
-import {  useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import PageBreadcrumb from "../../components/common/PageBreadCrumb"
 import { useToast } from "../../context/ToastContext";
 import { RoleDto } from "../../model/Role/RoleDto";
 import { RoleToast } from "../../model/ToastMessage";
 import { FormContent } from "../../model/Form/FormContent";
 import { BaseForm } from "../UiElements/BaseForm";
-import {  RoleIcon } from "../../icons";
+import { RoleIcon } from "../../icons";
 import { BaseTable } from "../UiElements/BaseTable";
 import { RoleEndpoint } from "../../endpoint/RoleEndpoint";
 import Helper from "../../utility/Helper";
@@ -23,28 +23,30 @@ import { UpdateRoleDto } from "../../model/Role/UpdateRoleDto";
 
 
 
-export const LOCATION_HEADER: string[] = ["Name", "Action"]
+export const LOCATION_HEADER: string[] = ["Name"]
 export const LOCATION_KEY: string[] = ["name"];
 
 
 export const Role = () => {
     const { toggleToast } = useToast();
-    const {locationId} = useLocation();
-    const {setPagination} = usePagination();
-    const {filterPermission} = useAuth();
-    const { setCreate,setConfirmCreate,setUpdate,setConfirmUpdate,setRemove,setConfirmRemove,setInfo,setMessage } = usePopup();
+    const { locationId } = useLocation();
+    const { setPagination } = usePagination();
+    const { filterPermission } = useAuth();
+    const { setCreate, setConfirmCreate, setUpdate, setConfirmUpdate, setRemove, setConfirmRemove, setInfo, setMessage } = usePopup();
     const [form, setForm] = useState<boolean>(false);
     const [refresh, setRefresh] = useState<boolean>(false);
     const defaultDto: RoleDto = {
         name: "",
         permissions: [],
         id: 0,
-        locationName: ""
+        locationName: "",
+        isActive: false,
+        isDefault: false
     }
 
     const [roleDto, setRoleDto] = useState<RoleDto>(defaultDto);
     const [rolesDto, setRolesDto] = useState<RoleDto[]>([]);
-    const [formType,setFormType] = useState<FormType>(FormType.CREATE);
+    const [formType, setFormType] = useState<FormType>(FormType.CREATE);
     const toggleRefresh = () => setRefresh(!refresh)
 
 
@@ -60,15 +62,15 @@ export const Role = () => {
         setRemove(true);
     }
 
-    const handleInfo = (data:RoleDto) => {
-        setFormType(FormType.INFO)
+    const handleInfo = (data: RoleDto) => {
+        setFormType(filterPermission(FeatureId.operator)?.isUpdated && !data.isDefault ? FormType.UPDATE : FormType.INFO)
         setRoleDto(data)
         setForm(true);
     }
 
     {/* handle Table Action */ }
     const handleEdit = (data: RoleDto) => {
-        setFormType(FormType.UPDATE)
+        setFormType(filterPermission(FeatureId.operator)?.isUpdated && !data.isDefault ? FormType.UPDATE : FormType.INFO)
         setRoleDto(data);
         setForm(true);
     }
@@ -82,24 +84,31 @@ export const Role = () => {
                 setForm(true);
                 break;
             case "delete":
-                if(selectedObjects.length == 0){            
+                if (selectedObjects.length == 0) {
                     setMessage("Please select object")
                     setInfo(true);
+                } else {
+
+                    setConfirmRemove(() => async () => {
+                        var data: number[] = [];
+                        selectedObjects.map(async (a: RoleDto) => {
+
+                            data.push(a.id)
+                        })
+                        var res = await send.post(RoleEndpoint.DELETE_RANGE, {
+                            ids: data
+                        })
+                        if (Helper.handleToastByResCode(res, RoleToast.DELETE_RANGE, toggleToast)) {
+                            setRemove(false);
+                            toggleRefresh();
+                            setSelectedObjects([]);
+   
+                        }
+                    })
+                    setRemove(true);
+
                 }
-                setConfirmRemove(() => async () => {
-                    var data:number[] = [];
-                    selectedObjects.map(async (a:RoleDto) => {
-                        data.push(a.id)
-                    })
-                    var res = await send.post(RoleEndpoint.DELETE_RANGE,{
-                        ids:data
-                    })
-                    if(Helper.handleToastByResCode(res,RoleToast.DELETE_RANGE,toggleToast)){
-                        setRemove(false);
-                        toggleRefresh();
-                    }
-                })
-                setRemove(true);
+
                 break;
             case "create":
                 setConfirmCreate(() => async () => {
@@ -145,13 +154,13 @@ export const Role = () => {
 
     const [selectedObjects, setSelectedObjects] = useState<RoleDto[]>([]);
 
-  const fetchData = async (pageNumber: number, pageSize: number,locationId?:number,search?: string, startDate?: string, endDate?: string) => {
-          const res = await send.get(RoleEndpoint.PAGINATION(pageNumber,pageSize,locationId,search, startDate, endDate));
-          if (res && res.data) {
-              setRolesDto(res.data.items);
-              setPagination(res.data);
-          }
-      }
+    const fetchData = async (pageNumber: number, pageSize: number, locationId?: number, search?: string, startDate?: string, endDate?: string) => {
+        const res = await send.get(RoleEndpoint.PAGINATION(pageNumber, pageSize, locationId, search, startDate, endDate));
+        if (res && res.data) {
+            setRolesDto(res.data.items);
+            setPagination(res.data);
+        }
+    }
 
 
     {/* Form */ }

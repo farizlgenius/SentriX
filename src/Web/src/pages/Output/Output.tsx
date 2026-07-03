@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import PageBreadcrumb from '../../components/common/PageBreadCrumb'
-import { AddIcon, ControlIcon, OffIcon, OnIcon, ToggleIcon } from '../../icons';
-import ControlPointForm from './ControlPointForm';
+import { ControlIcon, OffIcon, OnIcon, ToggleIcon } from '../../icons';
+import OutputForm from './OutputForm';
 import Logger from '../../utility/Logger';
 import { OutputDto } from '../../model/ControlPoint/OutputDto';
 import { StatusDto } from '../../model/StatusDto';
-import { OutputTrigger } from '../../model/ControlPoint/OutputTrigger';
 import Helper from '../../utility/Helper';
 import { useToast } from '../../context/ToastContext';
 import { ControlPointToast } from '../../model/ToastMessage';
@@ -23,7 +22,6 @@ import { FormContent } from '../../model/Form/FormContent';
 import SignalRService from '../../services/SignalRService';
 import { usePopup } from '../../context/PopupContext';
 import { FormType } from '../../model/Form/FormProp';
-import { CpStatus } from '../../model/ControlPoint/CpStatus';
 import { usePagination } from '../../context/PaginationContext';
 import { DeviceType } from '../../enum/DeviceType';
 import { SignalRTopic } from '../../constants/signalr-constant';
@@ -35,7 +33,7 @@ import { SignalRTopic } from '../../constants/signalr-constant';
 export const OUTPUT_TABLE_HEADER: string[] = ["Name","Pulse Time", "Status", "Action"]
 export const OUTPUT_KEY: string[] = ["name","defaultPulse"];
 
-const ControlPoint = () => {
+const Output = () => {
     const { toggleToast } = useToast();
     const {token} = useAuth();
     const { setPagination } = usePagination();
@@ -83,7 +81,8 @@ const ControlPoint = () => {
         outputNo: -1,
         defaultPulse: 1,
         model: '',
-        relayMode: 0,
+        driveMode: -1,
+        offlineMode:-1,        
         mac: '',
         componentId: -1,
         deviceComponentId: -1,
@@ -148,8 +147,6 @@ const ControlPoint = () => {
                 console.error("Subscribe error:", err);
               }
         
-            //   const res = await send.get(DeviceEndpoint.ID_REPORT);
-            //   setIdReports(res.data);
             };
         
             initSignalR();
@@ -221,7 +218,11 @@ const ControlPoint = () => {
                 console.log(selectedObjects);
                 if (selectedObjects.length > 0) {
                     selectedObjects.map(async (a: OutputDto) => {
-                        const res = await send.post(OutputEndpoint.TRIGGER(a.id,2));
+                        const res = await send.post(OutputEndpoint.TRIGGER,{
+                            id:a.id,
+                            command:2,
+                            type:DeviceType.AERO
+                        });
                         Helper.handleToastByResCode(res, ControlPointToast.TOGGLE, toggleToast)
                     });
                 }
@@ -230,7 +231,11 @@ const ControlPoint = () => {
             case "off":
                 if (selectedObjects.length > 0) {
                     selectedObjects.map(async (a: OutputDto) => {
-                        const res = await send.post(OutputEndpoint.TRIGGER(a.id,1));
+                        const res = await send.post(OutputEndpoint.TRIGGER,{
+                            id:a.id,
+                            command:1,
+                            type:DeviceType.AERO
+                        });
                         Helper.handleToastByResCode(res,  ControlPointToast.TOGGLE, toggleToast)
                     });
                 }
@@ -238,7 +243,23 @@ const ControlPoint = () => {
             case "toggle":
                 if (selectedObjects.length > 0) {
                     selectedObjects.map(async (a: OutputDto) => {
-                        const res = await send.post(OutputEndpoint.TRIGGER(a.id,3));
+                        const res = await send.post(OutputEndpoint.TRIGGER,{
+                            id:a.id,
+                            command:3,
+                            type:DeviceType.AERO
+                        });
+                        Helper.handleToastByResCode(res,  ControlPointToast.TOGGLE, toggleToast)
+                    });
+                }
+                break;
+            case "repeat":
+                if (selectedObjects.length > 0) {
+                    selectedObjects.map(async (a: OutputDto) => {
+                        const res = await send.post(OutputEndpoint.TRIGGER,{
+                            id:a.id,
+                            command:4,
+                            type:DeviceType.AERO
+                        });
                         Helper.handleToastByResCode(res,  ControlPointToast.TOGGLE, toggleToast)
                     });
                 }
@@ -293,7 +314,7 @@ const ControlPoint = () => {
         {
             icon: <ControlIcon />,
             label: "Control Point",
-            content: <ControlPointForm dto={controlPointDto} setDto={setControlPointDto} handleClick={handleClick} type={formType} />
+            content: <OutputForm dto={controlPointDto} setDto={setControlPointDto} handleClick={handleClick} type={formType} />
         }
     ]
 
@@ -318,4 +339,4 @@ const ControlPoint = () => {
     )
 }
 
-export default ControlPoint
+export default Output

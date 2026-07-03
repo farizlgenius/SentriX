@@ -5,4 +5,6 @@ export interface RoleDto{
     name:string;
     permissions:PermissionDto[];
     locationName:string;
+    isActive:boolean;
+    isDefault:boolean;
 }

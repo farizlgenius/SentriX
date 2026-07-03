@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, SetStateAction, useEffect, useState } from "react";
 import PageBreadcrumb from "../../components/common/PageBreadCrumb";
 import {
   AddIcon,
@@ -24,7 +24,7 @@ import { DeviceDto } from "../../model/Device/DeviceDto";
 import { IdReport } from "../../model/IdReport/IdReport";
 import SignalRService from "../../services/SignalRService";
 import { StatusDto } from "../../model/StatusDto";
-import { DeviceEndpoint } from "../../endpoint/HardwareEndpoint";
+import { DeviceEndpoint } from "../../endpoint/DeviceEndpoint";
 import { send } from "../../api/api";
 import { useLocation } from "../../context/LocationContext";
 import { BaseTable } from "../UiElements/BaseTable";
@@ -50,8 +50,10 @@ import SelectDeviceForm from "../../components/form/device/SelectDeviceForm";
 import { DeviceType } from "../../enum/DeviceType";
 import { AeroModuleDetailForm } from "../../components/form/device/AeroModuleDetailForm";
 import AeroDeviceForm from "../../components/form/device/AeroDeviceForm";
-import { DeviceDtoMetadata as AeroDtoMetadata } from "../../model/Device/DeviceDtoStrMetadata";
+import { AeroDtoMetadata as AeroDtoMetadata } from "../../model/Device/AeroDtoMetadata";
 import { mapFields } from "../../utility/Mapper";
+import AmicoDeviceForm from "../../components/form/device/AmicoDeviceForm";
+import { AmicoDtoMetadata } from "../../model/Device/AmicoDtoMetadata";
 
 const HEADER = ["Type", "Name", "Mac", "Firmware", "IP", "Port","Event", "Configuration", "Status", "Action"];
 const KEY = ["type", "name", "mac", "fw", "ip", "port","tranStatus"];
@@ -118,6 +120,25 @@ const Device = () => {
     }
   }
 
+  const amicoDefault:AmicoDtoMetadata = {
+    id: 0,
+    componentId: 0,
+    name: "",
+    serialNumber: "",
+    mac: "",
+    ip: "",
+    port: "",
+    fw: "",
+    type: "",
+    status: "",
+    syncedAt: new Date(),
+    locationId: 0,
+    metadata: {
+      login:"",
+      password:""
+    }
+  }
+
 
   const [scan, setScan] = useState<boolean>(false);
   const [selectType, setSelectType] = useState<boolean>(false);
@@ -126,6 +147,7 @@ const Device = () => {
   const [currentDeviceType, setCurrentDeviceType] = useState<string>("");
   const [deviceDto, setDeviceDto] = useState<DeviceDto>(defaultDto);
   const [aeroDto, setAeroDto] = useState<AeroDtoMetadata>(aeroDefault);
+  const [amicoDto,setAmicoDto] = useState<AmicoDtoMetadata>(amicoDefault);
   const [data, setData] = useState<DeviceDto[]>([]);
   const [status, setStatus] = useState<StatusDto[]>([]);
   const [tranStatus, setTranStatus] = useState<EventStatusDto[]>([]);
@@ -480,12 +502,9 @@ const Device = () => {
 
   const amicoContent: FormContent[] = [
     {
-      icon: <HardwareIcon />,
-      label: "Show Detail",
-      content: (
-        // <DeviceInfoSummary device={deviceDto} />
-        <></>
-      )
+      icon: <Info2Icon />,
+      label: "Device Information",
+      content: <AmicoDeviceForm type={formType} setDto={setAmicoDto} dto={amicoDto}/>
     }
   ];
 

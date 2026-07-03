@@ -3,10 +3,9 @@ import Label from "../Label.tsx";
 import Input from "../input/InputField.tsx";
 import Button from "../../ui/button/Button.tsx";
 import { FormProp, FormType } from "../../../model/Form/FormProp.ts";
-import { CreateAeroDeviceDto } from "../../../model/Device/CreateAeroDeviceDto.ts";
 import { CheckCircleIcon, ErrorIcon, LoadIcon } from "../../../icons/index.ts";
 import { FormActions, FormField, FormSection } from "../template/FormTemplate.tsx";
-import { DeviceDto } from "../../../model/Device/DeviceDto.ts";
+import { AmicoDtoMetadata } from "../../../model/Device/AmicoDtoMetadata.ts";
 
 
 
@@ -14,7 +13,7 @@ import { DeviceDto } from "../../../model/Device/DeviceDto.ts";
 
 
 
-const AmicoCreateDeviceForm: React.FC<PropsWithChildren<FormProp<DeviceDto>>> = ({ dto, type, handleClick, setDto }) => {
+const AmicoDeviceForm: React.FC<PropsWithChildren<FormProp<AmicoDtoMetadata>>> = ({ dto, type, handleClick, setDto }) => {
 
       type ConnectionStatus = "idle" | "loading" | "success" | "error";
 
@@ -60,20 +59,16 @@ const AmicoCreateDeviceForm: React.FC<PropsWithChildren<FormProp<DeviceDto>>> = 
                   <FormSection title="Amico Details" description="Name the location, assign its country, and add a short description." className="pb-10">
                         <div className="grid gap-5 grid-cols-2 md:grid-cols-2 gap-x-10 gap-y-6 mb-8 p-5">
                               <FormField>
-                                    <Label htmlFor="username">Username</Label>
-                                    <Input disabled={isReadOnly} placeholder="Username" name="username" type="text" id="ip" onChange={handleChange} value={dto.name} />
+                                    <Label htmlFor="username">Login</Label>
+                                    <Input disabled={isReadOnly} placeholder="Username" name="username" type="text" id="ip" onChange={handleChange} value={dto.metadata.login} />
                               </FormField>
                               <FormField>
                                     <Label htmlFor="password">Password</Label>
-                                    <Input disabled={isReadOnly} placeholder="Password" name="password" type="password" id="passowrd" onChange={handleChange} value={dto.name} />
+                                    <Input disabled={isReadOnly} placeholder="Password" name="password" type="password" id="passowrd" onChange={handleChange} value={dto.metadata.password} />
                               </FormField>
                               <FormField>
                                     <Label htmlFor="ip">IP Address</Label>
-                                    <Input disabled={isReadOnly} placeholder="IP Address" name="ip" type="text" id="ip" onChange={handleChange} value={dto.name} />
-                              </FormField>
-                              <FormField>
-                                    <Label htmlFor="ip">Port</Label>
-                                    <Input disabled={isReadOnly} placeholder="Port" name="ip" type="text" id="port" onChange={handleChange} value={dto.name} />
+                                    <Input disabled={isReadOnly} placeholder="IP Address" name="ip" type="text" id="ip" onChange={handleChange} value={dto.ip} />
                               </FormField>
                               <FormField className="col-span-2">
                                     {/* CONNECT BUTTON + STATUS */}
@@ -137,4 +132,4 @@ const AmicoCreateDeviceForm: React.FC<PropsWithChildren<FormProp<DeviceDto>>> = 
             </>);
 }
 
-export default AmicoCreateDeviceForm;
+export default AmicoDeviceForm;

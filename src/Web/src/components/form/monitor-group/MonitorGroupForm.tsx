@@ -7,14 +7,14 @@ import Select from "../Select";
 import Button from "../../ui/button/Button";
 import { useLocation } from "../../../context/LocationContext";
 import { send } from "../../../api/api";
-import { DeviceEndpoint } from "../../../endpoint/HardwareEndpoint";
+import { DeviceEndpoint } from "../../../endpoint/DeviceEndpoint";
 import { Options } from "../../../model/Options";
 import { DeviceDto } from "../../../model/Device/DeviceDto";
 import { ModeDto } from "../../../model/ModeDto";
 import { MonitorGroupEndpoint } from "../../../endpoint/MonitorGroupEndpoint";
 import { MonitorGroupListDto } from "../../../model/MonitorGroup/MonitorGroupListDto";
 import { MonitorPointEndpoint } from "../../../endpoint/MonitorPointEndpoint";
-import { MonitorPointDto } from "../../../model/MonitorPoint/MonitorPointDto";
+import { InputDto } from "../../../model/MonitorPoint/InputDto";
 import { DoorEndpoint } from "../../../endpoint/DoorEndpoint";
 import { DoorDto } from "../../../model/Door/DoorDto";
 import { MonitorIcon } from "../../../icons";
@@ -94,7 +94,7 @@ export const MonitorGroupForm: React.FC<PropsWithChildren<FormProp<MonitorGroupD
     const fetchMonitor = async (mac: string) => {
         const res = await send.get(MonitorPointEndpoint.MP_BY_MAC(mac))
         if (res && res.data.data) {
-            res.data.data.map((a: MonitorPointDto) => {
+            res.data.data.map((a: InputDto) => {
                 setNumberOptions(prev => ([...prev, {
                     label: a.name,
                     value: a.componentId

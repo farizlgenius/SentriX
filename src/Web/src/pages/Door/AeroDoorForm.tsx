@@ -11,7 +11,7 @@ import Switch from '../../components/form/switch/Switch';
 import { DeviceType } from '../../enum/DeviceType';
 import { ReaderType } from '../../enum/ReaderType';
 import { ModuleEndpoint } from '../../endpoint/ModuleEndpoint';
-import { DeviceEndpoint } from '../../endpoint/HardwareEndpoint';
+import { DeviceEndpoint } from '../../endpoint/DeviceEndpoint';
 import { DoorEndpoint } from '../../endpoint/DoorEndpoint';
 import { MonitorPointEndpoint as InputEndpoint } from '../../endpoint/MonitorPointEndpoint';
 import { OutputEndpoint } from '../../endpoint/ControlPointEndpoint';
@@ -394,7 +394,7 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
   }
   const fetchRelayDriveMode = async () => {
     if (relayDriveOption.length !== 0) return;
-    const res = await send.get(OutputEndpoint.GET_RELAY_DRIVE_MODE)
+    const res = await send.get(OutputEndpoint.RELAY_DRIVE_MODE)
     if (res && res.data) {
       res.data.map((a: Options) => {
         setRelayDriveOption(prev => [...prev, {
@@ -407,7 +407,7 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
   }
    const fetchRelayOfflineMode = async () => {
     if (relayOfflineOption.length !== 0) return;
-    const res = await send.get(OutputEndpoint.GET_RELAY_OFFLINE_MODE)
+    const res = await send.get(OutputEndpoint.RELAY_OFFLINE_MODE)
     if (res && res.data) {
       res.data.map((a: Options) => {
         setRelayOfflineOption(prev => [...prev, {

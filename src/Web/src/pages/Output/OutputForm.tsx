@@ -4,7 +4,7 @@ import Input from "../../components/form/input/InputField";
 import Select from "../../components/form/Select";
 import { Options } from "../../model/Options";
 import { OutputDto } from "../../model/ControlPoint/OutputDto";
-import { DeviceEndpoint } from "../../endpoint/HardwareEndpoint";
+import { DeviceEndpoint } from "../../endpoint/DeviceEndpoint";
 import { OutputEndpoint } from "../../endpoint/ControlPointEndpoint";
 import { ModuleEndpoint } from "../../endpoint/ModuleEndpoint";
 import api, { send } from "../../api/api";
@@ -15,7 +15,7 @@ import { DeviceType } from "../../enum/DeviceType";
 
 
 
-const ControlPointForm: React.FC<PropsWithChildren<FormProp<OutputDto>>> = ({ handleClick, dto, setDto, type }) => {
+const OutputForm: React.FC<PropsWithChildren<FormProp<OutputDto>>> = ({ handleClick, dto, setDto, type }) => {
   const { locationId } = useLocation();
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDto(prev => ({ ...prev, [e.target.name]: e.target.value }))
@@ -25,7 +25,8 @@ const ControlPointForm: React.FC<PropsWithChildren<FormProp<OutputDto>>> = ({ ha
   const [controllerOption, setControllerOption] = useState<Options[]>([])
   const [moduleOption, setModuleOption] = useState<Options[]>([]);
   const [relayOption, setRelayOption] = useState<Options[]>([]);
-  const [relayModeOption, setRelyModeOption] = useState<Options[]>([]);
+  const [offlineModeOption, setOfflineModeOption] = useState<Options[]>([]);
+  const [driveModeOption, setDriverModeOption] = useState<Options[]>([]);
   const [controller,setController] = useState<number>(-1);
 
   const handleSelect = async (value: string, e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -38,10 +39,13 @@ const ControlPointForm: React.FC<PropsWithChildren<FormProp<OutputDto>>> = ({ ha
         fetchOutput(moduleOption.find(a => a.value == Number(value))?.additionalInfo);
         setDto((prev) => ({ ...prev, moduleComponentId: Number(value), model: moduleOption.find(a => a.value == Number(value))?.label ?? "" }))
         break;
-      case "relayMode":
+      case "offlineMode":
         console.log(value);
-        setDto(prev => ({ ...prev, relayMode: Number(value) }))
-        // setOfflineModeOption()
+        setDto(prev => ({ ...prev, offlineMode: Number(value) }))
+        break;
+      case "driveMode":
+        console.log(value);
+        setDto(prev => ({ ...prev, driveMode: Number(value) }))
         break;
       default:
         setDto((prev) => ({ ...prev, [e.target.name]: value }));
@@ -51,7 +55,7 @@ const ControlPointForm: React.FC<PropsWithChildren<FormProp<OutputDto>>> = ({ ha
 
   {/* Controller Data */ }
   const fetchDevice = async () => {
-    const res = await send.get(DeviceEndpoint.GET(locationId));
+    const res = await send.get(DeviceEndpoint.GET(locationId,DeviceType.AERO.toString()));
     console.log(res);
     if (res.data) {
       res.data.map((a: Options) => {
@@ -66,12 +70,29 @@ const ControlPointForm: React.FC<PropsWithChildren<FormProp<OutputDto>>> = ({ ha
     }
   }
 
-  const fetchRelayMode = async () => {
+  const fetchOfflineMode = async () => {
 
-    let res = await api.get(OutputEndpoint.GET_RELAY_OP_MODE(DeviceType.AERO));
+    let res = await api.get(OutputEndpoint.RELAY_OFFLINE_MODE);
     if (res.data) {
       res.data.map((a: Options) => {
-        setRelyModeOption((prev) => [...prev, {
+        setOfflineModeOption((prev) => [...prev, {
+          label: a.label,
+          value: a.value,
+          additionalInfo:a.additionalInfo,
+          description:a.description
+        }]);
+      });
+    }
+
+
+  }
+
+  const fetchDriveMode = async () => {
+
+    let res = await api.get(OutputEndpoint.RELAY_DRIVE_MODE);
+    if (res.data) {
+      res.data.map((a: Options) => {
+        setDriverModeOption((prev) => [...prev, {
           label: a.label,
           value: a.value,
           additionalInfo:a.additionalInfo,
@@ -114,7 +135,8 @@ const ControlPointForm: React.FC<PropsWithChildren<FormProp<OutputDto>>> = ({ ha
   {/* UseEffect */ }
   useEffect(() => {
     fetchDevice();
-    fetchRelayMode();
+    fetchOfflineMode();
+    fetchDriveMode();
     if (type == FormType.INFO || type == FormType.UPDATE) {
       // fetchModuleByDeviceId(dto.moduleId);
       // fetchOutput(dto.moduleId);
@@ -168,14 +190,27 @@ const ControlPointForm: React.FC<PropsWithChildren<FormProp<OutputDto>>> = ({ ha
             />
           </FormField>
           <FormField>
-            <Label>Relay Mode</Label>
+            <Label>Offline Mode</Label>
             <Select
-              name="relayMode"
-              options={relayModeOption}
+              name="offlineMode"
+              options={offlineModeOption}
               placeholder="Select Option"
               onChangeWithEvent={handleSelect}
               className="dark:bg-dark-900"
-              defaultValue={dto.relayMode}
+              defaultValue={dto.offlineMode}
+              disabled={type == FormType.INFO}
+            />
+
+          </FormField>
+           <FormField>
+            <Label>Drive Mode</Label>
+            <Select
+              name="driveMode"
+              options={driveModeOption}
+              placeholder="Select Option"
+              onChangeWithEvent={handleSelect}
+              className="dark:bg-dark-900"
+              defaultValue={dto.driveMode}
               disabled={type == FormType.INFO}
             />
 
@@ -203,4 +238,4 @@ const ControlPointForm: React.FC<PropsWithChildren<FormProp<OutputDto>>> = ({ ha
   );
 }
 
-export default ControlPointForm;
+export default OutputForm;

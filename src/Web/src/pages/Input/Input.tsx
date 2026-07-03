@@ -2,8 +2,8 @@ import React, { JSX, useEffect, useState } from 'react'
 import PageBreadcrumb from '../../components/common/PageBreadCrumb'
 import { AddIcon, MaskIcon, MonitorIcon, UnmaskIcon } from '../../icons'
 import Logger from '../../utility/Logger';
-import MonitorPointForm from './MonitorPointForm';
-import { MonitorPointDto } from '../../model/MonitorPoint/MonitorPointDto';
+import InputForm from './InputForm';
+import { InputDto } from '../../model/MonitorPoint/InputDto';
 import { StatusDto } from '../../model/StatusDto';
 import { MonitorPointToast } from '../../model/ToastMessage';
 import { useToast } from '../../context/ToastContext';
@@ -29,7 +29,7 @@ import { usePagination } from '../../context/PaginationContext';
 export const MP_TABLE_HEADER: string[] = ["Name", "Main Controller", "Module", "Mode","Input Mode", "Masked", "Status", "Action"]
 export const MP_KEY: string[] = ["name", "hardwareName", "moduleDescription", "monitorPointModeDescription","inputModeDescription", "isMask"];
 
-const MonitorPoint = () => {
+const Input = () => {
     const { filterPermission } = useAuth();
     const { toggleToast } = useToast();
     const { locationId } = useLocation();
@@ -42,19 +42,19 @@ const MonitorPoint = () => {
     const [formType,setFormType] = useState<FormType>(FormType.CREATE);
 
     {/* handle Table Action */ }
-    const handleEdit = (data:MonitorPointDto) => {
+    const handleEdit = (data:InputDto) => {
         setMonitorPointDto(data);
         setFormType(FormType.UPDATE)
         setForm(true)
     }
 
-    const handleInfo = (data:MonitorPointDto) => {
+    const handleInfo = (data:InputDto) => {
         setMonitorPointDto(data)
         setFormType(FormType.INFO)
         setForm(true);
     }
 
-    const handleRemove = (data: MonitorPointDto) => {
+    const handleRemove = (data: InputDto) => {
         setConfirmRemove(() => async () => {
             const res = await send.delete(MonitorPointEndpoint.DELETE(data.id));
             if (Helper.handleToastByResCode(res, MonitorPointToast.DELETE, toggleToast)) {
@@ -78,7 +78,7 @@ const MonitorPoint = () => {
                 }
                 setConfirmRemove(() => async () => {
                     var data:number[] = [];
-                    selectedObjects.map(async (a:MonitorPointDto) => {
+                    selectedObjects.map(async (a:InputDto) => {
                         data.push(a.id)
                     })
                     var res = await send.post(MonitorPointEndpoint.DELETE_RANGE,data)
@@ -115,7 +115,7 @@ const MonitorPoint = () => {
                 setForm(false);
                 break;
             case "mask":
-                selectedObjects.forEach(async (a: MonitorPointDto) => {
+                selectedObjects.forEach(async (a: InputDto) => {
                     res = await send.post(MonitorPointEndpoint.MASK, a);
                     if (Helper.handleToastByResCode(res, MonitorPointToast.MASK, toggleToast)) {
                         toggleRefresh();
@@ -124,7 +124,7 @@ const MonitorPoint = () => {
 
                 break;
             case "unmask":
-                selectedObjects.forEach(async (a: MonitorPointDto) => {
+                selectedObjects.forEach(async (a: InputDto) => {
                     res = await send.post(MonitorPointEndpoint.UNMASK, a)
                     if (Helper.handleToastByResCode(res, MonitorPointToast.UNMASK, toggleToast)) {
                         toggleRefresh();
@@ -137,7 +137,7 @@ const MonitorPoint = () => {
     }
 
     {/* input Data */ }
-    const defaultDto: MonitorPointDto = {
+    const defaultDto: InputDto = {
         name: '',
         mpId: -1,
         moduleId: -1,
@@ -160,8 +160,8 @@ const MonitorPoint = () => {
         scpId: -1,
         moduleDriverId: -1
     }
-    const [monitorPointsDto, setMonitorPointsDto] = useState<MonitorPointDto[]>([]);
-    const [monitorPointDto, setMonitorPointDto] = useState<MonitorPointDto>(defaultDto);
+    const [monitorPointsDto, setMonitorPointsDto] = useState<InputDto[]>([]);
+    const [monitorPointDto, setMonitorPointDto] = useState<InputDto>(defaultDto);
     const [status, setStatus] = useState<StatusDto[]>([]);
     const fetchData = async (pageNumber: number, pageSize: number,locationId?:number,search?: string, startDate?: string, endDate?: string) => {
         const res = await send.get(MonitorPointEndpoint.PAGINATION(pageNumber,pageSize,locationId,search, startDate, endDate));
@@ -171,7 +171,7 @@ const MonitorPoint = () => {
             setPagination(res.data.data.page);
 
             // Batch set state
-            const newStatuses = res.data.data.data.map((a: MonitorPointDto) => ({
+            const newStatuses = res.data.data.data.map((a: InputDto) => ({
                 driverId: a.mpId,
                 deviceId: a.scpId,
                 status: 0
@@ -182,7 +182,7 @@ const MonitorPoint = () => {
             setStatus((prev) => [...prev, ...newStatuses]);
 
             // Fetch status for each
-            res.data.data.data.forEach((a: MonitorPointDto) => {
+            res.data.data.data.forEach((a: InputDto) => {
                 fetchStatus(a.id);
             });
         }
@@ -196,7 +196,7 @@ const MonitorPoint = () => {
 
 
     {/* checkBox */ }
-    const [selectedObjects, setSelectedObjects] = useState<MonitorPointDto[]>([]);
+    const [selectedObjects, setSelectedObjects] = useState<InputDto[]>([]);
 
     {/* UseEffect */ }
     useEffect(() => {
@@ -263,7 +263,7 @@ const MonitorPoint = () => {
         {
             label: "Monitor Point",
             icon: <MonitorIcon />,
-            content: <MonitorPointForm handleClick={handleClick} dto={monitorPointDto} setDto={setMonitorPointDto} type={formType} />
+            content: <InputForm handleClick={handleClick} dto={monitorPointDto} setDto={setMonitorPointDto} type={formType} />
 
         }
     ]
@@ -274,7 +274,7 @@ const MonitorPoint = () => {
             {form ?
                 <BaseForm tabContent={tabContent} />
                 :
-                <BaseTable<MonitorPointDto> headers={MP_TABLE_HEADER} keys={MP_KEY} data={monitorPointsDto} status={status}  onEdit={handleEdit} onRemove={handleRemove} onInfo={handleInfo} select={selectedObjects} setSelect={setSelectedObjects} onClick={handleClick} action={action} renderOptionalComponent={renderOptionalComponent} permission={filterPermission(FeatureId.monitor)} fetchData={fetchData} locationId={locationId} refresh={refresh} />
+                <BaseTable<InputDto> headers={MP_TABLE_HEADER} keys={MP_KEY} data={monitorPointsDto} status={status}  onEdit={handleEdit} onRemove={handleRemove} onInfo={handleInfo} select={selectedObjects} setSelect={setSelectedObjects} onClick={handleClick} action={action} renderOptionalComponent={renderOptionalComponent} permission={filterPermission(FeatureId.monitor)} fetchData={fetchData} locationId={locationId} refresh={refresh} />
 
             }
 
@@ -282,4 +282,4 @@ const MonitorPoint = () => {
     )
 }
 
-export default MonitorPoint
+export default Input

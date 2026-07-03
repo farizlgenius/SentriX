@@ -7,10 +7,10 @@ import Pagination from "../../components/ui/table/Pagination";
 import { usePagination } from "../../context/PaginationContext";
 import React from "react";
 
-    
 
-export const BaseTable = <T extends { id: number | string }>({ id, headers, keys, data, onEdit, onInfo, onRemove, setSelect, renderOptionalComponent, specialDisplay, onClick: handleClick, permission, action, status, select, subTable, fetchData,refresh,locationId }: TableProp<T>) => {
-    const {search,startDate,endDate,pageSize,pagination,setPageSize} = usePagination();
+
+export const BaseTable = <T extends { id: number | string, isDefault: boolean }>({ id, headers, keys, data, onEdit, onInfo, onRemove, setSelect, renderOptionalComponent, specialDisplay, onClick: handleClick, permission, action, status, select, subTable, fetchData, refresh, locationId }: TableProp<T>) => {
+    const { search, startDate, endDate, pageSize, pagination, setPageSize } = usePagination();
     const [show, setShow] = useState<number>(-1)
     const [sortKey, setSortKey] = useState<string>(keys?.[0] ?? "");
     const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
@@ -58,32 +58,32 @@ export const BaseTable = <T extends { id: number | string }>({ id, headers, keys
         setShow(-1);
     };
 
-     const handleClickFirst = () => {
-            fetchData(1, 10,locationId,search, startDate,endDate);
-      }
+    const handleClickFirst = () => {
+        fetchData(1, 10, locationId, search, startDate, endDate);
+    }
 
-      const handleClickPrevious = () => {
-            fetchData(pagination.page - 1, pageSize,locationId,search, startDate,endDate);
-      }
+    const handleClickPrevious = () => {
+        fetchData(pagination.page - 1, pageSize, locationId, search, startDate, endDate);
+    }
 
-      const handleClickNext = () => {
+    const handleClickNext = () => {
 
-            fetchData(pagination.page + 1, pageSize,locationId,search, startDate,endDate);
-      }
+        fetchData(pagination.page + 1, pageSize, locationId, search, startDate, endDate);
+    }
 
-      const handleClickLast = () => {
+    const handleClickLast = () => {
 
-            fetchData(pagination.totalPages, pageSize,locationId,search, startDate,endDate);
-      }
+        fetchData(pagination.totalPages, pageSize, locationId, search, startDate, endDate);
+    }
 
-      const handlePageSizeSelect = (data: string) => {
-            setPageSize(Number(data));
-      }
+    const handlePageSizeSelect = (data: string) => {
+        setPageSize(Number(data));
+    }
 
 
     const handleCheckAll = (data: T[], e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.checked) {
-            setSelect(data);
+            setSelect(data.filter(x => !x.isDefault));
         } else {
             setSelect([]);
         }
@@ -101,11 +101,11 @@ export const BaseTable = <T extends { id: number | string }>({ id, headers, keys
 
     }
 
-     useEffect(() => {
-        if(locationId != -1){
-            fetchData(1, pageSize,locationId,search, startDate,endDate);
+    useEffect(() => {
+        if (locationId != -1) {
+            fetchData(1, pageSize, locationId, search, startDate, endDate);
         }
-    }, [refresh,pageSize,search,startDate,endDate,locationId])
+    }, [refresh, pageSize, search, startDate, endDate, locationId])
 
 
     return (
@@ -125,28 +125,29 @@ export const BaseTable = <T extends { id: number | string }>({ id, headers, keys
                                         const key = keys?.[i] ?? "";
                                         const isActive = sortKey === key;
                                         return (
-                                        <TableCell
-                                            key={i}
-                                            isHeader
-                                            className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
-                                        >
-                                            <button
-                                                type="button"
-                                                onClick={() => handleSort(key)}
-                                                className="group inline-flex items-center gap-1.5 transition-colors hover:text-brand-500"
+                                            <TableCell
+                                                key={i}
+                                                isHeader
+                                                className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
                                             >
-                                                <span>{head}</span>
-                                                <span className={`inline-flex flex-col leading-none ${isActive ? "text-brand-500" : "text-gray-400 group-hover:text-brand-500"}`}>
-                                                    <svg className={`h-2 w-2 ${isActive && sortDirection === "asc" ? "opacity-100" : "opacity-40"}`} viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                        <path d="M5 2L8 6H2L5 2Z" fill="currentColor" />
-                                                    </svg>
-                                                    <svg className={`h-2 w-2 ${isActive && sortDirection === "desc" ? "opacity-100" : "opacity-40"}`} viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                        <path d="M5 8L2 4H8L5 8Z" fill="currentColor" />
-                                                    </svg>
-                                                </span>
-                                            </button>
-                                        </TableCell>
-                                    )})}
+                                                <button
+                                                    type="button"
+                                                    onClick={() => handleSort(key)}
+                                                    className="group inline-flex items-center gap-1.5 transition-colors hover:text-brand-500"
+                                                >
+                                                    <span>{head}</span>
+                                                    <span className={`inline-flex flex-col leading-none ${isActive ? "text-brand-500" : "text-gray-400 group-hover:text-brand-500"}`}>
+                                                        <svg className={`h-2 w-2 ${isActive && sortDirection === "asc" ? "opacity-100" : "opacity-40"}`} viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                            <path d="M5 2L8 6H2L5 2Z" fill="currentColor" />
+                                                        </svg>
+                                                        <svg className={`h-2 w-2 ${isActive && sortDirection === "desc" ? "opacity-100" : "opacity-40"}`} viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                            <path d="M5 8L2 4H8L5 8Z" fill="currentColor" />
+                                                        </svg>
+                                                    </span>
+                                                </button>
+                                            </TableCell>
+                                        )
+                                    })}
                                 </TableRow>
                             </TableHeader>
                             <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
@@ -161,18 +162,17 @@ export const BaseTable = <T extends { id: number | string }>({ id, headers, keys
                                     </TableRow>
                                 )}
                                 {sortedData && sortedData.map((data: T, i: number) => (
-                                    <React.Fragment key={i}>
+                                    <React.Fragment key={i} >
                                         <TableRow key={i} className="cursor-pointer hover:bg-gray-900 active:bg-gray-800" onClickWithEvent={() => {
-                                            if (show !== i) {
-                                                setShow(i);
-                                            } else {
-                                                setShow(-1);
-                                            }
-
+                                            onInfo(data)
                                         }}>
                                             <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400">
-                                                <input checked={select?.includes(data)} type="checkbox" onChange={(e) => handleCheck(data, e)} />
-                                            </TableCell >
+                                                {
+                                                    !data.isDefault && <input onClick={(e) => e.stopPropagation()} checked={select?.includes(data)} type="checkbox" onChange={(e) => handleCheck(data, e)} />
+                                                }
+
+                                            </TableCell  >
+
                                             {keys && keys.map((key: string, i: number) =>
                                                 specialDisplay?.some(a => a.key == key) ?
                                                     specialDisplay.find(a => a.key == key)?.content(data, i)
@@ -185,7 +185,7 @@ export const BaseTable = <T extends { id: number | string }>({ id, headers, keys
 
 
                                             {/* Action */}
-                                            <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                                            {/* <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
                                                 <div className="flex gap-2">
 
                                                     <a id="detail" onClick={() => onInfo(data)} className="cursor-pointer font-medium text-blue-600 dark:text-blue-500 hover:underline">
@@ -205,9 +205,9 @@ export const BaseTable = <T extends { id: number | string }>({ id, headers, keys
 
 
                                                 </div>
-                                            </TableCell>
+                                            </TableCell> */}
                                         </TableRow>
-                                        {show == i && subTable && subTable(i + 1)}
+                                        {/* {show == i && subTable && subTable(i + 1)} */}
                                     </React.Fragment>
 
 

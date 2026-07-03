@@ -6,7 +6,7 @@ import { FormProp, FormType } from "../../../model/Form/FormProp.ts";
 import Select from "../Select.tsx";
 import Switch from "../switch/Switch.tsx";
 import { FormActions, FormField, FormSection } from "../template/FormTemplate.tsx";
-import { DeviceDtoMetadata } from "../../../model/Device/DeviceDtoStrMetadata.ts";
+import { AeroDtoMetadata } from "../../../model/Device/AeroDtoMetadata.ts";
 
 
 
@@ -14,7 +14,7 @@ import { DeviceDtoMetadata } from "../../../model/Device/DeviceDtoStrMetadata.ts
 
 
 
-const AeroDeviceForm: React.FC<PropsWithChildren<FormProp<DeviceDtoMetadata>>> = ({ dto, type, handleClick, setDto }) => {
+const AeroDeviceForm: React.FC<PropsWithChildren<FormProp<AeroDtoMetadata>>> = ({ dto, type, handleClick, setDto }) => {
   const isReadOnly = type == FormType.INFO;
   const protocolOptions = [
     { label: "Aero", value: 0 },

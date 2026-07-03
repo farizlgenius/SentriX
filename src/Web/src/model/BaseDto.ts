@@ -3,4 +3,5 @@ export interface BaseDto{
   name:string;
   locationId:number;
   isActive:boolean;
+  isDefault:boolean;
 }

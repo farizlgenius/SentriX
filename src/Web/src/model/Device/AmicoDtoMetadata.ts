@@ -1,7 +1,8 @@
-import { AeroMetadata } from "./AeroMetadata";
+
+import { AmicoMetadata } from "./AmicoMetadata";
 
 
-export interface DeviceDtoMetadata  {
+export interface AmicoDtoMetadata  {
 
     id:number;
   componentId:number;
@@ -15,7 +16,7 @@ export interface DeviceDtoMetadata  {
   status:string;
   syncedAt: Date;
   locationId:number;
-  metadata:AeroMetadata;
+  metadata:AmicoMetadata;
   
 }
 

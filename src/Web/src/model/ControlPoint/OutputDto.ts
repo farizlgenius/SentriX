@@ -9,7 +9,8 @@ export interface OutputDto
     moduleComponentId:number;
     outputNo:number;
     model:string;
-    relayMode:number;
+    offlineMode:number;
+    driveMode:number;
     locationId:number;
     defaultPulse:number;
     type:string;

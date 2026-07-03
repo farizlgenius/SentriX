@@ -4,7 +4,7 @@ import { Table, TableBody, TableCell, TableHeader, TableRow } from "../../ui/tab
 import SignalRService from "../../../services/SignalRService"
 import { MemoryDto as MemoryDto } from "../../../model/Device/MemoryDto"
 import { send } from "../../../api/api"
-import { DeviceEndpoint } from "../../../endpoint/HardwareEndpoint"
+import { DeviceEndpoint } from "../../../endpoint/DeviceEndpoint"
 import { useToast } from "../../../context/ToastContext"
 import { DeviceDto } from "../../../model/Device/DeviceDto"
 import { MemoryAllocateDto } from "../../../model/Device/MemoryAllocateDto"

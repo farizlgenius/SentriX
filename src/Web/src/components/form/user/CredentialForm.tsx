@@ -14,7 +14,7 @@ import SignalRService from "../../../services/SignalRService";
 import { ScanCardStatus } from "../../../model/User/ScanCardStatus";
 import { CredentialEndpoint } from "../../../endpoint/CredentialEndpoint";
 import { send } from "../../../api/api";
-import { DeviceEndpoint } from "../../../endpoint/HardwareEndpoint";
+import { DeviceEndpoint } from "../../../endpoint/DeviceEndpoint";
 import { DeviceDto } from "../../../model/Device/DeviceDto";
 import { DoorEndpoint } from "../../../endpoint/DoorEndpoint";
 import { DoorDto } from "../../../model/Door/DoorDto";

@@ -1,5 +1,6 @@
 
-export interface OperatorDto{
+
+export interface OperatorDto  {
     id:number;
     username:string;
     password:string;
@@ -10,6 +11,8 @@ export interface OperatorDto{
     gender:string;
     email:string;
     mobile:string;
-    roleId:number; //
-    locationId:number[]; //
+    roleId:number; 
+    locationId:number[]; 
+    isActive:boolean;
+    isDefault:boolean;
 }

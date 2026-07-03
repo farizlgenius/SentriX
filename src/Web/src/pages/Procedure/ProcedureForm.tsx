@@ -10,12 +10,12 @@ import { ProcedureEndpoint } from "../../endpoint/ProcedureEndpoint"
 import { ModeDto } from "../../model/ModeDto"
 import Select from "../../components/form/Select"
 import { ActionDto } from "../../model/Procedure/ActionDto"
-import { DeviceEndpoint } from "../../endpoint/HardwareEndpoint"
+import { DeviceEndpoint } from "../../endpoint/DeviceEndpoint"
 import { useLocation } from "../../context/LocationContext"
 import { DeviceDto } from "../../model/Device/DeviceDto"
 import Button from "../../components/ui/button/Button"
 import { MonitorPointEndpoint } from "../../endpoint/MonitorPointEndpoint"
-import { MonitorPointDto } from "../../model/MonitorPoint/MonitorPointDto"
+import { InputDto } from "../../model/MonitorPoint/InputDto"
 import { OutputEndpoint } from "../../endpoint/ControlPointEndpoint"
 import { OutputDto } from "../../model/ControlPoint/OutputDto"
 import { MonitorMaskForm } from "../../components/form/command/MonitorMaskForm"
@@ -175,7 +175,7 @@ export const ProcedureForm: React.FC<PropsWithChildren<FormProp<ProcedureDto>>> 
     const fetchMp = async () => {
         var res = await api.get(MonitorPointEndpoint.GET(locationId));
         if (res && res.data.data) {
-            res.data.data.map((a: MonitorPointDto) => {
+            res.data.data.map((a: InputDto) => {
                 setMp(prev => ([...prev, {
                     label: a.name,
                     value: a.componentId,

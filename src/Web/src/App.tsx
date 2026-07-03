@@ -24,8 +24,7 @@ import Home from "./pages/Dashboard/Home";
 
 // ACS
 import Event from "./pages/Event/Event";
-import ControlPoint from "./pages/ControlPoint/ControlPoint";
-import MonitorPoint from "./pages/MonitorPoint/MonitorPoint";
+import Input from "./pages/Input/Input";
 import Device from "./pages/Device/Device";
 import PopupExample from "./pages/UiElements/PopupExample";
 import Door from "./pages/Door/Door";
@@ -72,8 +71,9 @@ import SignalRService from "./services/SignalRService";
 import { IdReport } from "./model/IdReport/IdReport";
 import { useIdReport } from "./context/IdReportContext";
 import { SignalRTopic } from "./constants/signalr-constant";
-import { DeviceEndpoint } from "./endpoint/HardwareEndpoint";
+import { DeviceEndpoint } from "./endpoint/DeviceEndpoint";
 import Scan from "./pages/Scan/Scan";
+import Output from "./pages/Output/Output";
 
 export default function App() {
   const navigate = useNavigate();
@@ -226,8 +226,8 @@ const fetchIdReport = async () => {
             < Route path="/scan" element={<Scan />}/>
             <Route path="/device" element={<Device />} />
             <Route path="/event" element={<Event />} />
-            <Route path="/control" element={<ControlPoint />} />
-            <Route path="/monitor" element={<MonitorPoint />} />
+            <Route path="/output" element={<Output />} />
+            <Route path="/input" element={<Input />} />
             <Route path="/popup" element={<PopupExample />} />
             <Route path="/door" element={<Door />} />
             <Route path="/level" element={<Group />} />

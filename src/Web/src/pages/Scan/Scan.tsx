@@ -1,7 +1,7 @@
 import { ReactNode, useEffect, useState } from "react";
 import PageBreadcrumb from "../../components/common/PageBreadCrumb";
 import { IdReport } from "../../model/IdReport/IdReport";
-import { DeviceEndpoint } from "../../endpoint/HardwareEndpoint";
+import { DeviceEndpoint } from "../../endpoint/DeviceEndpoint";
 import { send } from "../../api/api";
 import { useLocation } from "../../context/LocationContext";
 import { Table, TableBody, TableCell, TableHeader, TableRow } from "../../components/ui/table";

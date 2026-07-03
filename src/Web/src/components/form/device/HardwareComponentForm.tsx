@@ -3,7 +3,7 @@ import Badge from "../../ui/badge/Badge"
 import { Table, TableBody, TableCell, TableHeader, TableRow } from "../../ui/table"
 import SignalRService from "../../../services/SignalRService";
 import { useToast } from "../../../context/ToastContext";
-import { DeviceEndpoint } from "../../../endpoint/HardwareEndpoint";
+import { DeviceEndpoint } from "../../../endpoint/DeviceEndpoint";
 import { send } from "../../../api/api";
 import { VerifyHardwareDeviceConfigDto } from "../../../model/Device/VerifyHardwareDeviceConfigDto";
 import { DeviceDto } from "../../../model/Device/DeviceDto";

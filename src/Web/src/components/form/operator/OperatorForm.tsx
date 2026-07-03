@@ -30,6 +30,7 @@ import { useToast } from "../../../context/ToastContext";
 import { OperatorDto } from "../../../model/Operator/OperatorDto";
 import { useLocation } from "../../../context/LocationContext";
 import { TITLE } from "../../../enum/Title";
+import { FormActions } from "../template/FormTemplate";
 
 type PasswordDto = {
     userName: string;
@@ -765,19 +766,15 @@ export const OperatorForm: React.FC<PropsWithChildren<FormProp<OperatorDto>>> = 
                             </div>
                         </div>
 
-                        <div className="flex flex-wrap justify-end gap-3">
-                            <Button
+
+
+                            <FormActions
                                 disabled={isReadOnly}
-                                onClickWithEvent={handleClickWithEvent}
-                                name={type === FormType.UPDATE ? "update" : "create"}
-                                size="sm"
-                            >
-                                {type === FormType.UPDATE ? "Update Operator" : "Create Operator"}
-                            </Button>
-                            <Button variant="outline" onClickWithEvent={handleClickWithEvent} name="cancel" size="sm">
-                                Cancel
-                            </Button>
-                        </div>
+                                onSubmit={handleClickWithEvent}
+                                onCancel={handleClickWithEvent}
+                                submitName={type == FormType.UPDATE ? "update" : "create"}
+                                typeLabel={type == FormType.UPDATE ? "Update" : "Create"}
+                            />
                     </section>
                 </div>
             )}
