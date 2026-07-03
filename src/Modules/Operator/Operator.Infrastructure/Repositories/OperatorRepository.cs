@@ -61,7 +61,9 @@ public sealed class OperatorRepository(OperatorDbContext context, IMessageBus bu
               data.Entity.email,
               data.Entity.mobile,
             data.Entity.role_id,
-            data.Entity.operator_locations.Select(ol => ol.location_id).ToList()
+            data.Entity.operator_locations.Select(ol => ol.location_id).ToList(),
+            data.Entity.is_active,
+            data.Entity.is_default
               );
       }
 
@@ -109,7 +111,9 @@ public sealed class OperatorRepository(OperatorDbContext context, IMessageBus bu
               data.Entity.email,
               data.Entity.mobile,
               data.Entity.role_id,
-                  data.Entity.operator_locations.Select(ol => ol.location_id).ToList()
+                  data.Entity.operator_locations.Select(ol => ol.location_id).ToList(),
+                  data.Entity.is_active,
+            data.Entity.is_default
               );
       }
 
@@ -145,11 +149,13 @@ public sealed class OperatorRepository(OperatorDbContext context, IMessageBus bu
                   x.email,
                   x.mobile,
                   x.role_id,
-                  x.operator_locations.Select(ol => ol.location_id).ToList()
+                  x.operator_locations.Select(ol => ol.location_id).ToList(),
+                  x.is_active,
+                  x.is_default
             ))
             .FirstOrDefaultAsync()
             ??
-            new OperatorDto(0, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, 0, new List<int>());
+            new OperatorDto();
       }
 
       public async Task<Pagination<OperatorDto>> GetPagination(PaginationParams param,CancellationToken ct = default)
@@ -208,7 +214,20 @@ public sealed class OperatorRepository(OperatorDbContext context, IMessageBus bu
             var items = await query.OrderByDescending(r => r.id)
             .Skip((param.pageNumber - 1) * param.pageSize)
             .Take(param.pageSize)
-            .Select(r => new OperatorDto(r.id, r.username, r.title, r.firstname, r.middlename, r.lastname, r.gender, r.email, r.mobile, r.role_id,r.operator_locations.Select(ol => ol.location_id).ToList()))
+            .Select(r => new OperatorDto(
+                  r.id, 
+                  r.username, 
+                  r.title, 
+                  r.firstname, 
+                  r.middlename, 
+                  r.lastname, 
+                  r.gender, 
+                  r.email, 
+                  r.mobile, 
+                  r.role_id,
+                  r.operator_locations.Select(ol => ol.location_id).ToList(),
+                  r.is_active,
+                  r.is_default))
             .ToListAsync(ct);
 
             return new Pagination<OperatorDto>(param.pageNumber, param.pageSize, totalItems,

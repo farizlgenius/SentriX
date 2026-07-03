@@ -9,7 +9,7 @@ public sealed class SpareFlag : BaseEntity
       public string description {get; set;} = string.Empty;
 
       public SpareFlag(){}
-      public SpareFlag(string label,int value,string description) : base(0,0,true)
+      public SpareFlag(string label,int value,string description) : base(0,0,true,false)
       {
             this.label = label;
             this.value = value;

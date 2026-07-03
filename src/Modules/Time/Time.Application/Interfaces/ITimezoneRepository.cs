@@ -13,4 +13,5 @@ public interface ITimezoneRepository
       Task<Pagination<TimezoneDto>> GetPaginationAsync(PaginationParams param,CancellationToken ct = default);
       Task<IEnumerable<OptionDto>> GetTimezoneOptionByLocationIdAsync(int locationId,CancellationToken ct = default);
       Task<IEnumerable<TimezoneDto>> GetTimeZoneByLocationIdAsync(int locationId,CancellationToken ct = default);
+      Task<bool> IsAnyTimeZoneNotSyncAsync(int LocationId,DateTime SyncAt,CancellationToken ct = default);
 }

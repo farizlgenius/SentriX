@@ -4,7 +4,7 @@ namespace User.Contract.DTOs;
 
 public sealed record CredentialDto(
       int Id,
-      short Flag,
+      int Flag,
       short Bits,
       short Fac,
       int CardNumber,

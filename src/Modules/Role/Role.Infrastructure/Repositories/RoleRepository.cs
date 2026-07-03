@@ -49,7 +49,9 @@ public sealed class RoleRepository(RoleDbContext context,IMessageBus bus) : IRol
               r.is_created,
               r.is_updated,
               r.is_deleted))
-              .ToList()
+              .ToList(),
+              data.Entity.is_active,
+              data.Entity.is_default
               );
       }
 
@@ -75,7 +77,9 @@ public sealed class RoleRepository(RoleDbContext context,IMessageBus bus) : IRol
               r.is_created,
               r.is_updated,
               r.is_deleted))
-              .ToList()
+              .ToList(),
+              data.Entity.is_active,
+              data.Entity.is_default
               );
 
       }
@@ -102,7 +106,9 @@ public sealed class RoleRepository(RoleDbContext context,IMessageBus bus) : IRol
               r.is_created,
               r.is_updated,
               r.is_deleted))
-              .ToList()
+              .ToList(),
+              data.is_active,
+              data.is_default
               )).ToList();
       }
 
@@ -120,7 +126,9 @@ public sealed class RoleRepository(RoleDbContext context,IMessageBus bus) : IRol
               r.is_created,
               r.is_updated,
               r.is_deleted))
-              .ToList()
+              .ToList(),
+              data.is_active,
+              data.is_default
               )).ToListAsync();
       }
 
@@ -177,7 +185,7 @@ public sealed class RoleRepository(RoleDbContext context,IMessageBus bus) : IRol
             var items = await query.OrderByDescending(r => r.id)
             .Skip((param.pageNumber - 1) * param.pageSize)
             .Take(param.pageSize)
-            .Select(r => new RoleDto(r.id, r.name, r.permissions.Select(p => new PermissionDto(p.feature_id, p.feature.name, p.is_enabled, p.is_created, p.is_updated, p.is_deleted)).ToList()))
+            .Select(r => new RoleDto(r.id, r.name, r.permissions.Select(p => new PermissionDto(p.feature_id, p.feature.name, p.is_enabled, p.is_created, p.is_updated, p.is_deleted)).ToList(),r.is_active,r.is_default))
             .ToListAsync(ct);
 
             return new Pagination<RoleDto>(param.pageNumber, param.pageSize, totalItems,
@@ -242,7 +250,9 @@ public sealed class RoleRepository(RoleDbContext context,IMessageBus bus) : IRol
               r.is_created,
               r.is_updated,
               r.is_deleted))
-              .ToList()
+              .ToList(),
+              data.Entity.is_active,
+              data.Entity.is_default
               );
       }
 

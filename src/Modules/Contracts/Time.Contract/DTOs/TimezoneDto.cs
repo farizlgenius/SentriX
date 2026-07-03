@@ -3,12 +3,13 @@ using SharedKernel.Domain;
 namespace Time.Contract.DTOs;
 
 public sealed record TimezoneDto(
-        int Id,
-        short ComponentId,
-        string Name,
-        short Mode,
-        string Active,
-        string Deactive,
-        List<IntervalDto> Intervals,
-        int LocationId,
-        bool IsActive) : BaseDto(ComponentId,LocationId,string.Empty,IsActive);
+        int Id=0,
+        short ComponentId=0,
+        string Name="",
+        short Mode=0,
+        string Active="",
+        string Deactive="",
+        List<IntervalDto> Intervals=default!,
+        int LocationId=0,
+        bool IsActive=false,
+        bool IsDefault=false) : BaseDto(ComponentId,LocationId,string.Empty,IsActive);

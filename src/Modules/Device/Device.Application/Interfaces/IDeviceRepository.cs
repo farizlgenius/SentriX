@@ -39,8 +39,8 @@ public interface IDeviceRepository
       Task<bool> AddReaderAsync(Reader domain,CancellationToken ct = default);
       Task<bool> DeleteReaderAsync(Reader domain,CancellationToken ct = default);
 
-      Task<bool> AddInputAsync(Input domain,CancellationToken ct = default);
-      Task<bool> DeleteInputAsync(Input domain,CancellationToken ct = default);
+      Task<bool> AddInputAsync(Device.Domain.Entities.Input domain,CancellationToken ct = default);
+      Task<bool> DeleteInputAsync(Device.Domain.Entities.Input domain,CancellationToken ct = default);
       Task<bool> AddRelayAsync(Relay domain,CancellationToken ct = default);
       Task<bool> DeleteRelayAsync(Relay domain,CancellationToken ct = default);
       Task<IEnumerable<OptionDto>> GetReaderOptionsByModuleIdAsync(int id ,CancellationToken ct = default);
@@ -49,5 +49,10 @@ public interface IDeviceRepository
       Task<int> GetIdByComponentIdAsync(short ComponentId,CancellationToken ct = default);
       Task<string> GetModuleNameByMacAndComponentIdAsync(string Mac,short ComponentId,CancellationToken ct = default);
       Task<bool> UploadDeviceAsync(int id ,CancellationToken ct = default);
+      Task<IEnumerable<DeviceDto>> GetDeviceByLocationIdAsync(int LocationId,CancellationToken ct = default);
+      Task<bool> IsAnyModuleNotSyncAsync(string Mac,int LocationId,DateTime SyncAt,CancellationToken ct = default);
+      Task SetDeviceSyncStatusAsync(string Mac,string Status,CancellationToken ct = default);
+      Task UpdateSyncTimeAsync(string Mac,CancellationToken ct = default);
+      Task<(string Name,int LocationId)> GetNameAndLocationIdByMacAsync(string Mac,CancellationToken ct = default);
 
 }

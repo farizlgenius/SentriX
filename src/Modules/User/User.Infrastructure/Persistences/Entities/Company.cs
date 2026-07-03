@@ -14,7 +14,7 @@ public sealed class Company : BaseEntity
       public Company() { }
 
 
-      public Company(Domain.Entities.Company company) : base(0, company.LocationId, company.IsActive)
+      public Company(Domain.Entities.Company company) : base(0, company.LocationId, company.IsActive,false)
       {
             this.name = company.Name;
             this.address = company.Address;

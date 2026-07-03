@@ -20,7 +20,7 @@ public sealed class Module : BaseEntity
       public ICollection<Relay> relays {get; set;} = default!;
 
       public Module(){}
-      public Module(Domain.Entities.Module domain) : base(domain.ComponentId,domain.LocationId,domain.IsActive)
+      public Module(Domain.Entities.Module domain) : base(domain.ComponentId,domain.LocationId,domain.IsActive,false)
       {
             name = domain.Name;
             serial_number = domain.SerialNumber;

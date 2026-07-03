@@ -44,7 +44,10 @@ public class LocationRepository(LocationDbContext context,IMessageBus bus) : ILo
               data.Entity.name,
               data.Entity.description,
               data.Entity.country_id,
-            await context.Countries.AsNoTracking().OrderByDescending(c => c.id).Where(c => c.id == data.Entity.country_id).Select(c => c.name).FirstOrDefaultAsync() ?? "");
+            await context.Countries.AsNoTracking().OrderByDescending(c => c.id).Where(c => c.id == data.Entity.country_id).Select(c => c.name).FirstOrDefaultAsync() ?? "",  
+            data.Entity.is_active,
+            data.Entity.is_default
+            );
 
       }
 
@@ -81,7 +84,10 @@ public class LocationRepository(LocationDbContext context,IMessageBus bus) : ILo
           data.Entity.name,
           data.Entity.description,
           data.Entity.country_id,
-        await context.Countries.AsNoTracking().OrderByDescending(c => c.id).Where(c => c.id == data.Entity.country_id).Select(c => c.name).FirstOrDefaultAsync() ?? "");
+        await context.Countries.AsNoTracking().OrderByDescending(c => c.id).Where(c => c.id == data.Entity.country_id).Select(c => c.name).FirstOrDefaultAsync() ?? "",
+        data.Entity.is_active,
+        data.Entity.is_default
+        );
 
       }
 
@@ -102,7 +108,10 @@ public class LocationRepository(LocationDbContext context,IMessageBus bus) : ILo
               data.name,
               data.description,
               data.country_id,
-            context.Countries.AsNoTracking().OrderByDescending(c => c.id).Where(c => c.id == data.country_id).Select(c => c.name).FirstOrDefault() ?? "")).ToList();
+            context.Countries.AsNoTracking().OrderByDescending(c => c.id).Where(c => c.id == data.country_id).Select(c => c.name).FirstOrDefault() ?? "",
+            data.is_active,
+            data.is_default
+            )).ToList();
 
 
       }
@@ -119,7 +128,7 @@ public class LocationRepository(LocationDbContext context,IMessageBus bus) : ILo
       {
             return await context.Locations
             .AsNoTracking()
-            .Select(x => new LocationDto(x.id, x.name, x.description, x.country_id, x.country.name))
+            .Select(x => new LocationDto(x.id, x.name, x.description, x.country_id, x.country.name,x.is_active,x.is_default))
             .ToListAsync();
 
       }
@@ -200,7 +209,7 @@ public class LocationRepository(LocationDbContext context,IMessageBus bus) : ILo
             .OrderByDescending(x => x.id)
             .Skip((Page - 1) * PageSize)
             .Take(PageSize)
-            .Select(x => new LocationDto(x.id, x.name, x.description, x.country_id, x.country.name))
+            .Select(x => new LocationDto(x.id, x.name, x.description, x.country_id, x.country.name,x.is_active,x.is_default))
             .ToListAsync();
 
             return new Pagination<LocationDto>(Page, PageSize, totalItems, (int)Math.Ceiling(totalItems / (double)PageSize), items);
@@ -212,7 +221,7 @@ public class LocationRepository(LocationDbContext context,IMessageBus bus) : ILo
                 .AsNoTracking()
                 .OrderBy(l => l.id)
                 .Where(l => ids.Contains(l.id))
-                .Select(x => new LocationDto(x.id, x.name, x.description, x.country_id, x.country.name))
+                .Select(x => new LocationDto(x.id, x.name, x.description, x.country_id, x.country.name,x.is_active,x.is_default))
                 .ToListAsync();
 
             return locations;
@@ -270,7 +279,10 @@ public class LocationRepository(LocationDbContext context,IMessageBus bus) : ILo
           data.Entity.name,
           data.Entity.description,
           data.Entity.country_id,
-        await context.Countries.AsNoTracking().OrderByDescending(c => c.id).Where(c => c.id == data.Entity.country_id).Select(c => c.name).FirstOrDefaultAsync() ?? "");
+        await context.Countries.AsNoTracking().OrderByDescending(c => c.id).Where(c => c.id == data.Entity.country_id).Select(c => c.name).FirstOrDefaultAsync() ?? "",
+        data.Entity.is_active,
+        data.Entity.is_default
+        );
 
 
       }

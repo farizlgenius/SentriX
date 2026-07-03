@@ -14,7 +14,7 @@ public sealed class UserCommand(ILogger<UserCommand> logger) : BaseCommand, IUse
       public CommandResponse AccessDatabaseCardRecords(
             string Mac, 
             short ScpId, 
-            short Flags, 
+            int Flags, 
             long CardNumber, 
             short IssueCode, 
             string Pin, 
@@ -30,7 +30,7 @@ public sealed class UserCommand(ILogger<UserCommand> logger) : BaseCommand, IUse
             CC_ADBC_I64DTIC32 c = new CC_ADBC_I64DTIC32();
             c.lastModified = 0;
             c.scp_number = ScpId;
-            c.flags = Flags;
+            c.flags = (short)Flags;
             c.card_number = CardNumber;
             c.issue_code = IssueCode;
             int i = 0;

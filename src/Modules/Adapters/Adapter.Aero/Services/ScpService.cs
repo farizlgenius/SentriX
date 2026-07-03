@@ -12,17 +12,25 @@ using Device.Contract.Command;
 using Device.Contract.DTOs;
 using Device.Contract.Events;
 using Device.Contract.Queries;
+using Door.Contract.Queries;
 using Events.Contract.Command;
+using Group.Contract.Queries;
 using HID.Aero.ScpdNet.Wrapper;
+using Input.Contract.Queries;
 using Microsoft.Extensions.Logging;
+using Output.Contract.Queries;
+using Setting.Contract.Queries;
 using SharedKernel.Enums;
 using SharedKernel.Helpers;
 using SharedKernel.Logging;
 using SharedKernel.Messaging;
+using Time.Contract.Queries;
+using User.Contract.Queries;
+
 
 namespace Adapter.Aero.Services;
 
-public sealed class ScpService(ILogger<ScpService> logger, IMessageBus bus, IScpCommand scpCommand, IIdReportService idReport, IModuleCommand sioWriter, IInputCommand mpWriter,IAeroRepository repo) : IScp
+public sealed class ScpService(ILogger<ScpService> logger, IMessageBus bus, IScpCommand scpCommand, IIdReportService idReport, IModuleCommand sioWriter, IInputCommand mpWriter,IAeroRepository repo) : IScpService
 {
 
 
@@ -159,6 +167,10 @@ public sealed class ScpService(ILogger<ScpService> logger, IMessageBus bus, IScp
             // res = scpCommand.ElevatorAccessLevelSpecification(device.Mac, (short)ScpId, 256, 128);
             // await bus.SendAsync(new AddCommandEvent(res));
 
+            res = scpCommand.SetTransactionLogIndexAsync(device.Mac,(short)ScpId,true);
+
+            await bus.SendAsync(new AddCommandEvent(res));
+
             res = scpCommand.TimeSet(device.Mac, (short)ScpId);
 
             await bus.SendAsync(new AddCommandEvent(res));
@@ -199,11 +211,7 @@ public sealed class ScpService(ILogger<ScpService> logger, IMessageBus bus, IScp
 
 
 
-
-
             List<int> inputs = Enumerable.Range(AeroModuleModelHelper.nInputByModel(SioModel.x1100) - 3, 3).ToList();
-
-
 
             // Setting Input for Alarm 
             foreach (var i in inputs)
@@ -242,21 +250,43 @@ public sealed class ScpService(ILogger<ScpService> logger, IMessageBus bus, IScp
                         await bus.SendAsync(new AddCommandEvent(res));
                   }
             }
+
+
+           
+
       }
 
 
-      public async Task<bool> UploadScpComponentAsync(int ScpId)
+
+      public async Task VerifyScpComponentAsync(int ScpId)
       {
             // Query Each Component and Send Command here.
-            throw new NotImplementedException();
+            var device = await bus.QueryAsync(new DeviceByComponentIdQuery(ScpId));
+            var syncedAt = device.SyncedAt ?? DateTime.UtcNow;
+
+            if (
+                  await bus.QueryAsync(new IsAnyModuleNotSyncQuery(device.Mac, device.LocationId, syncedAt)) ||
+                  await bus.QueryAsync(new IsAnyTimeZoneNotSyncQuery(device.LocationId, syncedAt)) ||
+                  await bus.QueryAsync(new IsAnyOutputNotSyncQuery(device.Mac, device.LocationId, syncedAt)) ||
+                  await bus.QueryAsync(new IsAnyInputNotSyncQuery(device.Mac,device.LocationId,syncedAt)) ||
+                  await bus.QueryAsync(new IsAnyInputGroupNotSyncQuery(device.Mac,device.LocationId,syncedAt)) ||
+                  await bus.QueryAsync(new IsAnyDoorNotSyncQuery(device.Mac, device.LocationId, syncedAt)) ||
+                  await bus.QueryAsync(new IsAnyUserNotSyncQuery(device.LocationId, syncedAt)) ||
+                  await bus.QueryAsync(new IsAnyCardFormatNotSyncQuery(device.LocationId, syncedAt)) ||
+                  await bus.QueryAsync(new IsAnyGroupNotSyncQuery(device.LocationId, syncedAt))
+            )
+            {
+                  await bus.SendAsync(
+                        new DeviceSyncStatusCommand(
+                              device.Mac,
+                              ScpSyncStatus.UPLOAD.ToString()));
+
+
+            }
+
+
       }
 
-      public async Task<bool> VerifyScpComponentAsync(int ScpId)
-      {
-            // Query Each Component and Send Command here.
-            // throw new NotImplementedException();
-            return true;
-      }
 
       public async Task<bool> VerifySCPStructureMemoryAllocate(int ScpId, SCPReplyMessageDto.SCPReplyStrStatusDto message)
       {

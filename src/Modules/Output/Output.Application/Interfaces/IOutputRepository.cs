@@ -16,6 +16,8 @@ public interface IOutputRepository
       Task<OutputDto> UpdateAsync(Outputs dto,CancellationToken ct = default);
       Task<IEnumerable<OptionDto>> GetRelayDriveModeAsync(CancellationToken ct= default);
       Task<IEnumerable<OptionDto>> GetRelayOfflineModeAsync(CancellationToken ct = default);
+      Task<bool> IsAnyOutputNotSyncAsync(string Mac,int LocationId,DateTime SyncAt,CancellationToken ct = default);
+      Task<IEnumerable<OutputDto>> GetByMacAsync(string Mac,CancellationToken ct = default);
 
 
 }

@@ -9,7 +9,7 @@ public sealed class DoorMode : BaseEntity
       public string description {get; set;} = string.Empty;
 
       public DoorMode(){}
-      public DoorMode(string label,short value,string description) : base(0,0,true)
+      public DoorMode(string label,short value,string description) : base(0,0,true,false)
       {
             this.label = label;
             this.value = value;

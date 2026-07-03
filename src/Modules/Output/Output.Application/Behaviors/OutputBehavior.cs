@@ -1,9 +1,11 @@
+using System.Net;
 using Adapter.Abstraction.Constants;
 using Adapter.Abstraction.Interfaces;
 using Device.Contract.Queries;
 using Microsoft.AspNetCore.Mvc;
 using Output.Application.Interfaces;
 using Output.Contract.DTOs;
+using Output.Contract.Queries;
 using Output.Domain.Entities;
 using SharedKernel.Domain;
 using SharedKernel.Enums;
@@ -15,6 +17,19 @@ namespace Output.Application.Behaviors;
 
 public sealed class OutputBehavior(IOutputRepository repo,IAdapterFactory factory,IMessageBus bus) : IOutput
 {
+      public async Task<BaseResponse> CommandOutputDto(OutputCommandDto dto, CancellationToken ct = default)
+      {
+            var output = await bus.QueryAsync(new OutputByIdQuery(dto.Id));
+            await factory.GetAdapter(dto.Type).Control.TriggerOutputAsync(
+                  output.Mac,
+                  output.DeviceComponentId,
+                  output.ComponentId,
+                  dto.Command
+                  );
+
+            return new BaseResponse(HttpStatusCode.OK,MessageHelper.Common.Success,DateTime.UtcNow);
+      }
+
       public async Task<OutputDto> CreateAsync(CreateOutputDto dto)
       {
 
@@ -27,7 +42,8 @@ public sealed class OutputBehavior(IOutputRepository repo,IAdapterFactory factor
                   dto.ModuleComponentId,
                   dto.OutputNo,
                   dto.Model,
-                  dto.RelayMode,
+                  dto.DriveMode,
+                  dto.OfflineMode,
                   dto.Type,
                   dto.LocationId,
                   dto.DefaultPulse,
@@ -40,7 +56,8 @@ public sealed class OutputBehavior(IOutputRepository repo,IAdapterFactory factor
                               domain.DeviceComponentId,
                               domain.ModuleComponentId,
                               domain.OutputNo,
-                              domain.Mode,
+                              domain.DriveMode,
+                              domain.OfflineMode,
                               domain.DefaultPulse
                               );  
 
@@ -127,14 +144,15 @@ public sealed class OutputBehavior(IOutputRepository repo,IAdapterFactory factor
                   dto.ModuleComponentId,
                   dto.OutputNo,
                   dto.Model,
-                  dto.RelayMode,
+                  dto.DriveMode,
+                  dto.OfflineMode,
                   dto.Type,
                   dto.LocationId,
                   dto.DefaultPulse,
                   dto.IsActive
                   );
 
-           await factory.GetAdapter(domain.Type).Control.UpdateAsync(domain.Mac,domain.ComponentId,domain.ComponentId,domain.ModuleComponentId,domain.OutputNo,domain.Mode,domain.DefaultPulse);
+           await factory.GetAdapter(domain.Type).Control.UpdateAsync(domain.Mac,domain.ComponentId,domain.ComponentId,domain.ModuleComponentId,domain.OutputNo,domain.DriveMode,domain.OfflineMode,domain.DefaultPulse);
 
             return await repo.UpdateAsync(domain);
       }

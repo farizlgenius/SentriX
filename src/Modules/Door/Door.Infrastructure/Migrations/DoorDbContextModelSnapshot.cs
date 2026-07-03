@@ -46,6 +46,9 @@ namespace Door.Infrastructure.Migrations
                     b.Property<bool>("is_active")
                         .HasColumnType("boolean");
 
+                    b.Property<bool>("is_default")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("label")
                         .IsRequired()
                         .HasColumnType("text");
@@ -73,6 +76,7 @@ namespace Door.Infrastructure.Migrations
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "Decrement use limits on access",
                             is_active = true,
+                            is_default = false,
                             label = "Decrement Use Limit",
                             location_id = 0,
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -85,6 +89,7 @@ namespace Door.Infrastructure.Migrations
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "Require use limit to be non-zero",
                             is_active = true,
+                            is_default = false,
                             label = "Require use limit",
                             location_id = 0,
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -97,6 +102,7 @@ namespace Door.Infrastructure.Migrations
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "Set to deny a duress request. The default behavior is to grant access under duress and log event. ",
                             is_active = true,
+                            is_default = false,
                             label = "Deny duress",
                             location_id = 0,
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -109,6 +115,7 @@ namespace Door.Infrastructure.Migrations
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "Do not wait for door to open. Assume that the door was used and log all access requests as used as soon as the request is granted.",
                             is_active = true,
+                            is_default = false,
                             label = "Not wait door open",
                             location_id = 0,
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -121,6 +128,7 @@ namespace Door.Infrastructure.Migrations
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "Do not pulse the door strike on REX cycle. Used for “quiet” exit.",
                             is_active = true,
+                            is_default = false,
                             label = "Quiet REX",
                             location_id = 0,
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -133,6 +141,7 @@ namespace Door.Infrastructure.Migrations
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "Filter Change-of-state Door transactions. This flag is normally set,unless detailed door sequence notifications are required.",
                             is_active = true,
+                            is_default = false,
                             label = "Filter door transaction",
                             location_id = 0,
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -145,6 +154,7 @@ namespace Door.Infrastructure.Migrations
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "Require two-card control at this reader.",
                             is_active = true,
+                            is_default = false,
                             label = "2 Card require",
                             location_id = 0,
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -157,6 +167,7 @@ namespace Door.Infrastructure.Migrations
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "If online, check with HOST before GRANTING access.",
                             is_active = true,
+                            is_default = false,
                             label = "Require host confirm",
                             location_id = 0,
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -169,6 +180,7 @@ namespace Door.Infrastructure.Migrations
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "If HOST is not available (offline or timeout) proceed with GRANT.",
                             is_active = true,
+                            is_default = false,
                             label = "Always grant if offline",
                             location_id = 0,
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -181,6 +193,7 @@ namespace Door.Infrastructure.Migrations
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "Enable cipher mode (if user command fits a card format then use it as card). Allows user to enter digits through the keypad as card number.",
                             is_active = true,
+                            is_default = false,
                             label = "Cipher mode",
                             location_id = 0,
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -193,6 +206,7 @@ namespace Door.Infrastructure.Migrations
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "If set, log access grant transaction right away, then log used/not-used. This feature disabled when the ACR_F_ALLUSED (0x0008) access control flag is set.",
                             is_active = true,
+                            is_default = false,
                             label = "Log early",
                             location_id = 0,
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -205,6 +219,7 @@ namespace Door.Infrastructure.Migrations
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "If set, show “wait” pattern on “card not in file” instead of “denied” response. See Command 122: Reader LED/Buzzer Function Specs “wait” state.",
                             is_active = true,
+                            is_default = false,
                             label = "Wait pattern",
                             location_id = 0,
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -235,6 +250,9 @@ namespace Door.Infrastructure.Migrations
                     b.Property<bool>("is_active")
                         .HasColumnType("boolean");
 
+                    b.Property<bool>("is_default")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("label")
                         .IsRequired()
                         .HasColumnType("text");
@@ -262,6 +280,7 @@ namespace Door.Infrastructure.Migrations
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "Do not check or alter anti-passback location. No anti-passback rules.",
                             is_active = true,
+                            is_default = false,
                             label = "No Apb",
                             location_id = 0,
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -274,6 +293,7 @@ namespace Door.Infrastructure.Migrations
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "Soft anti-passback: Accept any new location, change the user’s location to current reader, and generate an anti-passback violation for an invalid entry.",
                             is_active = true,
+                            is_default = false,
                             label = "Soft",
                             location_id = 0,
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -286,6 +306,7 @@ namespace Door.Infrastructure.Migrations
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "Hard anti-passback: Check user location, if a valid entry is made, change user’s location to new location. If an invalid entry is attempted, do not grant access.",
                             is_active = true,
+                            is_default = false,
                             label = "Hard",
                             location_id = 0,
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -298,6 +319,7 @@ namespace Door.Infrastructure.Migrations
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "Reader-based anti-passback using the ACR’s last valid user. Verify it’s not the same user within the time parameter specified within apb_delay.",
                             is_active = true,
+                            is_default = false,
                             label = "Reader-based Last Valid (s)",
                             location_id = 0,
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -310,6 +332,7 @@ namespace Door.Infrastructure.Migrations
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "Reader-based anti-passback using the access history from the cardholder database: Check user’s last ACR used, checks for same reader within a specified time (apb_delay). This requires the bSupportTimeApb flag be set in Command 1105: Access Database Specification.",
                             is_active = true,
+                            is_default = false,
                             label = "Reader-based Access History (s)",
                             location_id = 0,
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -322,6 +345,7 @@ namespace Door.Infrastructure.Migrations
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "Area based anti-passback: Check user’s current location, if it does not match the expected location then check the delay time (apb_delay). Change user’s location on entry. This requires the bSupportTimeApb flag be set in Command 1105: Access Database Specification.",
                             is_active = true,
+                            is_default = false,
                             label = "Area-based (s)",
                             location_id = 0,
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -334,6 +358,7 @@ namespace Door.Infrastructure.Migrations
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "Reader-based anti-passback using the ACR’s last valid user. Verify it’s not the same user within the time parameter specified within apb_delay.",
                             is_active = true,
+                            is_default = false,
                             label = "Reader-based Last Valid (m)",
                             location_id = 0,
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -346,6 +371,7 @@ namespace Door.Infrastructure.Migrations
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "Reader-based anti-passback using the access history from the cardholder database: Check user’s last ACR used, checks for same reader within a specified time (apb_delay). This requires the bSupportTimeApb flag be set in Command 1105: Access Database Specification.",
                             is_active = true,
+                            is_default = false,
                             label = "Reader-based Access History (s)",
                             location_id = 0,
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -358,6 +384,7 @@ namespace Door.Infrastructure.Migrations
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "Area based anti-passback: Check user’s current location, if it does not match the expected location then check the delay time (apb_delay). Change user’s location on entry. This requires the bSupportTimeApb flag be set in Command 1105: Access Database Specification.",
                             is_active = true,
+                            is_default = false,
                             label = "Area-based (m)",
                             location_id = 0,
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -388,6 +415,9 @@ namespace Door.Infrastructure.Migrations
                     b.Property<bool>("is_active")
                         .HasColumnType("boolean");
 
+                    b.Property<bool>("is_default")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("label")
                         .IsRequired()
                         .HasColumnType("text");
@@ -415,6 +445,7 @@ namespace Door.Infrastructure.Migrations
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "Disable the ACR, no REX",
                             is_active = true,
+                            is_default = false,
                             label = "Disable",
                             location_id = 0,
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -427,6 +458,7 @@ namespace Door.Infrastructure.Migrations
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "Unlock (unlimited access)",
                             is_active = true,
+                            is_default = false,
                             label = "Unlock",
                             location_id = 0,
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -439,6 +471,7 @@ namespace Door.Infrastructure.Migrations
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "Locked (no access,REX active)",
                             is_active = true,
+                            is_default = false,
                             label = "Lock",
                             location_id = 0,
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -451,6 +484,7 @@ namespace Door.Infrastructure.Migrations
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "Facility code only",
                             is_active = true,
+                            is_default = false,
                             label = "FAC Only",
                             location_id = 0,
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -463,6 +497,7 @@ namespace Door.Infrastructure.Migrations
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "Card Only",
                             is_active = true,
+                            is_default = false,
                             label = "Card Only",
                             location_id = 0,
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -475,6 +510,7 @@ namespace Door.Infrastructure.Migrations
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "PIN Only",
                             is_active = true,
+                            is_default = false,
                             label = "PIN Only",
                             location_id = 0,
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -487,6 +523,7 @@ namespace Door.Infrastructure.Migrations
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "Card and PIN required",
                             is_active = true,
+                            is_default = false,
                             label = "Card and PIN",
                             location_id = 0,
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -499,6 +536,7 @@ namespace Door.Infrastructure.Migrations
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "Card or PIN required",
                             is_active = true,
+                            is_default = false,
                             label = "Card or PIN",
                             location_id = 0,
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -530,6 +568,9 @@ namespace Door.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.Property<bool>("is_active")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("is_default")
                         .HasColumnType("boolean");
 
                     b.Property<int>("location_id")
@@ -587,6 +628,9 @@ namespace Door.Infrastructure.Migrations
                     b.Property<bool>("is_active")
                         .HasColumnType("boolean");
 
+                    b.Property<bool>("is_default")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("label")
                         .IsRequired()
                         .HasColumnType("text");
@@ -614,6 +658,7 @@ namespace Door.Infrastructure.Migrations
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "",
                             is_active = true,
+                            is_default = false,
                             label = "9600",
                             location_id = 0,
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -626,6 +671,7 @@ namespace Door.Infrastructure.Migrations
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "",
                             is_active = true,
+                            is_default = false,
                             label = "19200",
                             location_id = 0,
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -638,6 +684,7 @@ namespace Door.Infrastructure.Migrations
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "",
                             is_active = true,
+                            is_default = false,
                             label = "38400",
                             location_id = 0,
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -650,6 +697,7 @@ namespace Door.Infrastructure.Migrations
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "",
                             is_active = true,
+                            is_default = false,
                             label = "115200",
                             location_id = 0,
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -662,6 +710,7 @@ namespace Door.Infrastructure.Migrations
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "",
                             is_active = true,
+                            is_default = false,
                             label = "57600",
                             location_id = 0,
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -674,6 +723,7 @@ namespace Door.Infrastructure.Migrations
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "",
                             is_active = true,
+                            is_default = false,
                             label = "230400",
                             location_id = 0,
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -704,6 +754,9 @@ namespace Door.Infrastructure.Migrations
                     b.Property<bool>("is_active")
                         .HasColumnType("boolean");
 
+                    b.Property<bool>("is_default")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("label")
                         .IsRequired()
                         .HasColumnType("text");
@@ -731,6 +784,7 @@ namespace Door.Infrastructure.Migrations
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "Single reader, controlling the door",
                             is_active = true,
+                            is_default = false,
                             label = "Single",
                             location_id = 0,
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -743,6 +797,7 @@ namespace Door.Infrastructure.Migrations
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "Paired readers, Primary - this reader controls the door",
                             is_active = true,
+                            is_default = false,
                             label = "Dual",
                             location_id = 0,
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -755,6 +810,7 @@ namespace Door.Infrastructure.Migrations
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "Turnstile Reader",
                             is_active = true,
+                            is_default = false,
                             label = "Turnstile",
                             location_id = 0,
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -767,6 +823,7 @@ namespace Door.Infrastructure.Migrations
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "Elevator, no floor select feedback *",
                             is_active = true,
+                            is_default = false,
                             label = "Elevator No Floor",
                             location_id = 0,
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -779,6 +836,7 @@ namespace Door.Infrastructure.Migrations
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "Elevator with floor select feedback *",
                             is_active = true,
+                            is_default = false,
                             label = "Elevator with Floor",
                             location_id = 0,
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -809,6 +867,9 @@ namespace Door.Infrastructure.Migrations
                     b.Property<bool>("is_active")
                         .HasColumnType("boolean");
 
+                    b.Property<bool>("is_default")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("label")
                         .IsRequired()
                         .HasColumnType("text");
@@ -836,6 +897,7 @@ namespace Door.Infrastructure.Migrations
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "On a new access grant, do not resume the extended door held open timer",
                             is_active = true,
+                            is_default = false,
                             label = "No extend held timer",
                             location_id = 0,
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -848,6 +910,7 @@ namespace Door.Infrastructure.Migrations
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "Card and PIN reader mode: Do not accept PIN followed by CARD. Forces CARD to be read first.",
                             is_active = true,
+                            is_default = false,
                             label = "Force card before PIN",
                             location_id = 0,
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -860,6 +923,7 @@ namespace Door.Infrastructure.Migrations
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "Enable “Door Forced Open Filter”. Opening door within 3 seconds of door closed will not report a door forced open.",
                             is_active = true,
+                            is_default = false,
                             label = "Door Forced Filter",
                             location_id = 0,
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -872,6 +936,7 @@ namespace Door.Infrastructure.Migrations
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "Do not process any access request. Reports all access requests as “Access Denied, Door Locked”.",
                             is_active = true,
+                            is_default = false,
                             label = "No request",
                             location_id = 0,
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -884,6 +949,7 @@ namespace Door.Infrastructure.Migrations
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "Relay #(strike_rly+1) becomes the 'shunt relay'. On door unlocked, the shunt relay is activated 5 ms before the strike relay. The shunt relay is deactivated 1 second after the door is closed or the held open timer expires. The dc_held field must be greater than 1 for the shunt relay to function correctly.",
                             is_active = true,
+                            is_default = false,
                             label = "Shunt relay",
                             location_id = 0,
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -896,6 +962,7 @@ namespace Door.Infrastructure.Migrations
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "Enables “output selection tracking” feature when reader is configured for elevator type 1 and the reader is also in Card and PIN mode. Instead of entering a PIN code at the reader, the floor/output number would be entered instead.",
                             is_active = true,
+                            is_default = false,
                             label = "Output Selection Tracking",
                             location_id = 0,
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -908,6 +975,7 @@ namespace Door.Infrastructure.Migrations
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "Enables “output selection tracking” feature when reader is configured for elevator type 1 and the reader is also in Card and PIN mode. Instead of entering a PIN code at the reader, the floor/output number would be entered instead.",
                             is_active = true,
+                            is_default = false,
                             label = "Link mode",
                             location_id = 0,
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -920,6 +988,7 @@ namespace Door.Infrastructure.Migrations
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "Flag that enables the ability to use the double card functionality at this ACR. Presenting a valid card that has rights at the ACR twice within 5 seconds will generate a double card transaction.",
                             is_active = true,
+                            is_default = false,
                             label = "Double Card",
                             location_id = 0,
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -932,6 +1001,7 @@ namespace Door.Infrastructure.Migrations
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "Flag that allows for override credentials to gain access to this ACR even when in locked state. Override credentials are configured using Free Form Field type FFRM_FLD_ACCESSFLGS.",
                             is_active = true,
+                            is_default = false,
                             label = "Override Credential",
                             location_id = 0,
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -944,6 +1014,7 @@ namespace Door.Infrastructure.Migrations
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "Flag indicating if this ACR allows the disabling of elevator floors via the offline_mode field. Applies only to Type 1 and Type 2 elevators.",
                             is_active = true,
+                            is_default = false,
                             label = "Disable Elevator Floor",
                             location_id = 0,
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -956,6 +1027,7 @@ namespace Door.Infrastructure.Migrations
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "Flag that indicates if ACR is in linking mode for alternate reader, acr_mode = 32 will start linking mode and acr_mode = 33 can abort linking mode or once reader is linked or timeout reached this flag will clear.",
                             is_active = true,
+                            is_default = false,
                             label = "Link mode Alt",
                             location_id = 0,
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -968,6 +1040,7 @@ namespace Door.Infrastructure.Migrations
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "lag to enable extending REX 'grant time' while REX input is active",
                             is_active = true,
+                            is_default = false,
                             label = "Extend REX",
                             location_id = 0,
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -980,6 +1053,7 @@ namespace Door.Infrastructure.Migrations
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "ACR_F_HOST_CBG must also be enabled for this flag to take effect. When both flags are active, the controller bypasses its local database check and for a grant decision. The host can respond with a grant or deny, which will be processed by the controller. If the host does not respond in time, the process times out, and the controller performs a secondary check using the local controller database. During a timeout, if the card is present in the local controller database and valid for the ACR/time, a grant is locally issued by the controller. Otherwisea deny is issued. This mode works with PIN codes if the ACR is configured into the Card and PIN reader mode.",
                             is_active = true,
+                            is_default = false,
                             label = "Controller Bypass",
                             location_id = 0,
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -992,6 +1066,7 @@ namespace Door.Infrastructure.Migrations
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "Flag to enable generating a transaction at the start of the REX cycle.",
                             is_active = true,
+                            is_default = false,
                             label = "Early REX",
                             location_id = 0,
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -1022,6 +1097,9 @@ namespace Door.Infrastructure.Migrations
                     b.Property<bool>("is_active")
                         .HasColumnType("boolean");
 
+                    b.Property<bool>("is_default")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("label")
                         .IsRequired()
                         .HasColumnType("text");
@@ -1049,6 +1127,7 @@ namespace Door.Infrastructure.Migrations
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "Do not use! This would allow the strike to stay active for the entire strike time allowing the door to be opened multiple times.",
                             is_active = true,
+                            is_default = false,
                             label = "No Change",
                             location_id = 0,
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -1061,6 +1140,7 @@ namespace Door.Infrastructure.Migrations
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "Deactivate strike when door opens.",
                             is_active = true,
+                            is_default = false,
                             label = "Deactivate on open",
                             location_id = 0,
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -1073,6 +1153,7 @@ namespace Door.Infrastructure.Migrations
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "Deactivate strike on door close or strike_t_max expires.",
                             is_active = true,
+                            is_default = false,
                             label = "Deactivate on close",
                             location_id = 0,
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -1085,6 +1166,7 @@ namespace Door.Infrastructure.Migrations
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "Used with ACR_S_OPEN or ACR_S_CLOSE, to select tailgate mode: pulse (strk_sio:strk_number+1) relay for each user expected to enter.",
                             is_active = true,
+                            is_default = false,
                             label = "Tailgate",
                             location_id = 0,
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),

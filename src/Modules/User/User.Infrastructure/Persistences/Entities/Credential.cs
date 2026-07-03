@@ -5,7 +5,7 @@ namespace User.Infrastructure.Persistences.Entities;
 
 public sealed class Credential : BaseEntity
 {
-      public short flag { get; set; }
+      public int flag { get; set; }
       public short bits {get; set;}
       public short fac {get; set;}
       public int card_number {get; set;}
@@ -21,7 +21,8 @@ public sealed class Credential : BaseEntity
       public Credential(Domain.Entities.Credential credential) : base(
             credential.ComponentId,
             credential.LocationId,
-            credential.IsActive
+            credential.IsActive,
+            false
       )
       {
             this.flag = credential.Flag;

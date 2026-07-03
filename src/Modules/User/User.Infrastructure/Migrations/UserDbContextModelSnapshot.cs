@@ -50,6 +50,9 @@ namespace User.Infrastructure.Migrations
                     b.Property<bool>("is_active")
                         .HasColumnType("boolean");
 
+                    b.Property<bool>("is_default")
+                        .HasColumnType("boolean");
+
                     b.Property<int>("location_id")
                         .HasColumnType("integer");
 
@@ -84,8 +87,8 @@ namespace User.Infrastructure.Migrations
                     b.Property<short>("bits")
                         .HasColumnType("smallint");
 
-                    b.Property<long>("card_number")
-                        .HasColumnType("bigint");
+                    b.Property<int>("card_number")
+                        .HasColumnType("integer");
 
                     b.Property<short>("component_id")
                         .HasColumnType("smallint");
@@ -101,14 +104,17 @@ namespace User.Infrastructure.Migrations
                     b.Property<short>("fac")
                         .HasColumnType("smallint");
 
-                    b.Property<short>("flag")
-                        .HasColumnType("smallint");
+                    b.Property<int>("flag")
+                        .HasColumnType("integer");
 
                     b.Property<bool>("is_active")
                         .HasColumnType("boolean");
 
-                    b.Property<int>("issue_code")
-                        .HasColumnType("integer");
+                    b.Property<bool>("is_default")
+                        .HasColumnType("boolean");
+
+                    b.Property<short>("issue_code")
+                        .HasColumnType("smallint");
 
                     b.Property<int>("location_id")
                         .HasColumnType("integer");
@@ -161,6 +167,9 @@ namespace User.Infrastructure.Migrations
                     b.Property<bool>("is_active")
                         .HasColumnType("boolean");
 
+                    b.Property<bool>("is_default")
+                        .HasColumnType("boolean");
+
                     b.Property<int>("location_id")
                         .HasColumnType("integer");
 
@@ -206,6 +215,9 @@ namespace User.Infrastructure.Migrations
                     b.Property<bool>("is_active")
                         .HasColumnType("boolean");
 
+                    b.Property<bool>("is_default")
+                        .HasColumnType("boolean");
+
                     b.Property<int>("location_id")
                         .HasColumnType("integer");
 
@@ -246,6 +258,9 @@ namespace User.Infrastructure.Migrations
                         .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
 
                     b.Property<bool>("is_active")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("is_default")
                         .HasColumnType("boolean");
 
                     b.Property<int>("location_id")
@@ -292,6 +307,9 @@ namespace User.Infrastructure.Migrations
                     b.Property<bool>("is_active")
                         .HasColumnType("boolean");
 
+                    b.Property<bool>("is_default")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("label")
                         .IsRequired()
                         .HasColumnType("text");
@@ -319,6 +337,7 @@ namespace User.Infrastructure.Migrations
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "Active cardholder record",
                             is_active = true,
+                            is_default = false,
                             label = "Active",
                             location_id = 0,
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -331,6 +350,7 @@ namespace User.Infrastructure.Migrations
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "Allow one free anti-passback pass",
                             is_active = true,
+                            is_default = false,
                             label = "One free APB",
                             location_id = 0,
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -343,6 +363,7 @@ namespace User.Infrastructure.Migrations
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "Anti-passback exempt",
                             is_active = true,
+                            is_default = false,
                             label = "APB Exempt",
                             location_id = 0,
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -355,6 +376,7 @@ namespace User.Infrastructure.Migrations
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "Use timing parameters for the disabled (ADA)",
                             is_active = true,
+                            is_default = false,
                             label = "ADA",
                             location_id = 0,
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -367,6 +389,7 @@ namespace User.Infrastructure.Migrations
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "Use timing parameters for the disabled (ADA)",
                             is_active = true,
+                            is_default = false,
                             label = "ADA",
                             location_id = 0,
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -379,6 +402,7 @@ namespace User.Infrastructure.Migrations
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "PIN Exempt for 'Card & PIN' ACR mode",
                             is_active = true,
+                            is_default = false,
                             label = "PIN Exempt",
                             location_id = 0,
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -391,6 +415,7 @@ namespace User.Infrastructure.Migrations
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "Do not change apb_loc",
                             is_active = true,
+                            is_default = false,
                             label = "No Change APB Location",
                             location_id = 0,
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -403,6 +428,7 @@ namespace User.Infrastructure.Migrations
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "Do not alter either the 'original' or the 'current' use count values",
                             is_active = true,
+                            is_default = false,
                             label = "No Change Use Limit",
                             location_id = 0,
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -415,6 +441,7 @@ namespace User.Infrastructure.Migrations
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "Do not alter the 'current' use count but change the original use limit stored in the cardholder database",
                             is_active = true,
+                            is_default = false,
                             label = "No Change Current",
                             location_id = 0,
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -442,6 +469,9 @@ namespace User.Infrastructure.Migrations
                         .HasColumnType("integer");
 
                     b.Property<bool>("is_active")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("is_default")
                         .HasColumnType("boolean");
 
                     b.Property<int>("location_id")
@@ -502,6 +532,9 @@ namespace User.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<int>("flag")
+                        .HasColumnType("integer");
+
                     b.Property<string>("gender")
                         .IsRequired()
                         .HasColumnType("text");
@@ -511,6 +544,9 @@ namespace User.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.Property<bool>("is_active")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("is_default")
                         .HasColumnType("boolean");
 
                     b.Property<string>("last_name")
@@ -578,6 +614,9 @@ namespace User.Infrastructure.Migrations
                         .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
 
                     b.Property<bool>("is_active")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("is_default")
                         .HasColumnType("boolean");
 
                     b.Property<int>("location_id")

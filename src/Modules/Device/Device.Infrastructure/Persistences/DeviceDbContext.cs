@@ -11,7 +11,7 @@ public sealed class DeviceDbContext(DbContextOptions<DeviceDbContext> options) :
       public DbSet<Devices> Devices { get; set; }
       public DbSet<Module> Modules {get; set;}
       public DbSet<Reader> Readers {get; set;}
-      public DbSet<Input> Inputs {get; set;}
+      public DbSet<Persistences.Entities.Input> Inputs {get; set;}
       public DbSet<Relay> Relays {get; set;}
 
       protected override void OnModelCreating(ModelBuilder modelBuilder)

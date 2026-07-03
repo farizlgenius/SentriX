@@ -1,16 +1,19 @@
 using System.Net;
 using Adapter.Abstraction.Interfaces;
+using Device.Contract.Queries;
 using Input.Application.Interfaces;
 using Input.Contract.DTOs;
 using Input.Contract.Interfaces;
 using Input.Domain.Entities;
 using SharedKernel.Domain;
+using SharedKernel.Enums;
 using SharedKernel.Exceptions;
 using SharedKernel.Helpers;
+using SharedKernel.Messaging;
 
 namespace Input.Application.Behaviors;
 
-public sealed class InputBehavior(IInputRepository repo,IAdapterFactory factory) : IInput
+public sealed class InputBehavior(IInputRepository repo,IAdapterFactory factory,IMessageBus bus) : IInput
 {
       public async Task<InputDto> CreateInputAsync(CreateInputDto dto)
       {
@@ -29,7 +32,15 @@ public sealed class InputBehavior(IInputRepository repo,IAdapterFactory factory)
                   dto.Mac,
                   dto.DeviceComponentId,
                   dto.ModuleComponentId,
-                  dto.Metadata,
+                  dto.InputNo,
+                  dto.SensorMode,
+                  dto.Debounce,
+                  dto.HoldTime,
+                  dto.LogFunction,
+                  dto.LatchMode,
+                  dto.DelayEntry,
+                  dto.DelayExit,
+                  dto.Type,
                   dto.LocationId,
                   dto.IsActive
                   );
@@ -40,7 +51,13 @@ public sealed class InputBehavior(IInputRepository repo,IAdapterFactory factory)
                   dto.DeviceComponentId,
                   dto.ModuleComponentId,
                   dto.InputNo,
-                  dto.Metadata
+                  dto.SensorMode,
+                  dto.Debounce,
+                  dto.HoldTime,
+                  dto.LogFunction,
+                  dto.LatchMode,
+                  dto.DelayEntry,
+                  dto.DelayExit
                   );
 
             return await repo.CreateInputAsync(domain);
@@ -53,28 +70,46 @@ public sealed class InputBehavior(IInputRepository repo,IAdapterFactory factory)
             if(string.IsNullOrWhiteSpace(dto.Name))
                   throw new BadRequestException(MessageHelper.Common.Empty(nameof(dto.Name)));
 
-            if(string.IsNullOrWhiteSpace(dto.Mac))
-                  throw new BadRequestException(MessageHelper.Common.Empty(nameof(dto.Mac)));
-
-            var componentId = await repo.GetLowestInputGroupComponentIdAsync(dto.Mac);
+            var componentId = await repo.GetLowestInputGroupComponentIdAsync();
 
             var domain = new InputGroups(
                   0,
                   componentId,
                   dto.Name,
-                  dto.Mac,
-                  dto.DeviceComponentId,
-                  dto.Metadata,
+                  dto.Type,
+                  dto.InputGroupDetailDtos
+                  .GroupBy(
+                        k => (k.Mac,k.DeviceComponentId)
+                  )
+                  .Select(x => new InputGroupDetail(
+                        0,
+                        x.Key.Mac,
+                        x.Key.DeviceComponentId,
+                        x.Select(i => new InputList(
+                              0,
+                              i.InputType,
+                              i.InputComponentId,
+                              dto.LocationId,
+                              dto.IsActive
+                        )).ToList(),
+                        dto.LocationId,
+                        dto.IsActive
+                  )).ToList(),
                   dto.LocationId,
                   dto.IsActive
                   );
 
-            await factory.GetAdapter(dto.Type).Monitor.CreateUpdateMonitorGroup(
-                  domain.Mac,
-                  domain.DeviceComponentId,
-                  domain.ComponentId,
-                  domain.Metadata
-            );
+            foreach(var d in domain.InputGroupDetails)
+            {
+                  await factory.GetAdapter(dto.Type).Monitor.CreateUpdateMonitorGroup(
+                        d.Mac,
+                        d.DeviceComponentId,
+                        componentId,
+                        d.InputList.Select(x => (x.Type, x.Number)).ToList()
+                  );
+            }
+
+            
 
             return await repo.CreateInputGroupAsync(domain);
       }
@@ -91,7 +126,13 @@ public sealed class InputBehavior(IInputRepository repo,IAdapterFactory factory)
                   entity.ComponentId,
                   entity.DeviceComponentId,
                   entity.InputNo,
-                  entity.Metadata
+                  entity.SensorMode,
+                  entity.Debounce,
+                  entity.HoldTime,
+                  entity.LogFunction,
+                  entity.LatchMode,
+                  entity.DelayEntry,
+                  entity.DelayExit
                   );
 
             return await repo.DeleteInputAsync(id);
@@ -104,12 +145,29 @@ public sealed class InputBehavior(IInputRepository repo,IAdapterFactory factory)
             if(entity.Id == 0)
                   throw new BadRequestException(MessageHelper.Common.NotFound("Input Group", id));
 
-            await factory.GetAdapter(entity.Type).Monitor.DeleteMonitorGroup(
-                  entity.Mac,
-                  entity.ComponentId,
-                  entity.DeviceComponentId);
+
+
+            foreach(var d in entity.InputGroupDetailDtos)
+            {
+                  await factory.GetAdapter(entity.Type).Monitor.CreateUpdateMonitorGroup(
+                        d.Mac,
+                        d.DeviceComponentId,
+                        entity.ComponentId,
+                        new List<(short Type, short Number)>()
+                  );
+            }
 
             return await repo.DeleteInputGroupAsync(id);
+      }
+
+      public async Task<IEnumerable<short>> GetAvailalbleInputByModuleIdAsync(int id, CancellationToken ct = default)
+      {
+            // Query model type by moduleid
+            var model = await bus.QueryAsync(new ModelByModuleIdQuery(id));
+            var nInput = AeroModuleModelHelper.nInputByModel(EnumHelper.ToEnum<SioModel>(model));
+            var inputList = Enumerable.Range(0, nInput).Select(x => (short)x).ToArray();
+            var res = await repo.GetUnavailableInputByModuleIdAsync(id);
+            return inputList.Except(res);
       }
 
       public async Task<Pagination<InputGroupDto>> GetGroupPaginationAsync(PaginationParams param)
@@ -162,7 +220,15 @@ public sealed class InputBehavior(IInputRepository repo,IAdapterFactory factory)
                   dto.Mac,
                   dto.DeviceComponentId,
                   dto.ModuleComponentId,
-                  dto.Metadata,
+                  dto.InputNo,
+                  dto.SensorMode,
+                  dto.Debounce,
+                  dto.HoldTime,
+                  dto.LogFunction,
+                  dto.LatchMode,
+                  dto.DelayEntry,
+                  dto.DelayExit,
+                  dto.Type,
                   dto.LocationId,
                   dto.IsActive
                   );
@@ -173,7 +239,13 @@ public sealed class InputBehavior(IInputRepository repo,IAdapterFactory factory)
                   dto.DeviceComponentId,
                   dto.ModuleComponentId,
                   dto.InputNo,
-                  dto.Metadata
+                  dto.SensorMode,
+                  dto.Debounce,
+                  dto.HoldTime,
+                  dto.LogFunction,
+                  dto.LatchMode,
+                  dto.DelayEntry,
+                  dto.DelayExit
                   );
 
             return await repo.UpdateInputAsync(domain);
@@ -184,26 +256,43 @@ public sealed class InputBehavior(IInputRepository repo,IAdapterFactory factory)
             if(string.IsNullOrWhiteSpace(dto.Name))
                   throw new BadRequestException(MessageHelper.Common.Empty(nameof(dto.Name)));
 
-            if(string.IsNullOrWhiteSpace(dto.Mac))
-                  throw new BadRequestException(MessageHelper.Common.Empty(nameof(dto.Mac)));
 
-            var domain = new InputGroups(
-                  dto.Id,
+           var domain = new InputGroups(
+                  0,
                   dto.ComponentId,
                   dto.Name,
-                  dto.Mac,
-                  dto.DeviceComponentId,
-                  dto.Metadata,
+                  dto.Type,
+                  dto.InputGroupDetailDtos
+                  .GroupBy(
+                        k => (k.Mac,k.DeviceComponentId)
+                  )
+                  .Select(x => new InputGroupDetail(
+                        0,
+                        x.Key.Mac,
+                        x.Key.DeviceComponentId,
+                        x.Select(i => new InputList(
+                              0,
+                              i.InputType,
+                              i.InputComponentId,
+                              dto.LocationId,
+                              dto.IsActive
+                        )).ToList(),
+                        dto.LocationId,
+                        dto.IsActive
+                  )).ToList(),
                   dto.LocationId,
                   dto.IsActive
                   );
 
-            await factory.GetAdapter(dto.Type).Monitor.CreateUpdateMonitorGroup(
-                  domain.Mac,
-                  domain.DeviceComponentId,
-                  domain.ComponentId,
-                  domain.Metadata
-            );
+            foreach(var d in domain.InputGroupDetails)
+            {
+                  await factory.GetAdapter(dto.Type).Monitor.CreateUpdateMonitorGroup(
+                        d.Mac,
+                        d.DeviceComponentId,
+                        dto.ComponentId,
+                        d.InputList.Select(x => (x.Type, x.Number)).ToList()
+                  );
+            }
 
             return await repo.UpdateInputGroupAsync(domain);
       }

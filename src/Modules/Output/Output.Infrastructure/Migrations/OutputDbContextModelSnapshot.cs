@@ -46,6 +46,9 @@ namespace Output.Infrastructure.Migrations
                     b.Property<bool>("is_active")
                         .HasColumnType("boolean");
 
+                    b.Property<bool>("is_default")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("label")
                         .IsRequired()
                         .HasColumnType("text");
@@ -73,6 +76,7 @@ namespace Output.Infrastructure.Migrations
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "",
                             is_active = true,
+                            is_default = false,
                             label = "Normal",
                             location_id = 0,
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -85,6 +89,7 @@ namespace Output.Infrastructure.Migrations
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "",
                             is_active = true,
+                            is_default = false,
                             label = "Inverted",
                             location_id = 0,
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -112,6 +117,9 @@ namespace Output.Infrastructure.Migrations
                         .HasColumnType("smallint");
 
                     b.Property<bool>("is_active")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("is_default")
                         .HasColumnType("boolean");
 
                     b.Property<string>("label")
@@ -144,6 +152,7 @@ namespace Output.Infrastructure.Migrations
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             drive = (short)0,
                             is_active = true,
+                            is_default = false,
                             label = "",
                             location_id = 0,
                             offline = (short)0,
@@ -157,6 +166,7 @@ namespace Output.Infrastructure.Migrations
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             drive = (short)1,
                             is_active = true,
+                            is_default = false,
                             label = "",
                             location_id = 0,
                             offline = (short)0,
@@ -170,6 +180,7 @@ namespace Output.Infrastructure.Migrations
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             drive = (short)0,
                             is_active = true,
+                            is_default = false,
                             label = "",
                             location_id = 0,
                             offline = (short)1,
@@ -183,6 +194,7 @@ namespace Output.Infrastructure.Migrations
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             drive = (short)1,
                             is_active = true,
+                            is_default = false,
                             label = "",
                             location_id = 0,
                             offline = (short)1,
@@ -196,6 +208,7 @@ namespace Output.Infrastructure.Migrations
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             drive = (short)0,
                             is_active = true,
+                            is_default = false,
                             label = "",
                             location_id = 0,
                             offline = (short)2,
@@ -209,6 +222,7 @@ namespace Output.Infrastructure.Migrations
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             drive = (short)1,
                             is_active = true,
+                            is_default = false,
                             label = "",
                             location_id = 0,
                             offline = (short)2,
@@ -240,6 +254,9 @@ namespace Output.Infrastructure.Migrations
                     b.Property<bool>("is_active")
                         .HasColumnType("boolean");
 
+                    b.Property<bool>("is_default")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("label")
                         .IsRequired()
                         .HasColumnType("text");
@@ -267,6 +284,7 @@ namespace Output.Infrastructure.Migrations
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "",
                             is_active = true,
+                            is_default = false,
                             label = "No Change",
                             location_id = 0,
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -279,6 +297,7 @@ namespace Output.Infrastructure.Migrations
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "",
                             is_active = true,
+                            is_default = false,
                             label = "Inactive",
                             location_id = 0,
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -291,6 +310,7 @@ namespace Output.Infrastructure.Migrations
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "",
                             is_active = true,
+                            is_default = false,
                             label = "Active",
                             location_id = 0,
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -320,7 +340,13 @@ namespace Output.Infrastructure.Migrations
                     b.Property<short>("device_component_id")
                         .HasColumnType("smallint");
 
+                    b.Property<short>("drive_mode")
+                        .HasColumnType("smallint");
+
                     b.Property<bool>("is_active")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("is_default")
                         .HasColumnType("boolean");
 
                     b.Property<int>("location_id")
@@ -329,9 +355,6 @@ namespace Output.Infrastructure.Migrations
                     b.Property<string>("mac")
                         .IsRequired()
                         .HasColumnType("text");
-
-                    b.Property<short>("mode")
-                        .HasColumnType("smallint");
 
                     b.Property<string>("model")
                         .IsRequired()
@@ -343,6 +366,9 @@ namespace Output.Infrastructure.Migrations
                     b.Property<string>("name")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<short>("offline_mode")
+                        .HasColumnType("smallint");
 
                     b.Property<short>("output_no")
                         .HasColumnType("smallint");

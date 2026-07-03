@@ -1,6 +1,7 @@
 using System;
 using Adapter.Abstraction.Constants;
 using Adapter.Abstraction.Interfaces;
+using Adapter.Aero.Interfaces;
 
 namespace Adapter.Aero;
 
@@ -10,24 +11,26 @@ public sealed class AeroAdapter : IAdapter
 
       public IDeviceAdapter Device { get; }
 
-      public IMonitorAdapter Monitor { get; }
+      public IInputAdapter Monitor { get; }
 
-      public IControlAdapter Control { get; }
+      public IOutputAdapter Control { get; }
 
       public ITimeAdapter Time {get;}
       public IDoorAdapter Door {get;}
       public IGroupAdapter Group {get;}
 
       public IUserAdapter User {get;}
+      public ISettingAdapter Setting {get;}
 
       public AeroAdapter(
-            IDeviceAdapter devices,
-            IControlAdapter controls,
-            IMonitorAdapter monitor,
-            ITimeAdapter time,
-            IDoorAdapter door,
-            IGroupAdapter group,
-            IUserAdapter user
+            IAeroDeviceAdapter devices,
+            IAeroOutputAdapter controls,
+            IAeroInputAdapter monitor,
+            IAeroTimeAdapter time,
+            IAeroDoorAdapter door,
+            IAeroGroupAdapter group,
+            IAeroUserAdapter user,
+            IAeroSettingAdapter setting
       )
       {
             Device = devices;
@@ -37,5 +40,6 @@ public sealed class AeroAdapter : IAdapter
             Door = door;
             Group = group;
             User = user;
+            Setting = setting;
       }
 }

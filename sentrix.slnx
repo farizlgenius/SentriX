@@ -48,6 +48,11 @@
 <Project Path="src/Modules/Role/Role.Domain/Role.Domain.csproj" />
 <Project Path="src/Modules/Role/Role.Infrastructure/Role.Infrastructure.csproj" />
 </Folder>
+<Folder Name="/src/Modules/Setting/">
+<Project Path="src/Modules/Setting/Setting.Application/Setting.Application.csproj" />
+<Project Path="src/Modules/Setting/Setting.Domain/Setting.Domain.csproj" />
+<Project Path="src/Modules/Setting/Setting.Infrastructure/Setting.Infrastructure.csproj" />
+</Folder>
 <Folder Name="/src/Modules/Time/">
 <Project Path="src/Modules/Time/Time.Application/Time.Application.csproj" />
 <Project Path="src/Modules/Time/Time.Domain/Time.Domain.csproj" />
@@ -92,6 +97,7 @@
 <Project Path="src/Modules/Contracts/Adapter.Abstraction/Adapter.Abstraction.csproj" />
 <Project Path="src/Modules/Contracts/Output.Contract/Output.Contract.csproj" />
 <Project Path="src/Modules/Contracts/Role.Contract/Role.Contract.csproj" />
+<Project Path="src/Modules/Contracts/Setting.Contract/Setting.Contract.csproj" />
 <Project Path="src/Modules/Contracts/Storage.Contract/Storage.Contract.csproj" />
 <Project Path="src/Modules/Contracts/Time.Contract/Time.Contract.csproj" />
 <Project Path="src/Modules/Contracts/User.Contract/User.Contract.csproj" />

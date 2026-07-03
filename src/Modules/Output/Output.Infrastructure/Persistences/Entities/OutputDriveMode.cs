@@ -11,7 +11,7 @@ public sealed class OutputDriveMode : BaseEntity
       public string description {get; set;} = string.Empty;
 
       public OutputDriveMode(){}
-      public OutputDriveMode(string label,short value,string description) : base(0,0,true)
+      public OutputDriveMode(string label,short value,string description) : base(0,0,true,false)
       {
             this.label = label;
             this.value = value;

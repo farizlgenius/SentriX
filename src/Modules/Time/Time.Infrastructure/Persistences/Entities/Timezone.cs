@@ -14,7 +14,7 @@ public sealed class Timezone : BaseEntity
       {
       }
 
-      public Timezone(Domain.Entities.Timezone domain) : base(domain.ComponentId,domain.LocationId,domain.IsActive)
+      public Timezone(Domain.Entities.Timezone domain) : base(domain.ComponentId,domain.LocationId,domain.IsActive,false)
       {
             this.name = domain.Name;
             this.mode = domain.Mode;
@@ -41,7 +41,7 @@ public sealed class Timezone : BaseEntity
                   )).ToList();
       }
 
-      public Timezone(short componetId,string name,short mode,string active,string deactive,List<Interval> intervals, int locationId, bool isactive) : base(componetId, locationId, isactive)
+      public Timezone(short componetId,string name,short mode,string active,string deactive,List<Interval> intervals, int locationId, bool isactive,bool isDefault) : base(componetId, locationId, isactive,isDefault)
       {
             this.name = name;
             this.mode = mode;

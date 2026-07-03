@@ -15,7 +15,7 @@ public sealed class Interval : BaseEntity
       {
       }
 
-      public Interval(short componetId,DayInWeek days,string start,string end, int locationId, bool isactive) : base(componetId, locationId, isactive)
+      public Interval(short componetId,DayInWeek days,string start,string end, int locationId, bool isactive) : base(componetId, locationId, isactive,false)
       {
             this.days = days;
             this.days_detail ="";

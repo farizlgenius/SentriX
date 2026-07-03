@@ -42,6 +42,9 @@ namespace Role.Infrastructure.Migrations
                     b.Property<bool>("is_active")
                         .HasColumnType("boolean");
 
+                    b.Property<bool>("is_default")
+                        .HasColumnType("boolean");
+
                     b.Property<int>("location_id")
                         .HasColumnType("integer");
 
@@ -65,6 +68,7 @@ namespace Role.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "dashboard",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -75,6 +79,7 @@ namespace Role.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "events",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -85,6 +90,7 @@ namespace Role.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "location",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -95,6 +101,7 @@ namespace Role.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "alert",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -105,6 +112,7 @@ namespace Role.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "operator",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -115,6 +123,7 @@ namespace Role.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "device",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -125,6 +134,7 @@ namespace Role.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "control",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -135,6 +145,7 @@ namespace Role.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "monitor",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -145,6 +156,7 @@ namespace Role.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "monitorgroup",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -155,6 +167,7 @@ namespace Role.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "acr",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -165,6 +178,7 @@ namespace Role.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "user",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -175,6 +189,7 @@ namespace Role.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "group",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -185,6 +200,7 @@ namespace Role.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "area",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -195,6 +211,7 @@ namespace Role.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "time",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -205,6 +222,7 @@ namespace Role.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "trigger",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -215,6 +233,7 @@ namespace Role.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "map",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -225,6 +244,7 @@ namespace Role.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "report",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -235,6 +255,7 @@ namespace Role.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "setting",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -245,6 +266,7 @@ namespace Role.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "tools",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -274,6 +296,9 @@ namespace Role.Infrastructure.Migrations
                         .HasColumnType("boolean");
 
                     b.Property<bool>("is_created")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("is_default")
                         .HasColumnType("boolean");
 
                     b.Property<bool>("is_deleted")
@@ -313,6 +338,7 @@ namespace Role.Infrastructure.Migrations
                             feature_id = 1,
                             is_active = true,
                             is_created = true,
+                            is_default = false,
                             is_deleted = true,
                             is_enabled = true,
                             is_updated = true,
@@ -328,6 +354,7 @@ namespace Role.Infrastructure.Migrations
                             feature_id = 2,
                             is_active = true,
                             is_created = true,
+                            is_default = false,
                             is_deleted = true,
                             is_enabled = true,
                             is_updated = true,
@@ -343,6 +370,7 @@ namespace Role.Infrastructure.Migrations
                             feature_id = 3,
                             is_active = true,
                             is_created = true,
+                            is_default = false,
                             is_deleted = true,
                             is_enabled = true,
                             is_updated = true,
@@ -358,6 +386,7 @@ namespace Role.Infrastructure.Migrations
                             feature_id = 4,
                             is_active = true,
                             is_created = true,
+                            is_default = false,
                             is_deleted = true,
                             is_enabled = true,
                             is_updated = true,
@@ -373,6 +402,7 @@ namespace Role.Infrastructure.Migrations
                             feature_id = 5,
                             is_active = true,
                             is_created = true,
+                            is_default = false,
                             is_deleted = true,
                             is_enabled = true,
                             is_updated = true,
@@ -388,6 +418,7 @@ namespace Role.Infrastructure.Migrations
                             feature_id = 6,
                             is_active = true,
                             is_created = true,
+                            is_default = false,
                             is_deleted = true,
                             is_enabled = true,
                             is_updated = true,
@@ -403,6 +434,7 @@ namespace Role.Infrastructure.Migrations
                             feature_id = 7,
                             is_active = true,
                             is_created = true,
+                            is_default = false,
                             is_deleted = true,
                             is_enabled = true,
                             is_updated = true,
@@ -418,6 +450,7 @@ namespace Role.Infrastructure.Migrations
                             feature_id = 8,
                             is_active = true,
                             is_created = true,
+                            is_default = false,
                             is_deleted = true,
                             is_enabled = true,
                             is_updated = true,
@@ -433,6 +466,7 @@ namespace Role.Infrastructure.Migrations
                             feature_id = 9,
                             is_active = true,
                             is_created = true,
+                            is_default = false,
                             is_deleted = true,
                             is_enabled = true,
                             is_updated = true,
@@ -448,6 +482,7 @@ namespace Role.Infrastructure.Migrations
                             feature_id = 10,
                             is_active = true,
                             is_created = true,
+                            is_default = false,
                             is_deleted = true,
                             is_enabled = true,
                             is_updated = true,
@@ -463,6 +498,7 @@ namespace Role.Infrastructure.Migrations
                             feature_id = 11,
                             is_active = true,
                             is_created = true,
+                            is_default = false,
                             is_deleted = true,
                             is_enabled = true,
                             is_updated = true,
@@ -478,6 +514,7 @@ namespace Role.Infrastructure.Migrations
                             feature_id = 12,
                             is_active = true,
                             is_created = true,
+                            is_default = false,
                             is_deleted = true,
                             is_enabled = true,
                             is_updated = true,
@@ -493,6 +530,7 @@ namespace Role.Infrastructure.Migrations
                             feature_id = 13,
                             is_active = true,
                             is_created = true,
+                            is_default = false,
                             is_deleted = true,
                             is_enabled = true,
                             is_updated = true,
@@ -508,6 +546,7 @@ namespace Role.Infrastructure.Migrations
                             feature_id = 14,
                             is_active = true,
                             is_created = true,
+                            is_default = false,
                             is_deleted = true,
                             is_enabled = true,
                             is_updated = true,
@@ -523,6 +562,7 @@ namespace Role.Infrastructure.Migrations
                             feature_id = 15,
                             is_active = true,
                             is_created = true,
+                            is_default = false,
                             is_deleted = true,
                             is_enabled = true,
                             is_updated = true,
@@ -538,6 +578,7 @@ namespace Role.Infrastructure.Migrations
                             feature_id = 16,
                             is_active = true,
                             is_created = true,
+                            is_default = false,
                             is_deleted = true,
                             is_enabled = true,
                             is_updated = true,
@@ -553,6 +594,7 @@ namespace Role.Infrastructure.Migrations
                             feature_id = 17,
                             is_active = true,
                             is_created = true,
+                            is_default = false,
                             is_deleted = true,
                             is_enabled = true,
                             is_updated = true,
@@ -568,6 +610,7 @@ namespace Role.Infrastructure.Migrations
                             feature_id = 18,
                             is_active = true,
                             is_created = true,
+                            is_default = false,
                             is_deleted = true,
                             is_enabled = true,
                             is_updated = true,
@@ -583,6 +626,7 @@ namespace Role.Infrastructure.Migrations
                             feature_id = 19,
                             is_active = true,
                             is_created = true,
+                            is_default = false,
                             is_deleted = true,
                             is_enabled = true,
                             is_updated = true,
@@ -609,6 +653,9 @@ namespace Role.Infrastructure.Migrations
                         .HasDefaultValueSql("NOW()");
 
                     b.Property<bool>("is_active")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("is_default")
                         .HasColumnType("boolean");
 
                     b.Property<int>("location_id")
@@ -651,6 +698,9 @@ namespace Role.Infrastructure.Migrations
                     b.Property<bool>("is_active")
                         .HasColumnType("boolean");
 
+                    b.Property<bool>("is_default")
+                        .HasColumnType("boolean");
+
                     b.Property<int>("location_id")
                         .HasColumnType("integer");
 
@@ -674,6 +724,7 @@ namespace Role.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = true,
                             location_id = 1,
                             name = "Administrator",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)

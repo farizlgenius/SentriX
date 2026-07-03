@@ -6,7 +6,7 @@ namespace User.Domain.Entities;
 
 public sealed class Credential : BaseDomain
 {
-      public short Flag { get; private set; }
+      public int Flag { get; private set; }
       public short Bits {get; private set;}
       public short Fac {get; private set;}
       public int CardNumber { get; private set; }
@@ -20,7 +20,7 @@ public sealed class Credential : BaseDomain
       public Credential(
             int id, 
             int userId,
-            short flag,
+            int flag,
             short bits,
             short fac,
             int cardNumber,

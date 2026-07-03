@@ -17,4 +17,5 @@ public interface IGroupRepository
       Task<IEnumerable<GroupSplitByMacDto>> GetByRangeIdAsync(List<int> Ids,CancellationToken ct= default);
       Task<IEnumerable<GroupDto>> GetGroupByMacAsync(string Mac,string Type,CancellationToken ct = default);
       Task<IEnumerable<(int id,short componentId)>> GetGroupIdAndComponentIdListByMacAsync(string Mac,CancellationToken ct = default);
+      Task<bool> IsAnyGroupNotSyncQueryAsync(int LocationId,DateTime SyncAt,CancellationToken ct = default);
 }

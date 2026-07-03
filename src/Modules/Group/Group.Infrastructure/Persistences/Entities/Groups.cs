@@ -13,7 +13,7 @@ public sealed class Groups : BaseEntity
             
       }
 
-      public Groups(Domain.Entities.Groups domain) : base(domain.ComponentId, domain.LocationId, domain.IsActive)
+      public Groups(Domain.Entities.Groups domain) : base(domain.ComponentId, domain.LocationId, domain.IsActive,false)
       {
             this.name = domain.Name;
             this.group_doors = domain.GroupDoors.Select(x => new GroupDoor(x)).ToList();

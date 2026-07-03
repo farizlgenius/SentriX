@@ -1,6 +1,7 @@
 using System;
 using Adapter.Abstraction.Constants;
 using Adapter.Abstraction.Interfaces;
+using Adapter.Amico.Interface;
 
 namespace Adapter.Amico;
 
@@ -10,9 +11,9 @@ public sealed class AmicoAdapter : IAdapter
 
       public IDeviceAdapter Device { get; }
 
-      public IMonitorAdapter Monitor { get; }
+      public IInputAdapter Monitor { get; }
 
-      public IControlAdapter Control { get; }
+      public IOutputAdapter Control { get; }
 
       public ITimeAdapter Time {get;}
 
@@ -20,23 +21,13 @@ public sealed class AmicoAdapter : IAdapter
       public IGroupAdapter Group {get;}
 
       public IUserAdapter User {get;}
+      public ISettingAdapter Setting {get;}
 
       public AmicoAdapter(
-            IDeviceAdapter devices,
-            IMonitorAdapter monitors,
-            IControlAdapter controls,
-            ITimeAdapter time,
-            IDoorAdapter door,
-            IGroupAdapter group,
-            IUserAdapter user
+            IAmicoDeviceAdapter devices
       )
       {
             Device = devices;
-            Monitor = monitors;
-            Control = controls;
-            Time = time;
-            Door = door;
-            Group = group;
-            User = user;
+
       }
 }

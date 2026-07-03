@@ -46,6 +46,9 @@ namespace Location.Infrastructure.Migrations
                     b.Property<bool>("is_active")
                         .HasColumnType("boolean");
 
+                    b.Property<bool>("is_default")
+                        .HasColumnType("boolean");
+
                     b.Property<int>("location_id")
                         .HasColumnType("integer");
 
@@ -70,6 +73,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Andorra",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -81,6 +85,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "United Arab Emirates",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -92,6 +97,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Afghanistan",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -103,6 +109,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Antigua and Barbuda",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -114,6 +121,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Anguilla",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -125,6 +133,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Albania",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -136,6 +145,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Armenia",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -147,6 +157,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Netherlands Antilles",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -158,6 +169,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Angola",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -169,6 +181,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Antarctica",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -180,6 +193,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Argentina",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -191,6 +205,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "American Samoa",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -202,6 +217,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Austria",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -213,6 +229,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Australia",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -224,6 +241,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Aruba",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -235,6 +253,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Azerbaijan",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -246,6 +265,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Bosnia and Herzegovina",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -257,6 +277,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Barbados",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -268,6 +289,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Bangladesh",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -279,6 +301,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Belgium",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -290,6 +313,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Burkina Faso",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -301,6 +325,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Bulgaria",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -312,6 +337,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Bahrain",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -323,6 +349,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Burundi",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -334,6 +361,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Benin",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -345,6 +373,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Bermuda",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -356,6 +385,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Brunei",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -367,6 +397,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Bolivia",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -378,6 +409,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Brazil",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -389,6 +421,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Bahamas",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -400,6 +433,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Bhutan",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -411,6 +445,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Bouvet Island",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -422,6 +457,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Botswana",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -433,6 +469,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Belarus",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -444,6 +481,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Belize",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -455,6 +493,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Canada",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -466,6 +505,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Cocos (Keeling) Islands",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -477,6 +517,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Congo (DRC)",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -488,6 +529,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Central African Republic",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -499,6 +541,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Congo (Republic)",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -510,6 +553,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Switzerland",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -521,6 +565,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Côte d'Ivoire",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -532,6 +577,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Cook Islands",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -543,6 +589,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Chile",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -554,6 +601,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Cameroon",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -565,6 +613,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "China",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -576,6 +625,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Colombia",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -587,6 +637,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Costa Rica",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -598,6 +649,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Cuba",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -609,6 +661,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Cape Verde",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -620,6 +673,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Christmas Island",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -631,6 +685,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Cyprus",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -642,6 +697,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Czech Republic",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -653,6 +709,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Germany",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -664,6 +721,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Djibouti",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -675,6 +733,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Denmark",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -686,6 +745,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Dominica",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -697,6 +757,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Dominican Republic",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -708,6 +769,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Algeria",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -719,6 +781,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Ecuador",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -730,6 +793,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Estonia",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -741,6 +805,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Egypt",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -752,6 +817,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Western Sahara",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -763,6 +829,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Eritrea",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -774,6 +841,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Spain",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -785,6 +853,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Ethiopia",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -796,6 +865,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Finland",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -807,6 +877,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Fiji",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -818,6 +889,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Falkland Islands",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -829,6 +901,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Micronesia",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -840,6 +913,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Faroe Islands",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -851,6 +925,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "France",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -862,6 +937,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Gabon",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -873,6 +949,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "United Kingdom",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -884,6 +961,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Grenada",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -895,6 +973,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Georgia",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -906,6 +985,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "French Guiana",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -917,6 +997,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Guernsey",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -928,6 +1009,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Ghana",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -939,6 +1021,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Gibraltar",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -950,6 +1033,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Greenland",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -961,6 +1045,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Gambia",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -972,6 +1057,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Guinea",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -983,6 +1069,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Guadeloupe",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -994,6 +1081,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Equatorial Guinea",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -1005,6 +1093,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Greece",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -1016,6 +1105,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Guatemala",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -1027,6 +1117,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Guam",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -1038,6 +1129,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Guinea-Bissau",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -1049,6 +1141,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Guyana",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -1060,6 +1153,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Hong Kong",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -1071,6 +1165,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Honduras",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -1082,6 +1177,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Croatia",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -1093,6 +1189,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Haiti",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -1104,6 +1201,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Hungary",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -1115,6 +1213,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Indonesia",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -1126,6 +1225,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Ireland",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -1137,6 +1237,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Israel",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -1148,6 +1249,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "India",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -1159,6 +1261,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Iraq",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -1170,6 +1273,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Iran",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -1181,6 +1285,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Iceland",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -1192,6 +1297,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Italy",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -1203,6 +1309,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Jamaica",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -1214,6 +1321,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Jordan",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -1225,6 +1333,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Japan",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -1236,6 +1345,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Kenya",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -1247,6 +1357,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Cambodia",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -1258,6 +1369,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "South Korea",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -1269,6 +1381,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Kuwait",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -1280,6 +1393,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Kazakhstan",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -1291,6 +1405,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Laos",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -1302,6 +1417,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Lebanon",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -1313,6 +1429,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Sri Lanka",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -1324,6 +1441,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Liberia",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -1335,6 +1453,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Lesotho",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -1346,6 +1465,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Lithuania",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -1357,6 +1477,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Luxembourg",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -1368,6 +1489,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Latvia",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -1379,6 +1501,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Libya",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -1390,6 +1513,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Morocco",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -1401,6 +1525,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Monaco",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -1412,6 +1537,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Moldova",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -1423,6 +1549,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Montenegro",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -1434,6 +1561,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Madagascar",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -1445,6 +1573,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Maldives",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -1456,6 +1585,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Mexico",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -1467,6 +1597,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Malaysia",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -1478,6 +1609,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Mozambique",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -1489,6 +1621,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Namibia",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -1500,6 +1633,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Nigeria",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -1511,6 +1645,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Netherlands",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -1522,6 +1657,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Norway",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -1533,6 +1669,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Nepal",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -1544,6 +1681,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "New Zealand",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -1555,6 +1693,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Oman",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -1566,6 +1705,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Panama",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -1577,6 +1717,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Peru",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -1588,6 +1729,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Philippines",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -1599,6 +1741,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Pakistan",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -1610,6 +1753,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Poland",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -1621,6 +1765,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Portugal",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -1632,6 +1777,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Qatar",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -1643,6 +1789,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Romania",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -1654,6 +1801,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Serbia",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -1665,6 +1813,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Russia",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -1676,6 +1825,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Rwanda",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -1687,6 +1837,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Saudi Arabia",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -1698,6 +1849,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Sweden",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -1709,6 +1861,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Singapore",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -1720,6 +1873,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Slovenia",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -1731,6 +1885,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Slovakia",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -1742,6 +1897,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Senegal",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -1753,6 +1909,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Somalia",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -1764,6 +1921,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Suriname",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -1775,6 +1933,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "El Salvador",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -1786,6 +1945,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Syria",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -1797,6 +1957,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Thailand",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -1808,6 +1969,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Tajikistan",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -1819,6 +1981,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Timor-Leste",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -1830,6 +1993,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Turkmenistan",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -1841,6 +2005,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Tunisia",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -1852,6 +2017,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Turkey",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -1863,6 +2029,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Taiwan",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -1874,6 +2041,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Tanzania",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -1885,6 +2053,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Ukraine",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -1896,6 +2065,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Uganda",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -1907,6 +2077,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "United States",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -1918,6 +2089,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Uruguay",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -1929,6 +2101,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Uzbekistan",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -1940,6 +2113,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Vatican City",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -1951,6 +2125,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Venezuela",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -1962,6 +2137,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Vietnam",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -1973,6 +2149,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Yemen",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -1984,6 +2161,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "South Africa",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -1995,6 +2173,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Zambia",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -2006,6 +2185,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Zimbabwe",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -2017,6 +2197,7 @@ namespace Location.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             name = "Default",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -2049,6 +2230,9 @@ namespace Location.Infrastructure.Migrations
                     b.Property<bool>("is_active")
                         .HasColumnType("boolean");
 
+                    b.Property<bool>("is_default")
+                        .HasColumnType("boolean");
+
                     b.Property<int>("location_id")
                         .HasColumnType("integer");
 
@@ -2076,6 +2260,7 @@ namespace Location.Infrastructure.Migrations
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "Main location descriptions",
                             is_active = true,
+                            is_default = true,
                             location_id = 0,
                             name = "Main Location",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)

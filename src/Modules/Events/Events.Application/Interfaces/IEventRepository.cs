@@ -8,6 +8,7 @@ namespace Events.Application.Interfaces;
 public interface IEventRepository
 {
       Task<Pagination<EventDto>> GetPaginationByLocationIdAsync(PaginationParams param,CancellationToken ct = default);
+      Task<Pagination<CommandEventDto>> GetCommandPaginationAsync(PaginationParams param,CancellationToken ct = default);
       Task AddAsync(
             DateTime timeStamp,
             string actor,
@@ -22,7 +23,7 @@ public interface IEventRepository
             CancellationToken ct = default
             );
 
-      Task AddCommandEvent(CommandResponse response,CancellationToken ct = default);
+      Task AddCommandEvent(string Name,int LocationId,CommandResponse response,CancellationToken ct = default);
       Task UpdateCommandEvent(
             string Mac, int Tag, short CommandStatus, string Reason,CancellationToken ct = default
       );

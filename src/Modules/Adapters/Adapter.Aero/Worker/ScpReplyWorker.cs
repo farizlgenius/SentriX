@@ -257,7 +257,7 @@ public sealed class ScpReplyWorker(Channel<SCPReplyMessageDto> queue, ILogger<Sc
                             await notifier.TriggerToTopic(NotifierTopic.EVENT);
                             break;
                         case (int)enSCPReplyType.enSCPReplyIDReport:
-                            var scp = scope.ServiceProvider.GetRequiredService<IScp>();
+                            var scp = scope.ServiceProvider.GetRequiredService<IScpService>();
                             await scp.HandleIdReport(message.id);
                             break;
                         case (int)enSCPReplyType.enSCPReplyCommStatus:
@@ -334,7 +334,7 @@ public sealed class ScpReplyWorker(Channel<SCPReplyMessageDto> queue, ILogger<Sc
                         case (int)enSCPReplyType.enSCPReplySioRelayCounts:
                             break;
                         case (int)enSCPReplyType.enSCPReplyStrStatus:
-                            scp = scope.ServiceProvider.GetRequiredService<IScp>();
+                            scp = scope.ServiceProvider.GetRequiredService<IScpService>();
                             if (await scp.VerifySCPStructureMemoryAllocate(message.SCPId, message.str_sts))
                             {
                                 await scp.InitialScpConfigurationAsync((short)message.SCPId);

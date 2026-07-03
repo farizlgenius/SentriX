@@ -14,7 +14,8 @@ public sealed class Vacation : BaseDomain
             short vacationDay,
             int userId, 
             int locationId, 
-            bool IsActive) : base(id, componentId, locationId, IsActive)
+            bool IsActive
+            ) : base(id, componentId, locationId, IsActive)
       {
             this.VacationDate = VacationDate;
             this.VacationDay = VacationDay;

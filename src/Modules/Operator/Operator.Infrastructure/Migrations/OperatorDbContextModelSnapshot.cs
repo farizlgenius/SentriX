@@ -42,6 +42,9 @@ namespace Operator.Infrastructure.Migrations
                     b.Property<bool>("is_active")
                         .HasColumnType("boolean");
 
+                    b.Property<bool>("is_default")
+                        .HasColumnType("boolean");
+
                     b.Property<int>("location_id")
                         .HasColumnType("integer");
 
@@ -66,6 +69,7 @@ namespace Operator.Infrastructure.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 1,
                             operator_id = 1,
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -101,6 +105,9 @@ namespace Operator.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.Property<bool>("is_active")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("is_default")
                         .HasColumnType("boolean");
 
                     b.Property<string>("lastname")
@@ -152,6 +159,7 @@ namespace Operator.Infrastructure.Migrations
                             firstname = "Administrator",
                             gender = "M",
                             is_active = true,
+                            is_default = true,
                             lastname = "",
                             location_id = 0,
                             middlename = "",

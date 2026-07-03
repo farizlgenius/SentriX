@@ -8,7 +8,7 @@ public sealed class UserGroup : BaseEntity
       public Users user { get; set; } = default!;
       public int group_id { get; set; }
       public UserGroup(){}
-      public UserGroup(int groupid,int locationid,bool isactive) : base(0,locationid,isactive)
+      public UserGroup(int groupid,int locationid,bool isactive) : base(0,locationid,isactive,false)
       {
             this.group_id = groupid;
       }

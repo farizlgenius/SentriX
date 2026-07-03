@@ -25,7 +25,7 @@ public sealed class DayInWeek : BaseEntity
       bool thursday,
       bool friday,
       bool saturday,
-       int locationId, bool isactive) : base(componetId, locationId, isactive)
+       int locationId, bool isactive) : base(componetId, locationId, isactive,false)
       {
             this.sunday = sunday;
             this.monday = monday;

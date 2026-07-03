@@ -121,7 +121,8 @@ public sealed class GlobalException : IMiddleware
                           Details = new
                           {
                                 Exception = ex.Message,
-                                InnerException = ex.InnerException.Message
+                                InnerException = ex.InnerException.Message,
+                                StackTrace = ex.StackTrace
                           }
                     }
                   );

@@ -133,6 +133,16 @@ namespace Host.Controllers
         }
 
 
+        // Amico
+        [HttpPost("amico/info")]
+        public async Task<IActionResult> GetAmicoDeviceInformationAsync([FromBody]AmicoStartSessionDto dto)
+        {
+            var res = await device.GetAmicoDeviceInformationAsync(dto);
+            return Ok(res);
+        }
+
+        
+
 
     }
 }

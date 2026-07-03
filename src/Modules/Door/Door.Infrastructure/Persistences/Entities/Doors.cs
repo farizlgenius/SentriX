@@ -16,7 +16,7 @@ public sealed class Doors : BaseEntity
       {
       }
 
-      public Doors(Domain.Entities.Doors domain) : base(domain.ComponentId,domain.LocationId,domain.IsActive)
+      public Doors(Domain.Entities.Doors domain) : base(domain.ComponentId,domain.LocationId,domain.IsActive,false)
       {
             this.name = domain.Name;
             this.mac = domain.Mac;

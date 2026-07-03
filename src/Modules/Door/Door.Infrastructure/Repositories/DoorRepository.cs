@@ -351,4 +351,9 @@ public sealed class DoorRepository(DoorDbContext context) : IDoorRepository
                   x.is_active
             )).ToArrayAsync();
       }
+
+      public async Task<bool> IsAnyDoorNotSyncAsync(string Mac,int LocationId,DateTime SyncAt, CancellationToken ct = default)
+      {
+            return await context.Doors.AsNoTracking().AnyAsync(x => x.location_id == LocationId && x.mac.Equals(Mac) && x.updated_at > SyncAt);
+      }
 }

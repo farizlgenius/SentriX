@@ -53,18 +53,9 @@ public sealed class TimezoneRepository(TimeDbContext context) : ITimezoneReposit
                         x.is_active
                   )).ToList(),
                   x.location_id,
-                  x.is_active
-                  )).FirstOrDefaultAsync() ?? new TimezoneDto(
-                        0,
-                        0,
-                        string.Empty,
-                        0,
-                        string.Empty,
-                        string.Empty,
-                        new List<IntervalDto>(),
-                        0,
-                        false
-                        );
+                  x.is_active,
+                  x.is_default
+                  )).FirstOrDefaultAsync() ?? new TimezoneDto();
       }
 
       public async Task<TimezoneDto> DeleteByIdAsync(int id, CancellationToken ct = default)
@@ -111,7 +102,8 @@ public sealed class TimezoneRepository(TimeDbContext context) : ITimezoneReposit
                         x.is_active
                         )).ToList(),
                   data.Entity.location_id,
-                  data.Entity.is_active
+                  data.Entity.is_active,
+                  data.Entity.is_default
             );
 
       }
@@ -151,18 +143,9 @@ public sealed class TimezoneRepository(TimeDbContext context) : ITimezoneReposit
                         x.is_active
                   )).ToList(),
                   x.location_id,
-                  x.is_active
-                  )).FirstOrDefaultAsync() ?? new TimezoneDto(
-                        0,
-                        0,
-                        string.Empty,
-                        0,
-                        string.Empty,
-                        string.Empty,
-                        new List<IntervalDto>(),
-                        0,
-                        false
-                        );
+                  x.is_active,
+                  x.is_default
+                  )).FirstOrDefaultAsync() ?? new TimezoneDto();
       }
 
       public async Task<short> GetLowestTimezoneComponentIdAsync(CancellationToken ct = default)
@@ -259,7 +242,8 @@ public sealed class TimezoneRepository(TimeDbContext context) : ITimezoneReposit
                         x.is_active
                   )).ToList(),
                   x.location_id,
-                  x.is_active
+                  x.is_active,
+                  x.is_default
                   ))
             .ToListAsync(ct);
 
@@ -302,7 +286,8 @@ public sealed class TimezoneRepository(TimeDbContext context) : ITimezoneReposit
                         x.is_active
                   )).ToList(),
                   x.location_id,
-                  x.is_active
+                  x.is_active,
+                  x.is_default
                   )).ToArrayAsync(ct);
       }
 
@@ -317,5 +302,11 @@ public sealed class TimezoneRepository(TimeDbContext context) : ITimezoneReposit
                   string.Empty,
                   x.component_id
                   )).ToArrayAsync(ct);
+      }
+
+      public async Task<bool> IsAnyTimeZoneNotSyncAsync(int LocationId, DateTime SyncAt, CancellationToken ct = default)
+      {
+            return await context.Timezones.AsNoTracking()
+            .AnyAsync(x => (x.location_id == LocationId && x.location_id == 0) || x.updated_at > SyncAt);
       }
 }

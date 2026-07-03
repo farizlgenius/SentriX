@@ -71,6 +71,13 @@ namespace Host.Controllers
                   return Ok(res);
             }
 
+            [HttpPost("command")]
+            public async Task<IActionResult> CommandOutputAsync([FromBody]OutputCommandDto dto)
+            {
+                  var res = await output.CommandOutputDto(dto);
+                  return Ok(res);
+            }
+
 
 
       }

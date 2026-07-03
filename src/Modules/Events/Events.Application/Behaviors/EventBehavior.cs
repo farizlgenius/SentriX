@@ -37,6 +37,10 @@ public sealed class EventBehavior(IEventRepository repo,IMessageBus bus) : Event
             );
       }
 
+      public async Task<Pagination<CommandEventDto>> GetCommandPaginationAsync(PaginationParams param)
+      {
+            return await repo.GetCommandPaginationAsync(param);
+      }
 
       public async Task<Pagination<EventDto>> GetPaginationByLocationIdAsync(PaginationParams param)
       {

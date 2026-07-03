@@ -50,10 +50,17 @@ namespace Events.Infrastructure.Migrations
                     b.Property<bool>("is_active")
                         .HasColumnType("boolean");
 
+                    b.Property<bool>("is_default")
+                        .HasColumnType("boolean");
+
                     b.Property<int>("location_id")
                         .HasColumnType("integer");
 
                     b.Property<string>("mac")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("name")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -64,6 +71,10 @@ namespace Events.Infrastructure.Migrations
                     b.Property<DateTime>("received_at")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("response")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<DateTime>("send_at")
                         .HasColumnType("timestamp with time zone");
 
@@ -73,6 +84,10 @@ namespace Events.Infrastructure.Migrations
 
                     b.Property<int>("tag")
                         .HasColumnType("integer");
+
+                    b.Property<string>("type")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<DateTime>("updated_at")
                         .ValueGeneratedOnAdd()
@@ -113,6 +128,9 @@ namespace Events.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.Property<bool>("is_active")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("is_default")
                         .HasColumnType("boolean");
 
                     b.Property<int>("location_id")

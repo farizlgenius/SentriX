@@ -153,6 +153,7 @@ public sealed class UserRepository(UserDbContext context) : IUserRepository
                   x.position_id,
                   x.position.name,
                   x.address,
+                  x.flag,
                   x.additionals.Select(x => x.additional).ToList(),
                   x.image,
                   x.credentials.Select(c => new CredentialDto(
@@ -744,6 +745,7 @@ public sealed class UserRepository(UserDbContext context) : IUserRepository
                   u.position_id,
                   u.position.name,
                   u.address,
+                  u.flag,
                   u.additionals.Select(s => s.additional).ToList(),
                   u.image,
                   u.credentials.Select(c => new CredentialDto(
@@ -977,6 +979,7 @@ public sealed class UserRepository(UserDbContext context) : IUserRepository
                   x.position_id,
                   x.position.name,
                   x.address,
+                  x.flag,
                   x.additionals.Select(x => x.additional).ToList(),
                   x.image,
                   x.credentials.Select(c => new CredentialDto(
@@ -1027,5 +1030,8 @@ public sealed class UserRepository(UserDbContext context) : IUserRepository
             return true;
       }
 
-
+      public async Task<bool> IsAnyDoorNotSyncAsync(int LocationId,DateTime SyncAt, CancellationToken ct = default)
+      {
+            return await context.Users.AsNoTracking().AnyAsync(x => (x.location_id == LocationId || x.location_id == 0) && x.updated_at > SyncAt);
+      }
 }

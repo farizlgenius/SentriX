@@ -37,11 +37,18 @@ public sealed class InputController(IInput input) : ControllerBase
             return Ok(res);
       }
 
-      [HttpPost("id")]
+      [HttpPost("mask/{id}")]
       public async Task<IActionResult> SetMaskAsync(int id,[FromBody]MaskDto dto)
       {
             var res = await input.InputMaskAsync(id,dto.IsMask);
             return Ok(res);
+      }
+
+      [HttpGet("input/{id}")]
+      public async Task<IActionResult> GetAvailalbleInputByModuleIdAsync(int id)
+      {
+                  var res = await input.GetAvailalbleInputByModuleIdAsync(id);
+                  return Ok(res);
       }
 
       

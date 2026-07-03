@@ -9,7 +9,7 @@ public sealed class StrikeMode : BaseEntity
       public string description {get; set;} = string.Empty;
 
       public StrikeMode(){}
-      public StrikeMode(string label,short value,string description) : base(0,0,true)
+      public StrikeMode(string label,short value,string description) : base(0,0,true,false)
       {
             this.label = label;
             this.value = value;

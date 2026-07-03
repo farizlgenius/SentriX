@@ -44,4 +44,5 @@ public interface IUserRepository
        Task<IEnumerable<OptionDto>> GetUserFlagOptionAsync(CancellationToken ct = default);
        Task<bool> IsAnyCardNumberAsync(int CardNumber,CancellationToken ct = default);
        Task<IEnumerable<CredentialDto>> GetCredentialByGroupListAsync(List<int> Groups,CancellationToken ct = default);
+       Task<bool> IsAnyDoorNotSyncAsync(int LocationId,DateTime SyncAt,CancellationToken ct = default);
 }

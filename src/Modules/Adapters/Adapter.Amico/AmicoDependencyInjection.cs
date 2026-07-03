@@ -1,5 +1,11 @@
 using System;
+using Adapter.Abstraction.Interfaces;
+using Adapter.Amico.Adapters;
+using Adapter.Amico.Command;
+using Adapter.Amico.Interface;
 using Adapter.Amico.Persistences;
+using Adapter.Amico.Services;
+using Adapter.Amico.ValueObject;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,11 +18,17 @@ public static class AmicoDependencyInjection
         this IServiceCollection services,
         IConfiguration configuration)
       {
-            //       services.AddHttpClient<AeroHttpClient>(c =>
-            //   {
-            //       c.BaseAddress = new Uri("https://aero-api/");
-            //       c.Timeout = TimeSpan.FromSeconds(30);
-            //   });
+            services.AddOptions<AmicoSetting>().Bind(configuration.GetSection("Amico")).ValidateOnStart();
+
+            services.AddSingleton<IAmicoSetting>(sp => sp.GetRequiredService<Microsoft.Extensions.Options.IOptions<AmicoSetting>>().Value);
+
+            services.AddHttpClient();
+            services.AddScoped<IHttpClient, HttpClientService>();
+            services.AddScoped<IAmicoDeviceAdapter,AmicoDeviceAdapter>();
+            services.AddScoped<IDeviceCommand,DeviceCommand>();
+
+            services.AddScoped<IAdapter, AmicoAdapter>();
+
 
 
             // ==========================

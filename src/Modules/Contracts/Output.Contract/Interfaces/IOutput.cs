@@ -12,6 +12,7 @@ public interface IOutput
       Task<OutputDto> UpdateAsync(OutputDto dto);
       Task<IEnumerable<OptionDto>> GetRelayDriveModeAsync();
       Task<IEnumerable<OptionDto>> GetRelayOfflineModeAsync();
+      Task<BaseResponse> CommandOutputDto(OutputCommandDto dto,CancellationToken ct = default);
 
 
 }

@@ -72,6 +72,9 @@ namespace Adapter.Aero.Migrations
                     b.Property<bool>("is_active")
                         .HasColumnType("boolean");
 
+                    b.Property<bool>("is_default")
+                        .HasColumnType("boolean");
+
                     b.Property<int>("location_id")
                         .HasColumnType("integer");
 
@@ -132,6 +135,7 @@ namespace Adapter.Aero.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             mac = "",
                             n_alvl = (short)8,
@@ -162,6 +166,9 @@ namespace Adapter.Aero.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<bool>("is_active")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("is_default")
                         .HasColumnType("boolean");
 
                     b.Property<int>("location_id")
@@ -206,6 +213,9 @@ namespace Adapter.Aero.Migrations
                         .HasColumnType("smallint");
 
                     b.Property<bool>("is_active")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("is_default")
                         .HasColumnType("boolean");
 
                     b.Property<int>("location_id")
@@ -314,6 +324,9 @@ namespace Adapter.Aero.Migrations
                     b.Property<bool>("is_active")
                         .HasColumnType("boolean");
 
+                    b.Property<bool>("is_default")
+                        .HasColumnType("boolean");
+
                     b.Property<int>("location_id")
                         .HasColumnType("integer");
 
@@ -361,6 +374,9 @@ namespace Adapter.Aero.Migrations
                     b.Property<bool>("is_active")
                         .HasColumnType("boolean");
 
+                    b.Property<bool>("is_default")
+                        .HasColumnType("boolean");
+
                     b.Property<int>("location_id")
                         .HasColumnType("integer");
 
@@ -393,6 +409,7 @@ namespace Adapter.Aero.Migrations
                             component_id = (short)0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             mac = "",
                             max_ealvl = (short)256,
@@ -434,6 +451,9 @@ namespace Adapter.Aero.Migrations
                     b.Property<bool>("is_active")
                         .HasColumnType("boolean");
 
+                    b.Property<bool>("is_default")
+                        .HasColumnType("boolean");
+
                     b.Property<int>("location_id")
                         .HasColumnType("integer");
 
@@ -468,6 +488,9 @@ namespace Adapter.Aero.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<bool>("is_active")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("is_default")
                         .HasColumnType("boolean");
 
                     b.Property<int>("location_id")
@@ -572,6 +595,9 @@ namespace Adapter.Aero.Migrations
                     b.Property<bool>("is_active")
                         .HasColumnType("boolean");
 
+                    b.Property<bool>("is_default")
+                        .HasColumnType("boolean");
+
                     b.Property<int>("location_id")
                         .HasColumnType("integer");
 
@@ -650,6 +676,7 @@ namespace Adapter.Aero.Migrations
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             gmt_offset = (short)-25200,
                             is_active = true,
+                            is_default = false,
                             location_id = 0,
                             mac = "",
                             n_acr = (short)64,
@@ -704,6 +731,9 @@ namespace Adapter.Aero.Migrations
                         .HasColumnType("smallint");
 
                     b.Property<bool>("is_active")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("is_default")
                         .HasColumnType("boolean");
 
                     b.Property<int>("location_id")

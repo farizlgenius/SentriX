@@ -12,6 +12,9 @@ public sealed class InputDbContext(DbContextOptions<InputDbContext> options) : D
       public DbSet<Persistences.Entities.InputGroups> InputGroups {get; set;}
       public DbSet<Persistences.Entities.InputMode> InputModes {get; set;}
 
+      public DbSet<Persistences.Entities.InputList> InputLists {get; set;} 
+      public DbSet<Persistences.Entities.InputGroupDetail> InputGroupDetails {get; set;}
+
       protected override void OnModelCreating(ModelBuilder modelBuilder)
       {
             base.OnModelCreating(modelBuilder);
@@ -48,6 +51,18 @@ public sealed class InputDbContext(DbContextOptions<InputDbContext> options) : D
                             .ValueGeneratedOnAdd();
                   }
             }
+
+            modelBuilder.Entity<Persistences.Entities.InputGroups>()
+            .HasMany(g => g.input_group_detail)
+            .WithOne(d => d.input_group)
+            .HasForeignKey(d => d.input_group_id)
+            .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Persistences.Entities.InputGroupDetail>()
+            .HasMany(d => d.input_list)
+            .WithOne(g => g.input_group_detail)
+            .HasForeignKey(g => g.input_group_detail_id)
+            .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<InputMode>()
             .HasData(

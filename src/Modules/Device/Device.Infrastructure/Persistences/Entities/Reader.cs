@@ -11,7 +11,8 @@ public sealed class Reader : BaseEntity
             public Reader(Domain.Entities.Reader domain) : base(
             0,
             domain.LocationId,
-            domain.IsActive
+            domain.IsActive,
+            false
       )
       {
             this.reader_number = domain.ReaderNumber;

@@ -62,7 +62,6 @@ import { LicenseToast } from "./model/ToastMessage";
 import { Map } from "./pages/Map/Map";
 import { Reports } from "./pages/Report/Report";
 import { Command } from "./pages/Diagnostic/Command";
-import { CommandStatus } from "./pages/Diagnostic/CommandStatus";
 import { useLocation } from "./context/LocationContext";
 import { Company } from "./pages/Company/Company";
 import { Department } from "./pages/Department/Department";
@@ -74,6 +73,7 @@ import { SignalRTopic } from "./constants/signalr-constant";
 import { DeviceEndpoint } from "./endpoint/DeviceEndpoint";
 import Scan from "./pages/Scan/Scan";
 import Output from "./pages/Output/Output";
+import CommandStatus from "./pages/Diagnostic/CommandStatus";
 
 export default function App() {
   const navigate = useNavigate();

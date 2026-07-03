@@ -23,7 +23,7 @@ namespace Input.Infrastructure.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Input.Infrastructure.Persistences.Entities.InputGroups", b =>
+            modelBuilder.Entity("Input.Infrastructure.Persistences.Entities.InputGroupDetail", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -42,7 +42,13 @@ namespace Input.Infrastructure.Migrations
                     b.Property<short>("device_component_id")
                         .HasColumnType("smallint");
 
+                    b.Property<int>("input_group_id")
+                        .HasColumnType("integer");
+
                     b.Property<bool>("is_active")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("is_default")
                         .HasColumnType("boolean");
 
                     b.Property<int>("location_id")
@@ -52,9 +58,42 @@ namespace Input.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("metadata")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<DateTime>("updated_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("input_group_id");
+
+                    b.ToTable("InputGroupDetails", "input");
+                });
+
+            modelBuilder.Entity("Input.Infrastructure.Persistences.Entities.InputGroups", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<short>("component_id")
+                        .HasColumnType("smallint");
+
+                    b.Property<DateTime>("created_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.Property<bool>("is_active")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("is_default")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("location_id")
+                        .HasColumnType("integer");
 
                     b.Property<string>("name")
                         .IsRequired()
@@ -72,6 +111,52 @@ namespace Input.Infrastructure.Migrations
                     b.HasKey("id");
 
                     b.ToTable("InputGroups", "input");
+                });
+
+            modelBuilder.Entity("Input.Infrastructure.Persistences.Entities.InputList", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<short>("component_id")
+                        .HasColumnType("smallint");
+
+                    b.Property<DateTime>("created_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.Property<short>("input_component_id")
+                        .HasColumnType("smallint");
+
+                    b.Property<int>("input_group_detail_id")
+                        .HasColumnType("integer");
+
+                    b.Property<short>("input_type")
+                        .HasColumnType("smallint");
+
+                    b.Property<bool>("is_active")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("is_default")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("location_id")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("updated_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("input_group_detail_id");
+
+                    b.ToTable("InputLists", "input");
                 });
 
             modelBuilder.Entity("Input.Infrastructure.Persistences.Entities.InputMode", b =>
@@ -95,6 +180,9 @@ namespace Input.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.Property<bool>("is_active")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("is_default")
                         .HasColumnType("boolean");
 
                     b.Property<string>("label")
@@ -124,6 +212,7 @@ namespace Input.Infrastructure.Migrations
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "",
                             is_active = true,
+                            is_default = false,
                             label = "Normally closed",
                             location_id = 0,
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -136,6 +225,7 @@ namespace Input.Infrastructure.Migrations
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "",
                             is_active = true,
+                            is_default = false,
                             label = "Normally open",
                             location_id = 0,
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -148,6 +238,7 @@ namespace Input.Infrastructure.Migrations
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "",
                             is_active = true,
+                            is_default = false,
                             label = "EOL: 1 kΩ normal, 2 kΩ active",
                             location_id = 0,
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -160,6 +251,7 @@ namespace Input.Infrastructure.Migrations
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             description = "",
                             is_active = true,
+                            is_default = false,
                             label = "EOL: 2 kΩ normal, 1 kΩ active",
                             location_id = 0,
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -183,7 +275,19 @@ namespace Input.Infrastructure.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
 
+                    b.Property<short>("debounce")
+                        .HasColumnType("smallint");
+
+                    b.Property<short>("delay_entry")
+                        .HasColumnType("smallint");
+
+                    b.Property<short>("delay_exit")
+                        .HasColumnType("smallint");
+
                     b.Property<short>("device_component_id")
+                        .HasColumnType("smallint");
+
+                    b.Property<short>("hold_time")
                         .HasColumnType("smallint");
 
                     b.Property<short>("input_no")
@@ -192,14 +296,19 @@ namespace Input.Infrastructure.Migrations
                     b.Property<bool>("is_active")
                         .HasColumnType("boolean");
 
+                    b.Property<bool>("is_default")
+                        .HasColumnType("boolean");
+
+                    b.Property<short>("latch_mode")
+                        .HasColumnType("smallint");
+
                     b.Property<int>("location_id")
                         .HasColumnType("integer");
 
-                    b.Property<string>("mac")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<short>("log_function")
+                        .HasColumnType("smallint");
 
-                    b.Property<string>("metadata")
+                    b.Property<string>("mac")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -209,6 +318,9 @@ namespace Input.Infrastructure.Migrations
                     b.Property<string>("name")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<short>("sensor_mode")
+                        .HasColumnType("smallint");
 
                     b.Property<string>("type")
                         .IsRequired()
@@ -222,6 +334,38 @@ namespace Input.Infrastructure.Migrations
                     b.HasKey("id");
 
                     b.ToTable("Inputs", "input");
+                });
+
+            modelBuilder.Entity("Input.Infrastructure.Persistences.Entities.InputGroupDetail", b =>
+                {
+                    b.HasOne("Input.Infrastructure.Persistences.Entities.InputGroups", "input_group")
+                        .WithMany("input_group_detail")
+                        .HasForeignKey("input_group_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("input_group");
+                });
+
+            modelBuilder.Entity("Input.Infrastructure.Persistences.Entities.InputList", b =>
+                {
+                    b.HasOne("Input.Infrastructure.Persistences.Entities.InputGroupDetail", "input_group_detail")
+                        .WithMany("input_list")
+                        .HasForeignKey("input_group_detail_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("input_group_detail");
+                });
+
+            modelBuilder.Entity("Input.Infrastructure.Persistences.Entities.InputGroupDetail", b =>
+                {
+                    b.Navigation("input_list");
+                });
+
+            modelBuilder.Entity("Input.Infrastructure.Persistences.Entities.InputGroups", b =>
+                {
+                    b.Navigation("input_group_detail");
                 });
 #pragma warning restore 612, 618
         }

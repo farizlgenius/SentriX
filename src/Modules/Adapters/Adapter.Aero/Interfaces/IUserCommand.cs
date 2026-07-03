@@ -8,7 +8,7 @@ public interface IUserCommand
       CommandResponse AccessDatabaseCardRecords(
             string Mac,
             short ScpId,
-            short Flags,
+            int Flags,
             long CardNumber,
             short IssueCode,
             string Pin,

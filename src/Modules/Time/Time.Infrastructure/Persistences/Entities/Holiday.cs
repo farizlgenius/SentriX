@@ -15,7 +15,7 @@ public sealed class Holiday : BaseEntity
       public Holiday() { }
 
 
-      public Holiday(short componentId, string name, short year, short month, short day, string metadata, int location, bool is_active) : base(componentId, location, is_active)
+      public Holiday(short componentId, string name, short year, short month, short day, string metadata, int location, bool is_active) : base(componentId, location, is_active,false)
       {
             this.name = name;
             this.year = year;

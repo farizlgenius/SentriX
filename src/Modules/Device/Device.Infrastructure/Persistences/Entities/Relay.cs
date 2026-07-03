@@ -13,7 +13,8 @@ public sealed class Relay : BaseEntity
       public Relay(Domain.Entities.Relay domain) : base(
 0,
 domain.LocationId,
-domain.IsActive
+domain.IsActive,
+false
 )
       {
             this.relay_number = domain.RelayNumber;

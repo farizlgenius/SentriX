@@ -15,7 +15,7 @@ public sealed class Department : BaseEntity
       public Department() { }
 
 
-      public Department(Domain.Entities.Department department) : base(0, department.LocationId, department.IsActive)
+      public Department(Domain.Entities.Department department) : base(0, department.LocationId, department.IsActive,false)
       {
             this.name = department.Name;
             this.description = department.Description;

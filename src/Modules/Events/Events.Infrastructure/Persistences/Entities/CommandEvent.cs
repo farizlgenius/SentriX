@@ -4,6 +4,7 @@ namespace Events.Infrastructure.Persistences.Entities;
 
 public sealed class CommandEvent : BaseEntity
 {
+      public string name {get; set;} = string.Empty;
        public string mac {get; set;} = string.Empty;
       public string command {get; set;} = string.Empty;
       public int tag {get; set;}
@@ -12,11 +13,22 @@ public sealed class CommandEvent : BaseEntity
       public string body {get; set;}  =string.Empty;
       public string status {get; set;} = string.Empty;
       public string reason {get; set;} = string.Empty;
+      public string response {get; set;} = string.Empty;
+      public string type {get; set;} = string.Empty;
 
       public CommandEvent(){}
 
-      public CommandEvent(string mac, short component_id, string command, int tag, DateTime send_at, DateTime received_at, string body, string status, string reason)
+      public CommandEvent(
+            string name,
+            string mac, 
+            short component_id, 
+            string command, int tag, DateTime send_at, DateTime received_at, string body, string status, string reason,string response,string type,int locationId) : base(
+                  component_id,
+                  locationId,
+                  true,
+                  false)
       {
+            this.name = name;
             this.mac = mac;
             this.component_id = component_id;
             this.command = command;
@@ -26,14 +38,17 @@ public sealed class CommandEvent : BaseEntity
             this.body = body;
             this.status = status;
             this.reason = reason;
+            this.response = response;
+            this.type = type;
       }
 
-      public void Update(string status,string reason)
+      public void Update(string status,string reason,string response)
       {
             received_at = DateTime.UtcNow;
             updated_at = DateTime.UtcNow;
             this.status = status;
             this.reason = reason;
+            this.response = response;
       }
 }
 

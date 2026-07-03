@@ -78,7 +78,7 @@ public class RoleDbContext(DbContextOptions<RoleDbContext> options) : DbContext(
 
             modelBuilder.Entity<Roles>()
             .HasData(
-              new Roles { id = 1, name = "Administrator", location_id = 1 }
+              new Roles { id = 1, name = "Administrator", location_id = 1,is_active=true,is_default=true }
             );
 
             modelBuilder.Entity<Permission>()

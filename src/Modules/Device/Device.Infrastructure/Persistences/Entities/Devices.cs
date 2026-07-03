@@ -20,7 +20,7 @@ public sealed class Devices : BaseEntity
 
   public Devices() { }
 
-  public Devices(Device.Domain.Entities.Devices domain) : base(domain.ComponentId,domain.LocationId,domain.IsActive)
+  public Devices(Device.Domain.Entities.Devices domain) : base(domain.ComponentId,domain.LocationId,domain.IsActive,false)
   {
     this.name = domain.Name;
     this.serial_number = domain.SerialNumber;
@@ -54,7 +54,7 @@ public sealed class Devices : BaseEntity
     this.created_at = DateTime.UtcNow;
   }
 
-  public void UpdateMemoryAllocateStatus(string Status)
+  public void UpdateSyncStatus(string Status)
   {
     this.status = Status;
     this.updated_at = DateTime.UtcNow;
@@ -75,6 +75,12 @@ public sealed class Devices : BaseEntity
   public void UpdatePort(int port)
   {
     this.port = port;
+    this.updated_at = DateTime.UtcNow;
+  }
+
+  public void UpdateSyncTime()
+  {
+    this.synced_at = DateTime.UtcNow;
     this.updated_at = DateTime.UtcNow;
   }
 

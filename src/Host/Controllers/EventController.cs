@@ -23,5 +23,12 @@ namespace Host.Controllers
             return Ok(res);
             
         }
+
+        [HttpGet("command/pagination")]
+        public async Task<IActionResult> GetCommandPaginationAsync([FromQuery]PaginationParams param)
+        {
+            var res = await @event.GetCommandPaginationAsync(param);
+            return Ok(res);
+        }
     }
 }

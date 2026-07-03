@@ -12,7 +12,8 @@ public sealed class Input : BaseEntity
       public Input(Domain.Entities.Input domain) : base(
             0,
             domain.LocationId,
-            domain.IsActive
+            domain.IsActive,
+            false
       )
       {
             this.input_number = domain.InputNumber;

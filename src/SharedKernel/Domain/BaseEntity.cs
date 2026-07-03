@@ -12,17 +12,19 @@ public class BaseEntity
   public DateTime created_at { get; set; }
   public DateTime updated_at { get; set; }
   public bool is_active { get; set; } = true;
+  public bool is_default {get; set;} = false;
 
   public BaseEntity()
   {
     
   }
 
-  public BaseEntity(short componetId,int locationId,bool isactive)
+  public BaseEntity(short componetId,int locationId,bool isactive,bool isdefault)
   {
     this.component_id = componetId;
     this.location_id = locationId;
     this.is_active = isactive;
+    this.is_default = isdefault;
   }
 
   public void Disable()

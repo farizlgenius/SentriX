@@ -23,6 +23,7 @@ public sealed class Users : BaseEntity
   public int position_id { get; set; }
   public Position position { get; set; } = default!;
   public string address { get; set; } = string.Empty;
+  public int flag {get; set;}
   public ICollection<UserAdditional> additionals { get; set; } = default!;
   public string image { get; set; } = string.Empty;
   public ICollection<Credential> credentials { get; set; } = default!;
@@ -30,7 +31,7 @@ public sealed class Users : BaseEntity
   public int? vacation_id {get; set;}
   public Vacation? vacation {get; set;}
   public Users() { }
-  public Users(Domain.Entities.Users users) : base(0,users.LocationId,users.IsActive)
+  public Users(Domain.Entities.Users users) : base(0,users.LocationId,users.IsActive,false)
   {
       this.user_id = users.UserId;
       this.title = users.Title;
@@ -45,6 +46,7 @@ public sealed class Users : BaseEntity
       this.department_id = users.DepartmentId;
       this.position_id = users.PositionId;
       this.address = users.Address;
+      this.flag = users.Flag;
   }
 
   public void Update(Domain.Entities.Users users)
@@ -61,6 +63,7 @@ public sealed class Users : BaseEntity
       this.department_id = users.DepartmentId;
       this.position_id = users.PositionId;
       this.address = users.Address;
+      this.flag = users.Flag;
       this.updated_at = DateTime.UtcNow;
   }
 

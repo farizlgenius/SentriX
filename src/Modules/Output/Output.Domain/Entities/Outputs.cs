@@ -13,25 +13,28 @@ public sealed class Outputs : BaseDomain
       public short ModuleComponentId { get; private set; }
       public short OutputNo {get; private set;}
       public string Model {get; private set;} = string.Empty;
-      public short Mode {get; private set;}
+      public short DriveMode {get; private set;}
+      public short OfflineMode {get; private set;}
       public short DefaultPulse {get; private set;}
       public string Type {get; private set;}  = string.Empty;
 
-        public Outputs(int id,short componentId,string mac,string name,short deviceComponentId, short moduleComponentId,short outputNo,string model,short mode,string type,int location,short pulse,bool isActive) : base(id,componentId,location,isActive)
+        public Outputs(int id,short componentId,string mac,string name,short deviceComponentId, short moduleComponentId,short outputNo,string model,short drive,short offline,string type,int location,short pulse,bool isActive) : base(id,componentId,location,isActive)
       {
             ValidationHelper.IsValidName(name);
             ValidationHelper.IsNullOrEmpty(mac,nameof(Mac));
             ValidationHelper.ValidateNotMinus(deviceComponentId,nameof(DeviceComponentId));
             ValidationHelper.ValidateNotMinus(moduleComponentId,nameof(ModuleComponentId));
             ValidationHelper.ValidateNotMinus(location,nameof(LocationId));
-            ValidationHelper.ValidateNotMinus(mode,nameof(Mode));
+            ValidationHelper.ValidateNotMinus(drive,nameof(DriveMode));
+            ValidationHelper.ValidateNotMinus(offline,nameof(OfflineMode));
             Name = name;
             Mac = mac;
             DeviceComponentId = deviceComponentId;
             ModuleComponentId = moduleComponentId;
             OutputNo = outputNo;
             Model =  model;
-            Mode = mode;
+            OfflineMode = offline;
+            DriveMode = drive;
             Type = type;
             DefaultPulse = pulse;
       }

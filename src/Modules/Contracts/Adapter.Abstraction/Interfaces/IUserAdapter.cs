@@ -10,7 +10,7 @@ public interface IUserAdapter
      Task CreateUserAsync(
              string Mac, 
             short ScpId, 
-            short Flags, 
+            int Flags, 
             int CardNumber, 
             short IssueCode, 
             string Pin,

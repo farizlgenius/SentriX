@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Channels;
 using Adapter.Abstraction.Interfaces;
+using Adapter.Aero.Adapters;
 using Adapter.Aero.Command;
 using Adapter.Aero.Interfaces;
 using Adapter.Aero.Listener;
@@ -62,16 +63,17 @@ public static class AeroDependencyInjection
             services.AddScoped<IUserCommand,UserCommand>();
 
 
-            services.AddScoped<IScp,ScpService>();
+            services.AddScoped<IScpService,ScpService>();
             services.AddScoped<IAeroRepository,AeroRepository>();
                   
-            services.AddScoped<IDeviceAdapter, AeroDeviceService>();
-            services.AddScoped<IControlAdapter,AeroControlService>();
-            services.AddScoped<IMonitorAdapter,AeroMonitorService>();
-            services.AddScoped<ITimeAdapter,AeroTimeService>();
-            services.AddScoped<IDoorAdapter,AeroDoorService>();
-            services.AddScoped<IGroupAdapter,AeroGroupService>();
-            services.AddScoped<IUserAdapter,AeroUserService>();
+            services.AddScoped<IAeroDeviceAdapter, AeroDeviceAdapter>();
+            services.AddScoped<IAeroOutputAdapter,AeroOutputAdapter>();
+            services.AddScoped<IAeroInputAdapter,AeroInputAdapter>();
+            services.AddScoped<IAeroTimeAdapter,AeroTimeAdapter>();
+            services.AddScoped<IAeroDoorAdapter,AeroDoorAdapter>();
+            services.AddScoped<IAeroGroupAdapter,AeroGroupAdapter>();
+            services.AddScoped<IAeroUserAdapter,AeroUserAdapter>();
+            services.AddScoped<IAeroSettingAdapter,AeroSettingAdapter>();
 
 
             services.AddScoped<IAdapter, AeroAdapter>();

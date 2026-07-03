@@ -1,4 +1,3 @@
-using System;
 using Device.Contract.DTOs;
 using SharedKernel.Domain;
 
@@ -25,5 +24,6 @@ public interface IDevice
       Task<BaseResponse> SetEventStatusAsync(SetEventDto dto,CancellationToken ct= default);
       Task<string> GetModuleNameByMacAndComponentIdAsync(string Mac,short ComponentId,CancellationToken ct = default);
       Task<BaseResponse> UploadDeviceAsync(int id,CancellationToken ct = default);
+      Task<string> GetAmicoDeviceInformationAsync(AmicoStartSessionDto dto);
 
 }

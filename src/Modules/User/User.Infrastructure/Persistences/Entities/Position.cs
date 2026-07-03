@@ -14,7 +14,7 @@ public sealed class Position : BaseEntity
       public Position() { }
 
 
-      public Position(Domain.Entities.Position position) : base(0, position.LocationId, position.IsActive)
+      public Position(Domain.Entities.Position position) : base(0, position.LocationId, position.IsActive,false)
       {
             this.name = position.Name;
             this.description = position.Description;

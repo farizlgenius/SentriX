@@ -55,6 +55,8 @@ public sealed class OperatorDbContext(DbContextOptions<OperatorDbContext> option
                        email = "admin@sentrix.com",
                        mobile = "1234567890",
                        role_id = 1,
+                       is_active=true,
+                       is_default=true
                  }
             );
 

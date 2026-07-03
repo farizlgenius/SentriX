@@ -33,7 +33,8 @@ public sealed class OutputRepository(OutputDbContext context) : IOutputRepositor
                   data.Entity.module_component_id,
                   data.Entity.output_no,
                   data.Entity.model,
-                  data.Entity.mode,
+                  data.Entity.offline_mode,
+                  data.Entity.drive_mode,
                   data.Entity.location_id,
                   data.Entity.default_pulse,
                   data.Entity.type,
@@ -46,7 +47,7 @@ public sealed class OutputRepository(OutputDbContext context) : IOutputRepositor
             var entity = await context.Outputs.OrderByDescending(x => x.id).Where(x => x.id == id).FirstOrDefaultAsync();
 
             if(entity == null)
-                  return new OutputDto(0,string.Empty,string.Empty,0,0,0,0,string.Empty,0,0,0,string.Empty,false);
+                  return new OutputDto();
 
             var data = context.Outputs.Remove(entity);
             var save = await context.SaveChangesAsync(ct);
@@ -63,7 +64,8 @@ public sealed class OutputRepository(OutputDbContext context) : IOutputRepositor
                   data.Entity.module_component_id,
                   data.Entity.output_no,
                   data.Entity.model,
-                  data.Entity.mode,
+                  data.Entity.offline_mode,
+                  data.Entity.drive_mode,
                   data.Entity.location_id,
                   data.Entity.default_pulse,
                   data.Entity.type,
@@ -85,13 +87,37 @@ public sealed class OutputRepository(OutputDbContext context) : IOutputRepositor
                   e.module_component_id,
                   e.output_no,
                   e.model,
-                  e.mode,
+                  e.offline_mode,
+                  e.drive_mode,
                   e.location_id,
                   e.default_pulse,
                   e.type,
                   e.is_active
             ))
-            .FirstOrDefaultAsync(ct) ?? new OutputDto(0,string.Empty,string.Empty,0,0,0,0,string.Empty,0,0,0,string.Empty,false);
+            .FirstOrDefaultAsync(ct) ?? new OutputDto();
+      }
+
+      public async Task<IEnumerable<OutputDto>> GetByMacAsync(string Mac, CancellationToken ct = default)
+      {
+            return await context.Outputs.AsNoTracking()
+            .Where(x => x.mac.Equals(Mac))
+            .Select(e => new OutputDto(
+                  e.id,
+                  e.name,
+                  e.mac,
+                  e.component_id,
+                  e.device_component_id,
+                  e.module_component_id,
+                  e.output_no,
+                  e.model,
+                  e.offline_mode,
+                  e.drive_mode,
+                  e.location_id,
+                  e.default_pulse,
+                  e.type,
+                  e.is_active
+            ))
+            .ToArrayAsync();
       }
 
       public async Task<short> GetLowestOutputComponentIdByMacAsync(string Mac, CancellationToken ct = default)
@@ -165,7 +191,8 @@ public sealed class OutputRepository(OutputDbContext context) : IOutputRepositor
                   e.module_component_id,
                   e.output_no,
                   e.model,
-                  e.mode,
+                  e.offline_mode,
+                  e.drive_mode,
                   e.location_id,
                   e.default_pulse,
                   e.type,
@@ -204,6 +231,11 @@ public sealed class OutputRepository(OutputDbContext context) : IOutputRepositor
             return await context.Outputs.AsNoTracking().Where(x => x.module_component_id == moduleId).Select(x => x.output_no).ToArrayAsync();
       }
 
+      public async Task<bool> IsAnyOutputNotSyncAsync(string Mac,int LocationId,DateTime SyncAt, CancellationToken ct = default)
+      {
+            return await context.Outputs.AsNoTracking().AnyAsync(x => x.location_id == LocationId && x.mac.Equals(Mac) && x.updated_at > SyncAt);
+      }
+
       public async Task<bool> IsAnyWithIdAsync(int Id, CancellationToken ct = default)
       {
             return await context.Outputs.AsNoTracking().AnyAsync(x => x.id == Id,ct);
@@ -231,7 +263,8 @@ public sealed class OutputRepository(OutputDbContext context) : IOutputRepositor
                   data.Entity.module_component_id,
                   data.Entity.output_no,
                   data.Entity.model,
-                  data.Entity.mode,
+                  data.Entity.offline_mode,
+                  data.Entity.drive_mode,
                   data.Entity.location_id,
                   data.Entity.default_pulse,
                   data.Entity.type,

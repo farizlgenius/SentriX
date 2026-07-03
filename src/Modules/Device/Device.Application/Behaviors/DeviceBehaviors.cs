@@ -5,11 +5,15 @@ using Adapter.Abstraction.Constants;
 using Adapter.Abstraction.Events;
 using Adapter.Abstraction.Interfaces;
 using Device.Application.Interfaces;
+using Device.Contract.Command;
 using Device.Contract.DTOs;
 using Device.Contract.Interfaces;
 using Door.Contract.Queries;
 using Group.Contract.Queries;
+using Input.Contract.Queries;
 using Location.Contract.Queries;
+using Output.Contract.Queries;
+using Setting.Contract.Queries;
 using SharedKernel.Domain;
 using SharedKernel.Enums;
 using SharedKernel.Exceptions;
@@ -268,10 +272,84 @@ public sealed class DeviceBehaviors(IDeviceRepository repo, IMessageBus bus, IAd
             }
 
             // Card Format
+            var formats = await bus.QueryAsync(new CardFormatByLocationIdQuery(device.LocationId));
+
+            foreach(var cfmt in formats)
+            {
+                  await adapterFactory.GetAdapter(device.Type).Setting.CardFormatConfiguration(
+                        device.Mac,
+                        device.ComponentId,
+                        cfmt.ComponentId,
+                        cfmt.Offset,
+                        cfmt.FunctionId,
+                        cfmt.Flag,
+                        cfmt.Bits,
+                        cfmt.PeLn,
+                        cfmt.PeLoc,
+                        cfmt.PoLn,
+                        cfmt.PoLoc,
+                        cfmt.FcLn,
+                        cfmt.FcLoc,
+                        cfmt.ChLn,
+                        cfmt.ChLoc,
+                        cfmt.IcLn,
+                        cfmt.IcLoc
+                  );
+            }
 
             // Input
+            var inputs = await bus.QueryAsync(new InputByMacQuery(device.Mac));
+
+            foreach(var input in inputs)
+            {
+                  await adapterFactory.GetAdapter(device.Type).Monitor.CreateUpdateMonitorPoint(
+                        device.Mac,
+                        input.ComponentId,
+                        input.DeviceComponentId,
+                        input.ModuleComponentId,
+                        input.InputNo,
+                        input.SensorMode,
+                        input.Debounce,
+                        input.HoldTime,
+                        input.LogFunction,
+                        input.LatchMode,
+                        input.DelayEntry,
+                        input.DelayExit
+                  );
+            }
+
+
+
+            // Input Group
+            var igps = await bus.QueryAsync(new InputGroupByMacQuery(device.Mac));
+
+            foreach(var g in igps)
+            {
+                  await adapterFactory.GetAdapter(device.Type).Monitor.CreateUpdateMonitorGroup(
+                        device.Mac,
+                        device.ComponentId,
+                        g.ComponentId,
+                        g.InputGroupDetailDtos.Select(x => (x.InputType,x.InputComponentId)).ToList()
+                  );
+            }
+            
 
             // Output
+
+            var outputs = await bus.QueryAsync(new OutputByMacQuery(device.Mac));
+            foreach(var o in outputs)
+            {
+                  await adapterFactory.GetAdapter(device.Type).Control.CreateAsync(
+                        o.Mac,
+                        o.ComponentId,
+                        o.DeviceComponentId,
+                        o.ModuleComponentId,
+                        o.OutputNo,
+                        o.DriveMode,
+                        o.OfflineMode,
+                        o.DefaultPulse
+                  );
+            }
 
             // TimeZone
             var timeZones = await bus.QueryAsync(new TimeZoneByLocationIdQuery(device.LocationId));
@@ -346,12 +424,25 @@ public sealed class DeviceBehaviors(IDeviceRepository repo, IMessageBus bus, IAd
 
             // Trigger
 
+            // Send Command Update sync datetime 
+            await bus.SendAsync(new DeviceSyncTimeCommand(device.Mac));
 
+            
             return new BaseResponse(
                   HttpStatusCode.OK,
                   MessageHelper.Common.Success,
                   DateTime.UtcNow
                   );
            
+      }
+
+      public async Task<string> GetAmicoDeviceInformationAsync(AmicoStartSessionDto dto)
+      {
+            var res = await adapterFactory.GetAdapter(DeviceType.AMICO.ToString()).Device.GetDeviceInformationAsync(
+                  dto.Ip,
+                  dto.Login,
+                  dto.Password);
+
+            return res;
       }
 }

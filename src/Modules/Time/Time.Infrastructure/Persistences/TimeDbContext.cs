@@ -61,6 +61,28 @@ public sealed class TimeDbContext(DbContextOptions<TimeDbContext> options) : DbC
             .HasForeignKey<DayInWeek>(x => x.interval_id)
             .OnDelete(DeleteBehavior.Cascade);
 
+            modelBuilder.Entity<Timezone>()
+            .HasData(
+                  new Timezone
+                  {
+                        id=1,
+                        name="Always",
+                        mode=1,
+                        active=string.Empty,
+                        deactive=string.Empty,
+                        is_default = true
+                  },
+                  new Timezone
+                  {
+                        id=2,
+                        name="Never",
+                        mode=0,
+                        active=string.Empty,
+                        deactive = string.Empty,
+                        is_default = true
+                  }
+            );
+
            
 
       }

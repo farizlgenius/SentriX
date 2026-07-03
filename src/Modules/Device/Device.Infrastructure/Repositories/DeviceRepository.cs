@@ -494,7 +494,7 @@ public sealed class DeviceRepository(DeviceDbContext context) : IDeviceRepositor
             if (entity is null)
                   return;
 
-            entity.UpdateMemoryAllocateStatus(status);
+            entity.UpdateSyncStatus(status);
             await context.SaveChangesAsync(ct);
       }
 
@@ -671,7 +671,7 @@ public sealed class DeviceRepository(DeviceDbContext context) : IDeviceRepositor
             return true;
       }
 
-      public async Task<bool> DeleteInputAsync(Input domain, CancellationToken ct = default)
+      public async Task<bool> DeleteInputAsync(Domain.Entities.Input domain, CancellationToken ct = default)
       {
             var entity = await context.Inputs
             .Where(x => x.module_id == domain.ModuleId && x.input_number == domain.InputNumber)
@@ -735,5 +735,80 @@ public sealed class DeviceRepository(DeviceDbContext context) : IDeviceRepositor
                   e.metadata,
                   e.is_active
             )).FirstOrDefaultAsync() ?? new DeviceDto();
+      }
+
+      public async Task<IEnumerable<DeviceDto>> GetDeviceByLocationIdAsync(int LocationId, CancellationToken ct = default)
+      {
+            return await context.Devices.AsNoTracking()
+            .OrderByDescending(x => x.id)
+            .Where(x => x.location_id == LocationId)
+            .Select(e => new DeviceDto(
+                  e.id,
+                  e.name,
+                  e.component_id,
+                  e.serial_number,
+                  e.mac.Replace("_", ":"),
+                  e.ip,
+                  e.port,
+                  e.fw,
+                  e.type,
+                  e.status,
+                  e.synced_at,
+                  e.location_id,
+                  e.metadata,
+                  e.is_active
+            )).ToArrayAsync();
+      }
+
+      public async Task<bool> IsAnyModuleNotSyncAsync(string Mac, int LocationId, DateTime SyncAt, CancellationToken ct = default)
+      {
+            return await context.Modules.AsNoTracking().AnyAsync(x => x.location_id == LocationId && x.mac.Equals(Mac) && x.updated_at > SyncAt);
+      }
+
+      public async Task SetDeviceSyncStatusAsync(string Mac, string Status, CancellationToken ct = default)
+      {
+            var entity = await context.Devices
+            .Where(x => x.mac.Equals(Mac))
+            .FirstOrDefaultAsync();
+
+            if(entity is null)
+                  throw new Exception(MessageHelper.DB.RecordNotFound);
+
+            entity.UpdateSyncStatus(Status);
+
+            var data = context.Devices.Update(entity);
+            var save = await context.SaveChangesAsync();
+
+            if(data.Entity is null || save <= 0)
+                  throw new Exception(MessageHelper.DB.UpdateRecordUnsuccessful);
+
+      }
+
+      public async Task UpdateSyncTimeAsync(string Mac, CancellationToken ct = default)
+      {
+            var entity = await context.Devices
+            .Where(x => x.mac.Equals(Mac))
+            .FirstOrDefaultAsync();
+
+            if(entity is null)
+                  throw new Exception(MessageHelper.DB.RecordNotFound);
+
+            entity.UpdateSyncTime();
+
+            var data = context.Devices.Update(entity);
+            var save = await context.SaveChangesAsync();
+
+            if(data.Entity is null || save <= 0)
+                  throw new Exception(MessageHelper.DB.UpdateRecordUnsuccessful);
+      }
+
+      public async Task<(string Name,int LocationId)> GetNameAndLocationIdByMacAsync(string Mac, CancellationToken ct = default)
+      {
+            var res = await context.Devices.AsNoTracking().Where(x => x.mac.Equals(Mac)).Select(x => new {x.name,x.location_id}).FirstOrDefaultAsync();
+
+            if(res is null)
+                  throw new Exception(MessageHelper.DB.RecordNotFound);
+
+            return (res.name,res.location_id);
       }
 }

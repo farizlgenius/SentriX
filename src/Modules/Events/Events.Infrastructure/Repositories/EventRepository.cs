@@ -5,25 +5,30 @@ using Events.Infrastructure.Persistences;
 using Events.Infrastructure.Persistences.Entities;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel.Domain;
+using SharedKernel.Enums;
 using SharedKernel.Model;
 
 namespace Events.Infrastructure.Repositories;
 
 public sealed class EventRepository(EventDbContext context) : IEventRepository
 {
-      public async Task AddCommandEvent(CommandResponse response,CancellationToken ct = default)
+      public async Task AddCommandEvent(string Name,int LocationId,CommandResponse response,CancellationToken ct = default)
       {
             await context.CommandEvents.AddAsync(
                   new CommandEvent(
+                        Name,
                         response.Mac,
                         response.ScpId,
                         response.Command,
                         response.Tag,
                         response.SendAt,
                         response.ReceivedAt,
-                        response.Body,
+                        response.Body ?? "",
                         response.Status,
-                        response.Reason
+                        response.Reason,
+                        string.Empty,
+                        DeviceType.AERO.ToString(),
+                        LocationId
                         )
             );
 
@@ -143,5 +148,84 @@ public sealed class EventRepository(EventDbContext context) : IEventRepository
             await context.SaveChangesAsync(ct);
 
 
+      }
+
+      public async Task<Pagination<CommandEventDto>> GetCommandPaginationAsync(PaginationParams param, CancellationToken ct = default)
+      {
+            var query = context.CommandEvents.AsNoTracking().Where(x => x.location_id == param.locationId || x.location_id == 0).AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(param.search))
+            {
+                  if (!string.IsNullOrWhiteSpace(param.search))
+                  {
+                        var search = param.search.Trim();
+
+                        if (context.Database.IsNpgsql())
+                        {
+                              var pattern = $"%{search}%";
+
+                              query = query.Where(x =>
+                                  EF.Functions.ILike(x.name, pattern) ||
+                                  EF.Functions.ILike(x.mac, pattern) ||
+                                  EF.Functions.ILike(x.command, pattern) ||
+                                  EF.Functions.ILike(x.body, pattern) ||
+                                  EF.Functions.ILike(x.status, pattern) ||
+                                  EF.Functions.ILike(x.reason, pattern) ||
+                                  EF.Functions.ILike(x.response, pattern) ||
+                                  EF.Functions.ILike(x.type, pattern)
+                              );
+                        }
+                        else // SQL Server
+                        {
+                              query = query.Where(x =>
+                                  x.name.Contains(search) ||
+                                  x.mac.Contains(search) ||
+                                  x.command.Contains(search) ||
+                                  x.body.Contains(search) ||
+                                  x.status.Contains(search) ||
+                                  x.reason.Contains(search) ||
+                                  x.response.Contains(search) ||
+                                  x.type.Contains(search)
+                              );
+                        }
+                  }
+            }
+
+            if (param.startDate != null)
+            {
+                  var startUtc = DateTime.SpecifyKind(param.startDate.Value, DateTimeKind.Utc);
+                  query = query.Where(x => x.send_at >= startUtc);
+            }
+
+            if (param.endDate != null)
+            {
+                  var endUtc = DateTime.SpecifyKind(param.endDate.Value, DateTimeKind.Utc);
+                  query = query.Where(x => x.received_at <= endUtc);
+            }
+
+            var count = await query.CountAsync();
+
+            var res = await query.AsNoTracking()
+            .OrderByDescending(e => e.send_at)
+            .Skip((param.pageNumber - 1) * param.pageSize)
+            .Take(param.pageSize)
+            .Select(e => new CommandEventDto(
+                  e.id,
+                  e.name,
+                  e.mac,
+                  e.command,
+                  e.tag,
+                  e.send_at,
+                  e.received_at,
+                  e.body,
+                  e.status,
+                  e.reason,
+                  e.reason,
+                  e.location_id,
+                  e.type,
+                  e.is_active
+            )).ToListAsync(ct);
+
+            return new Pagination<CommandEventDto>(param.pageNumber,param.pageSize,count,(int)Math.Ceiling(count / (double)param.pageSize),res);
       }
 }

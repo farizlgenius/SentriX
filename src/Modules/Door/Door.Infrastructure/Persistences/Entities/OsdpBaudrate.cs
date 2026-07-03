@@ -9,7 +9,7 @@ public sealed class OsdpBaudrate : BaseEntity
       public string description {get; set;} = string.Empty;
 
       public OsdpBaudrate(){}
-      public OsdpBaudrate(string label,int value,string description) : base(0,0,true)
+      public OsdpBaudrate(string label,int value,string description) : base(0,0,true,false)
       {
             this.label = label;
             this.value = value;

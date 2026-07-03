@@ -48,6 +48,9 @@ namespace Time.Infrastructure.Migrations
                     b.Property<bool>("is_active")
                         .HasColumnType("boolean");
 
+                    b.Property<bool>("is_default")
+                        .HasColumnType("boolean");
+
                     b.Property<int>("location_id")
                         .HasColumnType("integer");
 
@@ -102,6 +105,9 @@ namespace Time.Infrastructure.Migrations
                         .HasColumnType("smallint");
 
                     b.Property<bool>("is_active")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("is_default")
                         .HasColumnType("boolean");
 
                     b.Property<int>("location_id")
@@ -161,6 +167,9 @@ namespace Time.Infrastructure.Migrations
                     b.Property<bool>("is_active")
                         .HasColumnType("boolean");
 
+                    b.Property<bool>("is_default")
+                        .HasColumnType("boolean");
+
                     b.Property<int>("location_id")
                         .HasColumnType("integer");
 
@@ -210,6 +219,9 @@ namespace Time.Infrastructure.Migrations
                     b.Property<bool>("is_active")
                         .HasColumnType("boolean");
 
+                    b.Property<bool>("is_default")
+                        .HasColumnType("boolean");
+
                     b.Property<int>("location_id")
                         .HasColumnType("integer");
 
@@ -228,6 +240,36 @@ namespace Time.Infrastructure.Migrations
                     b.HasKey("id");
 
                     b.ToTable("Timezones", "time");
+
+                    b.HasData(
+                        new
+                        {
+                            id = 1,
+                            active = "",
+                            component_id = (short)0,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            deactive = "",
+                            is_active = true,
+                            is_default = true,
+                            location_id = 0,
+                            mode = (short)1,
+                            name = "Always",
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            id = 2,
+                            active = "",
+                            component_id = (short)0,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            deactive = "",
+                            is_active = true,
+                            is_default = true,
+                            location_id = 0,
+                            mode = (short)0,
+                            name = "Never",
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        });
                 });
 
             modelBuilder.Entity("Time.Infrastructure.Persistences.Entities.DayInWeek", b =>

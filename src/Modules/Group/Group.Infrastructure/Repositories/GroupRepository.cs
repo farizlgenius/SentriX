@@ -28,7 +28,8 @@ public sealed class GroupRepository(GroupDbContext context) : IGroupRepository
                   data.Entity.name,
                   new List<GroupDoorDto>(),
                   data.Entity.location_id,
-                  data.Entity.is_active
+                  data.Entity.is_active,
+                  data.Entity.is_default
             );
       }
 
@@ -53,7 +54,8 @@ public sealed class GroupRepository(GroupDbContext context) : IGroupRepository
                   data.Entity.name,
                   new List<GroupDoorDto>(),
                   data.Entity.location_id,
-                  data.Entity.is_active
+                  data.Entity.is_active,
+                  data.Entity.is_default
             );
       }
 
@@ -75,7 +77,8 @@ public sealed class GroupRepository(GroupDbContext context) : IGroupRepository
                               ))
                   ).ToList(),
                   x.location_id,
-                  x.is_active
+                  x.is_active,
+                  x.is_default
             ))
             .FirstOrDefaultAsync(ct) ?? new GroupDto(
                   0,
@@ -83,6 +86,7 @@ public sealed class GroupRepository(GroupDbContext context) : IGroupRepository
                   string.Empty,
                   new List<GroupDoorDto>(),
                   0,
+                  false,
                   false
                   );
       }
@@ -241,6 +245,11 @@ public sealed class GroupRepository(GroupDbContext context) : IGroupRepository
       public async Task<bool> IsAnyByIdAsync(int id, CancellationToken ct = default)
       {
             return await context.Groups.AsNoTracking().AnyAsync(x => x.id == id);
+      }
+
+      public async Task<bool> IsAnyGroupNotSyncQueryAsync(int LocationId, DateTime SyncAt, CancellationToken ct = default)
+      {
+            return await context.Groups.AsNoTracking().AnyAsync(x => (x.location_id == LocationId || x.location_id == 0) && x.updated_at > SyncAt);
       }
 
       public async Task<GroupDto> UpdateAsync(Groups dto, CancellationToken ct = default)

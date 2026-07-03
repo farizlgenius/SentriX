@@ -7,8 +7,7 @@ public class BaseDomain
       public int Id { get; set; }
       public short ComponentId { get; set; }
       public int LocationId { get; set; }
-      public bool IsActive {get; set;}
-      
+      public bool IsActive {get; set;}      
 
       public BaseDomain(int id,short componentId,int locationId,bool IsActive)
       {

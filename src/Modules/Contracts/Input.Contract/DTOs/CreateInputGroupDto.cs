@@ -3,10 +3,9 @@ using SharedKernel.Domain;
 namespace Input.Contract.DTOs;
 
 public sealed record CreateInputGroupDto(
+      int Id,
       string Name,
-      string Mac,
-      short DeviceComponentId,
-      string Metadata,
+      List<InputGroupDetailDto> InputGroupDetailDtos,
       int LocationId,
       string Type,
       bool IsActive

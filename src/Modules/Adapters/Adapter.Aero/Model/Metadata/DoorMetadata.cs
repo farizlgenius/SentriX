@@ -67,7 +67,8 @@ public sealed class Relay
       public short RelayNumber { get; set; }
       public short RelayMin { get; set; }
       public short RelayMax { get; set; }
-      public short RelayMode { get; set; }
+      public short DriveMode { get; set; }
+      public short OfflineMode {get; set;}
 }
 
 public sealed class Sensor

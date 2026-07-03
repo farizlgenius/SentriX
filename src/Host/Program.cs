@@ -18,6 +18,7 @@ using Host.Middlewares;
 using Input.Infrastructure;
 using Location.Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.IdentityModel.Tokens;
 using Notifier.Client;
 using Notifier.Client.Hubs;
@@ -26,6 +27,7 @@ using Output.Infrastructure;
 using Role.Infrastructure;
 using Scalar.AspNetCore;
 using Serilog;
+using Setting.Infrastructure;
 using SharedKernel;
 using Storage;
 using Time.Infrastructure;
@@ -88,6 +90,7 @@ public class Program
         builder.Services.AddGroup(builder.Configuration);
         builder.Services.AddUser(builder.Configuration);
         builder.Services.AddStorage(builder.Configuration);
+        builder.Services.AddSetting(builder.Configuration);
 
 
         // Replace default logging with Serilog
@@ -223,12 +226,14 @@ public class Program
         app.UseMiddleware<GlobalException>();
         app.UseMiddleware<CorrelationMiddleware>();
 
+
         app.MapOpenApi();
 
 
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
         {
+            // app.UseDeveloperExceptionPage();
 
 
             app.MapScalarApiReference(options =>
