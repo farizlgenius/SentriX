@@ -61,6 +61,32 @@ public sealed class GroupDbContext(DbContextOptions<GroupDbContext> options) : D
             .HasForeignKey(x => x.group_door_id)
             .OnDelete(DeleteBehavior.Cascade);
 
+            modelBuilder.Entity<Persistences.Entities.Groups>()
+            .HasData(
+                  new Persistences.Entities.Groups
+                  {
+                        id=1,
+                        name="Allow",
+                        component_id=1,
+                        location_id=0,
+                        is_default=true,
+                        is_active=true
+                  }
+            );
+
+             modelBuilder.Entity<Persistences.Entities.Groups>()
+            .HasData(
+                  new Persistences.Entities.Groups
+                  {
+                        id=2,
+                        name="Never",
+                        component_id=2,
+                        location_id=0,
+                        is_default=true,
+                        is_active=true
+                  }
+            );
+
 
 
       }

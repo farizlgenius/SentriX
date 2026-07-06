@@ -59,7 +59,7 @@ public sealed class TimeCommand(ILogger<TimeCommand> logger) : BaseCommand,ITime
                         SCPDLL.scpGetTagLastPosted(ScpId),
                         DateTime.UtcNow,
                         DateTime.UtcNow,
-                        c.ToString(),
+                        ObjectHelper.ToAsciiString(c),
                         CommandStatus.PENDING.ToString(),
                         string.Empty,
                         true
@@ -76,7 +76,7 @@ public sealed class TimeCommand(ILogger<TimeCommand> logger) : BaseCommand,ITime
                        -1,
                        DateTime.UtcNow,
                        DateTime.UtcNow,
-                        c.ToString(),
+                        ObjectHelper.ToAsciiString(c),
                        CommandStatus.FAILED.ToString(),
                        string.Empty,
                        false

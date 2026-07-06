@@ -119,7 +119,7 @@ public sealed class DoorCommand(ILogger<DoorCommand> logger) : BaseCommand,IDoor
                         SCPDLL.scpGetTagLastPosted(DeviceComponentId),
                         DateTime.UtcNow,
                         DateTime.UtcNow,
-                        c.ToString(),
+                        ObjectHelper.ToAsciiString(c),
                         CommandStatus.PENDING.ToString(),
                         string.Empty,
                         true
@@ -136,7 +136,7 @@ public sealed class DoorCommand(ILogger<DoorCommand> logger) : BaseCommand,IDoor
                        -1,
                        DateTime.UtcNow,
                        DateTime.UtcNow,
-                       c.ToString(),
+                       ObjectHelper.ToAsciiString(c),
                        CommandStatus.PENDING.ToString(),
                        string.Empty,
                        false

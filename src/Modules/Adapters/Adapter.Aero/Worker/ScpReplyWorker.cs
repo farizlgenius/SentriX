@@ -335,10 +335,13 @@ public sealed class ScpReplyWorker(Channel<SCPReplyMessageDto> queue, ILogger<Sc
                             break;
                         case (int)enSCPReplyType.enSCPReplyStrStatus:
                             scp = scope.ServiceProvider.GetRequiredService<IScpService>();
+                            var devicee = scope.ServiceProvider.GetRequiredService<IDevice>();
+                            var d = await devicee.GetDeviceByComponentIdAsync(message.SCPId);
                             if (await scp.VerifySCPStructureMemoryAllocate(message.SCPId, message.str_sts))
                             {
                                 await scp.InitialScpConfigurationAsync((short)message.SCPId);
                                 await scp.VerifyScpComponentAsync(message.SCPId);
+                                await devicee.UploadDeviceAsync(d.Id);
                             }
                             break;
                         case (int)enSCPReplyType.enSCPReplyCmndStatus:

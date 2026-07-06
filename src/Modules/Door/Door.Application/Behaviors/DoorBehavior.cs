@@ -26,7 +26,7 @@ public sealed class DoorBehavior(IDoorRepository repo,IMessageBus bus,IAdapterFa
             short FirstComponentId = await repo.GetLowestDoorComponentIdWithExceptionAsync(dto.Mac,[]);
             short SecondComponentId = -1;
 
-            if (dto.DoorType.Equals(DoorType.DUAL.ToString()))
+            if (dto.DoorType.Equals(DoorType.Dual.ToString()))
             {
                   SecondComponentId = await repo.GetLowestDoorComponentIdWithExceptionAsync(dto.Mac,[FirstComponentId]);
             }
@@ -245,7 +245,7 @@ public sealed class DoorBehavior(IDoorRepository repo,IMessageBus bus,IAdapterFa
                   throw new BadRequestException(MessageHelper.Common.NotFound("Door", dto.Id));
 
             short SecondComponentId = -1;
-            if (dto.DoorType.Equals(DoorType.DUAL) && dto.SecondComponentId == -1)
+            if (dto.DoorType.Equals(DoorType.Dual) && dto.SecondComponentId == -1)
             {
                   SecondComponentId = await repo.GetLowestDoorComponentIdWithExceptionAsync(dto.Mac,[]);
             }

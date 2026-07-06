@@ -40,7 +40,7 @@ public sealed class OutputCommand(ILogger<OutputCommand> logger) : BaseCommand,I
                         SCPDLL.scpGetTagLastPosted(ScpId),
                         DateTime.UtcNow,
                         DateTime.UtcNow,
-                        LogMessageHelper.ToString(c),
+                        ObjectHelper.ToAsciiString(c),
                         CommandStatus.PENDING.ToString(),
                         string.Empty,
                         true
@@ -57,7 +57,7 @@ public sealed class OutputCommand(ILogger<OutputCommand> logger) : BaseCommand,I
                        -1,
                        DateTime.UtcNow,
                        DateTime.UtcNow,
-                       LogMessageHelper.ToString(c),
+                       ObjectHelper.ToAsciiString(c),
                        CommandStatus.FAILED.ToString(),
                        string.Empty,
                        false
@@ -94,7 +94,7 @@ public sealed class OutputCommand(ILogger<OutputCommand> logger) : BaseCommand,I
                         SCPDLL.scpGetTagLastPosted(ScpId),
                         DateTime.UtcNow,
                         DateTime.UtcNow,
-                       LogMessageHelper.ToString(c),
+                       ObjectHelper.ToAsciiString(c),
                         CommandStatus.PENDING.ToString(),
                         string.Empty,
                         true
@@ -111,7 +111,7 @@ public sealed class OutputCommand(ILogger<OutputCommand> logger) : BaseCommand,I
                        -1,
                        DateTime.UtcNow,
                        DateTime.UtcNow,
-                       LogMessageHelper.ToString(c),
+                       ObjectHelper.ToAsciiString(c),
                        CommandStatus.FAILED.ToString(),
                        string.Empty,
                        false
@@ -140,7 +140,7 @@ public sealed class OutputCommand(ILogger<OutputCommand> logger) : BaseCommand,I
                         SCPDLL.scpGetTagLastPosted(ScpId),
                         DateTime.UtcNow,
                         DateTime.UtcNow,
-                       LogMessageHelper.ToString(c),
+                       ObjectHelper.ToAsciiString(c),
                         CommandStatus.PENDING.ToString(),
                         string.Empty,
                         true
@@ -157,7 +157,7 @@ public sealed class OutputCommand(ILogger<OutputCommand> logger) : BaseCommand,I
                        -1,
                        DateTime.UtcNow,
                        DateTime.UtcNow,
-                       LogMessageHelper.ToString(c),
+                       ObjectHelper.ToAsciiString(c),
                        CommandStatus.FAILED.ToString(),
                        string.Empty,
                        false

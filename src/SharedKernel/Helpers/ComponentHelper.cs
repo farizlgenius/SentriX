@@ -221,7 +221,7 @@ public static class ComponentHelper
                 .OrderBy(x => x)
                 .ToList();
 
-            if (numbers.Count == 0)
+            if (numbers.Count == 0 && Except.Count == 0)
                   return 0;
 
             int expected = 1;

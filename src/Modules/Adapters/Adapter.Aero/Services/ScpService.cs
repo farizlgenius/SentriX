@@ -135,7 +135,7 @@ public sealed class ScpService(ILogger<ScpService> logger, IMessageBus bus, IScp
       {
 
             var device = await bus.QueryAsync(new DeviceByComponentIdQuery(ScpId));
-
+            string Mac = device.Mac.Replace(":","_");
 
             var res = scpCommand.AccessDatabaseSpecification(
                   device.Mac,
@@ -251,9 +251,18 @@ public sealed class ScpService(ILogger<ScpService> logger, IMessageBus bus, IScp
                   }
             }
 
+            // All Shpuld also upload here
 
-           
+            // Module
+            
 
+            // Timezone
+
+
+            // Access Level
+
+
+            // Card Format 
       }
 
 
