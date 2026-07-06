@@ -2,12 +2,11 @@ import { BaseDto } from "../BaseDto";
 
 export interface CardFormatDto extends BaseDto {
     id:number;
-    cfmtId:number;
     name: string;
     fac: number;
     offset:number;
-    funcId:number;
-    flags:number;
+    functionId:number;
+    flag:number;
     bits: number;
     peLn: number;
     peLoc: number;
@@ -19,4 +18,6 @@ export interface CardFormatDto extends BaseDto {
     chLoc: number;
     icLn: number;
     icLoc: number;
+    locationId:number;
+    isActive:boolean;
 }

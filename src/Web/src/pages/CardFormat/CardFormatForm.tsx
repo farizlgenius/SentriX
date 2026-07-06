@@ -33,28 +33,6 @@ const CardFormatForm: React.FC<PropsWithChildren<FormProp<CardFormatDto>>> = ({ 
 
   };
 
-  //   const handleAdvanceCardClick = (event:React.MouseEvent<HTMLDivElement>, card:CardComponent, index:number) => {
-  //   if (event.shiftKey && lastSelectedIndex !== null) {
-  //     // Range selection
-  //     const start = Math.min(lastSelectedIndex, index);
-  //     const end = Math.max(lastSelectedIndex, index);
-  //     const range = cards.slice(start, end + 1).map(c => c.num);
-
-  //     setSelectObject(prev => Array.from(new Set([...prev, ...range])));
-  //   } else if (event.ctrlKey || event.metaKey) {
-  //     // Toggle single selection (Cmd/Ctrl)
-  //     setSelectObject(prev =>
-  //       prev.includes(card.num)
-  //         ? prev.filter(id => id !== card.num)
-  //         : [...prev, card.num]
-  //     );
-  //     setLastSelectedIndex(index);
-  //   } else {
-  //     // Normal click → select one
-  //     setSelectObject([card.num]);
-  //     setLastSelectedIndex(index);
-  //   }
-  // };
 
   const handleClickInside = (e: React.MouseEvent<HTMLButtonElement>) => {
     switch (e.currentTarget.name) {
@@ -125,11 +103,11 @@ const CardFormatForm: React.FC<PropsWithChildren<FormProp<CardFormatDto>>> = ({ 
       <div className="flex justify-center flex-col gap-6 sm:flex-row sm:gap-8">
         <div className='flex flex-col gap-1'>
           <Label htmlFor="name">Name</Label>
-          <Input disabled={type == FormType.INFO} name="name" type="text" id="cardFormatName" onChange={handleChange} value={dto.name} />
+          <Input disabled={type == FormType.INFO} name="name" type="text" id="cardFormatName" onChange={handleChange} value={dto.name}/>
         </div>
         <div className='flex flex-col gap-1'>
           <Label htmlFor="facility">Facility</Label>
-          <Input disabled={type == FormType.INFO} name="facility" type="text" id="cardFormatName" onChange={handleChange} value={dto.fac} />
+          <Input disabled={type == FormType.INFO} name="facility" type="text" id="cardFormatName" onChange={handleChange} value={dto.fac}  />
         </div>
         <div className='flex flex-col gap-1'>
           <Label htmlFor="bits">Bits</Label>
@@ -146,11 +124,11 @@ const CardFormatForm: React.FC<PropsWithChildren<FormProp<CardFormatDto>>> = ({ 
             </div>
             <div className='flex flex-col gap-1'>
               <Label htmlFor="poLoc">Start</Label>
-              <Input disabled={type == FormType.INFO} className='w-20' name="poLoc" type="number" id="poLoc" onChange={handleChange} value={dto.poLoc} />
+              <Input disabled={type == FormType.INFO} className='w-20' name="poLoc" type="number" id="poLoc" onChange={handleChange} value={dto.poLoc} defaultValue={dto.poLoc} />
             </div>
             <div className='flex flex-col gap-1'>
               <Label htmlFor="poLn">Length</Label>
-              <Input disabled={type == FormType.INFO} className='w-20' name="poLn" type="number" id="poLn" onChange={handleChange} value={dto.poLn} />
+              <Input disabled={type == FormType.INFO} className='w-20' name="poLn" type="number" id="poLn" onChange={handleChange} value={dto.poLn} defaultValue={dto.poLn} />
             </div>
           </div>
         </div >
@@ -200,11 +178,11 @@ const CardFormatForm: React.FC<PropsWithChildren<FormProp<CardFormatDto>>> = ({ 
             </div>
             <div className='flex flex-col gap-1'>
               <Label htmlFor="chLoc">Start</Label>
-              <Input disabled={type == FormType.INFO} className='w-20' name="chLoc" type="number" id="chLoc" onChange={handleChange} value={dto.chLoc} />
+              <Input disabled={type == FormType.INFO} className='w-20' name="chLoc" type="number" id="chLoc" onChange={handleChange} value={dto.chLoc} defaultValue={dto.chLoc} />
             </div>
             <div className='flex flex-col gap-1'>
               <Label htmlFor="chLn">Length</Label>
-              <Input disabled={type == FormType.INFO} className='w-20' name="chLn" type="number" id="chLn" onChange={handleChange} value={dto.chLn} />
+              <Input disabled={type == FormType.INFO} className='w-20' name="chLn" type="number" id="chLn" onChange={handleChange} value={dto.chLn} defaultValue={dto.chLn} />
             </div>
           </div>
 

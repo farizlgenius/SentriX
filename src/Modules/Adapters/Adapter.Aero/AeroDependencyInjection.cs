@@ -61,6 +61,7 @@ public static class AeroDependencyInjection
             services.AddScoped<IDoorCommand,DoorCommand>();
             services.AddScoped<IGroupCommand,GroupCommand>();
             services.AddScoped<IUserCommand,UserCommand>();
+            services.AddScoped<ISettingCommand,SettingCommand>();
 
 
             services.AddScoped<IScpService,ScpService>();

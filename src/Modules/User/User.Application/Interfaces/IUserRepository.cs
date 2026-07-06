@@ -45,4 +45,7 @@ public interface IUserRepository
        Task<bool> IsAnyCardNumberAsync(int CardNumber,CancellationToken ct = default);
        Task<IEnumerable<CredentialDto>> GetCredentialByGroupListAsync(List<int> Groups,CancellationToken ct = default);
        Task<bool> IsAnyDoorNotSyncAsync(int LocationId,DateTime SyncAt,CancellationToken ct = default);
+       Task<IEnumerable<int>> GetGroupIdsByIdAsync(int Id,CancellationToken ct = default);
+       Task<IEnumerable<CredentialDto>> GetCredentialsByUserIdAysnc(int Id,CancellationToken ct = default);
+       Task<bool> IsAnyUserNotSyncAsync(IEnumerable<int> GpIds,int LocationId,DateTime SyncAt,CancellationToken ct = default);
 }

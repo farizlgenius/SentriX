@@ -47,4 +47,23 @@ public sealed class AeroUserAdapter(IUserCommand user, IMessageBus bus) : IAeroU
 
             await bus.SendAsync(new AddCommandEvent(res));
       }
+
+      public async Task DeleteUserAsync(
+            string Mac, 
+            short ScpId,
+            int CardNumber
+            )
+      {
+
+
+            var res = user.CardDelete(
+                  Mac,
+                  ScpId,
+                  CardNumber
+                  );
+
+            await bus.SendAsync(new AddCommandEvent(res));
+      }
+
+
 }

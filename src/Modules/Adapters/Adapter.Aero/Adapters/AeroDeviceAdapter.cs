@@ -22,6 +22,7 @@ namespace Adapter.Aero.Adapters;
 
 public sealed class AeroDeviceAdapter(
       ILogger<AeroDeviceAdapter> logger,
+      IScpService scp,
       IScpCommand writer, IIdReportService idReport, IModuleCommand sioWriter,IMessageBus bus
       ) : IAeroDeviceAdapter
 {
@@ -146,6 +147,11 @@ public sealed class AeroDeviceAdapter(
       public Task<string> GetDeviceInformationAsync(string ip, string login, string password)
       {
             throw new NotImplementedException();
+      }
+
+      public async Task VerifyDeviceComponentAsync(int ComponentId)
+      {
+            await scp.VerifyScpComponentAsync(ComponentId);
       }
 }
 

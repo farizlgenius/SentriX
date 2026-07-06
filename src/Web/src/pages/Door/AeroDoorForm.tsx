@@ -307,16 +307,16 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
     }
   }
   {/* Input */ }
-  const [inputRex0Option, setInputRex0Option] = useState<Options[]>([])
-  const [inputRex1Option, setInputRex1Option] = useState<Options[]>([])
-  const [inputSensorOption, setInputSensorOption] = useState<Options[]>([])
+  const [inputOption,setInputOption] = useState<Options[]>([]);
+  // const [inputRex0Option, setInputRex0Option] = useState<Options[]>([])
+  // const [inputRex1Option, setInputRex1Option] = useState<Options[]>([])
+  // const [inputSensorOption, setInputSensorOption] = useState<Options[]>([])
   const [inputModeOption, setInputModeOption] = useState<Options[]>([])
-  const fetchInputRex0 = async (sio: number) => {
-    if (inputRex0Option.length !== 0) return;
+   const fetchInput = async (sio: number) => {
     const res = await send.get(DeviceEndpoint.GET_INPUT(sio));
     if (res && res.data) {
       res.data.map((a: Options) => {
-        setInputRex0Option(prev => [...prev, {
+        setInputOption(prev => [...prev, {
           label: a.label,
           value: a.value,
           isTaken: false
@@ -325,43 +325,7 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
     }
 
   }
-  const fetchInputRex1 = async (sio: number) => {
-    if (inputRex1Option.length !== 0) return;
-    if ((dto.metadata as AeroDoorMetadata).rex?.rex0ModuleComponentId === sio) {
-      setInputRex1Option(inputRex0Option.filter((a) => a.isTaken === false));
-      return;
-    }
-    const res = await send.get(DeviceEndpoint.GET_INPUT(sio));
-    if (res && res.data.data) {
-      res.data.data.map((a: Options) => {
-        setInputRex1Option(prev => [...prev, {
-          label: a.label,
-          value: a.value,
-          isTaken: false
-        }])
-      })
-    }
-  }
-  const fetchInputSensor = async (sio: number) => {
-    if (inputSensorOption.length !== 0) return;
-    if ((dto.metadata as AeroDoorMetadata).rex?.rex1ModuleComponentId == sio && inputRex1Option.length !== 0) {
-      setInputSensorOption(inputRex1Option.filter(a => a.isTaken == false));
-      return;
-    } else if ((dto.metadata as AeroDoorMetadata).rex?.rex0ModuleComponentId == sio) {
-      setInputSensorOption(inputRex0Option.filter(a => a.isTaken == false));
-      return;
-    }
-    const res = await send.get(DeviceEndpoint.GET_INPUT(sio));
-    if (res && res.data) {
-      res.data.map((a: Options) => {
-        setInputSensorOption(prev => [...prev, {
-           label: a.label,
-          value: a.value,
-          isTaken: false
-        }])
-      })
-    }
-  }
+
   const fetchInputMode = async () => {
     if (inputModeOption.length !== 0) return;
     const res = await send.get(InputEndpoint.IP_MODE)
@@ -1120,7 +1084,9 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
                       name="rex.rex0ModuleComponentId"
                       options={moduleOption}
                       onChange={(value: string) => {
-                        fetchInputRex0(moduleOption.find(x => x.value == Number(value))?.additionalInfo);
+                        if((dto.metadata as AeroDoorMetadata).rex.rex0ModuleComponentId != Number(value) && inputOption.length == 0){
+                            fetchInput(moduleOption.find(x => x.value == Number(value))?.additionalInfo);
+                        }
                         setDto(prev => ({
                           ...prev,
                           metadata: {
@@ -1140,9 +1106,9 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
                     <Select
                       disabled={type == FormType.INFO}
                       name="rex0.inputNo"
-                      options={inputRex0Option}
+                      options={inputOption.filter(x => x.isTaken == false)}
                       onChange={(value: string) => {
-                        setInputRex0Option(prev => Helper.updateOptionByValue(prev, Number(value), true));
+                        setInputOption(prev => Helper.updateOptionByValue(prev, Number(value), true));
                         setDto(prev => ({
                           ...prev,
                           metadata: {
@@ -1206,7 +1172,9 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
                           name="rex.rex1ModuleComponentId"
                           options={moduleOption}
                           onChange={(value: string) => {
-                            fetchInputRex1(Number(value));
+                            if((dto.metadata as AeroDoorMetadata).rex.rex1ModuleComponentId != Number(value)){
+                              fetchInput(moduleOption.find(x => x.value == Number(value))?.additionalInfo)
+                            }
                             setDto(prev => ({
                               ...prev,
                               metadata: {
@@ -1226,9 +1194,9 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
                         <Select
                           disabled={type == FormType.INFO}
                           name="rex.rex1Number"
-                          options={inputRex1Option}
+                          options={inputOption}
                           onChange={(value: string) => {
-                            setInputRex1Option(prev => Helper.updateOptionByValue(prev, Number(value), true));
+                            setInputOption(prev => Helper.updateOptionByValue(prev, Number(value), true));
                             setDto(prev => ({
                               ...prev,
                               metadata: {
@@ -1423,7 +1391,9 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
                   name="sensor.sensorModuleComponentId"
                   options={moduleOption}
                   onChange={(value: string) => {
-                    fetchInputSensor(moduleOption.find(x => x.value == Number(value))?.additionalInfo );
+                    if((dto.metadata as AeroDoorMetadata).rex.rex0ModuleComponentId != Number(value)){
+                              fetchInput(moduleOption.find(x => x.value == Number(value))?.additionalInfo)
+                            }
                     setDto(prev => ({
                       ...prev,
                       metadata: {
@@ -1443,7 +1413,7 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({ handleCl
                 <Select
                   disabled={type == FormType.INFO}
                   name="sensor.sensorNumber"
-                  options={inputSensorOption}
+                  options={inputOption.filter(x => x.isTaken == false)}
                   onChange={(value: string) => {
                     setDto(prev => ({
                       ...prev,

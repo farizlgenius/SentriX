@@ -39,7 +39,10 @@ export const UserSettingForm: React.FC<PropsWithChildren<FormProp<UserDto>>> = (
                                     disabled={type == FormType.INFO}
                                     label={d.label}
                                     defaultChecked={false}
-                                    onChange={(checked: boolean) => setDto(prev => ({ ...prev, flag: checked ? prev.flag | Number(d.value) : prev.flag & (~Number(d.value)) }))}
+                                    onChange={(checked: boolean) => {
+                                        setDto(prev => ({ ...prev, flag: checked ? prev.flag | Number(d.value) : prev.flag & (~Number(d.value)) }))
+                                        console.log(checked)
+                                    }}
                                 />
                                 {d.description && (
                                     <p className="mt-1 whitespace-pre-line text-xs text-gray-500 dark:text-gray-400">

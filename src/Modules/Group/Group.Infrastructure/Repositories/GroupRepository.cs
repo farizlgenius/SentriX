@@ -252,6 +252,12 @@ public sealed class GroupRepository(GroupDbContext context) : IGroupRepository
             return await context.Groups.AsNoTracking().AnyAsync(x => (x.location_id == LocationId || x.location_id == 0) && x.updated_at > SyncAt);
       }
 
+      public async Task<IEnumerable<string>> MacsByGroupIdAsync(IEnumerable<int> Ids, CancellationToken ct = default)
+      {
+            return await context.Groups.Where(x => Ids.Contains(x.id))
+                  .SelectMany(x => x.group_doors.Select(x => x.mac)).ToArrayAsync();
+      }
+
       public async Task<GroupDto> UpdateAsync(Groups dto, CancellationToken ct = default)
       {
             var entity = await context.Groups

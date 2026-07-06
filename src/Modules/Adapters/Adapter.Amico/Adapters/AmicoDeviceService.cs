@@ -65,4 +65,8 @@ public sealed class AmicoDeviceAdapter(IDeviceCommand command) : IAmicoDeviceAda
             throw new NotImplementedException();
       }
 
+      public Task VerifyDeviceComponentAsync(int ComponentId)
+      {
+            throw new NotImplementedException();
+      }
 }

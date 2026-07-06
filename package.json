@@ -1,5 +1,6 @@
 {
   "scripts": {
+    "migclean": "node scripts/delete-migrations-all.js",
     "migadd:all": "node scripts/add-migration-all.js",
     "migbundle:all": "node scripts/bundle-all.js",
     "migup:all": "node scripts/update-migration-all.js",
@@ -49,6 +50,9 @@
     "group:migremove": "dotnet ef migrations remove --project src/Modules/Group/Group.Infrastructure --startup-project src/Host",
     "user:migadd": "dotnet ef migrations add --project src/Modules/User/User.Infrastructure --startup-project src/Host",
     "user:migup" : "dotnet ef database update --project src/Modules/User/User.Infrastructure --startup-project src/Host",
-    "user:migremove": "dotnet ef migrations remove --project src/Modules/User/User.Infrastructure --startup-project src/Host"
+    "user:migremove": "dotnet ef migrations remove --project src/Modules/User/User.Infrastructure --startup-project src/Host",
+    "setting:migadd": "dotnet ef migrations add --project src/Modules/Setting/Setting.Infrastructure --startup-project src/Host",
+    "setting:migup" : "dotnet ef database update --project src/Modules/Setting/Setting.Infrastructure --startup-project src/Host",
+    "setting:migremove": "dotnet ef migrations remove --project src/Modules/Setting/Setting.Infrastructure --startup-project src/Host"
   }
 }

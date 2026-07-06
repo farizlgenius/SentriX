@@ -132,20 +132,6 @@ public sealed class DeviceRepository(DeviceDbContext context) : IDeviceRepositor
                   x.metadata,
                   x.is_active
                   )).FirstOrDefaultAsync() ?? new DeviceDto(
-                        0,
-                        string.Empty,
-                        0,
-                        string.Empty,
-                        string.Empty,
-                        string.Empty,
-                        0,
-                        string.Empty,
-                        string.Empty,
-                        string.Empty,
-                        DateTime.UtcNow,
-                        0,
-                        string.Empty,
-                        false
                   );
       }
 

@@ -25,10 +25,12 @@ const defaultDto: LocationDto = {
     name: "",
     description: "",
     countryId: -1,
-    country: ""
+    country: "",
+    isActive: false,
+    isDefault: false
 }
 
-export const LOCATION_HEADER: string[] = ["Name", "Action"]
+export const LOCATION_HEADER: string[] = ["Name","Enable","Action"]
 export const LOCATION_KEY: string[] = ["name"];
 
 export const Location = () => {

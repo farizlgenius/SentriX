@@ -12,4 +12,5 @@ export interface TimeZoneDto {
     locationId:number;
     isActive:boolean;
     type:string;
+    isDefault:boolean;
 }

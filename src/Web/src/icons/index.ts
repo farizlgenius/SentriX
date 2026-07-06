@@ -100,6 +100,8 @@ import {ReactComponent as DoorOutIcon} from "./out.svg?react";
 import {ReactComponent as LoadIcon} from "./loading.svg?react";
 import {ReactComponent as AmicoIcon} from "./amico.svg?react";
 import {ReactComponent as CancelCircleIcon} from "./cancel-circle.svg?react";
+import {ReactComponent as ToggleOnIcon} from "./toggle-on.svg?react";
+import {ReactComponent as ToggleOffIcon} from "./toggle-off.svg?react";
 
 export {
   ErrorHexaIcon,
@@ -201,5 +203,6 @@ export {
   DoorOutIcon,
   LoadIcon,
   AmicoIcon,
-  CancelCircleIcon
+  CancelCircleIcon,ToggleOnIcon,
+  ToggleOffIcon
 };

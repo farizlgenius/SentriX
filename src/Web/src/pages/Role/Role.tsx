@@ -23,7 +23,7 @@ import { UpdateRoleDto } from "../../model/Role/UpdateRoleDto";
 
 
 
-export const LOCATION_HEADER: string[] = ["Name"]
+export const LOCATION_HEADER: string[] = ["Name","Status","Action"]
 export const LOCATION_KEY: string[] = ["name"];
 
 

@@ -143,7 +143,7 @@ public sealed class CfmtRepository(SettingDbContext context) : ICfmtRepository
 
       public async Task<Pagination<CardFormatDto>> GetCardFormatPaginationAsync(PaginationParams param, CancellationToken ct = default)
       {
-            var query = context.CardFormats.AsNoTracking().Where(x => x.location_id == param.locationId).AsQueryable();
+            var query = context.CardFormats.AsNoTracking().Where(x => x.location_id == param.locationId || x.location_id == 0).AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(param.search))
             {

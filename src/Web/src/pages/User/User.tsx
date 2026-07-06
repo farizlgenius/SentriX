@@ -17,15 +17,14 @@ import { usePopup } from '../../context/PopupContext';
 import { usePagination } from '../../context/PaginationContext';
 import { TableCell } from '../../components/ui/table';
 import { Avatar } from '../UiElements/Avatar';
-import Switch from '../../components/form/switch/Switch';
 import UserForm from './UserForm';
 import { FormContent } from '../../model/Form/FormContent';
 import { BaseForm } from '../UiElements/BaseForm';
 
 
 
-const CARDHOLDER_HEAD: string[] = ["Image", "Id", "Name", "Company", "Department", "Postion", "Status", "Action"];
-const CARDHOLDER_KEY: string[] = ["avatar", "userId", "name", "company", "department", "position", "isActive"];
+const CARDHOLDER_HEAD: string[] = ["Image", "Id", "Name", "Company", "Department", "Postion", "Enable", "Action"];
+const CARDHOLDER_KEY: string[] = ["avatar", "userId", "name", "company", "department", "position"];
 
 
 const User = () => {
@@ -66,7 +65,8 @@ const User = () => {
         company: '',
         department: '',
         position: '',
-        vacationId: 0
+        vacationId: 0,
+        isDefault: false
     }
 
     const [cardHolderDto, setCardHolderDto] = useState<UserDto>(defaultDto)
@@ -163,7 +163,7 @@ const User = () => {
 
     const handleRemove = (data: UserDto) => {
         setConfirmRemove(() => async () => {
-            const res = await send.delete(UserEndpoint.DELETE(data.userId))
+            const res = await send.delete(UserEndpoint.DELETE(data.id))
             if (Helper.handleToastByResCode(res, UserToast.DELETE, toggleToast))
                 toggleRefresh();
         })
@@ -242,11 +242,6 @@ const User = () => {
                         key: "name",
                         content: (d, i) => <TableCell key={i} className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
                             {d.title} {d.firstName} {d.middleName} {d.lastName}
-                        </TableCell>
-                    },{
-                        key: "isActive",
-                        content: (d, i) => <TableCell key={i} className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                            {<Switch defaultChecked={d.isActive} label={''} />}
                         </TableCell>
                     }
                 ]} />

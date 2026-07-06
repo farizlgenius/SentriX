@@ -20,7 +20,8 @@ const modules = [
     "src/Modules/Output/Output.Infrastructure",
     "src/Modules/Time/Time.Infrastructure",
     "src/Modules/Door/Door.Infrastructure",
-    "src/Modules/Group/Group.Infrastructure"
+    "src/Modules/Group/Group.Infrastructure",
+    "src/Modules/Setting/Setting.Infrastructure"
 ];
 
 for (const project of modules) {

@@ -20,7 +20,7 @@ import { usePopup } from "../../context/PopupContext";
 import { MonitorGroupToast } from "../../model/ToastMessage";
 import { usePagination } from "../../context/PaginationContext";
 
-export const MP_GP_HEADER: string[] = ["Name", "Main Controller", "Action"]
+export const MP_GP_HEADER: string[] = ["Name", "Main Controller","Status", "Action"]
 export const MP_GP_KEY: string[] = ["name", "macAddress",];
 var removeElement = {
     mac: "",
@@ -35,11 +35,10 @@ export const MonitorGroup = () => {
         name: "",
         nMpCount: 0,
         nMpList: [],
-        componentId: 0,
-        mac: "",
         locationId: locationId,
         isActive: true,
-        hardwareName: ""
+        id: 0,
+        isDefault: false
     }
     const { filterPermission } = useAuth();
     const [form,setForm] = useState<boolean>(false);

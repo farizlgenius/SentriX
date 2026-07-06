@@ -23,4 +23,10 @@ public interface IUserCommand
             short TmpDays
             );
 
+      CommandResponse CardDelete(
+            string Mac,
+            short ScpId,
+            long CardNumber
+      );
+
 }

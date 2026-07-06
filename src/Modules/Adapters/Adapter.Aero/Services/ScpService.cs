@@ -271,7 +271,7 @@ public sealed class ScpService(ILogger<ScpService> logger, IMessageBus bus, IScp
                   await bus.QueryAsync(new IsAnyInputNotSyncQuery(device.Mac,device.LocationId,syncedAt)) ||
                   await bus.QueryAsync(new IsAnyInputGroupNotSyncQuery(device.Mac,device.LocationId,syncedAt)) ||
                   await bus.QueryAsync(new IsAnyDoorNotSyncQuery(device.Mac, device.LocationId, syncedAt)) ||
-                  await bus.QueryAsync(new IsAnyUserNotSyncQuery(device.LocationId, syncedAt)) ||
+                  await bus.QueryAsync(new IsAnyUserNotSyncQuery(device.Mac,device.LocationId, syncedAt)) ||
                   await bus.QueryAsync(new IsAnyCardFormatNotSyncQuery(device.LocationId, syncedAt)) ||
                   await bus.QueryAsync(new IsAnyGroupNotSyncQuery(device.LocationId, syncedAt))
             )
@@ -282,6 +282,13 @@ public sealed class ScpService(ILogger<ScpService> logger, IMessageBus bus, IScp
                               ScpSyncStatus.UPLOAD.ToString()));
 
 
+            }
+            else
+            {
+                  await bus.SendAsync(
+                        new DeviceSyncStatusCommand(
+                              device.Mac,
+                              ScpSyncStatus.SYNC.ToString()));
             }
 
 

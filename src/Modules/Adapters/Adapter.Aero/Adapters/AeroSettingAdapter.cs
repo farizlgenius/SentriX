@@ -1,13 +1,16 @@
 using Adapter.Aero.Interfaces;
+using Events.Contract.Command;
+using SharedKernel.Messaging;
 
 namespace Adapter.Aero.Adapters;
 
-public sealed class AeroSettingAdapter : IAeroSettingAdapter
+public sealed class AeroSettingAdapter(ISettingCommand writer,IMessageBus bus) : IAeroSettingAdapter
 {
-      public Task CardFormatConfiguration(
+      public async Task CardFormatConfiguration(
             string Mac,
             short ScpId,
             short ComponentId,
+            short Fac,
             short Offset,
             short FunctionId,
             short Flag,
@@ -24,6 +27,27 @@ public sealed class AeroSettingAdapter : IAeroSettingAdapter
             short IcLoc
       )
       {
-            throw new NotImplementedException();
+            var res = writer.CardFormatterConfiguration(
+                  Mac,
+                  ScpId,
+                  ComponentId,
+                  Fac,
+                  Offset,
+                  FunctionId,
+                  Flag,
+                  Bits,
+                  PeLn,
+                  PeLoc,
+                  PoLn,
+                  PoLoc,
+                  FcLn,
+                  FcLoc,
+                  ChLn,
+                  ChLoc,
+                  IcLn,
+                  IcLoc
+                  );
+
+            await bus.SendAsync(new AddCommandEvent(res));
       }
 }

@@ -1,15 +1,16 @@
 import { Table, TableBody, TableCell, TableHeader, TableRow } from "../../components/ui/table";
 import Search from "../../components/ui/table/Search";
 import { TableProp } from "../../model/TableProp";
-import { EditIcon, Info2Icon, TrashBinIcon } from "../../icons";
+import {  ToggleOffIcon, ToggleOnIcon, TrashBinIcon } from "../../icons";
 import { useEffect, useMemo, useState } from "react";
 import Pagination from "../../components/ui/table/Pagination";
 import { usePagination } from "../../context/PaginationContext";
 import React from "react";
+import Switch from "../../components/form/switch/Switch";
 
 
 
-export const BaseTable = <T extends { id: number | string, isDefault: boolean }>({ id, headers, keys, data, onEdit, onInfo, onRemove, setSelect, renderOptionalComponent, specialDisplay, onClick: handleClick, permission, action, status, select, subTable, fetchData, refresh, locationId }: TableProp<T>) => {
+export const BaseTable = <T extends { id: number | string, isDefault: boolean, isActive: boolean }>({ id, headers, keys, data, onEdit, onInfo, onRemove, setSelect, renderOptionalComponent, specialDisplay, onClick: handleClick, permission, action, status, select, subTable, fetchData, refresh, locationId }: TableProp<T>) => {
     const { search, startDate, endDate, pageSize, pagination, setPageSize } = usePagination();
     const [show, setShow] = useState<number>(-1)
     const [sortKey, setSortKey] = useState<string>(keys?.[0] ?? "");
@@ -183,29 +184,50 @@ export const BaseTable = <T extends { id: number | string, isDefault: boolean }>
                                             )}
                                             {status && renderOptionalComponent && renderOptionalComponent(data, status, i)}
 
+                                            {
+                                                /* Status */
+                                            }
+                                            <TableCell  className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                                                <Switch label={""} defaultChecked={data.isActive}  onChange={(checked) => {
+                                                    console.log(checked)
+                                                }} />
+                                            </TableCell>
+
+
 
                                             {/* Action */}
-                                            {/* <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                                            <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
                                                 <div className="flex gap-2">
-
-                                                    <a id="detail" onClick={() => onInfo(data)} className="cursor-pointer font-medium text-blue-600 dark:text-blue-500 hover:underline">
-                                                        <Info2Icon className="w-10 h-5" />
-                                                    </a>
-                                                    {permission?.isUpdated  && data.id !== 1 &&
-                                                        <a id="edit" onClick={() => onEdit(data)} className="cursor-pointer font-medium text-blue-600 dark:text-blue-500 hover:underline">
-                                                            <EditIcon className="w-10 h-5" />
-
-                                                        </a>
-                                                    }
                                                     {
-                                                        permission?.isDeleted && id !== data.id && data.id !== 1 &&
 
-                                                        <a id="remove" onClick={() => onRemove(data)} className="cursor-pointer font-medium text-red-600 dark:text-red-500 hover:underline"><TrashBinIcon className="w-10 h-5" /></a>
+
+                                                        <button
+                                                            type="button"
+                                                            onClick={(e) => {
+                                                                e.stopPropagation()
+                                                                onRemove(data)
+                                                            }}
+                                                            disabled={!permission?.isDeleted || data.isDefault}
+                                                            className={`
+    inline-flex items-center justify-center
+    rounded-lg p-1
+    transition-all duration-200
+    ${permission?.isDeleted || !data.isDefault
+        ?
+        "cursor-pointer text-red-600 hover:bg-red-50 hover:text-red-700 active:scale-95"
+                                                                    : "cursor-not-allowed bg-gray-100 text-gray-400 opacity-60"
+                                                                    
+                                                                }
+  `}
+                                                        >
+                                                            <TrashBinIcon className="h-5 w-5" />
+                                                        </button>
+
                                                     }
 
 
                                                 </div>
-                                            </TableCell> */}
+                                            </TableCell>
                                         </TableRow>
                                         {/* {show == i && subTable && subTable(i + 1)} */}
                                     </React.Fragment>

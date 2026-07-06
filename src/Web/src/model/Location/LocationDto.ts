@@ -4,4 +4,6 @@ export interface LocationDto{
     description:string;
     countryId:number;
     country:string;
+    isActive:boolean;
+    isDefault:boolean;
 }

@@ -91,5 +91,50 @@ public sealed class UserCommand(ILogger<UserCommand> logger) : BaseCommand, IUse
 
             }
       }
+
+      public CommandResponse CardDelete(string Mac, short ScpId, long CardNumber)
+      {
+            CC_CARDDELETEI64 c = new CC_CARDDELETEI64();
+            c.scp_number = ScpId;
+            c.cardholder_id = CardNumber;
+             var result = Send((short)enCfgCmnd.enCcCardDeleteI64, c);
+            if (result)
+            {
+                  logger.LogInformation(LogMessageHelper.CommandSuccess(CommandConstant.ExtendedTimeZoneActSpecification, ScpId));
+
+                  return new CommandResponse(
+                        Mac,
+                        ScpId,
+                        CommandConstant.ExtendedTimeZoneActSpecification,
+                        SCPDLL.scpGetTagLastPosted(ScpId),
+                        DateTime.UtcNow,
+                        DateTime.UtcNow,
+                        ObjectHelper.ToAsciiString(c),
+                        CommandStatus.PENDING.ToString(),
+                        string.Empty,
+                        true
+                        );
+
+            }
+            else
+            {
+                  logger.LogError(LogMessageHelper.CommandUnsuccess(CommandConstant.ExtendedTimeZoneActSpecification, ScpId));
+                  return new CommandResponse(
+                        Mac,
+                       ScpId,
+                       CommandConstant.ExtendedTimeZoneActSpecification,
+                       -1,
+                       DateTime.UtcNow,
+                       DateTime.UtcNow,
+                        ObjectHelper.ToAsciiString(c),
+                       CommandStatus.FAILED.ToString(),
+                       string.Empty,
+                       false
+                       );
+
+
+            }
+
+      }
 }
 

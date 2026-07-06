@@ -14,5 +14,7 @@ export interface DeviceDto  {
   syncedAt: Date;
   locationId:number;
   metadata:string;
+  isDefault:boolean;
+  isActive:boolean;
   
 }

@@ -56,6 +56,7 @@ const Switch: React.FC<SwitchProps> = ({
         disabled ? "text-gray-400" : "text-gray-700 dark:text-gray-400"
       }`}
       onClick={handleToggle} // Toggle when the label itself is clicked
+      
     >
       <div className="relative">
         <div

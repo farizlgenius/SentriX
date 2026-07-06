@@ -67,6 +67,7 @@ public sealed class TimeDbContext(DbContextOptions<TimeDbContext> options) : DbC
                   {
                         id=1,
                         name="Always",
+                        component_id=1,
                         mode=1,
                         active=string.Empty,
                         deactive=string.Empty,
@@ -76,6 +77,7 @@ public sealed class TimeDbContext(DbContextOptions<TimeDbContext> options) : DbC
                   {
                         id=2,
                         name="Never",
+                        component_id=2,
                         mode=0,
                         active=string.Empty,
                         deactive = string.Empty,

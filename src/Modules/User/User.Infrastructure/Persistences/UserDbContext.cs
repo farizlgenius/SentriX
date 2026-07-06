@@ -63,6 +63,12 @@ public sealed class UserDbContext(DbContextOptions<UserDbContext> options) : DbC
             .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Users>()
+            .HasMany(x => x.user_groups)
+            .WithOne(x => x.user)
+            .HasForeignKey(x => x.user_id)
+            .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Users>()
             .HasOne(x => x.company)
             .WithMany(x => x.users)
             .HasForeignKey(x => x.company_id)

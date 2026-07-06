@@ -23,5 +23,6 @@ public interface IDeviceAdapter
       Task<bool> SetEventStatusAsync(string Mac,int ComponentId,bool IsEnable);
       // Amico
       Task<string> GetDeviceInformationAsync(string ip,string login,string password);
+      Task VerifyDeviceComponentAsync(int ComponentId);
 
 }

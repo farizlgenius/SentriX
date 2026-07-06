@@ -25,5 +25,11 @@ public interface IUserAdapter
             short TmpDays
      );  
 
+     Task DeleteUserAsync(
+          string Mac, 
+            short ScpId,
+            int CardNumber
+     );
+
 
 }

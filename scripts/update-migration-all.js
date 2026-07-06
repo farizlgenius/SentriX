@@ -15,6 +15,7 @@ const modules = [
     "src/Modules/Door/Door.Infrastructure",
     "src/Modules/Group/Group.Infrastructure",
     "src/Modules/Input/Input.Infrastructure",
+    "src/Modules/Setting/Setting.Infrastructure",
 ];
 
 for (const project of modules) {

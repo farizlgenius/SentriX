@@ -1,8 +1,8 @@
-const CONTROLLER = 'CardFormat'
+const CONTROLLER = 'setting/cfmt'
 
 export const CardFormatEndpoint = {
     GET : `/api/${CONTROLLER}`,
-    PAGINATION:(pageNumber:number,pageSize:number,locationId?:number | undefined,search?:string | undefined,startDate?:string | undefined,endDate?:string | undefined) => `/api${locationId == 0 || locationId == undefined ?  "" : `/${locationId}` }/${CONTROLLER}/pagination?PageNumber=${pageNumber}&PageSize=${pageSize}${search == undefined || search == "" ? "" : `&search=${search}`}${startDate == undefined ? "" : `&startDate=${startDate}`}${endDate == undefined ? "" : `&startDate=${endDate}`}`,
+    PAGINATION:(pageNumber:number,pageSize:number,locationId?:number | undefined,search?:string | undefined,startDate?:string | undefined,endDate?:string | undefined) => `/api/${CONTROLLER}/pagination?PageNumber=${pageNumber}&PageSize=${pageSize}${search == undefined || search == "" ? "" : `&search=${search}`}${startDate == undefined ? "" : `&startDate=${startDate}`}${endDate == undefined ? "" : `&startDate=${endDate}`}${locationId == 0 || locationId == undefined ?  "" : `&locationId=${locationId}` }`,
     CREATE : `/api/${CONTROLLER}`,
     UPDATE : `/api/${CONTROLLER}`,
     DELETE :(component:number) => `/api/${CONTROLLER}/${component}`,

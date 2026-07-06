@@ -251,7 +251,45 @@ public sealed class UserRepository(UserDbContext context) : IUserRepository
 
       public async Task<UserDto> DeleteUserAsync(int id, CancellationToken ct = default)
       {
-            throw new NotImplementedException();
+            var entity = await context.Users
+            .OrderByDescending(x => x.id)
+            .Where(x => x.id == id)
+            .FirstOrDefaultAsync();
+
+            if(entity is null)
+                  throw new Exception(MessageHelper.DB.RecordNotFound);
+
+            var data = context.Users.Remove(entity);
+            var save = await context.SaveChangesAsync(ct);
+
+            return new UserDto(
+                  data.Entity.id,
+                  data.Entity.user_id,
+                  data.Entity.title,
+                  data.Entity.first_name,
+                  data.Entity.middle_name,
+                  data.Entity.last_name,
+                  data.Entity.gender,
+                  data.Entity.date_of_birth,
+                  data.Entity.email,
+                  data.Entity.phone,
+                  data.Entity.company_id,
+                  string.Empty,
+                  data.Entity.department_id,
+                  string.Empty,
+                  data.Entity.position_id,
+                  string.Empty,
+                  data.Entity.address,
+                  data.Entity.flag,
+                  new List<string>(),
+                  data.Entity.image,
+                  new List<CredentialDto>(),
+                  new List<int>(),
+                  data.Entity.vacation_id ?? 0,
+                  data.Entity.location_id,
+                  data.Entity.is_active
+            );
+
       }
 
       public async Task<IEnumerable<CompanyDto>> GetCompanyByLocationIdAsync(int LocationId, CancellationToken ct = default)
@@ -1033,5 +1071,42 @@ public sealed class UserRepository(UserDbContext context) : IUserRepository
       public async Task<bool> IsAnyDoorNotSyncAsync(int LocationId,DateTime SyncAt, CancellationToken ct = default)
       {
             return await context.Users.AsNoTracking().AnyAsync(x => (x.location_id == LocationId || x.location_id == 0) && x.updated_at > SyncAt);
+      }
+
+      public async Task<IEnumerable<int>> GetGroupIdsByIdAsync(int Id, CancellationToken ct = default)
+      {
+            return await context.UserGroups.AsNoTracking()
+            .Where(x => x.user_id == Id)
+            .Select(x => x.group_id)
+            .ToArrayAsync(ct);
+      }
+
+      public async Task<IEnumerable<CredentialDto>> GetCredentialsByUserIdAysnc(int Id, CancellationToken ct = default)
+      {
+            return await context.Users.AsNoTracking()
+            .Where(x => x.id == Id)
+            .SelectMany(x => x.credentials.Select(
+                  c => new CredentialDto(
+                        c.id,
+                        c.flag,
+                        c.bits,
+                        c.fac,
+                        c.card_number,
+                        c.issue_code,
+                        c.pin,
+                        c.use_count,
+                        c.apb_loc,
+                        c.act_time,
+                        c.deact_time,
+                        c.location_id,
+                        c.is_active
+                  )
+                  )).ToArrayAsync(ct);
+      }
+
+      public async Task<bool> IsAnyUserNotSyncAsync(IEnumerable<int> GpIds, int LocationId, DateTime SyncAt, CancellationToken ct = default)
+      {
+            return await context.Users.AsNoTracking()
+            .AnyAsync(x => x.location_id == LocationId && x.updated_at > SyncAt && x.user_groups.Any(g => GpIds.Contains(g.group_id)));
       }
 }

@@ -211,6 +211,27 @@ public sealed class UserBehavior(IUserRepository repo,IStorage file,IAdapterFact
             if(!await repo.IsAnyUserByIdAsync(id))
                   throw new BadRequestException(MessageHelper.Common.NotFound("User", id));
 
+            var credentials = await repo.GetCredentialsByUserIdAysnc(id);
+
+            var groupIds = await repo.GetGroupIdsByIdAsync(id);
+
+            var macs = await bus.QueryAsync(new MacsByGroupIdsQuery(groupIds));
+
+            foreach(var mac in macs)
+            {
+                  var device = await bus.QueryAsync(new DeviceByMacAsyncQuery(mac)); 
+                  // Get All Device that user in 
+                  foreach(var cred in credentials)
+                  {
+                        await factory.GetAdapter(device.Type).User.DeleteUserAsync(
+                        device.Mac,
+                        device.ComponentId,
+                        cred.CardNumber);
+                        
+                  }
+                     
+            }
+            
             
             return await repo.DeleteUserAsync(id);
 

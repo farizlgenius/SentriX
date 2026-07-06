@@ -8,11 +8,12 @@ public class BaseCommand
     public bool IsBypass { get; set; } = false;
       protected bool Send(short command, IConfigCommand cfg)
     {
-        if(IsBypass)
-            return true;
+        // if(IsBypass)
+        //     return true;
 
-        SCPConfig scp = new SCPConfig();
-        bool success = scp.scpCfgCmndEx(command, cfg);
-        return success;
+        // SCPConfig scp = new SCPConfig();
+        // bool success = scp.scpCfgCmndEx(command, cfg);
+        // return success;
+        return true;
     }
 }

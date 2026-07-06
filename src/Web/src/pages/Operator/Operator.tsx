@@ -40,7 +40,7 @@ const defaultDto: OperatorDto = {
 
 
 
-export const HEADER: string[] = ["Username","Email"]
+export const HEADER: string[] = ["Username","Email","Enable","Action"]
 export const KEY: string[] = ["username","email"];
 
 export const Operator = () => {

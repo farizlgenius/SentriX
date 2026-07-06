@@ -1,15 +1,17 @@
-namespace Adapter.Abstraction.Interfaces;
+using SharedKernel.Model;
 
-public interface ISettingAdapter
+namespace Adapter.Aero.Interfaces;
+
+public interface ISettingCommand
 {
-      Task CardFormatConfiguration(
+      CommandResponse CardFormatterConfiguration(
             string Mac,
             short ScpId,
             short ComponentId,
             short Fac,
             short Offset,
             short FunctionId,
-            short Flag,
+            short Flags,
             short Bits,
             short PeLn,
             short PeLoc,

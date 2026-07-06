@@ -243,6 +243,7 @@ public sealed class DeviceBehaviors(IDeviceRepository repo, IMessageBus bus, IAd
       {
            // Device
            var device = await repo.GetDeviceByIdAsync(id);
+           string Mac = device.Mac.Replace(":","_");
 
            if(device.Id == 0)
                   throw new BadRequestException(MessageHelper.Common.NotFound("Device",id));
@@ -258,7 +259,7 @@ public sealed class DeviceBehaviors(IDeviceRepository repo, IMessageBus bus, IAd
                         {
                               short enumValue = (short)status;
                               await adapterFactory.GetAdapter(device.Type).Device.CreateModuleAsync(
-                              module.Mac,
+                              Mac,
                               device.ComponentId,
                               module.ComponentId,
                               enumValue,
@@ -277,9 +278,10 @@ public sealed class DeviceBehaviors(IDeviceRepository repo, IMessageBus bus, IAd
             foreach(var cfmt in formats)
             {
                   await adapterFactory.GetAdapter(device.Type).Setting.CardFormatConfiguration(
-                        device.Mac,
+                       Mac,
                         device.ComponentId,
                         cfmt.ComponentId,
+                        cfmt.Fac,
                         cfmt.Offset,
                         cfmt.FunctionId,
                         cfmt.Flag,
@@ -298,12 +300,12 @@ public sealed class DeviceBehaviors(IDeviceRepository repo, IMessageBus bus, IAd
             }
 
             // Input
-            var inputs = await bus.QueryAsync(new InputByMacQuery(device.Mac));
+            var inputs = await bus.QueryAsync(new InputByMacQuery(Mac));
 
             foreach(var input in inputs)
             {
                   await adapterFactory.GetAdapter(device.Type).Monitor.CreateUpdateMonitorPoint(
-                        device.Mac,
+                        Mac,
                         input.ComponentId,
                         input.DeviceComponentId,
                         input.ModuleComponentId,
@@ -321,12 +323,12 @@ public sealed class DeviceBehaviors(IDeviceRepository repo, IMessageBus bus, IAd
 
 
             // Input Group
-            var igps = await bus.QueryAsync(new InputGroupByMacQuery(device.Mac));
+            var igps = await bus.QueryAsync(new InputGroupByMacQuery(Mac));
 
             foreach(var g in igps)
             {
                   await adapterFactory.GetAdapter(device.Type).Monitor.CreateUpdateMonitorGroup(
-                        device.Mac,
+                        Mac,
                         device.ComponentId,
                         g.ComponentId,
                         g.InputGroupDetailDtos.Select(x => (x.InputType,x.InputComponentId)).ToList()
@@ -336,7 +338,7 @@ public sealed class DeviceBehaviors(IDeviceRepository repo, IMessageBus bus, IAd
 
             // Output
 
-            var outputs = await bus.QueryAsync(new OutputByMacQuery(device.Mac));
+            var outputs = await bus.QueryAsync(new OutputByMacQuery(Mac));
             foreach(var o in outputs)
             {
                   await adapterFactory.GetAdapter(device.Type).Control.CreateAsync(
@@ -357,7 +359,7 @@ public sealed class DeviceBehaviors(IDeviceRepository repo, IMessageBus bus, IAd
             foreach(var time in timeZones)
             {
                   await adapterFactory.GetAdapter(device.Type).Time.CreateTimezoneAsync(
-                        device.Mac,
+                        Mac,
                         device.ComponentId,
                         time.ComponentId,
                         time.Mode,
@@ -368,12 +370,12 @@ public sealed class DeviceBehaviors(IDeviceRepository repo, IMessageBus bus, IAd
             }
 
             // Doors
-            var doors = await bus.QueryAsync(new DoorByMacQuery(device.Mac));
+            var doors = await bus.QueryAsync(new DoorByMacQuery(Mac));
 
             foreach(var door in doors)
             {
                   await adapterFactory.GetAdapter(device.Type).Door.CreateUpdateDoorAsync(
-                        device.Mac,
+                        Mac,
                         device.ComponentId,
                         door.Metadata,
                         door.ComponentId,
@@ -382,12 +384,12 @@ public sealed class DeviceBehaviors(IDeviceRepository repo, IMessageBus bus, IAd
             }
 
             // Access Level
-            var groups = await bus.QueryAsync(new GroupByMacAndDeviceTypeQuery(device.Mac,device.Type));
+            var groups = await bus.QueryAsync(new GroupByMacAndDeviceTypeQuery(Mac,device.Type));
 
             foreach(var group in groups)
             {
                   await adapterFactory.GetAdapter(device.Type).Group.CreateUpdateLevel(
-                        device.Mac,
+                        Mac,
                         device.ComponentId,
                         group.ComponentId,
                         group.Doors.Select(x => (x.DoorComponentId,x.TimezoneComponentId)).ToList()
@@ -395,13 +397,13 @@ public sealed class DeviceBehaviors(IDeviceRepository repo, IMessageBus bus, IAd
             }
 
             // Users
-            var gpList = await bus.QueryAsync(new GroupIdListByMacQuery(device.Mac));
+            var gpList = await bus.QueryAsync(new GroupIdListByMacQuery(Mac));
             var creds = await bus.QueryAsync(new CredentialByGroupListQuery(gpList.Select(x => x.id).ToList()));
 
             foreach(var cred in creds)
             {
                   await adapterFactory.GetAdapter(device.Type).User.CreateUserAsync(
-                        device.Mac,
+                        Mac,
                         device.ComponentId,
                         cred.Flag,
                         cred.CardNumber,
@@ -425,7 +427,10 @@ public sealed class DeviceBehaviors(IDeviceRepository repo, IMessageBus bus, IAd
             // Trigger
 
             // Send Command Update sync datetime 
-            await bus.SendAsync(new DeviceSyncTimeCommand(device.Mac));
+            await bus.SendAsync(new DeviceSyncTimeCommand(Mac));
+
+            // Check again
+            await adapterFactory.GetAdapter(device.Type).Device.VerifyDeviceComponentAsync(device.ComponentId);
 
             
             return new BaseResponse(

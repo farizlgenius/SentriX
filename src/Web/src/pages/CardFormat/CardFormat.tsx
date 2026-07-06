@@ -21,10 +21,10 @@ import { usePagination } from '../../context/PaginationContext';
 
 // Define Global Variable
 export const CARDFORMAT_TABLE_HEAD: string[] = [
-    "Name", "Bits", "Facility", "Action"
+    "Name","Facility", "Bits"
 ]
 export const CARDFORMAT_KEY: string[] = [
-    "name", "bits", "fac",
+    "name", "fac","bits"
 ];
 
 const CardFormat = () => {
@@ -38,7 +38,6 @@ const CardFormat = () => {
     const defaultDto: CardFormatDto = {
         name: '',
         fac: -1,
-        flags: 0,
         offset: 0,
         bits: 0,
         peLn: 0,
@@ -54,8 +53,9 @@ const CardFormat = () => {
         locationId: locationId,
         isActive: false,
         id: 0,
-        cfmtId: 0,
-        funcId: 0
+        isDefault: false,
+        functionId: 0,
+        flag: 0
     }
 
     const [formType,setFormType] = useState<FormType>(FormType.CREATE);
@@ -148,11 +148,10 @@ const CardFormat = () => {
 
     const fetchData = async (pageNumber: number, pageSize: number,locationId?:number,search?: string, startDate?: string, endDate?: string) => {
             const res = await send.get(CardFormatEndpoint.PAGINATION(pageNumber,pageSize,locationId,search, startDate, endDate));
-            console.log(res?.data.data)
-            if (res && res.data.data) {
-                console.log(res.data.data)
-                setCardFormatsDto(res.data.data.data);
-                setPagination(res.data.data.page);
+            if (res.data) {
+                console.log(res.data)
+                setCardFormatsDto(res.data.items);
+                setPagination(res.data);
             }
         }
 
@@ -175,7 +174,7 @@ const CardFormat = () => {
             {form ?
                 <BaseForm tabContent={content}/>
                 :
-                <BaseTable<CardFormatDto> headers={CARDFORMAT_TABLE_HEAD} keys={CARDFORMAT_KEY} data={cardFormatsDto} onInfo={handleInfo}  onEdit={handleEdit} onRemove={handleRemove} select={selectedObjects} setSelect={setSelectedObjects} onClick={handleClick} permission={filterPermission(FeatureId.SETTING)} refresh={refresh} fetchData={fetchData} locationId={locationId} />
+                <BaseTable<CardFormatDto> headers={CARDFORMAT_TABLE_HEAD} keys={CARDFORMAT_KEY} data={cardFormatsDto} onInfo={handleInfo}  onEdit={handleEdit} onRemove={handleRemove} select={selectedObjects} setSelect={setSelectedObjects} onClick={handleClick} permission={filterPermission(FeatureId.setting)} refresh={refresh} fetchData={fetchData} locationId={locationId} />
 
             }
 

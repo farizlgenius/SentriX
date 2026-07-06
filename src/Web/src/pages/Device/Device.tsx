@@ -55,7 +55,7 @@ import { mapFields } from "../../utility/Mapper";
 import AmicoDeviceForm from "../../components/form/device/AmicoDeviceForm";
 import { AmicoDtoMetadata } from "../../model/Device/AmicoDtoMetadata";
 
-const HEADER = ["Type", "Name", "Mac", "Firmware", "IP", "Port","Event", "Configuration", "Status", "Action"];
+const HEADER = ["Type", "Name", "Mac", "Firmware", "IP", "Port","Event", "Configuration", "Status","Enable", "Action"];
 const KEY = ["type", "name", "mac", "fw", "ip", "port","tranStatus"];
 
 
@@ -95,6 +95,8 @@ const Device = () => {
     syncedAt: new Date(),
     locationId: 0,
     metadata: "",
+    isDefault: false,
+    isActive: false
   }
 
   const aeroDefault:AeroDtoMetadata = {

@@ -45,7 +45,8 @@ const TimeZone = () => {
         deactive: "",
         intervals: [],
         id: 0,
-        type: ''
+        type: '',
+        isDefault: false
     }
 
     const [timeZoneDto, setTimeZoneDto] = useState<TimeZoneDto>(defaultDto);
