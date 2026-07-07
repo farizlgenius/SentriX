@@ -15,7 +15,7 @@ using User.Domain.Entities;
 
 namespace User.Application.Behaviors;
 
-public sealed class UserBehavior(IUserRepository repo,IStorage file,IAdapterFactory factory,IMessageBus bus) : IUser
+public sealed class UserBehavior(IUserRepository repo, IStorage file, IAdapterFactory factory, IMessageBus bus) : IUser
 {
       public async Task<CompanyDto> CreateCompanyAsync(CreateCompanyDto dto)
       {
@@ -30,7 +30,7 @@ public sealed class UserBehavior(IUserRepository repo,IStorage file,IAdapterFact
 
             // Check that Company already exists with the same name
 
-            if(await repo.IsCompanyNameExistAsync(dto.Name.Trim()))
+            if (await repo.IsCompanyNameExistAsync(dto.Name.Trim()))
                   throw new BadRequestException(MessageHelper.Common.Duplicate(nameof(dto.Name)));
 
             return await repo.CreateCompanyAsync(domain);
@@ -49,10 +49,10 @@ public sealed class UserBehavior(IUserRepository repo,IStorage file,IAdapterFact
 
             // Check that Department already exists with the same name
 
-            if(await repo.IsDepartmentExistAsync(dto.Name.Trim()))
+            if (await repo.IsDepartmentExistAsync(dto.Name.Trim()))
                   throw new BadRequestException(MessageHelper.Common.Duplicate(nameof(dto.Name)));
 
-            
+
 
             return await repo.CreateDepartmentAsync(domain);
       }
@@ -70,14 +70,14 @@ public sealed class UserBehavior(IUserRepository repo,IStorage file,IAdapterFact
 
             // Check that Position already exists with the same name
 
-            if(await repo.IsPositionExistAsync(dto.Name.Trim()))
+            if (await repo.IsPositionExistAsync(dto.Name.Trim()))
                   throw new BadRequestException(MessageHelper.Common.Duplicate(nameof(dto.Name)));
 
-            
+
 
             return await repo.CreatePositionAsync(domain);
       }
-      
+
 
       public async Task<UserDto> CreateUserAsync(CreateUserDto dto)
       {
@@ -99,7 +99,7 @@ public sealed class UserBehavior(IUserRepository repo,IStorage file,IAdapterFact
                   dto.Flag,
                   dto.Additionals,
                   dto.Image,
-                  dto.Credentials.Select(c => 
+                  dto.Credentials.Select(c =>
                   new Domain.Entities.Credential(
                         0,
                         0,
@@ -124,19 +124,19 @@ public sealed class UserBehavior(IUserRepository repo,IStorage file,IAdapterFact
 
             // Check userid dup 
 
-            if(await repo.IsAnyUserByUserIdAsync(domain.UserId))
+            if (await repo.IsAnyUserByUserIdAsync(domain.UserId))
                   throw new BadRequestException(MessageHelper.Common.Duplicate(nameof(domain.UserId)));
 
-            foreach(var c in domain.Credentials)
+            foreach (var c in domain.Credentials)
             {
-                  if(await repo.IsAnyCardNumberAsync(c.CardNumber))
+                  if (await repo.IsAnyCardNumberAsync(c.CardNumber))
                         throw new BadRequestException(MessageHelper.Common.Duplicate(nameof(c.CardNumber)));
             }
 
-      
 
             // Query Group
             var gps = await bus.QueryAsync(new GroupsListByRangeIdQuery(domain.Groups));
+
 
             foreach (var g in gps)
             {
@@ -164,17 +164,18 @@ public sealed class UserBehavior(IUserRepository repo,IStorage file,IAdapterFact
 
             }
 
+
             return await repo.CreateUserAsync(domain);
       }
 
       public async Task<CompanyDto> DeleteCompanyAsync(int id)
       {
-            if(!await repo.IsAnyCompanyByIdAsync(id))
+            if (!await repo.IsAnyCompanyByIdAsync(id))
                   throw new BadRequestException(MessageHelper.Common.NotFound("Company", id));
 
             // Check any relate record 
             var relateRecord = await repo.CheckCompanyRelateRecordAsync(id);
-            if(!string.IsNullOrEmpty(relateRecord))
+            if (!string.IsNullOrEmpty(relateRecord))
                   throw new BadRequestException(MessageHelper.Common.FoundRelatedRecord(relateRecord));
 
             return await repo.DeleteCompanyAsync(id);
@@ -182,12 +183,12 @@ public sealed class UserBehavior(IUserRepository repo,IStorage file,IAdapterFact
 
       public async Task<DepartmentDto> DeleteDepartmentAsync(int id)
       {
-            if(!await repo.IsAnyDepartmentByIdAsync(id))
+            if (!await repo.IsAnyDepartmentByIdAsync(id))
                   throw new BadRequestException(MessageHelper.Common.NotFound("Department", id));
-            
+
             // Check any relate record 
             var relateRecord = await repo.CheckDepartmentRelateRecordAsync(id);
-            if(!string.IsNullOrEmpty(relateRecord))
+            if (!string.IsNullOrEmpty(relateRecord))
                   throw new BadRequestException(MessageHelper.Common.FoundRelatedRecord(relateRecord));
 
             return await repo.DeleteDepartmentAsync(id);
@@ -195,12 +196,12 @@ public sealed class UserBehavior(IUserRepository repo,IStorage file,IAdapterFact
 
       public async Task<PositionDto> DeletePositionAsync(int id)
       {
-            if(!await repo.IsAnyPositionByIdAsync(id))
+            if (!await repo.IsAnyPositionByIdAsync(id))
                   throw new BadRequestException(MessageHelper.Common.NotFound("Position", id));
 
             // Check any relate record 
             var relateRecord = await repo.CheckPositionRelateRecordAsync(id);
-            if(!string.IsNullOrEmpty(relateRecord))
+            if (!string.IsNullOrEmpty(relateRecord))
                   throw new BadRequestException(MessageHelper.Common.FoundRelatedRecord(relateRecord));
 
             return await repo.DeletePositionAsync(id);
@@ -208,7 +209,7 @@ public sealed class UserBehavior(IUserRepository repo,IStorage file,IAdapterFact
 
       public async Task<UserDto> DeleteUserAsync(int id)
       {
-            if(!await repo.IsAnyUserByIdAsync(id))
+            if (!await repo.IsAnyUserByIdAsync(id))
                   throw new BadRequestException(MessageHelper.Common.NotFound("User", id));
 
             var credentials = await repo.GetCredentialsByUserIdAysnc(id);
@@ -217,40 +218,40 @@ public sealed class UserBehavior(IUserRepository repo,IStorage file,IAdapterFact
 
             var macs = await bus.QueryAsync(new MacsByGroupIdsQuery(groupIds));
 
-            foreach(var mac in macs)
+            foreach (var mac in macs)
             {
-                  var device = await bus.QueryAsync(new DeviceByMacAsyncQuery(mac)); 
+                  var device = await bus.QueryAsync(new DeviceByMacAsyncQuery(mac));
                   // Get All Device that user in 
-                  foreach(var cred in credentials)
+                  foreach (var cred in credentials)
                   {
                         await factory.GetAdapter(device.Type).User.DeleteUserAsync(
                         device.Mac,
                         device.ComponentId,
                         cred.CardNumber);
-                        
+
                   }
-                     
+
             }
-            
-            
+
+
             return await repo.DeleteUserAsync(id);
 
       }
 
-      public async Task<BaseResponse> UploadImageAsync(string userid,Stream stream)
-        {
+      public async Task<BaseResponse> UploadImageAsync(string userid, Stream stream)
+      {
             if (string.IsNullOrEmpty(userid))
                   throw new BadRequestException(MessageHelper.Common.Empty(nameof(userid)));
 
             if (!await repo.IsAnyUserByUserIdAsync(userid))
-                  throw new BadRequestException(MessageHelper.Common.NotFound("User",userid));
+                  throw new BadRequestException(MessageHelper.Common.NotFound("User", userid));
 
-            var path = await file.SaveUserAsync(stream,userid);
+            var path = await file.SaveUserAsync(stream, userid);
 
-            await repo.UpdateImagePathAsync(path,userid);
+            await repo.UpdateImagePathAsync(path, userid);
 
-            return new BaseResponse(HttpStatusCode.OK,MessageHelper.Common.Success, DateTime.UtcNow);
-        }
+            return new BaseResponse(HttpStatusCode.OK, MessageHelper.Common.Success, DateTime.UtcNow);
+      }
 
       public async Task<Pagination<CompanyDto>> GetCompanyPaginationAsync(PaginationParams param)
       {
@@ -284,11 +285,11 @@ public sealed class UserBehavior(IUserRepository repo,IStorage file,IAdapterFact
             );
 
             // Check first that company is there or not 
-            if(!await repo.IsAnyCompanyByIdAsync(dto.Id))
-                  throw new BadRequestException(MessageHelper.Common.NotFound(nameof(dto.Id),dto.Id));
+            if (!await repo.IsAnyCompanyByIdAsync(dto.Id))
+                  throw new BadRequestException(MessageHelper.Common.NotFound(nameof(dto.Id), dto.Id));
 
             return await repo.UpdateCompanyAsync(domain);
-            
+
       }
 
       public async Task<DepartmentDto> UpdateDepartmentAsync(DepartmentDto dto)
@@ -303,10 +304,10 @@ public sealed class UserBehavior(IUserRepository repo,IStorage file,IAdapterFact
             );
 
             // Check first that company is there or not 
-            if(!await repo.IsAnyDepartmentByIdAsync(dto.Id))
-                  throw new BadRequestException(MessageHelper.Common.NotFound(nameof(dto.Id),dto.Id));
+            if (!await repo.IsAnyDepartmentByIdAsync(dto.Id))
+                  throw new BadRequestException(MessageHelper.Common.NotFound(nameof(dto.Id), dto.Id));
 
-            
+
 
             return await repo.UpdateDepartmentAsync(domain);
       }
@@ -323,8 +324,8 @@ public sealed class UserBehavior(IUserRepository repo,IStorage file,IAdapterFact
             );
 
             // Check first that company is there or not 
-            if(!await repo.IsAnyPositionByIdAsync(dto.Id))
-                  throw new BadRequestException(MessageHelper.Common.NotFound(nameof(dto.Id),dto.Id));
+            if (!await repo.IsAnyPositionByIdAsync(dto.Id))
+                  throw new BadRequestException(MessageHelper.Common.NotFound(nameof(dto.Id), dto.Id));
 
             return await repo.UpdatePositionAsync(domain);
       }
@@ -349,7 +350,7 @@ public sealed class UserBehavior(IUserRepository repo,IStorage file,IAdapterFact
                   dto.Flag,
                   dto.Additionals,
                   dto.Image,
-                  dto.Credentials.Select(c => 
+                  dto.Credentials.Select(c =>
                         new Credential(
                               c.Id,
                               dto.Id,
@@ -372,7 +373,7 @@ public sealed class UserBehavior(IUserRepository repo,IStorage file,IAdapterFact
                   dto.IsActive
                   );
 
-            if(!await repo.IsAnyUserByUserIdAsync(dto.UserId))
+            if (!await repo.IsAnyUserByUserIdAsync(dto.UserId))
                   throw new BadRequestException(MessageHelper.Common.Duplicate(dto.UserId));
 
             return await repo.UpdateUserAsync(domain);
@@ -394,7 +395,7 @@ public sealed class UserBehavior(IUserRepository repo,IStorage file,IAdapterFact
 
       public async Task<Pagination<DepartmentDto>> GetDepartmentByCompanyAsync(PaginationParams param, int CompanyId)
       {
-            var res = await repo.GetDepartmentByCompanyAsync(param,CompanyId);
+            var res = await repo.GetDepartmentByCompanyAsync(param, CompanyId);
             return res;
       }
 
@@ -406,7 +407,7 @@ public sealed class UserBehavior(IUserRepository repo,IStorage file,IAdapterFact
 
       public async Task<Pagination<PositionDto>> GetPositionByDepartmentAsync(PaginationParams param, int DepartmentId)
       {
-            return await repo.GetPositionByDepartmentAsync(param,DepartmentId);
+            return await repo.GetPositionByDepartmentAsync(param, DepartmentId);
       }
 
       public async Task<IEnumerable<OptionDto>> GetCompanyOptionByLocationAsync(int LocationId)

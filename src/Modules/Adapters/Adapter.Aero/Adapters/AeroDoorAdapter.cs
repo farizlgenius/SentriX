@@ -24,7 +24,7 @@ public sealed class AeroDoorAdapter(IDoorCommand door, IOutputCommand output, II
       )
       {
 
-            var metadata = JSONHelper.Deserialize<DoorMetadata>(Metadata);
+            var metadata = JsonHelper.Deserialize<DoorMetadata>(Metadata);
             if (metadata == null)
                   throw new Exception(MessageHelper.Common.DeserializeFailed("DoorMetadata"));
 

@@ -58,7 +58,7 @@ public sealed class DoorBehavior(IDoorRepository repo,IMessageBus bus,IAdapterFa
             // Save component used
 
 
-            DoorMetadata? data = JSONHelper.Deserialize<DoorMetadata>(dto.Metadata);
+            DoorMetadata? data = JsonHelper.Deserialize<DoorMetadata>(dto.Metadata);
 
             // Redaer in
             if(data != null)
@@ -138,7 +138,7 @@ public sealed class DoorBehavior(IDoorRepository repo,IMessageBus bus,IAdapterFa
                   entity.SecondComponentId
                   );
 
-             DoorMetadata? data = JSONHelper.Deserialize<DoorMetadata>(entity.Metadata);
+             DoorMetadata? data = JsonHelper.Deserialize<DoorMetadata>(entity.Metadata);
 
             // Redaer in
             if(data != null)

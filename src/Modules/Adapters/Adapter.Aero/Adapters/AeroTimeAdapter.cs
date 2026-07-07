@@ -23,7 +23,7 @@ public sealed class AeroTimeAdapter(ITimeCommand time,IMessageBus bus,IAeroRepos
             string Metadata
             )
       {
-            var metadata = JSONHelper.Deserialize<HolidayMetadata>(Metadata);
+            var metadata = JsonHelper.Deserialize<HolidayMetadata>(Metadata);
             if(metadata == null)
                   throw new Exception(MessageHelper.Common.DeserializeFailed("HolidayMetadata"));
 
@@ -76,7 +76,7 @@ public sealed class AeroTimeAdapter(ITimeCommand time,IMessageBus bus,IAeroRepos
             string Metadata
       )
       {
-            var metadata = JSONHelper.Deserialize<HolidayMetadata>(Metadata);
+            var metadata = JsonHelper.Deserialize<HolidayMetadata>(Metadata);
             if(metadata == null)
                   throw new Exception(MessageHelper.Common.DeserializeFailed("HolidayMetadata"));
 

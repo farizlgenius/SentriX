@@ -51,7 +51,7 @@ public sealed class AmicoDeviceAdapter(IDeviceCommand command) : IAmicoDeviceAda
 
             await command.LogoutAsync(ip,logRes.Session);
 
-            return JSONHelper.Serialize(info);
+            return JsonHelper.Serialize(info);
 
       }
 

@@ -94,7 +94,7 @@ public sealed class GroupRepository(GroupDbContext context) : IGroupRepository
       public async Task<IEnumerable<GroupDto>> GetByLocationIdAsync(int location, CancellationToken ct = default)
       {
             return await context.Groups.AsNoTracking()
-            .Where(x => x.location_id == location)
+            .Where(x => x.location_id == location || x.location_id == 0)
             .Select(x => new GroupDto(
                   x.id,
                   x.component_id,

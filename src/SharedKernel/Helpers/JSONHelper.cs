@@ -5,25 +5,31 @@ using System.Text.Json;
 
 namespace SharedKernel.Helpers;
 
-public static class JSONHelper
+public static class JsonHelper
 {
-      public static T Deserialize<T>(string body)
+      private static readonly JsonSerializerOptions Options = new()
       {
-            Console.WriteLine($"Deserialized message: {body}");
-            var options = new JsonSerializerOptions
-            {
-                  PropertyNameCaseInsensitive = true
-            };
-            return JsonSerializer.Deserialize<T>(body, options)!;
+            PropertyNameCaseInsensitive = true
+      };
+
+      public static T? Deserialize<T>(string json)
+      {
+            return JsonSerializer.Deserialize<T>(json, Options);
       }
 
-      public static string Serialize<T>(T body)
+      public static T? Deserialize<T>(JsonElement element)
       {
-            Console.WriteLine($"Serialized message: {body}");
-            var options = new JsonSerializerOptions
-            {
-                  PropertyNameCaseInsensitive = true
-            };
-            return JsonSerializer.Serialize(body,options)!;
+            return element.Deserialize<T>(Options);
+      }
+
+      public static string Serialize<T>(T value)
+      {
+            return JsonSerializer.Serialize(value, Options);
+      }
+
+      public static JsonElement ToJsonElement(string json)
+      {
+            using var document = JsonDocument.Parse(json);
+            return document.RootElement.Clone();
       }
 }
