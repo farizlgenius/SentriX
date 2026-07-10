@@ -89,4 +89,10 @@ public static partial class ValidationHelper
       throw new ArgumentException("Device Type is invalid");
   }
 
+  public static void ValidateDateTime(string value,DateTime dateTime)
+  {
+      if(value == default)
+        throw new ArgumentException($"'{value}' is invalid.", dateTime.ToString());
+  }
+
 }

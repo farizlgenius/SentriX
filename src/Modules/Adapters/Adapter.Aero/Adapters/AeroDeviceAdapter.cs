@@ -144,7 +144,7 @@ public sealed class AeroDeviceAdapter(
             return res.IsSend;
       }
 
-      public Task<string> GetDeviceInformationAsync(string ip, string login, string password)
+      public Task<string> GetDeviceInformationByMacAsync(string Mac)
       {
             throw new NotImplementedException();
       }
@@ -152,6 +152,11 @@ public sealed class AeroDeviceAdapter(
       public async Task VerifyDeviceComponentAsync(int ComponentId)
       {
             await scp.VerifyScpComponentAsync(ComponentId);
+      }
+
+      public Task<string> GetDeviceInformationByIpAsync(string Ip)
+      {
+            throw new NotImplementedException();
       }
 }
 

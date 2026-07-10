@@ -308,7 +308,7 @@ public sealed class DeviceRepository(DeviceDbContext context) : IDeviceRepositor
       {
             return await context.Devices.AsNoTracking()
             .OrderByDescending(x => x.id)
-            .Where(x => x.location_id == locationId && x.type == DeviceType.AERO.ToString())
+            .Where(x => x.location_id == locationId && x.type == DeviceType.aero.ToString())
             .Select(x => new OptionDto(x.name, x.component_id,x.mac,x.id,false))
             .ToArrayAsync();
       }
@@ -317,7 +317,7 @@ public sealed class DeviceRepository(DeviceDbContext context) : IDeviceRepositor
       {
             return await context.Devices.AsNoTracking()
             .OrderByDescending(x => x.id)
-            .Where(x => x.location_id == locationId && x.type == DeviceType.AMICO.ToString())
+            .Where(x => x.location_id == locationId && x.type == DeviceType.amico.ToString())
             .Select(x => new OptionDto(x.name, x.component_id,x.mac,x.id,false))
             .ToArrayAsync();
       }

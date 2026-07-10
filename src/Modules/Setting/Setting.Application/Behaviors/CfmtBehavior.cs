@@ -49,7 +49,7 @@ public sealed class CfmtBehavior(
 
             foreach(var device in devices)
             {
-                  await adapter.GetAdapter(DeviceType.AERO.ToString()).Setting.CardFormatConfiguration(
+                  await adapter.GetAdapter(DeviceType.aero.ToString()).Setting.CardFormatConfiguration(
                         device.Mac,
                         device.ComponentId,
                         componentId,
@@ -101,7 +101,7 @@ public sealed class CfmtBehavior(
 
             foreach(var device in devices)
             {
-                  await adapter.GetAdapter(DeviceType.AERO.ToString()).Setting.CardFormatConfiguration(
+                  await adapter.GetAdapter(DeviceType.aero.ToString()).Setting.CardFormatConfiguration(
                         device.Mac,
                         device.ComponentId,
                         domain.ComponentId,
@@ -167,7 +167,7 @@ public sealed class CfmtBehavior(
 
             foreach(var device in devices)
             {
-                  await adapter.GetAdapter(DeviceType.AERO.ToString()).Setting.CardFormatConfiguration(
+                  await adapter.GetAdapter(DeviceType.aero.ToString()).Setting.CardFormatConfiguration(
                         device.Mac,
                         device.ComponentId,
                         domain.ComponentId,

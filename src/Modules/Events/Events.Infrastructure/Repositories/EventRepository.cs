@@ -27,7 +27,7 @@ public sealed class EventRepository(EventDbContext context) : IEventRepository
                         response.Status,
                         response.Reason,
                         string.Empty,
-                        DeviceType.AERO.ToString(),
+                        DeviceType.aero.ToString(),
                         LocationId
                         )
             );

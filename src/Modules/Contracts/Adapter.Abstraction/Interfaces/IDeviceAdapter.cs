@@ -5,7 +5,7 @@ namespace Adapter.Abstraction.Interfaces;
 
 public interface IDeviceAdapter
 {
-      Task<List<IdReportDto>> GetIdReportsAsync();
+      
       Task CreateDeviceAsync( string Mac,
             short ComponentId);
       Task<bool> GetDeviceStatusAsync(int ComponentId);
@@ -18,11 +18,15 @@ public interface IDeviceAdapter
             short Address,
             short Port
       );
-      Task<bool> AsciiCommandAsync(string Mac,int ComponentId,string Command);
+      
       Task<bool> GetEventStatusAsync(string Mac,int ComponentId);
       Task<bool> SetEventStatusAsync(string Mac,int ComponentId,bool IsEnable);
-      // Amico
-      Task<string> GetDeviceInformationAsync(string ip,string login,string password);
+
+      Task<string> GetDeviceInformationByMacAsync(string Mac);
+      Task<string> GetDeviceInformationByIpAsync(string Ip);
       Task VerifyDeviceComponentAsync(int ComponentId);
+
+      Task<bool> AsciiCommandAsync(string Mac,int ComponentId,string Command);
+      Task<List<IdReportDto>> GetIdReportsAsync();
 
 }

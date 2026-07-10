@@ -67,7 +67,7 @@ public sealed class DeviceBehaviors(IDeviceRepository repo, IMessageBus bus, IAd
                   0,
                   dto.Mac,
                   SioModel.x1100.ToString(),
-                  DeviceType.AERO.ToString(),
+                  DeviceType.aero.ToString(),
                   res.Id,
                   dto.LocationId,
                   dto.IsActive
@@ -91,7 +91,7 @@ public sealed class DeviceBehaviors(IDeviceRepository repo, IMessageBus bus, IAd
                   dto.Address,
                   string.Empty,
                   dto.Model.ToString(),
-                  DeviceType.AERO.ToString(),
+                  DeviceType.aero.ToString(),
                   deviceId,
                   dto.LocationId,
                   true
@@ -124,15 +124,15 @@ public sealed class DeviceBehaviors(IDeviceRepository repo, IMessageBus bus, IAd
             if (string.IsNullOrWhiteSpace(type))
                   throw new BadRequestException(MessageHelper.Common.Empty(type));
 
-            if (!type.Equals(DeviceType.AERO.ToString()) && !type.Equals(DeviceType.AMICO.ToString()))
+            if (!type.Equals(DeviceType.aero.ToString()) && !type.Equals(DeviceType.amico.ToString()))
                   throw new BadRequestException(MessageHelper.Common.NotFound("Type", type));
 
-            if (type.Equals(DeviceType.AERO.ToString()))
+            if (type.Equals(DeviceType.aero.ToString()))
             {
                   var res = await repo.GetOptionByLocationIdTypeAeroAsync(locationId, type, ct);
                   return res;
             }
-            else if (type.Equals(DeviceType.AMICO.ToString()))
+            else if (type.Equals(DeviceType.amico.ToString()))
             {
                   var res = await repo.GetOptionByLocationIdTypeAmicoAsync(locationId, type, ct);
                   return res;
@@ -253,7 +253,7 @@ public sealed class DeviceBehaviors(IDeviceRepository repo, IMessageBus bus, IAd
 
            foreach(var module in modules)
             {
-                  if (device.Type.Equals(DeviceType.AERO.ToString()))
+                  if (device.Type.Equals(DeviceType.aero.ToString()))
                   {
                         if (Enum.TryParse<SioModel>(module.Model, out var status))
                         {
@@ -443,10 +443,7 @@ public sealed class DeviceBehaviors(IDeviceRepository repo, IMessageBus bus, IAd
 
       public async Task<string> GetAmicoDeviceInformationAsync(AmicoStartSessionDto dto)
       {
-            var res = await adapterFactory.GetAdapter(DeviceType.AMICO.ToString()).Device.GetDeviceInformationAsync(
-                  dto.Ip,
-                  dto.Login,
-                  dto.Password);
+            var res = await adapterFactory.GetAdapter(DeviceType.amico.ToString()).Device.GetDeviceInformationByIpAsync(dto.Ip);
 
             return res;
       }

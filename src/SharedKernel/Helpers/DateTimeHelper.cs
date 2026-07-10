@@ -16,4 +16,16 @@ public static class DateTimeHelper
             DateTimeOffset dto = new DateTimeOffset(date);
             return dto.ToUnixTimeSeconds();
       }
+
+       public static int ConvertTimeToEndMinute(string timeString)
+      {
+            // Parse "HH:mm"
+            var time = TimeSpan.Parse(timeString);
+
+            // Convert hours/minutes to minutes since 12:00 AM
+            int startMinutes = time.Hours * 60 + time.Minutes;
+
+            // Return the minute number at the *end* of this minute
+            return startMinutes;
+      }
 }

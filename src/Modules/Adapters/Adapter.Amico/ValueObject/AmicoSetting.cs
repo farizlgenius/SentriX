@@ -5,4 +5,8 @@ namespace Adapter.Amico.ValueObject;
 public sealed class AmicoSetting : IAmicoSetting
 {
       public bool Secure {get; set;} = false;
+
+      public string Login {get; set;} = string.Empty;
+
+      public string Password {get; set;} = string.Empty;
 }

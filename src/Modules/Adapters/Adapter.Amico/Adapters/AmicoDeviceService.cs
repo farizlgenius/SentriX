@@ -3,6 +3,7 @@ using System.Text.Json;
 using Adapter.Abstraction.Interfaces;
 using Adapter.Amico.Helper;
 using Adapter.Amico.Interface;
+using Adapter.Amico.Interfaces;
 using Adapter.Amico.Model.Request;
 using Adapter.Amico.Model.Response;
 using Device.Contract.DTOs;
@@ -10,12 +11,9 @@ using SharedKernel.Helpers;
 
 namespace Adapter.Amico.Adapters;
 
-public sealed class AmicoDeviceAdapter(IDeviceCommand command) : IAmicoDeviceAdapter
+public sealed class AmicoDeviceAdapter(IDeviceCommand command,IAmicoRepository repo) : IAmicoDeviceAdapter
 {
-      public Task<bool> AsciiCommandAsync(string Mac, int ComponentId, string Command)
-      {
-            throw new NotImplementedException();
-      }
+
 
       public async Task CreateDeviceAsync(string Mac, short ComponentId)
       {
@@ -42,14 +40,31 @@ public sealed class AmicoDeviceAdapter(IDeviceCommand command) : IAmicoDeviceAda
             throw new NotImplementedException();
       }
 
-      public async Task<string> GetDeviceInformationAsync(string ip, string login, string password)
+      public async Task<string> GetDeviceInformationByMacAsync(string Mac)
       {
-            // Login
-            var logRes = await command.LoginAsync(ip,login,password);
-            
-            var info = await command.DeviceInfoAsync(ip,logRes.Session);
+            var amico = await repo.GetAmicoByMacAsync(Mac);
+            var session = amico.session;
 
-            await command.LogoutAsync(ip,logRes.Session);
+            var res = await command.CheckSession(amico.ip, amico.session);
+
+            if (!res.SessionIsValid)
+            {
+                  var news = await command.LoginAsync(amico.ip);
+                  session = news.Session;
+                  await repo.UpdateSessionByMacAsync(amico.mac,news.Session);
+            }
+            
+            var info = await command.DeviceInfoAsync(amico.ip,session);
+
+            return JsonHelper.Serialize(info);
+
+      }
+
+      public async Task<string> GetDeviceInformationByIpAsync(string Ip)
+      {
+            var res = await command.LoginAsync(Ip);
+
+            var info = await command.DeviceInfoAsync(Ip,res.Session);            
 
             return JsonHelper.Serialize(info);
 
@@ -66,6 +81,11 @@ public sealed class AmicoDeviceAdapter(IDeviceCommand command) : IAmicoDeviceAda
       }
 
       public Task VerifyDeviceComponentAsync(int ComponentId)
+      {
+            throw new NotImplementedException();
+      }
+
+      public Task<bool> AsciiCommandAsync(string Mac, int ComponentId, string Command)
       {
             throw new NotImplementedException();
       }

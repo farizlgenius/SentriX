@@ -3,7 +3,9 @@ using Adapter.Abstraction.Interfaces;
 using Adapter.Amico.Adapters;
 using Adapter.Amico.Command;
 using Adapter.Amico.Interface;
+using Adapter.Amico.Interfaces;
 using Adapter.Amico.Persistences;
+using Adapter.Amico.Repositories;
 using Adapter.Amico.Services;
 using Adapter.Amico.ValueObject;
 using Microsoft.EntityFrameworkCore;
@@ -26,6 +28,7 @@ public static class AmicoDependencyInjection
             services.AddScoped<IHttpClient, HttpClientService>();
             services.AddScoped<IAmicoDeviceAdapter,AmicoDeviceAdapter>();
             services.AddScoped<IDeviceCommand,DeviceCommand>();
+            services.AddScoped<IAmicoRepository,AmicoRepository>();
 
             services.AddScoped<IAdapter, AmicoAdapter>();
 
