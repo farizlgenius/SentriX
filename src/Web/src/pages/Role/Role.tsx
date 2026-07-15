@@ -156,9 +156,9 @@ export const Role = () => {
 
     const fetchData = async (pageNumber: number, pageSize: number, locationId?: number, search?: string, startDate?: string, endDate?: string) => {
         const res = await send.get(RoleEndpoint.PAGINATION(pageNumber, pageSize, locationId, search, startDate, endDate));
-        if (res && res.data) {
-            setRolesDto(res.data.items);
-            setPagination(res.data);
+        if (res.data.success) {
+            setRolesDto(res.data.data.items);
+            setPagination(res.data.data);
         }
     }
 

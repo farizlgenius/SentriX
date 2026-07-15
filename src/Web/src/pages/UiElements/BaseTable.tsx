@@ -1,7 +1,7 @@
 import { Table, TableBody, TableCell, TableHeader, TableRow } from "../../components/ui/table";
 import Search from "../../components/ui/table/Search";
 import { TableProp } from "../../model/TableProp";
-import {  ToggleOffIcon, ToggleOnIcon, TrashBinIcon } from "../../icons";
+import { ToggleOffIcon, ToggleOnIcon, TrashBinIcon } from "../../icons";
 import { useEffect, useMemo, useState } from "react";
 import Pagination from "../../components/ui/table/Pagination";
 import { usePagination } from "../../context/PaginationContext";
@@ -10,7 +10,7 @@ import Switch from "../../components/form/switch/Switch";
 
 
 
-export const BaseTable = <T extends { id: number | string, isDefault: boolean, isActive: boolean }>({ id, headers, keys, data, onEdit, onInfo, onRemove, setSelect, renderOptionalComponent, specialDisplay, onClick: handleClick, permission, action, status, select, subTable, fetchData, refresh, locationId }: TableProp<T>) => {
+export const BaseTable = <T extends { guid: string, isDefault: boolean, isActive: boolean }>({ id, headers, keys, data, onEdit, onInfo, onRemove, setSelect, renderOptionalComponent, specialDisplay, onClick: handleClick, permission, action, status, select, subTable, fetchData, refresh, locationId }: TableProp<T>) => {
     const { search, startDate, endDate, pageSize, pagination, setPageSize } = usePagination();
     const [show, setShow] = useState<number>(-1)
     const [sortKey, setSortKey] = useState<string>(keys?.[0] ?? "");
@@ -96,7 +96,7 @@ export const BaseTable = <T extends { id: number | string, isDefault: boolean, i
             setSelect((prev) => [...prev, data]);
         } else {
             setSelect((prev) =>
-                prev.filter((item) => item.id !== data.id)
+                prev.filter((item) => item.guid !== data.guid)
             );
         }
 
@@ -187,8 +187,8 @@ export const BaseTable = <T extends { id: number | string, isDefault: boolean, i
                                             {
                                                 /* Status */
                                             }
-                                            <TableCell  className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                                                <Switch label={""} defaultChecked={data.isActive}  onChange={(checked) => {
+                                            <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                                                <Switch label={""} defaultChecked={data.isActive} onChange={(checked) => {
                                                     console.log(checked)
                                                 }} />
                                             </TableCell>
@@ -209,14 +209,13 @@ export const BaseTable = <T extends { id: number | string, isDefault: boolean, i
                                                             }}
                                                             disabled={!permission?.isDeleted || data.isDefault}
                                                             className={`
-    inline-flex items-center justify-center
-    rounded-lg p-1
-    transition-all duration-200
-    ${permission?.isDeleted || !data.isDefault
-        ?
-        "cursor-pointer text-red-600 hover:bg-red-50 hover:text-red-700 active:scale-95"
-                                                                    : "cursor-not-allowed bg-gray-100 text-gray-400 opacity-60"
-                                                                    
+                                                                    inline-flex items-center justify-center
+                                                                    rounded-lg p-1
+                                                                    transition-all duration-200
+                                                                    ${permission?.isDeleted || !data.isDefault
+                                                                    ?
+                                                                    "cursor-not-allowed bg-gray-100 text-gray-400 opacity-60" :
+                                                                    "cursor-pointer text-red-600 hover:bg-red-50 hover:text-red-700 active:scale-95"
                                                                 }
   `}
                                                         >

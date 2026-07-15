@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using Storage.Interfaces;
 
 namespace Storage.Behaviors;
@@ -7,6 +8,7 @@ public sealed class PathProviderBehavior : IFilePathProvider
       public string Users { get; }
       public string Maps { get; }
       public string Operators {get;}
+      public string Captures {get;}
 
       public PathProviderBehavior()
       {
@@ -15,10 +17,12 @@ public sealed class PathProviderBehavior : IFilePathProvider
 
             Users = Path.Combine(runtimeRoot, "images", "users");
             Maps = Path.Combine(runtimeRoot, "images", "maps");
-            Operators = Path.Combine(runtimeRoot,"iamges","operators");
+            Operators = Path.Combine(runtimeRoot,"images","operators");
+            Captures = Path.Combine(runtimeRoot,"images","captures");
 
             Directory.CreateDirectory(Users);
             Directory.CreateDirectory(Maps);
             Directory.CreateDirectory(Operators);
+            Directory.CreateDirectory(Captures);
       }
 }

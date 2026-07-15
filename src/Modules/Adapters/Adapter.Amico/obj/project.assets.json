@@ -705,6 +705,33 @@
           "bin/placeholder/Door.Contract.dll": {}
         }
       },
+      "Events.Contract/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v10.0",
+        "dependencies": {
+          "SharedKernel": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/Events.Contract.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Events.Contract.dll": {}
+        }
+      },
+      "Notifier.Contract/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v10.0",
+        "dependencies": {
+          "Device.Contract": "1.0.0",
+          "SharedKernel": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/Notifier.Contract.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Notifier.Contract.dll": {}
+        }
+      },
       "Output.Contract/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v10.0",
@@ -733,6 +760,16 @@
         },
         "runtime": {
           "bin/placeholder/SharedKernel.dll": {}
+        }
+      },
+      "Storage.Contract/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v10.0",
+        "compile": {
+          "bin/placeholder/Storage.Contract.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Storage.Contract.dll": {}
         }
       },
       "Time.Contract/1.0.0": {
@@ -1760,6 +1797,16 @@
       "path": "../../Contracts/Door.Contract/Door.Contract.csproj",
       "msbuildProject": "../../Contracts/Door.Contract/Door.Contract.csproj"
     },
+    "Events.Contract/1.0.0": {
+      "type": "project",
+      "path": "../../Contracts/Events.Contract/Events.Contract.csproj",
+      "msbuildProject": "../../Contracts/Events.Contract/Events.Contract.csproj"
+    },
+    "Notifier.Contract/1.0.0": {
+      "type": "project",
+      "path": "../../Contracts/Notifier.Contract/Notifier.Contract.csproj",
+      "msbuildProject": "../../Contracts/Notifier.Contract/Notifier.Contract.csproj"
+    },
     "Output.Contract/1.0.0": {
       "type": "project",
       "path": "../../Contracts/Output.Contract/Output.Contract.csproj",
@@ -1770,6 +1817,11 @@
       "path": "../../../SharedKernel/SharedKernel.csproj",
       "msbuildProject": "../../../SharedKernel/SharedKernel.csproj"
     },
+    "Storage.Contract/1.0.0": {
+      "type": "project",
+      "path": "../../Contracts/Storage.Contract/Storage.Contract.csproj",
+      "msbuildProject": "../../Contracts/Storage.Contract/Storage.Contract.csproj"
+    },
     "Time.Contract/1.0.0": {
       "type": "project",
       "path": "../../Contracts/Time.Contract/Time.Contract.csproj",
@@ -1779,13 +1831,16 @@
   "projectFileDependencyGroups": {
     "net10.0": [
       "Adapter.Abstraction >= 1.0.0",
+      "Events.Contract >= 1.0.0",
       "Microsoft.Extensions.Configuration >= 10.0.7",
       "Microsoft.Extensions.Configuration.FileExtensions >= 10.0.7",
       "Microsoft.Extensions.Configuration.Json >= 10.0.7",
       "Microsoft.Extensions.Options >= 10.0.7",
       "Microsoft.Extensions.Options.ConfigurationExtensions >= 10.0.7",
+      "Notifier.Contract >= 1.0.0",
       "Npgsql.EntityFrameworkCore.PostgreSQL >= 10.0.1",
-      "SharedKernel >= 1.0.0"
+      "SharedKernel >= 1.0.0",
+      "Storage.Contract >= 1.0.0"
     ]
   },
   "packageFolders": {
@@ -1818,6 +1873,15 @@
           "projectReferences": {
             "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Adapter.Abstraction\\Adapter.Abstraction.csproj": {
               "projectPath": "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Adapter.Abstraction\\Adapter.Abstraction.csproj"
+            },
+            "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Events.Contract\\Events.Contract.csproj": {
+              "projectPath": "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Events.Contract\\Events.Contract.csproj"
+            },
+            "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Notifier.Contract\\Notifier.Contract.csproj": {
+              "projectPath": "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Notifier.Contract\\Notifier.Contract.csproj"
+            },
+            "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Storage.Contract\\Storage.Contract.csproj": {
+              "projectPath": "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Storage.Contract\\Storage.Contract.csproj"
             },
             "D:\\aero\\SentriX\\src\\SharedKernel\\SharedKernel.csproj": {
               "projectPath": "D:\\aero\\SentriX\\src\\SharedKernel\\SharedKernel.csproj"

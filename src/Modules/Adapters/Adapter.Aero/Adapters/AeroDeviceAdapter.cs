@@ -23,7 +23,7 @@ namespace Adapter.Aero.Adapters;
 public sealed class AeroDeviceAdapter(
       ILogger<AeroDeviceAdapter> logger,
       IScpService scp,
-      IScpCommand writer, IIdReportService idReport, IModuleCommand sioWriter,IMessageBus bus
+      IScpCommand writer, IIdReportService idReport, IModuleCommand sioWriter, IMessageBus bus
       ) : IAeroDeviceAdapter
 {
       public async Task<List<IdReportDto>> GetIdReportsAsync()
@@ -32,13 +32,16 @@ public sealed class AeroDeviceAdapter(
       }
 
       public async Task CreateDeviceAsync(
+            Guid Guid,
+            string Ip,
             string Mac,
-            short ComponentId
+            short ComponentId,
+            int LocationId
       )
       {
 
 
-             // Read Structure 
+            // Read Structure 
             var res = writer.ScpStructureStatusRead(
                   Mac,
                  ComponentId,
@@ -63,8 +66,8 @@ public sealed class AeroDeviceAdapter(
 
             await bus.SendAsync(new AddCommandEvent(res));
 
-            if(!res.IsSend)
-                  throw new Exception(MessageHelper.Command.Unsuccess(CommandConstant.ScpStructureStatusRead,Mac,ComponentId));
+            if (!res.IsSend)
+                  throw new Exception(MessageHelper.Command.Unsuccess(CommandConstant.ScpStructureStatusRead, Mac, ComponentId));
 
 
             idReport.IdReportInMemory.RemoveAll(x => x.Mac.Equals(Mac));
@@ -72,20 +75,20 @@ public sealed class AeroDeviceAdapter(
 
       }
 
-      public async Task<bool> GetDeviceStatusAsync(int ComponentId)
+      public async Task<bool> GetDeviceStatusAsync(string Mac, int ComponentId)
       {
             return SCPDLL.scpCheckOnline((short)ComponentId) == 1;
       }
 
-      public async Task<bool> ResetDeviceAsync(string Mac,short ScpId)
+      public async Task<bool> ResetDeviceAsync(string Mac, short ScpId)
       {
-            var res = writer.ScpReset(Mac,ScpId);
-            if(!res.IsSend)
-                  throw new Exception(MessageHelper.Command.Unsuccess(CommandConstant.ScpReset,Mac,ScpId));
+            var res = writer.ScpReset(Mac, ScpId);
+            if (!res.IsSend)
+                  throw new Exception(MessageHelper.Command.Unsuccess(CommandConstant.ScpReset, Mac, ScpId));
 
-             await bus.SendAsync(new AddCommandEvent(res));
+            await bus.SendAsync(new AddCommandEvent(res));
 
-             return res.IsSend;
+            return res.IsSend;
       }
 
       public async Task CreateModuleAsync(
@@ -118,28 +121,28 @@ public sealed class AeroDeviceAdapter(
 
             await bus.SendAsync(new AddCommandEvent(res));
 
-            if(!res.IsSend)
-                  throw new Exception(MessageHelper.Command.Unsuccess(CommandConstant.SioPanelConfiguration,Mac,ScpId));
+            if (!res.IsSend)
+                  throw new Exception(MessageHelper.Command.Unsuccess(CommandConstant.SioPanelConfiguration, Mac, ScpId));
       }
 
-      public async Task<bool> AsciiCommandAsync(string Mac,int ScpId,string Command)
+      public async Task<bool> AsciiCommandAsync(string Mac, int ScpId, string Command)
       {
-            var res = writer.AsciiCommandAsync(Mac,(short)ScpId,Command);
-            if(!res.IsSend)
-                  throw new Exception(MessageHelper.Command.Unsuccess(CommandConstant.AsciiCommandAsync,Mac,ScpId));
+            var res = writer.AsciiCommandAsync(Mac, (short)ScpId, Command);
+            if (!res.IsSend)
+                  throw new Exception(MessageHelper.Command.Unsuccess(CommandConstant.AsciiCommandAsync, Mac, ScpId));
             await bus.SendAsync(new AddCommandEvent(res));
             return res.IsSend;
       }
 
       public async Task<bool> GetEventStatusAsync(string Mac, int ComponentId)
       {
-            var res = writer.TransactionLogStatusAsync(Mac,(short)ComponentId);
+            var res = writer.TransactionLogStatusAsync(Mac, (short)ComponentId);
             return res.IsSend;
       }
 
       public async Task<bool> SetEventStatusAsync(string Mac, int ComponentId, bool IsEnable)
       {
-            var res = writer.SetTransactionLogIndexAsync(Mac,(short)ComponentId,IsEnable);
+            var res = writer.SetTransactionLogIndexAsync(Mac, (short)ComponentId, IsEnable);
             await bus.SendAsync(new AddCommandEvent(res));
             return res.IsSend;
       }
@@ -154,9 +157,29 @@ public sealed class AeroDeviceAdapter(
             await scp.VerifyScpComponentAsync(ComponentId);
       }
 
-      public Task<string> GetDeviceInformationByIpAsync(string Ip)
+      public Task<JsonElement> GetDeviceInformationByIpAsync(string Ip, bool? IsFirst)
       {
             throw new NotImplementedException();
+      }
+
+      public async Task DeleteDeviceAsync(Guid Guid, string Ip, string Mac, short ComponentId)
+      {
+            var res = writer.DeleteScp(
+                  Mac,
+                  ComponentId
+                  );
+
+            await bus.SendAsync(new AddCommandEvent(res));
+
+            if (!res.IsSend)
+                  throw new Exception(MessageHelper.Command.Unsuccess(CommandConstant.DeleteScp, Mac, ComponentId));
+
+            res = writer.DetachScpFromChannel(Mac, ComponentId);
+
+            await bus.SendAsync(new AddCommandEvent(res));
+
+            if (!res.IsSend)
+                  throw new Exception(MessageHelper.Command.Unsuccess(CommandConstant.DetachScpChannel, Mac, ComponentId));
       }
 }
 

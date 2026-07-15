@@ -19,6 +19,7 @@ using Microsoft.Extensions.Logging;
 using Notifier.Contract.Constants;
 using Notifier.Contract.Interfaces;
 using SharedKernel.Domain;
+using SharedKernel.Helpers;
 using SharedKernel.Messaging;
 
 namespace Adapter.Aero.Worker;
@@ -242,7 +243,7 @@ public sealed class ScpReplyWorker(Channel<SCPReplyMessageDto> queue, ILogger<Sc
                             }
                             var e = scope.ServiceProvider.GetRequiredService<Events.Contract.Interfaces.IEvent>();
                             await e.AddEventAsync(
-                                        DateTimeOffset.FromUnixTimeSeconds(message.tran.time).UtcDateTime,
+                                        DateTimeHelper.IntToDateTimeUTC(message.tran.time),
                                         actor,
                                         TranHelper.GetEventModuleFromTranType((tranSrc)message.tran.source_type),
                                         DescriptionHelper.GetTranTypeDesc(message.tran.tran_type),
@@ -341,7 +342,7 @@ public sealed class ScpReplyWorker(Channel<SCPReplyMessageDto> queue, ILogger<Sc
                             {
                                 await scp.InitialScpConfigurationAsync((short)message.SCPId);
                                 await scp.VerifyScpComponentAsync(message.SCPId);
-                                await devicee.UploadDeviceAsync(d.Id);
+                                await devicee.UploadDeviceAsync(d.Guid);
                             }
                             break;
                         case (int)enSCPReplyType.enSCPReplyCmndStatus:

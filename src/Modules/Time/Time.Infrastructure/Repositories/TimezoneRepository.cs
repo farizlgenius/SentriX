@@ -8,159 +8,108 @@ using Time.Infrastructure.Persistences.Entities;
 
 namespace Time.Infrastructure.Repositories;
 
-public sealed class TimezoneRepository(TimeDbContext context) : ITimezoneRepository
+public sealed class TimezoneRepository(TimeDbContext context) : ITimeZoneRepository
 {
-      public async Task<TimezoneDto> CreateAsync(Domain.Entities.Timezone timezone, CancellationToken ct = default)
+      public async Task AddAsync(Domain.Entities.TimeZone timezone, CancellationToken ct = default)
       {
-            var data = await context.Timezones.AddAsync(
-                  new Persistences.Entities.Timezone(timezone)
+            await context.Timezones.AddAsync(
+                  new Persistences.Entities.TimeZone(timezone),
+                  ct
             );
 
-            var save = await context.SaveChangesAsync(ct);
-
-            if(data.Entity == null || save <= 0)
-                  throw new Exception(MessageHelper.DB.SaveRecordUnsuccessful);
-
-            return  await context.Timezones.AsNoTracking()
-            .Include(x => x.intervals).ThenInclude(x => x.days)
-            .Where(x => x.id == data.Entity.id)
-            .Select(x => new TimezoneDto(
-                  x.id,
-                  x.component_id,
-                  x.name,
-                  x.mode,
-                  x.active,
-                  x.deactive,
-                  x.intervals.Select(x => new IntervalDto(
-                        x.id,
-                        x.component_id,
-                        new DaysInWeekDto(
-                              x.days.id,
-                              x.days.component_id,
-                              x.days.sunday,
-                              x.days.monday,
-                              x.days.tuesday,
-                              x.days.wednesday,
-                              x.days.thursday,
-                              x.days.friday,
-                              x.days.saturday,
-                              x.location_id
-                              ),
-                        x.days_detail,
-                        x.start,
-                        x.end,
-                        x.location_id,
-                        x.is_active
-                  )).ToList(),
-                  x.location_id,
-                  x.is_active,
-                  x.is_default
-                  )).FirstOrDefaultAsync() ?? new TimezoneDto();
+            await context.SaveChangesAsync(ct);
       }
 
-      public async Task<TimezoneDto> DeleteByIdAsync(int id, CancellationToken ct = default)
+      public async Task DeleteByGuidAsync(Guid guid, CancellationToken ct = default)
       {
             var entity = await context.Timezones.OrderByDescending(x => x.id)
-            .Where(x => x.id == id)
+            .Where(x => x.guid == guid)
             .FirstOrDefaultAsync();
 
-            if(entity == null)
+            if (entity == null)
                   throw new Exception(MessageHelper.DB.RecordNotFound);
 
-            var data = context.Timezones.Remove(entity);
-            var save = await context.SaveChangesAsync(ct);
-
-            if(data.Entity == null || save <= 0)
-                  throw new Exception(MessageHelper.DB.DeleteRecordUnsuccessful);
-
-            return new TimezoneDto(
-                  data.Entity.id,
-                  data.Entity.component_id,
-                  data.Entity.name,
-                  data.Entity.mode,
-                  data.Entity.active,
-                  data.Entity.deactive,
-                  data.Entity.intervals.Select(x => new IntervalDto(
-                        x.id,
-                        x.component_id,
-                        new DaysInWeekDto(
-                              x.days.id,
-                              x.days.component_id,
-                              x.days.sunday,
-                              x.days.monday,
-                              x.days.tuesday,
-                              x.days.wednesday,
-                              x.days.thursday,
-                              x.days.friday,
-                              x.days.saturday,
-                              x.days.location_id
-                              ),
-                        x.days_detail,
-                        x.start,
-                        x.end,
-                        x.location_id,
-                        x.is_active
-                        )).ToList(),
-                  data.Entity.location_id,
-                  data.Entity.is_active,
-                  data.Entity.is_default
-            );
+            context.Timezones.Remove(entity);
+            await context.SaveChangesAsync(ct);
 
       }
 
-      public async Task<TimezoneDto> GetByIdAsync(int id, CancellationToken ct = default)
+      public async Task<TimeZoneDto> GetByGuidAsync(Guid guid, CancellationToken ct = default)
       {
             return await context.Timezones.AsNoTracking()
             .Include(x => x.intervals).ThenInclude(x => x.days)
             .OrderByDescending(x => x.id)
-            .Where(x => x.id == id)
-            .Select(x => new TimezoneDto(
-                  x.id,
+            .Where(x => x.guid == guid)
+            .Select(x => new TimeZoneDto(
+                  x.guid,
                   x.component_id,
                   x.name,
                   x.mode,
                   x.active,
                   x.deactive,
                   x.intervals.Select(x => new IntervalDto(
-                        x.id,
-                        x.component_id,
+                        x.guid,
+                         x.component_id,
                         new DaysInWeekDto(
-                              x.days.id,
-                              x.days.component_id,
+                              x.days.guid,
                               x.days.sunday,
                               x.days.monday,
                               x.days.tuesday,
                               x.days.wednesday,
                               x.days.thursday,
                               x.days.friday,
-                              x.days.saturday,
-                              x.location_id
+                              x.days.saturday
                               ),
                         x.days_detail,
                         x.start,
-                        x.end,
-                        x.location_id,
-                        x.is_active
+                        x.end
                   )).ToList(),
                   x.location_id,
                   x.is_active,
                   x.is_default
-                  )).FirstOrDefaultAsync() ?? new TimezoneDto();
+                  )).FirstOrDefaultAsync() ?? new TimeZoneDto();
       }
 
-      public async Task<short> GetLowestTimezoneComponentIdAsync(CancellationToken ct = default)
+      public async Task<short> GetLowestTimeZoneComponentIdAsync(int location_id,CancellationToken ct = default)
       {
-            return (short)await ComponentHelper.LowestUnassignedNumberStartOneAsync<Timezone>(
+            return (short)await ComponentHelper.LowestUnassignedNumberStartOneWithFileterAsync<Persistences.Entities.TimeZone>(
                   context,
+                  x => x.location_id == location_id || x.location_id == 0,
                   x => x.component_id,
-                  10,
+                  255,
                   ct
                   );
       }
 
+      public async Task<short> GetLowestIntervalComponentIdAsync(CancellationToken ct = default)
+      {
+            return (short)await ComponentHelper.LowestUnassignedNumberStartOneAsync<Persistences.Entities.Interval>(
+                  context,
+                  x => x.component_id,
+                  255,
+                  ct
+                  );
+      }
+
+      public async Task<short> GetLowestIntervalComponentIdExceptStartFromOneAsync(
+            List<int> Excepts,
+            Guid TzGuid,
+            CancellationToken ct = default
+            )
+      {
+            return (short)await ComponentHelper.LowestUnassignedNumberExceptStartFromOneAsync<Persistences.Entities.Interval>(
+                  context,
+                  Excepts,
+                  x => x.timezone_guid == TzGuid,
+                  x => x.component_id,
+                  255,
+                  ct
+            );
+      }
 
 
-      public async Task<Pagination<TimezoneDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
+
+      public async Task<Pagination<TimeZoneDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
       {
             var query = context.Timezones.AsNoTracking().Where(x => x.location_id == param.locationId || x.location_id == 0).AsQueryable();
 
@@ -177,7 +126,7 @@ public sealed class TimezoneRepository(TimeDbContext context) : ITimezoneReposit
                               query = query.Where(x =>
                                   EF.Functions.ILike(x.name, pattern) ||
                                   EF.Functions.ILike(x.active.ToString(), pattern) ||
-                                  EF.Functions.ILike(x.deactive.ToString(), pattern) 
+                                  EF.Functions.ILike(x.deactive.ToString(), pattern)
                               );
                         }
                         else // SQL Server
@@ -185,15 +134,10 @@ public sealed class TimezoneRepository(TimeDbContext context) : ITimezoneReposit
                               query = query.Where(x =>
                                   x.name.Contains(search) ||
                                   x.active.ToString().Contains(search) ||
-                                  x.deactive.ToString().Contains(search) 
+                                  x.deactive.ToString().Contains(search)
                               );
                         }
                   }
-            }
-
-            if (param.locationId >= 0)
-            {
-                  query = query.Where(x => x.location_id == param.locationId || x.location_id == 1);
             }
 
 
@@ -213,33 +157,29 @@ public sealed class TimezoneRepository(TimeDbContext context) : ITimezoneReposit
             var items = await query.OrderByDescending(r => r.id)
             .Skip((param.pageNumber - 1) * param.pageSize)
             .Take(param.pageSize)
-             .Select(x => new TimezoneDto(
-                  x.id,
+             .Select(x => new TimeZoneDto(
+                  x.guid,
                   x.component_id,
                   x.name,
                   x.mode,
                   x.active,
                   x.deactive,
                   x.intervals.Select(x => new IntervalDto(
-                        x.id,
-                        x.component_id,
+                        x.guid,
+                         x.component_id,
                         new DaysInWeekDto(
-                              x.days.id,
-                              x.days.component_id,
+                              x.days.guid,
                               x.days.sunday,
                               x.days.monday,
                               x.days.tuesday,
                               x.days.wednesday,
                               x.days.thursday,
                               x.days.friday,
-                              x.days.saturday,
-                              x.location_id
+                              x.days.saturday
                               ),
                         x.days_detail,
                         x.start,
-                        x.end,
-                        x.location_id,
-                        x.is_active
+                        x.end
                   )).ToList(),
                   x.location_id,
                   x.is_active,
@@ -247,43 +187,39 @@ public sealed class TimezoneRepository(TimeDbContext context) : ITimezoneReposit
                   ))
             .ToListAsync(ct);
 
-            return new Pagination<TimezoneDto>(param.pageNumber, param.pageSize, totalItems,
+            return new Pagination<TimeZoneDto>(param.pageNumber, param.pageSize, totalItems,
             (int)Math.Ceiling(totalItems / (double)param.pageSize)
             , items);
       }
 
-      public async Task<IEnumerable<TimezoneDto>> GetTimeZoneByLocationIdAsync(int locationId, CancellationToken ct = default)
+      public async Task<IEnumerable<TimeZoneDto>> GetTimeZoneByLocationIdAsync(int locationId, CancellationToken ct = default)
       {
             return await context.Timezones.AsNoTracking()
             .OrderByDescending(x => x.id)
             .Where(x => x.location_id == locationId || x.location_id == 0)
-            .Select(x => new TimezoneDto(
-                  x.id,
+           .Select(x => new TimeZoneDto(
+                  x.guid,
                   x.component_id,
                   x.name,
                   x.mode,
                   x.active,
                   x.deactive,
                   x.intervals.Select(x => new IntervalDto(
-                        x.id,
+                        x.guid,
                         x.component_id,
                         new DaysInWeekDto(
-                              x.days.id,
-                              x.days.component_id,
+                              x.days.guid,
                               x.days.sunday,
                               x.days.monday,
                               x.days.tuesday,
                               x.days.wednesday,
                               x.days.thursday,
                               x.days.friday,
-                              x.days.saturday,
-                              x.location_id
+                              x.days.saturday
                               ),
                         x.days_detail,
                         x.start,
-                        x.end,
-                        x.location_id,
-                        x.is_active
+                        x.end
                   )).ToList(),
                   x.location_id,
                   x.is_active,
@@ -298,9 +234,9 @@ public sealed class TimezoneRepository(TimeDbContext context) : ITimezoneReposit
             .Where(x => x.location_id == locationId || x.location_id == 0)
             .Select(x => new OptionDto(
                   x.name,
-                  x.id,
+                  x.component_id,
                   string.Empty,
-                  x.component_id
+                  x.guid
                   )).ToArrayAsync(ct);
       }
 
@@ -309,4 +245,35 @@ public sealed class TimezoneRepository(TimeDbContext context) : ITimezoneReposit
             return await context.Timezones.AsNoTracking()
             .AnyAsync(x => (x.location_id == LocationId && x.location_id == 0) || x.updated_at > SyncAt);
       }
+
+      public async Task<bool> IsAnyNameAsync(string name, CancellationToken ct = default)
+      {
+            return await context.Timezones.AsNoTracking().AnyAsync(x => x.name.Equals(name));
+      }
+
+      public async Task UpdateAsync(Domain.Entities.TimeZone timezone, CancellationToken ct = default)
+      {
+            var entity = await context.Timezones
+            .Where(x => x.guid == timezone.Guid)
+            .OrderByDescending(x => x.id)
+            .FirstOrDefaultAsync();
+
+            if(entity is null)
+                  throw new Exception(MessageHelper.DB.RecordNotFound);
+
+            entity.Update(timezone);
+
+            context.Timezones.Update(entity);
+
+            await context.SaveChangesAsync(ct);
+      }
+
+      public async Task<int> CountTimeZoneByLocationIdAsync(int location_id, CancellationToken ct = default)
+      {
+            return await context.Timezones.AsNoTracking().Where(x => x.location_id == location_id || x.location_id == 0).CountAsync();
+      }
+
+
+
+
 }

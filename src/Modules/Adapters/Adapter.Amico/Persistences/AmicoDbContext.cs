@@ -32,20 +32,20 @@ public class AmicoDbContext(DbContextOptions<AmicoDbContext> options) : DbContex
 
             foreach (var entityType in modelBuilder.Model.GetEntityTypes())
             {
-                  if (typeof(BaseDbEntity).IsAssignableFrom(entityType.ClrType))
+                  if (typeof(AmicoDbEntity).IsAssignableFrom(entityType.ClrType))
                   {
                         modelBuilder.Entity(entityType.ClrType)
-                            .Property(nameof(BaseDbEntity.created_at))
+                            .Property(nameof(AmicoDbEntity.created_at))
                             .HasDefaultValueSql(utcNowSql)
                             .ValueGeneratedOnAdd();
 
                         modelBuilder.Entity(entityType.ClrType)
-                            .Property(nameof(BaseDbEntity.updated_at))
+                            .Property(nameof(AmicoDbEntity.updated_at))
                             .HasDefaultValueSql(utcNowSql)
                             .ValueGeneratedOnAdd();
 
                         modelBuilder.Entity(entityType.ClrType)
-                              .Property(nameof(BaseDbEntity.guid))
+                              .Property(nameof(AmicoDbEntity.guid))
                               .HasDefaultValueSql("gen_random_uuid()")
                               .ValueGeneratedOnAdd();
 

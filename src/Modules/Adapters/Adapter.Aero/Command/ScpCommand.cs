@@ -578,7 +578,7 @@ public sealed class ScpCommand(ILogger<ScpCommand> logger) : BaseCommand, IScpCo
                   return new CommandResponse(
                         Mac,
                         ScpId,
-                        CommandConstant.ScpSetId,
+                        CommandConstant.TransactionLogStatus,
                         SCPDLL.scpGetTagLastPosted(ScpId),
                         DateTime.UtcNow,
                         DateTime.UtcNow,
@@ -595,7 +595,7 @@ public sealed class ScpCommand(ILogger<ScpCommand> logger) : BaseCommand, IScpCo
                   return new CommandResponse(
                         Mac,
                        ScpId,
-                       CommandConstant.ScpSetId,
+                       CommandConstant.TransactionLogStatus,
                        -1,
                        DateTime.UtcNow,
                        DateTime.UtcNow,
@@ -616,12 +616,12 @@ public sealed class ScpCommand(ILogger<ScpCommand> logger) : BaseCommand, IScpCo
             var result = Send((short)enCfgCmnd.enCcTranIndex, c);
             if (result)
             {
-                  logger.LogInformation(LogMessageHelper.CommandSuccess(CommandConstant.TransactionLogStatus, ScpId));
+                  logger.LogInformation(LogMessageHelper.CommandSuccess(CommandConstant.SetTransactionIndex, ScpId));
 
                   return new CommandResponse(
                         Mac,
                         ScpId,
-                        CommandConstant.ScpSetId,
+                        CommandConstant.SetTransactionIndex,
                         SCPDLL.scpGetTagLastPosted(ScpId),
                         DateTime.UtcNow,
                         DateTime.UtcNow,
@@ -634,11 +634,95 @@ public sealed class ScpCommand(ILogger<ScpCommand> logger) : BaseCommand, IScpCo
             }
             else
             {
-                  logger.LogError(LogMessageHelper.CommandUnsuccess(CommandConstant.TransactionLogStatus, ScpId));
+                  logger.LogError(LogMessageHelper.CommandUnsuccess(CommandConstant.SetTransactionIndex, ScpId));
                   return new CommandResponse(
                         Mac,
                        ScpId,
-                       CommandConstant.ScpSetId,
+                       CommandConstant.SetTransactionIndex,
+                       -1,
+                       DateTime.UtcNow,
+                       DateTime.UtcNow,
+                       ObjectHelper.ToAsciiString(c),
+                       CommandStatus.FAILED.ToString(),
+                       string.Empty,
+                       false
+                       );
+
+            }
+      }
+
+      public CommandResponse DetachScpFromChannel(string Mac, short ScpId)
+      {
+            CC_ATTACHSCP c = new CC_ATTACHSCP();
+            c.nSCPId = ScpId;
+            var result = Send((short)enCfgCmnd.enCcDetachScp, c);
+            if (result)
+            {
+                  logger.LogInformation(LogMessageHelper.CommandSuccess(CommandConstant.DetachScpChannel, ScpId));
+
+                  return new CommandResponse(
+                        Mac,
+                        ScpId,
+                        CommandConstant.DetachScpChannel,
+                        SCPDLL.scpGetTagLastPosted(ScpId),
+                        DateTime.UtcNow,
+                        DateTime.UtcNow,
+                        ObjectHelper.ToAsciiString(c),
+                        CommandStatus.PENDING.ToString(),
+                        string.Empty,
+                        true
+                        );
+
+            }
+            else
+            {
+                  logger.LogError(LogMessageHelper.CommandUnsuccess(CommandConstant.DetachScpChannel, ScpId));
+                  return new CommandResponse(
+                        Mac,
+                       ScpId,
+                       CommandConstant.DetachScpChannel,
+                       -1,
+                       DateTime.UtcNow,
+                       DateTime.UtcNow,
+                       ObjectHelper.ToAsciiString(c),
+                       CommandStatus.FAILED.ToString(),
+                       string.Empty,
+                       false
+                       );
+
+            }
+      }
+
+      public CommandResponse DeleteScp(string Mac, short ScpId)
+      {
+            CC_NEWSCP c = new CC_NEWSCP();
+            c.nSCPId = ScpId;
+            var result = Send((short)enCfgCmnd.enCcDeleteScp, c);
+            if (result)
+            {
+                  logger.LogInformation(LogMessageHelper.CommandSuccess(CommandConstant.DeleteScp, ScpId));
+
+                  return new CommandResponse(
+                        Mac,
+                        ScpId,
+                        CommandConstant.DeleteScp,
+                        SCPDLL.scpGetTagLastPosted(ScpId),
+                        DateTime.UtcNow,
+                        DateTime.UtcNow,
+                        ObjectHelper.ToAsciiString(c),
+                        CommandStatus.PENDING.ToString(),
+                        string.Empty,
+                        true
+                        );
+
+            }
+            else
+            {
+                  logger.LogError(LogMessageHelper.CommandUnsuccess(CommandConstant.DeleteScp, ScpId));
+                  return new CommandResponse(
+                        Mac,
+                       ScpId,
+                       CommandConstant.DeleteScp,
                        -1,
                        DateTime.UtcNow,
                        DateTime.UtcNow,

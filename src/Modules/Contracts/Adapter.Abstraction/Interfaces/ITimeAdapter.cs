@@ -1,45 +1,79 @@
 
 
 using SharedKernel.Domain;
+using SharedKernel.Model;
 using Time.Contract.DTOs;
 
 namespace Adapter.Abstraction.Interfaces;
 
 public interface ITimeAdapter
 {
-     Task CreateHolidayAsync(
-       string Mac,
-            short ScpId,
-            short Year,
-            short Month,
-            short Day,
-            string Metadata
-     );  
+      Task CreateHolidayAsync(
+          Guid Guid,
+          short DeviceComponentId,
+          short ComponentId,
+           string Name,
+          string Mac,
+            DateTime Start,
+            DateTime End
+     );
 
-     Task CreateTimezoneAsync(
+
+     Task CreateTimeZoneAsync(
+          Guid Guid,
+          short DeviceComponentId,
+          short TzComponentId,
+           string Name,
            string Mac,
-            short DeviceComponentId,
-            short ComponentId,
             short Mode,
             string Active,
             string Deactive,
-            List<IntervalDto> Intervals
+            List<IntervalObject> Intervals
      );
 
-     Task DeleteHoliday(
+     Task UpdateTimeZoneAsync(
+          Guid Guid,
+          short DeviceComponentId,
+          short TzComponentId,
+           string Name,
            string Mac,
-            short ComponentId,
-            short Year,
-            short Month,
-            short Day,
-            string Metadata
+            short Mode,
+            string Active,
+            string Deactive,
+            List<IntervalObject> Intervals
      );
 
-     Task DeleteTimezone(
+     Task ClearTimeZoneAsync(
+          Guid Guid,
+          string Mac
+     );
+
+     Task DeleteHolidayAsync(
+       short DeviceComponentId,
+            int ComponentId,
+            string Mac,
+            DateTime Start,
+            DateTime End
+            );
+
+     Task DeleteTimeZoneAsync(
           string Mac,
             short DeviceComponentId,
             short ComponentId
      );
 
      Task<IEnumerable<OptionDto>> GetTimezoneMode();
+
+     Task UpdateHolidayAsync(
+          Guid guid,
+           string Name,
+           short DeviceComponentId,
+           int ComponentId,
+          string Mac,
+            DateTime Start,
+            DateTime End
+     );
+
+
+
 }

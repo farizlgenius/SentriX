@@ -4,7 +4,7 @@ using SharedKernel.Domain;
 namespace Device.Contract.DTOs;
 
 public sealed record ModuleDto(
-      int Id = 0,
+      Guid Guid = default,
       short ComponentId=0,
       string Name="",
       string Fw="",
@@ -16,5 +16,6 @@ public sealed record ModuleDto(
       string Type="",
       int DeviceComponentId=0,
       int LocationId=0,
-      bool IsActive=true
-      ) : BaseDto(ComponentId,LocationId,Type,IsActive);
+      bool IsActive=true,
+      bool IsDefault=false
+      ) : BaseDtoEntity(Guid,ComponentId,LocationId,Type,IsActive,IsDefault);

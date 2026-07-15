@@ -22,6 +22,6 @@ public interface ITimeCommand
             short Mode,
             string Active,
             string Deactive,
-            List<IntervalDto> Intervals
+            List<IntervalObject> Intervals
       );
 }

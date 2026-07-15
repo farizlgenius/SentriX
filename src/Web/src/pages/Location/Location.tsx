@@ -141,11 +141,9 @@ export const Location = () => {
 
     const fetchData = async (pageNumber: number, pageSize: number,locationId?:number | undefined,search?: string, startDate?: string, endDate?: string) => {
         const res = await send.get(LocationEndpoint.PAGINATION(pageNumber, pageSize,search, startDate, endDate,locationId))
-        console.log(res?.data)
-        if (res && res.data) {
-            console.log(res.data.data)
-            setLocationsDto(res.data.items);
-            setPagination(res.data);
+        if (res.data.success) {
+            setLocationsDto(res.data.data.items);
+            setPagination(res.data.data);
         }
     }
 

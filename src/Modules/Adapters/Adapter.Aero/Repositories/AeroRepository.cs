@@ -28,7 +28,7 @@ public sealed class AeroRepository(AeroDbContext context) : IAeroRepository
                   x.label,
                   x.value,
                   string.Empty,
-                  0,
+                  Guid.Empty,
                   false
             )).ToArrayAsync();
       }
@@ -39,7 +39,7 @@ public sealed class AeroRepository(AeroDbContext context) : IAeroRepository
                   x.label,
                   x.value,
                   x.description,
-                  0,
+                  Guid.Empty,
                   false
             )).ToArrayAsync();
       }
@@ -50,4 +50,6 @@ public sealed class AeroRepository(AeroDbContext context) : IAeroRepository
             .OrderByDescending(x => x.id)
             .FirstOrDefaultAsync() ?? new ScpDeviceSpecification();
       }
+
+
 }

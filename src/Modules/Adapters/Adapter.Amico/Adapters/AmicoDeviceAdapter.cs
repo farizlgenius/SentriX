@@ -7,28 +7,28 @@ using Adapter.Amico.Interfaces;
 using Adapter.Amico.Model.Request;
 using Adapter.Amico.Model.Response;
 using Device.Contract.DTOs;
+using Serilog;
 using SharedKernel.Helpers;
+using SharedKernel.Messaging;
 
 namespace Adapter.Amico.Adapters;
 
-public sealed class AmicoDeviceAdapter(IDeviceCommand command,IAmicoRepository repo) : IAmicoDeviceAdapter
+public sealed class AmicoDeviceAdapter(
+      IDeviceCommand command,
+      IAmicoRepository repo,
+      IMessageBus bus
+      ) : IAmicoDeviceAdapter
 {
 
 
-      public async Task CreateDeviceAsync(string Mac, short ComponentId)
-      {
-            throw new NotImplementedException();
-      }
+
 
       public Task CreateModuleAsync(string Mac, short ScpId, short SioNumber, short Model, short Address, short Port)
       {
             throw new NotImplementedException();
       }
 
-      public Task<bool> GetDeviceStatusAsync(int ComponentId)
-      {
-            throw new NotImplementedException();
-      }
+
 
       public Task<bool> GetEventStatusAsync(string Mac, int ComponentId)
       {
@@ -60,13 +60,15 @@ public sealed class AmicoDeviceAdapter(IDeviceCommand command,IAmicoRepository r
 
       }
 
-      public async Task<string> GetDeviceInformationByIpAsync(string Ip)
+      public async Task<JsonElement> GetDeviceInformationByIpAsync(string Ip,bool? IsFirst)
       {
-            var res = await command.LoginAsync(Ip);
+
+
+            var res = await command.LoginAsync(Ip,IsFirst);
 
             var info = await command.DeviceInfoAsync(Ip,res.Session);            
 
-            return JsonHelper.Serialize(info);
+            return JsonHelper.ToJsonElement(info);
 
       }
 
@@ -88,5 +90,32 @@ public sealed class AmicoDeviceAdapter(IDeviceCommand command,IAmicoRepository r
       public Task<bool> AsciiCommandAsync(string Mac, int ComponentId, string Command)
       {
             throw new NotImplementedException();
+      }
+
+      public async Task CreateDeviceAsync(Guid Guid, string Ip, string Mac, short ComponentId,int LocationId)
+      {
+            var res = await command.LoginAsync(Ip,true);
+
+            // await command.ChangeLogin(Ip,res.Session);
+
+            await repo.AddAsync(
+                  Guid,
+                  Mac,
+                  Ip,
+                  res.Session
+            );
+
+
+            await command.VerifyDeviceComponentAsync(Ip,res.Session,LocationId);
+      }
+
+      public Task<bool> GetDeviceStatusAsync(string Mac, int ComponentId)
+      {
+            throw new NotImplementedException();
+      }
+
+      public async Task DeleteDeviceAsync(Guid Guid, string Ip, string Mac, short ComponentId)
+      {
+            await repo.DeleteAsync(Mac,Ip);
       }
 }

@@ -2,8 +2,6 @@ import { AeroMetadata } from "./AeroMetadata";
 
 
 export interface AeroDtoMetadata  {
-
-    id:number;
   componentId:number;
   name: string;
   serialNumber: string;

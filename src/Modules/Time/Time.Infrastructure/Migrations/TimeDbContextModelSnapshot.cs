@@ -31,28 +31,14 @@ namespace Time.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
 
-                    b.Property<short>("component_id")
-                        .HasColumnType("smallint");
-
-                    b.Property<DateTime>("created_at")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
-                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
-
                     b.Property<bool>("friday")
                         .HasColumnType("boolean");
 
-                    b.Property<int>("interval_id")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("guid")
+                        .HasColumnType("uuid");
 
-                    b.Property<bool>("is_active")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("is_default")
-                        .HasColumnType("boolean");
-
-                    b.Property<int>("location_id")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("interval_guid")
+                        .HasColumnType("uuid");
 
                     b.Property<bool>("monday")
                         .HasColumnType("boolean");
@@ -69,20 +55,30 @@ namespace Time.Infrastructure.Migrations
                     b.Property<bool>("tuesday")
                         .HasColumnType("boolean");
 
-                    b.Property<DateTime>("updated_at")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
-                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
-
                     b.Property<bool>("wednesday")
                         .HasColumnType("boolean");
 
                     b.HasKey("id");
 
-                    b.HasIndex("interval_id")
+                    b.HasIndex("interval_guid")
                         .IsUnique();
 
                     b.ToTable("DayInWeeks", "time");
+
+                    b.HasData(
+                        new
+                        {
+                            id = 1,
+                            friday = true,
+                            guid = new Guid("4e7a2d90-3b8f-4fd8-9c57-2a1e6b9d8f43"),
+                            interval_guid = new Guid("f2d4c8b3-91aa-4b4c-8e1d-73c1f9b2a6d4"),
+                            monday = true,
+                            saturday = true,
+                            sunday = true,
+                            thursday = true,
+                            tuesday = true,
+                            wednesday = true
+                        });
                 });
 
             modelBuilder.Entity("Time.Infrastructure.Persistences.Entities.Holiday", b =>
@@ -101,8 +97,13 @@ namespace Time.Infrastructure.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
 
-                    b.Property<short>("day")
-                        .HasColumnType("smallint");
+                    b.Property<DateTime>("end")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("guid")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("gen_random_uuid()");
 
                     b.Property<bool>("is_active")
                         .HasColumnType("boolean");
@@ -113,24 +114,17 @@ namespace Time.Infrastructure.Migrations
                     b.Property<int>("location_id")
                         .HasColumnType("integer");
 
-                    b.Property<string>("metadata")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<short>("month")
-                        .HasColumnType("smallint");
-
                     b.Property<string>("name")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<DateTime>("start")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime>("updated_at")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
                         .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
-
-                    b.Property<short>("year")
-                        .HasColumnType("smallint");
 
                     b.HasKey("id");
 
@@ -148,13 +142,8 @@ namespace Time.Infrastructure.Migrations
                     b.Property<short>("component_id")
                         .HasColumnType("smallint");
 
-                    b.Property<DateTime>("created_at")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
-                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
-
-                    b.Property<int>("day_in_week_id")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("day_in_week_guid")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("days_detail")
                         .IsRequired()
@@ -164,35 +153,37 @@ namespace Time.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<bool>("is_active")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("is_default")
-                        .HasColumnType("boolean");
-
-                    b.Property<int>("location_id")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("guid")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("start")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("timezone_id")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime>("updated_at")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
-                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+                    b.Property<Guid>("timezone_guid")
+                        .HasColumnType("uuid");
 
                     b.HasKey("id");
 
-                    b.HasIndex("timezone_id");
+                    b.HasIndex("timezone_guid");
 
                     b.ToTable("Intervals", "time");
+
+                    b.HasData(
+                        new
+                        {
+                            id = 1,
+                            component_id = (short)1,
+                            day_in_week_guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            days_detail = "",
+                            end = "23:00",
+                            guid = new Guid("f2d4c8b3-91aa-4b4c-8e1d-73c1f9b2a6d4"),
+                            start = "00:00",
+                            timezone_guid = new Guid("9b6e1f89-6f6e-4c5d-a0a5-c9d6f5d18e7b")
+                        });
                 });
 
-            modelBuilder.Entity("Time.Infrastructure.Persistences.Entities.Timezone", b =>
+            modelBuilder.Entity("Time.Infrastructure.Persistences.Entities.TimeZone", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -215,6 +206,11 @@ namespace Time.Infrastructure.Migrations
                     b.Property<string>("deactive")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<Guid>("guid")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("gen_random_uuid()");
 
                     b.Property<bool>("is_active")
                         .HasColumnType("boolean");
@@ -249,6 +245,7 @@ namespace Time.Infrastructure.Migrations
                             component_id = (short)1,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             deactive = "",
+                            guid = new Guid("9b6e1f89-6f6e-4c5d-a0a5-c9d6f5d18e7b"),
                             is_active = true,
                             is_default = true,
                             location_id = 0,
@@ -263,6 +260,7 @@ namespace Time.Infrastructure.Migrations
                             component_id = (short)2,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             deactive = "",
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             is_active = true,
                             is_default = true,
                             location_id = 0,
@@ -276,7 +274,8 @@ namespace Time.Infrastructure.Migrations
                 {
                     b.HasOne("Time.Infrastructure.Persistences.Entities.Interval", "interval")
                         .WithOne("days")
-                        .HasForeignKey("Time.Infrastructure.Persistences.Entities.DayInWeek", "interval_id")
+                        .HasForeignKey("Time.Infrastructure.Persistences.Entities.DayInWeek", "interval_guid")
+                        .HasPrincipalKey("Time.Infrastructure.Persistences.Entities.Interval", "guid")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -285,9 +284,10 @@ namespace Time.Infrastructure.Migrations
 
             modelBuilder.Entity("Time.Infrastructure.Persistences.Entities.Interval", b =>
                 {
-                    b.HasOne("Time.Infrastructure.Persistences.Entities.Timezone", "timezone")
+                    b.HasOne("Time.Infrastructure.Persistences.Entities.TimeZone", "timezone")
                         .WithMany("intervals")
-                        .HasForeignKey("timezone_id")
+                        .HasForeignKey("timezone_guid")
+                        .HasPrincipalKey("guid")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -300,7 +300,7 @@ namespace Time.Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Time.Infrastructure.Persistences.Entities.Timezone", b =>
+            modelBuilder.Entity("Time.Infrastructure.Persistences.Entities.TimeZone", b =>
                 {
                     b.Navigation("intervals");
                 });

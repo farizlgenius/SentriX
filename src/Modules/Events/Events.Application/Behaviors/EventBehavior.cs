@@ -4,11 +4,14 @@ using Events.Application.Interfaces;
 using Events.Contract.DTOs;
 using Events.Contract.Interfaces;
 using SharedKernel.Domain;
+using SharedKernel.Exceptions;
+using SharedKernel.Helpers;
 using SharedKernel.Messaging;
+using Storage.Contract.Interfaces;
 
 namespace Events.Application.Behaviors;
 
-public sealed class EventBehavior(IEventRepository repo,IMessageBus bus) : Events.Contract.Interfaces.IEvent
+public sealed class EventBehavior(IEventRepository repo,IMessageBus bus,IStorage file) : Events.Contract.Interfaces.IEvent
 {
       public async Task AddEventAsync(
              DateTime timeStamp,
@@ -20,7 +23,8 @@ public sealed class EventBehavior(IEventRepository repo,IMessageBus bus) : Event
             string name,
             string code,
             string remarks,
-            int locationId
+            int locationId,
+            string capture
       )
       {
             await repo.AddAsync(
@@ -33,8 +37,17 @@ public sealed class EventBehavior(IEventRepository repo,IMessageBus bus) : Event
                   name,
                   code,
                   remarks,
-                  locationId
+                  locationId,
+                  capture
             );
+      }
+
+      public async Task<Stream> GetCaptureByTimeAsync(string time, CancellationToken ct = default)
+      {
+             if (string.IsNullOrEmpty(time))
+                  throw new BadRequestException(MessageHelper.Common.Empty(nameof(time)));
+
+            return await file.ReadCaptureAsync(time);
       }
 
       public async Task<Pagination<CommandEventDto>> GetCommandPaginationAsync(PaginationParams param)

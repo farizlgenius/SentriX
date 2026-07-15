@@ -2,7 +2,7 @@ using SharedKernel.Domain;
 
 namespace Door.Infrastructure.Persistences.Entities;
 
-public sealed class Doors : BaseEntity
+public sealed class Doors : BaseDbEntity
 {
       public string name { get; set; } = string.Empty;
       public string mac {get; set;} = string.Empty;
@@ -16,7 +16,7 @@ public sealed class Doors : BaseEntity
       {
       }
 
-      public Doors(Domain.Entities.Doors domain) : base(domain.ComponentId,domain.LocationId,domain.IsActive,false)
+      public Doors(Domain.Entities.Doors domain) : base(domain.Guid,domain.ComponentId,domain.LocationId,domain.IsActive,false)
       {
             this.name = domain.Name;
             this.mac = domain.Mac;

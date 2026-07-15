@@ -14,6 +14,7 @@ public sealed class Event : BaseEntity
       public string name {get; set;} = string.Empty;
       public string code {get; set;} = string.Empty;
       public string remarks {get; set;} = string.Empty;
+      public string capture_image { get; set; } = string.Empty;
 
       public Event(){}
 
@@ -27,7 +28,8 @@ public sealed class Event : BaseEntity
             string name,
             int location_id,
             string code = "",
-            string remarks = ""
+            string remarks = "",
+            string capture_image=""
             
       ){
             this.timestamp =  timestamp;
@@ -40,6 +42,7 @@ public sealed class Event : BaseEntity
             this.code = code;
             this.remarks = remarks;
             this.location_id = location_id;
+            this.capture_image = capture_image;
       }
 
 

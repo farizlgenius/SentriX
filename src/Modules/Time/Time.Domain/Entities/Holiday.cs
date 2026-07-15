@@ -1,26 +1,31 @@
 using SharedKernel.Domain;
+using SharedKernel.Helpers;
 
 namespace Time.Domain.Entities;
 
-public sealed class Holiday : BaseDomain
+public sealed class Holiday : BaseDomainEntity
 {
-       public string Name { get; set; } = string.Empty;
-        public short Year { get; set; }
-        public short Month { get; set; }
-        public short Day { get; set; }
-        public string Metadata {get; set;} = string.Empty;
-      //   public short Extend { get; set; }
-      //   public short TypeMask { get; set; }
+      public string Name { get; private set; } = string.Empty;
+      public DateTime Start { get; private set; }
+      public DateTime End { get; private set; }
 
-      public Holiday(int Id,short ComponentId,string Name,short Year,short Month,short Day,int LocationId,bool IsActive) : base(Id,ComponentId,LocationId,IsActive)
+
+      public Holiday(
+            Guid Guid,
+            short ComponentId,
+            string Name,
+            DateTime Start,
+            DateTime End,
+            int LocationId,
+            bool IsActive,
+            bool IsDefault = false
+            ) : base(Guid, ComponentId, LocationId, IsActive, IsDefault)
       {
+            ValidationHelper.ValidateDateTime(nameof(DateTime), Start);
+            ValidationHelper.ValidateDateTime(nameof(DateTime), End);
             this.Name = Name;
-            this.ComponentId = ComponentId;
-            this.Year = Year;
-            this.Month = Month;
-            this.Day = Day;
-            this.LocationId = LocationId;
-            this.IsActive = IsActive;
+            this.Start = Start;
+            this.End = End;
       }
-      
+
 }

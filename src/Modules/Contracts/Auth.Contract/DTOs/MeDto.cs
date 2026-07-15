@@ -5,4 +5,4 @@ using SharedKernel.Domain;
 
 namespace Auth.Contract.DTOs;
 
-public sealed record MeDto(HttpStatusCode Code, string Message, DateTime Timestamp, List<int> Locations, List<PermissionDto> Permissions) : BaseResponse(Code, Message, Timestamp);
+public sealed record MeDto(List<int> Locations, List<PermissionDto> Permissions);

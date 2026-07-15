@@ -1,4 +1,4 @@
 export interface EventStatusDto {
-    deviceId: number;
+    deviceGuid: string;
     isEnable:boolean;
 }

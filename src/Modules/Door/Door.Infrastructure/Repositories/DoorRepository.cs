@@ -10,62 +10,27 @@ namespace Door.Infrastructure.Repositories;
 
 public sealed class DoorRepository(DoorDbContext context) : IDoorRepository
 {
-      public async Task<DoorDto> CreateAsync(Doors domain, CancellationToken ct = default)
+      public async Task AddAsync(Doors domain, CancellationToken ct = default)
       {
-            var data = await context.Doors.AddAsync(
+           await context.Doors.AddAsync(
                   new Persistences.Entities.Doors(domain)
             );
 
-            var save = await context.SaveChangesAsync(ct);
+            await context.SaveChangesAsync(ct);
 
-            if (data.Entity == null || save <= 0)
-                  throw new Exception(MessageHelper.DB.SaveRecordUnsuccessful);
-
-
-            save = await context.SaveChangesAsync(ct);
-
-            return new DoorDto(
-                  data.Entity.id,
-                  data.Entity.component_id,
-                  data.Entity.name,
-                  data.Entity.device_component_id,
-                  data.Entity.second_component_id,
-                  data.Entity.mac,
-                  data.Entity.door_type,
-                  data.Entity.metadata,
-                  data.Entity.location_id,
-                  data.Entity.type,
-                  data.Entity.is_active
-            );
       }
 
-      public async Task<DoorDto> DeleteAsync(int id, CancellationToken ct = default)
+      public async Task DeleteAsync(Guid guid, CancellationToken ct = default)
       {
             var entity = await context.Doors.OrderByDescending(x => x.id)
-                        .Where(x => x.id == id)
+                        .Where(x => x.guid == guid)
                         .FirstOrDefaultAsync();
             if(entity == null)
                   throw new Exception(MessageHelper.DB.RecordNotFound);
 
-            var data = context.Doors.Remove(entity);
-            var save = await context.SaveChangesAsync(ct);
+            context.Doors.Remove(entity);
+            await context.SaveChangesAsync(ct);
 
-            if(data.Entity == null || save <= 0)
-                  throw new Exception(MessageHelper.DB.DeleteRecordUnsuccessful);
-
-            return new DoorDto(
-                  data.Entity.id,
-                  data.Entity.component_id,
-                  data.Entity.name,
-                  data.Entity.device_component_id,
-                  data.Entity.second_component_id,
-                  data.Entity.mac,
-                  data.Entity.door_type,
-                  data.Entity.metadata,
-                  data.Entity.location_id,
-                  data.Entity.type,
-                  data.Entity.is_active
-            );
       }
 
       public async Task<IEnumerable<OptionDto>> GetAccessControlFlagAsync(CancellationToken ct = default)
@@ -104,7 +69,7 @@ public sealed class DoorRepository(DoorDbContext context) : IDoorRepository
             .OrderByDescending(x => x.id)
             .Where(x => x.id == id)
             .Select(x => new DoorDto(
-                 x.id,
+                 x.guid,
                  x.component_id,
                  x.name,
                  x.device_component_id,
@@ -116,20 +81,7 @@ public sealed class DoorRepository(DoorDbContext context) : IDoorRepository
                  x.type,
                  x.is_active
                   )).FirstOrDefaultAsync(ct) ?? 
-                  new DoorDto(
-                        0,
-                        0,
-                        string.Empty,
-                        0,
-                        0,
-                        string.Empty,
-                        string.Empty,
-                        string.Empty,
-                        0,
-                        string.Empty,
-                        false
-                  )
-                  ;
+                  new DoorDto();
       }
 
       public async Task<IEnumerable<OptionDto>> GetDoorModeAsync(CancellationToken ct = default)
@@ -200,7 +152,7 @@ public sealed class DoorRepository(DoorDbContext context) : IDoorRepository
             .Skip((param.pageNumber - 1) * param.pageSize)
             .Take(param.pageSize)
             .Select(e => new DoorDto(
-                  e.id,
+                  e.guid,
                   e.component_id,
                   e.name,
                   e.device_component_id,
@@ -268,34 +220,18 @@ public sealed class DoorRepository(DoorDbContext context) : IDoorRepository
             return await context.Doors.AsNoTracking().AnyAsync(x => x.id == id);
       }
 
-      public async Task<DoorDto> UpdateAsync(Doors domain, CancellationToken ct = default)
+      public async Task UpdateAsync(Doors domain, CancellationToken ct = default)
       {
-            var entity = await context.Doors.Where(x => x.id == domain.Id).FirstOrDefaultAsync();
+            var entity = await context.Doors.Where(x => x.guid == domain.Guid).FirstOrDefaultAsync();
             if(entity == null)
                   throw new Exception(MessageHelper.DB.RecordNotFound);
 
             entity.Update(domain);
 
-            var data = context.Doors.Update(entity);
+            context.Doors.Update(entity);
 
-            var save = await context.SaveChangesAsync(ct);
+           await context.SaveChangesAsync(ct);
 
-            if(data.Entity == null || save <= 0)
-                  throw new Exception(MessageHelper.DB.DeleteRecordUnsuccessful);
-
-            return new DoorDto(
-                  data.Entity.id,
-                  data.Entity.component_id,
-                  data.Entity.name,
-                  data.Entity.device_component_id,
-                  data.Entity.second_component_id,
-                  data.Entity.mac,
-                  data.Entity.door_type,
-                  data.Entity.metadata,
-                  data.Entity.location_id,
-                  data.Entity.type,
-                  data.Entity.is_active
-            );
 
 
       }
@@ -316,9 +252,9 @@ public sealed class DoorRepository(DoorDbContext context) : IDoorRepository
             .Where(x => x.location_id == LocationId)
             .Select(x => new OptionDto(
                   x.name,
-                  x.id,
+                  x.component_id,
                   x.mac+","+x.type,
-                  x.component_id
+                  Guid.Empty
             )).ToListAsync();
       }
 
@@ -338,7 +274,7 @@ public sealed class DoorRepository(DoorDbContext context) : IDoorRepository
             .OrderByDescending(x => x.id)
             .Where(x => x.mac.Equals(Mac))
             .Select(x => new DoorDto(
-                  x.id,
+                  x.guid,
                   x.component_id,
                   x.name,
                   x.device_component_id,
@@ -355,5 +291,30 @@ public sealed class DoorRepository(DoorDbContext context) : IDoorRepository
       public async Task<bool> IsAnyDoorNotSyncAsync(string Mac,int LocationId,DateTime SyncAt, CancellationToken ct = default)
       {
             return await context.Doors.AsNoTracking().AnyAsync(x => x.location_id == LocationId && x.mac.Equals(Mac) && x.updated_at > SyncAt);
+      }
+
+      public async Task<DoorDto> GetByGuidAsync(Guid guid, CancellationToken ct = default)
+      {
+            return await context.Doors.AsNoTracking()
+            .Where(x => x.guid == guid)
+            .Select(x => new DoorDto(
+                  x.guid,
+                  x.component_id,
+                  x.name,
+                  x.device_component_id,
+                  x.second_component_id,
+                  x.mac,
+                  x.door_type,
+                  x.metadata,
+                  x.location_id,
+                  x.type,
+                  x.is_active,
+                  x.is_default
+            )).FirstOrDefaultAsync() ?? new DoorDto();
+      }
+
+      public async Task<bool> IsAnyByGuidAsync(Guid guid, CancellationToken ct = default)
+      {
+            return await context.Doors.AsNoTracking().AnyAsync(x => x.guid == guid);
       }
 }

@@ -4,7 +4,7 @@ import { PermissionDto } from "./Role/PermissionDto";
 import { ActionButton } from "./ActionButton";
 import { StatusDto } from "./StatusDto";
 
-export interface TableProp<T extends { id: number | string }> {
+export interface TableProp<T extends { guid:string }> {
     id?:number;
     headers:string[];
     keys:string[];

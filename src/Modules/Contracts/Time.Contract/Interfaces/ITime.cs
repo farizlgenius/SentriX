@@ -7,14 +7,14 @@ public interface ITime
 {
       Task<HolidayDto> CreateHolidayAsync(CreateHolidayDto dto);
       Task<Pagination<HolidayDto>> HolidayPaginationAsync(PaginationParams param);
-      Task<HolidayDto> DeleteHolidayAsync(int id);
+      Task<HolidayDto> DeleteHolidayByGuidAsync(Guid guid);
       Task<HolidayDto> UpdateHolidayAsync(HolidayDto dto);
 
       // Timezone
-      Task<Pagination<TimezoneDto>> TimezonePaginationAsync(PaginationParams param);
+      Task<Pagination<TimeZoneDto>> TimezonePaginationAsync(PaginationParams param);
       Task<IEnumerable<OptionDto>> GetTimezoneOptionByLocationIdAsync(int locationId);
-      Task<TimezoneDto> CreateTimezoneAsync(CreateTimezoneDto dto);
-      Task<TimezoneDto> UpdateTimezoneAsync(TimezoneDto dto);
-      Task<TimezoneDto> DeleteTimezoneAsync(int id);
+      Task<TimeZoneDto> CreateTimezoneAsync(CreateTimezoneDto dto);
+      Task<TimeZoneDto> UpdateTimezoneAsync(TimeZoneDto dto);
+      Task<TimeZoneDto> DeleteTimeZoneByGuidAsync(Guid guid);
       Task<IEnumerable<OptionDto>> GetTimezoneModeAsync(string Type);
 }

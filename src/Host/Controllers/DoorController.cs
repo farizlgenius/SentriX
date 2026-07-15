@@ -30,10 +30,10 @@ public class DoorController(IDoor door) : ControllerBase
             return Ok(res);
       }
 
-      [HttpDelete("{id}")]
-      public async Task<IActionResult> DeleteAsync(int id)
+      [HttpDelete("{guid}")]
+      public async Task<IActionResult> DeleteAsync(Guid guid)
       {
-            var res = await door.DeleteAsync(id);
+            var res = await door.DeleteAsync(guid);
             return Ok(res);
       }
 

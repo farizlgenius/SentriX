@@ -11,4 +11,9 @@ public sealed class StringHelper
     string result = ti.ToTitleCase(msg);
     return result;
   }
+
+  public static string FormatMac(string Mac)
+  {
+    return Mac.Replace(":","_");
+  }
 }

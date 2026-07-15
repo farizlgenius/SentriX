@@ -11,29 +11,16 @@ namespace Group.Infrastructure.Repositories;
 
 public sealed class GroupRepository(GroupDbContext context) : IGroupRepository
 {
-      public async Task<GroupDto> CreateAsync(Groups domain, CancellationToken ct = default)
+      public async Task CreateAsync(Groups domain, CancellationToken ct = default)
       {
-            var data = await context.Groups.AddAsync(
+            await context.Groups.AddAsync(
                   new Persistences.Entities.Groups(domain)
             );
 
-            var save = await context.SaveChangesAsync(ct);
-
-            if(data.Entity == null || save <= 0)
-                  throw new Exception(MessageHelper.DB.SaveRecordUnsuccessful);
-
-            return new GroupDto(
-                  data.Entity.id,
-                  data.Entity.component_id,
-                  data.Entity.name,
-                  new List<GroupDoorDto>(),
-                  data.Entity.location_id,
-                  data.Entity.is_active,
-                  data.Entity.is_default
-            );
+            await context.SaveChangesAsync(ct);
       }
 
-      public async Task<GroupDto> DeleteAsync(int id, CancellationToken ct = default)
+      public async Task DeleteAsync(int id, CancellationToken ct = default)
       {
             var entity = await context.Groups.OrderByDescending(x => x.id == id)
             .Where(x => x.id == id)
@@ -42,29 +29,19 @@ public sealed class GroupRepository(GroupDbContext context) : IGroupRepository
             if(entity == null)
                   throw new Exception(MessageHelper.DB.RecordNotFound);
 
-            var data = context.Groups.Remove(entity);
-            var save = await context.SaveChangesAsync(ct);
+            context.Groups.Remove(entity);
+            await context.SaveChangesAsync(ct);
 
-            if(data.Entity == null || save <= 0)
-                  throw new Exception(MessageHelper.DB.DeleteRecordUnsuccessful);
 
-            return new GroupDto(
-                  data.Entity.id,
-                  data.Entity.component_id,
-                  data.Entity.name,
-                  new List<GroupDoorDto>(),
-                  data.Entity.location_id,
-                  data.Entity.is_active,
-                  data.Entity.is_default
-            );
       }
 
-      public async Task<GroupDto> GetByIdAsync(int id, CancellationToken ct = default)
+      public async Task<GroupDto> GetByGuidAsync(Guid guid, CancellationToken ct = default)
       {
             return await context.Groups.AsNoTracking()
+            .Where(x => x.guid == guid)
             .OrderByDescending(x => x.id)
             .Select(x => new GroupDto(
-                  x.id,
+                  x.guid,
                   x.component_id,
                   x.name,
                   x.group_doors
@@ -80,15 +57,32 @@ public sealed class GroupRepository(GroupDbContext context) : IGroupRepository
                   x.is_active,
                   x.is_default
             ))
-            .FirstOrDefaultAsync(ct) ?? new GroupDto(
-                  0,
-                  0,
-                  string.Empty,
-                  new List<GroupDoorDto>(),
-                  0,
-                  false,
-                  false
-                  );
+            .FirstOrDefaultAsync(ct) ?? new GroupDto();
+      }
+
+      public async Task<GroupDto> GetByIdAsync(int id, CancellationToken ct = default)
+      {
+            return await context.Groups.AsNoTracking()
+            .Where(x => x.id == id)
+            .OrderByDescending(x => x.id)
+            .Select(x => new GroupDto(
+                  x.guid,
+                  x.component_id,
+                  x.name,
+                  x.group_doors
+                  .SelectMany(x => 
+                        x.group_door_detail.Select(s => new GroupDoorDto(
+                              x.mac,
+                              s.door_component_id,
+                              s.timezone_component_id,
+                              x.type
+                              ))
+                  ).ToList(),
+                  x.location_id,
+                  x.is_active,
+                  x.is_default
+            ))
+            .FirstOrDefaultAsync(ct) ?? new GroupDto();
       }
 
       public async Task<IEnumerable<GroupDto>> GetByLocationIdAsync(int location, CancellationToken ct = default)
@@ -96,7 +90,7 @@ public sealed class GroupRepository(GroupDbContext context) : IGroupRepository
             return await context.Groups.AsNoTracking()
             .Where(x => x.location_id == location || x.location_id == 0)
             .Select(x => new GroupDto(
-                  x.id,
+                  x.guid,
                   x.component_id,
                   x.name,
                   x.group_doors
@@ -134,7 +128,7 @@ public sealed class GroupRepository(GroupDbContext context) : IGroupRepository
             return await context.Groups.AsNoTracking()
             .Where(x => x.group_doors.Any(g => g.mac.Equals(Mac)))
             .Select(x => new GroupDto(
-                  x.id,
+                  x.guid,
                   x.component_id,
                   x.name,
                   x.group_doors
@@ -223,7 +217,7 @@ public sealed class GroupRepository(GroupDbContext context) : IGroupRepository
             .Skip((param.pageNumber - 1) * param.pageSize)
             .Take(param.pageSize)
             .Select(x => new GroupDto(
-                  x.id,
+                  x.guid,
                   x.component_id,
                   x.name,
                   x.group_doors
@@ -258,13 +252,13 @@ public sealed class GroupRepository(GroupDbContext context) : IGroupRepository
                   .SelectMany(x => x.group_doors.Select(x => x.mac)).ToArrayAsync();
       }
 
-      public async Task<GroupDto> UpdateAsync(Groups dto, CancellationToken ct = default)
+      public async Task UpdateAsync(Groups dto, CancellationToken ct = default)
       {
             var entity = await context.Groups
             .Include(x => x.group_doors)
             .ThenInclude(x => x.group_door_detail)
-            .OrderByDescending(x => x.id == dto.Id)
-            .Where(x => x.id == dto.Id)
+            .OrderByDescending(x => x.id)
+            .Where(x => x.guid == dto.Guid)
             .FirstOrDefaultAsync();
 
             if(entity == null)
@@ -276,19 +270,8 @@ public sealed class GroupRepository(GroupDbContext context) : IGroupRepository
 
             entity.group_doors = dto.GroupDoors.Select(x => new Persistences.Entities.GroupDoor(x)).ToList();
 
-            var data = context.Groups.Update(entity);
-            var save = await context.SaveChangesAsync(ct);
+            context.Groups.Update(entity);
+           await context.SaveChangesAsync(ct);
 
-             if(data.Entity == null || save <= 0)
-                  throw new Exception(MessageHelper.DB.UpdateRecordUnsuccessful);
-
-            return new GroupDto(
-                  data.Entity.id,
-                  data.Entity.component_id,
-                  data.Entity.name,
-                  new List<GroupDoorDto>(),
-                  data.Entity.location_id,
-                  data.Entity.is_active
-            );
       }
 }

@@ -3,7 +3,7 @@ using SharedKernel.Helpers;
 
 namespace Door.Domain.Entities;
 
-public sealed class Doors : BaseDomain
+public sealed class Doors : BaseDomainEntity
 {
       public string Name { get; private set; } = string.Empty;
       public string Mac {get; private set;} = string.Empty;
@@ -14,7 +14,7 @@ public sealed class Doors : BaseDomain
       public string Type {get; private set;} = string.Empty;
       
       public Doors(
-            int id, 
+            Guid guid,
             short deviceComponentId,
             string mac,
             short componentId,
@@ -24,7 +24,8 @@ public sealed class Doors : BaseDomain
             string metadata,
             string type,
             int locationId, 
-            bool IsActive) : base(id, componentId, locationId, IsActive)
+            bool IsActive,
+            bool IsDefault) : base(guid, componentId, locationId, IsActive,IsDefault)
       {
             ValidationHelper.IsValidName(name);
             ValidationHelper.IsNullOrEmpty(doorType,nameof(DoorType));

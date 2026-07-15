@@ -18,7 +18,8 @@ public interface IEvent
             string name,
             string code,
             string remarks,
-            int locationId
+            int locationId,
+            string capture=""
            );
 
       Task UpdateCommandEvent(
@@ -27,6 +28,8 @@ public interface IEvent
             short CommandStatus,
             string Reason
             );
+
+      Task<Stream> GetCaptureByTimeAsync(string time,CancellationToken ct = default);
 
       
 }

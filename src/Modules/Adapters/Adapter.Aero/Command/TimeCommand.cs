@@ -19,7 +19,7 @@ public sealed class TimeCommand(ILogger<TimeCommand> logger) : BaseCommand,ITime
             short Mode,
             string Active,
             string Deactive,
-            List<IntervalDto> intervals
+            List<IntervalObject> intervals
 
       )
       {
@@ -35,16 +35,16 @@ public sealed class TimeCommand(ILogger<TimeCommand> logger) : BaseCommand,ITime
             foreach(var interval in intervals)
             {
                   c.i[i].i_days = (short)UtilitiesHelper.ConvertDayToBinary(
-                        interval.Days.Sunday,
-                        interval.Days.Monday,
-                        interval.Days.Tuesday,
-                        interval.Days.Wednesday,
-                        interval.Days.Thursday,
-                        interval.Days.Friday,
-                        interval.Days.Saturday);
+                        interval.Sun,
+                        interval.Mon,
+                        interval.Tue,
+                        interval.Wed,
+                        interval.Thu,
+                        interval.Fri,
+                        interval.Sat);
 
-                  c.i[i].i_start = (short)UtilitiesHelper.ConvertTimeToEndMinute(interval.Start);
-                  c.i[i].i_end = (short)UtilitiesHelper.ConvertTimeToEndMinute(interval.End);
+                  c.i[i].i_start = (short)interval.Start;
+                  c.i[i].i_end = (short)interval.End;
                   i++;
             }
             var result = Send((short)enCfgCmnd.enCcScpTimezoneExAct, c);

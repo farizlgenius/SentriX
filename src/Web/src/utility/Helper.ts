@@ -68,25 +68,24 @@ class Helper {
             if (axios.isAxiosError(res)) {
                 switch (res.status) {
                     case HttpCode.UNAUTHORIZED:
-                        notify("error", res.response?.data.message || "Unauthorized")
+                        notify("error", res.data?.data.message || "Unauthorized")
                         return false;
                     case HttpCode.BAD_REQUEST:
-                        notify("error", res.response?.data.message || "Bad Request")
+                        notify("error", res.data?.data.message || "Bad Request")
                         return false;
                     case HttpCode.NOT_FOUND:
-                        notify("error", res.response?.data.message || "Not Found")
+                        notify("error", res.data?.data.message || "Not Found")
                         return false;
                     case HttpCode.INTERNAL_ERROR:
-                        notify("error", res.response?.data.message || "Internal Server Error")
-                        console.log("####1")
-                        console.log(res.response?.data)
+                        notify("error", res.data?.data.message || "Internal Server Error")
+                        console.log(res.data?.data)
                         //showPopup(false,[res.data.detail,res.data.message])
                         return false;
                     case HttpCode.NOT_ACCEPT:
-                        notify("error", res.response?.data.message || "Not Acceptable")
+                        notify("error", res.data?.data.message || "Not Acceptable")
                         return false;
                     default:
-                        notify("error", res.message)
+                        notify("error", res.data?.message)
                         return false;
                 }
 

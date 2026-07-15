@@ -40,7 +40,8 @@ export const Department = () => {
         description: "",
         companyId: selectedCompany,
         locationId: locationId,
-        isActive: true
+        isActive: true,
+        isDefault: false
     }
 
     const { toggleToast } = useToast();
@@ -141,18 +142,18 @@ export const Department = () => {
     const fetchData = async (pageNumber: number, pageSize: number, locationId?: number, search?: string, startDate?: string, endDate?: string) => {
         console.log(locationId);
         const res = await send.get(DepartmentEndpoint.PAGINATION_BY_COMPANY(pageNumber, pageSize,selectedCompany,locationId,search, startDate, endDate));
-        if (res && res.data) {
-            setDepartmentsDto(res.data.items);
-            setPagination(res.data);
+        if (res.data.success) {
+            setDepartmentsDto(res.data.data.items);
+            setPagination(res.data.data);
         }
     }
 
     const fetchDataImd = async (pageNumber: number, pageSize: number,companyId:number, locationId?: number, search?: string, startDate?: string, endDate?: string) => {
         console.log(locationId);
         const res = await send.get(DepartmentEndpoint.PAGINATION_BY_COMPANY(pageNumber, pageSize,companyId,locationId,search, startDate, endDate));
-        if (res && res.data) {
-            setDepartmentsDto(res.data.items);
-            setPagination(res.data);
+        if (res.data.success) {
+            setDepartmentsDto(res.data.data.items);
+            setPagination(res.data.data);
         }
     } 
 
@@ -166,7 +167,7 @@ export const Department = () => {
 
     const fetchCompany = async () => {
         var res = await send.get(CompanyEndpoint.GET_BY_LOCATION(locationId));
-        res.data.map((a:CompanyDto) => {
+        res.data.data.map((a:CompanyDto) => {
             setCompanyOptions((prev) => ([...prev,{
                 label:a.name,
                 value:a.id,

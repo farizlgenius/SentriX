@@ -51,8 +51,8 @@ public class UserController(IUser user) : ControllerBase
       [Consumes("multipart/form-data")]
       public async Task<IActionResult> UploadImageAsync([FromForm] UploadImageDto request, string userid)
       {
-            var res = await user.UploadImageAsync(userid, request.Image.OpenReadStream());
-            return Ok(res);
+            await user.UploadImageAsync(userid, request.Image.OpenReadStream());
+            return Ok();
       }
 
       // Company

@@ -41,7 +41,8 @@ const Group = () => {
         name: '',
         doors: [],
         locationId: locationId,
-        isActive: false
+        isActive: true,
+        isDefault: false
     }
     const [dto, setDto] = useState<GroupDto>(defaultDto);
     const [groups, setGroups] = useState<GroupDto[]>([]);
@@ -134,10 +135,9 @@ const Group = () => {
     {/* Group Data */ }
     const fetchData = async (pageNumber: number, pageSize: number,locationId?:number,search?: string, startDate?: string, endDate?: string) => {
                 const res = await send.get(GroupEndpoint.PAGINATION(pageNumber,pageSize,locationId,search, startDate, endDate));
-                console.log(res)
-                if (res && res.data) {
-                    setGroups(res.data.items);
-                    setPagination(res.data);
+                if (res.data.success) {
+                    setGroups(res.data.data.items);
+                    setPagination(res.data.data);
                 }
             }
 

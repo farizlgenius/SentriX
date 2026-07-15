@@ -11,13 +11,6 @@ public sealed class DeleteRelayUsedCommandHandler(IDeviceRepository repo) : ICom
 
       public async Task HandleAsync(DeleteRelayUsedCommand command, CancellationToken ct)
       {
-            var domain = new Relay(
-                  0,
-                  command.RelayNumber,
-                  command.ModuleId,
-                  0,
-                  true
-            );
-            await repo.DeleteRelayAsync(domain);
+            await repo.DeleteRelayAsync(command.Guid);
       }
 }

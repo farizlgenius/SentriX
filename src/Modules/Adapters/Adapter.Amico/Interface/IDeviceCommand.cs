@@ -5,6 +5,7 @@ namespace Adapter.Amico.Interface;
 
 public interface IDeviceCommand : IBaseCommand
 {
+      Task<bool> VerifyDeviceComponentAsync(string ip,string session,int location_id); 
       Task<DeviceInfoResponse> DeviceInfoAsync(string ip,string session);
-      Task ChangeLogin(string ip,string login, string password,string session);
+      Task ChangeLogin(string ip,string session);
 }

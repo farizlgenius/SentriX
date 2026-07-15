@@ -63,6 +63,16 @@ public static partial class ValidationHelper
     }
   }
 
+   public static void ValidateGuid(Guid value, string parameterName)
+  {
+    if (value == Guid.Empty)
+    {
+      throw new ArgumentException($"'{parameterName}' cannot be empty.", parameterName);
+    }
+  }
+
+  
+
   public static void ValidateDigit(string value,string param)
   {
     if(!DigitRegex().IsMatch(value))

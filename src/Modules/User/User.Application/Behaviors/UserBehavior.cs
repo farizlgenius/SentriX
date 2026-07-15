@@ -238,7 +238,7 @@ public sealed class UserBehavior(IUserRepository repo, IStorage file, IAdapterFa
 
       }
 
-      public async Task<BaseResponse> UploadImageAsync(string userid, Stream stream)
+      public async Task UploadImageAsync(string userid, Stream stream)
       {
             if (string.IsNullOrEmpty(userid))
                   throw new BadRequestException(MessageHelper.Common.Empty(nameof(userid)));
@@ -250,7 +250,6 @@ public sealed class UserBehavior(IUserRepository repo, IStorage file, IAdapterFa
 
             await repo.UpdateImagePathAsync(path, userid);
 
-            return new BaseResponse(HttpStatusCode.OK, MessageHelper.Common.Success, DateTime.UtcNow);
       }
 
       public async Task<Pagination<CompanyDto>> GetCompanyPaginationAsync(PaginationParams param)

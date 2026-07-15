@@ -1,3 +1,6 @@
+using System.Globalization;
+using SharedKernel.Model;
+
 namespace SharedKernel.Helpers;
 
 public static class DateTimeHelper
@@ -27,5 +30,35 @@ public static class DateTimeHelper
 
             // Return the minute number at the *end* of this minute
             return startMinutes;
+      }
+
+       public static DateTime StringToDate(string time)
+      {
+            return DateTimeOffset.Parse(
+                time,
+                CultureInfo.InvariantCulture,
+                DateTimeStyles.RoundtripKind
+            ).UtcDateTime;
+      }
+
+      public static List<DateObject> ExtractDateFromStartEndDateTime(DateTime Start,DateTime End)
+      {
+            var dates = new List<DateObject>();
+            for(DateTime date = Start.Date; date <= End.Date;date = date.AddDays(1))
+            {
+                  dates.Add(new DateObject
+                  {
+                        Day=(short)date.Day,
+                        Month=(short)date.Month,
+                        Year=(short)date.Year
+                  });
+            }
+
+            return dates;
+      } 
+
+      public static DateTime IntToDateTimeUTC(int unix)
+      {
+            return DateTimeOffset.FromUnixTimeSeconds(unix).UtcDateTime;
       }
 }

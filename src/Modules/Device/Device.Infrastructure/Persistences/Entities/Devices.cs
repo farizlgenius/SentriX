@@ -3,7 +3,7 @@ using SharedKernel.Domain;
 
 namespace Device.Infrastructure.Persistences.Entities;
 
-public sealed class Devices : BaseEntity
+public sealed class Devices : BaseDbEntity
 {
   public string name { get; set; } = string.Empty;
   public string serial_number { get; set; } = string.Empty;
@@ -20,7 +20,7 @@ public sealed class Devices : BaseEntity
 
   public Devices() { }
 
-  public Devices(Device.Domain.Entities.Devices domain) : base(domain.ComponentId,domain.LocationId,domain.IsActive,false)
+  public Devices(Device.Domain.Entities.Devices domain) : base(domain.Guid,domain.ComponentId,domain.LocationId,domain.IsActive,domain.IsDefault)
   {
     this.name = domain.Name;
     this.serial_number = domain.SerialNumber;

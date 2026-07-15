@@ -148,10 +148,9 @@ const CardFormat = () => {
 
     const fetchData = async (pageNumber: number, pageSize: number,locationId?:number,search?: string, startDate?: string, endDate?: string) => {
             const res = await send.get(CardFormatEndpoint.PAGINATION(pageNumber,pageSize,locationId,search, startDate, endDate));
-            if (res.data) {
-                console.log(res.data)
-                setCardFormatsDto(res.data.items);
-                setPagination(res.data);
+            if (res.data.success) {
+                setCardFormatsDto(res.data.data.items);
+                setPagination(res.data.data);
             }
         }
 

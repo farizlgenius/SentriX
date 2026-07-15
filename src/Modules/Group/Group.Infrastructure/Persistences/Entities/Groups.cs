@@ -3,7 +3,7 @@ using SharedKernel.Domain;
 
 namespace Group.Infrastructure.Persistences.Entities;
 
-public sealed class Groups : BaseEntity
+public sealed class Groups : BaseDbEntity
 {
       public string name { get; set; } = string.Empty;
       public ICollection<GroupDoor> group_doors {get; set;} = default!;
@@ -13,7 +13,7 @@ public sealed class Groups : BaseEntity
             
       }
 
-      public Groups(Domain.Entities.Groups domain) : base(domain.ComponentId, domain.LocationId, domain.IsActive,false)
+      public Groups(Domain.Entities.Groups domain) : base(domain.Guid,domain.ComponentId, domain.LocationId, domain.IsActive,false)
       {
             this.name = domain.Name;
             this.group_doors = domain.GroupDoors.Select(x => new GroupDoor(x)).ToList();

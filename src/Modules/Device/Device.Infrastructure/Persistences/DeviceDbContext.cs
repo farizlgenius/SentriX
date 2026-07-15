@@ -37,15 +37,15 @@ public sealed class DeviceDbContext(DbContextOptions<DeviceDbContext> options) :
 
             foreach (var entityType in modelBuilder.Model.GetEntityTypes())
             {
-                  if (typeof(BaseEntity).IsAssignableFrom(entityType.ClrType))
+                  if (typeof(BaseDbEntity).IsAssignableFrom(entityType.ClrType))
                   {
                         modelBuilder.Entity(entityType.ClrType)
-                            .Property(nameof(BaseEntity.created_at))
+                            .Property(nameof(BaseDbEntity.created_at))
                             .HasDefaultValueSql(utcNowSql)
                             .ValueGeneratedOnAdd();
 
                         modelBuilder.Entity(entityType.ClrType)
-                            .Property(nameof(BaseEntity.updated_at))
+                            .Property(nameof(BaseDbEntity.updated_at))
                             .HasDefaultValueSql(utcNowSql)
                             .ValueGeneratedOnAdd();
                   }
@@ -54,25 +54,29 @@ public sealed class DeviceDbContext(DbContextOptions<DeviceDbContext> options) :
             modelBuilder.Entity<Devices>()
             .HasMany(x => x.modules)
             .WithOne(x => x.devices)
-            .HasForeignKey(x => x.device_id)
+            .HasForeignKey(x => x.device_guid)
+            .HasPrincipalKey(x => x.guid)
             .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Module>()
             .HasMany(x => x.inputs)
             .WithOne(x => x.module)
-            .HasForeignKey(x => x.module_id)
+            .HasForeignKey(x => x.module_guid)
+            .HasPrincipalKey(x => x.guid)
             .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Module>()
             .HasMany(x => x.relays)
             .WithOne(x => x.module)
-            .HasForeignKey(x => x.module_id)
+            .HasForeignKey(x => x.module_guid)
+            .HasPrincipalKey(x => x.guid)
             .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Module>()
             .HasMany(x => x.readers)
             .WithOne(x => x.module)
-            .HasForeignKey(x => x.module_id)
+            .HasForeignKey(x => x.module_guid)
+            .HasPrincipalKey(x => x.guid)
             .OnDelete(DeleteBehavior.Cascade);
 
       }

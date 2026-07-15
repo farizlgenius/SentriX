@@ -9,4 +9,8 @@ public sealed class AmicoSetting : IAmicoSetting
       public string Login {get; set;} = string.Empty;
 
       public string Password {get; set;} = string.Empty;
+
+      public string DefaultLogin {get; set;} = string.Empty;
+
+      public string DefaultPassword {get; set;} = string.Empty;
 }

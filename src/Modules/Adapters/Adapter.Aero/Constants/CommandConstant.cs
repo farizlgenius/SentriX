@@ -31,6 +31,8 @@ public static class CommandConstant
       public static string SetTransactionIndex = "303 : Set Transaction Index";
       public static string CardFormatterConfiguration = "1102 : Card Formatter Configuration";
       public static string CardDelete = "3305 : Card Delete";
+      public static string DetachScpChannel = "208 : Detach Scp from Channel";
+      public static string DeleteScp = "015 : Delete Scp";
 }
 
 

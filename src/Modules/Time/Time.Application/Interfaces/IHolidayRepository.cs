@@ -6,9 +6,12 @@ namespace Time.Application.Interfaces;
 
 public interface IHolidayRepository
 {
-      Task<HolidayDto> CreateHolidayAsync(Holiday domain,CancellationToken ct = default);
+      Task AddAsync(Holiday domain,CancellationToken ct = default);
+      Task<bool> IsAnyByGuidAsync(Guid guid,CancellationToken ct= default);
       Task<int> GetLowestHolidayComponentIdAsync(CancellationToken ct = default);
-      Task<HolidayDto> GetByIdAsync(int id,CancellationToken ct = default);
-      Task<HolidayDto> DeleteByIdAsync(int id,CancellationToken ct = default);
+      Task<HolidayDto> GetByGuidAsync(Guid guid,CancellationToken ct = default);
+      Task DeleteByGuidAsync(Guid guid,CancellationToken ct = default);
       Task<Pagination<HolidayDto>> GetPaginationAsync(PaginationParams param,CancellationToken ct = default);
+      Task UpdateAsync(Holiday domain,CancellationToken ct = default);
+      Task<int> CountHolidayByLocationIdAsync(int location_id, CancellationToken ct = default);
 }

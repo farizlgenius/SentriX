@@ -51,7 +51,15 @@ public sealed class GlobalException : IMiddleware
             context.Response.StatusCode = StatusCodes.Status400BadRequest;
             context.Response.ContentType = "application/json";
 
-            var response = new BaseResponse(System.Net.HttpStatusCode.BadRequest, ex.Message, DateTime.UtcNow);
+            var response = new BaseResponse<object>(
+                  DateTime.UtcNow,
+                  System.Net.HttpStatusCode.BadRequest,
+                  false, 
+                  "Bad request",
+                  Errors:new SharedKernel.Model.BaseErrorResponse(
+                        ex.Message
+                  ));
+
             return context.Response.WriteAsJsonAsync(response);
 
 
@@ -67,7 +75,15 @@ public sealed class GlobalException : IMiddleware
             context.Response.StatusCode = StatusCodes.Status401Unauthorized;
             context.Response.ContentType = "application/json";
 
-            var response = new BaseResponse(System.Net.HttpStatusCode.Unauthorized, ex.Message, DateTime.UtcNow);
+            var response = new BaseResponse<object>(
+                  DateTime.UtcNow,
+                  System.Net.HttpStatusCode.Unauthorized,
+                  false, 
+                  "Unauthorized",
+                  Errors:new SharedKernel.Model.BaseErrorResponse(
+                        ex.Message
+                  ));
+
             return context.Response.WriteAsJsonAsync(response);
       }
 
@@ -80,7 +96,14 @@ public sealed class GlobalException : IMiddleware
             context.Response.StatusCode = StatusCodes.Status404NotFound;
             context.Response.ContentType = "application/json";
 
-            var response = new BaseResponse(System.Net.HttpStatusCode.NotFound, ex.Message, DateTime.UtcNow);
+            var response = new BaseResponse<object>(
+                  DateTime.UtcNow,
+                  System.Net.HttpStatusCode.NotFound,
+                  false, 
+                  "Not found",
+                  Errors:new SharedKernel.Model.BaseErrorResponse(
+                        ex.Message
+                  ));
             return context.Response.WriteAsJsonAsync(response);
       }
 
@@ -93,7 +116,15 @@ public sealed class GlobalException : IMiddleware
             context.Response.StatusCode = StatusCodes.Status403Forbidden;
             context.Response.ContentType = "application/json";
 
-            var response = new BaseResponse(System.Net.HttpStatusCode.Forbidden, ex.Message, DateTime.UtcNow);
+            var response = new BaseResponse<object>(
+                  DateTime.UtcNow,
+                  System.Net.HttpStatusCode.Forbidden,
+                  false, 
+                  "Forbidden",
+                  Errors:new SharedKernel.Model.BaseErrorResponse(
+                        ex.Message
+                  ));
+
             return context.Response.WriteAsJsonAsync(response);
       }
 
@@ -108,23 +139,30 @@ public sealed class GlobalException : IMiddleware
 
             if (ex.InnerException is null)
             {
-                  return context.Response.WriteAsJsonAsync(new BaseResponse(System.Net.HttpStatusCode.InternalServerError, ex.Message, DateTime.UtcNow));
+                  return context.Response.WriteAsJsonAsync(
+                         new BaseResponse<object>(
+                              DateTime.UtcNow,
+                              System.Net.HttpStatusCode.InternalServerError,
+                              false, 
+                              "Internal server error",
+                              Errors:new SharedKernel.Model.BaseErrorResponse(
+                                    ex.Message
+                              ))
+                  );
             }
             else
             {
-                  Console.WriteLine(ex.StackTrace);
-                  return context.Response.WriteAsJsonAsync(
-                    new
-                    {
-                          Code = HttpStatusCode.InternalServerError,
-                          Timestamp = DateTime.UtcNow,
-                          Details = new
-                          {
-                                Exception = ex.Message,
-                                InnerException = ex.InnerException.Message,
-                                StackTrace = ex.StackTrace
-                          }
-                    }
+                   return context.Response.WriteAsJsonAsync(
+                         new BaseResponse<object>(
+                              DateTime.UtcNow,
+                              System.Net.HttpStatusCode.InternalServerError,
+                              false, 
+                              "Internal server error",
+                              Errors:new SharedKernel.Model.BaseErrorResponse(
+                                    ex.Message,
+                                    ex.InnerException.ToString(),
+                                    ex.StackTrace
+                              ))
                   );
             }
 

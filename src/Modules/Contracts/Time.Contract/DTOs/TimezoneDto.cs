@@ -2,8 +2,8 @@ using SharedKernel.Domain;
 
 namespace Time.Contract.DTOs;
 
-public sealed record TimezoneDto(
-        int Id=0,
+public sealed record TimeZoneDto(
+        Guid Guid=default,
         short ComponentId=0,
         string Name="",
         short Mode=0,
@@ -11,5 +11,5 @@ public sealed record TimezoneDto(
         string Deactive="",
         List<IntervalDto> Intervals=default!,
         int LocationId=0,
-        bool IsActive=false,
-        bool IsDefault=false) : BaseDto(ComponentId,LocationId,string.Empty,IsActive);
+        bool IsActive=true,
+        bool IsDefault=false) : BaseDtoEntity(Guid,ComponentId,LocationId,string.Empty,IsActive,IsDefault);

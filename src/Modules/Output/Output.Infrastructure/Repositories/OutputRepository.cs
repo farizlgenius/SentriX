@@ -209,7 +209,7 @@ public sealed class OutputRepository(OutputDbContext context) : IOutputRepositor
                   x.label,
                   x.value,
                   string.Empty,
-                  0,
+                  Guid.Empty,
                   false
             )).ToArrayAsync();
       }
@@ -221,7 +221,7 @@ public sealed class OutputRepository(OutputDbContext context) : IOutputRepositor
                   x.label,
                   x.value,
                   string.Empty,
-                  0,
+                  Guid.Empty,
                   false
             )).ToArrayAsync();
       }

@@ -1,14 +1,20 @@
 using System;
+using System.Text.Json;
 using Device.Contract.DTOs;
 
 namespace Adapter.Abstraction.Interfaces;
 
 public interface IDeviceAdapter
 {
-      
-      Task CreateDeviceAsync( string Mac,
-            short ComponentId);
-      Task<bool> GetDeviceStatusAsync(int ComponentId);
+      Task DeleteDeviceAsync(Guid Guid,string Ip,string Mac,short ComponentId);
+      Task CreateDeviceAsync( 
+            Guid Guid,
+            string Ip,
+            string Mac,
+            short ComponentId,
+            int LocationId
+            );
+      Task<bool> GetDeviceStatusAsync(string Mac,int ComponentId);
       Task<bool> ResetDeviceAsync(string Mac,short ComponentId);
       Task CreateModuleAsync(
             string Mac,
@@ -23,7 +29,7 @@ public interface IDeviceAdapter
       Task<bool> SetEventStatusAsync(string Mac,int ComponentId,bool IsEnable);
 
       Task<string> GetDeviceInformationByMacAsync(string Mac);
-      Task<string> GetDeviceInformationByIpAsync(string Ip);
+      Task<JsonElement> GetDeviceInformationByIpAsync(string Ip,bool? IsFirst);
       Task VerifyDeviceComponentAsync(int ComponentId);
 
       Task<bool> AsciiCommandAsync(string Mac,int ComponentId,string Command);

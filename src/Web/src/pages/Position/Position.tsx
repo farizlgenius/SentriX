@@ -39,13 +39,14 @@ export const Position = () => {
     const [selectedCompany,setSelectedCompany] = useState<number>(-1);
     const [companyOptions,setCompanyOptions] = useState<Options[]>([]);
         const defaultDto: PositionDto = {
-        id: 0,
-        name: "",
-        description: "",
-        departmentId: selectedDepartment,
-        locationId:locationId,
-        isActive:true
-    }
+            id: 0,
+            name: "",
+            description: "",
+            departmentId: selectedDepartment,
+            locationId: locationId,
+            isActive: true,
+            isDefault: false
+        }
 
     const { toggleToast, updateToast } = useToast();
     const { setPagination } = usePagination();
@@ -158,17 +159,17 @@ export const Position = () => {
 
     const fetchData = async (pageNumber: number, pageSize: number,locationId?: number, search?: string, startDate?: string, endDate?: string) => {
         const res = await send.get(PositionEndpoint.PAGINATION_BY_DEPART(pageNumber, pageSize,selectedDepartment, locationId, search, startDate, endDate));
-        if (res && res.data) {
-            setPositionsDto(res.data.items);
-            setPagination(res.data);
+        if (res.data.success) {
+            setPositionsDto(res.data.data.items);
+            setPagination(res.data.data);
         }
     }
 
     const fetchDataImd = async (pageNumber: number, pageSize: number,departmentId:number,locationId?: number, search?: string, startDate?: string, endDate?: string) => {
         const res = await send.get(PositionEndpoint.PAGINATION_BY_DEPART(pageNumber, pageSize, departmentId,locationId, search, startDate, endDate));
-        if (res && res.data) {
-            setPositionsDto(res.data.items);
-            setPagination(res.data);
+        if (res.data.success) {
+            setPositionsDto(res.data.data.items);
+            setPagination(res.data.data);
         }
     }
 
@@ -183,20 +184,23 @@ export const Position = () => {
     const fetchCompany = async () => {
         setCompanyOptions([])
             var res = await send.get(CompanyEndpoint.GET_BY_LOCATION(locationId));
-            res.data.map((a:CompanyDto) => {
+            if(res.data.success){
+                res.data.data.map((a:CompanyDto) => {
                 setCompanyOptions((prev) => ([...prev,{
                     label:a.name,
                     value:a.id,
                     description:a.description
                 }]))
             })
+            }
+            
         }
 
     const fetchDepartments = async (company:number) => {
         setDepartmentOptions([])
         const res = await send.get(DepartmentEndpoint.GET_BY_COMPANY(company));
-        if (res && res.data) {
-            res.data.map((a:DepartmentDto) => {
+        if (res.data.success) {
+            res.data.data.map((a:DepartmentDto) => {
                  setDepartmentOptions((prev) => ([...prev,{
                     label:a.name,
                     value:a.id,

@@ -157,10 +157,9 @@ export const Operator = () => {
     
     const fetchData = async (pageNumber: number, pageSize: number,locationId?:number | undefined ,search?: string, startDate?: string, endDate?: string) => {
         const res = await send.get(OperatorEndpoint.PAGINATION(pageNumber,pageSize,locationId,search, startDate, endDate));
-        console.log(res.data)
-        if (res && res.data) {
-            setOperatorsDto(res.data.items);
-            setPagination(res.data);
+        if (res.data.success) {
+            setOperatorsDto(res.data.data.items);
+            setPagination(res.data.data);
         }
     }
 

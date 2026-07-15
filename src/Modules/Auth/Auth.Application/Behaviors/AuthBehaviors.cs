@@ -20,7 +20,7 @@ public sealed class AuthBehaviors(IOperator @operator, IJwt jwt,ICache redis,IRe
       {
             var locations = await bus.QueryAsync(new LocationListByUsernameQuery(username));
             var permissions = await bus.QueryAsync(new PermissionListByRoleIdQuery(roleId));
-            return new MeDto(System.Net.HttpStatusCode.OK, MessageHelper.Auth.GetMeSuccess, DateTime.UtcNow, locations, permissions);
+            return new MeDto(locations, permissions);
       }
 
       public async Task<AccessTokenDto> LoginAsync(LoginDto login)
@@ -58,7 +58,7 @@ public sealed class AuthBehaviors(IOperator @operator, IJwt jwt,ICache redis,IRe
               );
       }
 
-      public async Task<BaseResponse> LogoutAsync(string refreshToken)
+      public async Task<string> LogoutAsync(string refreshToken)
       {
             var hashed = TokenHasher.Hash(refreshToken);
             var refresh = await jwt.GetRefreshTokenAsync(hashed);
@@ -75,7 +75,8 @@ public sealed class AuthBehaviors(IOperator @operator, IJwt jwt,ICache redis,IRe
 
             await jwt.RevokeTokenAsync(refreshToken);
 
-            return new BaseResponse(System.Net.HttpStatusCode.OK, MessageHelper.Auth.LogoutSuccess, DateTime.UtcNow);
+            return "Logout success";
+
       }
 
       public async Task<AccessTokenDto> RefreshTokenAsync(string refreshToken)

@@ -55,9 +55,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                     refresh: ""
                 })
                 if (res?.status !== 200) return false;
-                setAccessToken(res.data.accessToken)
-                setToken(res.data.accessToken);
-                SignalRService.setToken(res.data.accessToken);
+                setAccessToken(res.data.data.accessToken)
+                setToken(res.data.data.accessToken);
+                SignalRService.setToken(res.data.data.accessToken);
 
                 await SignalRService.stopConnection();
                 await SignalRService.startConnection();
@@ -78,12 +78,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         if (!getAccessToken()) return false;
         const res = await send.get(AuthEndpoint.ME);
         if (res?.status !== 200) return false;
-        console.log(res)
-        console.log(res.data);
-        fetchLocation(res.data.locations) // [1]
-        setPermission(res.data.permissions)
+        fetchLocation(res.data.data.locations) // [1]
+        setPermission(res.data.data.permissions)
         setIsAuthenticated(true);
-        console.log(res.data.auth)
         return true;
     }, [fetch])
 
@@ -94,7 +91,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         }
         const res = await send.post(LocationEndpoint.GET_RANGE, dto)
         console.log(res)
-        let locs: LocationDto[] = res.data;
+        let locs: LocationDto[] = res.data.data;
         setLocationList(locs)
         SetLocationOption(locs.map(d => ({
             label: d.name,
@@ -133,9 +130,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         if (!Helper.handleToastByResCode(res, AuthToast.LOGIN, toggleToast)) {
             return false;
         }
-        setAccessToken(res.data.accessToken)
-        setToken(res.data.accessToken);
-        SignalRService.setToken(res.data.accessToken);
+        setAccessToken(res.data.data.accessToken)
+        setToken(res.data.data.accessToken);
+        SignalRService.setToken(res.data.data.accessToken);
         await fetchMe();
         return true
     }, [fetchMe])
@@ -144,12 +141,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         const res = await send.post(AuthEndpoint.LOGOUT, {
             "refresh": ""
         })
-        console.log(res.data)
-        if (res.data) {
+        console.log(res)
+        if (res.status == 200) {
             clearAccessToken()
             setIsAuthenticated(false);
         }
-        return res.data;
+        return res.status == 200;
     }, [])
 
     const filterPermission = useCallback((FeatureId: number) => {

@@ -1,5 +1,6 @@
 using System;
 using System.Net;
+using System.Text.Json;
 using Adapter.Abstraction.Command;
 using Adapter.Abstraction.Constants;
 using Adapter.Abstraction.Events;
@@ -19,6 +20,7 @@ using SharedKernel.Enums;
 using SharedKernel.Exceptions;
 using SharedKernel.Helpers;
 using SharedKernel.Messaging;
+using SharedKernel.Model;
 using Time.Contract.Queries;
 using User.Contract.Queries;
 
@@ -26,22 +28,27 @@ namespace Device.Application.Behaviors;
 
 public sealed class DeviceBehaviors(IDeviceRepository repo, IMessageBus bus, IAdapterFactory adapterFactory) : IDevice
 {
-      public async Task<BaseResponse> AsciiCommandAsync(int id, AeroCommandDto command, CancellationToken ct = default)
+      public async Task AsciiCommandAsync(Guid guid, AeroCommandDto command, CancellationToken ct = default)
       {
-            var Mac = await repo.GetMacByIdAsync(id);
-            var ScpId = await repo.GetComponentIdByMacAsync(Mac);
-            await adapterFactory.GetAdapter(Venders.AERO).Device.AsciiCommandAsync(Mac, ScpId, command.Command);
-            return new BaseResponse(System.Net.HttpStatusCode.OK, MessageHelper.Common.Success, DateTime.UtcNow);
+            var detail = await repo.GetMacAndTypeAndComponentIdByGuidAsync(guid);
+            await adapterFactory.GetAdapter(Venders.AERO).Device.AsciiCommandAsync(detail.Mac, detail.ComponentId, command.Command);
       }
 
       public async Task<DeviceDto> CreateAsync(CreateDeviceDto dto, CancellationToken ct = default)
       {
-            var device = new Device.Domain.Entities.Devices(
-                  0,
+
+            // Check that Mac is already exists 
+            if (await repo.IsAnyWithMacAsync(StringHelper.FormatMac(dto.Mac)))
+                  throw new BadRequestException(MessageHelper.Common.Duplicate(nameof(dto.Mac)));
+
+
+            var guid = Guid.NewGuid();
+            var domain = new Device.Domain.Entities.Devices(
+                  guid,
                   dto.ComponentId,
                   dto.Name,
                   dto.SerialNumber,
-                  dto.Mac,
+                  StringHelper.FormatMac(dto.Mac),
                   dto.Ip,
                   dto.Port,
                   dto.Fw,
@@ -50,40 +57,89 @@ public sealed class DeviceBehaviors(IDeviceRepository repo, IMessageBus bus, IAd
                   dto.SyncedAt,
                   dto.LocationId,
                   dto.Metadata,
-                  dto.IsActive);
+                  dto.IsActive,
+                  dto.IsDefault);
 
             // TODO: Map domain to dto using AutoMapper or similar library
-            await adapterFactory.GetAdapter(dto.Type).Device.CreateDeviceAsync(dto.Mac, dto.ComponentId);
-
-            var res = await repo.CreateAsync(device, ct);
-
-            var module = new Device.Domain.Entities.Module(
-                  0,
-                  0,
-                  $"{SioModel.x1100.ToString()} ({0})",
-                  string.Empty,
-                  string.Empty,
-                  0,
-                  0,
-                  dto.Mac,
-                  SioModel.x1100.ToString(),
-                  DeviceType.aero.ToString(),
-                  res.Id,
-                  dto.LocationId,
-                  dto.IsActive
+            await adapterFactory.GetAdapter(dto.Type).Device.CreateDeviceAsync(
+                  domain.Guid,
+                  domain.Ip,
+                  domain.Mac,
+                  domain.ComponentId,
+                  domain.LocationId
                   );
 
-            await repo.CreateModuleAsync(module);
+            await repo.AddAsync(domain, ct);
 
-            return res;
+            if (dto.Type.Equals(DeviceType.aero.ToString()))
+            {
+                  var module = new Device.Domain.Entities.Module(
+                 Guid.NewGuid(),
+                 0,
+                 $"{SioModel.x1100.ToString()} ({0})",
+                 dto.SerialNumber,
+                 dto.Fw,
+                 dto.Port,
+                 0,
+                 dto.Mac,
+                 SioModel.x1100.ToString(),
+                 DeviceType.aero.ToString(),
+                guid,
+                 dto.LocationId,
+                 dto.IsActive,
+                 dto.IsDefault
+                 );
+
+                  await repo.AddModuleAsync(module);
+            }
+            else if (dto.Type.Equals(DeviceType.amico.ToString()))
+            {
+                  var module = new Device.Domain.Entities.Module(
+                 Guid.NewGuid(),
+                 -1,
+                 dto.Name,
+                 dto.SerialNumber,
+                 dto.Fw,
+                 dto.Port,
+                 -1,
+                 dto.Mac,
+                 "Amico",
+                 DeviceType.amico.ToString(),
+                guid,
+                 dto.LocationId,
+                 dto.IsActive,
+                 dto.IsDefault
+                 );
+
+                  await repo.AddModuleAsync(module);
+            }
+
+
+
+            return new DeviceDto(
+                  guid,
+                  domain.Name,
+                  domain.ComponentId,
+                  domain.SerialNumber,
+                  domain.Mac,
+                  domain.Ip,
+                  domain.Port,
+                  domain.Fw,
+                  domain.Type,
+                  domain.Status,
+                  domain.SyncedAt,
+                  domain.LocationId,
+                  domain.Metadata,
+                  domain.IsActive,
+                  domain.IsDefault
+            );
       }
 
       public async Task<ModuleDto> CreateModuleAsync(CreateModuleDto dto, CancellationToken ct = default)
       {
-            var deviceId = await repo.GetIdByMacAsync(dto.Mac);
             var module = new Device.Domain.Entities.Module(
-                  0,
-                  (short)await repo.GetLowestModuleComponentIdByDeviceIdAsync(deviceId, ct),
+                  Guid.NewGuid(),
+                  (short)await repo.GetLowestModuleComponentIdByDeviceGuidAsync(dto.DeviceGuid, ct),
                   $"{((SioModel)dto.Model).ToString()}",
                   string.Empty,
                   string.Empty,
@@ -92,9 +148,10 @@ public sealed class DeviceBehaviors(IDeviceRepository repo, IMessageBus bus, IAd
                   string.Empty,
                   dto.Model.ToString(),
                   DeviceType.aero.ToString(),
-                  deviceId,
+                  dto.DeviceGuid,
                   dto.LocationId,
-                  true
+                  dto.IsActive,
+                  dto.IsDefault
                   );
 
 
@@ -108,10 +165,11 @@ public sealed class DeviceBehaviors(IDeviceRepository repo, IMessageBus bus, IAd
            );
 
 
-            var res = await repo.CreateModuleAsync(module, ct);
+            await repo.AddModuleAsync(module, ct);
 
+            return new ModuleDto(
 
-            return res;
+            );
       }
 
       public async Task<IEnumerable<OptionDto>> GetOptionByTypeAndLocationIdAsync(int locationId, string type, CancellationToken ct = default)
@@ -149,17 +207,18 @@ public sealed class DeviceBehaviors(IDeviceRepository repo, IMessageBus bus, IAd
             return await adapter.Device.GetIdReportsAsync();
       }
 
-      public async Task<IEnumerable<ModuleDto>> GetModuleByDeviceIdAsync(int id, CancellationToken ct = default)
+      public async Task<IEnumerable<ModuleDto>> GetModuleByDeviceGuidAsync(Guid guid, CancellationToken ct = default)
       {
-            return await repo.GetModuleByDeviceIdAsync(id, ct);
+            // Check that device is exists
+            return await repo.GetModuleByDeviceGuidAsync(guid, ct);
 
       }
 
-      public async Task<BaseResponse> GetModuleStatusByIdAsync(int id, CancellationToken ct = default)
+      public async Task GetModuleStatusByGuidAsync(Guid guid, CancellationToken ct = default)
       {
-            ModuleDto module = await repo.GetModuleByIdAsync(id, ct);
+            ModuleDto module = await repo.GetModuleByGuidAsync(guid, ct);
             await bus.SendAsync(new ModuleStatusCommand(module.DeviceComponentId, module.Mac, module.ComponentId));
-            return new BaseResponse(System.Net.HttpStatusCode.OK, MessageHelper.Common.Success, DateTime.UtcNow);
+
       }
 
       public async Task<Pagination<DeviceDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
@@ -167,30 +226,23 @@ public sealed class DeviceBehaviors(IDeviceRepository repo, IMessageBus bus, IAd
             return await repo.GetPaginationAsync(param, ct);
       }
 
-      public async Task<DeviceStatusDto> GetStatusByIdAsync(int id, CancellationToken ct = default)
+      public async Task<DeviceStatusDto> GetStatusByGuidAsync(Guid guid, CancellationToken ct = default)
       {
-            var ComponentId = await repo.GetComponentIdByIdAsync(id, ct);
-            var res = await adapterFactory.GetAdapter(Venders.AERO).Device.GetDeviceStatusAsync(ComponentId);
-            return new DeviceStatusDto(id, res);
+            var detail = await repo.GetMacAndTypeAndComponentIdByGuidAsync(guid, ct);
+            var res = await adapterFactory.GetAdapter(detail.Type).Device.GetDeviceStatusAsync(detail.Mac, detail.ComponentId);
+            return new DeviceStatusDto(guid, res);
       }
 
-      public async Task<BaseResponse> ResetDeviceAsync(int id, CancellationToken ct = default)
+      public async Task ResetDeviceAsync(Guid guid, CancellationToken ct = default)
       {
-            var Mac = await repo.GetMacByIdAsync(id, ct);
-            var ScpId = await repo.GetComponentIdByIdAsync(id, ct);
-            await adapterFactory.GetAdapter(Venders.AERO).Device.ResetDeviceAsync(Mac, ScpId);
+            var detail = await repo.GetMacAndTypeAndComponentIdByGuidAsync(guid, ct);
+            await adapterFactory.GetAdapter(detail.Type).Device.ResetDeviceAsync(detail.Mac, detail.ComponentId);
 
-            return new BaseResponse(System.Net.HttpStatusCode.OK, MessageHelper.Common.Success, DateTime.UtcNow);
       }
 
-      public async Task<IEnumerable<OptionDto>> GetModuleOptionByDeviceIdAsync(int deviceId, CancellationToken ct = default)
+      public async Task<IEnumerable<OptionDto>> GetModuleOptionByDeviceGuidAsync(Guid guid, CancellationToken ct = default)
       {
-            // Check that ModuleId is Exists
-            var flag = await repo.IsAnyModuleByIdAsync(deviceId);
-            if (!flag)
-                  throw new BadRequestException(MessageHelper.Common.NotFound("Module", deviceId));
-
-            var res = await repo.GetModuleOptionByDeviceIdAsync(deviceId, ct);
+            var res = await repo.GetModuleOptionByDeviceGuidAsync(guid, ct);
             return res;
       }
 
@@ -199,59 +251,56 @@ public sealed class DeviceBehaviors(IDeviceRepository repo, IMessageBus bus, IAd
             return await repo.GetDeviceByComponentIdAsync(ComponentId, ct);
       }
 
-      public async Task<IEnumerable<OptionDto>> GetReaderOptionsByModuleIdAsync(int id, CancellationToken ct = default)
+      public async Task<IEnumerable<OptionDto>> GetReaderOptionsByModuleGuidAsync(Guid guid, CancellationToken ct = default)
       {
-            return await repo.GetReaderOptionsByModuleIdAsync(id, ct);
+            return await repo.GetReaderOptionsByModuleGuidAsync(guid, ct);
       }
 
-      public async Task<IEnumerable<OptionDto>> GetInputOptionsByModuleIdAsync(int id, CancellationToken ct = default)
+      public async Task<IEnumerable<OptionDto>> GetInputOptionsByModuleIdAsync(Guid guid, CancellationToken ct = default)
       {
-            return await repo.GetInputOptionsByModuleIdAsync(id, ct);
+            return await repo.GetInputOptionsByModuleIdAsync(guid, ct);
       }
 
-      public async Task<IEnumerable<OptionDto>> GetRelayOptionsByModuleIdAsync(int id, CancellationToken ct = default)
+      public async Task<IEnumerable<OptionDto>> GetRelayOptionsByModuleIdAsync(Guid guid, CancellationToken ct = default)
       {
-            return await repo.GetRelayOptionsByModuleIdAsync(id, ct);
+            return await repo.GetRelayOptionsByModuleIdAsync(guid, ct);
       }
 
-      public async Task<BaseResponse> GetEventStatusAsync(string type, int id, CancellationToken ct = default)
+      public async Task GetEventStatusAsync(Guid guid, CancellationToken ct = default)
       {
-            var mac = await repo.GetMacByIdAsync(id);
-            var scpid = await repo.GetComponentIdByIdAsync(id);
+            var detail = await repo.GetMacAndTypeAndComponentIdByGuidAsync(guid, ct);
 
-            await adapterFactory.GetAdapter(type).Device.GetEventStatusAsync(mac, scpid);
+            await adapterFactory.GetAdapter(detail.Type).Device.GetEventStatusAsync(detail.Mac, detail.ComponentId);
 
-            return new BaseResponse(HttpStatusCode.OK, MessageHelper.Common.Success, DateTime.UtcNow);
       }
 
-      public async Task<BaseResponse> SetEventStatusAsync(SetEventDto dto, CancellationToken ct = default)
+      public async Task SetEventStatusAsync(SetEventDto dto, CancellationToken ct = default)
       {
-            var mac = await repo.GetMacByIdAsync(dto.DeviceId);
-            var scpid = await repo.GetComponentIdByIdAsync(dto.DeviceId);
+            var detail = await repo.GetMacAndTypeAndComponentIdByGuidAsync(dto.DeviceGuid, ct);
 
-            await adapterFactory.GetAdapter(dto.Type).Device.SetEventStatusAsync(mac, scpid, dto.IsEnable);
+            await adapterFactory.GetAdapter(detail.Type).Device.SetEventStatusAsync(detail.Mac, detail.ComponentId, dto.IsEnable);
 
-            return new BaseResponse(HttpStatusCode.OK, MessageHelper.Common.Success, DateTime.UtcNow);
+
       }
 
       public async Task<string> GetModuleNameByMacAndComponentIdAsync(string Mac, short ComponentId, CancellationToken ct = default)
       {
-            return await repo.GetModuleNameByMacAndComponentIdAsync(Mac,ComponentId,ct);
+            return await repo.GetModuleNameByMacAndComponentIdAsync(Mac, ComponentId, ct);
       }
 
-      public async Task<BaseResponse> UploadDeviceAsync(int id, CancellationToken ct = default)
+      public async Task UploadDeviceAsync(Guid guid, CancellationToken ct = default)
       {
-           // Device
-           var device = await repo.GetDeviceByIdAsync(id);
-           string Mac = device.Mac.Replace(":","_");
+            // Device
+            var device = await repo.GetDeviceByGuidAsync(guid);
+            string Mac = device.Mac.Replace(":", "_");
 
-           if(device.Id == 0)
-                  throw new BadRequestException(MessageHelper.Common.NotFound("Device",id));
+            if (device.Guid == Guid.Empty)
+                  throw new BadRequestException(MessageHelper.Common.NotFound("Device", guid.ToString()));
 
-           // Module
-           var modules = await repo.GetModuleByDeviceIdAsync(id);
+            // Module // Aero Only
+            var modules = await repo.GetModuleByDeviceGuidAsync(device.Guid);
 
-           foreach(var module in modules)
+            foreach (var module in modules)
             {
                   if (device.Type.Equals(DeviceType.aero.ToString()))
                   {
@@ -272,12 +321,14 @@ public sealed class DeviceBehaviors(IDeviceRepository repo, IMessageBus bus, IAd
 
             }
 
-            // Card Format
+            // Card Format // Aero Only
             var formats = await bus.QueryAsync(new CardFormatByLocationIdQuery(device.LocationId));
 
-            foreach(var cfmt in formats)
+            foreach (var cfmt in formats)
             {
-                  await adapterFactory.GetAdapter(device.Type).Setting.CardFormatConfiguration(
+                  if (device.Type.Equals(DeviceType.aero.ToString()))
+                  {
+                        await adapterFactory.GetAdapter(device.Type).Setting.CardFormatConfiguration(
                        Mac,
                         device.ComponentId,
                         cfmt.ComponentId,
@@ -297,14 +348,18 @@ public sealed class DeviceBehaviors(IDeviceRepository repo, IMessageBus bus, IAd
                         cfmt.IcLn,
                         cfmt.IcLoc
                   );
+                  }
+
             }
 
-            // Input
+            // Input // Aero Only
             var inputs = await bus.QueryAsync(new InputByMacQuery(Mac));
 
-            foreach(var input in inputs)
+            foreach (var input in inputs)
             {
-                  await adapterFactory.GetAdapter(device.Type).Monitor.CreateUpdateMonitorPoint(
+                  if (device.Type.Equals(DeviceType.aero.ToString()))
+                  {
+                        await adapterFactory.GetAdapter(device.Type).Monitor.CreateUpdateMonitorPoint(
                         Mac,
                         input.ComponentId,
                         input.DeviceComponentId,
@@ -318,30 +373,38 @@ public sealed class DeviceBehaviors(IDeviceRepository repo, IMessageBus bus, IAd
                         input.DelayEntry,
                         input.DelayExit
                   );
+                  }
+
             }
 
 
 
-            // Input Group
+            // Input Group // Aero
             var igps = await bus.QueryAsync(new InputGroupByMacQuery(Mac));
 
-            foreach(var g in igps)
+            foreach (var g in igps)
             {
-                  await adapterFactory.GetAdapter(device.Type).Monitor.CreateUpdateMonitorGroup(
-                        Mac,
-                        device.ComponentId,
-                        g.ComponentId,
-                        g.InputGroupDetailDtos.Select(x => (x.InputType,x.InputComponentId)).ToList()
-                  );
-            }
-            
+                  if (device.Type.Equals(DeviceType.aero.ToString()))
+                  {
+                        await adapterFactory.GetAdapter(device.Type).Monitor.CreateUpdateMonitorGroup(
+                       Mac,
+                       device.ComponentId,
+                       g.ComponentId,
+                       g.InputGroupDetailDtos.Select(x => (x.InputType, x.InputComponentId)).ToList()
+                 );
+                  }
 
-            // Output
+            }
+
+
+            // Output // Aero
 
             var outputs = await bus.QueryAsync(new OutputByMacQuery(Mac));
-            foreach(var o in outputs)
+            foreach (var o in outputs)
             {
-                  await adapterFactory.GetAdapter(device.Type).Control.CreateAsync(
+                  if (device.Type.Equals(DeviceType.aero.ToString()))
+                  {
+                        await adapterFactory.GetAdapter(device.Type).Control.CreateAsync(
                         o.Mac,
                         o.ComponentId,
                         o.DeviceComponentId,
@@ -351,28 +414,44 @@ public sealed class DeviceBehaviors(IDeviceRepository repo, IMessageBus bus, IAd
                         o.OfflineMode,
                         o.DefaultPulse
                   );
+                  }
+
             }
 
             // TimeZone
             var timeZones = await bus.QueryAsync(new TimeZoneByLocationIdQuery(device.LocationId));
 
-            foreach(var time in timeZones)
+            foreach (var time in timeZones)
             {
-                  await adapterFactory.GetAdapter(device.Type).Time.CreateTimezoneAsync(
-                        Mac,
-                        device.ComponentId,
+
+                  await adapterFactory.GetAdapter(device.Type).Time.CreateTimeZoneAsync(
+                        time.Guid,
+                         device.ComponentId,
                         time.ComponentId,
+                        time.Name,
+                        device.Mac,
                         time.Mode,
                         time.Active,
                         time.Deactive,
-                        time.Intervals
+                        time.Intervals.Select(x => new IntervalObject(
+                              (short)x.ComponentId,
+                              DateTimeHelper.ConvertTimeToEndMinute(x.Start),
+                              DateTimeHelper.ConvertTimeToEndMinute(x.End),
+                              x.Days.Sunday,
+                              x.Days.Monday,
+                              x.Days.Tuesday,
+                              x.Days.Wednesday,
+                              x.Days.Thursday,
+                              x.Days.Friday,
+                              x.Days.Saturday
+                        )).ToList()
                   );
             }
 
             // Doors
             var doors = await bus.QueryAsync(new DoorByMacQuery(Mac));
 
-            foreach(var door in doors)
+            foreach (var door in doors)
             {
                   await adapterFactory.GetAdapter(device.Type).Door.CreateUpdateDoorAsync(
                         Mac,
@@ -384,15 +463,15 @@ public sealed class DeviceBehaviors(IDeviceRepository repo, IMessageBus bus, IAd
             }
 
             // Access Level
-            var groups = await bus.QueryAsync(new GroupByMacAndDeviceTypeQuery(Mac,device.Type));
+            var groups = await bus.QueryAsync(new GroupByMacAndDeviceTypeQuery(Mac, device.Type));
 
-            foreach(var group in groups)
+            foreach (var group in groups)
             {
                   await adapterFactory.GetAdapter(device.Type).Group.CreateUpdateLevel(
                         Mac,
                         device.ComponentId,
                         group.ComponentId,
-                        group.Doors.Select(x => (x.DoorComponentId,x.TimezoneComponentId)).ToList()
+                        group.Doors.Select(x => (x.DoorComponentId, x.TimezoneComponentId)).ToList()
                   );
             }
 
@@ -400,7 +479,7 @@ public sealed class DeviceBehaviors(IDeviceRepository repo, IMessageBus bus, IAd
             var gpList = await bus.QueryAsync(new GroupIdListByMacQuery(Mac));
             var creds = await bus.QueryAsync(new CredentialByGroupListQuery(gpList.Select(x => x.id).ToList()));
 
-            foreach(var cred in creds)
+            foreach (var cred in creds)
             {
                   await adapterFactory.GetAdapter(device.Type).User.CreateUserAsync(
                         Mac,
@@ -432,19 +511,49 @@ public sealed class DeviceBehaviors(IDeviceRepository repo, IMessageBus bus, IAd
             // Check again
             await adapterFactory.GetAdapter(device.Type).Device.VerifyDeviceComponentAsync(device.ComponentId);
 
-            
-            return new BaseResponse(
-                  HttpStatusCode.OK,
-                  MessageHelper.Common.Success,
-                  DateTime.UtcNow
-                  );
-           
+
+
       }
 
-      public async Task<string> GetAmicoDeviceInformationAsync(AmicoStartSessionDto dto)
+      public async Task<JsonElement> GetAmicoDeviceInformationAsync(AmicoStartSessionDto dto)
       {
-            var res = await adapterFactory.GetAdapter(DeviceType.amico.ToString()).Device.GetDeviceInformationByIpAsync(dto.Ip);
+            var res = await adapterFactory.GetAdapter(DeviceType.amico.ToString()).Device.GetDeviceInformationByIpAsync(dto.Ip, true);
 
             return res;
+      }
+
+      public async Task<DeviceDto> DeleteDeviceAsync(Guid guid, CancellationToken ct = default)
+      {
+            var d = await repo.GetDeviceByGuidAsync(guid);
+
+            if(d.Guid == Guid.Empty)
+                  throw new BadRequestException(MessageHelper.Common.NotFound(nameof(guid),guid.ToString()));
+
+            await adapterFactory.GetAdapter(d.Type).Device.DeleteDeviceAsync(guid,d.Ip,StringHelper.FormatMac(d.Mac),d.ComponentId);
+
+            await repo.DeleteAsync(guid);
+
+            return new DeviceDto(
+                  d.Guid,
+                  d.Name,
+                  d.ComponentId,
+                  d.SerialNumber,
+                  d.Mac,
+                  d.Ip,
+                  d.Port,
+                  d.Fw,
+                  d.Type,
+                  d.Status,
+                  d.SyncedAt,
+                  d.LocationId,
+                  d.Metadata,
+                  d.IsActive,
+                  d.IsDefault
+            );
+      }
+
+      public async Task<DeviceDto> GetDeviceByDeviceIdAsync(string DeviceId, CancellationToken ct = default)
+      {
+            return await repo.GetDeviceByDeviceIdAsync(DeviceId);
       }
 }

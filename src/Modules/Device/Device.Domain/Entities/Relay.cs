@@ -3,16 +3,19 @@ using SharedKernel.Helpers;
 
 namespace Device.Domain.Entities;
 
-public sealed class Relay : BaseDomain
+public sealed class Relay 
 {
+      public Guid Guid { get; set; }
       public int RelayNumber { get; private set; }
-      public int ModuleId { get; private set; }
+      public Guid ModuleGuid { get; private set; }
+      public int LocationId { get; set; }
 
-      public Relay(int id,short relayNumber,int moduleId,int locationId, bool IsActive) : base(id, 0, locationId, IsActive)
+      public Relay(Guid guid,short relayNumber,Guid moduleGuid,int locationId) 
       {
             ValidationHelper.ValidateNotMinus(relayNumber,nameof(RelayNumber));
-            ValidationHelper.ValidateNotMinus(moduleId,nameof(ModuleId));
+            this.Guid = guid;
             this.RelayNumber = relayNumber;
-            this.ModuleId= moduleId;
+            this.ModuleGuid= moduleGuid;
+            this.LocationId = locationId;
       }
 }

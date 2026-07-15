@@ -27,13 +27,25 @@ public class BaseCommand : IBaseCommand
             ) ?? new CheckSessionResponse();
       }
 
-      public async Task<LoginResponse> LoginAsync(string ip)
+      public async Task<LoginResponse> LoginAsync(string ip,bool? isFirst)
       {
+            var login = "";
+            var password = "";
+            if(isFirst ?? false)
+            {
+                  login = Setting.DefaultLogin;
+                  password=Setting.DefaultPassword;
+            }
+            else
+            {
+                  login = Setting.Login;
+                  password=Setting.Password;
+            }
             return await Client.SendAsync<LoginRequest, LoginResponse>(
                   HttpMethod.Post,
                   UriHelper.UriBuilder(ip, Setting.Secure),
                   Endpoint.LOGIN,
-                  new LoginRequest(Setting.Login, Setting.Password)
+                  new LoginRequest(login, password)
             ) ?? new LoginResponse();
       }
 

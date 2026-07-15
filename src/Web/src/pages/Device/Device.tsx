@@ -1,25 +1,20 @@
-import { ReactNode, SetStateAction, useEffect, useState } from "react";
+import {  useEffect, useState } from "react";
 import PageBreadcrumb from "../../components/common/PageBreadCrumb";
 import {
-  AddIcon,
   AmicoIcon,
   CancelCircleIcon,
   CheckCircleIcon,
   ControlIcon,
-  HardwareIcon,
   Info2Icon,
   ModuleIcon,
-  OnIcon,
   ResetIcon,
   ScanIcon,
   ToggleTranIcon,
   TransferIcon,
-  TrashBinIcon,
   UploadIcon
 } from "../../icons";
 import Modals from "../UiElements/Modals";
 import Helper from "../../utility/Helper";
-import DeviceForm from "../../components/form/device/AeroDeviceForm";
 import { DeviceDto } from "../../model/Device/DeviceDto";
 import { IdReport } from "../../model/IdReport/IdReport";
 import SignalRService from "../../services/SignalRService";
@@ -54,6 +49,7 @@ import { AeroDtoMetadata as AeroDtoMetadata } from "../../model/Device/AeroDtoMe
 import { mapFields } from "../../utility/Mapper";
 import AmicoDeviceForm from "../../components/form/device/AmicoDeviceForm";
 import { AmicoDtoMetadata } from "../../model/Device/AmicoDtoMetadata";
+import { CreateDeviceStrMetadataDto } from "../../model/Device/CreateDeviceStrMetadataDto";
 
 const HEADER = ["Type", "Name", "Mac", "Firmware", "IP", "Port","Event", "Configuration", "Status","Enable", "Action"];
 const KEY = ["type", "name", "mac", "fw", "ip", "port","tranStatus"];
@@ -75,6 +71,7 @@ const Device = () => {
     setUpdate,
     setConfirmRemove,
     setConfirmUpdate,
+    setConfirmCreate,
     setMessage,
     setInfo
   } = usePopup();
@@ -82,7 +79,7 @@ const Device = () => {
   const toggleRefresh = () => setRefresh(!refresh);
 
   const defaultDto:DeviceDto = {
-    id: 0,
+    guid: "",
     componentId: 0,
     name: "",
     serialNumber: "",
@@ -100,7 +97,6 @@ const Device = () => {
   }
 
   const aeroDefault:AeroDtoMetadata = {
-    id: 0,
     componentId: 0,
     name: "",
     serialNumber: "",
@@ -111,7 +107,7 @@ const Device = () => {
     type: "",
     status: "",
     syncedAt: new Date(),
-    locationId: 0,
+    locationId: locationId,
     metadata: {
       portOne: false,
       protocolOne: -1,
@@ -123,21 +119,19 @@ const Device = () => {
   }
 
   const amicoDefault:AmicoDtoMetadata = {
-    id: 0,
     componentId: 0,
     name: "",
     serialNumber: "",
     mac: "",
     ip: "",
-    port: "",
+    port: 0,
     fw: "",
     type: "",
     status: "",
     syncedAt: new Date(),
-    locationId: 0,
+    locationId: locationId,
     metadata: {
-      login:"",
-      password:""
+      deviceId: ""
     }
   }
 
@@ -167,21 +161,21 @@ const Device = () => {
     endDate?: string
   ) => {
     const res = await send.get(DeviceEndpoint.PAGINATION(pageNumber, pageSize, fetchLocationId, search, startDate, endDate));
-    if (res && res.data) {
-      setData(res.data.items);
-      setPagination(res.data);
+    if (res.data.success) {
+      setData(res.data.data.items);
+      setPagination(res.data.data);
 
-      const newStatuses = res.data.items.map((item: DeviceDto) => ({
-        deviceComponentId: item.id,
+      const newStatuses = res.data.data.items.map((item: DeviceDto) => ({
+        deviceGuid: item.guid,
         componentId: item.componentId,
-        status: -1,
+        status: false,
         tamper: -1,
         ac: -1,
         batt: -1
       }));
 
-      const newTranStatuses = res.data.items.map((item: DeviceDto) => ({
-        deviceId: item.id,
+      const newTranStatuses = res.data.data.items.map((item: DeviceDto) => ({
+        deviceGuid: item.guid,
         capacity: 0,
         oldest: 0,
         lastReport: 0,
@@ -193,29 +187,29 @@ const Device = () => {
       setStatus(newStatuses);
       setTranStatus(newTranStatuses);
 
-      res.data.items.forEach((item: DeviceDto) => {
-        fetchStatus(item.id);
-        fetchTranStatus(item.type,item.id);
+      res.data.data.items.forEach((item: DeviceDto) => {
+        fetchStatus(item.guid);
+        fetchTranStatus(item.guid);
       });
     }
   };
 
-  const setTran = async (tranData: SetTranDto) => {
+  const fetchSetTran = async (tranData: SetTranDto) => {
     const res = await send.post(DeviceEndpoint.SET_TRAN, tranData);
     if (Helper.handleToastByResCode(res, HardwareToast.TOGGLE_TRAN, toggleToast)) {
       toggleRefresh();
     }
   };
 
-  const fetchTranStatus = async (type:string,id:number) => {
-    const res = await send.get(DeviceEndpoint.GET_EVENT_STATUS(type,id));
-    if (res.data) {
+  const fetchTranStatus = async (guid:string) => {
+    const res = await send.get(DeviceEndpoint.GET_EVENT_STATUS(guid));
+    if (res.data.success) {
       setTranStatus((prev) =>
         prev.map((item) =>
-          item.deviceId === res.data.id
+          item.deviceGuid === res.data.data.guid
             ? {
                 ...item,
-                status: res.data.status
+                status: res.data.data.status
               }
             : item
         )
@@ -223,15 +217,15 @@ const Device = () => {
     }
   }
 
-  const fetchStatus = async (id: number) => {
-    const res = await send.get(DeviceEndpoint.STATUS(id));
-    if (res.data) {
+  const fetchStatus = async (guid: string) => {
+    const res = await send.get(DeviceEndpoint.STATUS(guid));
+    if (res.data.success) {
       setStatus((prev) =>
         prev.map((item) =>
-          item.deviceComponentId === res.data.id
+          item.deviceGuid === res.data.data.guid
             ? {
                 ...item,
-                status: res.data.status
+                status: res.data.data.status
               }
             : item
         )
@@ -239,15 +233,15 @@ const Device = () => {
     }
   };
 
-  const resetDevice = async (id: number) => {
-    const res = await send.post(DeviceEndpoint.RESET(id));
+  const resetDevice = async (guid: string) => {
+    const res = await send.post(DeviceEndpoint.RESET(guid));
     if (Helper.handleToastByResCode(res, HardwareToast.RESET, toggleToast)) {
       toggleRefresh();
     }
   };
 
-  const uploadConfig = async (id: number) => {
-    const res = await send.post(DeviceEndpoint.UPLOAD(id));
+  const uploadConfig = async (guid:string) => {
+    const res = await send.post(DeviceEndpoint.UPLOAD(guid));
     if (Helper.handleToastByResCode(res, HardwareToast.UPLOAD, toggleToast)) {
       toggleRefresh();
     }
@@ -279,7 +273,7 @@ const Device = () => {
 
   const handleRemove = (item: DeviceDto) => {
     setConfirmRemove(() => async () => {
-      const res = await send.delete(DeviceEndpoint.DELETE(item.id));
+      const res = await send.delete(DeviceEndpoint.DELETE(item.guid));
       if (Helper.handleToastByResCode(res, HardwareToast.DELETE, toggleToast)) {
         setDeviceDto(defaultDto);
         toggleRefresh();
@@ -309,8 +303,8 @@ const Device = () => {
           setInfo(true);
         } else {
          select.forEach((item: DeviceDto) => (
-            setTran({
-              deviceId:item.id,
+            fetchSetTran({
+              deviceGuid:item.guid,
               type:item.type,
               isEnable:true
             })
@@ -323,7 +317,7 @@ const Device = () => {
           setInfo(true);
         } else {
           setConfirmRemove(() => async () => {
-            const ids = select.map((item: DeviceDto) => item.id);
+            const ids = select.map((item: DeviceDto) => item.guid);
             const res = await send.post(DeviceEndpoint.DELETE_RANGE, ids);
             if (Helper.handleToastByResCode(res, HardwareToast.DELETE_RANGE, toggleToast)) {
               setRemove(false);
@@ -346,6 +340,15 @@ const Device = () => {
         setUpdate(true);
         break;
       case "create":
+        setConfirmCreate(() => async () => {
+          var req:CreateDeviceStrMetadataDto = mapDto(amicoDto);
+          const res = await send.post(DeviceEndpoint.CREATE,req);
+          if(Helper.handleToastByResCode(res,HardwareToast.CREATE,toggleToast)){
+            setForm(false);
+            toggleRefresh();
+            setAmicoDto(amicoDefault);
+          }
+        });
         setCreate(true);
         break;
       case "type":
@@ -361,7 +364,7 @@ const Device = () => {
         break;
       case "reset":
         if (select.length !== 0) {
-          select.forEach((item: DeviceDto) => resetDevice(item.id));
+          select.forEach((item: DeviceDto) => resetDevice(item.guid));
         } else {
           setMessage("No selected object");
           setInfo(true);
@@ -369,7 +372,7 @@ const Device = () => {
         break;
       case "upload":
         if (select.length !== 0) {
-          select.forEach((item: DeviceDto) => uploadConfig(item.id));
+          select.forEach((item: DeviceDto) => uploadConfig(item.guid));
         } else {
           setMessage("No selected object");
           setInfo(true);
@@ -395,7 +398,7 @@ const Device = () => {
       connection.on(SignalRTopic.EVENT_STATUS, (status: EventStatusDto) => {
         setTranStatus((prev) =>
         prev.map((item) =>
-          item.deviceId === status.deviceId
+          item.deviceGuid === status.deviceGuid
             ? {
                 ...item,
                 isEnable: status.isEnable
@@ -467,9 +470,9 @@ const Device = () => {
       <TableCell key={index + 1} className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
         <Badge
           size="sm"
-          color={statusDto.find((statusItem) => statusItem.deviceComponentId === item.id)?.status ? "success" : "error"}
+          color={statusDto.find((statusItem) => statusItem.deviceGuid === item.guid)?.status ? "success" : "error"}
         >
-          {statusDto.find((statusItem) => statusItem.deviceComponentId === item.id)?.status
+          {statusDto.find((statusItem) => statusItem.deviceGuid === item.guid)?.status
             ? "Online"
             : "Offline"}
         </Badge>
@@ -506,7 +509,7 @@ const Device = () => {
     {
       icon: <Info2Icon />,
       label: "Device Information",
-      content: <AmicoDeviceForm type={formType} setDto={setAmicoDto} dto={amicoDto}/>
+      content: <AmicoDeviceForm handleClick={handleClickWithEvent} type={formType} setDto={setAmicoDto} dto={amicoDto}/>
     }
   ];
 
@@ -556,7 +559,7 @@ const Device = () => {
                 key: "tranStatus",
                 content: (item, index) => (
                   <TableCell key={index} className="px-4 py-3 text-gray-500 text-center text-theme-sm dark:text-gray-400">
-                    {tranStatus.find((tranItem) => tranItem.deviceId === item.id)?.isEnable ? <CheckCircleIcon className="text-2xl"/> : <CancelCircleIcon className="text-2xl"/>}
+                    {tranStatus.find((tranItem) => tranItem.deviceGuid === item.guid)?.isEnable ? <CheckCircleIcon className="text-2xl"/> : <CancelCircleIcon className="text-2xl"/>}
                   </TableCell>
                 )
               },
@@ -577,3 +580,9 @@ const Device = () => {
 };
 
 export default Device;
+
+function mapDto(amicoDto: AmicoDtoMetadata): CreateDeviceStrMetadataDto {
+  const { metadata, ...rest } = amicoDto
+  return mapFields(rest, { metadata: JSON.stringify(metadata) })
+}
+

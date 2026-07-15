@@ -187,7 +187,7 @@ public sealed class InputBehavior(IInputRepository repo,IAdapterFactory factory,
             return await repo.GetInputPaginationAsync(param);
       }
 
-      public async Task<BaseResponse> InputMaskAsync(int id,bool IsMask)
+      public async Task InputMaskAsync(int id,bool IsMask)
       {
             var entity = await repo.GetByIdAsync(id);
 
@@ -201,7 +201,6 @@ public sealed class InputBehavior(IInputRepository repo,IAdapterFactory factory,
                   IsMask
             );
 
-            return new BaseResponse(HttpStatusCode.OK,MessageHelper.Common.Success,DateTime.UtcNow);
       }
 
       public async Task<InputDto> UpdateInputAsync(InputDto dto)

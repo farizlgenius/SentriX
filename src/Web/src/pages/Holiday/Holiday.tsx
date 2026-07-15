@@ -41,7 +41,8 @@ const Holiday = () => {
         extend: 0,
         typeMask: 0,
         id: 0,
-        name: ''
+        name: '',
+        isDefault: false
     }
     const [holidatDto, setHolidayDto] = useState<HolidayDto>(defaultDto)
     {/* Modal */ }
@@ -131,11 +132,9 @@ const Holiday = () => {
     const [holidaysDto, setHolidaysDto] = useState<HolidayDto[]>([]);
     const fetchData = async (pageNumber: number, pageSize: number,locationId?:number,search?: string, startDate?: string, endDate?: string) => {
             const res = await send.get(HolidayEndpoint.PAGINATION(pageNumber,pageSize,locationId,search, startDate, endDate));
-            console.log(res?.data.data)
-            if (res && res.data.data) {
-                console.log(res.data.data)
-                setHolidaysDto(res.data.data.data);
-                setPagination(res.data.data.page);
+            if (res.data.success) {
+                setHolidaysDto(res.data.data.items);
+                setPagination(res.data.data);
             }
         }
 

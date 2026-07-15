@@ -682,7 +682,8 @@
         "dependencies": {
           "Device.Contract": "1.0.0",
           "Events.Contract": "1.0.0",
-          "Events.Domain": "1.0.0"
+          "Events.Domain": "1.0.0",
+          "Storage.Contract": "1.0.0"
         },
         "compile": {
           "bin/placeholder/Events.Application.dll": {}
@@ -729,6 +730,16 @@
         },
         "runtime": {
           "bin/placeholder/SharedKernel.dll": {}
+        }
+      },
+      "Storage.Contract/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v10.0",
+        "compile": {
+          "bin/placeholder/Storage.Contract.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Storage.Contract.dll": {}
         }
       }
     }
@@ -1752,6 +1763,11 @@
       "type": "project",
       "path": "../../../SharedKernel/SharedKernel.csproj",
       "msbuildProject": "../../../SharedKernel/SharedKernel.csproj"
+    },
+    "Storage.Contract/1.0.0": {
+      "type": "project",
+      "path": "../../Contracts/Storage.Contract/Storage.Contract.csproj",
+      "msbuildProject": "../../Contracts/Storage.Contract/Storage.Contract.csproj"
     }
   },
   "projectFileDependencyGroups": {

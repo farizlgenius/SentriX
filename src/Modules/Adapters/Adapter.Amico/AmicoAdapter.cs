@@ -24,10 +24,18 @@ public sealed class AmicoAdapter : IAdapter
       public ISettingAdapter Setting {get;}
 
       public AmicoAdapter(
-            IAmicoDeviceAdapter devices
+            IAmicoDeviceAdapter devices,
+            IAmicoTimeAdapter times,
+            IAmicoDoorAdapter doors,
+            IAmicoUserAdapter users,
+            IAmicoSettingAdapter settings
       )
       {
             Device = devices;
+            Time = times;
+            Door = doors;
+            Setting = settings;
+            User = users;
 
       }
 }

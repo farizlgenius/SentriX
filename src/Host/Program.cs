@@ -1,4 +1,5 @@
 
+using System.Net;
 using System.Text;
 using Adapter.Abstraction;
 using Adapter.Aero;
@@ -19,9 +20,11 @@ using Input.Infrastructure;
 using Location.Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Notifier.Client;
 using Notifier.Client.Hubs;
+using Npgsql.Internal.Postgres;
 using Operator.Infrastructure;
 using Output.Infrastructure;
 using Role.Infrastructure;
@@ -29,6 +32,9 @@ using Scalar.AspNetCore;
 using Serilog;
 using Setting.Infrastructure;
 using SharedKernel;
+using SharedKernel.Domain;
+using SharedKernel.Helpers;
+using SharedKernel.Model;
 using Storage;
 using Time.Infrastructure;
 using User.Infrastructure;
@@ -123,7 +129,34 @@ public class Program
         // ==========================
         // Add Controllers
         // ==========================
-        builder.Services.AddControllers();
+
+        builder.Services.AddControllers(options =>
+        {
+            options.Filters.Add<ApiResponseFilter>();
+        }).ConfigureApiBehaviorOptions(options =>
+        {
+            options.InvalidModelStateResponseFactory = context =>
+            {
+               var errors = context.ModelState
+                .Where(x => x.Value?.Errors.Count > 0)
+                .ToDictionary(
+                    x => x.Key,
+                    x => x.Value!.Errors
+                        .Select(e => e.ErrorMessage)
+                        .ToArray()
+                );
+
+                return new BadRequestObjectResult(
+                    new ValidateBaseResponse<object>(
+                        DateTime.UtcNow,
+                        HttpStatusCode.BadRequest,
+                        false,
+                        "Validation failed.",
+                        Errors:errors
+                    )
+                );  
+            };
+        });
 
         builder.Services.AddAuthorization();
 
@@ -210,6 +243,7 @@ public class Program
                     
                 };
             });
+
 
 
         // ==========================

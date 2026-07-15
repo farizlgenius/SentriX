@@ -1,6 +1,8 @@
 using System;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
+using Microsoft.Extensions.Options;
 
 
 namespace SharedKernel.Helpers;
@@ -9,8 +11,11 @@ public static class JsonHelper
 {
       private static readonly JsonSerializerOptions Options = new()
       {
-            PropertyNameCaseInsensitive = true
+            PropertyNameCaseInsensitive = true,
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
       };
+
+
 
       public static T? Deserialize<T>(string json)
       {
@@ -31,5 +36,12 @@ public static class JsonHelper
       {
             using var document = JsonDocument.Parse(json);
             return document.RootElement.Clone();
+      }
+
+      public static JsonElement ToJsonElement<T>(T obj)
+      {
+            byte[] bytes = JsonSerializer.SerializeToUtf8Bytes(obj, Options);
+            using var doc = JsonDocument.Parse(bytes);
+            return doc.RootElement.Clone();
       }
 }

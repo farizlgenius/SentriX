@@ -39,8 +39,8 @@ namespace Host.Controllers
             [HttpPost("{id}")]
             public async Task<IActionResult> TriggerOutputAsync(int id,[FromQuery]short Command)
             {
-                  var res = await output.TriggerOutputAsync(id,Command);
-                  return Ok(res);
+                 await output.TriggerOutputAsync(id,Command);
+                  return Ok();
             }
 
             [HttpDelete("{id}")]
@@ -74,8 +74,8 @@ namespace Host.Controllers
             [HttpPost("command")]
             public async Task<IActionResult> CommandOutputAsync([FromBody]OutputCommandDto dto)
             {
-                  var res = await output.CommandOutputDto(dto);
-                  return Ok(res);
+                  await output.CommandOutputDto(dto);
+                  return Ok();
             }
 
 

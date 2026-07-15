@@ -24,16 +24,22 @@ public sealed class StorageBehavior : IStorage
       {
             Directory.CreateDirectory(_paths.Users);
 
-            var path = Path.Combine(_paths.Users, fileName);
+            var safeFileName = Path.GetFileName(fileName);
+
+            var path = Path.Combine(
+                _paths.Users,
+                safeFileName);
 
             await using var fs = new FileStream(
                 path,
                 FileMode.Create,
                 FileAccess.Write,
-                FileShare.None
-            );
+                FileShare.None,
+                bufferSize: 81920,
+                useAsync: true);
 
             await stream.CopyToAsync(fs);
+
             return path;
       }
 
@@ -120,5 +126,74 @@ public sealed class StorageBehavior : IStorage
                   throw new FileNotFoundException("Map file not found", filename);
 
             File.Delete(path);
+      }
+
+      public async Task<string> SaveCaptureAsync(byte[] data, string fileName)
+      {
+            var path = Path.Combine(_paths.Captures, fileName);
+            await File.WriteAllBytesAsync(path, data);
+
+            return path;
+      }
+
+      public async Task<Stream> ReadCaptureAsync(string fileName)
+      {
+            var path = Path.Combine(_paths.Captures, fileName);
+
+            if (!File.Exists(path))
+                  throw new FileNotFoundException("Map file not found", fileName);
+
+            Stream stream = new FileStream(
+                path,
+                FileMode.Open,
+                FileAccess.Read,
+                FileShare.Read
+            );
+
+            return await Task.FromResult(stream);
+      }
+
+      public async Task<string> ReadCaptureBase64Async(string fileName)
+      {
+            var path = Path.Combine(_paths.Captures, fileName);
+
+            if (!File.Exists(path))
+                  throw new FileNotFoundException("Map file not found", fileName);
+
+            var bytes = await File.ReadAllBytesAsync(path);
+            return Convert.ToBase64String(bytes);
+      }
+
+      public void DeleteCaptureAsync(string fileName)
+      {
+            var path = Path.Combine(_paths.Captures, fileName);
+
+            if (!File.Exists(path))
+                  throw new FileNotFoundException("Map file not found", fileName);
+
+            File.Delete(path);
+      }
+
+      public async Task<string> SaveCaptureAsync(Stream stream, string fileName)
+      {
+            Directory.CreateDirectory(_paths.Captures);
+
+            var safeFileName = Path.GetFileName(fileName);
+
+            var path = Path.Combine(
+                _paths.Captures,
+                safeFileName);
+
+            await using var fs = new FileStream(
+                path,
+                FileMode.Create,
+                FileAccess.Write,
+                FileShare.None,
+                bufferSize: 81920,
+                useAsync: true);
+
+            await stream.CopyToAsync(fs);
+
+            return path;
       }
 }

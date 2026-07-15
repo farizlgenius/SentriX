@@ -24,10 +24,10 @@ public class TimeController(ITime time) : ControllerBase
             return Ok(res);
       }
 
-      [HttpDelete("holiday/{id}")]
-      public async Task<IActionResult> DeleteHolidayAsync(int id)
+      [HttpDelete("holiday/{guid}")]
+      public async Task<IActionResult> DeleteHolidayAsync(Guid guid)
       {
-            var res = await time.DeleteHolidayAsync(id);
+            var res = await time.DeleteHolidayByGuidAsync(guid);
             return Ok(res);
       }
 
@@ -62,16 +62,16 @@ public class TimeController(ITime time) : ControllerBase
       }
 
       [HttpPut]
-      public async Task<IActionResult> UpdateTimezoneAsync([FromBody]TimezoneDto dto)
+      public async Task<IActionResult> UpdateTimezoneAsync([FromBody]TimeZoneDto dto)
       {
             var res = await time.UpdateTimezoneAsync(dto);
             return Ok(res);
       }
 
-      [HttpDelete("{id}")]
-      public async Task<IActionResult> DeleteTimezoneAsync(int id)
+      [HttpDelete("{guid}")]
+      public async Task<IActionResult> DeleteTimezoneAsync(Guid guid)
       {
-            var res = await time.DeleteTimezoneAsync(id);
+            var res = await time.DeleteTimeZoneByGuidAsync(guid);
             return Ok(res);
       }
 

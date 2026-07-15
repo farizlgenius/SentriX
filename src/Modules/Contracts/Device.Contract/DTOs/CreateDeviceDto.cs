@@ -16,4 +16,4 @@ public sealed record CreateDeviceDto(
       DateTime SyncedAt,
       int LocationId,
       string Metadata
-) : BaseDto(ComponentId,LocationId,Type,true);
+) : BaseDtoEntity(Guid.Empty,ComponentId,LocationId,Type,true,true);

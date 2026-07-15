@@ -1,5 +1,5 @@
 export enum DeviceType{
-    NONE="NONE",
-    AERO = "AERO",
-    AMICO = "AMICO"
+    NONE="non",
+    AERO = "aero",
+    AMICO = "amico"
 }

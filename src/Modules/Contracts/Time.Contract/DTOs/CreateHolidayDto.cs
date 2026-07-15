@@ -4,10 +4,9 @@ namespace Time.Contract.DTOs;
 
 public sealed record CreateHolidayDto(
         string Name,
-        short Year,
-        short Month,
-        short Day,
-        string Metadata,
+        DateTime Start,
+        DateTime End,
         int LocationId,
-        bool IsActive
-) : BaseDto(0, LocationId, string.Empty, IsActive);
+        bool IsActive,
+        bool IsDefault
+) : BaseDtoEntity(Guid.Empty,0,LocationId, string.Empty, IsActive,IsDefault);

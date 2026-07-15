@@ -3,16 +3,18 @@ using SharedKernel.Helpers;
 
 namespace Device.Domain.Entities;
 
-public sealed class Reader : BaseDomain
+public sealed class Reader 
 {
+      public Guid Guid {get; set;}
       public int ReaderNumber { get; private set; }
-      public int ModuleId { get; private set; }
+      public Guid ModuleGuid { get; private set; }
+      public int LocationId {get; private set;}
 
-      public Reader(int id,short readerNumber,int moduleId,int locationId, bool IsActive) : base(id, 0, locationId, IsActive)
+      public Reader(Guid guid,short readerNumber,Guid moduleGuid,int locationId) 
       {
             ValidationHelper.ValidateNotMinus(readerNumber,nameof(ReaderNumber));
-            ValidationHelper.ValidateNotMinus(moduleId,nameof(ModuleId));
+            this.Guid = guid;
             this.ReaderNumber = readerNumber;
-            this.ModuleId= moduleId;
+            this.ModuleGuid= moduleGuid;
       }
 }

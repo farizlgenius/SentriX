@@ -7,4 +7,5 @@ export interface PositionDto {
     departmentId: number;
     locationId:number;
     isActive:boolean;
+    isDefault:boolean;
 }

@@ -3,7 +3,7 @@ using SharedKernel.Domain;
 
 namespace Device.Domain.Entities;
 
-public sealed class Module : BaseDomain
+public sealed class Module : BaseDomainEntity
 {
       public string Name {get; private set;} = string.Empty;
       public string SerialNumber {get; private set;} = string.Empty;
@@ -13,9 +13,9 @@ public sealed class Module : BaseDomain
       public int Address {get; private set;}
       public string Type {get; private set;} = string.Empty;
       public string Model {get; private set;} = string.Empty;
-      public int DeviceId {get; private set;}
+      public Guid Device_Guid {get; private set;}
 
-      public Module(int id,short componentId,string name, string serial_number, string fw,int port,int address,string mac,string model,string type,int device_id,int locationId,bool isActive) : base(id,componentId,locationId,isActive)
+      public Module(Guid guid,short componentId,string name, string serial_number, string fw,int port,int address,string mac,string model,string type,Guid device_guid,int locationId,bool isActive,bool isDefault) : base(guid,componentId,locationId,isActive,isDefault)
       {
             this.Name = name;
             this.SerialNumber = serial_number;
@@ -24,7 +24,7 @@ public sealed class Module : BaseDomain
             this.Address = address;
             this.Mac = mac;
             this.Model = model;
-            this.DeviceId = device_id;
+            this.Device_Guid = device_guid;
             this.Type = type;
       }
 }

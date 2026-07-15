@@ -341,7 +341,7 @@ public sealed class InputRepository(InputDbContext context) : IInputRepository
                   x.label,
                   x.value,
                   x.description,
-                  0,
+                  Guid.Empty,
                   false
             )).ToArrayAsync();
 

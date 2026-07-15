@@ -3,7 +3,7 @@ using SharedKernel.Domain;
 
 namespace Device.Infrastructure.Persistences.Entities;
 
-public sealed class Module : BaseEntity
+public sealed class Module : BaseDbEntity
 {
       public string name {get; set;} = string.Empty;
       public string serial_number {get; set;} = string.Empty;
@@ -13,21 +13,21 @@ public sealed class Module : BaseEntity
       public short address {get; set;}
       public string type {get; set;} = string.Empty;
       public string model {get; set;} = string.Empty;
-      public int device_id {get; set;}
+      public Guid device_guid {get; set;}
       public Devices devices {get; set; } = default!;
       public ICollection<Reader> readers {get; set;} = default!;
       public ICollection<Input> inputs {get; set;} = default!;
       public ICollection<Relay> relays {get; set;} = default!;
 
       public Module(){}
-      public Module(Domain.Entities.Module domain) : base(domain.ComponentId,domain.LocationId,domain.IsActive,false)
+      public Module(Domain.Entities.Module domain) : base(domain.Guid,domain.ComponentId,domain.LocationId,domain.IsActive,false)
       {
             name = domain.Name;
             serial_number = domain.SerialNumber;
             fw = domain.Fw;
             mac = domain.Mac;
             model = domain.Model;
-            device_id = domain.DeviceId;
+            device_guid = domain.Device_Guid;
             this.created_at = DateTime.UtcNow;
             this.updated_at = DateTime.UtcNow;
       }

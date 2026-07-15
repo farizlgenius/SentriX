@@ -11,91 +11,56 @@ namespace Time.Infrastructure.Repositories;
 
 public sealed class HolidayRepository(TimeDbContext context) : IHolidayRepository
 {
-      public async Task<HolidayDto> CreateHolidayAsync(Holiday domain, CancellationToken ct = default)
+      public async Task AddAsync(Holiday domain, CancellationToken ct = default)
       {
-            var data = await context.Holidays.AddAsync(
+           await context.Holidays.AddAsync(
                   new Persistences.Entities.Holiday(
+                        domain.Guid,
                         domain.ComponentId,
                         domain.Name,
-                        domain.Year,
-                        domain.Month,
-                        domain.Day,
-                        domain.Metadata,
+                        domain.Start,
+                        domain.End,
                         domain.LocationId,
-                        domain.IsActive
+                        domain.IsActive,
+                        domain.IsDefault
                         )
             );
 
-            var save = await context.SaveChangesAsync(ct);
-
-            if(data.Entity == null || save <= 0)
-                  throw new Exception(MessageHelper.DB.SaveRecordUnsuccessful);
-
-            return new HolidayDto(
-                  data.Entity.id,
-                  data.Entity.component_id,
-                  data.Entity.name,
-                  data.Entity.year,
-                  data.Entity.month,
-                  data.Entity.day,
-                  data.Entity.metadata,
-                  data.Entity.location_id,
-                  data.Entity.is_active
-            );
-
+            await context.SaveChangesAsync(ct);
             
       }
 
-      public async Task<HolidayDto> DeleteByIdAsync(int id, CancellationToken ct = default)
+      public async Task DeleteByGuidAsync(Guid guid, CancellationToken ct = default)
       {
-            var data = await context.Holidays.OrderByDescending(x => x.id)
-            .Where(x => x.id == id)
+            var data = await context.Holidays
+            .OrderByDescending(x => x.id)
+            .Where(x => x.guid == guid)
             .FirstOrDefaultAsync();
 
-            if(data == null)
+            if(data is null)
                   throw new Exception(MessageHelper.DB.RecordNotFound);
 
-            var res = context.Holidays.Remove(data);
-            return new HolidayDto(
-                  res.Entity.id,
-                  res.Entity.component_id,
-                  res.Entity.name,
-                  res.Entity.year,
-                  res.Entity.month,
-                  res.Entity.day,
-                  res.Entity.metadata,
-                  res.Entity.location_id,
-                  res.Entity.is_active
-                  );
+            context.Holidays.Remove(data);
+
+            await context.SaveChangesAsync(ct);
       }
 
-      public async Task<HolidayDto> GetByIdAsync(int id, CancellationToken ct = default)
+      public async Task<HolidayDto> GetByGuidAsync(Guid guid, CancellationToken ct = default)
       {
             return await context.Holidays.AsNoTracking()
             .OrderByDescending(x => x.id)
-            .Where(x => x.id == id)
+            .Where(x => x.guid == guid)
             .Select(x => new HolidayDto(
-                  x.id,
+                  x.guid,
                   x.component_id,
                   x.name,
-                  x.year,
-                  x.month,
-                  x.day,
-                  x.metadata,
+                  x.start,
+                  x.end,
                   x.location_id,
-                  x.is_active
+                  x.is_active,
+                  x.is_default
             ))
-            .FirstOrDefaultAsync() ?? new HolidayDto(
-                  0,
-                  0,
-                  string.Empty,
-                  0,
-                  0,
-                  0,
-                  string.Empty,
-                  0,
-                  false
-                  );
+            .FirstOrDefaultAsync() ?? new HolidayDto();
             
       }
 
@@ -105,14 +70,14 @@ public sealed class HolidayRepository(TimeDbContext context) : IHolidayRepositor
             (
                   context,
                   x => x.component_id,
-                  10,
+                  255,
                   ct
             );
       }
 
       public async Task<Pagination<HolidayDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
       {
-            var query = context.Holidays.AsNoTracking().AsQueryable();
+            var query = context.Holidays.AsNoTracking().Where(x => x.location_id == param.locationId || x.location_id == 0).AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(param.search))
             {
@@ -126,27 +91,21 @@ public sealed class HolidayRepository(TimeDbContext context) : IHolidayRepositor
 
                               query = query.Where(x =>
                                   EF.Functions.ILike(x.name, pattern) ||
-                                  EF.Functions.ILike(x.year.ToString(), pattern) ||
-                                  EF.Functions.ILike(x.month.ToString(), pattern) ||
-                                  EF.Functions.ILike(x.day.ToString(), pattern) 
+                                  EF.Functions.ILike(x.start.ToString(), pattern) ||
+                                  EF.Functions.ILike(x.end.ToString(), pattern) 
                               );
                         }
                         else // SQL Server
                         {
                               query = query.Where(x =>
                                   x.name.Contains(search) ||
-                                  x.year.ToString().Contains(search) ||
-                                  x.month.ToString().Contains(search) ||
-                                  x.day.ToString().Contains(search) 
+                                  x.start.ToString().Contains(search) ||
+                                  x.end.ToString().Contains(search) 
                               );
                         }
                   }
             }
 
-            if (param.locationId >= 0)
-            {
-                  query = query.Where(x => x.location_id == param.locationId || x.location_id == 1);
-            }
 
 
             if (param.startDate != null)
@@ -165,21 +124,46 @@ public sealed class HolidayRepository(TimeDbContext context) : IHolidayRepositor
             var items = await query.OrderByDescending(r => r.id)
             .Skip((param.pageNumber - 1) * param.pageSize)
             .Take(param.pageSize)
-            .Select(r => new HolidayDto(
-                  r.id,
-                  r.component_id,
-                  r.name,
-                  r.year,
-                  r.month,
-                  r.day,
-                  r.metadata,
-                  r.location_id,
-                  r.is_active
+            .Select(x => new HolidayDto(
+                  x.guid,
+                  x.component_id,
+                  x.name,
+                  x.start,
+                  x.end,
+                  x.location_id,
+                  x.is_active,
+                  x.is_default
             ))
             .ToListAsync(ct);
 
             return new Pagination<HolidayDto>(param.pageNumber, param.pageSize, totalItems,
             (int)Math.Ceiling(totalItems / (double)param.pageSize)
             , items);
+      }
+
+      public async Task<bool> IsAnyByGuidAsync(Guid guid, CancellationToken ct = default)
+      {
+            return await context.Holidays.AsNoTracking().AnyAsync(x => x.guid == guid);
+      }
+
+      public async Task UpdateAsync(Holiday domain, CancellationToken ct = default)
+      {
+            var entity = await context.Holidays
+            .Where(x => x.guid == domain.Guid)
+            .OrderByDescending(x => x.id)
+            .FirstOrDefaultAsync(ct);
+
+            if(entity is null)
+                  throw new Exception(MessageHelper.DB.RecordNotFound);
+
+            entity.Update(domain);
+
+            context.Holidays.Update(entity);
+            await context.SaveChangesAsync(ct);
+      }
+
+            public async Task<int> CountHolidayByLocationIdAsync(int location_id, CancellationToken ct = default)
+      {
+            return await context.Holidays.AsNoTracking().Where(x => x.location_id == location_id).CountAsync();
       }
 }

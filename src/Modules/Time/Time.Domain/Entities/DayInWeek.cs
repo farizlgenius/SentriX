@@ -2,8 +2,9 @@ using SharedKernel.Domain;
 
 namespace Time.Domain.Entities;
 
-public sealed class DayInWeek : BaseDomain
+public sealed class DayInWeek 
 {
+      public Guid Guid { get; private set; }
       public bool Sunday { get; private set; }
       public bool Monday { get; private set; }
       public bool Tuesday { get; private set; }
@@ -13,18 +14,17 @@ public sealed class DayInWeek : BaseDomain
       public bool Saturday {get; private set;}
 
       public DayInWeek(
-            int id,
+            Guid guid,
             bool Sunday,
             bool Monday, 
             bool Tuesday, 
             bool Wednesday, 
             bool Thursday, 
             bool Friday, 
-            bool Saturday,  
-            short componentId, 
-            int locationId, 
-            bool IsActive) : base(id, componentId, locationId, IsActive)
+            bool Saturday
+            ) 
       {
+            this.Guid = guid;
             this.Sunday = Sunday;
             this.Monday = Monday;
             this.Tuesday = Tuesday;

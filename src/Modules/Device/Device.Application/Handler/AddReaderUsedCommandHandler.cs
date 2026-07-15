@@ -12,11 +12,10 @@ public sealed class AddReaderUsedCommandHandler(IDeviceRepository repo) : IComma
       public async Task HandleAsync(AddReaderUsedCommand command, CancellationToken ct)
       {
             var domain = new Reader(
-                  0,
+                  Guid.NewGuid(),
                   command.ReaderNumber,
-                  command.ModuleId,
-                  command.LocationId,
-                  true
+                  command.ModuleGuid,
+                  command.LocationId
                   );
                   
             await repo.AddReaderAsync(domain);

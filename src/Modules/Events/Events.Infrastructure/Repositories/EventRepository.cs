@@ -34,7 +34,7 @@ public sealed class EventRepository(EventDbContext context) : IEventRepository
 
             await context.SaveChangesAsync(ct);
       }
-      public async Task AddAsync(DateTime timeStamp, string actor, string module, string type, string image, string mac, string name,string code,string remarks, int locationId,CancellationToken ct = default)
+      public async Task AddAsync(DateTime timeStamp, string actor, string module, string type, string image, string mac, string name,string code,string remarks, int locationId,string capture,CancellationToken ct = default)
       {
             await context.Events.AddAsync(new Event
             {
@@ -47,7 +47,8 @@ public sealed class EventRepository(EventDbContext context) : IEventRepository
                   name = name,
                   remarks = remarks,
                   code = code,
-                  location_id = locationId
+                  location_id = locationId,
+                  capture_image = capture
             });
 
             await context.SaveChangesAsync(ct);
@@ -118,7 +119,8 @@ public sealed class EventRepository(EventDbContext context) : IEventRepository
                   e.name,
                   e.code,
                   e.remarks,
-                  e.location_id
+                  e.location_id,
+                  e.capture_image
             )).ToListAsync(ct);
 
             return new Pagination<EventDto>(param.pageNumber,param.pageSize,count,(int)Math.Ceiling(count / (double)param.pageSize),res);

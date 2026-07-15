@@ -17,10 +17,10 @@ namespace Host.Controllers
             return Ok(res);
         }
 
-        [HttpGet("module/option/{id}")]
-        public async Task<IActionResult> GetModuleOptionByDeviceIdAsync(int id)
+        [HttpGet("module/option/{guid}")]
+        public async Task<IActionResult> GetModuleOptionByDeviceIdAsync(Guid guid)
         {
-             var res = await device.GetModuleOptionByDeviceIdAsync(id);
+             var res = await device.GetModuleOptionByDeviceGuidAsync(guid);
             return Ok(res);
         }
 
@@ -46,24 +46,24 @@ namespace Host.Controllers
             return Ok(res);
         }
 
-        [HttpGet("status/{id}")]
-        public async Task<IActionResult> GetStatusByIdAsync(int id)
+        [HttpGet("status/{guid}")]
+        public async Task<IActionResult> GetStatusByGuidAsync(Guid guid)
         {
-            var res = await device.GetStatusByIdAsync(id);
+            var res = await device.GetStatusByGuidAsync(guid);
             return Ok(res);
         }
 
-        [HttpPost("reset/{id}")]
-        public async Task<IActionResult> ResetDeviceAsync(int id)
+        [HttpPost("reset/{guid}")]
+        public async Task<IActionResult> ResetDeviceAsync(Guid guid)
         {
-            var res = await device.ResetDeviceAsync(id);
-            return Ok(res);
+            await device.ResetDeviceAsync(guid);
+            return Ok();
         }
 
-        [HttpGet("module/{id}")]
-        public async Task<IActionResult> GetModuleByDeviceIdAsync(int id)
+        [HttpGet("module/{guid}")]
+        public async Task<IActionResult> GetModuleByDeviceGuidAsync(Guid guid)
         {
-            var res = await device.GetModuleByDeviceIdAsync(id);
+            var res = await device.GetModuleByDeviceGuidAsync(guid);
             return Ok(res);
         }
 
@@ -74,67 +74,74 @@ namespace Host.Controllers
             return Ok(res);
         }
         
-        [HttpGet("module/status/{id}")]
-        public async Task<IActionResult> GetModuleStatusByIdAsync(int id)
+        [HttpGet("module/status/{guid}")]
+        public async Task<IActionResult> GetModuleStatusByIdAsync(Guid guid)
         {
-            var res = await device.GetModuleStatusByIdAsync(id);
-            return Ok(res);
+            await device.GetModuleStatusByGuidAsync(guid);
+            return Ok();
         }
 
-        [HttpPost("aero/command/{id}")]
-        public async Task<IActionResult> AsciiAsync(int id,[FromBody] AeroCommandDto Command)
+        [HttpPost("aero/command/{guid}")]
+        public async Task<IActionResult> AsciiAsync(Guid guid,[FromBody] AeroCommandDto Command)
         {
-            var res = await device.AsciiCommandAsync(id,Command);
-            return Ok(res);
+           await device.AsciiCommandAsync(guid,Command);
+            return Ok();
 
         }
 
         // Get Reader Number nad Input Number
-        [HttpGet("module/reader/options/{id}")]
-        public async Task<IActionResult> GetReaderOptionsByModuleIdAsync(int id)
+        [HttpGet("module/reader/options/{guid}")]
+        public async Task<IActionResult> GetReaderOptionsByModuleIdAsync(Guid guid)
         {
-            var res = await device.GetReaderOptionsByModuleIdAsync(id);
+            var res = await device.GetReaderOptionsByModuleGuidAsync(guid);
             return Ok(res);
         }
 
-        [HttpGet("module/input/options/{id}")]
-        public async Task<IActionResult> GetInputOptionsByModuleIdAsync(int id)
+        [HttpGet("module/input/options/{guid}")]
+        public async Task<IActionResult> GetInputOptionsByModuleIdAsync(Guid guid)
         {
-            var res = await device.GetInputOptionsByModuleIdAsync(id);
+            var res = await device.GetInputOptionsByModuleIdAsync(guid);
             return Ok(res);
         }
 
-        [HttpGet("module/relay/options/{id}")]
-        public async Task<IActionResult> GetRelayOptionsByModuleIdAsync(int id)
+        [HttpGet("module/relay/options/{guid}")]
+        public async Task<IActionResult> GetRelayOptionsByModuleIdAsync(Guid guid)
         {
-            var res = await device.GetRelayOptionsByModuleIdAsync(id);
+            var res = await device.GetRelayOptionsByModuleIdAsync(guid);
             return Ok(res);
         }
 
-        [HttpGet("event/{type}/{id}")]
-        public async Task<IActionResult> GetEventStatusAsync(string type,int id)
+        [HttpGet("event/{guid}")]
+        public async Task<IActionResult> GetEventStatusAsync(Guid guid)
         {
-            var res = await device.GetEventStatusAsync(type,id);
-            return Ok(res);
+           await device.GetEventStatusAsync(guid);
+            return Ok();
         }
 
         [HttpPost("event")]
         public async Task<IActionResult> GetEventStatusAsync([FromBody] SetEventDto dto)
         {
-            var res = await device.SetEventStatusAsync(dto);
-            return Ok(res);
+            await device.SetEventStatusAsync(dto);
+            return Ok();
         }
 
-        [HttpPost("upload/{id}")]
-        public async Task<IActionResult> UploadDeviceAsync(int id)
+        [HttpPost("upload/{guid}")]
+        public async Task<IActionResult> UploadDeviceAsync(Guid guid)
         {
-            var res = await device.UploadDeviceAsync(id);
-            return Ok(res);
+           await device.UploadDeviceAsync(guid);
+            return Ok();
+        }
+
+        [HttpDelete("{guid}")]
+        public async Task<IActionResult> DeleteDeviceAsync(Guid guid)
+        {
+            var res = await device.DeleteDeviceAsync(guid);
+            return Ok();
         }
 
 
         // Amico
-        [HttpPost("amico/info")]
+        [HttpPost("amico/connect")]
         public async Task<IActionResult> GetAmicoDeviceInformationAsync([FromBody]AmicoStartSessionDto dto)
         {
             var res = await device.GetAmicoDeviceInformationAsync(dto);

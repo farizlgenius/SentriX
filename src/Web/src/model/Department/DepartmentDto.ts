@@ -5,4 +5,5 @@ export interface DepartmentDto {
     companyId: number;
     locationId:number;
     isActive:boolean;
+    isDefault:boolean;
 }

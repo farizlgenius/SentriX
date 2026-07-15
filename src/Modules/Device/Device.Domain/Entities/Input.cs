@@ -3,16 +3,21 @@ using SharedKernel.Helpers;
 
 namespace Device.Domain.Entities;
 
-public sealed class Input : BaseDomain
+public sealed class Input 
 {
+      public Guid Guid { get; set; }
       public int InputNumber { get; private set; }
-      public int ModuleId { get; private set; }
+      public Guid ModuleGuid { get; private set; }
+      public int LocationId { get; set; }
 
-      public Input(int id,short inputNumber,int moduleId,int locationId, bool IsActive) : base(id, 0, locationId, IsActive)
+      public Input(Guid guid,short inputNumber,Guid moduleGuid,int locationId) 
       {
+            ValidationHelper.ValidateGuid(guid,nameof(Guid));
             ValidationHelper.ValidateNotMinus(inputNumber,nameof(InputNumber));
-            ValidationHelper.ValidateNotMinus(moduleId,nameof(ModuleId));
+            ValidationHelper.ValidateGuid(moduleGuid,nameof(ModuleGuid));
+            this.Guid = guid;
             this.InputNumber = inputNumber;
-            this.ModuleId= moduleId;
+            this.ModuleGuid= moduleGuid;
+            this.LocationId = locationId;
       }
 }

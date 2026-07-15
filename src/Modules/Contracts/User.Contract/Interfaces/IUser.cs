@@ -9,7 +9,7 @@ public interface IUser
       Task<UserDto> CreateUserAsync(CreateUserDto dto);
       Task<UserDto> UpdateUserAsync(UserDto dto);
       Task<UserDto> DeleteUserAsync(int id);
-      Task<BaseResponse> UploadImageAsync(string userid, Stream stream);
+      Task UploadImageAsync(string userid, Stream stream);
       Task<Stream> GetImageByUserIdAsync(string userid);
 
       // Company

@@ -7,12 +7,12 @@ public interface IOutput
       Task<OutputDto> CreateAsync(CreateOutputDto dto);
       Task<IEnumerable<short>> GetAvailalbleOutputByModuleIdAsync(int ModuleId);
       Task<IEnumerable<OptionDto>> GetRelayModeAsync(string Type);
-      Task<BaseResponse> TriggerOutputAsync(int id,short Command);
+      Task TriggerOutputAsync(int id,short Command);
       Task<OutputDto> DeleteByIdAsync(int id);
       Task<OutputDto> UpdateAsync(OutputDto dto);
       Task<IEnumerable<OptionDto>> GetRelayDriveModeAsync();
       Task<IEnumerable<OptionDto>> GetRelayOfflineModeAsync();
-      Task<BaseResponse> CommandOutputDto(OutputCommandDto dto,CancellationToken ct = default);
+      Task CommandOutputDto(OutputCommandDto dto,CancellationToken ct = default);
 
 
 }

@@ -71,7 +71,7 @@ namespace Host.Controllers
             {
                 string? refreshToken;
                 Request.Cookies.TryGetValue("refresh_token", out refreshToken);
-                var result = await auth.LogoutAsync(refreshToken ?? "");
+                await auth.LogoutAsync(refreshToken ?? "");
                 Response.Cookies.Delete("refresh_token", new CookieOptions
                 {
                     HttpOnly = true,
@@ -79,11 +79,11 @@ namespace Host.Controllers
                     SameSite = SameSiteMode.None,
                     // Path = "/api/Auth"
                 });
-                return Ok(result);
+                return Ok();
             }
             else
             {
-                var result = await auth.LogoutAsync(dto.Refresh);
+                await auth.LogoutAsync(dto.Refresh);
                 Response.Cookies.Delete("refresh_token", new CookieOptions
                 {
                     HttpOnly = true,
@@ -91,7 +91,7 @@ namespace Host.Controllers
                     SameSite = SameSiteMode.None,
                     // Path = "/api/Auth"
                 });
-                return Ok(result);
+                return Ok();
             }
         }
 

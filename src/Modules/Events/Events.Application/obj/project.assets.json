@@ -589,6 +589,16 @@
         "runtime": {
           "bin/placeholder/SharedKernel.dll": {}
         }
+      },
+      "Storage.Contract/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v10.0",
+        "compile": {
+          "bin/placeholder/Storage.Contract.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Storage.Contract.dll": {}
+        }
       }
     }
   },
@@ -1430,13 +1440,19 @@
       "type": "project",
       "path": "../../../SharedKernel/SharedKernel.csproj",
       "msbuildProject": "../../../SharedKernel/SharedKernel.csproj"
+    },
+    "Storage.Contract/1.0.0": {
+      "type": "project",
+      "path": "../../Contracts/Storage.Contract/Storage.Contract.csproj",
+      "msbuildProject": "../../Contracts/Storage.Contract/Storage.Contract.csproj"
     }
   },
   "projectFileDependencyGroups": {
     "net10.0": [
       "Device.Contract >= 1.0.0",
       "Events.Contract >= 1.0.0",
-      "Events.Domain >= 1.0.0"
+      "Events.Domain >= 1.0.0",
+      "Storage.Contract >= 1.0.0"
     ]
   },
   "packageFolders": {
@@ -1472,6 +1488,9 @@
             },
             "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Events.Contract\\Events.Contract.csproj": {
               "projectPath": "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Events.Contract\\Events.Contract.csproj"
+            },
+            "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Storage.Contract\\Storage.Contract.csproj": {
+              "projectPath": "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Storage.Contract\\Storage.Contract.csproj"
             },
             "D:\\aero\\SentriX\\src\\Modules\\Events\\Events.Domain\\Events.Domain.csproj": {
               "projectPath": "D:\\aero\\SentriX\\src\\Modules\\Events\\Events.Domain\\Events.Domain.csproj"

@@ -5,4 +5,5 @@ export interface CompanyDto {
     address:string;
     locationId:number;
     isActive:boolean;
+    isDefault:boolean;
 }

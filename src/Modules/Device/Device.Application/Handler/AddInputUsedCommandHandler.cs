@@ -12,11 +12,10 @@ public sealed class AddInputUsedCommandHandler(IDeviceRepository repo) : IComman
       public async Task HandleAsync(AddInputUsedCommand command, CancellationToken ct)
       {
             var domain = new Domain.Entities.Input(
-                  0,
+                  Guid.NewGuid(),
                   command.InputNumber,
-                  command.ModuleId,
-                  command.LocationId,
-                  true
+                  command.ModuleGuid,
+                  command.LocationId
                   );
                   
             await repo.AddInputAsync(domain);

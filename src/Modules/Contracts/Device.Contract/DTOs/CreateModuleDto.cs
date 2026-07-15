@@ -10,9 +10,10 @@ public sealed record CreateModuleDto(
       short Port,
       short Address,
       int DeviceComponentId,
-      int DeviceId,
+      Guid DeviceGuid,
       int LocationId,
       string Type,
-      bool IsActive
-) : BaseDto(ComponentId,LocationId,Type,IsActive);
+      bool IsActive,
+      bool IsDefault
+) : BaseDtoEntity(Guid.Empty,ComponentId,LocationId,Type,IsActive,IsDefault);
 

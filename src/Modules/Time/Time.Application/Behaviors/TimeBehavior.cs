@@ -2,9 +2,11 @@ using Adapter.Abstraction.Constants;
 using Adapter.Abstraction.Interfaces;
 using Device.Contract.Queries;
 using SharedKernel.Domain;
+using SharedKernel.Enums;
 using SharedKernel.Exceptions;
 using SharedKernel.Helpers;
 using SharedKernel.Messaging;
+using SharedKernel.Model;
 using Time.Application.Interfaces;
 using Time.Contract.DTOs;
 using Time.Contract.Interfaces;
@@ -14,148 +16,252 @@ namespace Time.Application.Behaviors;
 
 public sealed class TimeBehavior(
       IHolidayRepository holRepo,
-      ITimezoneRepository repo,
+      ITimeZoneRepository repo,
       IMessageBus bus,
       IAdapterFactory factory) : ITime
 {
       public async Task<HolidayDto> CreateHolidayAsync(CreateHolidayDto dto)
       {
             // Generate ComponentId
+            var componentId = await holRepo.GetLowestHolidayComponentIdAsync();
             var datas = await bus.QueryAsync(new MacAndComponentIdListByLocationIdQuery(dto.LocationId));
 
              var domain = new Holiday(
-                  0,
-                  0,
+                  Guid.NewGuid(),
+                  (short)componentId,
                   dto.Name,
-                  dto.Year,
-                  dto.Month,
-                  dto.Day,
+                  dto.Start,
+                  dto.End,
                   dto.LocationId,
                   dto.IsActive
-                  );
+            );
 
 
             // Send Command
-            foreach(var data in datas)
+            foreach (var data in datas)
             {
                   await factory.GetAdapter(data.Type).Time.CreateHolidayAsync(
-                              data.Mac,
+                              domain.Guid,
                               data.ComponentId,
-                              domain.Year,
-                              domain.Month,
-                              domain.Day,
-                              domain.Metadata
+                              domain.ComponentId,
+                              domain.Name,
+                              data.Mac,
+                              domain.Start,
+                              domain.End
                               );
 
-            }      
+            }     
             
 
+            await holRepo.AddAsync(domain);
 
-            var res = await holRepo.CreateHolidayAsync(domain);
-
-            return res;
+           return new HolidayDto(
+                  domain.Guid,
+                  domain.ComponentId,
+                  domain.Name,
+                  domain.Start,
+                  domain.End,
+                  domain.LocationId,
+                  domain.IsActive,
+                  domain.IsDefault
+            );
       }
 
-      public async Task<TimezoneDto> CreateTimezoneAsync(CreateTimezoneDto dto)
+      public async Task<TimeZoneDto> CreateTimezoneAsync(CreateTimezoneDto dto)
       {
-            var componentId = await repo.GetLowestTimezoneComponentIdAsync();
-            var domain = new Timezone(
-                  0,
-                  componentId,
-                  dto.Name,
-                  dto.Mode,
-                  dto.Type,
-                  dto.Active,
-                  dto.Deactive,
-                  dto.Intervals.Select(x => new Interval(
-                        x.Id,
-                        0,
-                        x.LocationId,
-                        x.IsActive,
+            if(await repo.IsAnyNameAsync(dto.Name))
+                  throw new BadRequestException(MessageHelper.Common.Duplicate(nameof(dto.Name)));
+
+            var componentId = await repo.GetLowestTimeZoneComponentIdAsync(dto.LocationId);
+            var tzGuid = Guid.NewGuid();
+            var interComs = new List<int>();
+            foreach (var interval in dto.Intervals)
+            {
+                  interComs.Add(await repo.GetLowestIntervalComponentIdExceptStartFromOneAsync(interComs,tzGuid));
+            }
+
+            var intervals = dto.Intervals.Select((x,index) => new Interval(
+                        Guid.NewGuid(),
+                        (short)interComs.ElementAt(index),
                         new DayInWeek(
-                              0,
+                              Guid.NewGuid(),
                               x.Days.Sunday,
                               x.Days.Monday,
                               x.Days.Tuesday,
                               x.Days.Wednesday,
                               x.Days.Thursday,
                               x.Days.Friday,
-                              x.Days.Saturday,
-                              0,
-                              x.LocationId,
-                              x.IsActive
-                              ),
+                              x.Days.Saturday
+                        ),
                         x.DaysDetail,
                         x.Start,
-                        x.End,
-                        x.Type
-                        )).ToList(),
+                        x.End
+                  ));
+            
+            var d = new Domain.Entities.TimeZone(
+                  tzGuid,
+                  componentId,
+                  dto.Name,
+                  dto.Mode,
+                  dto.Type,
+                  dto.Active,
+                  dto.Deactive,
+                  intervals.ToList(),
                   dto.LocationId,
-                  dto.IsActive
+                  dto.IsActive,
+                  dto.IsDefault
                   );
+
+            
+            
             var datas = await bus.QueryAsync(new MacAndComponentIdListByLocationIdQuery(dto.LocationId));
 
             // Send Command
             foreach(var data in datas)
             {
-                  await factory.GetAdapter(data.Type).Time.CreateTimezoneAsync(
-                              data.Mac,
+                  await factory.GetAdapter(data.Type).Time.CreateTimeZoneAsync(
+                              d.Guid,
                               data.ComponentId,
-                              domain.ComponentId,
-                              domain.Mode,
-                              domain.Active,
-                              domain.Deactive,
-                              dto.Intervals
+                              d.ComponentId,
+                              d.Name,
+                              data.Mac,
+                              d.Mode,
+                              d.Active,
+                              d.Deactive,
+                              d.Intervals.Select(x => new IntervalObject(
+                                    x.ComponentId,
+                                    DateTimeHelper.ConvertTimeToEndMinute(x.Start),
+                                    DateTimeHelper.ConvertTimeToEndMinute(x.End),
+                                    x.Days.Sunday,
+                                    x.Days.Monday,
+                                    x.Days.Tuesday,
+                                    x.Days.Wednesday,
+                                    x.Days.Thursday,
+                                    x.Days.Friday,
+                                    x.Days.Friday
+                              )).ToList()
                               );
 
             } 
 
-            return await repo.CreateAsync(domain);
+            await repo.AddAsync(d);
+
+            return new TimeZoneDto(
+                  d.Guid,
+                  d.ComponentId,
+                  d.Name,
+                  d.Mode,
+                  d.Active,
+                  d.Deactive,
+                  d.Intervals.Select(
+                        i => new IntervalDto(
+                              i.Guid,
+                              i.ComponentId,
+                              new DaysInWeekDto(
+                                    i.Days.Guid,
+                                    i.Days.Sunday,
+                                    i.Days.Monday,
+                                    i.Days.Tuesday,
+                                    i.Days.Wednesday,
+                                    i.Days.Thursday,
+                                    i.Days.Friday,
+                                    i.Days.Saturday
+                              ),
+                              i.DaysDetail,
+                              i.Start,
+                              i.End
+                        )
+                  ).ToList(),
+                  d.LocationId,
+                  d.IsActive,
+                  d.IsDefault
+            );
 
       }
 
-      public async Task<HolidayDto> DeleteHolidayAsync(int id)
+      public async Task<HolidayDto> DeleteHolidayByGuidAsync(Guid guid)
       {
-            var entity = await holRepo.GetByIdAsync(id);
-            if(entity.Id == 0)
-                  throw new BadRequestException(MessageHelper.Common.NotFound("Holiday", id));
+            var e = await holRepo.GetByGuidAsync(guid);
+            if(e.Guid == Guid.Empty)
+                  throw new BadRequestException(MessageHelper.Common.NotFound("Holiday", guid.ToString()));
 
-            var datas = await bus.QueryAsync(new MacAndComponentIdListByLocationIdQuery(entity.LocationId));
+            var datas = await bus.QueryAsync(new MacAndComponentIdListByLocationIdQuery(e.LocationId));
 
             foreach(var data in datas)
             {
-                   await factory.GetAdapter(data.Type).Time.DeleteHoliday(
-                        data.Mac,
-                        data.ComponentId,
-                        entity.Year,
-                        entity.Month,
-                        entity.Day,
-                        entity.Metadata
+                   await factory.GetAdapter(data.Type).Time.DeleteHolidayAsync(
+                              data.ComponentId,
+                              e.ComponentId,
+                              data.Mac,
+                              e.Start ?? default,
+                              e.End ?? default
                         );
             }
 
-            return await holRepo.DeleteByIdAsync(id);
+            await holRepo.DeleteByGuidAsync(guid);
+
+            return new HolidayDto(
+                  e.Guid,
+                  e.ComponentId,
+                  e.Name,
+                  e.Start,
+                  e.End,
+                  e.LocationId,
+                  e.IsActive,
+                  e.IsDefault
+            );
            
       }
 
-      public async Task<TimezoneDto> DeleteTimezoneAsync(int id)
+      public async Task<TimeZoneDto> DeleteTimeZoneByGuidAsync(Guid guid)
       {
-            var entity = await repo.GetByIdAsync(id);
-            if(entity.Id == 0)
-                  throw new BadRequestException(MessageHelper.Common.NotFound("Timezone", id));
+            var d = await repo.GetByGuidAsync(guid);
+            if(d.Guid == Guid.Empty)
+                  throw new BadRequestException(MessageHelper.Common.NotFound("TimeZone", guid.ToString()));
 
-            var datas = await bus.QueryAsync(new MacAndComponentIdListByLocationIdQuery(entity.LocationId));
+            var datas = await bus.QueryAsync(new MacAndComponentIdListByLocationIdQuery(d.LocationId));
 
             foreach(var data in datas)
             {
-                   await factory.GetAdapter(data.Type).Time.DeleteTimezone(
+                   await factory.GetAdapter(data.Type).Time.DeleteTimeZoneAsync(
                         data.Mac,
                         data.ComponentId,
-                        entity.ComponentId
+                        d.ComponentId
                         );
             }
 
-            return await repo.DeleteByIdAsync(id);
+           await repo.DeleteByGuidAsync(guid);
+
+          return new TimeZoneDto(
+                  d.Guid,
+                  d.ComponentId,
+                  d.Name,
+                  d.Mode,
+                  d.Active,
+                  d.Deactive,
+                  d.Intervals.Select(
+                        i => new IntervalDto(
+                              i.Guid,
+                              i.ComponentId,
+                              new DaysInWeekDto(
+                                    i.Days.Guid,
+                                    i.Days.Sunday,
+                                    i.Days.Monday,
+                                    i.Days.Tuesday,
+                                    i.Days.Wednesday,
+                                    i.Days.Thursday,
+                                    i.Days.Friday,
+                                    i.Days.Saturday
+                              ),
+                              i.DaysDetail,
+                              i.Start,
+                              i.End
+                        )
+                  ).ToList(),
+                  d.LocationId,
+                  d.IsActive,
+                  d.IsDefault
+            );
 
             
       }
@@ -176,19 +282,190 @@ public sealed class TimeBehavior(
             return res;
       }
 
-      public async Task<Pagination<TimezoneDto>> TimezonePaginationAsync(PaginationParams param)
+      public async Task<Pagination<TimeZoneDto>> TimezonePaginationAsync(PaginationParams param)
       {
             var res = await repo.GetPaginationAsync(param);
             return res;
       }
 
-      public Task<HolidayDto> UpdateHolidayAsync(HolidayDto dto)
+      public async Task<HolidayDto> UpdateHolidayAsync(HolidayDto dto)
       {
-            throw new NotImplementedException();
+
+            var e = await holRepo.GetByGuidAsync(dto.Guid);
+
+            if(e.Guid == Guid.Empty)
+                  throw new BadRequestException(MessageHelper.Common.NotFound(nameof(dto.Guid),dto.Guid.ToString()));
+
+
+            var d = new Holiday(
+                  dto.Guid,
+                  dto.ComponentId,
+                  dto.Name,
+                  dto.Start ?? default,
+                  dto.End ?? default,
+                  dto.LocationId,
+                  dto.IsActive,
+                  dto.IsDefault
+            );
+
+            var d1 = new Holiday(
+                  e.Guid,
+                  e.ComponentId,
+                  e.Name,
+                  e.Start ?? default,
+                  e.End ?? default,
+                  e.LocationId,
+                  e.IsActive,
+                  e.IsDefault
+            );
+
+             var datas = await bus.QueryAsync(new MacAndComponentIdListByLocationIdQuery(d.LocationId));
+
+            var aeroData = datas.Where(x => x.Type.Equals(DeviceType.aero.ToString()));
+
+            foreach(var data in aeroData)
+            {
+                  await factory.GetAdapter(data.Type).Time.DeleteHolidayAsync(
+                        data.ComponentId,
+                        d1.ComponentId,
+                        data.Mac,
+                        d1.Start,
+                        d1.End
+                  );
+            }
+
+            foreach(var data in datas)
+            {
+                  await factory.GetAdapter(data.Type).Time.UpdateHolidayAsync(
+                        d.Guid,
+                        d.Name,
+                        d.ComponentId,
+                        d.ComponentId,
+                        data.Mac,
+                        d.Start,
+                        d.End
+                  );
+            }
+
+            await holRepo.UpdateAsync(d);
+
+            return new HolidayDto(
+                  d.Guid,
+                  d.ComponentId,
+                  d.Name,
+                  d.Start,
+                  d.End,
+                  d.LocationId,
+                  d.IsActive,
+                  d.IsDefault
+            );
       }
 
-      public Task<TimezoneDto> UpdateTimezoneAsync(TimezoneDto dto)
+      public async Task<TimeZoneDto> UpdateTimezoneAsync(TimeZoneDto dto)
       {
-            throw new NotImplementedException();
+            var tz = await repo.GetByGuidAsync(dto.Guid);
+
+            if(tz.Guid == Guid.Empty)
+                   throw new BadRequestException(MessageHelper.Common.NotFound(nameof(dto.Guid),dto.Guid.ToString()));
+
+            
+            var d = new Domain.Entities.TimeZone(
+                  Guid.NewGuid(),
+                  dto.ComponentId,
+                  dto.Name,
+                  dto.Mode,
+                  dto.Type,
+                  dto.Active,
+                  dto.Deactive,
+                  dto.Intervals.Select(x => new Interval(
+                        Guid.NewGuid(),
+                        (short)x.ComponentId,
+                        new DayInWeek(
+                              Guid.NewGuid(),
+                              x.Days.Sunday,
+                              x.Days.Monday,
+                              x.Days.Tuesday,
+                              x.Days.Wednesday,
+                              x.Days.Thursday,
+                              x.Days.Friday,
+                              x.Days.Saturday
+                        ),
+                        x.DaysDetail,
+                        x.Start,
+                        x.End
+                  )).ToList(),
+                  dto.LocationId,
+                  dto.IsActive,
+                  dto.IsDefault
+            );
+
+            var datas = await bus.QueryAsync(new MacAndComponentIdListByLocationIdQuery(dto.LocationId));
+
+            // Send Command
+            foreach(var data in datas)
+            {
+                  await factory.GetAdapter(data.Type).Time.UpdateTimeZoneAsync(
+                              d.Guid,
+                              data.ComponentId,
+                              d.ComponentId,
+                              d.Name,
+                              data.Mac,
+                              d.Mode,
+                              d.Active,
+                              d.Deactive,
+                              d.Intervals.Select(x => new IntervalObject(
+                                    x.ComponentId,
+                                    DateTimeHelper.ConvertTimeToEndMinute(x.Start),
+                                    DateTimeHelper.ConvertTimeToEndMinute(x.End),
+                                    x.Days.Sunday,
+                                    x.Days.Monday,
+                                    x.Days.Tuesday,
+                                    x.Days.Wednesday,
+                                    x.Days.Thursday,
+                                    x.Days.Friday,
+                                    x.Days.Friday
+                              )).ToList()
+                              );
+
+            } 
+
+
+            await repo.UpdateAsync(d);
+
+
+            return new TimeZoneDto(
+                  d.Guid,
+                  d.ComponentId,
+                  d.Name,
+                  d.Mode,
+                  d.Active,
+                  d.Deactive,
+                  d.Intervals.Select(
+                        i => new IntervalDto(
+                              i.Guid,
+                              i.ComponentId,
+                              new DaysInWeekDto(
+                                    i.Days.Guid,
+                                    i.Days.Sunday,
+                                    i.Days.Monday,
+                                    i.Days.Tuesday,
+                                    i.Days.Wednesday,
+                                    i.Days.Thursday,
+                                    i.Days.Friday,
+                                    i.Days.Saturday
+                              ),
+                              i.DaysDetail,
+                              i.Start,
+                              i.End
+                        )
+                  ).ToList(),
+                  d.LocationId,
+                  d.IsActive,
+                  d.IsDefault
+            );
+
+
+
+
       }
 }

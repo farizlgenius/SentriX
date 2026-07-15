@@ -12,11 +12,10 @@ public sealed class AddRelayUsedCommandHandler(IDeviceRepository repo) : IComman
       public async Task HandleAsync(AddRelayUsedCommand command, CancellationToken ct)
       {
             var domain = new Relay(
-                  0,
+                  Guid.NewGuid(),
                   command.RelayNumber,
-                  command.ModuleId,
-                  command.LocationId,
-                  true
+                  command.ModuleGuid,
+                  command.LocationId
                   );
                   
             await repo.AddRelayAsync(domain);

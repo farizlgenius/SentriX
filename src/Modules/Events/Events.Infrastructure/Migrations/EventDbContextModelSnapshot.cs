@@ -111,6 +111,10 @@ namespace Events.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("capture_image")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("code")
                         .IsRequired()
                         .HasColumnType("text");

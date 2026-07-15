@@ -9,4 +9,5 @@ export interface EventDto{
     name:string;
     remarks:string;
     locationId:number;
+    capture:string;
 }

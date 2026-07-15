@@ -3,12 +3,20 @@ using SharedKernel.Helpers;
 
 namespace Group.Domain.Entities;
 
-public sealed class Groups : BaseDomain
+public sealed class Groups : BaseDomainEntity
 {
       public string Name { get; private set; } = string.Empty;
       public List<GroupDoor> GroupDoors {get; private set;} = new List<GroupDoor>();
 
-      public Groups(int id, short componentId,string name,List<(string Mac,string Type,List<(short DoorComponentId,short TimezoneComponentId)> DoorDetail)> doorGroup,int locationId, bool IsActive) : base(id, componentId, locationId, IsActive)
+      public Groups(
+            Guid guid, 
+            short componentId,
+            string name,
+            List<(string Mac,string Type,List<(short DoorComponentId,short TimezoneComponentId)> DoorDetail)> doorGroup,
+            int locationId, 
+            bool IsActive,
+            bool IsDefault
+            ) : base(guid, componentId, locationId, IsActive,IsDefault)
       {
             ValidationHelper.IsValidName(name);
             this.Name = name;

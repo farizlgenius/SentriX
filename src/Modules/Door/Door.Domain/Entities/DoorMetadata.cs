@@ -15,38 +15,44 @@ public sealed class DoorMetadata
 
 public sealed class ReaderIn
 {
-      public int ReaderModuleId { get; set; }
+      public Guid Guid {get; set;}
+      public Guid ReaderModuleGuid { get; set; }
       public short ReaderNumber { get; set; }
 }
 
 public sealed class ReaderOut
 {
-      public int ReaderModuleId { get; set; }
+      public Guid Guid {get; set;}
+      public Guid ReaderModuleGuid { get; set; }
       public short ReaderNumber { get; set; }
 }
 
 public sealed class Sensor
 {
-      public int SensorModuleId { get; set; }
+      public Guid Guid {get; set;}
+      public Guid SensorModuleGuid { get; set; }
       public short SensorNumber { get; set; }
 }
 
 public sealed class Relay
 {
-      public int RelayModuleId { get; set; }
+      public Guid Guid {get; set;}
+      public Guid RelayModuleGuid { get; set; }
       public short RelayNumber { get; set; }
 }
 
 public sealed class Rex
 {
-      public int Rex0ModuleId { get; set; }
+      public Guid Guid {get; set;}
+      public Guid Rex0ModuleGuid { get; set; }
       public short Rex0Number { get; set; }
-      public int Rex1ModuleId { get; set; }
+      public Guid Rex1ModuleGuid { get; set; }
       public short Rex1Number { get; set; }
 }
 
 public sealed class AltrReader
 {
-      public int AltrRdrModuleId { get; set; }
+      public Guid Guid {get; set;}
+      public Guid AltrRdrModuleId { get; set; }
       public short AltrRdrNumber { get; set; }
 }

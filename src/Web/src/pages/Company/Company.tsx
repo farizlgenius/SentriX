@@ -39,8 +39,9 @@ export const Company = () => {
         name: "",
         description: "",
         address: "",
-        locationId:locationId,
-        isActive:true
+        locationId: locationId,
+        isActive: true,
+        isDefault: false
     }
 
     const [dto, setDto] = useState<CompanyDto>(defaultDto);
@@ -139,11 +140,9 @@ export const Company = () => {
 
     const fetchData = async (pageNumber: number, pageSize: number, locationId?: number, search?: string, startDate?: string, endDate?: string) => {
         const res = await send.get(CompanyEndpoint.PAGINATION(pageNumber, pageSize, locationId, search, startDate, endDate));
-        console.log(res?.data)
-        if (res && res.data) {
-            console.log(res.data.data)
-            setDtos(res.data.items);
-            setPagination(res.data);
+        if (res.data.success) {
+            setDtos(res.data.data.items);
+            setPagination(res.data.data);
         }
     }
 

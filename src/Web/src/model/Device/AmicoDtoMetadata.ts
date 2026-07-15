@@ -3,14 +3,12 @@ import { AmicoMetadata } from "./AmicoMetadata";
 
 
 export interface AmicoDtoMetadata  {
-
-    id:number;
-  componentId:number;
   name: string;
+  componentId:number;
+   mac:string;
   serialNumber: string;
-  mac:string;
   ip: string;
-  port:string;
+  port:number;
   fw:string;
   type:string;
   status:string;

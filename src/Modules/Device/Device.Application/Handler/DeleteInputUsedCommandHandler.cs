@@ -11,13 +11,7 @@ public sealed class DeleteInputUsedCommandHandler(IDeviceRepository repo) : ICom
 
       public async Task HandleAsync(DeleteInputUsedCommand command, CancellationToken ct)
       {
-            var domain = new Domain.Entities.Input(
-                  0,
-                  command.InputNumber,
-                  command.ModuleId,
-                  0,
-                  true
-            );
-            await repo.DeleteInputAsync(domain);
+
+            await repo.DeleteInputAsync(command.Guid);
       }
 }

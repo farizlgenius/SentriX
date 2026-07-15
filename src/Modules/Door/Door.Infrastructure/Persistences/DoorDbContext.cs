@@ -28,28 +28,41 @@ public sealed class DoorDbContext(DbContextOptions<DoorDbContext> options) : DbC
             var isPostgres = Database.ProviderName == "Npgsql.EntityFrameworkCore.PostgreSQL";
 
             string utcNowSql;
+            string guidSql;
 
             if (isSqlServer)
+            {
                   utcNowSql = "GETUTCDATE()";
+                  guidSql = "NEWSEQUENTIALID()"; // or NEWID()
+            }
             else if (isPostgres)
+            {
                   utcNowSql = "NOW() AT TIME ZONE 'UTC'";
+                  guidSql = "gen_random_uuid()";
+            }
             else
+            {
                   throw new Exception("Unsupported database provider");
-
+            }
 
             foreach (var entityType in modelBuilder.Model.GetEntityTypes())
             {
-                  if (typeof(BaseEntity).IsAssignableFrom(entityType.ClrType))
+                  if (typeof(BaseDbEntity).IsAssignableFrom(entityType.ClrType))
                   {
                         modelBuilder.Entity(entityType.ClrType)
-                            .Property(nameof(BaseEntity.created_at))
-                            .HasDefaultValueSql(utcNowSql)
-                            .ValueGeneratedOnAdd();
+                              .Property(nameof(BaseDbEntity.created_at))
+                              .HasDefaultValueSql(utcNowSql)
+                              .ValueGeneratedOnAdd();
 
                         modelBuilder.Entity(entityType.ClrType)
-                            .Property(nameof(BaseEntity.updated_at))
-                            .HasDefaultValueSql(utcNowSql)
-                            .ValueGeneratedOnAdd();
+                              .Property(nameof(BaseDbEntity.updated_at))
+                              .HasDefaultValueSql(utcNowSql)
+                              .ValueGeneratedOnAdd();
+
+                        modelBuilder.Entity(entityType.ClrType)
+                              .Property(nameof(BaseDbEntity.guid))
+                              .HasDefaultValueSql(guidSql)
+                              .ValueGeneratedOnAdd();
                   }
             }
 

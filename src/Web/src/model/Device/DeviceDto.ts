@@ -1,9 +1,9 @@
 
 
 export interface DeviceDto  {
-  id:number;
-  componentId:number;
+  guid:string;
   name: string;
+  componentId:number;
   serialNumber: string;
   mac:string;
   ip: string;

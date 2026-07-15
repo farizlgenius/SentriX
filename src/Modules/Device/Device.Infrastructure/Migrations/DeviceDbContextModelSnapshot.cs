@@ -43,6 +43,9 @@ namespace Device.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<Guid>("guid")
+                        .HasColumnType("uuid");
+
                     b.Property<string>("ip")
                         .IsRequired()
                         .HasColumnType("text");
@@ -104,37 +107,21 @@ namespace Device.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
 
-                    b.Property<short>("component_id")
-                        .HasColumnType("smallint");
-
-                    b.Property<DateTime>("created_at")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
-                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+                    b.Property<Guid>("guid")
+                        .HasColumnType("uuid");
 
                     b.Property<int>("input_number")
                         .HasColumnType("integer");
 
-                    b.Property<bool>("is_active")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("is_default")
-                        .HasColumnType("boolean");
-
                     b.Property<int>("location_id")
                         .HasColumnType("integer");
 
-                    b.Property<int>("module_id")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime>("updated_at")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
-                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+                    b.Property<Guid>("module_guid")
+                        .HasColumnType("uuid");
 
                     b.HasKey("id");
 
-                    b.HasIndex("module_id");
+                    b.HasIndex("module_guid");
 
                     b.ToTable("Inputs", "device");
                 });
@@ -158,12 +145,15 @@ namespace Device.Infrastructure.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
 
-                    b.Property<int>("device_id")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("device_guid")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("fw")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<Guid>("guid")
+                        .HasColumnType("uuid");
 
                     b.Property<bool>("is_active")
                         .HasColumnType("boolean");
@@ -204,7 +194,7 @@ namespace Device.Infrastructure.Migrations
 
                     b.HasKey("id");
 
-                    b.HasIndex("device_id");
+                    b.HasIndex("device_guid");
 
                     b.ToTable("Modules", "device");
                 });
@@ -217,37 +207,21 @@ namespace Device.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
 
-                    b.Property<short>("component_id")
-                        .HasColumnType("smallint");
-
-                    b.Property<DateTime>("created_at")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
-                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
-
-                    b.Property<bool>("is_active")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("is_default")
-                        .HasColumnType("boolean");
+                    b.Property<Guid>("guid")
+                        .HasColumnType("uuid");
 
                     b.Property<int>("location_id")
                         .HasColumnType("integer");
 
-                    b.Property<int>("module_id")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("module_guid")
+                        .HasColumnType("uuid");
 
                     b.Property<int>("reader_number")
                         .HasColumnType("integer");
 
-                    b.Property<DateTime>("updated_at")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
-                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
-
                     b.HasKey("id");
 
-                    b.HasIndex("module_id");
+                    b.HasIndex("module_guid");
 
                     b.ToTable("Readers", "device");
                 });
@@ -260,37 +234,21 @@ namespace Device.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
 
-                    b.Property<short>("component_id")
-                        .HasColumnType("smallint");
-
-                    b.Property<DateTime>("created_at")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
-                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
-
-                    b.Property<bool>("is_active")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("is_default")
-                        .HasColumnType("boolean");
-
-                    b.Property<int>("location_id")
+                    b.Property<int>("LocationId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("module_id")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("guid")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("module_guid")
+                        .HasColumnType("uuid");
 
                     b.Property<int>("relay_number")
                         .HasColumnType("integer");
 
-                    b.Property<DateTime>("updated_at")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
-                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
-
                     b.HasKey("id");
 
-                    b.HasIndex("module_id");
+                    b.HasIndex("module_guid");
 
                     b.ToTable("Relays", "device");
                 });
@@ -299,7 +257,8 @@ namespace Device.Infrastructure.Migrations
                 {
                     b.HasOne("Device.Infrastructure.Persistences.Entities.Module", "module")
                         .WithMany("inputs")
-                        .HasForeignKey("module_id")
+                        .HasForeignKey("module_guid")
+                        .HasPrincipalKey("guid")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -310,7 +269,8 @@ namespace Device.Infrastructure.Migrations
                 {
                     b.HasOne("Device.Infrastructure.Persistences.Entities.Devices", "devices")
                         .WithMany("modules")
-                        .HasForeignKey("device_id")
+                        .HasForeignKey("device_guid")
+                        .HasPrincipalKey("guid")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -321,7 +281,8 @@ namespace Device.Infrastructure.Migrations
                 {
                     b.HasOne("Device.Infrastructure.Persistences.Entities.Module", "module")
                         .WithMany("readers")
-                        .HasForeignKey("module_id")
+                        .HasForeignKey("module_guid")
+                        .HasPrincipalKey("guid")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -332,7 +293,8 @@ namespace Device.Infrastructure.Migrations
                 {
                     b.HasOne("Device.Infrastructure.Persistences.Entities.Module", "module")
                         .WithMany("relays")
-                        .HasForeignKey("module_id")
+                        .HasForeignKey("module_guid")
+                        .HasPrincipalKey("guid")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

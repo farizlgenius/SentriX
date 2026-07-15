@@ -316,7 +316,7 @@ public sealed class UserRepository(UserDbContext context) : IUserRepository
                   x.name,
                   x.id,
                   string.Empty,
-                  0,
+                  Guid.Empty,
                   false
                   )).ToArrayAsync();
 
@@ -472,7 +472,7 @@ public sealed class UserRepository(UserDbContext context) : IUserRepository
                   x.name,
                   x.id,
                   string.Empty,
-                  x.component_id,
+                  Guid.Empty,
                   false
                   )).ToArrayAsync();
       }
@@ -607,7 +607,7 @@ public sealed class UserRepository(UserDbContext context) : IUserRepository
                   x.name,
                   x.id,
                   string.Empty,
-                  x.component_id,
+                  Guid.Empty,
                   false
                   )).ToArrayAsync();
       }

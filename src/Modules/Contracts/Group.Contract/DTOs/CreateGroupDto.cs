@@ -6,4 +6,6 @@ public sealed record CreateGroupDto(
       string Name,
       List<GroupDoorDto> Doors,
       int LocationId, 
-      bool IsActive) : BaseDto(0, LocationId, string.Empty, IsActive);
+      bool IsActive,
+      bool IsDefault
+      ) : BaseDtoEntity(Guid.Empty,0, LocationId, string.Empty, IsActive,IsDefault);

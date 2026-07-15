@@ -14,6 +14,7 @@ public sealed class HttpClientService(IHttpClientFactory factory) : IHttpClient
         PropertyNameCaseInsensitive = true
     };
 
+
     public async Task<TResponse?> SendAsync<TRequest, TResponse>(
         HttpMethod method,
         string baseUrl,
@@ -23,24 +24,20 @@ public sealed class HttpClientService(IHttpClientFactory factory) : IHttpClient
         Dictionary<string, string?>? queryParams = null,
         CancellationToken ct = default)
     {
-        var client = factory.CreateClient();
-        client.BaseAddress = new Uri(baseUrl);
-
-        var url = endpoint;
-
-        if (queryParams?.Any() == true)
-        {
-            url = QueryHelpers.AddQueryString(endpoint, queryParams);
-        }
-
-        var message = new HttpRequestMessage(method, url);
+        using var message = CreateRequest(
+            method,
+            baseUrl,
+            endpoint,
+            headers,
+            queryParams);
 
         if (request != null)
         {
-            var requestJson = JsonSerializer.Serialize(request, JsonOptions);
+            var requestJson = JsonSerializer.Serialize(
+                request,
+                JsonOptions);
 
             Console.WriteLine("========== HTTP REQUEST ==========");
-            Console.WriteLine($"{method} {baseUrl}{url}");
             Console.WriteLine(requestJson);
             Console.WriteLine("==================================");
 
@@ -50,34 +47,24 @@ public sealed class HttpClientService(IHttpClientFactory factory) : IHttpClient
                 "application/json");
         }
 
-        if (headers != null)
-        {
-            foreach (var header in headers)
-            {
-                message.Headers.TryAddWithoutValidation(
-                    header.Key,
-                    header.Value);
-            }
-        }
 
-        var response = await client.SendAsync(message, ct);
+        using var response = await SendRequestAsync(
+            baseUrl,
+            message,
+            ct);
 
-        var responseText = await response.Content.ReadAsStringAsync(ct);
-
-        Console.WriteLine("========== HTTP RESPONSE ==========");
-        Console.WriteLine($"Status: {(int)response.StatusCode} {response.StatusCode}");
-        Console.WriteLine(responseText);
-        Console.WriteLine("===================================");
 
         response.EnsureSuccessStatusCode();
 
-        if (string.IsNullOrWhiteSpace(responseText))
+        if (response.Content.Headers.ContentLength == 0)
             return default;
 
-        return JsonSerializer.Deserialize<TResponse>(
-            responseText,
-            JsonOptions);
+
+        return await response.Content.ReadFromJsonAsync<TResponse>(
+            JsonOptions,
+            ct);
     }
+
 
     public async Task<TResponse?> SendAsync<TResponse>(
         HttpMethod method,
@@ -87,17 +74,120 @@ public sealed class HttpClientService(IHttpClientFactory factory) : IHttpClient
         Dictionary<string, string?>? queryParams = null,
         CancellationToken ct = default)
     {
-        var client = factory.CreateClient();
-        client.BaseAddress = new Uri(baseUrl);
+        using var message = CreateRequest(
+            method,
+            baseUrl,
+            endpoint,
+            headers,
+            queryParams);
 
+
+        using var response = await SendRequestAsync(
+            baseUrl,
+            message,
+            ct);
+
+
+        response.EnsureSuccessStatusCode();
+
+        if (response.Content.Headers.ContentLength == 0)
+            return default;
+
+
+        return await response.Content.ReadFromJsonAsync<TResponse>(
+            JsonOptions,
+            ct);
+    }
+
+
+    // ==============================
+    // Binary Stream Response
+    // ==============================
+
+    public async Task<Stream> SendStreamAsync(
+        HttpMethod method,
+        string baseUrl,
+        string endpoint,
+        Dictionary<string, string>? headers = null,
+        Dictionary<string, string?>? queryParams = null,
+        CancellationToken ct = default)
+    {
+        var message = CreateRequest(
+            method,
+            baseUrl,
+            endpoint,
+            headers,
+            queryParams);
+
+
+        var response = await factory
+            .CreateClient()
+            .SendAsync(
+                message,
+                HttpCompletionOption.ResponseHeadersRead,
+                ct);
+
+
+        response.EnsureSuccessStatusCode();
+
+
+        return await response.Content.ReadAsStreamAsync(ct);
+    }
+
+
+    // ==============================
+    // Binary Byte Response
+    // ==============================
+
+    public async Task<byte[]> SendBytesAsync(
+        HttpMethod method,
+        string baseUrl,
+        string endpoint,
+        Dictionary<string, string>? headers = null,
+        Dictionary<string, string?>? queryParams = null,
+        CancellationToken ct = default)
+    {
+        using var message = CreateRequest(
+            method,
+            baseUrl,
+            endpoint,
+            headers,
+            queryParams);
+
+
+        using var response = await factory
+            .CreateClient()
+            .SendAsync(message, ct);
+
+
+        response.EnsureSuccessStatusCode();
+
+
+        return await response.Content.ReadAsByteArrayAsync(ct);
+    }
+
+
+    private HttpRequestMessage CreateRequest(
+        HttpMethod method,
+        string baseUrl,
+        string endpoint,
+        Dictionary<string, string>? headers,
+        Dictionary<string, string?>? queryParams)
+    {
         var url = endpoint;
 
         if (queryParams?.Any() == true)
         {
-            url = QueryHelpers.AddQueryString(endpoint, queryParams);
+            url = QueryHelpers.AddQueryString(
+                endpoint,
+                queryParams);
         }
 
-        var message = new HttpRequestMessage(method, url);
+
+        var message = new HttpRequestMessage(
+            method,
+            new Uri(new Uri(baseUrl), url));
+
 
         if (headers != null)
         {
@@ -109,26 +199,70 @@ public sealed class HttpClientService(IHttpClientFactory factory) : IHttpClient
             }
         }
 
+
+        return message;
+    }
+
+
+    private async Task<HttpResponseMessage> SendRequestAsync(
+        string baseUrl,
+        HttpRequestMessage message,
+        CancellationToken ct)
+    {
         Console.WriteLine("========== HTTP REQUEST ==========");
-        Console.WriteLine($"{method} {baseUrl}{url}");
+        Console.WriteLine($"{message.Method} {message.RequestUri}");
         Console.WriteLine("==================================");
 
-        var response = await client.SendAsync(message, ct);
 
-        var responseText = await response.Content.ReadAsStringAsync(ct);
+        var client = factory.CreateClient();
 
-        Console.WriteLine("========== HTTP RESPONSE ==========");
-        Console.WriteLine($"Status: {(int)response.StatusCode} {response.StatusCode}");
-        Console.WriteLine(responseText);
-        Console.WriteLine("===================================");
 
-        response.EnsureSuccessStatusCode();
-
-        if (string.IsNullOrWhiteSpace(responseText))
-            return default;
-
-        return JsonSerializer.Deserialize<TResponse>(
-            responseText,
-            JsonOptions);
+        return await client.SendAsync(
+            message,
+            ct);
     }
+
+      public async Task<Stream> SendStreamAsync<TRequest>(
+    HttpMethod method,
+    string baseUrl,
+    string endpoint,
+    TRequest? request = default,
+    Dictionary<string, string>? headers = null,
+    Dictionary<string, string?>? queryParams = null,
+    CancellationToken ct = default)
+{
+    var message = CreateRequest(
+        method,
+        baseUrl,
+        endpoint,
+        headers,
+        queryParams);
+
+
+    if (request != null)
+    {
+        var requestJson = JsonSerializer.Serialize(
+            request,
+            JsonOptions);
+
+        message.Content = new StringContent(
+            requestJson,
+            Encoding.UTF8,
+            "application/json");
+    }
+
+
+    var response = await factory
+        .CreateClient()
+        .SendAsync(
+            message,
+            HttpCompletionOption.ResponseHeadersRead,
+            ct);
+
+
+    response.EnsureSuccessStatusCode();
+
+
+    return await response.Content.ReadAsStreamAsync(ct);
+}
 }

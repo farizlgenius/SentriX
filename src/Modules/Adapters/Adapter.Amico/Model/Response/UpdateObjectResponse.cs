@@ -1,5 +1,5 @@
 namespace Adapter.Amico.Model.Response;
 
 public sealed record UpdateObjectResponse(
-      int Changes
+      int Changes=0
 );

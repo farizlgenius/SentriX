@@ -20,6 +20,7 @@ public interface IEventRepository
             string code,
             string remarks,
             int locationId,
+            string capture,
             CancellationToken ct = default
             );
 

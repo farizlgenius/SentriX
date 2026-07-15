@@ -11,13 +11,6 @@ public sealed class DeleteReaderUsedCommandHandler(IDeviceRepository repo) : ICo
 
       public async Task HandleAsync(DeleteReaderUsedCommand command, CancellationToken ct)
       {
-            var domain = new Reader(
-                  0,
-                  command.ReaderNumber,
-                  command.ModuleId,
-                  0,
-                  true
-            );
-            await repo.DeleteReaderAsync(domain);
+            await repo.DeleteReaderAsync(command.Guid);
       }
 }

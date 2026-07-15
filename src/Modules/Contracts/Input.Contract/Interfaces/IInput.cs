@@ -9,7 +9,7 @@ public interface IInput
       Task<InputDto> CreateInputAsync(CreateInputDto dto);
       Task<InputDto> UpdateInputAsync(InputDto dto);
       Task<InputDto> DeleteInputAsync(int id);
-      Task<BaseResponse> InputMaskAsync(int id,bool IsMask); 
+      Task InputMaskAsync(int id,bool IsMask); 
       Task<InputGroupDto> CreateInputGroupAsync(CreateInputGroupDto dto);
       Task<InputGroupDto> UpdateInputGroupAsync(InputGroupDto dto);
       Task<InputGroupDto> DeleteInputGroupAsync(int id);

@@ -1,6 +1,6 @@
 namespace Adapter.Amico.Persistences.Entities;
 
-public sealed class Amicos : BaseDbEntity
+public sealed class Amicos : AmicoDbEntity
 {
       public string mac { get; set; } = string.Empty;
       public string ip { get; set; } = string.Empty;
@@ -10,7 +10,7 @@ public sealed class Amicos : BaseDbEntity
             
       }
 
-      public Amicos(Guid guid,string mac,string ip,string session ,int locationId, bool isactive, bool isdefault) : base(guid, locationId, isactive, isdefault)
+      public Amicos(Guid guid,string mac,string ip,string session) : base(guid)
       {
             this.mac = mac;
             this.ip = ip;

@@ -206,7 +206,7 @@ const Input = () => {
             (status:MpStatus) => {
                 setStatus((prev) =>
                     prev.map((a) =>
-                        a.componentId == status.deviceId && a.deviceComponentId == status.first
+                        a.componentId == status.deviceId && a.deviceGuid == status.first
                             ? {
                                 ...a,
                                 status: status.status,

@@ -22,9 +22,9 @@ export const AeroModuleDetailForm: React.FC<PropsWithChildren<AeroModuleDetailFo
       const toggleRefresh = () => setRefresh(!refresh);
 
       const fetchModule = async () => {
-            const res = await send.get(ModuleEndpoint.GET(data.id));
-            setModules(res.data);
-            const newStatuses = res.data.map((a: ModuleDto) => ({
+            const res = await send.get(ModuleEndpoint.GET_BY_GUID(data.guid));
+            setModules(res.data.data);
+            const newStatuses = res.data.data.map((a: ModuleDto) => ({
                   componentId: a.componentId,
                   deviceComponentId:a.deviceComponentId,
                   status: "",
@@ -60,7 +60,7 @@ export const AeroModuleDetailForm: React.FC<PropsWithChildren<AeroModuleDetailFo
                         console.log("Received realtime update:", status);
                         setStatus((prev) =>
                               prev.map((a) =>
-                                    a.deviceComponentId == status.deviceComponentId && a.componentId == status.componentId
+                                    a.deviceGuid == status.deviceGuid && a.componentId == status.componentId
                                           ? {
                                                 ...a,
                                                 status: status.status,
@@ -139,38 +139,38 @@ export const AeroModuleDetailForm: React.FC<PropsWithChildren<AeroModuleDetailFo
                                                       <TableCell className="text-center">{m.port == 0 ? "Internal" : m.port == 1 ? "PORT 1" : m.port == 2 ? "PORT 2" : "NONE"}</TableCell>
                                                       <TableCell className="text-center"> <Badge
                                                             size="sm"
-                                                            color={status.find(x => x.componentId == m.componentId && x.deviceComponentId == m.deviceComponentId)?.batt == "Active"
+                                                            color={status.find(x => x.componentId == m.componentId && x.deviceGuid == m.deviceComponentId)?.batt == "Active"
                                                                   ? "success"
                                                                   : "error"}
                                                       >
-                                                            {status.find(x => x.componentId == m.componentId && x.deviceComponentId == m.deviceComponentId)?.batt}
+                                                            {status.find(x => x.componentId == m.componentId && x.deviceGuid == m.deviceComponentId)?.batt}
                                                       </Badge></TableCell>
                                                       <TableCell className="text-center"> <Badge
                                                             size="sm"
-                                                            color={status.find(x => x.componentId == m.componentId && x.deviceComponentId == m.deviceComponentId)?.ac == "Active"
+                                                            color={status.find(x => x.componentId == m.componentId && x.deviceGuid == m.deviceComponentId)?.ac == "Active"
                                                                   ? "success"
                                                                   : "error"}
                                                       >
-                                                            {status.find(x => x.componentId == m.componentId && x.deviceComponentId == m.deviceComponentId)?.ac}
+                                                            {status.find(x => x.componentId == m.componentId && x.deviceGuid == m.deviceComponentId)?.ac}
                                                       </Badge></TableCell>
                                                       <TableCell className="text-center">
                                                             <Badge
                                                                   size="sm"
-                                                                  color={status.find(x => x.componentId == m.componentId && x.deviceComponentId == m.deviceComponentId)?.tamper == "Active"
+                                                                  color={status.find(x => x.componentId == m.componentId && x.deviceGuid == m.deviceComponentId)?.tamper == "Active"
                                                                         ? "success"
                                                                         : "error"}
                                                             >
-                                                                  {status.find(x => x.componentId == m.componentId && x.deviceComponentId == m.deviceComponentId)?.tamper}
+                                                                  {status.find(x => x.componentId == m.componentId && x.deviceGuid == m.deviceComponentId)?.tamper}
                                                             </Badge>
                                                       </TableCell>
                                                       <TableCell className="text-center">
                                                             <Badge
                                                                   size="sm"
-                                                                  color={status.find(x => x.componentId == m.componentId && x.deviceComponentId == m.deviceComponentId)?.status == "Online"
+                                                                  color={status.find(x => x.componentId == m.componentId && x.deviceGuid == m.deviceComponentId)?.status == "Online"
                                                                         ? "success"
                                                                         : "error"}
                                                             >
-                                                                  {status.find(x => x.componentId == m.componentId && x.deviceComponentId == m.deviceComponentId)?.status}
+                                                                  {status.find(x => x.componentId == m.componentId && x.deviceGuid == m.deviceComponentId)?.status}
                                                             </Badge>
                                                       </TableCell>
                                                 </TableRow>

@@ -1,5 +1,5 @@
 export interface SetTranDto{
-    deviceId:number;
+    deviceGuid:string;
     type:string;
     isEnable:boolean;
 }

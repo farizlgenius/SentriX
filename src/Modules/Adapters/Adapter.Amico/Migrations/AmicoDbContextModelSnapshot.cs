@@ -45,15 +45,6 @@ namespace Adapter.Amico.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<bool>("is_active")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("is_default")
-                        .HasColumnType("boolean");
-
-                    b.Property<int>("location_id")
-                        .HasColumnType("integer");
-
                     b.Property<string>("mac")
                         .IsRequired()
                         .HasColumnType("text");

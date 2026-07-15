@@ -12,5 +12,6 @@ public sealed record EventDto(
       string Name,
       string Code,
       string Remarks,
-      int LocationId
+      int LocationId,
+      string Capture
       );

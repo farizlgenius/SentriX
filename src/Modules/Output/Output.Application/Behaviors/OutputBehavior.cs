@@ -17,7 +17,7 @@ namespace Output.Application.Behaviors;
 
 public sealed class OutputBehavior(IOutputRepository repo,IAdapterFactory factory,IMessageBus bus) : IOutput
 {
-      public async Task<BaseResponse> CommandOutputDto(OutputCommandDto dto, CancellationToken ct = default)
+      public async Task CommandOutputDto(OutputCommandDto dto, CancellationToken ct = default)
       {
             var output = await bus.QueryAsync(new OutputByIdQuery(dto.Id));
             await factory.GetAdapter(dto.Type).Control.TriggerOutputAsync(
@@ -27,7 +27,6 @@ public sealed class OutputBehavior(IOutputRepository repo,IAdapterFactory factor
                   dto.Command
                   );
 
-            return new BaseResponse(HttpStatusCode.OK,MessageHelper.Common.Success,DateTime.UtcNow);
       }
 
       public async Task<OutputDto> CreateAsync(CreateOutputDto dto)
@@ -114,7 +113,7 @@ public sealed class OutputBehavior(IOutputRepository repo,IAdapterFactory factor
             return res;
       }
 
-      public async Task<BaseResponse> TriggerOutputAsync(int id, short Command)
+      public async Task TriggerOutputAsync(int id, short Command)
       {
             // Check that any output with id
             if(!await repo.IsAnyWithIdAsync(id))
@@ -124,9 +123,6 @@ public sealed class OutputBehavior(IOutputRepository repo,IAdapterFactory factor
 
             await factory.GetAdapter(output.Type).Control.TriggerOutputAsync(output.Mac,output.DeviceComponentId,output.ComponentId,Command);
             
-                  
-            
-            return new BaseResponse(System.Net.HttpStatusCode.OK,MessageHelper.Common.Success,DateTime.UtcNow);
       }
 
       public async Task<OutputDto> UpdateAsync(OutputDto dto)

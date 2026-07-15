@@ -8,6 +8,41 @@ namespace Adapter.Amico.Repositories;
 
 public sealed class AmicoRepository(AmicoDbContext context) : IAmicoRepository
 {
+      public async Task AddAsync(
+            Guid guid,
+            string mac,
+            string ip,
+            string session,
+            CancellationToken ct = default)
+      {
+            await context.Amicos.AddAsync(
+                  new Persistences.Entities.Amicos(
+                        guid,
+                        mac,
+                        ip,
+                        session
+                        ),
+                        ct
+            );
+
+            await context.SaveChangesAsync(ct);
+      }
+
+      public async Task DeleteAsync(string Mac, string Ip, CancellationToken ct = default)
+      {
+            var entity = await context.Amicos
+            .Where(x => x.mac.Equals(Mac))
+            .OrderByDescending(x => x.id)
+            .FirstOrDefaultAsync();
+
+            if(entity is null)
+                  throw new Exception(MessageHelper.DB.RecordNotFound);
+
+            context.Amicos.Remove(entity);
+
+            await context.SaveChangesAsync(ct); 
+      }
+
       public async Task<Amicos> GetAmicoByMacAsync(string mac,CancellationToken ct = default)
       {
             return await context.Amicos

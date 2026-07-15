@@ -78,5 +78,7 @@ public interface IScpCommand
       CommandResponse SetScpId(string Mac,short ScpId,short To);
       CommandResponse TransactionLogStatusAsync(string Mac,short ScpId);
       CommandResponse SetTransactionLogIndexAsync(string Mac,short ScpId,bool IsEnable);
+      CommandResponse DetachScpFromChannel(string Mac,short ScpId);
+      CommandResponse DeleteScp(string Mac,short ScpId);
 
 }

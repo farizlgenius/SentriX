@@ -1,4 +1,4 @@
 using SharedKernel.Messaging;
 
 namespace Device.Contract.Command;
-public sealed record DeleteInputUsedCommand(short InputNumber,int ModuleId) : ICommand;
+public sealed record DeleteInputUsedCommand(Guid Guid) : ICommand;

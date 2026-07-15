@@ -7,11 +7,12 @@ namespace Group.Application.Interfaces;
 public interface IGroupRepository
 {
       Task<short> GetLowestGroupComponentIdAsync(CancellationToken ct = default);
-      Task<GroupDto> CreateAsync(Groups dto,CancellationToken ct = default);
-      Task<GroupDto> UpdateAsync(Groups dto,CancellationToken ct = default);
-      Task<GroupDto> DeleteAsync(int id,CancellationToken ct = default);
+      Task CreateAsync(Groups dto,CancellationToken ct = default);
+      Task UpdateAsync(Groups dto,CancellationToken ct = default);
+      Task DeleteAsync(int id,CancellationToken ct = default);
       Task<bool> IsAnyByIdAsync(int id,CancellationToken ct = default);
       Task<GroupDto> GetByIdAsync(int id,CancellationToken ct = default);
+      Task<GroupDto> GetByGuidAsync(Guid guid,CancellationToken ct = default);
       Task<Pagination<GroupDto>> GetPaginationAsync(PaginationParams param,CancellationToken ct = default);
       Task<IEnumerable<GroupDto>> GetByLocationIdAsync(int location,CancellationToken ct = default);
       Task<IEnumerable<GroupSplitByMacDto>> GetByRangeIdAsync(List<int> Ids,CancellationToken ct= default);

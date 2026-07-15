@@ -56,7 +56,8 @@ const TransactionTable: React.FC<PropsWithChildren<TableContents>> = ({ tableHea
   timestamp: "w-[20%]",
   name: "w-[15%]",
   code: "w-[15%]",
-  remarks: "w-[50%]",
+  remarks: "w-[40%]",
+  capture: "w-[10%]",
 };
 
   return (
