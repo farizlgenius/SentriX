@@ -181,7 +181,7 @@ public sealed class DoorRepository(DoorDbContext context) : IDoorRepository
 
       public async Task<short> GetLowestDoorComponentIdWithExceptionAsync(string Mac, List<int> Excepts, CancellationToken ct = default)
       {
-            return (short)await ComponentHelper.LowestUnassignedNumberAsync<Persistences.Entities.Doors>(
+            return await ComponentHelper.LowestUnassignedNumberAsync<Persistences.Entities.Doors>(
                   context,
                   Excepts,
                   x => x.mac.Equals(Mac),

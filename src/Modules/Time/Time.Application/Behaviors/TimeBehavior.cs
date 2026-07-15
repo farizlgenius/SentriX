@@ -74,7 +74,7 @@ public sealed class TimeBehavior(
 
             var componentId = await repo.GetLowestTimeZoneComponentIdAsync(dto.LocationId);
             var tzGuid = Guid.NewGuid();
-            var interComs = new List<int>();
+            var interComs = new List<short>();
             foreach (var interval in dto.Intervals)
             {
                   interComs.Add(await repo.GetLowestIntervalComponentIdExceptStartFromOneAsync(interComs,tzGuid));

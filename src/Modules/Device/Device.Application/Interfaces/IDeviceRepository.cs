@@ -29,7 +29,7 @@ public interface IDeviceRepository
       Task<bool> IsAnyModuleByIdAsync(int ModuleId,CancellationToken ct = default);
       Task<IEnumerable<OptionDto>> GetModuleOptionByDeviceGuidAsync(Guid DeviceGuid,CancellationToken ct = default);
       Task<string> GetModelByModuleIdAsync(int ModuleId,CancellationToken ct = default);
-      Task<int> GetComponentIdByMacAsync(string Mac,CancellationToken ct = default);
+      Task<short> GetComponentIdByMacAsync(string Mac,CancellationToken ct = default);
       Task<int> GetLowestModuleComponentIdByDeviceGuidAsync(Guid DeviceGuid,CancellationToken ct = default);
       Task<DeviceDto> GetDeviceByComponentIdAsync(int ComponentId,CancellationToken ct = default);
       Task<DeviceDto> GetDeviceByGuidAsync(Guid guid,CancellationToken ct = default);

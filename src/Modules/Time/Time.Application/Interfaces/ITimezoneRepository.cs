@@ -17,7 +17,7 @@ public interface ITimeZoneRepository
       Task<bool> IsAnyTimeZoneNotSyncAsync(int LocationId,DateTime SyncAt,CancellationToken ct = default);
       Task<bool> IsAnyNameAsync(string name,CancellationToken ct = default);
       Task<short> GetLowestIntervalComponentIdExceptStartFromOneAsync(
-            List<int> Excepts,
+            List<short> Excepts,
             Guid TzGuid,
             CancellationToken ct = default
             );

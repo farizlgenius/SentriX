@@ -62,7 +62,7 @@ public sealed class DeviceCommand(IHttpClient client,IAmicoSetting setting,IMess
                   UriHelper.UriBuilder(ip,Setting.Secure),
                   Endpoint.LOAD_OBJECT,
                   new LoadObjectRequest(
-                        ObjectMapper.TimeZone,
+                        ObjectConstant.TimeZone,
                         ["id"]
                   ),
                   queryParams:queryParams
@@ -73,7 +73,7 @@ public sealed class DeviceCommand(IHttpClient client,IAmicoSetting setting,IMess
             if(res is null)
                   return false;
 
-            if(res.TimeZones.Count() != v)
+            if(res.time_zones.Count() != v)
                   return false;
 
             // Holiday
@@ -83,7 +83,7 @@ public sealed class DeviceCommand(IHttpClient client,IAmicoSetting setting,IMess
                   UriHelper.UriBuilder(ip,Setting.Secure),
                   Endpoint.LOAD_OBJECT,
                   new LoadObjectRequest(
-                        ObjectMapper.Holiday,
+                        ObjectConstant.Holiday,
                         ["id"]
                   ),
                   queryParams:queryParams
@@ -95,7 +95,7 @@ public sealed class DeviceCommand(IHttpClient client,IAmicoSetting setting,IMess
             if(res is null)
                   return false;
 
-            if(res.Holidays.Count() != v)
+            if(res.holidays.Count() != v)
                   return false;
 
             return true;

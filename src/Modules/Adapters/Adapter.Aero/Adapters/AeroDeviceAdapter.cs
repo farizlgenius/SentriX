@@ -75,9 +75,9 @@ public sealed class AeroDeviceAdapter(
 
       }
 
-      public async Task<bool> GetDeviceStatusAsync(string Mac, int ComponentId)
+      public async Task<bool> GetDeviceStatusAsync(string Mac, short ComponentId)
       {
-            return SCPDLL.scpCheckOnline((short)ComponentId) == 1;
+            return SCPDLL.scpCheckOnline(ComponentId) == 1;
       }
 
       public async Task<bool> ResetDeviceAsync(string Mac, short ScpId)
@@ -125,24 +125,24 @@ public sealed class AeroDeviceAdapter(
                   throw new Exception(MessageHelper.Command.Unsuccess(CommandConstant.SioPanelConfiguration, Mac, ScpId));
       }
 
-      public async Task<bool> AsciiCommandAsync(string Mac, int ScpId, string Command)
+      public async Task<bool> AsciiCommandAsync(string Mac, short ScpId, string Command)
       {
-            var res = writer.AsciiCommandAsync(Mac, (short)ScpId, Command);
+            var res = writer.AsciiCommandAsync(Mac, ScpId, Command);
             if (!res.IsSend)
                   throw new Exception(MessageHelper.Command.Unsuccess(CommandConstant.AsciiCommandAsync, Mac, ScpId));
             await bus.SendAsync(new AddCommandEvent(res));
             return res.IsSend;
       }
 
-      public async Task<bool> GetEventStatusAsync(string Mac, int ComponentId)
+      public async Task<bool> GetEventStatusAsync(string Mac, short ComponentId)
       {
-            var res = writer.TransactionLogStatusAsync(Mac, (short)ComponentId);
+            var res = writer.TransactionLogStatusAsync(Mac,ComponentId);
             return res.IsSend;
       }
 
-      public async Task<bool> SetEventStatusAsync(string Mac, int ComponentId, bool IsEnable)
+      public async Task<bool> SetEventStatusAsync(string Mac, short ComponentId, bool IsEnable)
       {
-            var res = writer.SetTransactionLogIndexAsync(Mac, (short)ComponentId, IsEnable);
+            var res = writer.SetTransactionLogIndexAsync(Mac, ComponentId, IsEnable);
             await bus.SendAsync(new AddCommandEvent(res));
             return res.IsSend;
       }
@@ -152,7 +152,7 @@ public sealed class AeroDeviceAdapter(
             throw new NotImplementedException();
       }
 
-      public async Task VerifyDeviceComponentAsync(int ComponentId)
+      public async Task VerifyDeviceComponentAsync(short ComponentId)
       {
             await scp.VerifyScpComponentAsync(ComponentId);
       }

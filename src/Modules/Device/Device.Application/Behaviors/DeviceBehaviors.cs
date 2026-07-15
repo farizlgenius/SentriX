@@ -467,7 +467,7 @@ public sealed class DeviceBehaviors(IDeviceRepository repo, IMessageBus bus, IAd
 
             foreach (var group in groups)
             {
-                  await adapterFactory.GetAdapter(device.Type).Group.CreateUpdateLevel(
+                  await adapterFactory.GetAdapter(device.Type).Group.CreateGroup(
                         Mac,
                         device.ComponentId,
                         group.ComponentId,

@@ -92,7 +92,7 @@ public sealed class TimezoneRepository(TimeDbContext context) : ITimeZoneReposit
       }
 
       public async Task<short> GetLowestIntervalComponentIdExceptStartFromOneAsync(
-            List<int> Excepts,
+            List<short> Excepts,
             Guid TzGuid,
             CancellationToken ct = default
             )

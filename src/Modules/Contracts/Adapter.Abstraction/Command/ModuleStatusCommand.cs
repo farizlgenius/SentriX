@@ -3,4 +3,4 @@ using SharedKernel.Messaging;
 
 namespace Adapter.Abstraction.Command;
 
-public sealed record ModuleStatusCommand(int DeviceCompnentId,string Mac,int ModuleComponentId) : ICommand;
+public sealed record ModuleStatusCommand(long DeviceCompnentId,string Mac,int ModuleComponentId) : ICommand;

@@ -6,7 +6,7 @@ namespace SharedKernel.Helpers;
 
 public static class ComponentHelper
 {
-      public static async Task<int> LowestUnassignedNumberAsync<TEntity>(
+      public static async Task<short> LowestUnassignedNumberAsync<TEntity>(
           DbContext context,
           Expression<Func<TEntity, bool>> filter,                 // WHERE condition (ex: mac == "xx")
           Expression<Func<TEntity, int>> numberSelector,          // column that stores numbers
@@ -36,15 +36,15 @@ public static class ComponentHelper
             foreach (var num in numbers)
             {
                   if (num != expected)
-                        return expected;
+                        return (short)expected;
 
                   expected++;
             }
 
-            return expected > max ? -1 : expected;
+            return (short)(expected > max ? -1 : expected);
       }
 
-      public static async Task<int> LowestUnassignedNumberAsync<TEntity>(
+      public static async Task<short> LowestUnassignedNumberAsync<TEntity>(
           DbContext context,
           Expression<Func<TEntity, int>> numberSelector,          // column that stores numbers
           int max,
@@ -72,15 +72,15 @@ public static class ComponentHelper
             foreach (var num in numbers)
             {
                   if (num != expected)
-                        return expected;
+                        return (short)expected;
 
                   expected++;
             }
 
-            return expected > max ? -1 : expected;
+            return (short)(expected > max ? -1 : expected);
       }
 
-      public static async Task<int> LowestUnassignedNumberStartOneAsync<TEntity>(
+      public static async Task<short> LowestUnassignedNumberStartOneAsync<TEntity>(
           DbContext context,
           Expression<Func<TEntity, int>> numberSelector,          // column that stores numbers
           int max,
@@ -108,15 +108,15 @@ public static class ComponentHelper
             foreach (var num in numbers)
             {
                   if (num != expected)
-                        return expected;
+                        return (short)expected;
 
                   expected++;
             }
 
-            return expected > max ? -1 : expected;
+            return (short)(expected > max ? -1 : expected);
       }
 
-      public static async Task<int> LowestUnassignedNumberStartOneWithFileterAsync<TEntity>(
+      public static async Task<short> LowestUnassignedNumberStartOneWithFileterAsync<TEntity>(
           DbContext context,
            Expression<Func<TEntity, bool>> filter, 
           Expression<Func<TEntity, int>> numberSelector,          // column that stores numbers
@@ -146,15 +146,15 @@ public static class ComponentHelper
             foreach (var num in numbers)
             {
                   if (num != expected)
-                        return expected;
+                        return (short)expected;
 
                   expected++;
             }
 
-            return expected > max ? -1 : expected;
+            return (short)(expected > max ? -1 : expected);
       }
 
-      public static async Task<int> LowestUnassignedNumberAsync<TEntity>(
+      public static async Task<short> LowestUnassignedNumberAsync<TEntity>(
           DbContext context,
           Expression<Func<TEntity, bool>> filter,                 // WHERE condition (ex: mac == "xx")
           Expression<Func<TEntity, int>> numberSelector,          // column that stores numbers
@@ -182,15 +182,15 @@ public static class ComponentHelper
             foreach (var num in numbers)
             {
                   if (num != expected)
-                        return expected;
+                        return (short)expected;
 
                   expected++;
             }
 
-            return expected;
+            return (short)expected;
       }
 
-      public static async Task<int> LowestUnassignedNumberAsync<TEntity>(
+      public static async Task<short> LowestUnassignedNumberAsync<TEntity>(
           DbContext context,
           List<int> Except,
           Expression<Func<TEntity, bool>> filter,                 // WHERE condition (ex: mac == "xx")
@@ -222,15 +222,15 @@ public static class ComponentHelper
             foreach (var num in numbers)
             {
                   if (num != expected && !Except.Contains(num))
-                        return expected;
+                        return (short)expected;
 
                   expected++;
             }
 
-            return expected > max ? -1 : expected;
+            return (short)(expected > max ? -1 : expected);
       }
 
-      public static async Task<int> LowestUnassignedNumberAsync<TEntity>(
+      public static async Task<short> LowestUnassignedNumberAsync<TEntity>(
     DbContext context,
     List<int> Except,
     Expression<Func<TEntity, bool>> filter,
@@ -267,17 +267,17 @@ public static class ComponentHelper
             foreach (var num in numbers)
             {
                   if (num != expected && !Except.Contains(expected))
-                        return expected;
+                        return (short)expected;
 
                   expected++;
             }
 
-            return expected > max ? -1 : expected;
+            return (short)(expected > max ? -1 : expected);
       }
 
-      public static async Task<int> LowestUnassignedNumberExceptStartFromOneAsync<TEntity>(
+      public static async Task<short> LowestUnassignedNumberExceptStartFromOneAsync<TEntity>(
     DbContext context,
-    List<int> Except,
+    List<short> Except,
     Expression<Func<TEntity, bool>> filter,
     Expression<Func<TEntity, object>> numberSelector,
     int max,
@@ -307,16 +307,16 @@ public static class ComponentHelper
             if (numbers.Count == 0 && Except.Count == 0)
                   return 1;
 
-            int expected = 1;
+            short expected = 1;
 
             foreach (var num in numbers)
             {
                   if (num != expected && !Except.Contains(expected))
-                        return expected;
+                        return (short)expected;
 
                   expected++;
             }
 
-            return expected > max ? -1 : expected;
+            return (short)(expected > max ? -1 : expected);
       }
 }

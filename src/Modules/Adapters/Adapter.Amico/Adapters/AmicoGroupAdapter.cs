@@ -6,12 +6,12 @@ public sealed class AmicoGroupAdapter(
       IGroupCommand command
 ) : IAmicoGroupAdapter
 {
-      public async Task CreateUpdateLevel(string Mac, short DeviceComponentId, short ComponentId, List<(short DoorComponentId, short TimeZoneComponentId)> Doors)
+      public async Task CreateGroup(string Mac, short DeviceComponentId, short ComponentId, List<(short DoorComponentId, short TimeZoneComponentId)> Doors)
       {
             throw new NotImplementedException();
       }
 
-      public Task DeleteLevel(string Mac, short DeviceComponentId, short ComponentId)
+      public async Task DeleteGroup(string Mac, short DeviceComponentId, short ComponentId)
       {
             throw new NotImplementedException();
       }

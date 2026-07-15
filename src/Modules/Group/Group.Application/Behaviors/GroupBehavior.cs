@@ -39,7 +39,7 @@ public sealed class GroupBehavior(IGroupRepository repo,IAdapterFactory factory,
             foreach(var dd in d.GroupDoors)
             {
                   var DeviceComponentId = await bus.QueryAsync(new ComponentIdByMacQuery(dd.Mac));
-                  await factory.GetAdapter(dd.Type).Group.CreateUpdateLevel(
+                  await factory.GetAdapter(dd.Type).Group.CreateGroup(
                         dd.Mac,
                         (short)DeviceComponentId,
                         ComponentId,
@@ -77,7 +77,7 @@ public sealed class GroupBehavior(IGroupRepository repo,IAdapterFactory factory,
 
             foreach(var data in datas)
             {
-                  await factory.GetAdapter(data.Type).Group.DeleteLevel(
+                  await factory.GetAdapter(data.Type).Group.DeleteGroup(
                         data.Mac,
                         data.ComponentId,
                         d.ComponentId
@@ -131,7 +131,7 @@ public sealed class GroupBehavior(IGroupRepository repo,IAdapterFactory factory,
             foreach(var d in domain.GroupDoors)
             {
                   var DeviceComponentId = await bus.QueryAsync(new ComponentIdByMacQuery(d.Mac));
-                  await factory.GetAdapter(d.Type).Group.CreateUpdateLevel(
+                  await factory.GetAdapter(d.Type).Group.CreateGroup(
                         d.Mac,
                         (short)DeviceComponentId,
                         dto.ComponentId,

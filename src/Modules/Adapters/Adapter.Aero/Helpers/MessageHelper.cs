@@ -24,8 +24,8 @@ public sealed class LogMessageHelper
             return JsonSerializer.Deserialize<T>(message,options)!;
       }
 
-      public static string CommandSuccess(string type,short ScpId) => $"{type} on ScpId {ScpId}  - Successfully.";
-      public static string CommandUnsuccess(string type,short ScpId) => $"{type} on ScpId {ScpId}  - Unsuccessfully.";
+      public static string CommandSuccess(string type,long ScpId) => $"{type} on ScpId {ScpId}  - Successfully.";
+      public static string CommandUnsuccess(string type,long ScpId) => $"{type} on ScpId {ScpId}  - Unsuccessfully.";
 
 
            // ================= JSON STYLE =================

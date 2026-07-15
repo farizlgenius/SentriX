@@ -30,7 +30,7 @@ public sealed class AmicoDeviceAdapter(
 
 
 
-      public Task<bool> GetEventStatusAsync(string Mac, int ComponentId)
+      public Task<bool> GetEventStatusAsync(string Mac, short ComponentId)
       {
             throw new NotImplementedException();
       }
@@ -77,17 +77,17 @@ public sealed class AmicoDeviceAdapter(
             throw new NotImplementedException();
       }
 
-      public Task<bool> SetEventStatusAsync(string Mac, int ComponentId, bool IsEnable)
+      public Task<bool> SetEventStatusAsync(string Mac, short ComponentId, bool IsEnable)
       {
             throw new NotImplementedException();
       }
 
-      public Task VerifyDeviceComponentAsync(int ComponentId)
+      public Task VerifyDeviceComponentAsync(short ComponentId)
       {
             throw new NotImplementedException();
       }
 
-      public Task<bool> AsciiCommandAsync(string Mac, int ComponentId, string Command)
+      public Task<bool> AsciiCommandAsync(string Mac, short ComponentId, string Command)
       {
             throw new NotImplementedException();
       }
@@ -109,7 +109,7 @@ public sealed class AmicoDeviceAdapter(
             await command.VerifyDeviceComponentAsync(Ip,res.Session,LocationId);
       }
 
-      public Task<bool> GetDeviceStatusAsync(string Mac, int ComponentId)
+      public Task<bool> GetDeviceStatusAsync(string Mac, short ComponentId)
       {
             throw new NotImplementedException();
       }

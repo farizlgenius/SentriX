@@ -101,7 +101,7 @@ public sealed class DeviceRepository(DeviceDbContext context) : IDeviceRepositor
            .FirstOrDefaultAsync() ?? string.Empty;
       }
 
-      public async Task<int> GetComponentIdByMacAsync(string Mac, CancellationToken ct = default)
+      public async Task<short> GetComponentIdByMacAsync(string Mac, CancellationToken ct = default)
       {
             return await context.Devices.AsNoTracking()
             .OrderByDescending(x => x.id)

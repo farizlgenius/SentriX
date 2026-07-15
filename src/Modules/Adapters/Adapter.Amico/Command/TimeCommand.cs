@@ -18,7 +18,7 @@ public sealed class TimeCommand(IHttpClient client,IAmicoSetting setting) : Base
             };
 
             var request = new DeleteObjectAllRequest(
-                  ObjectMapper.TimeZone
+                  ObjectConstant.TimeZone
             );
 
             await Client.SendAsync<DeleteObjectAllRequest, DeleteObjectResponse>(
@@ -30,7 +30,7 @@ public sealed class TimeCommand(IHttpClient client,IAmicoSetting setting) : Base
             );
 
             request = new DeleteObjectAllRequest(
-                  ObjectMapper.TimeSpan
+                  ObjectConstant.TimeSpan
             );
 
             await Client.SendAsync<DeleteObjectAllRequest, DeleteObjectResponse>(
@@ -56,7 +56,7 @@ public sealed class TimeCommand(IHttpClient client,IAmicoSetting setting) : Base
             )
       {
             var request = new CreateObjectRequest<Model.Objects.Holiday>(
-                  ObjectMapper.Holiday,
+                  ObjectConstant.Holiday,
                   new List<Model.Objects.Holiday>
                   {
                         new Model.Objects.Holiday(
@@ -105,7 +105,7 @@ public sealed class TimeCommand(IHttpClient client,IAmicoSetting setting) : Base
             int hol3)
       {
             var request = new CreateObjectRequest<Model.Objects.TimeSpan>(
-                  ObjectMapper.TimeSpan,
+                  ObjectConstant.TimeSpan,
                   new List<Model.Objects.TimeSpan>
                   {
                         new Model.Objects.TimeSpan(
@@ -149,7 +149,7 @@ public sealed class TimeCommand(IHttpClient client,IAmicoSetting setting) : Base
             )
       {
             var request = new CreateObjectRequest<Model.Objects.TimeZone>(
-                  ObjectMapper.TimeZone,
+                  ObjectConstant.TimeZone,
                   new List<Model.Objects.TimeZone>
                   {
                         new Model.Objects.TimeZone(
@@ -180,7 +180,7 @@ public sealed class TimeCommand(IHttpClient client,IAmicoSetting setting) : Base
       )
       {
             var request = new DeleteObjectRequest(
-                  ObjectMapper.Holiday,
+                  ObjectConstant.Holiday,
                   new
                   {
                         holidays = new
@@ -207,7 +207,7 @@ public sealed class TimeCommand(IHttpClient client,IAmicoSetting setting) : Base
       public async Task<UpdateObjectResponse> UpdateHolidayAsync(string ip, string session, string name,int componentId, int start, int end, int hol1, int hol2, int hol3, int repeats)
       {
            var request = new UpdateObjectRequest<Model.Objects.Holiday>(
-                  ObjectMapper.TimeZone,
+                  ObjectConstant.TimeZone,
                   new List<Model.Objects.Holiday>
                   {
                         new Model.Objects.Holiday(
@@ -247,7 +247,7 @@ public sealed class TimeCommand(IHttpClient client,IAmicoSetting setting) : Base
       public async Task<UpdateObjectResponse> UpdateTimeSpanAsync(string ip, string session, int tz_id, int componentId, int start, int end, int sun, int mon, int tue, int wed, int thu, int fri, int sat, int hol1, int hol2, int hol3)
       {
              var request = new UpdateObjectRequest<Model.Objects.TimeSpan>(
-                  ObjectMapper.TimeSpan,
+                  ObjectConstant.TimeSpan,
                   new List<Model.Objects.TimeSpan>
                   {
                         new Model.Objects.TimeSpan(
@@ -294,7 +294,7 @@ public sealed class TimeCommand(IHttpClient client,IAmicoSetting setting) : Base
       {
            var request = new UpdateObjectRequest<Model.Objects.TimeZone>
              (
-                   ObjectMapper.TimeZone,
+                   ObjectConstant.TimeZone,
                   new List<Model.Objects.TimeZone>
                   {
                         new Model.Objects.TimeZone(

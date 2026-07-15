@@ -14,7 +14,7 @@ public sealed record ModuleDto(
       string Mac="",
       string Model="",
       string Type="",
-      int DeviceComponentId=0,
+      long DeviceComponentId=0,
       int LocationId=0,
       bool IsActive=true,
       bool IsDefault=false

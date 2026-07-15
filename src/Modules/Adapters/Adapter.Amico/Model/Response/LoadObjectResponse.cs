@@ -4,31 +4,12 @@ namespace Adapter.Amico.Model.Response;
 
 public sealed class LoadObjectResponse
 {
-      [JsonPropertyName("time_zones")]
-      public List<TimeZone> TimeZones { get; set; } = [];
+      public List<Objects.TimeZone> time_zones { get; set; } = [];
 
-      [JsonPropertyName("holidays")]
-      public List<Holiday> Holidays { get; set; } = [];
+      public List<Objects.Holiday> holidays { get; set; } = [];
 
-      [JsonPropertyName("users")]
-      public List<User> Users { get; set; } = [];
-}
-
-public class TimeZone
-{
-      [JsonPropertyName("id")]
-      public int Id { get; set; }
-}
-
-public class Holiday
-{
-      [JsonPropertyName("id")]
-      public int Id { get; set; }
+      public List<Objects.AccessRuleTimeZone> access_rule_time_zones {get; set;} = [];
+      public List<Objects.GroupAccessRule> group_access_rules {get; set;} = [];
 }
 
 
-public class User
-{
-      [JsonPropertyName("id")]
-      public int Id { get; set; }
-}

@@ -4,7 +4,7 @@ namespace Adapter.Amico.Model.Objects;
 
 public sealed record TimeZone(
       [property: JsonPropertyName("id")]
-      int Id,
+      int id,
       [property: JsonPropertyName("name")]
-      string Name
+      string name
       );
