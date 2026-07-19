@@ -53,35 +53,7 @@ public sealed class AeroDbContext(DbContextOptions<AeroDbContext> options) : DbC
             }
 
             // Below is used for define relation betweeneach database 
-            modelBuilder.Entity<Aeros>()
-            .HasMany(x => x.driver_configurations)
-            .WithOne(x => x.aero)
-            .HasForeignKey(x => x.aero_id)
-            .OnDelete(DeleteBehavior.Cascade);
-
-            modelBuilder.Entity<Aeros>()
-            .HasMany(x => x.sio_panel_configurations)
-            .WithOne(x => x.aero)
-            .HasForeignKey(x => x.aero_id)
-            .OnDelete(DeleteBehavior.Cascade);
-
-            modelBuilder.Entity<Aeros>()
-            .HasMany(x => x.input_point_specifications)
-            .WithOne(x => x.aero)
-            .HasForeignKey(x => x.aero_id)
-            .OnDelete(DeleteBehavior.Cascade);
-
-            modelBuilder.Entity<Aeros>()
-            .HasMany(x => x.output_point_specifications)
-            .WithOne(x => x.aero)
-            .HasForeignKey(x => x.aero_id)
-            .OnDelete(DeleteBehavior.Cascade);
-
-            modelBuilder.Entity<Aeros>()
-            .HasMany(x => x.control_point_configurations)
-            .WithOne(x => x.aero)
-            .HasForeignKey(x => x.aero_id)
-            .OnDelete(DeleteBehavior.Cascade);
+         
 
 
             modelBuilder.Entity<ScpDeviceSpecification>()
