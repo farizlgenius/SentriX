@@ -32,10 +32,10 @@ public class UserController(IUser user) : ControllerBase
             return Ok(res);
       }
 
-      [HttpDelete("{id}")]
-      public async Task<IActionResult> DeleteUserAsync(int id)
+      [HttpDelete("{guid}")]
+      public async Task<IActionResult> DeleteUserAsync(Guid guid)
       {
-            var res = await user.DeleteUserAsync(id);
+            var res = await user.DeleteUserAsync(guid);
             return Ok(res);
       }
 
@@ -59,7 +59,7 @@ public class UserController(IUser user) : ControllerBase
       [HttpGet("/api/company/option/{location}")]
       public async Task<IActionResult> GetCompanyOptionByLocationAsync(int location)
       {
-            var res = await user.GetCompanyOptionByLocationAsync(location);
+            var res = await user.GetCompanyOptionByLocationIdAsync(location);
             return Ok(res);
       }
 
@@ -91,10 +91,10 @@ public class UserController(IUser user) : ControllerBase
             return Ok(res);
       }
 
-      [HttpDelete("/api/company/{id}")]
-      public async Task<IActionResult> DeleteCompanyAsync(int id)
+      [HttpDelete("/api/company/{guid}")]
+      public async Task<IActionResult> DeleteCompanyAsync(Guid guid)
       {
-            var res = await user.DeleteCompanyAsync(id);
+            var res = await user.DeleteCompanyAsync(guid);
             return Ok(res);
       }
 
@@ -107,24 +107,24 @@ public class UserController(IUser user) : ControllerBase
             return Ok(res);
       }
 
-      [HttpGet("/api/department/pagination/{companyId}")]
-      public async Task<IActionResult> GetDepartmentByCompanyAsync(int companyId,[FromQuery] PaginationParams param)
+      [HttpGet("/api/department/pagination/{guid}")]
+      public async Task<IActionResult> GetDepartmentByCompanyGuidAsync(Guid guid,[FromQuery] PaginationParams param)
       {
-            var res = await user.GetDepartmentByCompanyAsync(param,companyId);
+            var res = await user.GetDepartmentPaginationByCompanyGuidAsync(param,guid);
             return Ok(res);            
       }
 
-      [HttpGet("/api/department/company/{companyId}")]
-      public async Task<IActionResult> GetDepartmentByCompanyAsync(int companyId)
+      [HttpGet("/api/department/company/{guid}")]
+      public async Task<IActionResult> GetDepartmentByCompanyAsync(Guid guid)
       {
-            var res = await user.GetDepartmentByCompanyAsync(companyId);
+            var res = await user.GetDepartmentByCompanyGuidAsync(guid);
             return Ok(res);
       }
 
-      [HttpGet("/api/department/option/company/{companyId}")]
-      public async Task<IActionResult> GetDepartmentOptionByCompanyAsync(int companyId)
+      [HttpGet("/api/department/option/company/{guid}")]
+      public async Task<IActionResult> GetDepartmentOptionByCompanyAsync(Guid guid)
       {
-            var res = await user.GetDepartmentOptionByCompanyAsync(companyId);
+            var res = await user.GetDepartmentOptionByCompanyGuidAsync(guid);
             return Ok(res);
       }
 
@@ -142,10 +142,10 @@ public class UserController(IUser user) : ControllerBase
             return Ok(res);
       }
 
-      [HttpDelete("/api/department/{id}")]
-      public async Task<IActionResult> DeleteDepartmentAsync(int id)
+      [HttpDelete("/api/department/{guid}")]
+      public async Task<IActionResult> DeleteDepartmentAsync(Guid guid)
       {
-            var res = await user.DeleteDepartmentAsync(id);
+            var res = await user.DeleteDepartmentAsync(guid);
             return Ok(res);
       }
 
@@ -157,10 +157,10 @@ public class UserController(IUser user) : ControllerBase
             return Ok(res);
       }
 
-      [HttpGet("/api/position/pagination/{departmentId}")]
-      public async Task<IActionResult> GetPositionByDepartmentAsync(int departmentId,[FromQuery] PaginationParams param)
+      [HttpGet("/api/position/pagination/{guid}")]
+      public async Task<IActionResult> GetPositionByDepartmentAsync(Guid guid,[FromQuery] PaginationParams param)
       {
-            var res = await user.GetPositionByDepartmentAsync(param,departmentId);
+            var res = await user.GetPositionPaginationByDepartmentGuidAsync(param,guid);
             return Ok(res);
       }
 
@@ -178,17 +178,17 @@ public class UserController(IUser user) : ControllerBase
             return Ok(res);
       }
 
-      [HttpDelete("/api/position/{id}")]
-      public async Task<IActionResult> DeletePositionAsync(int id)
+      [HttpDelete("/api/position/{guid}")]
+      public async Task<IActionResult> DeletePositionAsync(Guid guid)
       {
-            var res = await user.DeletePositionAsync(id);
+            var res = await user.DeletePositionAsync(guid);
             return Ok(res);
       }
 
-      [HttpGet("/api/position/option/department/{deprtmentId}")]
-      public async Task<IActionResult> GetPositionOptionByDepartmentAsync(int deprtmentId)
+      [HttpGet("/api/position/option/department/{guid}")]
+      public async Task<IActionResult> GetPositionOptionByDepartmentAsync(Guid guid)
       {
-            var res = await user.GetPositionOptionByDepartmentAsync(deprtmentId);
+            var res = await user.GetPositionOptionByDepartmentGuidAsync(guid);
             return Ok(res);
       }
 

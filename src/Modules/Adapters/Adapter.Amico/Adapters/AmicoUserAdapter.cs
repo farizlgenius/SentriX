@@ -10,12 +10,26 @@ public sealed class AmicoUserAdapter(
       IMessageBus bus
       ) : IAmicoUserAdapter
 {
-      public Task CreateUserAsync(string Mac, short ScpId, int Flags, int CardNumber, short IssueCode, string Pin, List<short> Groups, short ApbLoc, short UseCount, int ActiveDate, int DeactiveDate, int VacDate, short VacDays, int TmpDate, short TmpDays)
+      public Task AddUserAsync(
+             string Mac,
+          short DeviceComponentId,
+          string Identification,
+          string Name,
+          int Active,
+          int Expire,
+          int Card,          
+          string License,
+          string Pin,
+          string QrCode,
+          string FaceFile,
+          List<short> Groups
+      )
       {
             throw new NotImplementedException();
       }
 
-      public Task DeleteUserAsync(string Mac, short ScpId, int CardNumber)
+
+      public Task DeleteUserAsync(string Mac, short ScpId, int CardNumber, string LicenseNumber, string Pin, string QrCode, string ImageName)
       {
             throw new NotImplementedException();
       }

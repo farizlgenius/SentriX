@@ -7,55 +7,24 @@ namespace Adapter.Aero.Adapters;
 
 public sealed class AeroUserAdapter(IUserCommand user, IMessageBus bus) : IAeroUserAdapter
 {
-      public async Task CreateUserAsync(
-            string Mac, 
-            short ScpId, 
-            int Flags, 
-            int CardNumber, 
-            short IssueCode, 
-            string Pin,
-            List<short> Groups,
-            short ApbLoc,
-            short UseCount,
-            int ActiveDate,
-            int DeactiveDate,
-            int VacDate,
-            short VacDays,
-            int TmpDate,
-            short TmpDays
-            )
+      public async Task AddUserAsync(string Mac, short DeviceComponentId, string Identification, string Name, int Active, int Expire, int Card, string License, string Pin, string QrCode, string FaceFile, List<short> Groups)
       {
-
-
             var res = user.AccessDatabaseCardRecords(
                   Mac,
-                  ScpId,
-                  Flags,
-                  CardNumber,
-                  IssueCode,
+                  DeviceComponentId,
+                  Card,
                   Pin,
                   Groups,
-                  ApbLoc,
-                  UseCount,
-                  ActiveDate,
-                  DeactiveDate,
-                  VacDate,
-                  VacDays,
-                  TmpDate,
-                  TmpDays
+                  Active,
+                  Expire
                   );
 
             await bus.SendAsync(new AddCommandEvent(res));
       }
 
-      public async Task DeleteUserAsync(
-            string Mac, 
-            short ScpId,
-            int CardNumber
-            )
+
+      public async Task DeleteUserAsync(string Mac, short ScpId, int CardNumber, string LicenseNumber, string Pin, string QrCode, string ImageName)
       {
-
-
             var res = user.CardDelete(
                   Mac,
                   ScpId,
@@ -64,6 +33,4 @@ public sealed class AeroUserAdapter(IUserCommand user, IMessageBus bus) : IAeroU
 
             await bus.SendAsync(new AddCommandEvent(res));
       }
-
-
 }

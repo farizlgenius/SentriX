@@ -105,4 +105,16 @@ public static partial class ValidationHelper
         throw new ArgumentException($"'{value}' is invalid.", dateTime.ToString());
   }
 
+  public static void ValidateActiveTime(DateTime active,DateTime expire)
+  {
+      if(active > expire)
+        throw new ArgumentException($"Active time must be lower than expire time.");
+
+      if(active == expire)
+        throw new ArgumentException($"Active time must be lower than expire time.");
+
+  }
+
+
+
 }

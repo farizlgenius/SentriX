@@ -3,7 +3,7 @@ using SharedKernel.Domain;
 
 namespace User.Infrastructure.Persistences.Entities;
 
-public sealed class Company : BaseEntity
+public sealed class Company : BaseDbEntity
 {
       public string name { get; set; } = string.Empty;
       public string description { get; set; } = string.Empty;
@@ -14,7 +14,7 @@ public sealed class Company : BaseEntity
       public Company() { }
 
 
-      public Company(Domain.Entities.Company company) : base(0, company.LocationId, company.IsActive,false)
+      public Company(Domain.Entities.Company company) : base(company.Guid,0, company.LocationId, company.IsActive,false)
       {
             this.name = company.Name;
             this.address = company.Address;

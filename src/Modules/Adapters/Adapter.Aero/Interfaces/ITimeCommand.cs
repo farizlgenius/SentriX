@@ -19,9 +19,6 @@ public interface ITimeCommand
             string Mac,
             short ScpId,
             short TzNumber,
-            short Mode,
-            string Active,
-            string Deactive,
             List<IntervalObject> Intervals
       );
 }

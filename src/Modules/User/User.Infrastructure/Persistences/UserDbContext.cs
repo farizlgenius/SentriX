@@ -13,11 +13,14 @@ public sealed class UserDbContext(DbContextOptions<UserDbContext> options) : DbC
       public DbSet<Company> Companies {get; set;}
       public DbSet<Department> Departments {get; set;}
       public DbSet<Position> Positions {get; set;}
-      public DbSet<Credential> Credentials {get; set;}
       public DbSet<UserAdditional> UserAdditionals {get; set;}
       public DbSet<UserGroup> UserGroups {get; set;}
       public DbSet<UserFlag> UserFlags {get; set;}
-      public DbSet<Vacation> Vacations {get; set;}
+      public DbSet<Card> Cards { get; set; }
+      public DbSet<LicensePlate> LicensePlates { get; set; }
+      public DbSet<Pin> Pins { get; set; }
+      public DbSet<QrCode> QrCodes { get; set; }
+      public DbSet<Face> Faces { get; set; }
 
       protected override void OnModelCreating(ModelBuilder modelBuilder)
       {
@@ -56,55 +59,91 @@ public sealed class UserDbContext(DbContextOptions<UserDbContext> options) : DbC
                   }
             }
 
+
             modelBuilder.Entity<Users>()
-            .HasMany(x => x.credentials)
+            .HasMany(x => x.additionals)
             .WithOne(x => x.user)
-            .HasForeignKey(x => x.user_id)
+            .HasForeignKey(x => x.user_guid)
+            .HasPrincipalKey(x => x.guid)
             .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Users>()
             .HasMany(x => x.user_groups)
             .WithOne(x => x.user)
-            .HasForeignKey(x => x.user_id)
+            .HasForeignKey(x => x.user_guid)
+            .HasPrincipalKey(x => x.guid)
             .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Users>()
             .HasOne(x => x.company)
             .WithMany(x => x.users)
-            .HasForeignKey(x => x.company_id)
+            .HasForeignKey(x => x.company_guid)
+            .HasPrincipalKey(x => x.guid)
             .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Users>()
             .HasOne(x => x.department)
             .WithMany(x => x.users)
-            .HasForeignKey(x => x.department_id)
+            .HasForeignKey(x => x.department_guid)
+            .HasPrincipalKey(x => x.guid)
             .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Users>()
             .HasOne(x => x.position)
             .WithMany(x => x.users)
-            .HasForeignKey(x => x.position_id)
-            .OnDelete(DeleteBehavior.Cascade);
-
-            modelBuilder.Entity<Users>()
-            .HasOne(x => x.vacation)
-            .WithOne(x => x.users)
-            .HasForeignKey<Users>(x => x.vacation_id)
+            .HasForeignKey(x => x.position_guid)
+            .HasPrincipalKey(x => x.guid)
             .OnDelete(DeleteBehavior.Cascade);
 
 
             modelBuilder.Entity<Company>()
             .HasMany(x => x.departments)
             .WithOne(x => x.company)
-            .HasForeignKey(x => x.company_id)
+            .HasForeignKey(x => x.company_guid)
+            .HasPrincipalKey(x => x.guid)
             .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Department>()
             .HasMany(x => x.positions)
             .WithOne(x => x.department)
-            .HasForeignKey(x => x.department_id)
+            .HasForeignKey(x => x.department_guid)
+            .HasPrincipalKey(x => x.guid)
             .OnDelete(DeleteBehavior.Cascade);
 
+            modelBuilder.Entity<Users>()
+            .HasOne(x => x.card)
+            .WithOne(x => x.user)
+            .HasForeignKey<Card>(x => x.user_guid)
+            .HasPrincipalKey<Users>(x => x.guid)
+            .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Users>()
+            .HasOne(x => x.license_plate)
+            .WithOne(x => x.user)
+            .HasForeignKey<Card>(x => x.user_guid)
+            .HasPrincipalKey<Users>(x => x.guid)
+            .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Users>()
+            .HasOne(x => x.qr_code)
+            .WithOne(x => x.user)
+            .HasForeignKey<Card>(x => x.user_guid)
+            .HasPrincipalKey<Users>(x => x.guid)
+            .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Users>()
+            .HasOne(x => x.face)
+            .WithOne(x => x.user)
+            .HasForeignKey<Card>(x => x.user_guid)
+            .HasPrincipalKey<Users>(x => x.guid)
+            .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Users>()
+            .HasOne(x => x.pin)
+            .WithOne(x => x.user)
+            .HasForeignKey<Card>(x => x.user_guid)
+            .HasPrincipalKey<Users>(x => x.guid)
+            .OnDelete(DeleteBehavior.Cascade);
 
             
 

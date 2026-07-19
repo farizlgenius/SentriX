@@ -68,21 +68,14 @@ public class TimeController(ITime time) : ControllerBase
             return Ok(res);
       }
 
-      [HttpDelete("{guid}")]
+      [HttpDelete("timezone/{guid}")]
       public async Task<IActionResult> DeleteTimezoneAsync(Guid guid)
       {
             var res = await time.DeleteTimeZoneByGuidAsync(guid);
             return Ok(res);
       }
 
-      [HttpGet("timezone/mode")]
-      public async Task<IActionResult> GetTimezoneModeAsync([FromQuery]string Type)
-      {
-            var res = await time.GetTimezoneModeAsync(Type);
-            return Ok(res);
-      }
-
-
+   
 
 
 }

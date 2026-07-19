@@ -1,16 +1,26 @@
+using System.ComponentModel.DataAnnotations;
 using SharedKernel.Domain;
 
 namespace User.Infrastructure.Persistences.Entities;
 
-public sealed class UserGroup : BaseEntity
+public sealed class UserGroup 
 {
-      public int user_id { get; set; }
+      [Key]
+      public int id {get; set;}
+      public Guid guid {get; set;}
+      public Guid user_guid { get; set; }
       public Users user { get; set; } = default!;
-      public int group_id { get; set; }
+      public Guid group_guid { get; set; }
+      public DateTime created_at { get; set; }
+      public DateTime updated_at { get; set; }
       public UserGroup(){}
-      public UserGroup(int groupid,int locationid,bool isactive) : base(0,locationid,isactive,false)
+      public UserGroup(Guid guid,Guid group_guid,Guid user_guid)
       {
-            this.group_id = groupid;
+            this.guid = guid;
+            this.group_guid = group_guid;
+            this.user_guid = user_guid;
+            this.created_at = DateTime.UtcNow;
+            this.updated_at = DateTime.UtcNow;
       }
 
 }

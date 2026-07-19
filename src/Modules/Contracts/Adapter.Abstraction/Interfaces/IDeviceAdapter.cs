@@ -14,7 +14,7 @@ public interface IDeviceAdapter
             short ComponentId,
             int LocationId
             );
-      Task<bool> GetDeviceStatusAsync(string Mac,short ComponentId);
+      Task<bool> GetDeviceStatusAsync(string Ip,string Mac,short ComponentId);
       Task<bool> ResetDeviceAsync(string Mac,short ComponentId);
       Task CreateModuleAsync(
             string Mac,

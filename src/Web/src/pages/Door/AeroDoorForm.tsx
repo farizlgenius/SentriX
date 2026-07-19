@@ -15,7 +15,7 @@ import { DeviceEndpoint } from '../../endpoint/DeviceEndpoint';
 import { DoorEndpoint } from '../../endpoint/DoorEndpoint';
 import { MonitorPointEndpoint as InputEndpoint } from '../../endpoint/MonitorPointEndpoint';
 import { OutputEndpoint } from '../../endpoint/ControlPointEndpoint';
-import { TimeZoneEndPoint } from '../../endpoint/TimezoneEndpoint';
+import { TimeZoneEndPoint } from '../../endpoint/TimeZoneEndpoint';
 import { useLocation } from '../../context/LocationContext';
 import { send } from '../../api/api';
 import { FormProp, FormType } from '../../model/Form/FormProp';

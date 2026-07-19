@@ -9,5 +9,6 @@ public interface IGroup
       Task<IEnumerable<GroupDto>> GetByLocationIdAsync(int location);
       Task<GroupDto> CreateAsync(CreateGroupDto dto);
       Task<GroupDto> DeleteAsync(int id);
+      Task<GroupDto> DeleteByGuidAsync(Guid guid);
       Task<GroupDto> UpdateAsync(GroupDto dto);
 }

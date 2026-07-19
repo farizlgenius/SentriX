@@ -70,12 +70,6 @@ C:\Users\Farizl\Desktop\Work\SentriX\src\Modules\Adapters\Adapter.Amico\obj\Debu
 C:\Users\Farizl\Desktop\Work\SentriX\src\Modules\Adapters\Adapter.Amico\obj\Debug\net10.0\refint\Adapter.Amico.dll
 C:\Users\Farizl\Desktop\Work\SentriX\src\Modules\Adapters\Adapter.Amico\obj\Debug\net10.0\Adapter.Amico.pdb
 C:\Users\Farizl\Desktop\Work\SentriX\src\Modules\Adapters\Adapter.Amico\obj\Debug\net10.0\ref\Adapter.Amico.dll
-D:\aero\SentriX\src\Modules\Adapters\Adapter.Amico\obj\Debug\net10.0\Adapter.Amico.csproj.AssemblyReference.cache
-D:\aero\SentriX\src\Modules\Adapters\Adapter.Amico\obj\Debug\net10.0\Adapter.Amico.GeneratedMSBuildEditorConfig.editorconfig
-D:\aero\SentriX\src\Modules\Adapters\Adapter.Amico\obj\Debug\net10.0\Adapter.Amico.AssemblyInfoInputs.cache
-D:\aero\SentriX\src\Modules\Adapters\Adapter.Amico\obj\Debug\net10.0\Adapter.Amico.AssemblyInfo.cs
-D:\aero\SentriX\src\Modules\Adapters\Adapter.Amico\obj\Debug\net10.0\Adapter.Amico.csproj.CoreCompileInputs.cache
-D:\aero\SentriX\src\Modules\Adapters\Adapter.Amico\obj\Debug\net10.0\Adapter.Amico.sourcelink.json
 D:\aero\SentriX\src\Modules\Adapters\Adapter.Amico\bin\Debug\net10.0\Adapter.Amico.deps.json
 D:\aero\SentriX\src\Modules\Adapters\Adapter.Amico\bin\Debug\net10.0\Adapter.Amico.dll
 D:\aero\SentriX\src\Modules\Adapters\Adapter.Amico\bin\Debug\net10.0\Adapter.Amico.pdb
@@ -97,6 +91,12 @@ D:\aero\SentriX\src\Modules\Adapters\Adapter.Amico\bin\Debug\net10.0\Device.Cont
 D:\aero\SentriX\src\Modules\Adapters\Adapter.Amico\bin\Debug\net10.0\Door.Contract.pdb
 D:\aero\SentriX\src\Modules\Adapters\Adapter.Amico\bin\Debug\net10.0\Output.Contract.pdb
 D:\aero\SentriX\src\Modules\Adapters\Adapter.Amico\bin\Debug\net10.0\Time.Contract.pdb
+D:\aero\SentriX\src\Modules\Adapters\Adapter.Amico\obj\Debug\net10.0\Adapter.Amico.csproj.AssemblyReference.cache
+D:\aero\SentriX\src\Modules\Adapters\Adapter.Amico\obj\Debug\net10.0\Adapter.Amico.GeneratedMSBuildEditorConfig.editorconfig
+D:\aero\SentriX\src\Modules\Adapters\Adapter.Amico\obj\Debug\net10.0\Adapter.Amico.AssemblyInfoInputs.cache
+D:\aero\SentriX\src\Modules\Adapters\Adapter.Amico\obj\Debug\net10.0\Adapter.Amico.AssemblyInfo.cs
+D:\aero\SentriX\src\Modules\Adapters\Adapter.Amico\obj\Debug\net10.0\Adapter.Amico.csproj.CoreCompileInputs.cache
+D:\aero\SentriX\src\Modules\Adapters\Adapter.Amico\obj\Debug\net10.0\Adapter.Amico.sourcelink.json
 D:\aero\SentriX\src\Modules\Adapters\Adapter.Amico\obj\Debug\net10.0\Adapter..DF32D176.Up2Date
 D:\aero\SentriX\src\Modules\Adapters\Adapter.Amico\obj\Debug\net10.0\Adapter.Amico.dll
 D:\aero\SentriX\src\Modules\Adapters\Adapter.Amico\obj\Debug\net10.0\refint\Adapter.Amico.dll

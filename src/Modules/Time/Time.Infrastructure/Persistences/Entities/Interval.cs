@@ -9,7 +9,6 @@ public sealed class Interval
       public int id { get; set; }
       public Guid guid { get; set; }
       public short component_id { get; set; }
-      public string days_detail { get; set; } = string.Empty;
       public string start { get; set; } = string.Empty;
       public string end { get; set; } = string.Empty;
       public Guid timezone_guid {get; set;}
@@ -25,7 +24,6 @@ public sealed class Interval
             this.component_id = component_id;
             this.guid = guid;
             this.days = days;
-            this.days_detail ="";
             this.start = start;
             this.end = end;
       }

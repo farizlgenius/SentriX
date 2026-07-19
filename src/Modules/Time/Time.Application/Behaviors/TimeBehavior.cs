@@ -93,7 +93,6 @@ public sealed class TimeBehavior(
                               x.Days.Friday,
                               x.Days.Saturday
                         ),
-                        x.DaysDetail,
                         x.Start,
                         x.End
                   ));
@@ -102,10 +101,6 @@ public sealed class TimeBehavior(
                   tzGuid,
                   componentId,
                   dto.Name,
-                  dto.Mode,
-                  dto.Type,
-                  dto.Active,
-                  dto.Deactive,
                   intervals.ToList(),
                   dto.LocationId,
                   dto.IsActive,
@@ -125,9 +120,6 @@ public sealed class TimeBehavior(
                               d.ComponentId,
                               d.Name,
                               data.Mac,
-                              d.Mode,
-                              d.Active,
-                              d.Deactive,
                               d.Intervals.Select(x => new IntervalObject(
                                     x.ComponentId,
                                     DateTimeHelper.ConvertTimeToEndMinute(x.Start),
@@ -150,9 +142,6 @@ public sealed class TimeBehavior(
                   d.Guid,
                   d.ComponentId,
                   d.Name,
-                  d.Mode,
-                  d.Active,
-                  d.Deactive,
                   d.Intervals.Select(
                         i => new IntervalDto(
                               i.Guid,
@@ -167,7 +156,6 @@ public sealed class TimeBehavior(
                                     i.Days.Friday,
                                     i.Days.Saturday
                               ),
-                              i.DaysDetail,
                               i.Start,
                               i.End
                         )
@@ -226,7 +214,8 @@ public sealed class TimeBehavior(
                    await factory.GetAdapter(data.Type).Time.DeleteTimeZoneAsync(
                         data.Mac,
                         data.ComponentId,
-                        d.ComponentId
+                        d.ComponentId,
+                        d.Intervals.Select(x => (short)x.ComponentId).ToList()
                         );
             }
 
@@ -236,9 +225,6 @@ public sealed class TimeBehavior(
                   d.Guid,
                   d.ComponentId,
                   d.Name,
-                  d.Mode,
-                  d.Active,
-                  d.Deactive,
                   d.Intervals.Select(
                         i => new IntervalDto(
                               i.Guid,
@@ -253,7 +239,6 @@ public sealed class TimeBehavior(
                                     i.Days.Friday,
                                     i.Days.Saturday
                               ),
-                              i.DaysDetail,
                               i.Start,
                               i.End
                         )
@@ -266,10 +251,6 @@ public sealed class TimeBehavior(
             
       }
 
-      public async Task<IEnumerable<OptionDto>> GetTimezoneModeAsync(string Type)
-      {
-            return await factory.GetAdapter(Type).Time.GetTimezoneMode();
-      }
 
       public async Task<IEnumerable<OptionDto>> GetTimezoneOptionByLocationIdAsync(int locationId)
       {
@@ -373,10 +354,6 @@ public sealed class TimeBehavior(
                   Guid.NewGuid(),
                   dto.ComponentId,
                   dto.Name,
-                  dto.Mode,
-                  dto.Type,
-                  dto.Active,
-                  dto.Deactive,
                   dto.Intervals.Select(x => new Interval(
                         Guid.NewGuid(),
                         (short)x.ComponentId,
@@ -390,7 +367,6 @@ public sealed class TimeBehavior(
                               x.Days.Friday,
                               x.Days.Saturday
                         ),
-                        x.DaysDetail,
                         x.Start,
                         x.End
                   )).ToList(),
@@ -410,9 +386,6 @@ public sealed class TimeBehavior(
                               d.ComponentId,
                               d.Name,
                               data.Mac,
-                              d.Mode,
-                              d.Active,
-                              d.Deactive,
                               d.Intervals.Select(x => new IntervalObject(
                                     x.ComponentId,
                                     DateTimeHelper.ConvertTimeToEndMinute(x.Start),
@@ -437,9 +410,6 @@ public sealed class TimeBehavior(
                   d.Guid,
                   d.ComponentId,
                   d.Name,
-                  d.Mode,
-                  d.Active,
-                  d.Deactive,
                   d.Intervals.Select(
                         i => new IntervalDto(
                               i.Guid,
@@ -454,7 +424,6 @@ public sealed class TimeBehavior(
                                     i.Days.Friday,
                                     i.Days.Saturday
                               ),
-                              i.DaysDetail,
                               i.Start,
                               i.End
                         )

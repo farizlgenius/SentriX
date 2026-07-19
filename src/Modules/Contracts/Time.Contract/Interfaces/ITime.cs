@@ -16,5 +16,4 @@ public interface ITime
       Task<TimeZoneDto> CreateTimezoneAsync(CreateTimezoneDto dto);
       Task<TimeZoneDto> UpdateTimezoneAsync(TimeZoneDto dto);
       Task<TimeZoneDto> DeleteTimeZoneByGuidAsync(Guid guid);
-      Task<IEnumerable<OptionDto>> GetTimezoneModeAsync(string Type);
 }

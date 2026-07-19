@@ -11,7 +11,7 @@ public sealed class IsAnyUserNotSyncQueryHandler(IUserRepository repo,IMessageBu
 
       public async Task<bool> HandleAsync(IsAnyUserNotSyncQuery query, CancellationToken ct)
       {
-            var res = await bus.QueryAsync(new GroupIdListByMacQuery(query.Mac));
-            return await repo.IsAnyUserNotSyncAsync(res.Select(x => x.id).ToArray(),query.LocationId,query.SyncAt);
+            var res = await bus.QueryAsync(new GroupGuidsByMacQuery(query.Mac));
+            return await repo.IsAnyUserNotSyncAsync(res.Select(x => x.guid).ToArray(),query.LocationId,query.SyncAt);
       }
 }

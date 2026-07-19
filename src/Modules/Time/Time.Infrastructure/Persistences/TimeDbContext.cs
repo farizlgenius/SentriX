@@ -81,36 +81,50 @@ public sealed class TimeDbContext(DbContextOptions<TimeDbContext> options) : DbC
                   new Persistences.Entities.TimeZone
                   {
                         id=1,
-                        name="Always",
-                        guid=new Guid("9b6e1f89-6f6e-4c5d-a0a5-c9d6f5d18e7b"),
+                        name="Default",
+                        guid=new Guid("65dd168c-e53f-4f42-a8c0-d83487bfb321"),
                         component_id=1,
-                        mode=1,
-                        active=string.Empty,
-                        deactive=string.Empty,
+                        location_id=-1,
                         is_default = true
                   },
                   new Persistences.Entities.TimeZone
                   {
                         id=2,
-                        name="Never",
+                        name="Always",
+                        guid=new Guid("9b6e1f89-6f6e-4c5d-a0a5-c9d6f5d18e7b"),
                         component_id=2,
-                        mode=0,
-                        active=string.Empty,
-                        deactive = string.Empty,
+                        is_default = true
+                  },
+                  new Persistences.Entities.TimeZone
+                  {
+                        id=3,
+                        name="Never",
+                        guid=new Guid("6ce6a36f-a898-4f14-a198-1b85aa43834e"),
+                        component_id=3,
                         is_default = true
                   }
             );
 
             modelBuilder.Entity<Persistences.Entities.Interval>()
             .HasData(
-                  new Persistences.Entities.Interval
+                   new Persistences.Entities.Interval
                   {
                         id=1,
-                        guid=new Guid("f2d4c8b3-91aa-4b4c-8e1d-73c1f9b2a6d4"),
+                        guid=new Guid("65364114-fd3b-43f4-8710-ce62655fb44d"),
                         component_id=1,
                         start="00:00",
                         end="23:00",
-                        timezone_guid=new Guid("9b6e1f89-6f6e-4c5d-a0a5-c9d6f5d18e7b")
+                        timezone_guid=new Guid("65dd168c-e53f-4f42-a8c0-d83487bfb321")
+                  },
+                  new Persistences.Entities.Interval
+                  {
+                        id=2,
+                        guid=new Guid("f2d4c8b3-91aa-4b4c-8e1d-73c1f9b2a6d4"),
+                        component_id=2,
+                        start="00:00",
+                        end="23:00",
+                        timezone_guid=new Guid("9b6e1f89-6f6e-4c5d-a0a5-c9d6f5d18e7b"),
+                        day_in_week_guid=new Guid("4e7a2d90-3b8f-4fd8-9c57-2a1e6b9d8f43")
                   }
             );
 

@@ -44,9 +44,6 @@ public sealed class TimezoneRepository(TimeDbContext context) : ITimeZoneReposit
                   x.guid,
                   x.component_id,
                   x.name,
-                  x.mode,
-                  x.active,
-                  x.deactive,
                   x.intervals.Select(x => new IntervalDto(
                         x.guid,
                          x.component_id,
@@ -60,7 +57,6 @@ public sealed class TimezoneRepository(TimeDbContext context) : ITimeZoneReposit
                               x.days.friday,
                               x.days.saturday
                               ),
-                        x.days_detail,
                         x.start,
                         x.end
                   )).ToList(),
@@ -74,7 +70,7 @@ public sealed class TimezoneRepository(TimeDbContext context) : ITimeZoneReposit
       {
             return (short)await ComponentHelper.LowestUnassignedNumberStartOneWithFileterAsync<Persistences.Entities.TimeZone>(
                   context,
-                  x => x.location_id == location_id || x.location_id == 0,
+                  x => x.location_id == location_id || x.location_id == 0 || x.location_id == -1,
                   x => x.component_id,
                   255,
                   ct
@@ -97,12 +93,10 @@ public sealed class TimezoneRepository(TimeDbContext context) : ITimeZoneReposit
             CancellationToken ct = default
             )
       {
-            return (short)await ComponentHelper.LowestUnassignedNumberExceptStartFromOneAsync<Persistences.Entities.Interval>(
+            return await ComponentHelper.LowestUnassignedNumberExceptStartFromOneAsync<Persistences.Entities.Interval>(
                   context,
                   Excepts,
-                  x => x.timezone_guid == TzGuid,
                   x => x.component_id,
-                  255,
                   ct
             );
       }
@@ -111,7 +105,11 @@ public sealed class TimezoneRepository(TimeDbContext context) : ITimeZoneReposit
 
       public async Task<Pagination<TimeZoneDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
       {
-            var query = context.Timezones.AsNoTracking().Where(x => x.location_id == param.locationId || x.location_id == 0).AsQueryable();
+            var query = context.Timezones.AsNoTracking()
+            .Include(x => x.intervals)
+            .ThenInclude(x => x.days)
+            .Where(x => x.location_id == param.locationId || param.locationId == 0)
+            .AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(param.search))
             {
@@ -124,17 +122,13 @@ public sealed class TimezoneRepository(TimeDbContext context) : ITimeZoneReposit
                               var pattern = $"%{search}%";
 
                               query = query.Where(x =>
-                                  EF.Functions.ILike(x.name, pattern) ||
-                                  EF.Functions.ILike(x.active.ToString(), pattern) ||
-                                  EF.Functions.ILike(x.deactive.ToString(), pattern)
+                                  EF.Functions.ILike(x.name, pattern) 
                               );
                         }
                         else // SQL Server
                         {
                               query = query.Where(x =>
-                                  x.name.Contains(search) ||
-                                  x.active.ToString().Contains(search) ||
-                                  x.deactive.ToString().Contains(search)
+                                  x.name.Contains(search) 
                               );
                         }
                   }
@@ -161,9 +155,6 @@ public sealed class TimezoneRepository(TimeDbContext context) : ITimeZoneReposit
                   x.guid,
                   x.component_id,
                   x.name,
-                  x.mode,
-                  x.active,
-                  x.deactive,
                   x.intervals.Select(x => new IntervalDto(
                         x.guid,
                          x.component_id,
@@ -177,7 +168,6 @@ public sealed class TimezoneRepository(TimeDbContext context) : ITimeZoneReposit
                               x.days.friday,
                               x.days.saturday
                               ),
-                        x.days_detail,
                         x.start,
                         x.end
                   )).ToList(),
@@ -201,9 +191,6 @@ public sealed class TimezoneRepository(TimeDbContext context) : ITimeZoneReposit
                   x.guid,
                   x.component_id,
                   x.name,
-                  x.mode,
-                  x.active,
-                  x.deactive,
                   x.intervals.Select(x => new IntervalDto(
                         x.guid,
                         x.component_id,
@@ -217,7 +204,6 @@ public sealed class TimezoneRepository(TimeDbContext context) : ITimeZoneReposit
                               x.days.friday,
                               x.days.saturday
                               ),
-                        x.days_detail,
                         x.start,
                         x.end
                   )).ToList(),

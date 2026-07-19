@@ -20,6 +20,7 @@ public static class MessageHelper
             public static string Success = "Success.";
             public static string DeserializeFailed(string Method) => $"Deserialize {Method} unsuccessful";
             public static string FoundRelatedRecord(string Type) => $"Found related {Type} record.";
+            public static string FoundRelatedRecord() => $"Found related record.";
       }
 
       public static class Auth

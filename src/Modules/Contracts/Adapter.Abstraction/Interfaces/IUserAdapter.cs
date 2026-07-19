@@ -7,28 +7,31 @@ namespace Adapter.Abstraction.Interfaces;
 
 public interface IUserAdapter
 {
-     Task CreateUserAsync(
-             string Mac, 
-            short ScpId, 
-            int Flags, 
-            int CardNumber, 
-            short IssueCode, 
-            string Pin,
-            List<short> Groups,
-            short ApbLoc,
-            short UseCount,
-            int ActiveDate,
-            int DeactiveDate,
-            int VacDate,
-            short VacDays,
-            int TmpDate,
-            short TmpDays
-     );  
+
+
+     Task AddUserAsync(
+          string Mac,
+          short DeviceComponentId,
+          string Identification,
+          string Name,
+          int Active,
+          int Expire,
+          int Card,          
+          string License,
+          string Pin,
+          string QrCode,
+          string FaceFile,
+          List<short> Groups
+     );
 
      Task DeleteUserAsync(
           string Mac, 
             short ScpId,
-            int CardNumber
+            int CardNumber,
+            string LicenseNumber,
+            string Pin,
+            string QrCode,
+            string ImageName
      );
 
 

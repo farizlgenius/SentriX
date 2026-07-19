@@ -16,7 +16,7 @@ namespace Adapter.Aero.Adapters;
 
 public sealed class AeroTimeAdapter(ITimeCommand time,IMessageBus bus,IAeroRepository repo) : IAeroTimeAdapter
 {
-      public Task ClearTimeZoneAsync(Guid Guid, string Mac)
+      public Task ClearTimeAsync(Guid Guid, string Mac)
       {
             throw new NotImplementedException();
       }
@@ -60,9 +60,6 @@ public sealed class AeroTimeAdapter(ITimeCommand time,IMessageBus bus,IAeroRepos
           short TzComponentId,
            string Name,
            string Mac,
-            short Mode,
-            string Active,
-            string Deactive,
             List<IntervalObject> Intervals
       )
       {
@@ -72,9 +69,6 @@ public sealed class AeroTimeAdapter(ITimeCommand time,IMessageBus bus,IAeroRepos
                   Mac,
                   DeviceComponentId,
                   TzComponentId,
-                  Mode,
-                  Active,
-                  Deactive,
                   Intervals
            );
 
@@ -124,26 +118,20 @@ public sealed class AeroTimeAdapter(ITimeCommand time,IMessageBus bus,IAeroRepos
                   Mac,
                   DeviceComponentId,
                   ComponentId,
-                  0,
-                  string.Empty,
-                  string.Empty,
                   new List<IntervalObject>()
                   );
 
             await bus.SendAsync(new AddCommandEvent(res));
       }
 
-      public async Task DeleteTimeZoneAsync(string Mac, short DeviceComponentId, short ComponentId)
-      {
-            var ScpId = await bus.QueryAsync(new ComponentIdByMacQuery(Mac));
 
-           var res = time.ExtendedTimezoneActSpecification(
+
+      public async Task DeleteTimeZoneAsync(string Mac, short DeviceComponentId, short ComponentId, List<short> IntervalComponentId)
+      {
+            var res = time.ExtendedTimezoneActSpecification(
                   Mac,
                   DeviceComponentId,
                   ComponentId,
-                  0,
-                  string.Empty,
-                  string.Empty,
                   new List<IntervalObject>()
                   );
 
@@ -182,16 +170,13 @@ public sealed class AeroTimeAdapter(ITimeCommand time,IMessageBus bus,IAeroRepos
 
       }
 
-      public async Task UpdateTimeZoneAsync(Guid Guid,short DeviceComponentId, short TzComponentId, string Name, string Mac, short Mode, string Active, string Deactive, List<IntervalObject> Intervals)
+      public async Task UpdateTimeZoneAsync(Guid Guid,short DeviceComponentId, short TzComponentId, string Name, string Mac,List<IntervalObject> Intervals)
       {
     
             var res = time.ExtendedTimezoneActSpecification(
                   Mac,
                   DeviceComponentId,
                   TzComponentId,
-                  Mode,
-                  Active,
-                  Deactive,
                   Intervals
            );
 

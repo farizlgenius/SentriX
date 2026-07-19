@@ -16,9 +16,6 @@ public sealed class TimeCommand(ILogger<TimeCommand> logger) : BaseCommand,ITime
             string Mac,
             short ScpId,
             short TzNumber,
-            short Mode,
-            string Active,
-            string Deactive,
             List<IntervalObject> intervals
 
       )
@@ -27,9 +24,9 @@ public sealed class TimeCommand(ILogger<TimeCommand> logger) : BaseCommand,ITime
             c.lastModified = 0;
             c.nScpID = ScpId;
             c.number = TzNumber;
-            c.mode = Mode;
-            c.actTime = (int)UtilitiesHelper.DateTimeToElapeSecond(Active);
-            c.deactTime = (int)UtilitiesHelper.DateTimeToElapeSecond(Deactive);
+            c.mode = 2;
+            c.actTime = 0;
+            c.deactTime = 0;
             c.intervals = (short)intervals.Count;
             int i = 0;
             foreach(var interval in intervals)
@@ -98,7 +95,6 @@ public sealed class TimeCommand(ILogger<TimeCommand> logger) : BaseCommand,ITime
             c.day = Day;
             c.extend = Extend;
             c.type_mask = TypeMask;
-            var command = ObjectHelper.ToAsciiString(c);
             var result = Send((short)enCfgCmnd.enCcScpHoliday, c);
             if (result)
             {

@@ -16,5 +16,5 @@ public interface IGroupCommand : IBaseCommand
       Task<DeleteObjectResponse> DeleteGroupAccessRuleAsync(string ip,string session,int group_id,int access_rule_id);
       Task<CreateObjectResponse> CreateAccessRuleTimeZoneAsync(string ip,string session,int timezone_id,int access_rule_id);
       Task<UpdateObjectResponse> UpdateAccessRuleTimeZoneAsync(string ip,string session,int timezone_id,int access_rule_id);
-      Task<DeleteObjectResponse> DeleteAccessRuleTimeZoneAsync(string ip,string session,int timezone_id,int access_rule_id);
+      Task<DeleteObjectResponse> DeleteAccessRuleTimeZoneAsync(string ip,string session,int access_rule_id);
 }

@@ -4,11 +4,11 @@ using SharedKernel.Domain;
 
 namespace User.Infrastructure.Persistences.Entities;
 
-public sealed class UserAdditional : BaseEntity
+public sealed class UserAdditional : BaseDbEntity
 {
 
       public string additional { get; set; } = string.Empty;
-      public int user_id { get; set; }
+      public Guid user_guid { get; set; }
       public Users user { get; set; } = new Users();
 
       public UserAdditional() { }

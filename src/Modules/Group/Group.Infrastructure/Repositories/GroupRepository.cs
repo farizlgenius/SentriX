@@ -22,7 +22,7 @@ public sealed class GroupRepository(GroupDbContext context) : IGroupRepository
 
       public async Task DeleteAsync(int id, CancellationToken ct = default)
       {
-            var entity = await context.Groups.OrderByDescending(x => x.id == id)
+            var entity = await context.Groups.OrderByDescending(x => x.id)
             .Where(x => x.id == id)
             .FirstOrDefaultAsync();
 
@@ -35,24 +35,36 @@ public sealed class GroupRepository(GroupDbContext context) : IGroupRepository
 
       }
 
+      public async Task DeleteAsync(Guid guid, CancellationToken ct = default)
+      {
+            var entity = await context.Groups.OrderByDescending(x => x.id)
+            .Where(x => x.guid == guid)
+            .FirstOrDefaultAsync();
+
+            if(entity == null)
+                  throw new Exception(MessageHelper.DB.RecordNotFound);
+
+            context.Groups.Remove(entity);
+            await context.SaveChangesAsync(ct);
+      }
+
       public async Task<GroupDto> GetByGuidAsync(Guid guid, CancellationToken ct = default)
       {
             return await context.Groups.AsNoTracking()
+            .Include(x => x.group_doors)
             .Where(x => x.guid == guid)
             .OrderByDescending(x => x.id)
             .Select(x => new GroupDto(
                   x.guid,
                   x.component_id,
                   x.name,
-                  x.group_doors
-                  .SelectMany(x => 
-                        x.group_door_detail.Select(s => new GroupDoorDto(
-                              x.mac,
-                              s.door_component_id,
-                              s.timezone_component_id,
-                              x.type
-                              ))
-                  ).ToList(),
+                  x.group_doors.Select(g => new GroupDoorDto(
+                        g.mac,
+                        g.device_component_id,
+                        g.door_component_id,
+                        g.timezone_component_id,
+                        g.type
+                  )).ToList(),
                   x.location_id,
                   x.is_active,
                   x.is_default
@@ -63,21 +75,20 @@ public sealed class GroupRepository(GroupDbContext context) : IGroupRepository
       public async Task<GroupDto> GetByIdAsync(int id, CancellationToken ct = default)
       {
             return await context.Groups.AsNoTracking()
+            .Include(x => x.group_doors)
             .Where(x => x.id == id)
             .OrderByDescending(x => x.id)
             .Select(x => new GroupDto(
                   x.guid,
                   x.component_id,
                   x.name,
-                  x.group_doors
-                  .SelectMany(x => 
-                        x.group_door_detail.Select(s => new GroupDoorDto(
-                              x.mac,
-                              s.door_component_id,
-                              s.timezone_component_id,
-                              x.type
-                              ))
-                  ).ToList(),
+                  x.group_doors.Select(g => new GroupDoorDto(
+                        g.mac,
+                        g.device_component_id,
+                        g.door_component_id,
+                        g.timezone_component_id,
+                        g.type
+                  )).ToList(),
                   x.location_id,
                   x.is_active,
                   x.is_default
@@ -93,29 +104,28 @@ public sealed class GroupRepository(GroupDbContext context) : IGroupRepository
                   x.guid,
                   x.component_id,
                   x.name,
-                  x.group_doors
-                  .SelectMany(x => 
-                        x.group_door_detail.Select(s => new GroupDoorDto(
-                              x.mac,
-                              s.door_component_id,
-                              s.timezone_component_id,
-                              x.type
-                              ))
-                  ).ToList(),
+                  x.group_doors.Select(g => new GroupDoorDto(
+                        g.mac,
+                        g.device_component_id,
+                        g.door_component_id,
+                        g.timezone_component_id,
+                        g.type
+                  )).ToList(),
                   x.location_id,
                   x.is_active
             )).ToArrayAsync();
       }
 
-      public async Task<IEnumerable<GroupSplitByMacDto>> GetByRangeIdAsync(List<int> Ids, CancellationToken ct = default)
+      public async Task<IEnumerable<GroupSplitByMacDto>> GetByRangeGuidAsync(List<Guid> guids, CancellationToken ct = default)
       {
              return await context.GroupDoors
                   .AsNoTracking()
-                  .Where(x => Ids.Contains(x.group_id))
-                  .GroupBy(x => new { x.mac, x.type })
+                  .Where(x => guids.Contains(x.group_guid))
+                  .GroupBy(x => new { x.mac, x.type,x.device_component_id })
                   .Select(g => new GroupSplitByMacDto(
                         g.Key.mac,
                         g.Key.type,
+                        g.Key.device_component_id,
                         g.Select(x => x.groups.component_id)
                         .ToList()
                   ))
@@ -131,29 +141,27 @@ public sealed class GroupRepository(GroupDbContext context) : IGroupRepository
                   x.guid,
                   x.component_id,
                   x.name,
-                  x.group_doors
-                  .Where(a => a.type.Equals(Type))
-                  .SelectMany(x => 
-                        x.group_door_detail.Select(s => new GroupDoorDto(
-                              x.mac,
-                              s.door_component_id,
-                              s.timezone_component_id,
-                              x.type
-                              ))
-                  ).ToList(),
+                 x.group_doors.Select(g => new GroupDoorDto(
+                        g.mac,
+                        g.device_component_id,
+                        g.door_component_id,
+                        g.timezone_component_id,
+                        g.type
+                  )).ToList(),
                   x.location_id,
                   x.is_active
             )).ToArrayAsync(ct);
       }
 
-      public async Task<IEnumerable<(int id,short componentId)>> GetGroupIdAndComponentIdListByMacAsync(string Mac, CancellationToken ct = default)
+      public async Task<IEnumerable<(Guid guid,short componentId)>> GetGroupGuidAndComponentIdsByMacAsync(string Mac, CancellationToken ct = default)
       {
-            var res = await context.Groups.AsNoTracking()
+           var res = await context.Groups.AsNoTracking()
             .Where(x => x.group_doors.Any(s => s.mac.Equals(Mac)))
-            .Select(x => new {x.id,x.component_id})
-            .ToArrayAsync();
+            .Select(x =>new {x.guid,x.component_id})
+            .ToArrayAsync(ct);
 
-            return res.Select(x => (x.id,x.component_id)).ToArray();
+            return res.Select(x => (x.guid,x.component_id));
+
       }
 
       public async Task<short> GetLowestGroupComponentIdAsync(CancellationToken ct = default)
@@ -170,7 +178,6 @@ public sealed class GroupRepository(GroupDbContext context) : IGroupRepository
       {
             var query = context.Groups.AsNoTracking()
             .Include(x => x.group_doors)
-            .ThenInclude(s => s.group_door_detail)
             .Where(x => x.location_id == param.locationId || x.location_id == 0).AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(param.search))
@@ -220,20 +227,23 @@ public sealed class GroupRepository(GroupDbContext context) : IGroupRepository
                   x.guid,
                   x.component_id,
                   x.name,
-                  x.group_doors
-                  .SelectMany(x => 
-                        x.group_door_detail.Select(s => new GroupDoorDto(
-                              x.mac,
-                              s.door_component_id,
-                              s.timezone_component_id,
-                              x.type
-                              ))
-                  ).ToList(),
+                  x.group_doors.Select(g => new GroupDoorDto(
+                        g.mac,
+                        g.device_component_id,
+                        g.door_component_id,
+                        g.timezone_component_id,
+                        g.type
+                  )).ToList(),
                   x.location_id,
                   x.is_active
             )).ToListAsync(ct);
 
             return new Pagination<GroupDto>(param.pageNumber,param.pageSize,count,(int)Math.Ceiling(count / (double)param.pageSize),res);
+      }
+
+      public async Task<bool> IsAnyByGuidAsync(Guid guid, CancellationToken ct = default)
+      {
+            return await context.Groups.AsNoTracking().AnyAsync(x => x.guid == guid);
       }
 
       public async Task<bool> IsAnyByIdAsync(int id, CancellationToken ct = default)
@@ -256,7 +266,6 @@ public sealed class GroupRepository(GroupDbContext context) : IGroupRepository
       {
             var entity = await context.Groups
             .Include(x => x.group_doors)
-            .ThenInclude(x => x.group_door_detail)
             .OrderByDescending(x => x.id)
             .Where(x => x.guid == dto.Guid)
             .FirstOrDefaultAsync();

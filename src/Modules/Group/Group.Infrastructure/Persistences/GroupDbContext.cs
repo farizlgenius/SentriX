@@ -10,7 +10,6 @@ public sealed class GroupDbContext(DbContextOptions<GroupDbContext> options) : D
       public const string Schema = "group";
       public DbSet<Persistences.Entities.Groups> Groups { get; set; }
       public DbSet<Persistences.Entities.GroupDoor> GroupDoors { get; set; }
-      public DbSet<Persistences.Entities.GroupDoorDetail> GroupDoorDetails { get; set; }
 
       protected override void OnModelCreating(ModelBuilder modelBuilder)
       {
@@ -52,33 +51,34 @@ public sealed class GroupDbContext(DbContextOptions<GroupDbContext> options) : D
             modelBuilder.Entity<Persistences.Entities.Groups>()
             .HasMany(x => x.group_doors)
             .WithOne(x => x.groups)
-            .HasForeignKey(x => x.group_id)
+            .HasForeignKey(x => x.group_guid)
+            .HasPrincipalKey(x => x.guid)
             .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<Persistences.Entities.GroupDoor>()
-            .HasMany(x => x.group_door_detail)
-            .WithOne(x => x.group_door)
-            .HasForeignKey(x => x.group_door_id)
-            .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Persistences.Entities.Groups>()
             .HasData(
                   new Persistences.Entities.Groups
                   {
                         id=1,
-                        name="Allow",
+                        name="Default",
+                        component_id=1,
+                        location_id=-1,
+                        is_default=true,
+                        is_active=true
+                  },
+                  new Persistences.Entities.Groups
+                  {
+                        id=2,
+                        name="Always",
                         component_id=1,
                         location_id=0,
                         is_default=true,
                         is_active=true
-                  }
-            );
-
-             modelBuilder.Entity<Persistences.Entities.Groups>()
-            .HasData(
-                  new Persistences.Entities.Groups
+                  },
+                   new Persistences.Entities.Groups
                   {
-                        id=2,
+                        id=3,
                         name="Never",
                         component_id=2,
                         location_id=0,
@@ -86,7 +86,6 @@ public sealed class GroupDbContext(DbContextOptions<GroupDbContext> options) : D
                         is_active=true
                   }
             );
-
 
 
       }

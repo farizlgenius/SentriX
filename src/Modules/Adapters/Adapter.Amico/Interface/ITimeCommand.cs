@@ -70,6 +70,12 @@ public interface ITimeCommand : IBaseCommand
             int componentId
       );
 
+      Task<DeleteObjectResponse> DeleteTimeZoneAsunc(
+            string ip,
+            string session,
+            int componentId
+      );
+
       Task<UpdateObjectResponse> UpdateTimeSpanAsync(
             string ip,
             string session,
@@ -89,8 +95,16 @@ public interface ITimeCommand : IBaseCommand
             int hol3
       );
 
-      Task ClearTimeZoneAsync(
+      Task<DeleteObjectResponse> DeleteTimeSpanAsync(
+            string ip,
+            string session,
+            int componentId
+      );
+
+      Task ClearTimeAsync(
             string ip,
             string session
       );
+
+
 }

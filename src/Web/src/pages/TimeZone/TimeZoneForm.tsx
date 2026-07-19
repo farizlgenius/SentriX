@@ -1,40 +1,25 @@
 import React, { PropsWithChildren, useEffect, useState } from 'react'
 import Label from '../../components/form/Label';
 import Input from '../../components/form/input/InputField';
-import DatePicker from '../../components/form/date-picker';
-import Select from '../../components/form/Select';
 import Helper from '../../utility/Helper';
 import ActionElement from '../UiElements/ActionElement';
 import { IntervalDto } from '../../model/Interval/IntervalDto';
 import { TimeZoneDto } from '../../model/TimeZone/TimeZoneDto';
-import { Options } from '../../model/Options';
-import { ModeDto } from '../../model/ModeDto';
-import { TimeZoneEndPoint } from '../../endpoint/TimezoneEndpoint';
-import { IntervalEndpoint } from '../../endpoint/IntervalEndpoint';
-import { useLocation } from '../../context/LocationContext';
 import { FormProp, FormType } from '../../model/Form/FormProp';
-import { send } from '../../api/api';
 import { CalenderIcon, TimeIcon } from '../../icons';
-import TextArea from '../../components/form/input/TextArea';
 import { useToast } from '../../context/ToastContext';
 import { FormActions, FormField, FormSection } from '../../components/form/template/FormTemplate';
 import { IntervalForm } from '../../components/form/interval/IntervalForm';
 import { DaysInWeekDto } from '../../model/Interval/DaysInWeekDto';
-import { DeviceType } from '../../enum/DeviceType';
+
 
 
 
 const TimeZoneForm: React.FC<PropsWithChildren<FormProp<TimeZoneDto>>> = ({ type, setDto, dto, handleClick }) => {
   const { toggleToast } = useToast();
-  const { locationId } = useLocation();
-  const [modeDetail, setModeDetail] = useState<string>("");
-  const [modeOption, setModeOption] = useState<Options[]>([])
   const [intervalForm, setIntervalForm] = useState<boolean>(false);
 
   const defaultDto: IntervalDto = {
-    locationId: locationId,
-    isActive: true,
-    id: 0,
     days: {
       sunday: false,
       monday: false,
@@ -47,11 +32,10 @@ const TimeZoneForm: React.FC<PropsWithChildren<FormProp<TimeZoneDto>>> = ({ type
       componentId: 0,
       locationId: 0
     },
-    daysDetail: "",
     start: "",
     end: "",
-    componentId: 0,
-    type: ''
+    guid: "00000000-0000-0000-0000-000000000000",
+    componentId: 0
   }
   const [intervalDto, setIntervalDto] = useState<IntervalDto>(defaultDto);
 
@@ -70,43 +54,11 @@ const TimeZoneForm: React.FC<PropsWithChildren<FormProp<TimeZoneDto>>> = ({ type
 
 
 
-  const toLocalISOWithOffset = (date: Date) => {
-    const pad = (n: number) => String(n).padStart(2, "0");
-    const tzOffset = -date.getTimezoneOffset();
-    const sign = tzOffset >= 0 ? "+" : "-";
-    const offsetHours = pad(Math.floor(Math.abs(tzOffset) / 60));
-    const offsetMinutes = pad(Math.abs(tzOffset) % 60);
-
-    return (
-      date.getFullYear() + "-" +
-      pad(date.getMonth() + 1) + "-" +
-      pad(date.getDate()) + "T" +
-      pad(date.getHours()) + ":" +
-      pad(date.getMinutes()) + ":" +
-      pad(date.getSeconds()) +
-      sign + offsetHours + ":" + offsetMinutes
-    );
-  }
-
-
-  const fetchMode = async () => {
-    const res = await send.get(TimeZoneEndPoint.GET_MODE(DeviceType.AERO));
-    if (res) {
-      res.data.map((a:Options) => {
-          setModeOption((prev) => [...prev, {
-            value: a.value,
-            label: a.label,
-            description: a.description
-          }])
-        })
-    }
-  }
-
 
 
 
   const handleClickWithData = (data: IntervalDto) => {
-    setDto((prev: TimeZoneDto) => ({ ...prev, intervals: [...prev.intervals.filter(a => a.id !== data.id)] }));
+    setDto((prev: TimeZoneDto) => ({ ...prev, intervals: [...prev.intervals.filter(a => a.guid !== data.guid)] }));
   };
   const handleClickWithEvent = (e: React.MouseEvent<HTMLButtonElement>) => {
     console.log(e.currentTarget.name)
@@ -134,19 +86,11 @@ const TimeZoneForm: React.FC<PropsWithChildren<FormProp<TimeZoneDto>>> = ({ type
         }
 
         break;
-      case "detail":
-        setModeDetail(modeOption.filter(a => a.value == dto.mode)[0].description ?? "")
-        // setModeDetailPopup(true);
-        break;
       default:
         break;
     }
 
   }
-
-  useEffect(() => {
-    fetchMode()
-  }, [])
 
   return (
     <>
@@ -155,50 +99,6 @@ const TimeZoneForm: React.FC<PropsWithChildren<FormProp<TimeZoneDto>>> = ({ type
           <FormField>
             <Label htmlFor="name">Name</Label>
             <Input placeholder='Time zone name' disabled={type == FormType.INFO} name="name" type="text" id="name" onChange={(e) => setDto((prev: TimeZoneDto) => ({ ...prev, name: e.target.value }))} value={dto.name} />
-          </FormField>
-          <FormField>
-            <Label>TimeZone Mode</Label>
-            <Select
-              name="mode"
-              options={modeOption}
-              placeholder="Select Option"
-              onChangeWithEvent={(e) => {
-                setDto((prev: TimeZoneDto) => ({ ...prev, mode: Number(e) }));
-                setModeDetail(modeOption.filter(a => a.value == dto.mode)[0].description ?? "")
-              }}
-              className="dark:bg-dark-900"
-              defaultValue={dto.mode == -1 ? -1 : dto.mode}
-            />
-          </FormField>
-          <FormField>
-            <DatePicker
-              id="activeTime"
-              label="Activate Date"
-              placeholder="Select a date"
-              value={dto.active}
-              onChange={(dates, currentDateString) => {
-                // Handle your logic
-                console.log({ dates, currentDateString });
-                setDto((prev: TimeZoneDto) => ({ ...prev, active: toLocalISOWithOffset(dates[0]) }))
-              }}
-            />
-          </FormField>
-          <FormField>
-            <DatePicker
-              id="deactiveTime"
-              label="Deactive Date"
-              placeholder="Select a date"
-              value={dto.deactive}
-              onChange={(dates, currentDateString) => {
-                // Handle your logic
-                console.log({ dates, currentDateString });
-                setDto((prev: TimeZoneDto) => ({ ...prev, deactive: toLocalISOWithOffset(dates[0]) }))
-              }}
-            />
-          </FormField>
-
-          <FormField className='col-span-2'>
-            <TextArea disabled={true} value={modeDetail} placeholder='Detail info will show here' />
           </FormField>
           <FormField className='col-span-2'>
             {/* Interval */}

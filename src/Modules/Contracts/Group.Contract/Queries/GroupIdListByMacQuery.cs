@@ -3,6 +3,6 @@ using SharedKernel.Messaging;
 
 namespace Group.Contract.Queries;
 
-public sealed record GroupIdListByMacQuery(
+public sealed record GroupGuidsByMacQuery(
       string Mac
-      ) : IQuery<IEnumerable<(int id,short componentId)>>;
+      ) : IQuery<IEnumerable<(Guid guid,short componentId)>>;

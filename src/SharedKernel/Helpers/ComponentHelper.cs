@@ -319,4 +319,45 @@ public static class ComponentHelper
 
             return (short)(expected > max ? -1 : expected);
       }
+
+      public static async Task<short> LowestUnassignedNumberExceptStartFromOneAsync<TEntity>(
+    DbContext context,
+    List<short> Except,
+    Expression<Func<TEntity, object>> numberSelector,
+    CancellationToken ct = default)
+    where TEntity : class
+      {
+
+
+            var rows = await context.Set<TEntity>()
+                .AsNoTracking()
+                .Select(numberSelector)
+                .ToListAsync(ct);
+
+            var numbers = rows
+                .SelectMany(x =>
+                {
+                      return x.GetType()
+                  .GetProperties()
+                  .Select(p => Convert.ToInt32(p.GetValue(x)));
+                })
+                .Distinct()
+                .OrderBy(x => x)
+                .ToList();
+
+            if (numbers.Count == 0 && Except.Count == 0)
+                  return 1;
+
+            short expected = 1;
+
+            foreach (var num in numbers)
+            {
+                  if (num != expected && !Except.Contains(expected))
+                        return (short)expected;
+
+                  expected++;
+            }
+
+            return expected;
+      }
 }

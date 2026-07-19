@@ -6,7 +6,7 @@ import Helper from '../../utility/Helper';
 import { TimeZoneDto } from '../../model/TimeZone/TimeZoneDto';
 import { useToast } from '../../context/ToastContext';
 import { TimeZoneToast } from '../../model/ToastMessage';
-import { TimeZoneEndPoint } from '../../endpoint/TimezoneEndpoint';
+import { TimeZoneEndPoint } from '../../endpoint/TimeZoneEndpoint';
 import { useLocation } from '../../context/LocationContext';
 import { useAuth } from '../../context/AuthContext';
 import { send } from '../../api/api';
@@ -20,8 +20,8 @@ import { usePagination } from '../../context/PaginationContext';
 
 
 
-const TIMEZONE_TABLE_HEAD: string[] = ["Name", "Active Date", "Deactive Date","Mode","Interval", "Action"]
-const TIMEZONE_KEY: string[] = ["name", "active", "deactive","mode","intervals"];
+const TIMEZONE_TABLE_HEAD: string[] = ["Name", "Action"]
+const TIMEZONE_KEY: string[] = ["name"];
 
 const TimeZone = () => {
     const { locationId } = useLocation();
@@ -40,11 +40,8 @@ const TimeZone = () => {
         componentId: -1,
         isActive: true,
         name: "",
-        mode: -1,
-        active: "",
-        deactive: "",
         intervals: [],
-        id: 0,
+        guid: "00000000-0000-0000-0000-000000000000",
         type: '',
         isDefault: false
     }
@@ -66,9 +63,10 @@ const TimeZone = () => {
                     setInfo(true);
                 }
                 setConfirmRemove(() => async () => {
-                    var data:number[] = [];
+                    var data:string[] = [];
                     selectedObjects.map(async (a:TimeZoneDto) => {
-                        data.push(a.id)
+                        if(a.guid != null)
+                            data.push(a.guid)
                     })
                     var res = await send.post(TimeZoneEndPoint.DELETE_RANGE,data)
                     if(Helper.handleToastByResCode(res,TimeZoneToast.DELETE_RANGE,toggleToast)){
@@ -118,7 +116,7 @@ const TimeZone = () => {
     const handleRemove = async (data: TimeZoneDto) => {
         console.log(data)
         setConfirmRemove(() => async () => {
-            const res = await send.delete(TimeZoneEndPoint.DELETE(data.id));
+            const res = await send.delete(TimeZoneEndPoint.DELETE(data.guid));
             console.log(res)
             if (Helper.handleToastByResCode(res, TimeZoneToast.DELETE, toggleToast)) {
                 toggleRefresh();

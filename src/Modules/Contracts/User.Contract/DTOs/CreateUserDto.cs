@@ -4,7 +4,8 @@ using SharedKernel.Domain;
 namespace User.Contract.DTOs;
 
 public sealed record CreateUserDto(
-      string UserId,
+      Guid Guid,
+      string Identification,
       string Title,
       string FirstName,
       string MiddleName,
@@ -13,20 +14,27 @@ public sealed record CreateUserDto(
       DateTime DateOfBirth,
       string Email,
       string Phone,
-      int CompanyId,
-      int DepartmentId,
-      int PositionId,
+      Guid CompanyGuid,
+      Guid DepartmentGuid,
+      Guid PositionGuid,
       string Address,
-      short Flag,
+      DateTime ActiveTime,
+      DateTime ExpireTime,
       List<string> Additionals,
-      string Image,
-      List<CredentialDto> Credentials,
-      List<int> Groups,
-      int LocationId,
-      bool IsActive
-) : BaseDto(
+      CardDto Card=default!,
+      LicensePlateDto LicensePlate=default!,
+      QrCodeDto QrCode=default!,
+      FaceDto Face=default!,
+      PinDto Pin=default!,
+      List<Guid> Groups=default!,
+      int LocationId=0,
+      bool IsActive=true,
+      bool IsDefault=false
+) : BaseDtoEntity(
+      Guid,
       0,
       LocationId,
       string.Empty,
-      IsActive
+      IsActive,
+      IsDefault
 );

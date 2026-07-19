@@ -145,10 +145,6 @@ namespace Time.Infrastructure.Migrations
                     b.Property<Guid>("day_in_week_guid")
                         .HasColumnType("uuid");
 
-                    b.Property<string>("days_detail")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<string>("end")
                         .IsRequired()
                         .HasColumnType("text");
@@ -175,7 +171,16 @@ namespace Time.Infrastructure.Migrations
                             id = 1,
                             component_id = (short)1,
                             day_in_week_guid = new Guid("00000000-0000-0000-0000-000000000000"),
-                            days_detail = "",
+                            end = "23:00",
+                            guid = new Guid("65364114-fd3b-43f4-8710-ce62655fb44d"),
+                            start = "00:00",
+                            timezone_guid = new Guid("65dd168c-e53f-4f42-a8c0-d83487bfb321")
+                        },
+                        new
+                        {
+                            id = 2,
+                            component_id = (short)2,
+                            day_in_week_guid = new Guid("4e7a2d90-3b8f-4fd8-9c57-2a1e6b9d8f43"),
                             end = "23:00",
                             guid = new Guid("f2d4c8b3-91aa-4b4c-8e1d-73c1f9b2a6d4"),
                             start = "00:00",
@@ -191,10 +196,6 @@ namespace Time.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
 
-                    b.Property<string>("active")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<short>("component_id")
                         .HasColumnType("smallint");
 
@@ -202,10 +203,6 @@ namespace Time.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
                         .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
-
-                    b.Property<string>("deactive")
-                        .IsRequired()
-                        .HasColumnType("text");
 
                     b.Property<Guid>("guid")
                         .ValueGeneratedOnAdd()
@@ -220,9 +217,6 @@ namespace Time.Infrastructure.Migrations
 
                     b.Property<int>("location_id")
                         .HasColumnType("integer");
-
-                    b.Property<short>("mode")
-                        .HasColumnType("smallint");
 
                     b.Property<string>("name")
                         .IsRequired()
@@ -241,30 +235,36 @@ namespace Time.Infrastructure.Migrations
                         new
                         {
                             id = 1,
-                            active = "",
                             component_id = (short)1,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            deactive = "",
-                            guid = new Guid("9b6e1f89-6f6e-4c5d-a0a5-c9d6f5d18e7b"),
+                            guid = new Guid("65dd168c-e53f-4f42-a8c0-d83487bfb321"),
                             is_active = true,
                             is_default = true,
-                            location_id = 0,
-                            mode = (short)1,
-                            name = "Always",
+                            location_id = -1,
+                            name = "Default",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             id = 2,
-                            active = "",
                             component_id = (short)2,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            deactive = "",
-                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            guid = new Guid("9b6e1f89-6f6e-4c5d-a0a5-c9d6f5d18e7b"),
                             is_active = true,
                             is_default = true,
                             location_id = 0,
-                            mode = (short)0,
+                            name = "Always",
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            id = 3,
+                            component_id = (short)3,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("6ce6a36f-a898-4f14-a198-1b85aa43834e"),
+                            is_active = true,
+                            is_default = true,
+                            location_id = 0,
                             name = "Never",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         });

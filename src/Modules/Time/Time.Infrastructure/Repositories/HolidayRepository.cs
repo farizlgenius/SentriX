@@ -77,7 +77,7 @@ public sealed class HolidayRepository(TimeDbContext context) : IHolidayRepositor
 
       public async Task<Pagination<HolidayDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
       {
-            var query = context.Holidays.AsNoTracking().Where(x => x.location_id == param.locationId || x.location_id == 0).AsQueryable();
+            var query = context.Holidays.AsNoTracking().Where(x => x.location_id == param.locationId || param.locationId == 0).AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(param.search))
             {

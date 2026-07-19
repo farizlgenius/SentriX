@@ -6,8 +6,10 @@ using Adapter.Amico.Interface;
 using Adapter.Amico.Interfaces;
 using Adapter.Amico.Model.Request;
 using Adapter.Amico.Model.Response;
+using Adapter.Amico.Persistences.Entities;
 using Device.Contract.DTOs;
 using Serilog;
+using SharedKernel.Exceptions;
 using SharedKernel.Helpers;
 using SharedKernel.Messaging;
 
@@ -109,9 +111,18 @@ public sealed class AmicoDeviceAdapter(
             await command.VerifyDeviceComponentAsync(Ip,res.Session,LocationId);
       }
 
-      public Task<bool> GetDeviceStatusAsync(string Mac, short ComponentId)
+      public async Task<bool> GetDeviceStatusAsync(string Ip,string Mac, short ComponentId)
       {
-            throw new NotImplementedException();
+            var amico = await repo.GetAmicoByMacAsync(Mac);
+            var session = amico.session;
+
+            if (amico.id == 0)
+                  throw new BadRequestException(MessageHelper.Common.NotFound(nameof(Amicos), Mac));
+
+
+            var res = await command.CheckSession(amico.ip, amico.session);
+
+            return true;
       }
 
       public async Task DeleteDeviceAsync(Guid Guid, string Ip, string Mac, short ComponentId)

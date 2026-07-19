@@ -35,8 +35,8 @@ namespace User.Contract.DTOs;
 // );
 
 public sealed record UserDto(
-    int Id = 0,
-    string UserId = "",
+    Guid Guid = default!,
+    string Identification = "",
     string Title = "",
     string FirstName = "",
     string MiddleName = "",
@@ -45,24 +45,30 @@ public sealed record UserDto(
     DateTime? DateOfBirth = null!,
     string Email = "",
     string Phone = "",
-    int CompanyId = 0,
+    Guid CompanyGuid = default,
     string Company = "",
-    int DepartmentId = 0,
+    Guid DepartmentGuid = default,
     string Department = "",
-    int PositionId = 0,
+    Guid PositionGuid = default,
     string Position = "",
     string Address = "",
-    int Flag = 1,
+    DateTime ActiveTime = default,
+    DateTime ExpireTime = default,
     List<string> Additionals = default!,
-    string Image = "",
-    List<CredentialDto> Credentials = default!,
-    List<int> Groups = default!,
-    int VacationId = 0,
+    CardDto Card=default!,
+      LicensePlateDto LicensePlate=default!,
+      QrCodeDto QrCode=default!,
+      FaceDto Face=default!,
+      PinDto Pin=default!,
+    List<Guid> Groups = default!,
     int LocationId = 0,
-    bool IsActive = false
-) : BaseDto(
+    bool IsActive = true,
+    bool IsDefault=false
+) : BaseDtoEntity(
+    Guid,
       0,
       LocationId,
       string.Empty,
-      IsActive
+      IsActive,
+      IsDefault
 );

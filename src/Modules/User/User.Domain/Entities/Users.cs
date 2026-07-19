@@ -4,28 +4,33 @@ using SharedKernel.Helpers;
 
 namespace User.Domain.Entities;
 
-public sealed class Users : BaseDomain
+public sealed class Users : BaseDomainEntity
 {
-      public string UserId { get; set; } = string.Empty;
-      public string Title { get; set; } = string.Empty;
-      public string FirstName { get; set; } = string.Empty;
-      public string MiddleName { get; set; } = string.Empty;
-      public string LastName { get; set; } = string.Empty;
-      public string Gender { get; set; } = string.Empty;
-      public DateTime DateOfBirth { get; set; }
-      public string Email { get; set; } = string.Empty;
-      public string Phone { get; set; } = string.Empty;
-      public int CompanyId { get; set; }
-      public int DepartmentId { get; set; }
-      public int PositionId { get; set; }
-      public string Address { get; set; } = string.Empty;
-      public int Flag {get; set;} 
-      public List<string> Additionals { get; set; } = new List<string>();
-      public string Image { get; set; } = string.Empty;
-      public List<Credential> Credentials { get; set; } = new List<Credential>();
-      public List<int> Groups { get; set; } = new List<int>();
+      public string Identification { get; private set; } = string.Empty;
+      public string Title { get; private set; } = string.Empty;
+      public string FirstName { get; private set; } = string.Empty;
+      public string MiddleName { get; private set; } = string.Empty;
+      public string LastName { get; private set; } = string.Empty;
+      public string Gender { get; private set; } = string.Empty;
+      public DateTime DateOfBirth { get; private set; }
+      public string Email { get; private set; } = string.Empty;
+      public string Phone { get; private set; } = string.Empty;
+      public Guid? CompanyGuid { get; private set; }
+      public Guid? DepartmentGuid { get; private set; }
+      public Guid? PositionGuid { get; private set; }
+      public string Address { get; private set; } = string.Empty;
+      public DateTime ActiveTime { get; set; }
+      public DateTime ExpireTime { get; set; }
+      public List<string> Additionals { get; private set; } = new List<string>();
+      public List<Guid> Groups { get; private set; } = new List<Guid>();
+      public Card Card {get; private set;} = default!;
+      public LicensePlate LicensePlate {get; private set;}= default!;
+      public Pin Pin {get; private set;}= default!;
+      public QrCode QrCode {get; private set;}= default!;
+      public Face Face {get; private set;}= default!;
 
-      public Users(int id,
+      public Users(
+            Guid Guid,
       string UserId,
       string Title,
       string FirstName,
@@ -35,28 +40,34 @@ public sealed class Users : BaseDomain
       DateTime DateOfBirth,
       string Email,
       string Phone,
-      int CompanyId,
-      int DepartmentId,
-      int PositionId,
+      Guid CompanyGuid,
+      Guid DepartmentGuid,
+      Guid PositionGuid,
       string Address,
-      int Flag,
+      DateTime ActiveTime,
+      DateTime ExpireTime,
       List<string> Additionals,
-      string Image,
-      List<Credential> Credentials,
-      List<int> UserGroups,
+      Card Card,
+      LicensePlate LicensePlate,
+      Pin Pin,
+      QrCode QrCode,
+      Face Face,
+      List<Guid> UserGroups,
       int locationId, 
-      bool IsActive
-      ) : base(id,0, locationId, IsActive)
+      bool IsActive,
+      bool IsDefault
+      ) : base(Guid,0, locationId, IsActive,IsDefault)
       {
             ValidationHelper.IsValidOnlyCharAndDigit(UserId, nameof(UserId));
             ValidationHelper.IsValidName(FirstName);
             ValidationHelper.IsValidName(LastName);
             // Gender Validate
             ValidationHelper.IsValidEmail(Email,nameof(Email));
-            ValidationHelper.ValidateNotMinus(CompanyId,nameof(CompanyId));
-            ValidationHelper.ValidateNotMinus(DepartmentId,nameof(DepartmentId));
-            ValidationHelper.ValidateNotMinus(PositionId,nameof(PositionId));
-            this.UserId = UserId;
+            ValidationHelper.ValidateGuid(CompanyGuid,nameof(CompanyGuid));
+            ValidationHelper.ValidateGuid(DepartmentGuid,nameof(DepartmentGuid));
+            ValidationHelper.ValidateGuid(PositionGuid,nameof(PositionGuid));
+            ValidationHelper.ValidateActiveTime(ActiveTime,ExpireTime);
+            this.Identification = UserId;
             this.Title = Title;
             this.FirstName = FirstName;
             this.MiddleName = MiddleName;
@@ -65,14 +76,18 @@ public sealed class Users : BaseDomain
             this.DateOfBirth = DateOfBirth;
             this.Email = Email;
             this.Phone = Phone;
-            this.CompanyId = CompanyId;
-            this.DepartmentId = DepartmentId;
-            this.PositionId = PositionId;
+            this.CompanyGuid = CompanyGuid;
+            this.DepartmentGuid = DepartmentGuid;
+            this.PositionGuid = PositionGuid;
             this.Address = Address;
-            this.Flag = Flag;
+            this.ActiveTime = ActiveTime;
+            this.ExpireTime = ExpireTime;
             this.Additionals = Additionals;
-            this.Image = Image;
-            this.Credentials = Credentials;
+            this.Card = Card;
+            this.LicensePlate = LicensePlate;
+            this.Pin = Pin;
+            this.QrCode = QrCode;
+            this.Face = Face;
             this.Groups = UserGroups;
       }
 }

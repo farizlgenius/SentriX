@@ -3,6 +3,6 @@ using SharedKernel.Messaging;
 
 namespace Group.Contract.Queries;
 
-public sealed record GroupsListByRangeIdQuery(
-      List<int> Ids
+public sealed record GroupsListByRangeGuidQuery(
+      List<Guid> Guids
       ) : IQuery<IEnumerable<GroupSplitByMacDto>>;

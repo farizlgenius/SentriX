@@ -7,10 +7,13 @@ public sealed record CreateCompanyDto(
       string Address,
       string Description,
       int LocationId,
-      bool IsActive
-) : BaseDto(
+      bool IsActive,
+      bool IsDefault
+) : BaseDtoEntity(
+      Guid.Empty,
       0,
       LocationId,
       string.Empty,
-      IsActive
+      IsActive,
+      IsDefault
 );

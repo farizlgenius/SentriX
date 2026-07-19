@@ -7,17 +7,18 @@ public sealed class GroupDoor
 {
       public string Mac { get; private set; } = string.Empty;
       public string Type {get; private set;} = string.Empty;
-      public List<GroupDoorDetail> DoorDetails {get; private set;} = new List<GroupDoorDetail>();
+      public short DeviceComponentId {get; private set;}
+      public short DoorComponentId {get; private set;}
+      public short TimeZoneComponentId {get; private set;}
 
-      public GroupDoor(string mac,string Type,List<(short DoorComponentId,short TimezoneComponentId)> Doors) 
+      public GroupDoor(string mac,string Type,short DeviceComponentId,short DoorComponentId,short TimeZoneComponentId) 
       {
             ValidationHelper.IsNullOrEmpty(mac,nameof(Mac));
             ValidationHelper.ValidateDeviceType(Type);
             this.Mac = mac;
-            this.DoorDetails = Doors.Select(x => new GroupDoorDetail(
-                  x.DoorComponentId,
-                  x.TimezoneComponentId
-            )).ToList();
             this.Type = Type;
+            this.DeviceComponentId = DeviceComponentId;
+            this.DoorComponentId = DoorComponentId;
+            this.TimeZoneComponentId = TimeZoneComponentId;
       }
 }

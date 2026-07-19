@@ -228,8 +228,8 @@ public sealed class DeviceBehaviors(IDeviceRepository repo, IMessageBus bus, IAd
 
       public async Task<DeviceStatusDto> GetStatusByGuidAsync(Guid guid, CancellationToken ct = default)
       {
-            var detail = await repo.GetMacAndTypeAndComponentIdByGuidAsync(guid, ct);
-            var res = await adapterFactory.GetAdapter(detail.Type).Device.GetDeviceStatusAsync(detail.Mac, detail.ComponentId);
+            var detail = await repo.GetDeviceByGuidAsync(guid, ct);
+            var res = await adapterFactory.GetAdapter(detail.Type).Device.GetDeviceStatusAsync(detail.Ip,detail.Mac, detail.ComponentId);
             return new DeviceStatusDto(guid, res);
       }
 
@@ -430,9 +430,6 @@ public sealed class DeviceBehaviors(IDeviceRepository repo, IMessageBus bus, IAd
                         time.ComponentId,
                         time.Name,
                         device.Mac,
-                        time.Mode,
-                        time.Active,
-                        time.Deactive,
                         time.Intervals.Select(x => new IntervalObject(
                               (short)x.ComponentId,
                               DateTimeHelper.ConvertTimeToEndMinute(x.Start),
@@ -465,38 +462,42 @@ public sealed class DeviceBehaviors(IDeviceRepository repo, IMessageBus bus, IAd
             // Access Level
             var groups = await bus.QueryAsync(new GroupByMacAndDeviceTypeQuery(Mac, device.Type));
 
-            foreach (var group in groups)
+            foreach (var g in groups)
             {
+                  var door = g.Doors.Select(x => new
+                  {
+                        x.Mac,
+                        x.DeviceComponentId,
+                        x.DoorComponentId,
+                        x.TimezoneComponentId
+                  }).ToList();
                   await adapterFactory.GetAdapter(device.Type).Group.CreateGroup(
-                        Mac,
-                        device.ComponentId,
-                        group.ComponentId,
-                        group.Doors.Select(x => (x.DoorComponentId, x.TimezoneComponentId)).ToList()
+                        g.Name,
+                        g.ComponentId,
+                        door.Select(x => (x.Mac,x.DeviceComponentId,x.DoorComponentId,x.TimezoneComponentId)).ToList()
                   );
             }
 
             // Users
-            var gpList = await bus.QueryAsync(new GroupIdListByMacQuery(Mac));
-            var creds = await bus.QueryAsync(new CredentialByGroupListQuery(gpList.Select(x => x.id).ToList()));
+            var gpGuidList = await bus.QueryAsync(new GroupGuidsByMacQuery(Mac));
 
-            foreach (var cred in creds)
+            var users = await bus.QueryAsync(new UsersByGroupGuidsQuery(gpGuidList.Select(x => x.guid).ToList()));
+
+            foreach (var user in users)
             {
-                  await adapterFactory.GetAdapter(device.Type).User.CreateUserAsync(
+                  await adapterFactory.GetAdapter(device.Type).User.AddUserAsync(
                         Mac,
                         device.ComponentId,
-                        cred.Flag,
-                        cred.CardNumber,
-                        cred.IssueCode,
-                        cred.Pin,
-                        gpList.Select(x => x.componentId).ToList(),
-                        cred.ApbLoc,
-                        cred.UseCount,
-                        (short)DateTimeHelper.DateTimeToElapeSecond(cred.Active),
-                        (short)DateTimeHelper.DateTimeToElapeSecond(cred.Expire),
-                        -1,
-                        -1,
-                        -1,
-                        -1
+                        user.Identification,
+                        $"{user.Title} {user.FirstName} {user.MiddleName} ${user.LastName}",
+                       (int)DateTimeHelper.DateTimeToElapeSecond(user.ActiveTime),
+                       (int)DateTimeHelper.DateTimeToElapeSecond(user.ExpireTime),
+                        user.Card.CardNumber,
+                        user.LicensePlate.LicensePlate,
+                        user.Pin.Pin,
+                        user.QrCode.QrCode,
+                        user.Face.ImageName,
+                        gpGuidList.Select(x => x.componentId).ToList()
                   );
             }
 

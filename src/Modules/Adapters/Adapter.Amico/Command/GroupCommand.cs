@@ -138,7 +138,7 @@ public sealed class GroupCommand(IAmicoSetting setting, IHttpClient client) : Ba
             ) ?? new DeleteObjectResponse();
       }
 
-      public async Task<DeleteObjectResponse> DeleteAccessRuleTimeZoneAsync(string ip, string session, int timezone_id, int access_rule_id)
+      public async Task<DeleteObjectResponse> DeleteAccessRuleTimeZoneAsync(string ip, string session, int access_rule_id)
       {
             var queryParams = new Dictionary<string, string?>
             {
@@ -155,8 +155,7 @@ public sealed class GroupCommand(IAmicoSetting setting, IHttpClient client) : Ba
                         {
                               access_rule_time_zones = new
                               {
-                                    access_rule_id=access_rule_id,
-                                    time_zone_id=timezone_id
+                                    access_rule_id=access_rule_id
                               }
                         }
                         ),

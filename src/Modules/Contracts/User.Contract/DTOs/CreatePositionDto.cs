@@ -5,12 +5,15 @@ namespace User.Contract.DTOs;
 public sealed record CreatePositionDto(
       string Name,
       string Description,
-      int DepartmentId,
+      Guid DepartmentGuid,
       int LocationId,
-      bool IsActive
-) : BaseDto(
+      bool IsActive,
+      bool IsDefault
+) : BaseDtoEntity(
+      Guid.Empty,
       0,
       LocationId,
       string.Empty,
-      IsActive
+      IsActive,
+      IsDefault
 );

@@ -31,12 +31,21 @@ namespace Group.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
 
+                    b.Property<short>("device_component_id")
+                        .HasColumnType("smallint");
+
+                    b.Property<short>("door_component_id")
+                        .HasColumnType("smallint");
+
                     b.Property<int>("group_id")
                         .HasColumnType("integer");
 
                     b.Property<string>("mac")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<short>("timezone_component_id")
+                        .HasColumnType("smallint");
 
                     b.Property<string>("type")
                         .IsRequired()
@@ -47,30 +56,6 @@ namespace Group.Infrastructure.Migrations
                     b.HasIndex("group_id");
 
                     b.ToTable("GroupDoors", "group");
-                });
-
-            modelBuilder.Entity("Group.Infrastructure.Persistences.Entities.GroupDoorDetail", b =>
-                {
-                    b.Property<int>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
-
-                    b.Property<short>("door_component_id")
-                        .HasColumnType("smallint");
-
-                    b.Property<int>("group_door_id")
-                        .HasColumnType("integer");
-
-                    b.Property<short>("timezone_component_id")
-                        .HasColumnType("smallint");
-
-                    b.HasKey("id");
-
-                    b.HasIndex("group_door_id");
-
-                    b.ToTable("GroupDoorDetails", "group");
                 });
 
             modelBuilder.Entity("Group.Infrastructure.Persistences.Entities.Groups", b =>
@@ -85,9 +70,10 @@ namespace Group.Infrastructure.Migrations
                         .HasColumnType("smallint");
 
                     b.Property<DateTime>("created_at")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
-                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("guid")
+                        .HasColumnType("uuid");
 
                     b.Property<bool>("is_active")
                         .HasColumnType("boolean");
@@ -103,9 +89,7 @@ namespace Group.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime>("updated_at")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
-                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("id");
 
@@ -117,17 +101,31 @@ namespace Group.Infrastructure.Migrations
                             id = 1,
                             component_id = (short)1,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             is_active = true,
                             is_default = true,
-                            location_id = 0,
-                            name = "Allow",
+                            location_id = -1,
+                            name = "Default",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             id = 2,
+                            component_id = (short)1,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = true,
+                            location_id = 0,
+                            name = "Always",
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            id = 3,
                             component_id = (short)2,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             is_active = true,
                             is_default = true,
                             location_id = 0,
@@ -145,22 +143,6 @@ namespace Group.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("groups");
-                });
-
-            modelBuilder.Entity("Group.Infrastructure.Persistences.Entities.GroupDoorDetail", b =>
-                {
-                    b.HasOne("Group.Infrastructure.Persistences.Entities.GroupDoor", "group_door")
-                        .WithMany("group_door_detail")
-                        .HasForeignKey("group_door_id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("group_door");
-                });
-
-            modelBuilder.Entity("Group.Infrastructure.Persistences.Entities.GroupDoor", b =>
-                {
-                    b.Navigation("group_door_detail");
                 });
 
             modelBuilder.Entity("Group.Infrastructure.Persistences.Entities.Groups", b =>

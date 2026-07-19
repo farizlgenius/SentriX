@@ -75,7 +75,7 @@ public sealed class AeroDeviceAdapter(
 
       }
 
-      public async Task<bool> GetDeviceStatusAsync(string Mac, short ComponentId)
+      public async Task<bool> GetDeviceStatusAsync(string Ip,string Mac, short ComponentId)
       {
             return SCPDLL.scpCheckOnline(ComponentId) == 1;
       }

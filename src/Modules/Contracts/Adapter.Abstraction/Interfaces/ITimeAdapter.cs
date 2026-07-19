@@ -8,6 +8,8 @@ namespace Adapter.Abstraction.Interfaces;
 
 public interface ITimeAdapter
 {
+
+     // Holiday
       Task CreateHolidayAsync(
           Guid Guid,
           short DeviceComponentId,
@@ -18,6 +20,28 @@ public interface ITimeAdapter
             DateTime End
      );
 
+          Task DeleteHolidayAsync(
+       short DeviceComponentId,
+            int ComponentId,
+            string Mac,
+            DateTime Start,
+            DateTime End
+            );
+
+
+                 Task UpdateHolidayAsync(
+          Guid guid,
+           string Name,
+           short DeviceComponentId,
+           int ComponentId,
+          string Mac,
+            DateTime Start,
+            DateTime End
+     );
+
+
+     // Time Zone
+
 
      Task CreateTimeZoneAsync(
           Guid Guid,
@@ -25,9 +49,6 @@ public interface ITimeAdapter
           short TzComponentId,
            string Name,
            string Mac,
-            short Mode,
-            string Active,
-            string Deactive,
             List<IntervalObject> Intervals
      );
 
@@ -37,42 +58,29 @@ public interface ITimeAdapter
           short TzComponentId,
            string Name,
            string Mac,
-            short Mode,
-            string Active,
-            string Deactive,
             List<IntervalObject> Intervals
      );
 
-     Task ClearTimeZoneAsync(
+          Task DeleteTimeZoneAsync(
+          string Mac,
+            short DeviceComponentId,
+            short ComponentId,
+            List<short> IntervalComponentId
+     );
+
+
+     // Reset Delete All
+
+
+     Task ClearTimeAsync(
           Guid Guid,
           string Mac
      );
 
-     Task DeleteHolidayAsync(
-       short DeviceComponentId,
-            int ComponentId,
-            string Mac,
-            DateTime Start,
-            DateTime End
-            );
 
-     Task DeleteTimeZoneAsync(
-          string Mac,
-            short DeviceComponentId,
-            short ComponentId
-     );
 
-     Task<IEnumerable<OptionDto>> GetTimezoneMode();
 
-     Task UpdateHolidayAsync(
-          Guid guid,
-           string Name,
-           short DeviceComponentId,
-           int ComponentId,
-          string Mac,
-            DateTime Start,
-            DateTime End
-     );
+
 
 
 

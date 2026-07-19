@@ -1,12 +1,11 @@
-import { BaseDto } from "../BaseDto";
 
-export interface HolidayDto extends BaseDto{
-  id:number;
-  holId:number;
+export interface HolidayDto {
+  guid:string;
+  componentId:number;
   name:string;
-  year:number;
-  month:number;
-  day:number;
-  extend:number;
-  typeMask:number
+  start:string;
+  end:string;
+  locationId:number;
+  isActive:boolean;
+  isDefault:boolean;
 }

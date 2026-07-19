@@ -379,7 +379,7 @@ export const CredentialForm: React.FC<PropsWithChildren<FormProp<UserDto>>> = ({
                                                 onChange={(dates, currentDateString) => {
                                                     // Handle your logic
                                                     console.log({ dates, currentDateString });
-                                                    setCredentialDto(prev => ({ ...prev, activeDate: toLocalISOWithOffset(dates[0]) }));
+                                                    setCredentialDto(prev => ({ ...prev, active: toLocalISOWithOffset(dates[0]) }));
 
                                                 }}
                                             />
@@ -393,7 +393,7 @@ export const CredentialForm: React.FC<PropsWithChildren<FormProp<UserDto>>> = ({
                                                 onChange={(dates, currentDateString) => {
                                                     // Handle your logic
                                                     console.log({ dates, currentDateString });
-                                                    setCredentialDto(prev => ({ ...prev, deactiveDate: toLocalISOWithOffset(dates[0]) }));
+                                                    setCredentialDto(prev => ({ ...prev, expire: toLocalISOWithOffset(dates[0]) }));
                                                 }}
                                             />
                                         </div>

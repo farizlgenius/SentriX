@@ -22,13 +22,12 @@ public sealed class GroupBehavior(IGroupRepository repo,IAdapterFactory factory,
                   Guid.NewGuid(),
                   ComponentId,
                   dto.Name,
-                  dto.Doors.GroupBy(
-                        x => (x.Mac,x.Type),
-                        x => (x.DoorComponentId,x.TimezoneComponentId)
-                  ).Select(gp => (
-                        gp.Key.Mac,
-                        gp.Key.Type,
-                        gp.ToList()
+                  dto.Doors.Select(x => new GroupDoor(
+                        x.Mac,
+                        x.Type,
+                        x.DeviceComponentId,
+                        x.DoorComponentId,
+                        x.TimezoneComponentId
                   )).ToList(),
                   dto.LocationId,
                   dto.IsActive,
@@ -39,11 +38,20 @@ public sealed class GroupBehavior(IGroupRepository repo,IAdapterFactory factory,
             foreach(var dd in d.GroupDoors)
             {
                   var DeviceComponentId = await bus.QueryAsync(new ComponentIdByMacQuery(dd.Mac));
+                  var Doors =  d.GroupDoors.Select(x => new
+                        {
+                              x.Mac,
+                              x.Type,
+                              x.DeviceComponentId,
+                              x.DoorComponentId,
+                              x.TimeZoneComponentId
+                        }).ToList();
+
+
                   await factory.GetAdapter(dd.Type).Group.CreateGroup(
-                        dd.Mac,
-                        (short)DeviceComponentId,
-                        ComponentId,
-                        dd.DoorDetails.Select(x => (x.DoorComponentId,x.TimezoneComponentId)).ToList()
+                        d.Name,
+                        d.ComponentId,
+                        Doors.Select(x => (x.Mac,x.DeviceComponentId,x.DoorComponentId,x.TimeZoneComponentId)).ToList()
                         );
             }
 
@@ -53,12 +61,13 @@ public sealed class GroupBehavior(IGroupRepository repo,IAdapterFactory factory,
                   d.Guid,
                   d.ComponentId,
                   d.Name,
-                  d.GroupDoors.SelectMany(x => x.DoorDetails.Select(s => new GroupDoorDto(
+                  d.GroupDoors.Select(x => new GroupDoorDto(
                         x.Mac,
-                        s.DoorComponentId,
-                        s.TimezoneComponentId,
+                        x.DeviceComponentId,
+                        x.DoorComponentId,
+                        x.TimeZoneComponentId,
                         x.Type
-                  ))).ToList(),
+                  )).ToList(),
                   d.LocationId,
                   d.IsActive,
                   d.IsDefault
@@ -73,13 +82,11 @@ public sealed class GroupBehavior(IGroupRepository repo,IAdapterFactory factory,
             if(d == null)
                   throw new BadRequestException(MessageHelper.Common.NotFound("Group", id));
 
-            var datas = await bus.QueryAsync(new MacAndComponentIdListByLocationIdQuery(d.LocationId));
-
-            foreach(var data in datas)
+            foreach(var data in d.Doors)
             {
                   await factory.GetAdapter(data.Type).Group.DeleteGroup(
                         data.Mac,
-                        data.ComponentId,
+                        data.DeviceComponentId,
                         d.ComponentId
                         );
             }
@@ -89,6 +96,28 @@ public sealed class GroupBehavior(IGroupRepository repo,IAdapterFactory factory,
             return d;
 
             
+      }
+
+      public async Task<GroupDto> DeleteByGuidAsync(Guid guid)
+      {
+            var d = await repo.GetByGuidAsync(guid);
+
+            if(d == null)
+                  throw new BadRequestException(MessageHelper.Common.NotFound("Group", d.Guid.ToString()));
+
+            foreach(var data in d.Doors)
+            {
+                  await factory.GetAdapter(data.Type).Group.DeleteGroup(
+                        data.Mac,
+                        data.DeviceComponentId,
+                        d.ComponentId
+                        );
+            }
+
+            await repo.DeleteAsync(guid);
+
+            return d;
+
       }
 
       public async Task<IEnumerable<GroupDto>> GetByLocationIdAsync(int location)
@@ -103,44 +132,55 @@ public sealed class GroupBehavior(IGroupRepository repo,IAdapterFactory factory,
 
       public async Task<GroupDto> UpdateAsync(GroupDto dto)
       {
-            var entity = await repo.GetByGuidAsync(dto.Guid);
+            var entity = await repo.IsAnyByGuidAsync(dto.Guid);
 
-            if(entity == null)
+            if(!entity)
                   throw new BadRequestException(MessageHelper.Common.NotFound("Group", dto.Guid.ToString()));
 
 
-            var domain = new Groups(
+            var d = new Groups(
                   dto.Guid,
                   dto.ComponentId,
                   dto.Name,
-                  dto.Doors.GroupBy(
-                        x => (x.Mac,x.Type),
-                        x => (x.DoorComponentId,x.TimezoneComponentId)
-                  ).Select(gp => (
-                        gp.Key.Mac,
-                        gp.Key.Type,
-                        gp.ToList()
+                  dto.Doors.Select(x => new GroupDoor(
+                        x.Mac,
+                        x.Type,
+                        x.DeviceComponentId,
+                        x.DoorComponentId,
+                        x.TimezoneComponentId
                   )).ToList(),
                   dto.LocationId,
                   dto.IsActive,
                   dto.IsDefault
                   );
 
-            var datas = await bus.QueryAsync(new MacAndComponentIdListByLocationIdQuery(entity.LocationId));
 
-            foreach(var d in domain.GroupDoors)
+            foreach(var dd in d.GroupDoors)
             {
-                  var DeviceComponentId = await bus.QueryAsync(new ComponentIdByMacQuery(d.Mac));
-                  await factory.GetAdapter(d.Type).Group.CreateGroup(
-                        d.Mac,
-                        (short)DeviceComponentId,
-                        dto.ComponentId,
-                        d.DoorDetails.Select(x => (x.DoorComponentId,x.TimezoneComponentId)).ToList()
+                  var DeviceComponentId = await bus.QueryAsync(new ComponentIdByMacQuery(dd.Mac));
+                  await factory.GetAdapter(dd.Type).Group.CreateGroup(
+                        d.Name,
+                        d.ComponentId,
+                        d.GroupDoors.Select(x => (x.Mac,x.DeviceComponentId,x.DoorComponentId,x.TimeZoneComponentId)).ToList()
                         );
             }
 
-            await repo.UpdateAsync(domain);
+            await repo.UpdateAsync(d);
 
-            return entity;
+            return new GroupDto(
+                  d.Guid,
+                  d.ComponentId,
+                  d.Name,
+                  d.GroupDoors.Select(x => new GroupDoorDto(
+                        x.Mac,
+                        x.DeviceComponentId,
+                        x.DoorComponentId,
+                        x.TimeZoneComponentId,
+                        x.Type
+                  )).ToList(),
+                  d.LocationId,
+                  d.IsActive,
+                  d.IsDefault
+            );;
       }
 }

@@ -14,7 +14,7 @@ public sealed class AmicoTimeAdapter(
       ITimeCommand time,
       IAmicoRepository repo) : IAmicoTimeAdapter
 {
-      public async Task ClearTimeZoneAsync(Guid Guid,string Mac)
+      public async Task ClearTimeAsync(Guid Guid,string Mac)
       {
             var amico = await repo.GetAmicoByMacAsync(Mac);
             var session = amico.session;
@@ -32,7 +32,7 @@ public sealed class AmicoTimeAdapter(
                   await repo.UpdateSessionByMacAsync(amico.mac, news.Session);
             }
 
-            await time.ClearTimeZoneAsync(
+            await time.ClearTimeAsync(
                   amico.ip,
                   session
             );
@@ -89,9 +89,6 @@ public sealed class AmicoTimeAdapter(
           short TzComponentId,
            string Name,
            string Mac,
-            short Mode,
-            string Active,
-            string Deactive,
             List<IntervalObject> Intervals
      )
       {
@@ -185,15 +182,42 @@ public sealed class AmicoTimeAdapter(
 
       }
 
-      public async Task DeleteTimeZoneAsync(string Mac, short DeviceComponentId, short ComponentId)
+      public async Task DeleteTimeZoneAsync(string Mac, short DeviceComponentId, short TzComponentId,List<short> IntervalComponentId)
       {
-            throw new NotImplementedException();
+            var amico = await repo.GetAmicoByMacAsync(Mac);
+            var session = amico.session;
+
+            if (amico.id == 0)
+                  throw new BadRequestException(MessageHelper.Common.NotFound(nameof(Amicos), Mac));
+
+
+            var res = await time.CheckSession(amico.ip, amico.session);
+
+            if (!res.SessionIsValid)
+            {
+                  var news = await time.LoginAsync(amico.ip);
+                  session = news.Session;
+                  await repo.UpdateSessionByMacAsync(amico.mac, news.Session);
+            }
+
+            await time.DeleteTimeZoneAsunc(
+                  amico.ip,
+                  session,
+                  TzComponentId
+            );
+
+            foreach(var id in IntervalComponentId)
+            {
+                  await time.DeleteTimeSpanAsync(
+                  amico.ip,
+                  session,
+                  id
+            );
+            }
+
+            
       }
 
-      public Task<IEnumerable<OptionDto>> GetTimezoneMode()
-      {
-            throw new NotImplementedException();
-      }
 
       public async Task UpdateHolidayAsync(Guid guid, string Name,short DeviceComponentId,int ComponentId, string Mac, DateTime Start, DateTime End)
       {
@@ -230,7 +254,7 @@ public sealed class AmicoTimeAdapter(
 
       }
 
-      public async Task UpdateTimeZoneAsync(Guid Guid,short DeviceComponentId, short TzComponentId, string Name, string Mac, short Mode, string Active, string Deactive, List<IntervalObject> Intervals)
+      public async Task UpdateTimeZoneAsync(Guid Guid,short DeviceComponentId, short TzComponentId, string Name, string Mac, List<IntervalObject> Intervals)
       {
             var amico = await repo.GetAmicoByMacAsync(Mac);
             var session = amico.session;

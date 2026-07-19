@@ -5,23 +5,17 @@ namespace Adapter.Aero.Interfaces;
 
 public interface IUserCommand
 {
+
+
       CommandResponse AccessDatabaseCardRecords(
-            string Mac,
+             string Mac,
             short ScpId,
-            int Flags,
             long CardNumber,
-            short IssueCode,
             string Pin,
             List<short> Groups,
-            short ApbLoc,
-            short UseCount,
             int ActiveDate,
-            int DeactiveDate,
-            int VacDate,
-            short VacDays,
-            int TmpDate,
-            short TmpDays
-            );
+            int DeactiveDate
+      );
 
       CommandResponse CardDelete(
             string Mac,

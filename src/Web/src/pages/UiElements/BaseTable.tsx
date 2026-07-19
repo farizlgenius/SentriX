@@ -10,7 +10,7 @@ import Switch from "../../components/form/switch/Switch";
 
 
 
-export const BaseTable = <T extends { guid: string, isDefault: boolean, isActive: boolean }>({ id, headers, keys, data, onEdit, onInfo, onRemove, setSelect, renderOptionalComponent, specialDisplay, onClick: handleClick, permission, action, status, select, subTable, fetchData, refresh, locationId }: TableProp<T>) => {
+export const BaseTable = <T extends { guid: string , isDefault: boolean, isActive: boolean }>({ id, headers, keys, data, onEdit, onInfo, onRemove, setSelect, renderOptionalComponent, specialDisplay, onClick: handleClick, permission, action, status, select, subTable, fetchData, refresh, locationId }: TableProp<T>) => {
     const { search, startDate, endDate, pageSize, pagination, setPageSize } = usePagination();
     const [show, setShow] = useState<number>(-1)
     const [sortKey, setSortKey] = useState<string>(keys?.[0] ?? "");
@@ -207,16 +207,21 @@ export const BaseTable = <T extends { guid: string, isDefault: boolean, isActive
                                                                 e.stopPropagation()
                                                                 onRemove(data)
                                                             }}
-                                                            disabled={!permission?.isDeleted || data.isDefault}
+                                                            // disabled={!permission?.isDeleted || data.isDefault}
+                                                            // className={`
+                                                            //         inline-flex items-center justify-center
+                                                            //         rounded-lg p-1
+                                                            //         transition-all duration-200
+                                                            //         ${permission?.isDeleted || !data.isDefault
+                                                            //         ?
+                                                            //         "cursor-not-allowed bg-gray-100 text-gray-400 opacity-60" :
+                                                            //         "cursor-pointer text-red-600 hover:bg-red-50 hover:text-red-700 active:scale-95"
+                                                            //     }
                                                             className={`
                                                                     inline-flex items-center justify-center
                                                                     rounded-lg p-1
                                                                     transition-all duration-200
-                                                                    ${permission?.isDeleted || !data.isDefault
-                                                                    ?
-                                                                    "cursor-not-allowed bg-gray-100 text-gray-400 opacity-60" :
-                                                                    "cursor-pointer text-red-600 hover:bg-red-50 hover:text-red-700 active:scale-95"
-                                                                }
+                                                                    cursor-pointer text-red-600 hover:bg-red-50 hover:text-red-700 active:scale-95
   `}
                                                         >
                                                             <TrashBinIcon className="h-5 w-5" />

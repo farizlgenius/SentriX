@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import {  CalenderIcon } from '../../icons';
+import { CalenderIcon, TimeIcon } from '../../icons';
 import PageBreadcrumb from '../../components/common/PageBreadCrumb';
 import HolidayForm from './HolidayForm';
 import Helper from '../../utility/Helper';
@@ -17,36 +17,34 @@ import { FormContent } from '../../model/Form/FormContent';
 import { FormType } from '../../model/Form/FormProp';
 import { usePopup } from '../../context/PopupContext';
 import { usePagination } from '../../context/PaginationContext';
+import { TableCell } from '../../components/ui/table';
 
 // Holiday Page 
-export const HEADER: string[] = ["Name","Day", "Month", "Year", "Action"]
-export const KEY: string[] = ["name","day", "month", "year"];
+export const HEADER: string[] = ["Name", "Start", "End", "Action"]
+export const KEY: string[] = ["name", "start", "end"];
 
 const Holiday = () => {
     const { toggleToast } = useToast();
     const { locationId } = useLocation();
     const { filterPermission } = useAuth();
     const { setPagination } = usePagination();
-    const {setCreate,setUpdate,setRemove,setConfirmCreate,setConfirmRemove,setConfirmUpdate,setInfo,setMessage} = usePopup();
+    const { setCreate, setUpdate, setRemove, setConfirmCreate, setConfirmRemove, setConfirmUpdate, setInfo, setMessage } = usePopup();
     const [refresh, setRefresh] = useState(false);
     const toggleRefresh = () => setRefresh(!refresh);
-    const [formType,setFormType] = useState<FormType>(FormType.CREATE);
+    const [formType, setFormType] = useState<FormType>(FormType.CREATE);
     const defaultDto: HolidayDto = {
+        name: '',
+        start: '',
+        end: '',
         locationId: locationId,
         isActive: true,
-        holId: -1,
-        year: 0,
-        month: 0,
-        day: 0,
-        extend: 0,
-        typeMask: 0,
-        id: 0,
-        name: '',
-        isDefault: false
+        isDefault: false,
+        guid: '00000000-0000-0000-0000-000000000000',
+        componentId: 0
     }
     const [holidatDto, setHolidayDto] = useState<HolidayDto>(defaultDto)
     {/* Modal */ }
-    const [form,setForm] = useState<boolean>(false);
+    const [form, setForm] = useState<boolean>(false);
 
     const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
         console.log(e.currentTarget.name);
@@ -56,27 +54,27 @@ const Holiday = () => {
                 setForm(true);
                 break;
             case "delete":
-                if(selectedObjects.length == 0){            
+                if (selectedObjects.length == 0) {
                     setMessage("Please select object")
                     setInfo(true);
                 }
                 setConfirmRemove(() => async () => {
-                    var data:number[] = [];
-                    selectedObjects.map(async (a:HolidayDto) => {
-                        data.push(a.holId)
+                    var data: string[] = [];
+                    selectedObjects.map(async (a: HolidayDto) => {
+                        data.push(a.guid)
                     })
-                    var res = await send.post(HolidayEndpoint.DELETE_RANGE,data)
-                    if(Helper.handleToastByResCode(res,HolidayToast.DELETE_RANGE,toggleToast)){
-                        setSelectedObjects([])                  
+                    var res = await send.post(HolidayEndpoint.DELETE_RANGE, data)
+                    if (Helper.handleToastByResCode(res, HolidayToast.DELETE_RANGE, toggleToast)) {
+                        setSelectedObjects([])
                         toggleRefresh();
                     }
                 })
                 setRemove(true);
                 break;
             case "create":
-                setConfirmCreate(() => async() => {
-                    const res = await send.post(HolidayEndpoint.CREATE,holidatDto);
-                    if(Helper.handleToastByResCode(res,HolidayToast.CREATE,toggleToast)){
+                setConfirmCreate(() => async () => {
+                    const res = await send.post(HolidayEndpoint.CREATE, holidatDto);
+                    if (Helper.handleToastByResCode(res, HolidayToast.CREATE, toggleToast)) {
                         setHolidayDto(defaultDto);
                         setForm(false);
                         toggleRefresh();
@@ -87,7 +85,7 @@ const Holiday = () => {
             case "update":
                 setConfirmUpdate(() => async () => {
                     const res = await send.put(HolidayEndpoint.UPDATE, holidatDto);
-                    if (Helper.handleToastByResCode(res,HolidayToast.UPDATE, toggleToast)) {
+                    if (Helper.handleToastByResCode(res, HolidayToast.UPDATE, toggleToast)) {
                         setHolidayDto(defaultDto)
                         setForm(false);
                         toggleRefresh();
@@ -113,14 +111,14 @@ const Holiday = () => {
 
     const handleRemove = (data: HolidayDto) => {
         setConfirmRemove(() => async () => {
-            const res = await send.delete(HolidayEndpoint.DELETE(data.id))
+            const res = await send.delete(HolidayEndpoint.DELETE(data.guid))
             if (Helper.handleToastByResCode(res, HolidayToast.DELETE, toggleToast))
                 toggleRefresh();
         })
         setRemove(true);
     }
 
-    const handleInfo = (data:HolidayDto) => {
+    const handleInfo = (data: HolidayDto) => {
         setFormType(FormType.INFO);
         setHolidayDto(data)
         setForm(true);
@@ -130,19 +128,19 @@ const Holiday = () => {
 
     {/* Group Data */ }
     const [holidaysDto, setHolidaysDto] = useState<HolidayDto[]>([]);
-    const fetchData = async (pageNumber: number, pageSize: number,locationId?:number,search?: string, startDate?: string, endDate?: string) => {
-            const res = await send.get(HolidayEndpoint.PAGINATION(pageNumber,pageSize,locationId,search, startDate, endDate));
-            if (res.data.success) {
-                setHolidaysDto(res.data.data.items);
-                setPagination(res.data.data);
-            }
+    const fetchData = async (pageNumber: number, pageSize: number, locationId?: number, search?: string, startDate?: string, endDate?: string) => {
+        const res = await send.get(HolidayEndpoint.PAGINATION(pageNumber, pageSize, locationId, search, startDate, endDate));
+        if (res.data.success) {
+            setHolidaysDto(res.data.data.items);
+            setPagination(res.data.data);
         }
+    }
 
 
 
     {/* checkBox */ }
     const [selectedObjects, setSelectedObjects] = useState<HolidayDto[]>([]);
-   
+
     const content: FormContent[] = [
         {
             label: "Holiday",
@@ -156,7 +154,41 @@ const Holiday = () => {
             {form ?
                 <BaseForm tabContent={content} header={''} desc={''} />
                 :
-                <BaseTable<HolidayDto> headers={HEADER} keys={KEY} data={holidaysDto} select={selectedObjects} setSelect={setSelectedObjects} onInfo={handleInfo} onEdit={handleEdit} onRemove={handleRemove} onClick={handleClick} refresh={refresh} permission={filterPermission(FeatureId.time)} fetchData={fetchData} locationId={locationId}/>
+                <BaseTable<HolidayDto> headers={HEADER} keys={KEY} data={holidaysDto} select={selectedObjects} setSelect={setSelectedObjects} onInfo={handleInfo} onEdit={handleEdit} onRemove={handleRemove} onClick={handleClick} refresh={refresh} permission={filterPermission(FeatureId.time)} fetchData={fetchData} locationId={locationId} specialDisplay={
+                    [
+                        {
+                            key: "start",
+                            content: (data, i) => <TableCell key={i} className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                                <span className='flex gap-2 items-center'>
+
+                                    {<TimeIcon className="w-6 h-6" />}
+                                    {new Date(data.start).toLocaleDateString('en-US', {
+                                        weekday: 'long',
+                                        year: 'numeric',
+                                        month: 'long',
+                                        day: 'numeric'
+                                    })}
+                                </span>
+
+                            </TableCell>
+                        },
+                        {
+                            key: "end",
+                            content: (data, i) => <TableCell key={i} className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                                <span className='flex gap-2 items-center'>
+
+                                    {<TimeIcon className="w-6 h-6" />}
+                                    {new Date(data.end).toLocaleDateString('en-US', {
+                                        weekday: 'long',
+                                        year: 'numeric',
+                                        month: 'long',
+                                        day: 'numeric'
+                                    })}
+                                </span>
+
+                            </TableCell>
+                        }
+                    ]} />
 
 
             }

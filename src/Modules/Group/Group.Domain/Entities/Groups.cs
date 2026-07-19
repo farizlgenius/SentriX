@@ -12,7 +12,7 @@ public sealed class Groups : BaseDomainEntity
             Guid guid, 
             short componentId,
             string name,
-            List<(string Mac,string Type,List<(short DoorComponentId,short TimezoneComponentId)> DoorDetail)> doorGroup,
+            List<GroupDoor> doorGroup,
             int locationId, 
             bool IsActive,
             bool IsDefault
@@ -23,8 +23,10 @@ public sealed class Groups : BaseDomainEntity
             this.GroupDoors = doorGroup.Select(x => new GroupDoor(
                   x.Mac,
                   x.Type,
-                  x.DoorDetail.Select(s => (s.DoorComponentId,s.TimezoneComponentId)).ToList()
-                  )).ToList();
+                  x.DeviceComponentId,
+                  x.DoorComponentId,
+                  x.TimeZoneComponentId
+            )).ToList();
 
       }
 }
