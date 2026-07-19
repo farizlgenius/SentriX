@@ -11,7 +11,6 @@ public sealed record CreatePositionDto(
       bool IsDefault
 ) : BaseDtoEntity(
       Guid.Empty,
-      0,
       LocationId,
       string.Empty,
       IsActive,

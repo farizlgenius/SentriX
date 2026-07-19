@@ -12,7 +12,6 @@ public sealed record CompanyDto(
       bool IsDefault = false
 ) : BaseDtoEntity(
       Guid,
-      0,
       LocationId,
       string.Empty,
       IsActive,

@@ -29,14 +29,11 @@ public interface IDeviceRepository
       Task<bool> IsAnyModuleByIdAsync(int ModuleId,CancellationToken ct = default);
       Task<IEnumerable<OptionDto>> GetModuleOptionByDeviceGuidAsync(Guid DeviceGuid,CancellationToken ct = default);
       Task<string> GetModelByModuleIdAsync(int ModuleId,CancellationToken ct = default);
-      Task<short> GetComponentIdByMacAsync(string Mac,CancellationToken ct = default);
       Task<int> GetLowestModuleComponentIdByDeviceGuidAsync(Guid DeviceGuid,CancellationToken ct = default);
-      Task<DeviceDto> GetDeviceByComponentIdAsync(int ComponentId,CancellationToken ct = default);
       Task<DeviceDto> GetDeviceByGuidAsync(Guid guid,CancellationToken ct = default);
       Task<string> GetMacByGuidAsync(Guid guid,CancellationToken ct = default);
       Task<(string Mac, string Type,short ComponentId)> GetMacAndTypeAndComponentIdByGuidAsync(Guid guid, CancellationToken ct = default);
       Task<IEnumerable<(string Mac,short ComponentId,string Type)>> MacAndComponentIdListAsync(int LocationId,CancellationToken ct = default);
-      Task<string> GetMacByComponentIdAsync(int ComponentId);
       Task<bool> AddReaderAsync(Reader domain,CancellationToken ct = default);
       Task<bool> DeleteReaderAsync(Guid Guid,CancellationToken ct = default);
 

@@ -23,12 +23,10 @@ public sealed class TimeBehavior(
       public async Task<HolidayDto> CreateHolidayAsync(CreateHolidayDto dto)
       {
             // Generate ComponentId
-            var componentId = await holRepo.GetLowestHolidayComponentIdAsync();
             var datas = await bus.QueryAsync(new MacAndComponentIdListByLocationIdQuery(dto.LocationId));
 
              var domain = new Holiday(
                   Guid.NewGuid(),
-                  (short)componentId,
                   dto.Name,
                   dto.Start,
                   dto.End,

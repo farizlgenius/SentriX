@@ -52,7 +52,9 @@ public sealed class ScpReplyWorker(Channel<SCPReplyMessageDto> queue, ILogger<Sc
                         case (int)enSCPReplyType.enSCPReplyTransaction:
                             // define mac , name , actor , image
                             var h = scope.ServiceProvider.GetRequiredService<IDevice>();
-                            var hw = await h.GetDeviceByComponentIdAsync(message.SCPId);
+                            var repo = scope.ServiceProvider.GetRequiredService<IAeroRepository>();
+                            var guid = await repo.GetScpGuidBySlotAsync(message.SCPId);
+                            var hw = await h.GetDeviceByGuidAsync(guid);
                             var mac = hw.Mac;
                             var name = string.Empty;
                             var actor = string.Empty;

@@ -30,8 +30,7 @@ public sealed class DeviceBehaviors(IDeviceRepository repo, IMessageBus bus, IAd
 {
       public async Task AsciiCommandAsync(Guid guid, AeroCommandDto command, CancellationToken ct = default)
       {
-            var detail = await repo.GetMacAndTypeAndComponentIdByGuidAsync(guid);
-            await adapterFactory.GetAdapter(Venders.AERO).Device.AsciiCommandAsync(detail.Mac, detail.ComponentId, command.Command);
+            await adapterFactory.GetAdapter(Venders.AERO).Device.AsciiCommandAsync(guid, command.Command);
       }
 
       public async Task<DeviceDto> CreateAsync(CreateDeviceDto dto, CancellationToken ct = default)
@@ -45,7 +44,6 @@ public sealed class DeviceBehaviors(IDeviceRepository repo, IMessageBus bus, IAd
             var guid = Guid.NewGuid();
             var domain = new Device.Domain.Entities.Devices(
                   guid,
-                  dto.ComponentId,
                   dto.Name,
                   dto.SerialNumber,
                   StringHelper.FormatMac(dto.Mac),
@@ -65,7 +63,7 @@ public sealed class DeviceBehaviors(IDeviceRepository repo, IMessageBus bus, IAd
                   domain.Guid,
                   domain.Ip,
                   domain.Mac,
-                  domain.ComponentId,
+                  dto.ScpId,
                   domain.LocationId
                   );
 
@@ -119,7 +117,6 @@ public sealed class DeviceBehaviors(IDeviceRepository repo, IMessageBus bus, IAd
             return new DeviceDto(
                   guid,
                   domain.Name,
-                  domain.ComponentId,
                   domain.SerialNumber,
                   domain.Mac,
                   domain.Ip,
@@ -137,8 +134,9 @@ public sealed class DeviceBehaviors(IDeviceRepository repo, IMessageBus bus, IAd
 
       public async Task<ModuleDto> CreateModuleAsync(CreateModuleDto dto, CancellationToken ct = default)
       {
-            var module = new Device.Domain.Entities.Module(
-                  Guid.NewGuid(),
+            var guid = Guid.NewGuid();
+            var d = new Device.Domain.Entities.Module(
+                  guid,
                   (short)await repo.GetLowestModuleComponentIdByDeviceGuidAsync(dto.DeviceGuid, ct),
                   $"{((SioModel)dto.Model).ToString()}",
                   string.Empty,
@@ -156,19 +154,30 @@ public sealed class DeviceBehaviors(IDeviceRepository repo, IMessageBus bus, IAd
 
 
             await adapterFactory.GetAdapter(dto.Type).Device.CreateModuleAsync(
-                 dto.Mac,
-                 (short)dto.DeviceComponentId,
-                 dto.ComponentId,
+                  dto.DeviceGuid,
+                  guid,
                  dto.Model,
                  dto.Address,
                  dto.Port
            );
 
 
-            await repo.AddModuleAsync(module, ct);
+            await repo.AddModuleAsync(d, ct);
 
             return new ModuleDto(
-
+                  d.Guid,
+                  d.Name,
+                  d.Fw,
+                  d.SerialNumber,
+                  (short)d.Port,
+                  (short)d.Address,
+                  d.Mac,
+                  d.Model,
+                  d.Type,
+                  d.Device_Guid,
+                  d.LocationId,
+                  d.IsActive,
+                  d.IsDefault
             );
       }
 
@@ -216,8 +225,7 @@ public sealed class DeviceBehaviors(IDeviceRepository repo, IMessageBus bus, IAd
 
       public async Task GetModuleStatusByGuidAsync(Guid guid, CancellationToken ct = default)
       {
-            ModuleDto module = await repo.GetModuleByGuidAsync(guid, ct);
-            await bus.SendAsync(new ModuleStatusCommand(module.DeviceComponentId, module.Mac, module.ComponentId));
+            await bus.SendAsync(new ModuleStatusCommand(guid));
 
       }
 
@@ -229,14 +237,14 @@ public sealed class DeviceBehaviors(IDeviceRepository repo, IMessageBus bus, IAd
       public async Task<DeviceStatusDto> GetStatusByGuidAsync(Guid guid, CancellationToken ct = default)
       {
             var detail = await repo.GetDeviceByGuidAsync(guid, ct);
-            var res = await adapterFactory.GetAdapter(detail.Type).Device.GetDeviceStatusAsync(detail.Ip,detail.Mac, detail.ComponentId);
+            var res = await adapterFactory.GetAdapter(detail.Type).Device.GetDeviceStatusAsync(detail.Guid);
             return new DeviceStatusDto(guid, res);
       }
 
       public async Task ResetDeviceAsync(Guid guid, CancellationToken ct = default)
       {
-            var detail = await repo.GetMacAndTypeAndComponentIdByGuidAsync(guid, ct);
-            await adapterFactory.GetAdapter(detail.Type).Device.ResetDeviceAsync(detail.Mac, detail.ComponentId);
+            var detail = await repo.GetDeviceByGuidAsync(guid, ct);
+            await adapterFactory.GetAdapter(detail.Type).Device.ResetDeviceAsync(detail.Guid);
 
       }
 
@@ -246,10 +254,6 @@ public sealed class DeviceBehaviors(IDeviceRepository repo, IMessageBus bus, IAd
             return res;
       }
 
-      public async Task<DeviceDto> GetDeviceByComponentIdAsync(int ComponentId, CancellationToken ct = default)
-      {
-            return await repo.GetDeviceByComponentIdAsync(ComponentId, ct);
-      }
 
       public async Task<IEnumerable<OptionDto>> GetReaderOptionsByModuleGuidAsync(Guid guid, CancellationToken ct = default)
       {
@@ -308,9 +312,8 @@ public sealed class DeviceBehaviors(IDeviceRepository repo, IMessageBus bus, IAd
                         {
                               short enumValue = (short)status;
                               await adapterFactory.GetAdapter(device.Type).Device.CreateModuleAsync(
-                              Mac,
-                              device.ComponentId,
-                              module.ComponentId,
+                              device.Guid,
+                              module.Guid,
                               enumValue,
                               module.Address,
                               module.Port
@@ -537,7 +540,6 @@ public sealed class DeviceBehaviors(IDeviceRepository repo, IMessageBus bus, IAd
             return new DeviceDto(
                   d.Guid,
                   d.Name,
-                  d.ComponentId,
                   d.SerialNumber,
                   d.Mac,
                   d.Ip,
@@ -556,5 +558,10 @@ public sealed class DeviceBehaviors(IDeviceRepository repo, IMessageBus bus, IAd
       public async Task<DeviceDto> GetDeviceByDeviceIdAsync(string DeviceId, CancellationToken ct = default)
       {
             return await repo.GetDeviceByDeviceIdAsync(DeviceId);
+      }
+
+      public async Task<DeviceDto> GetDeviceByGuidAsync(Guid guid, CancellationToken ct = default)
+      {
+            return await repo.GetDeviceByGuidAsync(guid);
       }
 }

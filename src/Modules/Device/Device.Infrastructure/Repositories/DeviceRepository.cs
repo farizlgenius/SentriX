@@ -77,7 +77,6 @@ public sealed class DeviceRepository(DeviceDbContext context) : IDeviceRepositor
             .Select(x => new DeviceDto(
                   x.guid,
                   x.name,
-                  x.component_id,
                   x.serial_number,
                   x.mac,
                   x.ip,
@@ -101,38 +100,7 @@ public sealed class DeviceRepository(DeviceDbContext context) : IDeviceRepositor
            .FirstOrDefaultAsync() ?? string.Empty;
       }
 
-      public async Task<short> GetComponentIdByMacAsync(string Mac, CancellationToken ct = default)
-      {
-            return await context.Devices.AsNoTracking()
-            .OrderByDescending(x => x.id)
-            .Where(x => x.mac.Equals(Mac))
-            .Select(x => x.component_id)
-            .FirstOrDefaultAsync();
-      }
-
-      public async Task<DeviceDto> GetDeviceByComponentIdAsync(int ComponentId, CancellationToken ct = default)
-      {
-            return await context.Devices.AsNoTracking()
-            .Where(x => x.component_id == ComponentId)
-            .OrderByDescending(x => x.id)
-            .Select(x => new DeviceDto(
-                   x.guid,
-                  x.name,
-                  x.component_id,
-                  x.serial_number,
-                  x.mac,
-                  x.ip,
-                  x.port,
-                  x.fw,
-                  x.type,
-                  x.status,
-                  x.synced_at,
-                  x.location_id,
-                  x.metadata,
-                  x.is_active
-                  ))
-            .FirstOrDefaultAsync() ?? new DeviceDto();
-      }
+     
 
       public async Task<int> GetIdByMacAsync(string Mac, CancellationToken ct = default)
       {
@@ -143,19 +111,6 @@ public sealed class DeviceRepository(DeviceDbContext context) : IDeviceRepositor
             .FirstOrDefaultAsync(ct);
       }
 
-      public async Task<int> GetLowestModuleComponentIdByDeviceGuidAsync(Guid device_guid, CancellationToken ct = default)
-      {
-            return await ComponentHelper.LowestUnassignedNumberAsync<Device.Infrastructure.Persistences.Entities.Module>(
-            context,
-            x => x.device_guid == device_guid,
-            x => x.component_id,
-            ct);
-      }
-
-      public async Task<string> GetMacByComponentIdAsync(int ComponentId)
-      {
-            return await context.Devices.AsNoTracking().Where(x => x.component_id == ComponentId).Select(x => x.mac).FirstOrDefaultAsync() ?? string.Empty;
-      }
 
       public async Task<string> GetMacByIdAsync(int id, CancellationToken ct = default)
       {
@@ -178,7 +133,6 @@ public sealed class DeviceRepository(DeviceDbContext context) : IDeviceRepositor
                   .Include(x => x.devices)
                   .Select(m => new ModuleDto(
                         m.guid,
-                        m.component_id,
                         m.name,
                         m.fw,
                         m.serial_number,
@@ -187,7 +141,7 @@ public sealed class DeviceRepository(DeviceDbContext context) : IDeviceRepositor
                         m.mac,
                         m.model,
                         m.type,
-                        m.devices.component_id,
+                        m.devices.guid,
                         m.location_id,
                         m.is_active
                   )).ToArrayAsync(ct);
@@ -230,7 +184,13 @@ public sealed class DeviceRepository(DeviceDbContext context) : IDeviceRepositor
             return await context.Modules.AsNoTracking()
                   .OrderByDescending(x => x.id)
                   .Where(x => x.device_guid == DeviceGuid)
-                  .Select(x => new OptionDto(x.name, x.component_id,x.mac,x.guid, false))
+                  .Select(x => new OptionDto(
+                        x.name, 
+                        0,
+                        x.mac,
+                        x.guid, 
+                        false
+                        ))
                   .ToArrayAsync();
       }
 
@@ -239,7 +199,7 @@ public sealed class DeviceRepository(DeviceDbContext context) : IDeviceRepositor
             return await context.Devices.AsNoTracking()
             .OrderByDescending(x => x.id)
             .Where(x => x.location_id == locationId && x.type == DeviceType.aero.ToString())
-            .Select(x => new OptionDto(x.name, x.component_id,x.mac,x.guid,false))
+            .Select(x => new OptionDto(x.name, 0,x.mac,x.guid,false))
             .ToArrayAsync();
       }
 
@@ -248,7 +208,7 @@ public sealed class DeviceRepository(DeviceDbContext context) : IDeviceRepositor
             return await context.Devices.AsNoTracking()
             .OrderByDescending(x => x.id)
             .Where(x => x.location_id == locationId && x.type == DeviceType.amico.ToString())
-            .Select(x => new OptionDto(x.name, x.component_id,x.mac,x.guid,false))
+            .Select(x => new OptionDto(x.name, 0,x.mac,x.guid,false))
             .ToArrayAsync();
       }
 
@@ -638,7 +598,6 @@ public sealed class DeviceRepository(DeviceDbContext context) : IDeviceRepositor
             .Select(e => new DeviceDto(
                   e.guid,
                   e.name,
-                  e.component_id,
                   e.serial_number,
                   e.mac.Replace("_", ":"),
                   e.ip,

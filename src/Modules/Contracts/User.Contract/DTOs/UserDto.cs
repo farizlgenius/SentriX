@@ -66,7 +66,6 @@ public sealed record UserDto(
     bool IsDefault=false
 ) : BaseDtoEntity(
     Guid,
-      0,
       LocationId,
       string.Empty,
       IsActive,

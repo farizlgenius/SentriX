@@ -70,7 +70,6 @@ public sealed class DoorRepository(DoorDbContext context) : IDoorRepository
             .Where(x => x.id == id)
             .Select(x => new DoorDto(
                  x.guid,
-                 x.component_id,
                  x.name,
                  x.device_component_id,
                  x.second_component_id,

@@ -17,7 +17,6 @@ public interface IDevice
       Task GetModuleStatusByGuidAsync(Guid guid, CancellationToken ct = default);
       Task AsciiCommandAsync(Guid guid, AeroCommandDto command, CancellationToken ct = default);
       Task<IEnumerable<OptionDto>> GetModuleOptionByDeviceGuidAsync(Guid guid, CancellationToken ct = default);
-      Task<DeviceDto> GetDeviceByComponentIdAsync(int ComponentId, CancellationToken ct = default);
       Task<IEnumerable<OptionDto>> GetReaderOptionsByModuleGuidAsync(Guid guid,CancellationToken ct = default);
       Task<IEnumerable<OptionDto>> GetInputOptionsByModuleIdAsync(Guid guid,CancellationToken ct = default);
       Task<IEnumerable<OptionDto>> GetRelayOptionsByModuleIdAsync(Guid guid,CancellationToken ct = default);
@@ -28,6 +27,7 @@ public interface IDevice
       Task<JsonElement> GetAmicoDeviceInformationAsync(AmicoStartSessionDto dto);
       Task<DeviceDto> DeleteDeviceAsync(Guid guid,CancellationToken ct = default);
       Task<DeviceDto> GetDeviceByDeviceIdAsync(string DeviceId,CancellationToken ct = default);
+      Task<DeviceDto> GetDeviceByGuidAsync(Guid guid,CancellationToken ct = default);
 
 
 }

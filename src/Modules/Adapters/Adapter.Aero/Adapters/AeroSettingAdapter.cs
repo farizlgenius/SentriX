@@ -4,12 +4,10 @@ using SharedKernel.Messaging;
 
 namespace Adapter.Aero.Adapters;
 
-public sealed class AeroSettingAdapter(ISettingCommand writer,IMessageBus bus) : IAeroSettingAdapter
+public sealed class AeroSettingAdapter(ISettingCommand writer,IMessageBus bus,IAeroRepository repo) : IAeroSettingAdapter
 {
       public async Task CardFormatConfiguration(
-            string Mac,
-            short ScpId,
-            short ComponentId,
+            Guid guid,
             short Fac,
             short Offset,
             short FunctionId,
@@ -27,9 +25,10 @@ public sealed class AeroSettingAdapter(ISettingCommand writer,IMessageBus bus) :
             short IcLoc
       )
       {
+            var slots = await repo.GetScpSlotByGuidAsync(guid);
             var res = writer.CardFormatterConfiguration(
-                  Mac,
-                  ScpId,
+                  slots.mac,
+                  slots.slot_id,
                   ComponentId,
                   Fac,
                   Offset,

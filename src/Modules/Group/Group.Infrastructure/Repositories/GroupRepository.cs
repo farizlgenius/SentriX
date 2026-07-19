@@ -56,7 +56,6 @@ public sealed class GroupRepository(GroupDbContext context) : IGroupRepository
             .OrderByDescending(x => x.id)
             .Select(x => new GroupDto(
                   x.guid,
-                  x.component_id,
                   x.name,
                   x.group_doors.Select(g => new GroupDoorDto(
                         g.mac,
@@ -80,7 +79,6 @@ public sealed class GroupRepository(GroupDbContext context) : IGroupRepository
             .OrderByDescending(x => x.id)
             .Select(x => new GroupDto(
                   x.guid,
-                  x.component_id,
                   x.name,
                   x.group_doors.Select(g => new GroupDoorDto(
                         g.mac,
@@ -102,7 +100,6 @@ public sealed class GroupRepository(GroupDbContext context) : IGroupRepository
             .Where(x => x.location_id == location || x.location_id == 0)
             .Select(x => new GroupDto(
                   x.guid,
-                  x.component_id,
                   x.name,
                   x.group_doors.Select(g => new GroupDoorDto(
                         g.mac,
@@ -139,7 +136,6 @@ public sealed class GroupRepository(GroupDbContext context) : IGroupRepository
             .Where(x => x.group_doors.Any(g => g.mac.Equals(Mac)))
             .Select(x => new GroupDto(
                   x.guid,
-                  x.component_id,
                   x.name,
                  x.group_doors.Select(g => new GroupDoorDto(
                         g.mac,
@@ -164,15 +160,6 @@ public sealed class GroupRepository(GroupDbContext context) : IGroupRepository
 
       }
 
-      public async Task<short> GetLowestGroupComponentIdAsync(CancellationToken ct = default)
-      {
-            return (short)await ComponentHelper.LowestUnassignedNumberAsync<Persistences.Entities.Groups>(
-                  context,
-                  x => x.component_id,
-                  100,
-                  ct
-            );
-      }
 
       public async Task<Pagination<GroupDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
       {
@@ -225,7 +212,6 @@ public sealed class GroupRepository(GroupDbContext context) : IGroupRepository
             .Take(param.pageSize)
             .Select(x => new GroupDto(
                   x.guid,
-                  x.component_id,
                   x.name,
                   x.group_doors.Select(g => new GroupDoorDto(
                         g.mac,

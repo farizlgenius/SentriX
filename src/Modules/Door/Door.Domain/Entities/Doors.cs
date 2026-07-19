@@ -17,7 +17,6 @@ public sealed class Doors : BaseDomainEntity
             Guid guid,
             short deviceComponentId,
             string mac,
-            short componentId,
             short secondComponentId,
             string name,
             string doorType,
@@ -25,7 +24,7 @@ public sealed class Doors : BaseDomainEntity
             string type,
             int locationId, 
             bool IsActive,
-            bool IsDefault) : base(guid, componentId, locationId, IsActive,IsDefault)
+            bool IsDefault) : base(guid, locationId, IsActive,IsDefault)
       {
             ValidationHelper.IsValidName(name);
             ValidationHelper.IsNullOrEmpty(doorType,nameof(DoorType));

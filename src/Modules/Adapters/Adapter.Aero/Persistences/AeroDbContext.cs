@@ -15,6 +15,14 @@ public sealed class AeroDbContext(DbContextOptions<AeroDbContext> options) : DbC
       public DbSet<RelayMode> RelayModes {get; set;}
       public DbSet<TimezoneMode> TimezoneModes {get; set;}
       public DbSet<DoorMode> DoorModes {get; set;}
+
+      // Resource Allocate Tracking Table
+      public DbSet<ScpSlot> ScpSlots {get; set;}
+      public DbSet<SioSlot> SioSlots {get; set;}
+      public DbSet<AcrSlot> AcrSlots {get; set;}
+      public DbSet<CpSlot> CpSlots {get; set;}
+      public DbSet<MpSlot> MpSlots { get; set; }
+      public DbSet<MpgSlot> MpgSlots {get; set;}
       protected override void OnModelCreating(ModelBuilder modelBuilder)
       {
             base.OnModelCreating(modelBuilder);
@@ -50,6 +58,34 @@ public sealed class AeroDbContext(DbContextOptions<AeroDbContext> options) : DbC
                             .HasDefaultValueSql(utcNowSql)
                             .ValueGeneratedOnAdd();
                   }
+
+                  if (typeof(BaseSlot).IsAssignableFrom(entityType.ClrType))
+                  {
+                        modelBuilder.Entity(entityType.ClrType)
+                            .Property(nameof(BaseSlot.created_at))
+                            .HasDefaultValueSql(utcNowSql)
+                            .ValueGeneratedOnAdd();
+
+                        modelBuilder.Entity(entityType.ClrType)
+                            .Property(nameof(BaseSlot.updated_at))
+                            .HasDefaultValueSql(utcNowSql)
+                            .ValueGeneratedOnAdd();
+                  }
+
+                   if (typeof(ScpSlot).IsAssignableFrom(entityType.ClrType))
+                  {
+                        modelBuilder.Entity(entityType.ClrType)
+                            .Property(nameof(ScpSlot.created_at))
+                            .HasDefaultValueSql(utcNowSql)
+                            .ValueGeneratedOnAdd();
+
+                        modelBuilder.Entity(entityType.ClrType)
+                            .Property(nameof(ScpSlot.updated_at))
+                            .HasDefaultValueSql(utcNowSql)
+                            .ValueGeneratedOnAdd();
+                  }
+
+                  
             }
 
             // Below is used for define relation betweeneach database 
@@ -155,6 +191,18 @@ public sealed class AeroDbContext(DbContextOptions<AeroDbContext> options) : DbC
                           max_floors = 128
                     }
                 );
+
+            var allocations = Enumerable.Range(1, 1024)
+                  .Select(i => new ScpSlot
+                  {
+                        id = i,
+                        slot_id = 1,
+                        is_available = true
+                  });
+
+                  modelBuilder.Entity<ScpSlot>()
+                  .HasData(allocations);
+
 
 
       }

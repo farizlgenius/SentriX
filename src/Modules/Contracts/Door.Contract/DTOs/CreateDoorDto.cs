@@ -13,4 +13,4 @@ public sealed record CreateDoorDto(
       string Type,
       bool IsActive,
       bool IsDefault
-      ) : BaseDtoEntity(Guid,0,LocationId,Type,IsActive,IsDefault);
+      ) : BaseDtoEntity(Guid,LocationId,Type,IsActive,IsDefault);

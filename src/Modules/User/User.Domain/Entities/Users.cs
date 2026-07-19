@@ -56,7 +56,7 @@ public sealed class Users : BaseDomainEntity
       int locationId, 
       bool IsActive,
       bool IsDefault
-      ) : base(Guid,0, locationId, IsActive,IsDefault)
+      ) : base(Guid,locationId, IsActive,IsDefault)
       {
             ValidationHelper.IsValidOnlyCharAndDigit(UserId, nameof(UserId));
             ValidationHelper.IsValidName(FirstName);

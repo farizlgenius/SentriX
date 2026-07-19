@@ -9,13 +9,12 @@ public sealed class TimeZone : BaseDomainEntity
         public List<Interval> Intervals {get; set;} = new List<Interval>();
       public TimeZone(
             Guid guid,
-            short componentId,
             string name,
             List<Interval> intervals,
             int locationId,
             bool isActive,
             bool isDefault
-      ) : base(guid,componentId,locationId,isActive,isDefault)
+      ) : base(guid,locationId,isActive,isDefault)
       {
             this.Name = name;
             this.Intervals = intervals;

@@ -15,7 +15,7 @@ public sealed class Module : BaseDomainEntity
       public string Model {get; private set;} = string.Empty;
       public Guid Device_Guid {get; private set;}
 
-      public Module(Guid guid,short componentId,string name, string serial_number, string fw,int port,int address,string mac,string model,string type,Guid device_guid,int locationId,bool isActive,bool isDefault) : base(guid,componentId,locationId,isActive,isDefault)
+      public Module(Guid guid,short componentId,string name, string serial_number, string fw,int port,int address,string mac,string model,string type,Guid device_guid,int locationId,bool isActive,bool isDefault) : base(guid,locationId,isActive,isDefault)
       {
             this.Name = name;
             this.SerialNumber = serial_number;

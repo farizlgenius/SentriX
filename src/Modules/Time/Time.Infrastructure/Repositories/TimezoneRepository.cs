@@ -77,29 +77,9 @@ public sealed class TimezoneRepository(TimeDbContext context) : ITimeZoneReposit
                   );
       }
 
-      public async Task<short> GetLowestIntervalComponentIdAsync(CancellationToken ct = default)
-      {
-            return (short)await ComponentHelper.LowestUnassignedNumberStartOneAsync<Persistences.Entities.Interval>(
-                  context,
-                  x => x.component_id,
-                  255,
-                  ct
-                  );
-      }
 
-      public async Task<short> GetLowestIntervalComponentIdExceptStartFromOneAsync(
-            List<short> Excepts,
-            Guid TzGuid,
-            CancellationToken ct = default
-            )
-      {
-            return await ComponentHelper.LowestUnassignedNumberExceptStartFromOneAsync<Persistences.Entities.Interval>(
-                  context,
-                  Excepts,
-                  x => x.component_id,
-                  ct
-            );
-      }
+
+
 
 
 

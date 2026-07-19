@@ -1,4 +1,5 @@
 using Adapter.Amico.Persistences.Entities;
+using SharedKernel.Domain;
 
 namespace Adapter.Amico.Interfaces;
 
@@ -19,4 +20,16 @@ public interface IAmicoRepository
       );
       Task<Amicos> GetAmicoByMacAsync(string mac,CancellationToken ct = default);
       Task UpdateSessionByMacAsync(string mac,string session,CancellationToken ct = default);
+      Task AddSlotAsync<TEntity>(
+             Guid guid,
+            int slot,
+             Func<Guid, int, TEntity> factory, 
+            CancellationToken ct = default
+      ) where TEntity : BaseSlot;
+
+      Task DeleteSlot<TEntity>(
+            Guid guid, 
+            int slot,
+            CancellationToken ct = default
+      ) where TEntity : BaseSlot;
 }

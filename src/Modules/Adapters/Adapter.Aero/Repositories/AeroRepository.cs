@@ -3,6 +3,7 @@ using Adapter.Aero.Persistences;
 using Adapter.Aero.Persistences.Entities;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel.Domain;
+using SharedKernel.Helpers;
 
 namespace Adapter.Aero.Repositories;
 
@@ -52,4 +53,214 @@ public sealed class AeroRepository(AeroDbContext context) : IAeroRepository
       }
 
 
+      // Slot Allocate
+
+      public async Task AddSlotAsync<TEntity>(
+            Guid guid,
+            int slot,
+             Func<Guid, int, TEntity> factory, 
+            CancellationToken ct = default
+            ) where TEntity : BaseSlot
+      {
+            var entity = factory(guid, slot);
+
+            await context.Set<TEntity>().AddAsync(entity, ct);
+            await context.SaveChangesAsync(ct);
+      }
+
+
+
+      public async Task InsertSlotAsync<TEntity>(
+            Guid device_guid,
+            Guid module_guid,
+            int slot,
+            CancellationToken ct = default
+            ) where TEntity : BaseSlot
+      {
+            var e = await context.Set<TEntity>()
+            .Where(x => x.device_guid == device_guid && x.slot_id == slot)
+            .FirstOrDefaultAsync();
+
+             if(e == null)
+                  throw new Exception(MessageHelper.Common.NotFound("Slot",slot));
+
+            e.Inserted(module_guid);
+            context.Set<TEntity>().Update(e);
+            await context.SaveChangesAsync();
+      }
+
+       public async Task InsertCentralSlotAsync<TEntity>(
+            Guid module_guid,
+            int slot,
+            CancellationToken ct = default
+            ) where TEntity : CentralBaseSlot
+      {
+            var e = await context.Set<TEntity>()
+            .Where(x => x.slot_id == slot)
+            .FirstOrDefaultAsync();
+
+             if(e == null)
+                  throw new Exception(MessageHelper.Common.NotFound("Slot",slot));
+
+            e.Inserted(module_guid);
+            context.Set<TEntity>().Update(e);
+            await context.SaveChangesAsync();
+      }
+
+
+      public async Task EjectSlotAsync<TEntity>(
+            Guid guid,
+            int slot,
+            CancellationToken ct = default
+            ) where TEntity : BaseSlot
+      {
+            var e = await context.Set<TEntity>()
+            .Where(x => x.device_guid == guid && x.slot_id == slot)
+            .FirstOrDefaultAsync();
+
+             if(e == null)
+                  throw new Exception(MessageHelper.Common.NotFound("Slot",slot));
+
+            e.Ejected();
+            context.Set<TEntity>().Update(e);
+            await context.SaveChangesAsync(ct);
+      }
+
+      public async Task EjectCentralSlotAsync<TEntity>(
+            int slot,
+            CancellationToken ct = default
+            ) where TEntity : CentralBaseSlot
+      {
+            var e = await context.Set<TEntity>()
+            .Where(x =>  x.slot_id == slot)
+            .FirstOrDefaultAsync();
+
+             if(e == null)
+                  throw new Exception(MessageHelper.Common.NotFound("Slot",slot));
+
+            e.Ejected();
+            context.Set<TEntity>().Update(e);
+            await context.SaveChangesAsync();
+      }
+
+
+      public async Task DeleteSlotAsync<TEntity>(Guid guid, CancellationToken ct = default) where TEntity : BaseSlot
+      {
+            var e = await context.Set<TEntity>()
+            .Where(x => x.device_guid == guid)
+            .ToArrayAsync(ct);
+
+            context.Set<TEntity>().RemoveRange(e);
+            await context.SaveChangesAsync(ct);
+      }
+
+      public async Task<int> GetFreeSlotAsync<TEntity>(Guid guid, CancellationToken ct = default) where TEntity : BaseSlot
+      {
+            return await context.Set<TEntity>()
+            .AsNoTracking()
+            .OrderByDescending(x => x.slot_id)
+            .Where(x => x.device_guid == guid && x.is_available == true)
+            .Select(x => x.slot_id)
+            .FirstOrDefaultAsync();
+      }
+
+      public async Task<int> GetScpFreeSlotAsync(CancellationToken ct = default)
+      {
+            return await context.ScpSlots.AsNoTracking()
+            .OrderByDescending(x => x.slot_id)
+            .Where(x => x.is_available == true)
+            .Select(x => x.slot_id)
+            .FirstOrDefaultAsync();
+      }
+
+      public async Task<int> GetScpSlotByMacAsync(string mac, CancellationToken ct = default)
+      {
+           return await context.ScpSlots.AsNoTracking()
+           .OrderByDescending(x => x.id)
+           .Where(x => x.mac.Equals(mac))
+           .Select(x => x.slot_id)
+           .FirstOrDefaultAsync();
+      }
+
+      public async Task InsertScpSlotAsync(Guid guid, string mac,int slot,CancellationToken ct = default)
+      {
+            var e = await context.ScpSlots
+            .Where(x => x.slot_id == slot)
+            .FirstOrDefaultAsync(ct);
+
+            if(e is null)
+                  throw new Exception(MessageHelper.DB.RecordNotFound);
+
+            e.Inserted(guid,mac);
+
+            context.ScpSlots.Update(e);
+            await context.SaveChangesAsync(ct);
+      }
+
+      public async Task EjectScpSlotAsync(Guid guid,CancellationToken ct = default)
+      {
+            var e = await context.ScpSlots
+            .Where(x => x.component_guid == guid)
+            .FirstOrDefaultAsync(ct);
+
+            if(e is null)
+                  throw new Exception(MessageHelper.DB.RecordNotFound);
+
+            e.Ejected();
+
+            context.ScpSlots.Update(e);
+            await context.SaveChangesAsync(ct);
+      }
+
+      public async Task<ScpSlot> GetScpSlotByGuidAsync(Guid guid, CancellationToken ct = default)
+      {
+            return await context.ScpSlots.AsNoTracking()
+            .Where(x => x.component_guid == guid)
+            .OrderByDescending(x => x.id)
+            .FirstOrDefaultAsync() ?? new ScpSlot();
+      }
+
+      public async Task<TEntity> GetSlotByGuidAsync<TEntity>(Guid guid, CancellationToken ct = default) where TEntity : BaseSlot
+      {
+            return (TEntity)(await context.Set<TEntity>()
+            .AsNoTracking()
+            .OrderByDescending(x => x.id)
+            .Where(x => x.component_guid == guid)
+            .FirstOrDefaultAsync() ?? new BaseSlot());
+      }
+
+      public async Task<Guid> GetScpGuidBySlotAsync(int slot, CancellationToken ct = default)
+      {
+           return await context.ScpSlots.AsNoTracking()
+           .Where(x => x.slot_id == slot)
+           .Select(x => x.component_guid)
+           .FirstOrDefaultAsync() ?? Guid.Empty;
+      }
+
+      public async Task<int> GetCentralFreeSlotAsync<TEntity>(CancellationToken ct = default) where TEntity : CentralBaseSlot
+      {
+            return await context.Set<TEntity>()
+            .Where(x => x.is_available == true)
+            .Select(x => x.slot_id)
+            .FirstOrDefaultAsync();
+      }
+
+      public async Task<TEntity> GetCentralSlotByGuidAsync<TEntity>(Guid guid, CancellationToken ct = default) where TEntity : CentralBaseSlot
+      {
+            return (TEntity)(await context.Set<TEntity>()
+            .Where(x => x.component_guid == guid)
+            .FirstOrDefaultAsync() ?? new CentralBaseSlot());
+      }
+
+      public async Task AddCentrlSlotAsync<TEntity>(
+            int slot,
+             Func<int, TEntity> factory, 
+            CancellationToken ct = default
+            ) where TEntity : CentralBaseSlot
+      {
+            var entity = factory( slot);
+
+            await context.Set<TEntity>().AddAsync(entity, ct);
+            await context.SaveChangesAsync(ct);
+      }
 }

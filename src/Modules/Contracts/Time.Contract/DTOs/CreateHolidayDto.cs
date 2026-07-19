@@ -9,4 +9,4 @@ public sealed record CreateHolidayDto(
         int LocationId,
         bool IsActive,
         bool IsDefault
-) : BaseDtoEntity(Guid.Empty,0,LocationId, string.Empty, IsActive,IsDefault);
+) : BaseDtoEntity(Guid.Empty,LocationId, string.Empty, IsActive,IsDefault);

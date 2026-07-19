@@ -15,4 +15,4 @@ public sealed record DoorDto(
       string Type="",
       bool IsActive=true,
       bool IsDefault=false
-      ) : BaseDtoEntity(Guid,ComponentId,LocationId,Type,IsActive,IsDefault);
+      ) : BaseDtoEntity(Guid,LocationId,Type,IsActive,IsDefault);

@@ -6,7 +6,6 @@ namespace Device.Contract.DTOs;
 public sealed record DeviceDto(
       Guid Guid=default,
       string Name="",
-      short ComponentId=0,
       string SerialNumber="",
       string Mac="",
       string Ip="",
@@ -19,4 +18,4 @@ public sealed record DeviceDto(
       string Metadata="",
       bool IsActive=true,
       bool IsDefault=false
-) : BaseDtoEntity(Guid,ComponentId,LocationId,Type,IsActive,IsDefault);
+) : BaseDtoEntity(Guid,LocationId,Type,IsActive,IsDefault);

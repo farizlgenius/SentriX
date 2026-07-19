@@ -32,7 +32,6 @@ public sealed record CreateUserDto(
       bool IsDefault=false
 ) : BaseDtoEntity(
       Guid,
-      0,
       LocationId,
       string.Empty,
       IsActive,

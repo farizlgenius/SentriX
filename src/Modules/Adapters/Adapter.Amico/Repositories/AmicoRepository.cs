@@ -2,6 +2,7 @@ using Adapter.Amico.Interfaces;
 using Adapter.Amico.Persistences;
 using Adapter.Amico.Persistences.Entities;
 using Microsoft.EntityFrameworkCore;
+using SharedKernel.Domain;
 using SharedKernel.Helpers;
 
 namespace Adapter.Amico.Repositories;
@@ -28,6 +29,14 @@ public sealed class AmicoRepository(AmicoDbContext context) : IAmicoRepository
             await context.SaveChangesAsync(ct);
       }
 
+      public async Task AddSlotAsync<TEntity>(Guid guid, int slot, Func<Guid, int, TEntity> factory, CancellationToken ct = default) where TEntity : BaseSlot
+      {
+            var entity = factory(guid, slot);
+
+            await context.Set<TEntity>().AddAsync(entity, ct);
+            await context.SaveChangesAsync(ct);
+      }
+
       public async Task DeleteAsync(string Mac, string Ip, CancellationToken ct = default)
       {
             var entity = await context.Amicos
@@ -41,6 +50,19 @@ public sealed class AmicoRepository(AmicoDbContext context) : IAmicoRepository
             context.Amicos.Remove(entity);
 
             await context.SaveChangesAsync(ct); 
+      }
+
+      public async Task DeleteSlot<TEntity>(Guid guid, int slot, CancellationToken ct = default) where TEntity : BaseSlot
+      {
+            var e = await context.Set<TEntity>()
+            .Where(x => x.device_guid == guid && x.slot_id == slot)
+            .FirstOrDefaultAsync(ct);
+
+            if(e is null)
+                  throw new Exception(MessageHelper.Common.NotFound("Slot Id",slot));
+
+            context.Set<TEntity>().Remove(e);
+            await context.SaveChangesAsync(ct);
       }
 
       public async Task<Amicos> GetAmicoByMacAsync(string mac,CancellationToken ct = default)

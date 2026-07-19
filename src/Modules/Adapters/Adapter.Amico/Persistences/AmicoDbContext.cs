@@ -10,6 +10,8 @@ public class AmicoDbContext(DbContextOptions<AmicoDbContext> options) : DbContex
       public const string Schema = "amico";
 
       public DbSet<Amicos> Amicos {get; set;}
+      public DbSet<TimeZoneSlot> TimeZoneSlots { get; set; }
+      public DbSet<TimeSpanSlot> TimeSpanSlot { get; set; }
       protected override void OnModelCreating(ModelBuilder modelBuilder)
       {
             base.OnModelCreating(modelBuilder);

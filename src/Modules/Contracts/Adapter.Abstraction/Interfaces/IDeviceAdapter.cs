@@ -11,19 +11,18 @@ public interface IDeviceAdapter
             Guid Guid,
             string Ip,
             string Mac,
-            short ComponentId,
+            short ScpId,
             int LocationId
             );
-      Task<bool> GetDeviceStatusAsync(string Ip,string Mac,short ComponentId);
-      Task<bool> ResetDeviceAsync(string Mac,short ComponentId);
+      Task<bool> GetDeviceStatusAsync(Guid guid);
+      Task ResetDeviceAsync(Guid guid);
       Task CreateModuleAsync(
-            string Mac,
-            short ScpId,
-            short SioNumber,
+            Guid DeviceGuid,
+            Guid ModuleGuid,
             short Model,
             short Address,
             short Port
-      );
+            );
       
       Task<bool> GetEventStatusAsync(string Mac,short ComponentId);
       Task<bool> SetEventStatusAsync(string Mac,short ComponentId,bool IsEnable);
@@ -32,7 +31,9 @@ public interface IDeviceAdapter
       Task<JsonElement> GetDeviceInformationByIpAsync(string Ip,bool? IsFirst);
       Task VerifyDeviceComponentAsync(short ComponentId);
 
-      Task<bool> AsciiCommandAsync(string Mac,short ComponentId,string Command);
+      Task<bool> AsciiCommandAsync(Guid guid,string Command);
+
+      
       Task<List<IdReportDto>> GetIdReportsAsync();
 
 }

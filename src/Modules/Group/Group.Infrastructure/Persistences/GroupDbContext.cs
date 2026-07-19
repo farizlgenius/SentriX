@@ -62,7 +62,6 @@ public sealed class GroupDbContext(DbContextOptions<GroupDbContext> options) : D
                   {
                         id=1,
                         name="Default",
-                        component_id=1,
                         location_id=-1,
                         is_default=true,
                         is_active=true
@@ -71,7 +70,6 @@ public sealed class GroupDbContext(DbContextOptions<GroupDbContext> options) : D
                   {
                         id=2,
                         name="Always",
-                        component_id=1,
                         location_id=0,
                         is_default=true,
                         is_active=true
@@ -80,7 +78,6 @@ public sealed class GroupDbContext(DbContextOptions<GroupDbContext> options) : D
                   {
                         id=3,
                         name="Never",
-                        component_id=2,
                         location_id=0,
                         is_default=true,
                         is_active=true

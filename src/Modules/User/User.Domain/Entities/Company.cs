@@ -12,7 +12,7 @@ public sealed class Company : BaseDomainEntity
       public List<Department> Departments {get; private set;} = new List<Department>();
       public List<Users> Users {get; private set;} = new List<Users>();
 
-      public Company(Guid guid, string name, string address, string description, int locationId, bool isActive,bool isDefault) : base(guid, 0, locationId, isActive,isDefault)
+      public Company(Guid guid, string name, string address, string description, int locationId, bool isActive,bool isDefault) : base(guid, locationId, isActive,isDefault)
       {
             ValidationHelper.IsNullOrEmpty(name, nameof(name));
             ValidationHelper.ValidateNotMinus(locationId, nameof(locationId));

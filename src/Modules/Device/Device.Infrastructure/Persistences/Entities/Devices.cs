@@ -20,7 +20,7 @@ public sealed class Devices : BaseDbEntity
 
   public Devices() { }
 
-  public Devices(Device.Domain.Entities.Devices domain) : base(domain.Guid,domain.ComponentId,domain.LocationId,domain.IsActive,domain.IsDefault)
+  public Devices(Device.Domain.Entities.Devices domain) : base(domain.Guid,domain.LocationId,domain.IsActive,domain.IsDefault)
   {
     this.name = domain.Name;
     this.serial_number = domain.SerialNumber;

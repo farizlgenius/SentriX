@@ -4,9 +4,9 @@ using SharedKernel.Domain;
 namespace Device.Contract.DTOs;
 
 public sealed record CreateDeviceDto(
-      short ComponentId,
       string Name,
       string SerialNumber,
+      short ScpId,
       string Mac,
       string Ip,
       int Port,
@@ -16,4 +16,4 @@ public sealed record CreateDeviceDto(
       DateTime SyncedAt,
       int LocationId,
       string Metadata
-) : BaseDtoEntity(Guid.Empty,ComponentId,LocationId,Type,true,true);
+) : BaseDtoEntity(Guid.Empty,LocationId,Type,true,true);

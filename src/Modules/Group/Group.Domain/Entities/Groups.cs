@@ -10,13 +10,12 @@ public sealed class Groups : BaseDomainEntity
 
       public Groups(
             Guid guid, 
-            short componentId,
             string name,
             List<GroupDoor> doorGroup,
             int locationId, 
             bool IsActive,
             bool IsDefault
-            ) : base(guid, componentId, locationId, IsActive,IsDefault)
+            ) : base(guid, locationId, IsActive,IsDefault)
       {
             ValidationHelper.IsValidName(name);
             this.Name = name;

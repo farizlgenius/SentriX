@@ -10,78 +10,44 @@ public interface ITimeAdapter
 {
 
      // Holiday
-      Task CreateHolidayAsync(
+     Task CreateHolidayAsync(
+         Guid Guid,
+          string Name,
+           DateTime Start,
+           DateTime End
+    );
+
+     Task DeleteHolidayAsync(
           Guid Guid,
-          short DeviceComponentId,
-          short ComponentId,
-           string Name,
-          string Mac,
-            DateTime Start,
-            DateTime End
-     );
-
-          Task DeleteHolidayAsync(
-       short DeviceComponentId,
-            int ComponentId,
-            string Mac,
-            DateTime Start,
-            DateTime End
-            );
+       DateTime Start,
+       DateTime End
+       );
 
 
-                 Task UpdateHolidayAsync(
-          Guid guid,
-           string Name,
-           short DeviceComponentId,
-           int ComponentId,
-          string Mac,
-            DateTime Start,
-            DateTime End
-     );
+     Task UpdateHolidayAsync(Guid DeviceGuid,DateTime Start, DateTime End);
 
 
      // Time Zone
 
 
      Task CreateTimeZoneAsync(
-          Guid Guid,
-          short DeviceComponentId,
-          short TzComponentId,
+           Guid DeviceGuid,
+           Guid TzGuid,
            string Name,
-           string Mac,
             List<IntervalObject> Intervals
-     );
+      );
 
-     Task UpdateTimeZoneAsync(
-          Guid Guid,
-          short DeviceComponentId,
-          short TzComponentId,
-           string Name,
-           string Mac,
-            List<IntervalObject> Intervals
-     );
+     Task UpdateTimeZoneAsync(Guid DeviceGuid,Guid TzGuid, string Name, List<IntervalObject> Intervals);
 
-          Task DeleteTimeZoneAsync(
-          string Mac,
-            short DeviceComponentId,
-            short ComponentId,
-            List<short> IntervalComponentId
-     );
+     Task DeleteTimeZoneAsync(Guid DeviceGuid,Guid TzGuid, List<short> IntervalComponentId);
 
 
      // Reset Delete All
 
 
      Task ClearTimeAsync(
-          Guid Guid,
-          string Mac
+          Guid Guid
      );
-
-
-
-
-
-
 
 
 }

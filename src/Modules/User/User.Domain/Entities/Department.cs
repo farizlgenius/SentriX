@@ -11,7 +11,7 @@ public sealed class Department : BaseDomainEntity
       public Guid CompanyGuid {get; private set;} 
       public List<Position> Positions { get; private set; } = new List<Position>();
 
-      public Department(Guid guid, string name, string description,Guid companyGuid, int locationId,bool isActive,bool IsDefault) : base(guid,0,locationId,isActive,IsDefault)
+      public Department(Guid guid, string name, string description,Guid companyGuid, int locationId,bool isActive,bool IsDefault) : base(guid,locationId,isActive,IsDefault)
       {
             ValidationHelper.IsNullOrEmpty(name, nameof(name));
             ValidationHelper.ValidateNotMinus(locationId, nameof(locationId));

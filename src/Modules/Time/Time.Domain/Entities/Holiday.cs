@@ -12,14 +12,13 @@ public sealed class Holiday : BaseDomainEntity
 
       public Holiday(
             Guid Guid,
-            short ComponentId,
             string Name,
             DateTime Start,
             DateTime End,
             int LocationId,
             bool IsActive,
             bool IsDefault = false
-            ) : base(Guid, ComponentId, LocationId, IsActive, IsDefault)
+            ) : base(Guid, LocationId, IsActive, IsDefault)
       {
             ValidationHelper.ValidateDateTime(nameof(DateTime), Start);
             ValidationHelper.ValidateDateTime(nameof(DateTime), End);

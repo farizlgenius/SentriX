@@ -13,6 +13,7 @@ using Device.Contract.DTOs;
 using Device.Contract.Queries;
 using Events.Contract.Command;
 using HID.Aero.ScpdNet.Wrapper;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SharedKernel.Enums;
 using SharedKernel.Helpers;
@@ -23,7 +24,11 @@ namespace Adapter.Aero.Adapters;
 public sealed class AeroDeviceAdapter(
       ILogger<AeroDeviceAdapter> logger,
       IScpService scp,
-      IScpCommand writer, IIdReportService idReport, IModuleCommand sioWriter, IMessageBus bus
+      IScpCommand writer, 
+      IIdReportService idReport, 
+      IModuleCommand sioWriter, 
+      IMessageBus bus,
+      IAeroRepository repo
       ) : IAeroDeviceAdapter
 {
       public async Task<List<IdReportDto>> GetIdReportsAsync()
@@ -35,7 +40,7 @@ public sealed class AeroDeviceAdapter(
             Guid Guid,
             string Ip,
             string Mac,
-            short ComponentId,
+            short ScpId,
             int LocationId
       )
       {
@@ -44,7 +49,7 @@ public sealed class AeroDeviceAdapter(
             // Read Structure 
             var res = writer.ScpStructureStatusRead(
                   Mac,
-                 ComponentId,
+                 ScpId,
                   [
                         (short)SCPStructure.SCPSID_TRAN,
                         (short)SCPStructure.SCPSID_TZ,
@@ -67,44 +72,101 @@ public sealed class AeroDeviceAdapter(
             await bus.SendAsync(new AddCommandEvent(res));
 
             if (!res.IsSend)
-                  throw new Exception(MessageHelper.Command.Unsuccess(CommandConstant.ScpStructureStatusRead, Mac, ComponentId));
+                  throw new Exception(MessageHelper.Command.Unsuccess(CommandConstant.ScpStructureStatusRead, Mac, ScpId));
 
 
             idReport.IdReportInMemory.RemoveAll(x => x.Mac.Equals(Mac));
 
+            var setting = await repo.GetScpDeviceSpecificationAsync();
+
+            await repo.InsertScpSlotAsync(Guid,Mac,ScpId);
+
+            var sios = Enumerable.Range(1,setting.n_sio-1);
+            foreach(var sio in sios)
+            {
+                  await repo.AddSlotAsync(
+                        Guid,
+                        sio,
+                        (g,s) => new SioSlot(g,s)
+                        );
+            }
+            
+            var mpgs = Enumerable.Range(0,setting.n_mpg-1);
+            foreach(var mpg in mpgs)
+            {
+                  await repo.AddSlotAsync(
+                        Guid,
+                        mpg,
+                        (g,s) => new MpgSlot(g,s)
+                        );
+            }
+
+            var acrs = Enumerable.Range(0,setting.n_acr - 1);
+            foreach(var acr in acrs)
+            {
+                  await repo.AddSlotAsync(
+                        Guid,
+                        acr,
+                        (g,s) => new AcrSlot(g,s)
+                        );
+            }
+            
+            var cps = Enumerable.Range(0,setting.n_cp -1);
+            foreach(var cp in cps)
+            {
+                  await repo.AddSlotAsync(
+                        Guid,
+                        cp,
+                        (g,s) => new CpSlot(g,s)
+                        );
+            }
+            
+            var mps = Enumerable.Range(0,setting.n_mp -1);
+            foreach(var mp in mps)
+            {
+                  await repo.AddSlotAsync(
+                        Guid,
+                        mp,
+                        (g,s) => new MpSlot(g,s)
+                        );
+            }
+            
+
 
       }
 
-      public async Task<bool> GetDeviceStatusAsync(string Ip,string Mac, short ComponentId)
+      public async Task<bool> GetDeviceStatusAsync(Guid guid)
       {
-            return SCPDLL.scpCheckOnline(ComponentId) == 1;
+            var slots = await repo.GetScpSlotByGuidAsync(guid);
+            return SCPDLL.scpCheckOnline((short)slots.slot_id) == 1;
       }
 
-      public async Task<bool> ResetDeviceAsync(string Mac, short ScpId)
+      public async Task ResetDeviceAsync(Guid guid)
       {
-            var res = writer.ScpReset(Mac, ScpId);
+            var slots = await repo.GetScpSlotByGuidAsync(guid);
+            var res = writer.ScpReset(slots.mac, (short)slots.slot_id);
             if (!res.IsSend)
-                  throw new Exception(MessageHelper.Command.Unsuccess(CommandConstant.ScpReset, Mac, ScpId));
+                  throw new Exception(MessageHelper.Command.Unsuccess(CommandConstant.ScpReset, slots.mac, (short)slots.slot_id));
 
             await bus.SendAsync(new AddCommandEvent(res));
 
-            return res.IsSend;
       }
 
       public async Task CreateModuleAsync(
-            string Mac,
-            short ScpId,
-            short SioNumber,
+            Guid DeviceGuid,
+            Guid ModuleGuid,
             short Model,
             short Address,
             short Port
             )
       {
+            var deviceSlot = await repo.GetScpSlotByGuidAsync(DeviceGuid);
+            var slot = await repo.GetFreeSlotAsync<SioSlot>(DeviceGuid);
 
             var res = sioWriter.SioPanelConfiguration(
-                  Mac,
-                  ScpId,
-                  SioNumber,
+                  deviceSlot.mac,
+                  (short)deviceSlot.slot_id,
+                  (short)slot,
                   AeroModuleModelHelper.nInputByModel((SioModel)Model),
                   AeroModuleModelHelper.nOutputByModel((SioModel)Model),
                   AeroModuleModelHelper.nReaderByModel((SioModel)Model),
@@ -122,14 +184,21 @@ public sealed class AeroDeviceAdapter(
             await bus.SendAsync(new AddCommandEvent(res));
 
             if (!res.IsSend)
-                  throw new Exception(MessageHelper.Command.Unsuccess(CommandConstant.SioPanelConfiguration, Mac, ScpId));
+                  throw new Exception(MessageHelper.Command.Unsuccess(CommandConstant.SioPanelConfiguration, deviceSlot.mac, deviceSlot.slot_id));
+
+            await repo.InsertSlotAsync<SioSlot>(
+                  DeviceGuid,
+                  ModuleGuid,
+                  slot
+            );
       }
 
-      public async Task<bool> AsciiCommandAsync(string Mac, short ScpId, string Command)
+      public async Task<bool> AsciiCommandAsync(Guid guid, string Command)
       {
-            var res = writer.AsciiCommandAsync(Mac, ScpId, Command);
+            var detail = await repo.GetScpSlotByGuidAsync(guid);
+            var res = writer.AsciiCommandAsync(detail.mac,(short)detail.slot_id, Command);
             if (!res.IsSend)
-                  throw new Exception(MessageHelper.Command.Unsuccess(CommandConstant.AsciiCommandAsync, Mac, ScpId));
+                  throw new Exception(MessageHelper.Command.Unsuccess(CommandConstant.AsciiCommandAsync, detail.mac,(short)detail.slot_id));
             await bus.SendAsync(new AddCommandEvent(res));
             return res.IsSend;
       }
@@ -180,6 +249,8 @@ public sealed class AeroDeviceAdapter(
 
             if (!res.IsSend)
                   throw new Exception(MessageHelper.Command.Unsuccess(CommandConstant.DetachScpChannel, Mac, ComponentId));
+
+            await repo.EjectScpSlotAsync(Guid);
       }
 }
 

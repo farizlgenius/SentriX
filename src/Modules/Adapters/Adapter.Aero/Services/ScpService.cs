@@ -1,6 +1,7 @@
 using System;
 using System.Text.Json;
 using Adapter.Abstraction.Events;
+using Adapter.Aero.Constants;
 using Adapter.Aero.Entities;
 using Adapter.Aero.Enums;
 using Adapter.Aero.Helpers;
@@ -30,7 +31,15 @@ using User.Contract.Queries;
 
 namespace Adapter.Aero.Services;
 
-public sealed class ScpService(ILogger<ScpService> logger, IMessageBus bus, IScpCommand scpCommand, IIdReportService idReport, IModuleCommand sioWriter, IInputCommand mpWriter,IAeroRepository repo) : IScpService
+public sealed class ScpService(
+      ILogger<ScpService> logger, 
+      IMessageBus bus, 
+      IScpCommand scpCommand, 
+      IIdReportService idReport, 
+      IModuleCommand sioWriter, 
+      IInputCommand mpWriter,
+      IAeroRepository repo
+      ) : IScpService
 {
 
 
@@ -70,8 +79,17 @@ public sealed class ScpService(ILogger<ScpService> logger, IMessageBus bus, IScp
             {
                   // New Contoller
 
+                  var ScpId = await repo.GetScpFreeSlotAsync();
+
+                  res = scpCommand.SetScpId(UtilitiesHelper.ByteToHexStr(id.mac_addr), id.scp_id, (short)ScpId);
+
+                  if(!res.IsSend)
+                        throw new Exception(MessageHelper.Command.Unsuccess(CommandConstant.ScpSetId,UtilitiesHelper.ByteToHexStr(id.mac_addr),id.scp_id));
+
+                  await bus.SendAsync(new AddCommandEvent(res));
+
                   IdReport report = new IdReport(
-                        id.scp_id,
+                        ScpId,
                         id.serial_number.ToString(),
                         UtilitiesHelper.ByteToHexStr(id.mac_addr),
                         string.Empty,
@@ -92,18 +110,22 @@ public sealed class ScpService(ILogger<ScpService> logger, IMessageBus bus, IScp
             }
             else
             {
+                  var ScpId = await repo.GetScpSlotByMacAsync(UtilitiesHelper.ByteToHexStr(id.mac_addr));
 
-                  var scp_id = await bus.QueryAsync(new ComponentIdByMacQuery(UtilitiesHelper.ByteToHexStr(id.mac_addr)));
 
-
-                  if (scp_id != id.scp_id)
+                  if (ScpId != id.scp_id)
                   {
-                        res = scpCommand.SetScpId(UtilitiesHelper.ByteToHexStr(id.mac_addr), id.scp_id, (short)scp_id);
+                        res = scpCommand.SetScpId(UtilitiesHelper.ByteToHexStr(id.mac_addr), id.scp_id, (short)ScpId);
+                        if (!res.IsSend)
+                        {
+                              throw new Exception(MessageHelper.Command.Unsuccess(CommandConstant.ScpSetId,UtilitiesHelper.ByteToHexStr(id.mac_addr),id.scp_id));
+                        }
+                              
                   }
 
 
                   // Read Structure 
-                  res = scpCommand.ScpStructureStatusRead(UtilitiesHelper.ByteToHexStr(id.mac_addr), (short)scp_id,
+                  res = scpCommand.ScpStructureStatusRead(UtilitiesHelper.ByteToHexStr(id.mac_addr), (short)ScpId,
                         [
                               (short)SCPStructure.SCPSID_TRAN,
                               (short)SCPStructure.SCPSID_TZ,
