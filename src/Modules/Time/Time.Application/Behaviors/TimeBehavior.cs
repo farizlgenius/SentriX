@@ -23,7 +23,7 @@ public sealed class TimeBehavior(
       public async Task<HolidayDto> CreateHolidayAsync(CreateHolidayDto dto)
       {
             // Generate ComponentId
-            var datas = await bus.QueryAsync(new MacAndComponentIdListByLocationIdQuery(dto.LocationId));
+            var datas = await bus.QueryAsync(new GuidAndTypeByLocationIdQuery(dto.LocationId));
 
              var domain = new Holiday(
                   Guid.NewGuid(),
@@ -39,11 +39,8 @@ public sealed class TimeBehavior(
             foreach (var data in datas)
             {
                   await factory.GetAdapter(data.Type).Time.CreateHolidayAsync(
-                              domain.Guid,
-                              data.ComponentId,
-                              domain.ComponentId,
+                              data.Guid,
                               domain.Name,
-                              data.Mac,
                               domain.Start,
                               domain.End
                               );
@@ -55,7 +52,6 @@ public sealed class TimeBehavior(
 
            return new HolidayDto(
                   domain.Guid,
-                  domain.ComponentId,
                   domain.Name,
                   domain.Start,
                   domain.End,
@@ -70,17 +66,10 @@ public sealed class TimeBehavior(
             if(await repo.IsAnyNameAsync(dto.Name))
                   throw new BadRequestException(MessageHelper.Common.Duplicate(nameof(dto.Name)));
 
-            var componentId = await repo.GetLowestTimeZoneComponentIdAsync(dto.LocationId);
             var tzGuid = Guid.NewGuid();
-            var interComs = new List<short>();
-            foreach (var interval in dto.Intervals)
-            {
-                  interComs.Add(await repo.GetLowestIntervalComponentIdExceptStartFromOneAsync(interComs,tzGuid));
-            }
 
-            var intervals = dto.Intervals.Select((x,index) => new Interval(
+            var intervals = dto.Intervals.Select(x => new Interval(
                         Guid.NewGuid(),
-                        (short)interComs.ElementAt(index),
                         new DayInWeek(
                               Guid.NewGuid(),
                               x.Days.Sunday,
@@ -97,7 +86,6 @@ public sealed class TimeBehavior(
             
             var d = new Domain.Entities.TimeZone(
                   tzGuid,
-                  componentId,
                   dto.Name,
                   intervals.ToList(),
                   dto.LocationId,
@@ -107,19 +95,16 @@ public sealed class TimeBehavior(
 
             
             
-            var datas = await bus.QueryAsync(new MacAndComponentIdListByLocationIdQuery(dto.LocationId));
+            var datas = await bus.QueryAsync(new GuidAndTypeByLocationIdQuery(dto.LocationId));
 
             // Send Command
             foreach(var data in datas)
             {
                   await factory.GetAdapter(data.Type).Time.CreateTimeZoneAsync(
+                              data.Guid,
                               d.Guid,
-                              data.ComponentId,
-                              d.ComponentId,
                               d.Name,
-                              data.Mac,
                               d.Intervals.Select(x => new IntervalObject(
-                                    x.ComponentId,
                                     DateTimeHelper.ConvertTimeToEndMinute(x.Start),
                                     DateTimeHelper.ConvertTimeToEndMinute(x.End),
                                     x.Days.Sunday,
@@ -138,12 +123,10 @@ public sealed class TimeBehavior(
 
             return new TimeZoneDto(
                   d.Guid,
-                  d.ComponentId,
                   d.Name,
                   d.Intervals.Select(
                         i => new IntervalDto(
                               i.Guid,
-                              i.ComponentId,
                               new DaysInWeekDto(
                                     i.Days.Guid,
                                     i.Days.Sunday,
@@ -171,14 +154,12 @@ public sealed class TimeBehavior(
             if(e.Guid == Guid.Empty)
                   throw new BadRequestException(MessageHelper.Common.NotFound("Holiday", guid.ToString()));
 
-            var datas = await bus.QueryAsync(new MacAndComponentIdListByLocationIdQuery(e.LocationId));
+            var datas = await bus.QueryAsync(new GuidAndTypeByLocationIdQuery(e.LocationId));
 
             foreach(var data in datas)
             {
                    await factory.GetAdapter(data.Type).Time.DeleteHolidayAsync(
-                              data.ComponentId,
-                              e.ComponentId,
-                              data.Mac,
+                              data.Guid,
                               e.Start ?? default,
                               e.End ?? default
                         );
@@ -188,7 +169,6 @@ public sealed class TimeBehavior(
 
             return new HolidayDto(
                   e.Guid,
-                  e.ComponentId,
                   e.Name,
                   e.Start,
                   e.End,
@@ -205,14 +185,13 @@ public sealed class TimeBehavior(
             if(d.Guid == Guid.Empty)
                   throw new BadRequestException(MessageHelper.Common.NotFound("TimeZone", guid.ToString()));
 
-            var datas = await bus.QueryAsync(new MacAndComponentIdListByLocationIdQuery(d.LocationId));
+            var datas = await bus.QueryAsync(new GuidAndTypeByLocationIdQuery(d.LocationId));
 
             foreach(var data in datas)
             {
                    await factory.GetAdapter(data.Type).Time.DeleteTimeZoneAsync(
-                        data.Mac,
-                        data.ComponentId,
-                        d.ComponentId,
+                        data.Guid,
+                        guid,
                         d.Intervals.Select(x => (short)x.ComponentId).ToList()
                         );
             }
@@ -221,12 +200,10 @@ public sealed class TimeBehavior(
 
           return new TimeZoneDto(
                   d.Guid,
-                  d.ComponentId,
                   d.Name,
                   d.Intervals.Select(
                         i => new IntervalDto(
                               i.Guid,
-                              i.ComponentId,
                               new DaysInWeekDto(
                                     i.Days.Guid,
                                     i.Days.Sunday,
@@ -278,7 +255,6 @@ public sealed class TimeBehavior(
 
             var d = new Holiday(
                   dto.Guid,
-                  dto.ComponentId,
                   dto.Name,
                   dto.Start ?? default,
                   dto.End ?? default,
@@ -289,7 +265,6 @@ public sealed class TimeBehavior(
 
             var d1 = new Holiday(
                   e.Guid,
-                  e.ComponentId,
                   e.Name,
                   e.Start ?? default,
                   e.End ?? default,
@@ -298,16 +273,14 @@ public sealed class TimeBehavior(
                   e.IsDefault
             );
 
-             var datas = await bus.QueryAsync(new MacAndComponentIdListByLocationIdQuery(d.LocationId));
+             var datas = await bus.QueryAsync(new GuidAndTypeByLocationIdQuery(d.LocationId));
 
             var aeroData = datas.Where(x => x.Type.Equals(DeviceType.aero.ToString()));
 
             foreach(var data in aeroData)
             {
                   await factory.GetAdapter(data.Type).Time.DeleteHolidayAsync(
-                        data.ComponentId,
-                        d1.ComponentId,
-                        data.Mac,
+                        data.Guid,
                         d1.Start,
                         d1.End
                   );
@@ -316,11 +289,8 @@ public sealed class TimeBehavior(
             foreach(var data in datas)
             {
                   await factory.GetAdapter(data.Type).Time.UpdateHolidayAsync(
-                        d.Guid,
+                        data.Guid,
                         d.Name,
-                        d.ComponentId,
-                        d.ComponentId,
-                        data.Mac,
                         d.Start,
                         d.End
                   );
@@ -373,7 +343,7 @@ public sealed class TimeBehavior(
                   dto.IsDefault
             );
 
-            var datas = await bus.QueryAsync(new MacAndComponentIdListByLocationIdQuery(dto.LocationId));
+            var datas = await bus.QueryAsync(new GuidAndTypeByLocationIdQuery(dto.LocationId));
 
             // Send Command
             foreach(var data in datas)

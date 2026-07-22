@@ -4,21 +4,20 @@ namespace Adapter.Abstraction.Interfaces;
 public interface IGroupAdapter
 {
       Task CreateGroup(
+            Guid Guid,
              string Name,
-            short ComponentId,
-            List<(string Mac, short DeviceComponentId, short DoorComponentId, short TimeZoneComponentId)> Doors
+            List<(Guid DeviceGuid,Guid DoorGuid,Guid TzGuid)> Doors
       );
 
       Task UpdateGroup(
+              Guid Guid,
              string Name,
-            short ComponentId,
-            List<(string Mac, short DeviceComponentId, short DoorComponentId, short TimeZoneComponentId)> Doors
+            List<(Guid DeviceGuid,Guid DoorGuid,Guid TzGuid)> Doors
       );
 
       Task DeleteGroup(
-            string Mac,
-            short DeviceComponentId,
-            short ComponentId
+            Guid DeviceGuid,
+            Guid GroupGuid
       );
 
 

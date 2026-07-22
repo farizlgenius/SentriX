@@ -11,21 +11,28 @@ public sealed class AmicoDoorAdapter(
       ) : IAmicoDoorAdapter
 {
       public Task CreateUpdateDoorAsync(
-            string Mac, 
-            short DeviceComponentId, 
-            string Metadata, 
-            short FirstComponentId, 
-            short SecondComponentId = -1)
+            Guid DeviceGuid,
+            Guid DoorGuid,
+            string Metadata
+            )
       {
             throw new NotImplementedException();
       }
 
-      public async Task DeleteDoorAsync(string Mac, short DeviceComponentId, string Metadata, short FirstComponentId, short SecondComponentId = -1)
+      public async Task DeleteDoorAsync(
+            Guid DeviceGuid,
+            Guid DoorGuid,
+            string Metadata
+      )
       {
             throw new NotImplementedException();
       }
 
-      public Task UpdateDoorAsync(string Mac, short DeviceComponentId, string Metadata, short FirstComponentId, short SecondComponentId = -1)
+      public Task UpdateDoorAsync(
+            Guid DeviceGuid,
+            Guid DoorGuid,
+            string Metadata
+      )
       {
             throw new NotImplementedException();
       }

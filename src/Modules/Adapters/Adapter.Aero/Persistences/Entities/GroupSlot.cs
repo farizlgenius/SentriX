@@ -5,13 +5,10 @@ using SharedKernel.Domain;
 
 namespace Adapter.Aero.Persistences.Entities;
 
-public sealed class TzSlot : BaseSlot
+public sealed class GroupSlot : BaseSlot
 {
-
-      public Guid? tz_guid { get; set; }
-
-      public TzSlot() { }
-      public TzSlot(int component_id) : base(component_id)
+      public GroupSlot() { }
+      public GroupSlot(int component_id) : base(component_id)
       {
 
       }

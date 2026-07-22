@@ -1,4 +1,5 @@
 using System;
+using Adapter.Aero.Model;
 using SharedKernel.Domain;
 
 namespace Adapter.Aero.Persistences.Entities;

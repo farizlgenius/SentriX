@@ -1,3 +1,4 @@
+using Adapter.Aero.Model;
 using Adapter.Aero.Persistences.Entities;
 using SharedKernel.Domain;
 
@@ -19,11 +20,7 @@ public interface IAeroRepository
             CancellationToken ct = default
             ) where TEntity : BaseSlot;
 
-       Task AddCentrlSlotAsync<TEntity>(
-            int slot,
-             Func<int, TEntity> factory, 
-            CancellationToken ct = default
-            ) where TEntity : CentralBaseSlot;
+
 
 
       // Insert Slot
@@ -34,11 +31,13 @@ public interface IAeroRepository
             CancellationToken ct = default
             ) where TEntity : BaseSlot;
 
-      Task InsertCentralSlotAsync<TEntity>(
+            Task InsertSlotAsync<TEntity>(
             Guid module_guid,
             int slot,
             CancellationToken ct = default
-            ) where TEntity : CentralBaseSlot;
+            ) where TEntity : BaseSlot;
+
+
 
       // Eject Sloe
       Task EjectSlotAsync<TEntity>(
@@ -47,25 +46,28 @@ public interface IAeroRepository
             CancellationToken ct = default
             ) where TEntity : BaseSlot;
 
-      Task EjectCentralSlotAsync<TEntity>(
+            Task EjectSlotAsync<TEntity>(
             int slot,
             CancellationToken ct = default
-            ) where TEntity : CentralBaseSlot;
+            ) where TEntity : BaseSlot;
+
+
 
       // Get Free Slot
 
-       Task<int> GetFreeSlotAsync<TEntity>(Guid guid, CancellationToken ct = default) where TEntity : BaseSlot;
-       Task<int> GetCentralFreeSlotAsync<TEntity>(CancellationToken ct = default) where TEntity : CentralBaseSlot;
+       Task<int> GetFreeSlotAsync<TEntity>(Guid guid,short Except = -1, CancellationToken ct = default) where TEntity : BaseSlot;
+       Task<int> GetFreeSlotAsync<TEntity>(short Except = -1, CancellationToken ct = default) where TEntity : BaseSlot;
+
+       Task<int> GetSlotIdByGuidAsync<TEntity>(Guid guid,CancellationToken ct  =default) where TEntity : BaseSlot;
+       Task<IEnumerable<int>> GetSlotIdsByGuidAsync<TEntity>(Guid guid,CancellationToken ct  =default) where TEntity : BaseSlot;
 
 
       Task<TEntity> GetSlotByGuidAsync<TEntity>(Guid guid, CancellationToken ct = default) where TEntity : BaseSlot;
+      Task<IEnumerable<TEntity>> GetSlotsByGuidAsync<TEntity>(Guid guid, CancellationToken ct = default) where TEntity : BaseSlot;
       Task DeleteSlotAsync<TEntity>(Guid guid, CancellationToken ct = default) where TEntity : BaseSlot;
      
-
-      // Central Slot Without device scope
       
-      Task<TEntity> GetCentralSlotByGuidAsync<TEntity>(Guid guid, CancellationToken ct = default) where TEntity : CentralBaseSlot;
-     
+     // Scp
 
       Task<int> GetScpSlotByMacAsync(string mac, CancellationToken ct = default);
       Task InsertScpSlotAsync(Guid guid, string Mac, int slot, CancellationToken ct = default);

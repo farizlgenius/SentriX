@@ -1,3 +1,4 @@
+using Adapter.Amico.Constants;
 using Adapter.Amico.Interface;
 using Adapter.Amico.Interfaces;
 using Adapter.Amico.Model.Objects;
@@ -14,13 +15,13 @@ public sealed class AmicoTimeAdapter(
       ITimeCommand time,
       IAmicoRepository repo) : IAmicoTimeAdapter
 {
-      public async Task ClearTimeAsync(Guid Guid,string Mac)
+      public async Task ClearTimeAsync(Guid Guid)
       {
-            var amico = await repo.GetAmicoByMacAsync(Mac);
+            var amico = await repo.GetAmicoByGuidAsync(Guid);
             var session = amico.session;
 
             if (amico.id == 0)
-                  throw new BadRequestException(MessageHelper.Common.NotFound(nameof(Amicos), Mac));
+                  throw new BadRequestException(MessageHelper.Common.NotFound(nameof(Amicos), amico.mac));
 
 
             var res = await time.CheckSession(amico.ip, amico.session);
@@ -38,22 +39,14 @@ public sealed class AmicoTimeAdapter(
             );
       }
 
-      public async Task CreateHolidayAsync(
-             Guid Guid,
-             short DeviceComponentId,
-             short ComponentId,
-             string Name,
-             string Mac,
-             DateTime Start,
-             DateTime End
-             )
-      {
 
-            var amico = await repo.GetAmicoByMacAsync(Mac);
+      public async Task CreateHolidayAsync(Guid Guid, string Name, DateTime Start, DateTime End)
+      {
+            var amico = await repo.GetAmicoByGuidAsync(Guid);
             var session = amico.session;
 
             if (amico.id == 0)
-                  throw new BadRequestException(MessageHelper.Common.NotFound(nameof(Amicos), Mac));
+                  throw new BadRequestException(MessageHelper.Common.NotFound(nameof(Amicos), amico.mac));
 
 
             var res = await time.CheckSession(amico.ip, amico.session);
@@ -66,11 +59,10 @@ public sealed class AmicoTimeAdapter(
             }
 
 
-           await time.CreateHolidayAsync(
+           var response = await time.CreateHolidayAsync(
                   amico.ip,
                  session,
                   Name,
-                  ComponentId,
                   (int)DateTimeHelper.DateTimeToElapeSecond(Start),
                   (int)DateTimeHelper.DateTimeToElapeSecond(End),
                   1,
@@ -79,24 +71,25 @@ public sealed class AmicoTimeAdapter(
                   0
             );
 
+            if(response.Ids.Count == 0)
+                  throw new Exception(MessageHelper.Command.Unsuccess(CommandConstant.Holiday,amico.mac));
 
+            await repo.AddSlotAsync(
+                  Guid,
+                  response.Ids[0],
+                  (s) => new HolidaySlot(s)
+            );
 
       }
 
-      public async Task CreateTimeZoneAsync(
-          Guid Guid,
-          short DeviceComponentId,
-          short TzComponentId,
-           string Name,
-           string Mac,
-            List<IntervalObject> Intervals
-     )
+
+      public async Task CreateTimeZoneAsync(Guid DeviceGuid, Guid TzGuid, string Name, List<IntervalObject> Intervals)
       {
-            var amico = await repo.GetAmicoByMacAsync(Mac);
+            var amico = await repo.GetAmicoByGuidAsync(DeviceGuid);
             var session = amico.session;
 
             if (amico.id == 0)
-                  throw new BadRequestException(MessageHelper.Common.NotFound(nameof(Amicos), Mac));
+                  throw new BadRequestException(MessageHelper.Common.NotFound(nameof(Amicos), amico.mac));
 
 
             var res = await time.CheckSession(amico.ip, amico.session);
@@ -109,21 +102,29 @@ public sealed class AmicoTimeAdapter(
             }
 
             // Create Time Zone
-            var arr = await time.CreateTimeZoneAsync(
+            var response = await time.CreateTimeZoneAsync(
                   amico.ip,
                  session,
-                  Name,
-                  TzComponentId
+                  Name
             );
+
+            await repo.AddSlotAsync<TimeZoneSlot>(
+                  TzGuid,
+                  response.Ids[0],
+                  (g,s) => new TimeZoneSlot(g,s)
+            );
+
+            if(response.Ids.Count == 0)
+                  throw new Exception(CommandConstant.TimeZone);
 
             foreach (var interval in Intervals)
             {
                  
                   // Create Time Span
-                 await time.CreateTimeSpanAsync(
+                 var arr = await time.CreateTimeSpanAsync(
                         amico.ip,
                         session,
-                        TzComponentId,
+                        response.Ids[0],
                         interval.ComponentId,
                        interval.Start,
                        interval.End,
@@ -139,12 +140,13 @@ public sealed class AmicoTimeAdapter(
                         1
                   );
 
+
+                  await repo.AddSlotAsync<TimeSpanSlot>(
+                        ,
+                  );
+
        
             }
-
-            
-
-
       }
 
       public async Task DeleteHolidayAsync(
@@ -180,6 +182,11 @@ public sealed class AmicoTimeAdapter(
 
 
 
+      }
+
+      public Task DeleteHolidayAsync(Guid Guid, DateTime Start, DateTime End)
+      {
+            throw new NotImplementedException();
       }
 
       public async Task DeleteTimeZoneAsync(string Mac, short DeviceComponentId, short TzComponentId,List<short> IntervalComponentId)
@@ -218,6 +225,10 @@ public sealed class AmicoTimeAdapter(
             
       }
 
+      public Task DeleteTimeZoneAsync(Guid DeviceGuid, Guid TzGuid, List<short> IntervalComponentId)
+      {
+            throw new NotImplementedException();
+      }
 
       public async Task UpdateHolidayAsync(Guid guid, string Name,short DeviceComponentId,int ComponentId, string Mac, DateTime Start, DateTime End)
       {
@@ -252,6 +263,11 @@ public sealed class AmicoTimeAdapter(
             );
 
 
+      }
+
+      public Task UpdateHolidayAsync(Guid DeviceGuid, DateTime Start, DateTime End)
+      {
+            throw new NotImplementedException();
       }
 
       public async Task UpdateTimeZoneAsync(Guid Guid,short DeviceComponentId, short TzComponentId, string Name, string Mac, List<IntervalObject> Intervals)
@@ -306,5 +322,10 @@ public sealed class AmicoTimeAdapter(
 
                   i++;
             }
+      }
+
+      public Task UpdateTimeZoneAsync(Guid DeviceGuid, Guid TzGuid, string Name, List<IntervalObject> Intervals)
+      {
+            throw new NotImplementedException();
       }
 }

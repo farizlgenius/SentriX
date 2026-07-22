@@ -7,33 +7,33 @@ namespace Adapter.Abstraction.Interfaces;
 public interface IOutputAdapter
 {
       Task CreateAsync(
-             string Mac,
-            short ComponentId,
-            short DeviceComponentId,
-            short ModuleComponentId,
-            short OutputNo,
-            short DriverMode,
-            short OffineMode,
-            short DefaultPulse
+             Guid Guid,
+            Guid DeviceGuid,
+            string Metadata,
+            Guid ModuleGuid
       );
       Task DeleteAsync(
-            string Mac,
-            short ScpId,
-            short CpNumber,
-            short OpNumber,
-            short DefaultPulse
+             Guid Guid,
+            Guid DeviceGuid,
+            string Metadata
       );
       Task<IEnumerable<OptionDto>> GetRelayModeAsync();
-      Task TriggerOutputAsync(string Mac,short ScpId,short CpId,short Command);
+      Task TriggerOutputAsync(
+            Guid Guid,
+            Guid DeviceGuid,
+            short Command
+            );
       Task UpdateAsync(
-             string Mac,
-            short ComponentId,
-            short DeviceComponentId,
-            short ModuleComponentId,
-            short OutputNo,
-            short DriverMode,
-            short OffineMode,
-            short DefaultPulse
+             Guid Guid,
+            Guid DeviceGuid,
+            string Metadata,
+            Guid ModuleGuid
+      );
+
+      Task CommandOutputAsync(
+            Guid Guid,
+            Guid DeviceGuid,
+            short Command
       );
 
 

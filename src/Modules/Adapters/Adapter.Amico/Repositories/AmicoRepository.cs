@@ -55,7 +55,7 @@ public sealed class AmicoRepository(AmicoDbContext context) : IAmicoRepository
       public async Task DeleteSlot<TEntity>(Guid guid, int slot, CancellationToken ct = default) where TEntity : BaseSlot
       {
             var e = await context.Set<TEntity>()
-            .Where(x => x.device_guid == guid && x.slot_id == slot)
+            .Where(x => x.guid == guid && x.slot_id == slot)
             .FirstOrDefaultAsync(ct);
 
             if(e is null)
@@ -65,11 +65,27 @@ public sealed class AmicoRepository(AmicoDbContext context) : IAmicoRepository
             await context.SaveChangesAsync(ct);
       }
 
+      public async Task<Amicos> GetAmicoByGuidAsync(Guid guid, CancellationToken ct = default)
+      {
+            return await context.Amicos.AsNoTracking()
+            .Where(x => x.guid == guid)
+            .FirstOrDefaultAsync() ?? new Amicos();
+      }
+
       public async Task<Amicos> GetAmicoByMacAsync(string mac,CancellationToken ct = default)
       {
             return await context.Amicos
             .Where(x => mac.Equals(mac))
             .FirstOrDefaultAsync() ?? new Amicos();
+      }
+
+      public async Task<int> GetSlotIdByGuid<TEntity>(Guid Guid, CancellationToken ct = default) where TEntity : BaseSlot
+      {
+            return await context.Set<TEntity>()
+            .Where(x => x.guid == Guid)
+            .Select(x => x.slot_id)
+            .DefaultIfEmpty(-1)
+            .FirstAsync();
       }
 
       public async Task UpdateSessionByMacAsync(string mac, string session, CancellationToken ct = default)

@@ -3,8 +3,8 @@ using System.Text.Json.Serialization;
 namespace Adapter.Amico.Model.Objects;
 
 public sealed record Holiday(
-      [property: JsonPropertyName("id")]
-      int Id,
+      // [property: JsonPropertyName("id")]
+      // int Id,
       [property: JsonPropertyName("name")]
       string Name,
       [property: JsonPropertyName("start")]

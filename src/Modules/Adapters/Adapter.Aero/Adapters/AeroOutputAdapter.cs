@@ -18,44 +18,52 @@ using SharedKernel.Messaging;
 
 namespace Adapter.Aero.Adapters;
 
-public sealed class AeroOutputAdapter(IAeroRepository repo,IOutputCommand writer,IMessageBus bus) : IAeroOutputAdapter
+public sealed class AeroOutputAdapter(IAeroRepository repo, IOutputCommand writer, IMessageBus bus) : IAeroOutputAdapter
 {
       public async Task CreateAsync(
-            string Mac,
-            short ComponentId,
-            short DeviceComponentId,
-            short ModuleComponentId,
-            short OutputNo,
-            short DriverMode,
-            short OfflineMode,
-            short DefaultPulse
+            Guid Guid,
+            Guid DeviceGuid,
+            string Metadata,
+            Guid ModuleGuid
       )
       {
-            
+            var meta = JsonHelper.Deserialize<CpMetadata>(Metadata);
+            if (meta is null)
+                  throw new Exception(MessageHelper.Common.DeserializeFailed(nameof(CpMetadata)));
+
+            var deviceSlot = await repo.GetScpSlotByGuidAsync(DeviceGuid);
+            var moduleSlot = await repo.GetSlotIdByGuidAsync<SioSlot>(ModuleGuid);
+            var slot = await repo.GetFreeSlotAsync<CpSlot>(DeviceGuid);
             var res = writer.OutputPointSpecification(
-                  Mac,
-                  DeviceComponentId,
-                  ModuleComponentId,
-                  OutputNo,
-                  OutputHelper.FinalizeOutputMode(DriverMode,OfflineMode)
+                  deviceSlot.mac,
+                  (short)deviceSlot.slot_id,
+                 (short)moduleSlot,
+                  meta.OutputNo,
+                  OutputHelper.FinalizeOutputMode(meta.DriveMode, meta.OfflineMode)
                   );
 
             await bus.SendAsync(new AddCommandEvent(res));
 
             res = writer.ControlPointConfiguration(
-                  Mac,
-                  DeviceComponentId,
-                  ComponentId,
-                  ModuleComponentId,
-                  OutputNo,
-                  DefaultPulse
+                  deviceSlot.mac,
+                  (short)deviceSlot.slot_id,
+                  (short)slot,
+                 (short)moduleSlot,
+                  meta.OutputNo,
+                  meta.DefaultPulse
             );
 
-             await bus.SendAsync(new AddCommandEvent(res));
+            await bus.SendAsync(new AddCommandEvent(res));
 
-             if(!res.IsSend)
-                  throw new Exception(MessageHelper.Command.Unsuccess(CommandConstant.OutputPointSpecification,Mac,DeviceComponentId));
-            
+            if (!res.IsSend)
+                  throw new Exception(MessageHelper.Command.Unsuccess(CommandConstant.OutputPointSpecification, deviceSlot.mac, deviceSlot.slot_id));
+
+            await repo.InsertSlotAsync<CpSlot>(
+                  DeviceGuid,
+                  Guid,
+                  slot
+            );
+
       }
 
       public async Task<IEnumerable<OptionDto>> GetRelayModeAsync()
@@ -63,83 +71,118 @@ public sealed class AeroOutputAdapter(IAeroRepository repo,IOutputCommand writer
             return await repo.GetRelayOptionAsync();
       }
 
-      public async Task TriggerOutputAsync(string Mac,short ScpId, short CpId, short Command)
+      public async Task TriggerOutputAsync(
+            Guid Guid,
+            Guid DeviceGuid,
+            short Command
+            )
       {
-           var res = writer.ControlPointCommand(ScpId,Mac,CpId,Command);
-           await bus.SendAsync(new AddCommandEvent(res));
-           if(!res.IsSend)
-                  throw new Exception(MessageHelper.Command.Unsuccess(CommandConstant.ControlPointCommand,Mac,ScpId));
+            var deviceSlot = await repo.GetScpSlotByGuidAsync(DeviceGuid);
+            var slot = await repo.GetSlotIdByGuidAsync<CpSlot>(Guid);
+            var res = writer.ControlPointCommand(
+             (short)deviceSlot.slot_id,
+             deviceSlot.mac,
+             (short)slot,
+             Command);
+
+            await bus.SendAsync(new AddCommandEvent(res));
+            if (!res.IsSend)
+                  throw new Exception(MessageHelper.Command.Unsuccess(CommandConstant.ControlPointCommand, deviceSlot.mac, deviceSlot.slot_id));
       }
 
       public async Task DeleteAsync(
-              string Mac,
-            short ScpId,
-            short CpNumber,
-            short OpNumber,
-            short DefaultPulse
+            Guid Guid,
+            Guid DeviceGuid,
+            string Metadata
       )
       {
-            var res = writer.DeleteControlPoint(Mac,ScpId,CpNumber,OpNumber,DefaultPulse);
-           
+            var meta = JsonHelper.Deserialize<CpMetadata>(Metadata);
+            if(meta is null)
+                  throw new Exception(MessageHelper.Common.DeserializeFailed(nameof(CpMetadata)));
+                  
+            var deviceSlot = await repo.GetScpSlotByGuidAsync(DeviceGuid);
+            var slot = await repo.GetSlotIdByGuidAsync<CpSlot>(Guid);
+
+            var res = writer.DeleteControlPoint(
+                  deviceSlot.mac, 
+                  (short)deviceSlot.slot_id, 
+                  (short)slot, 
+                  meta.OutputNo, 
+                  meta.DefaultPulse);
+
 
             await bus.SendAsync(new AddCommandEvent(res));
 
-             if(!res.IsSend)
-                  throw new Exception(MessageHelper.Command.Unsuccess(CommandConstant.ControlPointConfiguration,Mac,ScpId));
+            if (!res.IsSend)
+                  throw new Exception(MessageHelper.Command.Unsuccess(CommandConstant.ControlPointConfiguration, deviceSlot.mac, deviceSlot.slot_id));
+
+            await repo.EjectSlotAsync<CpSlot>(
+                  Guid,
+                  slot
+            );
       }
 
       public async Task UpdateAsync(
-              string Mac,
-            short ComponentId,
-            short DeviceComponentId,
-            short ModuleComponentId,
-            short OutputNo,
-            short DriverMode,
-            short OfflineMode,
-            short DefaultPulse
+             Guid Guid,
+            Guid DeviceGuid,
+            string Metadata,
+            Guid ModuleGuid
       )
       {
-            
-             var res = writer.OutputPointSpecification(
-                  Mac,
-                  DeviceComponentId,
-                  ModuleComponentId,
-                  OutputNo,
-                  OutputHelper.FinalizeOutputMode(DriverMode,OfflineMode)
-                  );
+            var meta = JsonHelper.Deserialize<CpMetadata>(Metadata);
+            if(meta is null)
+                  throw new Exception(MessageHelper.Common.DeserializeFailed(nameof(CpMetadata)));
+                  
+            var deviceSlot = await repo.GetScpSlotByGuidAsync(DeviceGuid);
+            var slot = await repo.GetSlotIdByGuidAsync<CpSlot>(Guid);
+            var moduleSlot = await repo.GetSlotIdByGuidAsync<CpSlot>(ModuleGuid);
+
+            var res = writer.OutputPointSpecification(
+                 deviceSlot.mac,
+                 (short)deviceSlot.slot_id,
+                 (short)moduleSlot,
+                 meta.OutputNo,
+                 OutputHelper.FinalizeOutputMode(meta.DriveMode, meta.OfflineMode)
+                 );
 
             await bus.SendAsync(new AddCommandEvent(res));
 
-            if(!res.IsSend)
-                  throw new Exception(MessageHelper.Command.Unsuccess(CommandConstant.OutputPointSpecification,Mac,DeviceComponentId));
+            if (!res.IsSend)
+                  throw new Exception(MessageHelper.Command.Unsuccess(CommandConstant.OutputPointSpecification,deviceSlot.mac, deviceSlot.slot_id));
 
             res = writer.ControlPointConfiguration(
-                  Mac,
-                  DeviceComponentId,
-                  ComponentId,
-                  ModuleComponentId,
-                  OutputNo,
-                  DefaultPulse
+                   deviceSlot.mac,
+                 (short)deviceSlot.slot_id,
+                 (short)slot,
+                 (short)moduleSlot,
+                  meta.OutputNo,
+                  meta.DefaultPulse
             );
 
-             await bus.SendAsync(new AddCommandEvent(res));
+            await bus.SendAsync(new AddCommandEvent(res));
 
-             if(!res.IsSend)
-                  throw new Exception(MessageHelper.Command.Unsuccess(CommandConstant.OutputPointSpecification,Mac,DeviceComponentId));
+            if (!res.IsSend)
+                  throw new Exception(MessageHelper.Command.Unsuccess(CommandConstant.OutputPointSpecification,deviceSlot.mac, deviceSlot.slot_id));
       }
 
-      public async Task CommandOutputAsync(string Mac,short DeviceComponentId, short ComponentId,short Command)
+      public async Task CommandOutputAsync(
+            Guid Guid,
+            Guid DeviceGuid,
+            short Command
+            )
       {
+            var deviceSlot = await repo.GetScpSlotByGuidAsync(DeviceGuid);
+            var slot = await repo.GetSlotIdByGuidAsync<CpSlot>(Guid);
             var res = writer.ControlPointCommand(
-                  DeviceComponentId,
-                  Mac,
-                  ComponentId,
+                  (short)deviceSlot.slot_id,
+                  deviceSlot.mac,
+                  (short)slot,
                   Command
                   );
 
             await bus.SendAsync(new AddCommandEvent(res));
 
-            if(!res.IsSend)
-                  throw new Exception(MessageHelper.Command.Unsuccess(CommandConstant.ControlPointCommand,Mac,DeviceComponentId));
+            if (!res.IsSend)
+                  throw new Exception(MessageHelper.Command.Unsuccess(CommandConstant.ControlPointCommand, deviceSlot.mac, deviceSlot.slot_id));
       }
 }

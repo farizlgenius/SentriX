@@ -5,10 +5,10 @@ namespace Adapter.Amico.Interface;
 
 public interface IGroupCommand : IBaseCommand
 {
-      Task<CreateObjectResponse> CreateGroupAsync(string ip,string session,int id,string name);
+      Task<CreateObjectResponse> CreateGroupAsync(string ip,string session,string name);
       Task<UpdateObjectResponse> UpdateGroupAsync(string ip,string session,int id,string name);
       Task<DeleteObjectResponse> DeleteGroupAsync(string ip,string session,int id);
-      Task<CreateObjectResponse> CreateAccessRulesAsync(string ip,string session,int id,string name,int type);
+      Task<CreateObjectResponse> CreateAccessRulesAsync(string ip,string session,string name,int type);
       Task<UpdateObjectResponse> UpdateAccessRulesAsync(string ip,string session,int id,string name,int type);
       Task<DeleteObjectResponse> DeleteAccessRuleAsync(string ip,string session,int id);
       Task<CreateObjectResponse> CreateGroupAccessRuleAsync(string ip,string session,int group_id,int access_rule_id);

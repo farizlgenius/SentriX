@@ -18,8 +18,12 @@ public interface IAmicoRepository
             string Ip,
             CancellationToken ct = default
       );
+
+      Task<int> GetSlotIdByGuid<TEntity>(Guid Guid,CancellationToken ct = default) where TEntity : BaseSlot;
       Task<Amicos> GetAmicoByMacAsync(string mac,CancellationToken ct = default);
       Task UpdateSessionByMacAsync(string mac,string session,CancellationToken ct = default);
+
+      // Slot Command
       Task AddSlotAsync<TEntity>(
              Guid guid,
             int slot,
@@ -27,9 +31,12 @@ public interface IAmicoRepository
             CancellationToken ct = default
       ) where TEntity : BaseSlot;
 
+
       Task DeleteSlot<TEntity>(
             Guid guid, 
             int slot,
             CancellationToken ct = default
       ) where TEntity : BaseSlot;
+
+      Task<Amicos> GetAmicoByGuidAsync(Guid guid,CancellationToken ct = default);
 }

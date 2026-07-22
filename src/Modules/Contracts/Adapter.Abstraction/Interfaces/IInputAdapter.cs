@@ -5,51 +5,32 @@ namespace Adapter.Abstraction.Interfaces;
 public interface IInputAdapter
 {
       Task CreateUpdateMonitorPoint(
-             string Mac,
-            short ComponentId,
-            short DeviceComponentId,
-            short ModuleComponentId,
-            short InputNo,
-            short SensorMode,
-            short Debounce,
-            short HoldTime,
-            short LogFunction,
-            short LatchMode,
-            short DelayEntry,
-            short DelayExit
+             Guid Guid,
+            Guid DeviceGuid,
+            string metadata,
+            Guid ModuleGuid
       );
 
       Task DeleteMonitorPoint(
-            string Mac,
-            short ComponentId,
-            short DeviceComponentId,
-            short InputNo,
-            short SensorMode,
-            short Debounce,
-            short HoldTime,
-            short LogFunction,
-            short LatchMode,
-            short DelayEntry,
-            short DelayExit
+           Guid Guid,
+            Guid DeviceGuid,
+            string Metadata
       );
 
       Task MaskMonitorPoint(
-            string Mac,
-            short DeviceComponentId,
-            short ComponentId,
+            Guid Guid,
+            Guid DeviceGuid,
             bool IsMask
       );
 
       Task CreateUpdateMonitorGroup(
-             string Mac,
-            short ScpId,
-            short MpgNumber,
-            List<(short Type,short Number)> Inputs
+            Guid Guid,
+            Guid DeviceGuid,
+            List<(short Type,Guid InputGuid)> Inputs
       );
 
       Task DeleteMonitorGroup(
-             string Mac,
-            short ComponentId,
-            short MpgNumber
+            Guid Guid,
+            Guid DeviceGuid
       );
 }

@@ -1,98 +1,155 @@
+using System.IO.Compression;
 using System.Text.Json;
 using Adapter.Abstraction.Interfaces;
 using Adapter.Aero.Interfaces;
 using Adapter.Aero.Model.Metadata;
+using Adapter.Aero.Persistences.Entities;
 using Events.Contract.Command;
 using SharedKernel.Helpers;
 using SharedKernel.Messaging;
 
 namespace Adapter.Aero.Adapters;
 
-public sealed class AeroGroupAdapter(IGroupCommand group, IMessageBus bus) : IAeroGroupAdapter
+public sealed class AeroGroupAdapter(
+      IAeroRepository repo,
+      IGroupCommand group, 
+      IMessageBus bus
+      ) : IAeroGroupAdapter
 {
       public async Task CreateGroup(
+            Guid Guid,
             string Name,
-            short ComponentId,
-            List<(string Mac, short DeviceComponentId, short DoorComponentId, short TimeZoneComponentId)> Doors
+            List<(Guid DeviceGuid,Guid DoorGuid,Guid TzGuid)> Doors
       )
       {
+
+            var slot = await repo.GetFreeSlotAsync<GroupSlot>();
+
 
             var grouped = Doors
                   .GroupBy(d => new
                   {
-                        d.Mac,
-                        d.DeviceComponentId
+                        d.DeviceGuid
                   })
                   .Select(g => new
                   {
-                        g.Key.Mac,
-                        g.Key.DeviceComponentId,
+                        g.Key.DeviceGuid,
                         Doors = g.Select(x => new
                         {
-                              x.DoorComponentId,
-                              x.TimeZoneComponentId
+                              x.DoorGuid,
+                              x.TzGuid
                         }).ToList()
                   })
                   .ToList();
 
             foreach (var g in grouped)
             {
+                  var deviceSlot = await repo.GetScpSlotByGuidAsync(g.DeviceGuid);
+                  var doorTask = g.Doors.Select(async x =>
+                  {
+                        var doorSlots = await repo.GetSlotIdsByGuidAsync<AcrSlot>(x.DoorGuid);
+                        var tzSlot = await repo.GetSlotIdByGuidAsync<TzSlot>(x.TzGuid);
+
+                        return doorSlots.Select(x => new
+                        {
+                              DoorComponentId=x,
+                              TimeZoneComponentId=tzSlot
+                        });   
+                  });
+
+                  var doorsResults = await Task.WhenAll(doorTask);
+
+                  var list = doorsResults.SelectMany(items => items.Select(x => ((short)x.DoorComponentId,(short)x.TimeZoneComponentId)).ToList()).ToList();
+
                   var res = group.AccessLevelConfigurationExtended(
-                  g.Mac,
-                  g.DeviceComponentId,
-                  ComponentId,
-                  g.Doors.Select(x => (x.DoorComponentId, x.TimeZoneComponentId)).ToList()
-            );
+                        deviceSlot.mac,
+                        (short)deviceSlot.slot_id,
+                        (short)slot,
+                        list
+                  );
 
                   await bus.SendAsync(new AddCommandEvent(res));
             }
 
+            await repo.InsertSlotAsync<GroupSlot>(
+                  Guid,
+                  slot
+            );
 
 
       }
 
-      public async Task DeleteGroup(string Mac, short DeviceComponentId, short ComponentId)
+      public async Task DeleteGroup(Guid DeviceGuid,Guid GroupGuid)
       {
+            var deviceSlot = await repo.GetScpSlotByGuidAsync(DeviceGuid);
+            var slotId = await repo.GetSlotIdByGuidAsync<GroupSlot>(GroupGuid);
             var res = group.AccessLevelConfigurationExtended(
-                  Mac,
-                  DeviceComponentId,
-                  ComponentId,
+                  deviceSlot.mac,
+                  (short)deviceSlot.slot_id,
+                  (short)slotId,
                   new List<(short DoorComponentId, short TimeZoneComponentId)>()
             );
 
             await bus.SendAsync(new AddCommandEvent(res));
+
+            await repo.EjectSlotAsync<GroupSlot>(
+                  GroupGuid,
+                  slotId
+            );
       }
 
-      public async Task UpdateGroup(string Name, short ComponentId, List<(string Mac, short DeviceComponentId, short DoorComponentId, short TimeZoneComponentId)> Doors)
+      public async Task UpdateGroup(
+            Guid Guid,
+            string Name,
+            List<(Guid DeviceGuid,Guid DoorGuid,Guid TzGuid)> Doors
+      )
       {
+            var slot = await repo.GetSlotIdByGuidAsync<GroupSlot>(Guid);
             var grouped = Doors
                   .GroupBy(d => new
                   {
-                        d.Mac,
-                        d.DeviceComponentId
+                        d.DeviceGuid
                   })
                   .Select(g => new
                   {
-                        g.Key.Mac,
-                        g.Key.DeviceComponentId,
+                        g.Key.DeviceGuid,
                         Doors = g.Select(x => new
                         {
-                              x.DoorComponentId,
-                              x.TimeZoneComponentId
+                              x.DoorGuid,
+                              x.TzGuid
                         }).ToList()
                   })
                   .ToList();
 
             foreach (var g in grouped)
             {
+                  var deviceSlot = await repo.GetScpSlotByGuidAsync(g.DeviceGuid);
+                  var doorTask = g.Doors.Select(async x =>
+                  {
+                        var doorSlots = await repo.GetSlotIdsByGuidAsync<AcrSlot>(x.DoorGuid);
+                        var tzSlot = await repo.GetSlotIdByGuidAsync<TzSlot>(x.TzGuid);
+
+                        return doorSlots.Select(x => new
+                        {
+                              DoorComponentId=x,
+                              TimeZoneComponentId=tzSlot
+                        });   
+                  });
+
+                  var doorsResults = await Task.WhenAll(doorTask);
+
+                  var list = doorsResults.SelectMany(items => items.Select(x => ((short)x.DoorComponentId,(short)x.TimeZoneComponentId)).ToList()).ToList();
+
                   var res = group.AccessLevelConfigurationExtended(
-                  g.Mac,
-                  g.DeviceComponentId,
-                  ComponentId,
-                  g.Doors.Select(x => (x.DoorComponentId, x.TimeZoneComponentId)).ToList()
-            );
+                        deviceSlot.mac,
+                        (short)deviceSlot.slot_id,
+                        (short)slot,
+                        list
+                  );
 
                   await bus.SendAsync(new AddCommandEvent(res));
             }
+
+
       }
 }

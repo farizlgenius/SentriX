@@ -340,7 +340,7 @@ public sealed class UserBehavior(
 
             foreach (var g in gps)
             {
-                  await factory.GetAdapter(g.Type).User.DeleteUserAsync(
+                  await factory.GetAdapter(g.Type).User.DeleteAsync(
                         g.Mac,
                         g.DeviceComponentId,
                         dto.Card.CardNumber,

@@ -10,8 +10,10 @@ public class AmicoDbContext(DbContextOptions<AmicoDbContext> options) : DbContex
       public const string Schema = "amico";
 
       public DbSet<Amicos> Amicos {get; set;}
-      public DbSet<TimeZoneSlot> TimeZoneSlots { get; set; }
-      public DbSet<TimeSpanSlot> TimeSpanSlot { get; set; }
+      public DbSet<Persistences.Entities.TimeSpan> TimeSpans { get; set; }
+      public DbSet<Group> Groups { get; set; }
+      public DbSet<AccessRule> AccessRules { get; set; }
+      public DbSet<Persistences.Entities.TimeZone> TimeZone { get; set; }
       protected override void OnModelCreating(ModelBuilder modelBuilder)
       {
             base.OnModelCreating(modelBuilder);
@@ -50,6 +52,21 @@ public class AmicoDbContext(DbContextOptions<AmicoDbContext> options) : DbContex
                               .Property(nameof(AmicoDbEntity.guid))
                               .HasDefaultValueSql("gen_random_uuid()")
                               .ValueGeneratedOnAdd();
+
+                        
+                  }
+
+                  if (typeof(BaseSlot).IsAssignableFrom(entityType.ClrType))
+                  {
+                        modelBuilder.Entity(entityType.ClrType)
+                            .Property(nameof(BaseSlot.created_at))
+                            .HasDefaultValueSql(utcNowSql)
+                            .ValueGeneratedOnAdd();
+
+                        modelBuilder.Entity(entityType.ClrType)
+                            .Property(nameof(BaseSlot.updated_at))
+                            .HasDefaultValueSql(utcNowSql)
+                            .ValueGeneratedOnAdd();
 
                         
                   }

@@ -4,10 +4,10 @@ using SharedKernel.Messaging;
 
 namespace Device.Application.Handler;
 
-public sealed class MacAndComponentIdListQueryHandler(IDeviceRepository repo) : IQueryHandler<MacAndComponentIdListByLocationIdQuery, IEnumerable<(string Mac, short ComponentId,string Type)>>
+public sealed class GuidAndTypeByLocationIdQueryHandler(IDeviceRepository repo) : IQueryHandler<GuidAndTypeByLocationIdQuery,IEnumerable<(Guid Guid,string Type)>>
 {
-      public async Task<IEnumerable<(string Mac, short ComponentId,string Type)>> HandleAsync(MacAndComponentIdListByLocationIdQuery query, CancellationToken ct)
+      public async Task<IEnumerable<(Guid Guid,string Type)>> HandleAsync(GuidAndTypeByLocationIdQuery query, CancellationToken ct)
       {
-            return await repo.MacAndComponentIdListAsync(query.LocationId);
+            return await repo.GetGuidAndTypesByLocationIdAsync(query.LocationId);
       }
 }

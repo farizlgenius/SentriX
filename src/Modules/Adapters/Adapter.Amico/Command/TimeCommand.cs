@@ -46,7 +46,6 @@ public sealed class TimeCommand(IHttpClient client, IAmicoSetting setting) : Bas
             string ip,
             string session,
             string name,
-            int componentId,
             int start,
             int end,
             int hol1,
@@ -60,7 +59,6 @@ public sealed class TimeCommand(IHttpClient client, IAmicoSetting setting) : Bas
                   new List<Model.Objects.Holiday>
                   {
                         new Model.Objects.Holiday(
-                              componentId,
                               name,
                               start,
                               end,

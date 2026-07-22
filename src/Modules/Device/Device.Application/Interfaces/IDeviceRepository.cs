@@ -33,7 +33,7 @@ public interface IDeviceRepository
       Task<DeviceDto> GetDeviceByGuidAsync(Guid guid,CancellationToken ct = default);
       Task<string> GetMacByGuidAsync(Guid guid,CancellationToken ct = default);
       Task<(string Mac, string Type,short ComponentId)> GetMacAndTypeAndComponentIdByGuidAsync(Guid guid, CancellationToken ct = default);
-      Task<IEnumerable<(string Mac,short ComponentId,string Type)>> MacAndComponentIdListAsync(int LocationId,CancellationToken ct = default);
+      Task<IEnumerable<(Guid Guid,string Type)>> GetGuidAndTypesByLocationIdAsync(int LocationId,CancellationToken ct = default);
       Task<bool> AddReaderAsync(Reader domain,CancellationToken ct = default);
       Task<bool> DeleteReaderAsync(Guid Guid,CancellationToken ct = default);
 

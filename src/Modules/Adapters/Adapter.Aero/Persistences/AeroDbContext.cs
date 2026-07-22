@@ -23,6 +23,7 @@ public sealed class AeroDbContext(DbContextOptions<AeroDbContext> options) : DbC
       public DbSet<CpSlot> CpSlots {get; set;}
       public DbSet<MpSlot> MpSlots { get; set; }
       public DbSet<MpgSlot> MpgSlots {get; set;}
+      public DbSet<CardFormatSlot> CardFormatSlots {get; set;}
       protected override void OnModelCreating(ModelBuilder modelBuilder)
       {
             base.OnModelCreating(modelBuilder);

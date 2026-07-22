@@ -1,10 +1,11 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using Adapter.Aero.Model;
 using SharedKernel.Domain;
 
 namespace Adapter.Aero.Persistences.Entities;
 
-public sealed class ScpSlot : CentralBaseSlot
+public sealed class ScpSlot : BaseSlot
 {
 
       public string mac {get ;set;} = string.Empty;

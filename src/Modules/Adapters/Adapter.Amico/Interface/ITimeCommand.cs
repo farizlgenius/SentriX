@@ -9,7 +9,6 @@ public interface ITimeCommand : IBaseCommand
             string ip,
             string session,
             string name,
-            int componentId,
             int start,
             int end,
             int hol1,
@@ -40,8 +39,7 @@ public interface ITimeCommand : IBaseCommand
       Task<CreateObjectResponse> CreateTimeZoneAsync(
             string ip,
             string session,
-            string name,
-            int componentId
+            string name
       );
 
       Task<CreateObjectResponse> CreateTimeSpanAsync(

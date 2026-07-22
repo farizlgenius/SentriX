@@ -1,13 +1,13 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace SharedKernel.Domain;
+namespace Adapter.Aero.Model;
 
 public class BaseSlot
 {
       [Key]
       public int id { get; set; }
       public int slot_id { get; set; }
-      public Guid device_guid { get; set; }
+      public Guid? device_guid { get; set; }
       public Guid? component_guid { get; set; }
       public bool is_available { get; set; } = true;
       public DateTime created_at { get; set; } 
@@ -15,11 +15,25 @@ public class BaseSlot
 
       public BaseSlot(){}
 
+      public BaseSlot(int component_id)
+      {
+            this.slot_id = component_id;
+            this.is_available = true;
+      }
+
       public BaseSlot(Guid scpGuid,int component_id)
       {
             this.device_guid = scpGuid;
             this.slot_id = component_id;
-            this.is_available = is_available;
+            this.is_available = true;
+      }
+
+      public BaseSlot(Guid scpGuid,Guid componentGuid,int component_id)
+      {
+            this.device_guid = scpGuid;
+            this.component_guid = componentGuid;
+            this.slot_id = component_id;
+            this.is_available = true;
       }
 
       public void Inserted(Guid component)

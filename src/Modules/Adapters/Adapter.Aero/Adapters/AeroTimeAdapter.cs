@@ -65,7 +65,7 @@ public sealed class AeroTimeAdapter(
       {
 
             var deviceSlots = await repo.GetScpSlotByGuidAsync(DeviceGuid);
-            var slot = await repo.GetCentralFreeSlotAsync<TzSlot>();
+            var slot = await repo.GetFreeSlotAsync<TzSlot>();
             var res = time.ExtendedTimezoneActSpecification(
                   deviceSlots.mac,
                   (short)deviceSlots.slot_id,
@@ -75,7 +75,7 @@ public sealed class AeroTimeAdapter(
 
             await bus.SendAsync(new AddCommandEvent(res));
 
-            await repo.InsertCentralSlotAsync<TzSlot>(TzGuid,slot);
+            await repo.InsertSlotAsync<TzSlot>(TzGuid,slot);
 
       }
 
@@ -113,19 +113,19 @@ public sealed class AeroTimeAdapter(
 
       public async Task DeleteTimeZoneAsync(Guid DeviceGuid,Guid TzGuid, List<short> IntervalComponentId)
       {
-            var slot = await repo.GetCentralSlotByGuidAsync<TzSlot>(TzGuid);
+            var slot = await repo.GetSlotIdByGuidAsync<TzSlot>(TzGuid);
             var deviceSlot = await repo.GetScpSlotByGuidAsync(DeviceGuid);
 
             var res = time.ExtendedTimezoneActSpecification(
                   deviceSlot.mac,
                   (short)deviceSlot.slot_id,
-                  (short)slot.slot_id,
+                  (short)slot,
                   new List<IntervalObject>()
                   );
 
             await bus.SendAsync(new AddCommandEvent(res));
 
-            await repo.EjectCentralSlotAsync<TzSlot>(slot.slot_id);
+            await repo.EjectSlotAsync<TzSlot>(slot);
       }
 
 
@@ -155,13 +155,13 @@ public sealed class AeroTimeAdapter(
 
       public async Task UpdateTimeZoneAsync(Guid DeviceGuid,Guid TzGuid, string Name, List<IntervalObject> Intervals)
       {
-            var slot = await repo.GetCentralSlotByGuidAsync<TzSlot>(TzGuid);
+            var slot = await repo.GetSlotIdByGuidAsync<TzSlot>(TzGuid);
             var deviceSlot = await repo.GetScpSlotByGuidAsync(DeviceGuid);
 
             var res = time.ExtendedTimezoneActSpecification(
                   deviceSlot.mac,
                   (short)deviceSlot.slot_id,
-                  (short)slot.slot_id,
+                  (short)slot,
                   Intervals
            );
 

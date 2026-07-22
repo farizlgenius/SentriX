@@ -25,7 +25,13 @@ public sealed class AmicoDeviceAdapter(
 
 
 
-      public Task CreateModuleAsync(string Mac, short ScpId, short SioNumber, short Model, short Address, short Port)
+      public Task CreateModuleAsync(
+             Guid DeviceGuid,
+            Guid ModuleGuid,
+            short Model,
+            short Address,
+            short Port
+      )
       {
             throw new NotImplementedException();
       }
@@ -74,7 +80,7 @@ public sealed class AmicoDeviceAdapter(
 
       }
 
-      public Task<bool> ResetDeviceAsync(string Mac, short ComponentId)
+      public Task ResetDeviceAsync(Guid Guid)
       {
             throw new NotImplementedException();
       }
@@ -89,7 +95,7 @@ public sealed class AmicoDeviceAdapter(
             throw new NotImplementedException();
       }
 
-      public Task<bool> AsciiCommandAsync(string Mac, short ComponentId, string Command)
+      public Task<bool> AsciiCommandAsync(Guid Guid, string Command)
       {
             throw new NotImplementedException();
       }
@@ -111,13 +117,13 @@ public sealed class AmicoDeviceAdapter(
             await command.VerifyDeviceComponentAsync(Ip,res.Session,LocationId);
       }
 
-      public async Task<bool> GetDeviceStatusAsync(string Ip,string Mac, short ComponentId)
+      public async Task<bool> GetDeviceStatusAsync(Guid Guid)
       {
-            var amico = await repo.GetAmicoByMacAsync(Mac);
+            var amico = await repo.GetAmicoByGuidAsync(Guid);
             var session = amico.session;
 
             if (amico.id == 0)
-                  throw new BadRequestException(MessageHelper.Common.NotFound(nameof(Amicos), Mac));
+                  throw new BadRequestException(MessageHelper.Common.NotFound(nameof(Amicos), amico.mac));
 
 
             var res = await command.CheckSession(amico.ip, amico.session);

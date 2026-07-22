@@ -4,6 +4,7 @@ using Adapter.Aero.Constants;
 using Adapter.Aero.Helpers;
 using Adapter.Aero.Interfaces;
 using Adapter.Aero.Model.Metadata;
+using Adapter.Aero.Persistences.Entities;
 using AeroAdapter.Application.Interfaces;
 using Door.Contract.DTOs;
 using Events.Contract.Command;
@@ -13,17 +14,23 @@ using SharedKernel.Messaging;
 namespace Adapter.Aero.Adapters;
 
 
-public sealed class AeroDoorAdapter(IDoorCommand door, IOutputCommand output, IInputCommand input, IMessageBus bus) : IAeroDoorAdapter
+public sealed class AeroDoorAdapter(
+      IDoorCommand door, 
+      IOutputCommand output, 
+      IInputCommand input, 
+      IMessageBus bus,
+      IAeroRepository repo
+      ) : IAeroDoorAdapter
 {
       public async Task CreateUpdateDoorAsync(
-            string Mac,
-            short DeviceComponentId,
-            string Metadata,
-            short FirstComponentId,
-            short SecondComponentId = -1
+            Guid DeviceGuid,
+            Guid DoorGuid,
+            string Metadata
       )
       {
-
+            short FirstSlot = -1;
+            short SecondSlot = -1;
+            var deviceSlot = await repo.GetScpSlotByGuidAsync(DeviceGuid);
             var metadata = JsonHelper.Deserialize<DoorMetadata>(Metadata);
             if (metadata == null)
                   throw new Exception(MessageHelper.Common.DeserializeFailed("DoorMetadata"));
@@ -33,6 +40,7 @@ public sealed class AeroDoorAdapter(IDoorCommand door, IOutputCommand output, II
             // Below is Setting Reader In
             if (metadata.ReaderIn.ReaderModuleComponentId > -1)
             {
+                  FirstSlot = (short)await repo.GetFreeSlotAsync<AcrSlot>(DeviceGuid);
                   short readerInOsdpFlag = 0x00;
                   if (metadata.ReaderIn.OsdpFlag)
                   {
@@ -49,8 +57,8 @@ public sealed class AeroDoorAdapter(IDoorCommand door, IOutputCommand output, II
                   }
 
                   var res = door.ReaderSpecification(
-                        Mac,
-                        DeviceComponentId,
+                        deviceSlot.mac,
+                        (short)deviceSlot.slot_id,
                         metadata.ReaderIn.ReaderModuleComponentId,
                         metadata.ReaderIn.ReaderNumber,
                         metadata.ReaderIn.DataFormat == -1 ? (short)0x01 : metadata.ReaderIn.DataFormat,
@@ -62,13 +70,14 @@ public sealed class AeroDoorAdapter(IDoorCommand door, IOutputCommand output, II
                   await bus.SendAsync(new AddCommandEvent(res));
 
                   if (!res.IsSend)
-                        throw new Exception(MessageHelper.Command.Unsuccess(CommandConstant.ReaderSpecification, Mac, DeviceComponentId));
+                        throw new Exception(MessageHelper.Command.Unsuccess(CommandConstant.ReaderSpecification, deviceSlot.mac,deviceSlot.slot_id));
             }
 
 
             // Below is Setting Reader Out
             if (metadata.ReaderOut.ReaderModuleComponentId > -1)
             {
+                  SecondSlot = (short)await repo.GetFreeSlotAsync<AcrSlot>(DeviceGuid,FirstSlot);
                   short readerOutOsdpFlag = 0x00;
                   if (metadata.ReaderOut.OsdpFlag)
                   {
@@ -85,8 +94,8 @@ public sealed class AeroDoorAdapter(IDoorCommand door, IOutputCommand output, II
                   }
 
                   var res = door.ReaderSpecification(
-                        Mac,
-                        DeviceComponentId,
+                        deviceSlot.mac,
+                        (short)deviceSlot.slot_id,
                         metadata.ReaderOut.ReaderModuleComponentId,
                         metadata.ReaderOut.ReaderNumber,
                          metadata.ReaderOut.DataFormat == -1 ? (short)0x01 : metadata.ReaderOut.DataFormat,
@@ -98,7 +107,7 @@ public sealed class AeroDoorAdapter(IDoorCommand door, IOutputCommand output, II
                   await bus.SendAsync(new AddCommandEvent(res));
 
                   if (!res.IsSend)
-                        throw new Exception(MessageHelper.Command.Unsuccess(CommandConstant.ReaderSpecification, Mac, DeviceComponentId));
+                        throw new Exception(MessageHelper.Command.Unsuccess(CommandConstant.ReaderSpecification, deviceSlot.mac,deviceSlot.slot_id));
             }
 
 
@@ -106,8 +115,8 @@ public sealed class AeroDoorAdapter(IDoorCommand door, IOutputCommand output, II
             if (metadata.Relay.RelayModuleComponentId > -1)
             {
                   var res = output.OutputPointSpecification(
-                  Mac,
-                  DeviceComponentId,
+                  deviceSlot.mac,
+                  (short)deviceSlot.slot_id,
                   metadata.Relay.RelayModuleComponentId,
                   metadata.Relay.RelayNumber,
                   OutputHelper.FinalizeOutputMode(metadata.Relay.DriveMode,metadata.Relay.OfflineMode)
@@ -116,15 +125,15 @@ public sealed class AeroDoorAdapter(IDoorCommand door, IOutputCommand output, II
                   await bus.SendAsync(new AddCommandEvent(res));
 
                   if (!res.IsSend)
-                        throw new Exception(MessageHelper.Command.Unsuccess(CommandConstant.OutputPointSpecification, Mac, DeviceComponentId));
+                        throw new Exception(MessageHelper.Command.Unsuccess(CommandConstant.OutputPointSpecification, deviceSlot.mac,deviceSlot.slot_id));
             }
 
             if (metadata.Sensor.SensorModuleComponentId > -1)
             {
                   // Input Spec
                   var res = input.InputPointSpecification(
-                        Mac,
-                        DeviceComponentId,
+                        deviceSlot.mac,
+                        (short)deviceSlot.slot_id,
                         metadata.Sensor.SensorModuleComponentId,
                         metadata.Sensor.SensorNumber,
                         metadata.Sensor.SensorMode,
@@ -135,7 +144,7 @@ public sealed class AeroDoorAdapter(IDoorCommand door, IOutputCommand output, II
                   await bus.SendAsync(new AddCommandEvent(res));
 
                   if (!res.IsSend)
-                        throw new Exception(MessageHelper.Command.Unsuccess(CommandConstant.OutputPointSpecification, Mac, DeviceComponentId));
+                        throw new Exception(MessageHelper.Command.Unsuccess(CommandConstant.OutputPointSpecification,deviceSlot.mac,deviceSlot.slot_id));
             }
 
 
@@ -147,8 +156,8 @@ public sealed class AeroDoorAdapter(IDoorCommand door, IOutputCommand output, II
             {
                   // Input Spec
                   var res = input.InputPointSpecification(
-                        Mac,
-                        DeviceComponentId,
+                        deviceSlot.mac,
+                        (short)deviceSlot.slot_id,
                         metadata.Rex.Rex0ModuleComponentId,
                         metadata.Rex.Rex0Number,
                         metadata.Rex.Rex0SensorMode,
@@ -159,15 +168,15 @@ public sealed class AeroDoorAdapter(IDoorCommand door, IOutputCommand output, II
                   await bus.SendAsync(new AddCommandEvent(res));
 
                   if (!res.IsSend)
-                        throw new Exception(MessageHelper.Command.Unsuccess(CommandConstant.OutputPointSpecification, Mac, DeviceComponentId));
+                        throw new Exception(MessageHelper.Command.Unsuccess(CommandConstant.OutputPointSpecification, deviceSlot.mac,deviceSlot.slot_id));
             }
 
             if (metadata.Rex.Rex1ModuleComponentId > -1)
             {
                   // Input Spec
                   var res = input.InputPointSpecification(
-                        Mac,
-                        DeviceComponentId,
+                        deviceSlot.mac,
+                        (short)deviceSlot.slot_id,
                         metadata.Rex.Rex1ModuleComponentId,
                         metadata.Rex.Rex1Number,
                         metadata.Rex.Rex1SensorMode,
@@ -178,7 +187,7 @@ public sealed class AeroDoorAdapter(IDoorCommand door, IOutputCommand output, II
                   await bus.SendAsync(new AddCommandEvent(res));
 
                   if (!res.IsSend)
-                        throw new Exception(MessageHelper.Command.Unsuccess(CommandConstant.OutputPointSpecification, Mac, DeviceComponentId));
+                        throw new Exception(MessageHelper.Command.Unsuccess(CommandConstant.OutputPointSpecification,deviceSlot.mac,deviceSlot.slot_id));
             }
 
 
@@ -186,11 +195,11 @@ public sealed class AeroDoorAdapter(IDoorCommand door, IOutputCommand output, II
             if (metadata.ReaderIn.ReaderModuleComponentId > -1)
             {
                   var res = door.AccessControlReaderConfiguration(
-                  Mac,
-                  DeviceComponentId,
-                  FirstComponentId,
+                 deviceSlot.mac,
+                  (short)deviceSlot.slot_id,
+                  FirstSlot,
                   metadata.AccessConfig,
-                  SecondComponentId,
+                  SecondSlot,
                   metadata.ReaderIn.ReaderModuleComponentId,
                   metadata.ReaderIn.ReaderNumber,
                   metadata.Relay.RelayModuleComponentId,
@@ -234,17 +243,19 @@ public sealed class AeroDoorAdapter(IDoorCommand door, IOutputCommand output, II
                   await bus.SendAsync(new AddCommandEvent(res));
 
                   if (!res.IsSend)
-                        throw new Exception(MessageHelper.Command.Unsuccess(CommandConstant.AccessControlReaderConfiguration, Mac, DeviceComponentId));
+                        throw new Exception(MessageHelper.Command.Unsuccess(CommandConstant.AccessControlReaderConfiguration, deviceSlot.mac,deviceSlot.slot_id));
+
+                  await repo.InsertSlotAsync<AcrSlot>(DeviceGuid,DoorGuid,FirstSlot);
             }
 
             if (metadata.ReaderOut.ReaderModuleComponentId > -1)
             {
                   var res = door.AccessControlReaderConfiguration(
-                  Mac,
-                  DeviceComponentId,
-                  SecondComponentId,
+                  deviceSlot.mac,
+                  (short)deviceSlot.slot_id,
+                  FirstSlot,
                   2,
-                  FirstComponentId,
+                  SecondSlot,
                   metadata.ReaderOut.ReaderModuleComponentId,
                   metadata.ReaderOut.ReaderNumber,
                   -1,
@@ -288,22 +299,34 @@ public sealed class AeroDoorAdapter(IDoorCommand door, IOutputCommand output, II
                   await bus.SendAsync(new AddCommandEvent(res));
 
                   if (!res.IsSend)
-                        throw new Exception(MessageHelper.Command.Unsuccess(CommandConstant.AccessControlReaderConfiguration, Mac, DeviceComponentId));
+                        throw new Exception(MessageHelper.Command.Unsuccess(CommandConstant.AccessControlReaderConfiguration, deviceSlot.mac,deviceSlot.slot_id));
+
+                  await repo.InsertSlotAsync<AcrSlot>(DeviceGuid,DoorGuid,SecondSlot);
             }
 
-
+            
 
       }
 
       
       public async Task DeleteDoorAsync(
-            string Mac,
-            short DeviceComponentId,
-            string Metadata,
-            short FirstComponentId,
-            short SecondComponentId = -1
+            Guid DeviceGuid,
+            Guid DoorGuid,
+            string Metadata
       )
       {
+            short FirstSlot = -1;
+            short SecondSlot = -1;
+            var deviceSlot = await repo.GetScpSlotByGuidAsync(DeviceGuid);
+            var doorSlot = await repo.GetSlotIdsByGuidAsync<AcrSlot>(DoorGuid);
+
+            if(doorSlot.Count() > 0)
+                  FirstSlot = (short)doorSlot.ElementAt(0);
+            
+             if(doorSlot.Count() > 1)
+                  SecondSlot = (short)doorSlot.ElementAt(1);
+            
+            
             var metadata = JsonSerializer.Deserialize<DoorMetadata>(Metadata);
             if (metadata == null)
                   throw new Exception(MessageHelper.Common.DeserializeFailed("DoorMetadata"));
@@ -314,11 +337,11 @@ public sealed class AeroDoorAdapter(IDoorCommand door, IOutputCommand output, II
             if (metadata.ReaderIn.ReaderModuleComponentId > -1)
             {
                   var res = door.AccessControlReaderConfiguration(
-                  Mac,
-                  DeviceComponentId,
-                  FirstComponentId,
+                  deviceSlot.mac,
+                  (short)deviceSlot.slot_id,
+                  FirstSlot,
                   metadata.AccessConfig,
-                  SecondComponentId,
+                  SecondSlot,
                   -1,
                   metadata.ReaderIn.ReaderNumber,
                   -1,
@@ -362,17 +385,19 @@ public sealed class AeroDoorAdapter(IDoorCommand door, IOutputCommand output, II
                   await bus.SendAsync(new AddCommandEvent(res));
 
                   if (!res.IsSend)
-                        throw new Exception(MessageHelper.Command.Unsuccess(CommandConstant.AccessControlReaderConfiguration, Mac, DeviceComponentId));
+                        throw new Exception(MessageHelper.Command.Unsuccess(CommandConstant.AccessControlReaderConfiguration, deviceSlot.mac,deviceSlot.slot_id));
+
+                  await repo.EjectSlotAsync<AcrSlot>(DeviceGuid,FirstSlot);
             }
 
             if (metadata.ReaderOut.ReaderModuleComponentId > -1)
             {
                   var res = door.AccessControlReaderConfiguration(
-                  Mac,
-                  DeviceComponentId,
-                  SecondComponentId,
+                  deviceSlot.mac,
+                  (short)deviceSlot.slot_id,
+                  SecondSlot,
                   2,
-                  FirstComponentId,
+                 FirstSlot,
                   -1,
                   metadata.ReaderIn.ReaderNumber,
                   -1,
@@ -416,12 +441,32 @@ public sealed class AeroDoorAdapter(IDoorCommand door, IOutputCommand output, II
                   await bus.SendAsync(new AddCommandEvent(res));
 
                   if (!res.IsSend)
-                        throw new Exception(MessageHelper.Command.Unsuccess(CommandConstant.AccessControlReaderConfiguration, Mac, DeviceComponentId));
+                        throw new Exception(MessageHelper.Command.Unsuccess(CommandConstant.AccessControlReaderConfiguration, deviceSlot.mac, deviceSlot.slot_id));
+
+                  await repo.EjectSlotAsync<AcrSlot>(DeviceGuid,SecondSlot);
+
             }
+
+    
       }
 
-      public async Task UpdateDoorAsync(string Mac, short DeviceComponentId, string Metadata, short FirstComponentId, short SecondComponentId = -1)
+      public async Task UpdateDoorAsync(
+            Guid DeviceGuid,
+            Guid DoorGuid,
+            string Metadata
+            )
       {
+            var deviceSlot = await repo.GetScpSlotByGuidAsync(DeviceGuid);
+            short FirstSlot = -1;
+            short SecondSlot = -1;
+            var doorSlot = await repo.GetSlotIdsByGuidAsync<AcrSlot>(DoorGuid);
+
+            if(doorSlot.Count() > 0)
+                  FirstSlot = (short)doorSlot.ElementAt(0);
+            
+             if(doorSlot.Count() > 1)
+                  SecondSlot = (short)doorSlot.ElementAt(1);
+
             var metadata = JsonSerializer.Deserialize<DoorMetadata>(Metadata);
             if (metadata == null)
                   throw new Exception(MessageHelper.Common.DeserializeFailed("DoorMetadata"));
@@ -447,8 +492,8 @@ public sealed class AeroDoorAdapter(IDoorCommand door, IOutputCommand output, II
                   }
 
                   var res = door.ReaderSpecification(
-                        Mac,
-                        DeviceComponentId,
+                        deviceSlot.mac,
+                        (short)deviceSlot.slot_id,
                         metadata.ReaderIn.ReaderModuleComponentId,
                         metadata.ReaderIn.ReaderNumber,
                         metadata.ReaderIn.DataFormat,
@@ -460,7 +505,7 @@ public sealed class AeroDoorAdapter(IDoorCommand door, IOutputCommand output, II
                   await bus.SendAsync(new AddCommandEvent(res));
 
                   if (!res.IsSend)
-                        throw new Exception(MessageHelper.Command.Unsuccess(CommandConstant.ReaderSpecification, Mac, DeviceComponentId));
+                        throw new Exception(MessageHelper.Command.Unsuccess(CommandConstant.ReaderSpecification, deviceSlot.mac, deviceSlot.slot_id));
             }
 
 
@@ -483,8 +528,8 @@ public sealed class AeroDoorAdapter(IDoorCommand door, IOutputCommand output, II
                   }
 
                   var res = door.ReaderSpecification(
-                        Mac,
-                        DeviceComponentId,
+                        deviceSlot.mac,
+                        (short)deviceSlot.slot_id,
                         metadata.ReaderOut.ReaderModuleComponentId,
                         metadata.ReaderOut.ReaderNumber,
                         metadata.ReaderOut.DataFormat,
@@ -496,7 +541,7 @@ public sealed class AeroDoorAdapter(IDoorCommand door, IOutputCommand output, II
                   await bus.SendAsync(new AddCommandEvent(res));
 
                   if (!res.IsSend)
-                        throw new Exception(MessageHelper.Command.Unsuccess(CommandConstant.ReaderSpecification, Mac, DeviceComponentId));
+                        throw new Exception(MessageHelper.Command.Unsuccess(CommandConstant.ReaderSpecification, deviceSlot.mac, deviceSlot.slot_id));
             }
 
 
@@ -504,8 +549,8 @@ public sealed class AeroDoorAdapter(IDoorCommand door, IOutputCommand output, II
             if (metadata.Relay.RelayModuleComponentId > -1)
             {
                   var res = output.OutputPointSpecification(
-                  Mac,
-                  DeviceComponentId,
+                   deviceSlot.mac,
+                        (short)deviceSlot.slot_id,
                   metadata.Relay.RelayModuleComponentId,
                   metadata.Relay.RelayNumber,
                   metadata.Relay.DriveMode
@@ -514,15 +559,15 @@ public sealed class AeroDoorAdapter(IDoorCommand door, IOutputCommand output, II
                   await bus.SendAsync(new AddCommandEvent(res));
 
                   if (!res.IsSend)
-                        throw new Exception(MessageHelper.Command.Unsuccess(CommandConstant.OutputPointSpecification, Mac, DeviceComponentId));
+                        throw new Exception(MessageHelper.Command.Unsuccess(CommandConstant.OutputPointSpecification, deviceSlot.mac, deviceSlot.slot_id));
             }
 
             if (metadata.Sensor.SensorModuleComponentId > -1)
             {
                   // Input Spec
                   var res = input.InputPointSpecification(
-                        Mac,
-                        DeviceComponentId,
+                         deviceSlot.mac,
+                        (short)deviceSlot.slot_id,
                         metadata.Sensor.SensorModuleComponentId,
                         metadata.Sensor.SensorNumber,
                         metadata.Sensor.SensorMode,
@@ -533,7 +578,7 @@ public sealed class AeroDoorAdapter(IDoorCommand door, IOutputCommand output, II
                   await bus.SendAsync(new AddCommandEvent(res));
 
                   if (!res.IsSend)
-                        throw new Exception(MessageHelper.Command.Unsuccess(CommandConstant.OutputPointSpecification, Mac, DeviceComponentId));
+                        throw new Exception(MessageHelper.Command.Unsuccess(CommandConstant.OutputPointSpecification, deviceSlot.mac, deviceSlot.slot_id));
             }
 
 
@@ -545,8 +590,8 @@ public sealed class AeroDoorAdapter(IDoorCommand door, IOutputCommand output, II
             {
                   // Input Spec
                   var res = input.InputPointSpecification(
-                        Mac,
-                        DeviceComponentId,
+                         deviceSlot.mac,
+                        (short)deviceSlot.slot_id,
                         metadata.Rex.Rex0ModuleComponentId,
                         metadata.Rex.Rex0Number,
                         metadata.Rex.Rex0SensorMode,
@@ -557,15 +602,15 @@ public sealed class AeroDoorAdapter(IDoorCommand door, IOutputCommand output, II
                   await bus.SendAsync(new AddCommandEvent(res));
 
                   if (!res.IsSend)
-                        throw new Exception(MessageHelper.Command.Unsuccess(CommandConstant.OutputPointSpecification, Mac, DeviceComponentId));
+                        throw new Exception(MessageHelper.Command.Unsuccess(CommandConstant.OutputPointSpecification,deviceSlot.mac, deviceSlot.slot_id));
             }
 
             if (metadata.Rex.Rex1ModuleComponentId > -1)
             {
                   // Input Spec
                   var res = input.InputPointSpecification(
-                        Mac,
-                        DeviceComponentId,
+                         deviceSlot.mac,
+                        (short)deviceSlot.slot_id,
                         metadata.Rex.Rex1ModuleComponentId,
                         metadata.Rex.Rex1Number,
                         metadata.Rex.Rex1SensorMode,
@@ -576,7 +621,7 @@ public sealed class AeroDoorAdapter(IDoorCommand door, IOutputCommand output, II
                   await bus.SendAsync(new AddCommandEvent(res));
 
                   if (!res.IsSend)
-                        throw new Exception(MessageHelper.Command.Unsuccess(CommandConstant.OutputPointSpecification, Mac, DeviceComponentId));
+                        throw new Exception(MessageHelper.Command.Unsuccess(CommandConstant.OutputPointSpecification, deviceSlot.mac, deviceSlot.slot_id));
             }
 
 
@@ -584,11 +629,11 @@ public sealed class AeroDoorAdapter(IDoorCommand door, IOutputCommand output, II
             if (metadata.ReaderIn.ReaderModuleComponentId > -1)
             {
                   var res = door.AccessControlReaderConfiguration(
-                  Mac,
-                  DeviceComponentId,
-                  FirstComponentId,
+                   deviceSlot.mac,
+                  (short)deviceSlot.slot_id,
+                  FirstSlot,
                   metadata.AccessConfig,
-                  SecondComponentId,
+                  SecondSlot,
                   metadata.ReaderIn.ReaderModuleComponentId,
                   metadata.ReaderIn.ReaderNumber,
                   metadata.Relay.RelayModuleComponentId,
@@ -632,17 +677,17 @@ public sealed class AeroDoorAdapter(IDoorCommand door, IOutputCommand output, II
                   await bus.SendAsync(new AddCommandEvent(res));
 
                   if (!res.IsSend)
-                        throw new Exception(MessageHelper.Command.Unsuccess(CommandConstant.AccessControlReaderConfiguration, Mac, DeviceComponentId));
+                        throw new Exception(MessageHelper.Command.Unsuccess(CommandConstant.AccessControlReaderConfiguration,deviceSlot.mac,deviceSlot.slot_id));
             }
 
             if (metadata.ReaderOut.ReaderModuleComponentId > -1)
             {
                   var res = door.AccessControlReaderConfiguration(
-                  Mac,
-                  DeviceComponentId,
-                  SecondComponentId,
+                  deviceSlot.mac,
+                  (short)deviceSlot.slot_id,
+                  SecondSlot,
                   2,
-                  FirstComponentId,
+                  FirstSlot,
                   metadata.ReaderIn.ReaderModuleComponentId,
                   metadata.ReaderIn.ReaderNumber,
                   -1,
@@ -686,7 +731,7 @@ public sealed class AeroDoorAdapter(IDoorCommand door, IOutputCommand output, II
                   await bus.SendAsync(new AddCommandEvent(res));
 
                   if (!res.IsSend)
-                        throw new Exception(MessageHelper.Command.Unsuccess(CommandConstant.AccessControlReaderConfiguration, Mac, DeviceComponentId));
+                        throw new Exception(MessageHelper.Command.Unsuccess(CommandConstant.AccessControlReaderConfiguration, deviceSlot.mac,deviceSlot.slot_id));
             }
       }
 }

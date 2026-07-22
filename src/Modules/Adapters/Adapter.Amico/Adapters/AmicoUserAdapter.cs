@@ -29,7 +29,7 @@ public sealed class AmicoUserAdapter(
       }
 
 
-      public Task DeleteUserAsync(string Mac, short ScpId, int CardNumber, string LicenseNumber, string Pin, string QrCode, string ImageName)
+      public Task DeleteAsync(string Mac, short ScpId, int CardNumber, string LicenseNumber, string Pin, string QrCode, string ImageName)
       {
             throw new NotImplementedException();
       }

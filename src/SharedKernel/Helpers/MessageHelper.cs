@@ -7,6 +7,7 @@ public static class MessageHelper
       public static class Command
       {
             public static string Unsuccess(string Type,string Mac,int ComponentId) => $"{Type} [{Mac}] [{ComponentId}] - Unsuccess";
+            public static string Unsuccess(string Type,string Mac) => $"{Type} [{Mac}] - Unsuccess";
       }
       public static class Common
       {
@@ -21,6 +22,7 @@ public static class MessageHelper
             public static string DeserializeFailed(string Method) => $"Deserialize {Method} unsuccessful";
             public static string FoundRelatedRecord(string Type) => $"Found related {Type} record.";
             public static string FoundRelatedRecord() => $"Found related record.";
+            public static string SlotNotAvailable(string Table) => $"Slot for {Table} is full.";
       }
 
       public static class Auth

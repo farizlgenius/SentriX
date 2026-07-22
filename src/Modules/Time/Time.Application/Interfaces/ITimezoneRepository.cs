@@ -6,7 +6,6 @@ namespace Time.Application.Interfaces;
 
 public interface ITimeZoneRepository
 {
-      Task<short> GetLowestTimeZoneComponentIdAsync(int location_id,CancellationToken ct = default);
       Task AddAsync(Domain.Entities.TimeZone timezone,CancellationToken ct = default);
       Task UpdateAsync(Domain.Entities.TimeZone timezone,CancellationToken ct = default);
       Task DeleteByGuidAsync(Guid guid,CancellationToken ct = default);

@@ -11,7 +11,7 @@ namespace Adapter.Amico.Command;
 
 public sealed class GroupCommand(IAmicoSetting setting, IHttpClient client) : BaseCommand(client, setting), IGroupCommand
 {
-      public async Task<CreateObjectResponse> CreateAccessRulesAsync(string ip, string session, int id, string name, int type)
+      public async Task<CreateObjectResponse> CreateAccessRulesAsync(string ip, string session, string name, int type)
       {
             var queryParams = new Dictionary<string, string?>
             {
@@ -27,7 +27,6 @@ public sealed class GroupCommand(IAmicoSetting setting, IHttpClient client) : Ba
                         new List<AccessRule>
                         {
                               new AccessRule(
-                        id,
                         name,
                         type,
                         0
@@ -88,7 +87,7 @@ public sealed class GroupCommand(IAmicoSetting setting, IHttpClient client) : Ba
             ) ?? new CreateObjectResponse();
       }
 
-      public async Task<CreateObjectResponse> CreateGroupAsync(string ip, string session, int id, string name)
+      public async Task<CreateObjectResponse> CreateGroupAsync(string ip, string session, string name)
       {
             var queryParams = new Dictionary<string, string?>
             {
@@ -104,7 +103,6 @@ public sealed class GroupCommand(IAmicoSetting setting, IHttpClient client) : Ba
                         new List<Model.Objects.Group>
                         {
                               new Model.Objects.Group(
-                                    id,
                                     name
                               )
                         }
@@ -231,7 +229,6 @@ public sealed class GroupCommand(IAmicoSetting setting, IHttpClient client) : Ba
                         new List<AccessRule>
                         {
                               new AccessRule(
-                                    id,
                                     name,
                                     type,
                                     0
@@ -368,7 +365,6 @@ public sealed class GroupCommand(IAmicoSetting setting, IHttpClient client) : Ba
                         new List<Model.Objects.Group>
                         {
                               new Model.Objects.Group(
-                                    id,
                                     name
                               )
                         },

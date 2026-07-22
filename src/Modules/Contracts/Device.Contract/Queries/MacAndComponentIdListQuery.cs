@@ -2,4 +2,4 @@ using SharedKernel.Messaging;
 
 namespace Device.Contract.Queries;
 
-public sealed record MacAndComponentIdListByLocationIdQuery(int LocationId) : IQuery<IEnumerable<(string Mac,short ComponentId,string Type)>>;
+public sealed record GuidAndTypeByLocationIdQuery(int LocationId) : IQuery<IEnumerable<(Guid Guid,string Type)>>;

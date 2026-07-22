@@ -1,3 +1,4 @@
+using Adapter.Amico.Constants;
 using Adapter.Amico.Interface;
 using Adapter.Amico.Interfaces;
 using Adapter.Amico.Persistences.Entities;
@@ -12,15 +13,19 @@ public sealed class AmicoGroupAdapter(
 ) : IAmicoGroupAdapter
 {
 
-      public async Task CreateGroup(string Name, short ComponentId, List<(string Mac, short DeviceComponentId, short DoorComponentId, short TimeZoneComponentId)> Doors)
+      public async Task CreateGroup(
+             Guid Guid,
+             string Name,
+            List<(Guid DeviceGuid, Guid DoorGuid, Guid TzGuid)> Doors
+      )
       {
             foreach (var d in Doors)
             {
-                  var amico = await repo.GetAmicoByMacAsync(d.Mac);
+                  var amico = await repo.GetAmicoByGuidAsync(d.DeviceGuid);
                   var session = amico.session;
 
                   if (amico.id == 0)
-                        throw new BadRequestException(MessageHelper.Common.NotFound(nameof(Amicos), d.Mac));
+                        throw new BadRequestException(MessageHelper.Common.NotFound(nameof(Amicos), d.DeviceGuid.ToString()));
 
 
                   var res = await group.CheckSession(amico.ip, amico.session);
@@ -32,45 +37,66 @@ public sealed class AmicoGroupAdapter(
                         await repo.UpdateSessionByMacAsync(amico.mac, news.Session);
                   }
 
-                  await group.CreateGroupAsync(
+                  var gres = await group.CreateGroupAsync(
                         amico.ip,
                         session,
-                        ComponentId,
                         Name
                   );
 
-                  await group.CreateAccessRulesAsync(
+                  if(gres.Ids.Count() == 0)
+                        throw new Exception(MessageHelper.Command.Unsuccess(CommandConstant.Group,amico.mac));
+
+
+                  await repo.AddSlotAsync<Group>(
+                              Guid,
+                              gres.Ids.ElementAt(0),
+                              (g,s) => new Group(g,s)
+                        );
+                  
+
+                  var arres = await group.CreateAccessRulesAsync(
                         amico.ip,
                         session,
-                        ComponentId,
                         Name,
                         0
                   );
 
+                  if(arres.Ids.Count() == 0)
+                        throw new Exception(MessageHelper.Command.Unsuccess(CommandConstant.AccessRule,amico.mac));
+
+                  await repo.AddSlotAsync<AccessRule>(
+                              Guid,
+                              arres.Ids.ElementAt(0),
+                              (g,s) => new AccessRule(g,s)
+                        );
+
                   await group.CreateGroupAccessRuleAsync(
                         amico.ip,
                         session,
-                        ComponentId,
-                        ComponentId
+                        gres.Ids.ElementAt(0),
+                        arres.Ids.ElementAt(0)
                   );
 
                   await group.CreateAccessRuleTimeZoneAsync(
                         amico.ip,
                         session,
-                        d.TimeZoneComponentId,
-                        ComponentId
+                        await repo.GetSlotIdByGuid<Persistences.Entities.TimeZone>(d.TzGuid),
+                        arres.Ids.ElementAt(0)
                   );
             }
 
       }
 
-      public async Task DeleteGroup(string Mac, short DeviceComponentId, short ComponentId)
+      public async Task DeleteGroup(
+            Guid DeviceGuid,
+            Guid GroupGuid
+      )
       {
-            var amico = await repo.GetAmicoByMacAsync(Mac);
+            var amico = await repo.GetAmicoByGuidAsync(DeviceGuid);
             var session = amico.session;
 
             if (amico.id == 0)
-                  throw new BadRequestException(MessageHelper.Common.NotFound(nameof(Amicos), Mac));
+                  throw new BadRequestException(MessageHelper.Common.NotFound(nameof(Amicos), amico.mac));
 
 
             var res = await group.CheckSession(amico.ip, amico.session);
@@ -112,7 +138,11 @@ public sealed class AmicoGroupAdapter(
 
       }
 
-      public async Task UpdateGroup(string Name, short ComponentId, List<(string Mac, short DeviceComponentId, short DoorComponentId, short TimeZoneComponentId)> Doors)
+      public async Task UpdateGroup(
+             Guid Guid,
+             string Name,
+            List<(Guid DeviceGuid, Guid DoorGuid, Guid TzGuid)> Doors
+      )
       {
             foreach (var d in Doors)
             {
