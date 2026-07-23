@@ -88,7 +88,6 @@ public sealed class TimeCommand(IHttpClient client, IAmicoSetting setting) : Bas
             string ip,
             string session,
             int tz_id,
-            int componentId,
             int start,
             int end,
             int sun,
@@ -107,7 +106,6 @@ public sealed class TimeCommand(IHttpClient client, IAmicoSetting setting) : Bas
                   new List<Model.Objects.TimeSpan>
                   {
                         new Model.Objects.TimeSpan(
-                        componentId,
                         tz_id,
                         start,
                         end,
@@ -142,8 +140,7 @@ public sealed class TimeCommand(IHttpClient client, IAmicoSetting setting) : Bas
       public async Task<CreateObjectResponse> CreateTimeZoneAsync(
             string ip,
             string session,
-            string name,
-            int componentId
+            string name
             )
       {
             var request = new CreateObjectRequest<Model.Objects.TimeZone>(
@@ -151,7 +148,6 @@ public sealed class TimeCommand(IHttpClient client, IAmicoSetting setting) : Bas
                   new List<Model.Objects.TimeZone>
                   {
                         new Model.Objects.TimeZone(
-                              componentId,
                               name
                               )
                   }
@@ -263,7 +259,6 @@ public sealed class TimeCommand(IHttpClient client, IAmicoSetting setting) : Bas
                    new List<Model.Objects.Holiday>
                    {
                         new Model.Objects.Holiday(
-                              componentId,
                               name,
                               start,
                               end,
@@ -303,7 +298,6 @@ public sealed class TimeCommand(IHttpClient client, IAmicoSetting setting) : Bas
                  new List<Model.Objects.TimeSpan>
                  {
                         new Model.Objects.TimeSpan(
-                        componentId,
                         tz_id,
                         start,
                         end,
@@ -350,7 +344,6 @@ public sealed class TimeCommand(IHttpClient client, IAmicoSetting setting) : Bas
                    new List<Model.Objects.TimeZone>
                    {
                         new Model.Objects.TimeZone(
-                                    componentId,
                                     name
                               )
                    },

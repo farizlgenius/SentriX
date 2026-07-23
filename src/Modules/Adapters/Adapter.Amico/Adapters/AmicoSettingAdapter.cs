@@ -10,7 +10,9 @@ public sealed class AmicoSettingAdapter(
       IMessageBus bus
       ) : IAmicoSettingAdapter
 {
-      public Task CardFormatConfiguration(string Mac, short ScpId, short ComponentId, short Fac, short Offset, short FunctionId, short Flag, short Bits, short PeLn, short PeLoc, short PoLn, short PoLoc, short FcLn, short FcLoc, short ChLn, short ChLoc, short IcLn, short IcLoc)
+
+
+      public Task CardFormatConfiguration(Guid Guid, string Metadata)
       {
             throw new NotImplementedException();
       }

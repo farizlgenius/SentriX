@@ -1,7 +1,6 @@
 namespace Adapter.Amico.Model.Objects;
 
 public sealed record TimeSpan(
-      int id,
       int time_zone_id,
       int start,
       int end,

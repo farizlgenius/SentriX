@@ -74,10 +74,10 @@ public sealed class AmicoTimeAdapter(
             if(response.Ids.Count == 0)
                   throw new Exception(MessageHelper.Command.Unsuccess(CommandConstant.Holiday,amico.mac));
 
-            await repo.AddSlotAsync(
+            await repo.AddSlotAsync<Persistences.Entities.Holiday>(
                   Guid,
                   response.Ids[0],
-                  (s) => new HolidaySlot(s)
+                  (g,s) => new Persistences.Entities.Holiday(g,s)
             );
 
       }
@@ -108,10 +108,10 @@ public sealed class AmicoTimeAdapter(
                   Name
             );
 
-            await repo.AddSlotAsync<TimeZoneSlot>(
+            await repo.AddSlotAsync<Persistences.Entities.TimeZone>(
                   TzGuid,
                   response.Ids[0],
-                  (g,s) => new TimeZoneSlot(g,s)
+                  (g,s) => new Persistences.Entities.TimeZone(g,s)
             );
 
             if(response.Ids.Count == 0)
@@ -125,7 +125,6 @@ public sealed class AmicoTimeAdapter(
                         amico.ip,
                         session,
                         response.Ids[0],
-                        interval.ComponentId,
                        interval.Start,
                        interval.End,
                         interval.Sun ? 1 : 0,
@@ -140,9 +139,14 @@ public sealed class AmicoTimeAdapter(
                         1
                   );
 
+                  if(arr.Ids.Count == 0)
+                        throw new Exception(CommandConstant.TimeSpan);
 
-                  await repo.AddSlotAsync<TimeSpanSlot>(
-                        ,
+
+                  await repo.AddSlotAsync<Persistences.Entities.TimeSpan>(
+                        TzGuid,
+                        arr.Ids.ElementAt(0),
+                        (g,s) => new Persistences.Entities.TimeSpan(g,s) 
                   );
 
        
@@ -150,9 +154,8 @@ public sealed class AmicoTimeAdapter(
       }
 
       public async Task DeleteHolidayAsync(
-            short DeviceComponentId,
-            int ComponentId,
-            string Mac,
+            Guid Guid,
+            Guid DeviceGuid,
             DateTime Start,
             DateTime End
             )

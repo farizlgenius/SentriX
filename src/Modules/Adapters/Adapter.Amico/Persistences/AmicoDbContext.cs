@@ -72,6 +72,12 @@ public class AmicoDbContext(DbContextOptions<AmicoDbContext> options) : DbContex
                   }
             }
 
+            modelBuilder.Entity<Group>()
+            .HasOne(x => x.access_rule)
+            .WithOne(x => x.group)
+            .HasForeignKey<Group>(x => x.access_rule_guid)
+            .HasPrincipalKey<AccessRule>(x => x.guid);
+
 
       }
 }

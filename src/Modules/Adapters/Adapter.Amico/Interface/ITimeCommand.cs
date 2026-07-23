@@ -46,7 +46,6 @@ public interface ITimeCommand : IBaseCommand
             string ip,
             string session,
             int tz_id,
-            int componentId,
             int start,
             int end,
             int sun,

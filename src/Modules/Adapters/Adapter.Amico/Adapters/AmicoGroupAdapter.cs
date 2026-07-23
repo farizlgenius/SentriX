@@ -37,6 +37,25 @@ public sealed class AmicoGroupAdapter(
                         await repo.UpdateSessionByMacAsync(amico.mac, news.Session);
                   }
 
+                  // Create Access Rule Here
+                   var arres = await group.CreateAccessRulesAsync(
+                        amico.ip,
+                        session,
+                        Name,
+                        0
+                  );
+
+                  if(arres.Ids.Count() == 0)
+                        throw new Exception(MessageHelper.Command.Unsuccess(CommandConstant.AccessRule,amico.mac));
+
+                  await repo.AddSlotAsync<AccessRule>(
+                              Guid,
+                              arres.Ids.ElementAt(0),
+                              (g,s) => new AccessRule(g,s)
+                        );
+
+                  // Create Group Here
+
                   var gres = await group.CreateGroupAsync(
                         amico.ip,
                         session,
@@ -54,35 +73,29 @@ public sealed class AmicoGroupAdapter(
                         );
                   
 
-                  var arres = await group.CreateAccessRulesAsync(
-                        amico.ip,
-                        session,
-                        Name,
-                        0
-                  );
+                 
 
-                  if(arres.Ids.Count() == 0)
-                        throw new Exception(MessageHelper.Command.Unsuccess(CommandConstant.AccessRule,amico.mac));
-
-                  await repo.AddSlotAsync<AccessRule>(
-                              Guid,
-                              arres.Ids.ElementAt(0),
-                              (g,s) => new AccessRule(g,s)
-                        );
-
-                  await group.CreateGroupAccessRuleAsync(
+                  var garres = await group.CreateGroupAccessRuleAsync(
                         amico.ip,
                         session,
                         gres.Ids.ElementAt(0),
                         arres.Ids.ElementAt(0)
                   );
 
-                  await group.CreateAccessRuleTimeZoneAsync(
+                   if(garres.Ids.Count() == 0)
+                        throw new Exception(MessageHelper.Command.Unsuccess(CommandConstant.GroupAccessRule,amico.mac));
+
+
+                  var artzres =  await group.CreateAccessRuleTimeZoneAsync(
                         amico.ip,
                         session,
-                        await repo.GetSlotIdByGuid<Persistences.Entities.TimeZone>(d.TzGuid),
+                        await repo.GetSlotIdByGuidAsync<Persistences.Entities.TimeZone>(d.TzGuid),
                         arres.Ids.ElementAt(0)
                   );
+
+                   if(artzres.Ids.Count() == 0)
+                        throw new Exception(MessageHelper.Command.Unsuccess(CommandConstant.AccessRuleTimeZone,amico.mac));
+
             }
 
       }
@@ -94,6 +107,7 @@ public sealed class AmicoGroupAdapter(
       {
             var amico = await repo.GetAmicoByGuidAsync(DeviceGuid);
             var session = amico.session;
+            
 
             if (amico.id == 0)
                   throw new BadRequestException(MessageHelper.Common.NotFound(nameof(Amicos), amico.mac));
@@ -108,34 +122,35 @@ public sealed class AmicoGroupAdapter(
                   await repo.UpdateSessionByMacAsync(amico.mac, news.Session);
             }
 
+            var groupSlot = await repo.GetSlotByGuidAsync<Group>(GroupGuid);
+            var accessRuleSlot = await repo.GetSlotByGuidAsync<AccessRule>(groupSlot.access_rule_guid);
+
+
             await group.DeleteAccessRuleTimeZoneAsync(
                         amico.ip,
                         session,
-                        ComponentId
+                        accessRuleSlot.slot_id
                   );
+
 
             await group.DeleteGroupAccessRuleAsync(
                        amico.ip,
                        session,
-                       ComponentId,
-                       ComponentId
+                       groupSlot.slot_id,
+                       accessRuleSlot.slot_id
                  );
 
             await group.DeleteGroupAsync(
                         amico.ip,
                         session,
-                        ComponentId
+                        groupSlot.slot_id
                   );
 
             await group.DeleteAccessRuleAsync(
                   amico.ip,
                   session,
-                  ComponentId
+                  accessRuleSlot.slot_id
             );
-
-
-
-
       }
 
       public async Task UpdateGroup(
@@ -146,11 +161,11 @@ public sealed class AmicoGroupAdapter(
       {
             foreach (var d in Doors)
             {
-                  var amico = await repo.GetAmicoByMacAsync(d.Mac);
+                  var amico = await repo.GetAmicoByGuidAsync(d.DeviceGuid);
                   var session = amico.session;
 
                   if (amico.id == 0)
-                        throw new BadRequestException(MessageHelper.Common.NotFound(nameof(Amicos), d.Mac));
+                        throw new BadRequestException(MessageHelper.Common.NotFound(nameof(Amicos), d.DeviceGuid.ToString()));
 
 
                   var res = await group.CheckSession(amico.ip, amico.session);
@@ -162,17 +177,20 @@ public sealed class AmicoGroupAdapter(
                         await repo.UpdateSessionByMacAsync(amico.mac, news.Session);
                   }
 
+                  var groupSlot = await repo.GetSlotByGuidAsync<Group>(Guid);
+                  var accessRuleSlot = await repo.GetSlotByGuidAsync<AccessRule>(groupSlot.access_rule_guid);
+
                   await group.UpdateGroupAsync(
                         amico.ip,
                         session,
-                        ComponentId,
+                        groupSlot.slot_id,
                         Name
                   );
 
                   await group.UpdateAccessRulesAsync(
                         amico.ip,
                         session,
-                        ComponentId,
+                        accessRuleSlot.slot_id,
                         Name,
                         0
                   );
@@ -180,15 +198,15 @@ public sealed class AmicoGroupAdapter(
                   await group.UpdateGroupAccessRuleAsync(
                         amico.ip,
                         session,
-                        ComponentId,
-                        ComponentId
+                        groupSlot.slot_id,
+                        accessRuleSlot.slot_id
                   );
 
                   await group.UpdateAccessRuleTimeZoneAsync(
                         amico.ip,
                         session,
-                        d.TimeZoneComponentId,
-                        ComponentId
+                        await repo.GetSlotIdByGuidAsync<Persistences.Entities.TimeZone>(d.TzGuid),
+                        accessRuleSlot.slot_id
                   );
             }
 

@@ -79,7 +79,7 @@ public sealed class AmicoRepository(AmicoDbContext context) : IAmicoRepository
             .FirstOrDefaultAsync() ?? new Amicos();
       }
 
-      public async Task<int> GetSlotIdByGuid<TEntity>(Guid Guid, CancellationToken ct = default) where TEntity : BaseSlot
+      public async Task<int> GetSlotIdByGuidAsync<TEntity>(Guid Guid, CancellationToken ct = default) where TEntity : BaseSlot
       {
             return await context.Set<TEntity>()
             .Where(x => x.guid == Guid)

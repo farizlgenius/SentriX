@@ -19,7 +19,10 @@ public interface IAmicoRepository
             CancellationToken ct = default
       );
 
-      Task<int> GetSlotIdByGuid<TEntity>(Guid Guid,CancellationToken ct = default) where TEntity : BaseSlot;
+      Task<int> GetSlotIdByGuidAsync<TEntity>(Guid Guid,CancellationToken ct = default) where TEntity : BaseSlot;
+
+      Task<TEntity> GetSlotByGuidAsync<>
+
       Task<Amicos> GetAmicoByMacAsync(string mac,CancellationToken ct = default);
       Task UpdateSessionByMacAsync(string mac,string session,CancellationToken ct = default);
 
