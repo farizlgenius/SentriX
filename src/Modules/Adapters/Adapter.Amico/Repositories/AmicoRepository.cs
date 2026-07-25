@@ -37,6 +37,14 @@ public sealed class AmicoRepository(AmicoDbContext context) : IAmicoRepository
             await context.SaveChangesAsync(ct);
       }
 
+      public async Task AddSlotAsync<TEntity>(Guid guid, Guid deviceGuid, int slot, Func<Guid, Guid, int, TEntity> factory, CancellationToken ct = default) where TEntity : BaseSlot
+      {
+            var entity = factory(guid, deviceGuid, slot);
+
+            await context.Set<TEntity>().AddAsync(entity, ct);
+            await context.SaveChangesAsync(ct);
+      }
+
       public async Task DeleteAsync(string Mac, string Ip, CancellationToken ct = default)
       {
             var entity = await context.Amicos
@@ -44,12 +52,12 @@ public sealed class AmicoRepository(AmicoDbContext context) : IAmicoRepository
             .OrderByDescending(x => x.id)
             .FirstOrDefaultAsync();
 
-            if(entity is null)
+            if (entity is null)
                   throw new Exception(MessageHelper.DB.RecordNotFound);
 
             context.Amicos.Remove(entity);
 
-            await context.SaveChangesAsync(ct); 
+            await context.SaveChangesAsync(ct);
       }
 
       public async Task DeleteSlot<TEntity>(Guid guid, int slot, CancellationToken ct = default) where TEntity : BaseSlot
@@ -58,8 +66,8 @@ public sealed class AmicoRepository(AmicoDbContext context) : IAmicoRepository
             .Where(x => x.guid == guid && x.slot_id == slot)
             .FirstOrDefaultAsync(ct);
 
-            if(e is null)
-                  throw new Exception(MessageHelper.Common.NotFound("Slot Id",slot));
+            if (e is null)
+                  throw new Exception(MessageHelper.Common.NotFound("Slot Id", slot));
 
             context.Set<TEntity>().Remove(e);
             await context.SaveChangesAsync(ct);
@@ -69,14 +77,21 @@ public sealed class AmicoRepository(AmicoDbContext context) : IAmicoRepository
       {
             return await context.Amicos.AsNoTracking()
             .Where(x => x.guid == guid)
-            .FirstOrDefaultAsync() ?? new Amicos();
+            .FirstOrDefaultAsync() ?? throw new Exception(MessageHelper.DB.RecordNotFound);
       }
 
-      public async Task<Amicos> GetAmicoByMacAsync(string mac,CancellationToken ct = default)
+      public async Task<Amicos> GetAmicoByMacAsync(string mac, CancellationToken ct = default)
       {
             return await context.Amicos
             .Where(x => mac.Equals(mac))
-            .FirstOrDefaultAsync() ?? new Amicos();
+            .FirstOrDefaultAsync() ?? throw new Exception(MessageHelper.DB.RecordNotFound);
+      }
+
+      public async Task<TEntity> GetSlotByGuidAsync<TEntity>(Guid guid, CancellationToken ct = default) where TEntity : BaseSlot
+      {
+            return await context.Set<TEntity>()
+            .Where(x => x.guid == guid)
+            .FirstOrDefaultAsync() ?? throw new Exception(MessageHelper.DB.RecordNotFound);
       }
 
       public async Task<int> GetSlotIdByGuidAsync<TEntity>(Guid Guid, CancellationToken ct = default) where TEntity : BaseSlot
@@ -94,7 +109,7 @@ public sealed class AmicoRepository(AmicoDbContext context) : IAmicoRepository
             .Where(x => x.mac.Equals(mac))
             .FirstOrDefaultAsync();
 
-            if(entity is null)
+            if (entity is null)
                   throw new Exception(MessageHelper.DB.RecordNotFound);
 
             entity.UpdateSession(session);

@@ -11,42 +11,53 @@ public interface ITimeAdapter
 
      // Holiday
      Task CreateHolidayAsync(
-         Guid Guid,
+          Guid HolidayGuid,
+         List<Guid> DeviceGuids,
           string Name,
            DateTime Start,
            DateTime End
     );
 
      Task DeleteHolidayAsync(
-          Guid Guid,
+          Guid HolidayGuid,
+          List<Guid> DeviceGuids,
        DateTime Start,
        DateTime End
        );
 
 
-     Task UpdateHolidayAsync(Guid DeviceGuid,DateTime Start, DateTime End);
+     Task UpdateHolidayAsync(Guid HolidayGuid, List<Guid> DeviceGuids, DateTime Start, DateTime End);
 
 
      // Time Zone
 
 
      Task CreateTimeZoneAsync(
-           Guid DeviceGuid,
            Guid TzGuid,
            string Name,
-            List<IntervalObject> Intervals
+            List<IntervalObject> Intervals,
+            List<Guid> DeviceGuids
       );
 
-     Task UpdateTimeZoneAsync(Guid DeviceGuid,Guid TzGuid, string Name, List<IntervalObject> Intervals);
+     Task UpdateTimeZoneAsync(
+          Guid TzGuid,
+          string Name, List<IntervalObject> Intervals,
+          List<Guid> DeviceGuids
+          );
 
-     Task DeleteTimeZoneAsync(Guid DeviceGuid,Guid TzGuid, List<short> IntervalComponentId);
+     Task DeleteTimeZoneAsync(
+          Guid TzGuid,
+          List<short> IntervalComponentId,
+          List<Guid> DeviceGuids
+          );
 
 
      // Reset Delete All
 
 
      Task ClearTimeAsync(
-          Guid Guid
+          Guid TzGuid,
+          List<Guid> DeviceGuids
      );
 
 

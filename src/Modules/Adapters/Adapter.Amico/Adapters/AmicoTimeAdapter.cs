@@ -40,45 +40,58 @@ public sealed class AmicoTimeAdapter(
       }
 
 
-      public async Task CreateHolidayAsync(Guid Guid, string Name, DateTime Start, DateTime End)
+      public async Task CreateHolidayAsync(
+            Guid HolidayGuid,
+         List<Guid> DeviceGuids,
+          string Name,
+           DateTime Start,
+           DateTime End
+      )
       {
-            var amico = await repo.GetAmicoByGuidAsync(Guid);
-            var session = amico.session;
-
-            if (amico.id == 0)
-                  throw new BadRequestException(MessageHelper.Common.NotFound(nameof(Amicos), amico.mac));
-
-
-            var res = await time.CheckSession(amico.ip, amico.session);
-
-            if (!res.SessionIsValid)
+            foreach (var g in DeviceGuids)
             {
-                  var news = await time.LoginAsync(amico.ip);
-                  session = news.Session;
-                  await repo.UpdateSessionByMacAsync(amico.mac, news.Session);
+                  var amico = await repo.GetAmicoByGuidAsync(g);
+                  var session = amico.session;
+
+                  if (amico.id == 0)
+                        throw new BadRequestException(MessageHelper.Common.NotFound(nameof(Amicos), amico.mac));
+
+
+                  var res = await time.CheckSession(amico.ip, amico.session);
+
+                  if (!res.SessionIsValid)
+                  {
+                        var news = await time.LoginAsync(amico.ip);
+                        session = news.Session;
+                        await repo.UpdateSessionByMacAsync(amico.mac, news.Session);
+                  }
+
+
+                  var response = await time.CreateHolidayAsync(
+                         amico.ip,
+                        session,
+                         Name,
+                         (int)DateTimeHelper.DateTimeToElapeSecond(Start),
+                         (int)DateTimeHelper.DateTimeToElapeSecond(End),
+                         1,
+                         1,
+                         1,
+                         0
+                   );
+
+                  if (response.Ids.Count == 0)
+                        throw new Exception(MessageHelper.Command.Unsuccess(CommandConstant.Holiday, amico.mac));
+
+                  await repo.AddSlotAsync<Persistences.Entities.Holiday>(
+                  HolidayGuid,
+                  amico.guid,
+                  response.Ids[0],
+                  (g, d, s) => new Persistences.Entities.Holiday(g, d, s)
+            );
             }
 
 
-           var response = await time.CreateHolidayAsync(
-                  amico.ip,
-                 session,
-                  Name,
-                  (int)DateTimeHelper.DateTimeToElapeSecond(Start),
-                  (int)DateTimeHelper.DateTimeToElapeSecond(End),
-                  1,
-                  1,
-                  1,
-                  0
-            );
 
-            if(response.Ids.Count == 0)
-                  throw new Exception(MessageHelper.Command.Unsuccess(CommandConstant.Holiday,amico.mac));
-
-            await repo.AddSlotAsync<Persistences.Entities.Holiday>(
-                  Guid,
-                  response.Ids[0],
-                  (g,s) => new Persistences.Entities.Holiday(g,s)
-            );
 
       }
 
@@ -111,45 +124,45 @@ public sealed class AmicoTimeAdapter(
             await repo.AddSlotAsync<Persistences.Entities.TimeZone>(
                   TzGuid,
                   response.Ids[0],
-                  (g,s) => new Persistences.Entities.TimeZone(g,s)
+                  (g, s) => new Persistences.Entities.TimeZone(g, s)
             );
 
-            if(response.Ids.Count == 0)
+            if (response.Ids.Count == 0)
                   throw new Exception(CommandConstant.TimeZone);
 
             foreach (var interval in Intervals)
             {
-                 
-                  // Create Time Span
-                 var arr = await time.CreateTimeSpanAsync(
-                        amico.ip,
-                        session,
-                        response.Ids[0],
-                       interval.Start,
-                       interval.End,
-                        interval.Sun ? 1 : 0,
-                        interval.Mon ? 1 : 0,
-                        interval.Tue ? 1 : 0,
-                        interval.Wed ? 1 : 0,
-                        interval.Thu ? 1 : 0,
-                        interval.Fri ? 1 : 0,
-                        interval.Sat ? 1 : 0,
-                        1,
-                        1,
-                        1
-                  );
 
-                  if(arr.Ids.Count == 0)
+                  // Create Time Span
+                  var arr = await time.CreateTimeSpanAsync(
+                         amico.ip,
+                         session,
+                         response.Ids[0],
+                        interval.Start,
+                        interval.End,
+                         interval.Sun ? 1 : 0,
+                         interval.Mon ? 1 : 0,
+                         interval.Tue ? 1 : 0,
+                         interval.Wed ? 1 : 0,
+                         interval.Thu ? 1 : 0,
+                         interval.Fri ? 1 : 0,
+                         interval.Sat ? 1 : 0,
+                         1,
+                         1,
+                         1
+                   );
+
+                  if (arr.Ids.Count == 0)
                         throw new Exception(CommandConstant.TimeSpan);
 
 
                   await repo.AddSlotAsync<Persistences.Entities.TimeSpan>(
                         TzGuid,
                         arr.Ids.ElementAt(0),
-                        (g,s) => new Persistences.Entities.TimeSpan(g,s) 
+                        (g, s) => new Persistences.Entities.TimeSpan(g, s)
                   );
 
-       
+
             }
       }
 
@@ -192,7 +205,7 @@ public sealed class AmicoTimeAdapter(
             throw new NotImplementedException();
       }
 
-      public async Task DeleteTimeZoneAsync(string Mac, short DeviceComponentId, short TzComponentId,List<short> IntervalComponentId)
+      public async Task DeleteTimeZoneAsync(string Mac, short DeviceComponentId, short TzComponentId, List<short> IntervalComponentId)
       {
             var amico = await repo.GetAmicoByMacAsync(Mac);
             var session = amico.session;
@@ -216,7 +229,7 @@ public sealed class AmicoTimeAdapter(
                   TzComponentId
             );
 
-            foreach(var id in IntervalComponentId)
+            foreach (var id in IntervalComponentId)
             {
                   await time.DeleteTimeSpanAsync(
                   amico.ip,
@@ -225,7 +238,7 @@ public sealed class AmicoTimeAdapter(
             );
             }
 
-            
+
       }
 
       public Task DeleteTimeZoneAsync(Guid DeviceGuid, Guid TzGuid, List<short> IntervalComponentId)
@@ -233,7 +246,7 @@ public sealed class AmicoTimeAdapter(
             throw new NotImplementedException();
       }
 
-      public async Task UpdateHolidayAsync(Guid guid, string Name,short DeviceComponentId,int ComponentId, string Mac, DateTime Start, DateTime End)
+      public async Task UpdateHolidayAsync(Guid guid, string Name, short DeviceComponentId, int ComponentId, string Mac, DateTime Start, DateTime End)
       {
             var amico = await repo.GetAmicoByMacAsync(Mac);
             var session = amico.session;
@@ -273,7 +286,7 @@ public sealed class AmicoTimeAdapter(
             throw new NotImplementedException();
       }
 
-      public async Task UpdateTimeZoneAsync(Guid Guid,short DeviceComponentId, short TzComponentId, string Name, string Mac, List<IntervalObject> Intervals)
+      public async Task UpdateTimeZoneAsync(Guid Guid, short DeviceComponentId, short TzComponentId, string Name, string Mac, List<IntervalObject> Intervals)
       {
             var amico = await repo.GetAmicoByMacAsync(Mac);
             var session = amico.session;
@@ -302,26 +315,26 @@ public sealed class AmicoTimeAdapter(
             int i = 0;
             foreach (var interval in Intervals)
             {
-                 
+
                   // Create Time Span
-                 await time.CreateTimeSpanAsync(
-                        amico.ip,
-                        session,
-                        TzComponentId,
-                        interval.ComponentId,
-                       interval.Start,
-                       interval.End,
-                        interval.Sun ? 1 : 0,
-                        interval.Mon ? 1 : 0,
-                        interval.Tue ? 1 : 0,
-                        interval.Wed ? 1 : 0,
-                        interval.Thu ? 1 : 0,
-                        interval.Fri ? 1 : 0,
-                        interval.Sat ? 1 : 0,
-                        1,
-                        1,
-                        1
-                  );
+                  await time.CreateTimeSpanAsync(
+                         amico.ip,
+                         session,
+                         TzComponentId,
+                         interval.ComponentId,
+                        interval.Start,
+                        interval.End,
+                         interval.Sun ? 1 : 0,
+                         interval.Mon ? 1 : 0,
+                         interval.Tue ? 1 : 0,
+                         interval.Wed ? 1 : 0,
+                         interval.Thu ? 1 : 0,
+                         interval.Fri ? 1 : 0,
+                         interval.Sat ? 1 : 0,
+                         1,
+                         1,
+                         1
+                   );
 
                   i++;
             }

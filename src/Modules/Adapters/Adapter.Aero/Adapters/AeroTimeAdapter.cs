@@ -21,89 +21,105 @@ public sealed class AeroTimeAdapter(
       IAeroRepository repo
       ) : IAeroTimeAdapter
 {
-      public Task ClearTimeAsync(Guid Guid)
+      public Task ClearTimeAsync(
+            Guid TzGuid,
+          List<Guid> DeviceGuids
+      )
       {
             throw new NotImplementedException();
       }
 
       public async Task CreateHolidayAsync(
-            Guid Guid,
-            string Name,
-            DateTime Start,
-            DateTime End
+            Guid HolidayGuid,
+         List<Guid> DeviceGuids,
+          string Name,
+           DateTime Start,
+           DateTime End
             )
       {
-
-            var slots = await repo.GetScpSlotByGuidAsync(Guid);
-
-            var dates = DateTimeHelper.ExtractDateFromStartEndDateTime(Start, End);
-
-            foreach (var date in dates)
+            foreach (var g in DeviceGuids)
             {
-                  var res = time.HolidayConfiguration(
-                  slots.mac,
-                  (short)slots.slot_id,
-                  date.Year,
-                  date.Month,
-                  date.Day,
-                  0,
-                  1
-                  );
+                  var slots = await repo.GetScpSlotByGuidAsync(g);
 
-                  await bus.SendAsync(new AddCommandEvent(res));
+                  var dates = DateTimeHelper.ExtractDateFromStartEndDateTime(Start, End);
 
+                  foreach (var date in dates)
+                  {
+                        var res = time.HolidayConfiguration(
+                        slots.mac,
+                        (short)slots.slot_id,
+                        date.Year,
+                        date.Month,
+                        date.Day,
+                        0,
+                        1
+                        );
+
+                        await bus.SendAsync(new AddCommandEvent(res));
+
+                  }
             }
+
+            // No slot because holiday is not used slot in SCP
 
       }
 
       public async Task CreateTimeZoneAsync(
-           Guid DeviceGuid,
            Guid TzGuid,
            string Name,
-            List<IntervalObject> Intervals
+            List<IntervalObject> Intervals,
+            List<Guid> DeviceGuids
       )
       {
-
-            var deviceSlots = await repo.GetScpSlotByGuidAsync(DeviceGuid);
             var slot = await repo.GetFreeSlotAsync<TzSlot>();
-            var res = time.ExtendedTimezoneActSpecification(
-                  deviceSlots.mac,
-                  (short)deviceSlots.slot_id,
-                  (short)slot,
-                  Intervals
-           );
+            foreach (var g in DeviceGuids)
+            {
+                  var deviceSlots = await repo.GetScpSlotByGuidAsync(g);
 
-            await bus.SendAsync(new AddCommandEvent(res));
+                  var res = time.ExtendedTimezoneActSpecification(
+                        deviceSlots.mac,
+                        (short)deviceSlots.slot_id,
+                        (short)slot,
+                        Intervals
+                 );
 
-            await repo.InsertSlotAsync<TzSlot>(TzGuid,slot);
+                  await bus.SendAsync(new AddCommandEvent(res));
+            }
+
+            await repo.InsertSlotAsync<TzSlot>(TzGuid, slot);
 
       }
 
 
 
       public async Task DeleteHolidayAsync(
-            Guid DeviceGuid,
-            DateTime Start,
-            DateTime End
+            Guid HolidayGuid,
+          List<Guid> DeviceGuids,
+       DateTime Start,
+       DateTime End
       )
       {
-            var deviceSlot = await repo.GetScpSlotByGuidAsync(DeviceGuid);
-            var dates = DateTimeHelper.ExtractDateFromStartEndDateTime(Start, End);
-
-            foreach (var date in dates)
+            foreach (var g in DeviceGuids)
             {
-                  var res = time.HolidayConfiguration(
-                  deviceSlot.mac,
-                  (short)deviceSlot.slot_id,
-                  date.Year,
-                  date.Month,
-                  date.Day,
-                  0,
-                  0
-                  );
+                  var deviceSlot = await repo.GetScpSlotByGuidAsync(g);
+                  var dates = DateTimeHelper.ExtractDateFromStartEndDateTime(Start, End);
 
-                  await bus.SendAsync(new AddCommandEvent(res));
+                  foreach (var date in dates)
+                  {
+                        var res = time.HolidayConfiguration(
+                        deviceSlot.mac,
+                        (short)deviceSlot.slot_id,
+                        date.Year,
+                        date.Month,
+                        date.Day,
+                        0,
+                        0
+                        );
+
+                        await bus.SendAsync(new AddCommandEvent(res));
+                  }
             }
+
 
 
 
@@ -111,60 +127,80 @@ public sealed class AeroTimeAdapter(
 
 
 
-      public async Task DeleteTimeZoneAsync(Guid DeviceGuid,Guid TzGuid, List<short> IntervalComponentId)
+      public async Task DeleteTimeZoneAsync(
+            Guid TzGuid,
+          List<short> IntervalComponentId,
+          List<Guid> DeviceGuids
+      )
       {
             var slot = await repo.GetSlotIdByGuidAsync<TzSlot>(TzGuid);
-            var deviceSlot = await repo.GetScpSlotByGuidAsync(DeviceGuid);
+            foreach (var g in DeviceGuids)
+            {
+                  var deviceSlot = await repo.GetScpSlotByGuidAsync(g);
 
-            var res = time.ExtendedTimezoneActSpecification(
-                  deviceSlot.mac,
-                  (short)deviceSlot.slot_id,
-                  (short)slot,
-                  new List<IntervalObject>()
-                  );
+                  var res = time.ExtendedTimezoneActSpecification(
+                        deviceSlot.mac,
+                        (short)deviceSlot.slot_id,
+                        (short)slot,
+                        new List<IntervalObject>()
+                        );
 
-            await bus.SendAsync(new AddCommandEvent(res));
+                  await bus.SendAsync(new AddCommandEvent(res));
+            }
+
 
             await repo.EjectSlotAsync<TzSlot>(slot);
       }
 
 
-      public async Task UpdateHolidayAsync(Guid DeviceGuid,DateTime Start, DateTime End)
+      public async Task UpdateHolidayAsync(
+            Guid HolidayGuid, List<Guid> DeviceGuids, DateTime Start, DateTime End
+            )
       {
-
-            var deviceSlot = await repo.GetScpSlotByGuidAsync(DeviceGuid);
-            var dates = DateTimeHelper.ExtractDateFromStartEndDateTime(Start, End);
-
-            foreach (var date in dates)
+            foreach (var g in DeviceGuids)
             {
-                  var res = time.HolidayConfiguration(
-                  deviceSlot.mac,
-                  (short)deviceSlot.slot_id,
-                  date.Year,
-                  date.Month,
-                  date.Day,
-                  0,
-                  1
-                  );
+                  var deviceSlot = await repo.GetScpSlotByGuidAsync(g);
+                  var dates = DateTimeHelper.ExtractDateFromStartEndDateTime(Start, End);
+
+                  foreach (var date in dates)
+                  {
+                        var res = time.HolidayConfiguration(
+                        deviceSlot.mac,
+                        (short)deviceSlot.slot_id,
+                        date.Year,
+                        date.Month,
+                        date.Day,
+                        0,
+                        1
+                        );
+
+                        await bus.SendAsync(new AddCommandEvent(res));
+                  }
+            }
+
+      }
+
+      public async Task UpdateTimeZoneAsync(
+            Guid TzGuid,
+          string Name, List<IntervalObject> Intervals,
+          List<Guid> DeviceGuids
+      )
+      {
+            var slot = await repo.GetSlotIdByGuidAsync<TzSlot>(TzGuid);
+            foreach (var g in DeviceGuids)
+            {
+                  var deviceSlot = await repo.GetScpSlotByGuidAsync(g);
+
+                  var res = time.ExtendedTimezoneActSpecification(
+                        deviceSlot.mac,
+                        (short)deviceSlot.slot_id,
+                        (short)slot,
+                        Intervals
+                 );
 
                   await bus.SendAsync(new AddCommandEvent(res));
             }
 
 
-      }
-
-      public async Task UpdateTimeZoneAsync(Guid DeviceGuid,Guid TzGuid, string Name, List<IntervalObject> Intervals)
-      {
-            var slot = await repo.GetSlotIdByGuidAsync<TzSlot>(TzGuid);
-            var deviceSlot = await repo.GetScpSlotByGuidAsync(DeviceGuid);
-
-            var res = time.ExtendedTimezoneActSpecification(
-                  deviceSlot.mac,
-                  (short)deviceSlot.slot_id,
-                  (short)slot,
-                  Intervals
-           );
-
-            await bus.SendAsync(new AddCommandEvent(res));
       }
 }

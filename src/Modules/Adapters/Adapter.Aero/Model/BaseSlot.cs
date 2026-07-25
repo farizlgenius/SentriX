@@ -10,10 +10,10 @@ public class BaseSlot
       public Guid? device_guid { get; set; }
       public Guid? component_guid { get; set; }
       public bool is_available { get; set; } = true;
-      public DateTime created_at { get; set; } 
+      public DateTime created_at { get; set; }
       public DateTime updated_at { get; set; }
 
-      public BaseSlot(){}
+      public BaseSlot() { }
 
       public BaseSlot(int component_id)
       {
@@ -21,14 +21,21 @@ public class BaseSlot
             this.is_available = true;
       }
 
-      public BaseSlot(Guid scpGuid,int component_id)
+      public BaseSlot(Guid componentGuid, int component_id)
+      {
+            this.component_guid = componentGuid;
+            this.slot_id = component_id;
+            this.is_available = true;
+      }
+
+      public BaseSlot(int component_id, Guid scpGuid)
       {
             this.device_guid = scpGuid;
             this.slot_id = component_id;
             this.is_available = true;
       }
 
-      public BaseSlot(Guid scpGuid,Guid componentGuid,int component_id)
+      public BaseSlot(Guid scpGuid, Guid componentGuid, int component_id)
       {
             this.device_guid = scpGuid;
             this.component_guid = componentGuid;
