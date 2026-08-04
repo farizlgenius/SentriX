@@ -103,11 +103,16 @@ public sealed class AmicoRepository(AmicoDbContext context) : IAmicoRepository
 
       public async Task<int> GetSlotIdByGuidAsync<TEntity>(Guid Guid, CancellationToken ct = default) where TEntity : BaseSlot
       {
-            return await context.Set<TEntity>()
+           var res= await context.Set<TEntity>()
             .Where(x => x.guid == Guid)
             .Select(x => x.slot_id)
             .DefaultIfEmpty(-1)
             .FirstAsync();
+
+            if(res == -1)
+                  throw new Exception(MessageHelper.DB.RecordNotFounds(Guid.ToString()));
+
+            return res;
       }
 
       public async Task UpdateSessionByMacAsync(string mac, string session, CancellationToken ct = default)
@@ -138,5 +143,15 @@ public sealed class AmicoRepository(AmicoDbContext context) : IAmicoRepository
 
             context.Amicos.Update(entity);
             await context.SaveChangesAsync(ct);
+      }
+
+      public async Task<IEnumerable<int>> GetSlotIdsByGuidAsync<TEntity>(Guid Guid, CancellationToken ct = default) where TEntity : BaseSlot
+      {
+            var res= await context.Set<TEntity>()
+            .Where(x => x.guid == Guid)
+            .Select(x => x.slot_id)
+            .ToArrayAsync();
+
+            return res;
       }
 }

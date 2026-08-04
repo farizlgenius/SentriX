@@ -79,18 +79,27 @@ public sealed class AeroGroupAdapter(
 
       }
 
-      public async Task DeleteGroup(Guid DeviceGuid,Guid GroupGuid)
+      public async Task DeleteGroup(
+            Guid GroupGuid,
+            List<Guid> DeviceGuids
+            )
       {
-            var deviceSlot = await repo.GetScpSlotByGuidAsync(DeviceGuid);
             var slotId = await repo.GetSlotIdByGuidAsync<GroupSlot>(GroupGuid);
-            var res = group.AccessLevelConfigurationExtended(
-                  deviceSlot.mac,
-                  (short)deviceSlot.slot_id,
-                  (short)slotId,
-                  new List<(short DoorComponentId, short TimeZoneComponentId)>()
-            );
 
-            await bus.SendAsync(new AddCommandEvent(res));
+            foreach (var deviceGuid in DeviceGuids)
+            {
+                  var deviceSlot = await repo.GetScpSlotByGuidAsync(deviceGuid);
+
+                  var res = group.AccessLevelConfigurationExtended(
+                        deviceSlot.mac,
+                        (short)deviceSlot.slot_id,
+                        (short)slotId,
+                        new List<(short DoorComponentId, short TimeZoneComponentId)>()
+                  );
+
+                  await bus.SendAsync(new AddCommandEvent(res));
+            }
+
 
             await repo.EjectSlotAsync<GroupSlot>(
                   GroupGuid,

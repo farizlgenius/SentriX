@@ -26,7 +26,12 @@ public interface ITimeAdapter
        );
 
 
-     Task UpdateHolidayAsync(Guid HolidayGuid, List<Guid> DeviceGuids, DateTime Start, DateTime End);
+     Task UpdateHolidayAsync(
+          Guid HolidayGuid,
+          List<Guid> DeviceGuids, 
+          string Name, 
+          DateTime Start, 
+          DateTime End);
 
 
      // Time Zone

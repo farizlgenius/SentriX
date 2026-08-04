@@ -20,6 +20,7 @@ public interface IAmicoRepository
       );
 
       Task<int> GetSlotIdByGuidAsync<TEntity>(Guid Guid, CancellationToken ct = default) where TEntity : BaseSlot;
+      Task<IEnumerable<int>> GetSlotIdsByGuidAsync<TEntity>(Guid Guid, CancellationToken ct = default) where TEntity : BaseSlot;
 
       Task<TEntity> GetSlotByGuidAsync<TEntity>(Guid guid, CancellationToken ct = default) where TEntity : BaseSlot;
 

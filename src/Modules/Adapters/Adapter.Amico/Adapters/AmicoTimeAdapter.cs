@@ -15,9 +15,12 @@ public sealed class AmicoTimeAdapter(
       ITimeCommand time,
       IAmicoRepository repo) : IAmicoTimeAdapter
 {
-      public async Task ClearTimeAsync(Guid Guid)
+      public async Task ClearTimeAsync(
+            Guid TzGuid,
+          List<Guid> DeviceGuids
+      )
       {
-            var amico = await repo.GetAmicoByGuidAsync(Guid);
+            var amico = await repo.GetAmicoByGuidAsync(TzGuid);
             var session = await time.CheckSessionAsync(amico.ip, amico.session);
 
             await time.ClearTimeAsync(
@@ -70,187 +73,225 @@ public sealed class AmicoTimeAdapter(
       }
 
 
-      public async Task CreateTimeZoneAsync(Guid DeviceGuid, Guid TzGuid, string Name, List<IntervalObject> Intervals)
+      public async Task CreateTimeZoneAsync(
+            Guid TzGuid,
+           string Name,
+            List<IntervalObject> Intervals,
+            List<Guid> DeviceGuids
+            )
       {
-            var amico = await repo.GetAmicoByGuidAsync(DeviceGuid);
-            var session = await time.CheckSessionAsync(amico.ip, amico.session);
-
-            // Create Time Zone
-            var response = await time.CreateTimeZoneAsync(
-                  amico.ip,
-                 session,
-                  Name
-            );
-
-            await repo.AddSlotAsync<Persistences.Entities.TimeZone>(
-                  TzGuid,
-                  response.Ids[0],
-                  (g, s) => new Persistences.Entities.TimeZone(g, s)
-            );
-
-            if (response.Ids.Count == 0)
-                  throw new Exception(CommandConstant.TimeZone);
-
-            foreach (var interval in Intervals)
+            foreach (var g in DeviceGuids)
             {
+                  var amico = await repo.GetAmicoByGuidAsync(g);
+                  var session = await time.CheckSessionAsync(amico.ip, amico.session);
 
-                  // Create Time Span
-                  var arr = await time.CreateTimeSpanAsync(
-                         amico.ip,
-                         session,
-                         response.Ids[0],
-                        interval.Start,
-                        interval.End,
-                         interval.Sun ? 1 : 0,
-                         interval.Mon ? 1 : 0,
-                         interval.Tue ? 1 : 0,
-                         interval.Wed ? 1 : 0,
-                         interval.Thu ? 1 : 0,
-                         interval.Fri ? 1 : 0,
-                         interval.Sat ? 1 : 0,
-                         1,
-                         1,
-                         1
-                   );
-
-                  if (arr.Ids.Count == 0)
-                        throw new Exception(CommandConstant.TimeSpan);
-
-
-                  await repo.AddSlotAsync<Persistences.Entities.TimeSpan>(
-                        TzGuid,
-                        arr.Ids.ElementAt(0),
-                        (g, s) => new Persistences.Entities.TimeSpan(g, s)
+                  // Create Time Zone
+                  var response = await time.CreateTimeZoneAsync(
+                        amico.ip,
+                       session,
+                        Name
                   );
 
+                  await repo.AddSlotAsync<Persistences.Entities.TimeZone>(
+                        TzGuid,
+                        g,
+                        response.Ids[0],
+                        (g,d,s) => new Persistences.Entities.TimeZone(g,d,s)
+                  );
 
+                  if (response.Ids.Count == 0)
+                        throw new Exception(CommandConstant.TimeZone);
+
+                  foreach (var interval in Intervals)
+                  {
+
+                        // Create Time Span
+                        var arr = await time.CreateTimeSpanAsync(
+                               amico.ip,
+                               session,
+                               response.Ids[0],
+                              interval.Start,
+                              interval.End,
+                               interval.Sun ? 1 : 0,
+                               interval.Mon ? 1 : 0,
+                               interval.Tue ? 1 : 0,
+                               interval.Wed ? 1 : 0,
+                               interval.Thu ? 1 : 0,
+                               interval.Fri ? 1 : 0,
+                               interval.Sat ? 1 : 0,
+                               1,
+                               1,
+                               1
+                         );
+
+                        if (arr.Ids.Count == 0)
+                              throw new Exception(CommandConstant.TimeSpan);
+
+
+                        await repo.AddSlotAsync<Persistences.Entities.TimeSpan>(
+                              TzGuid,
+                              g,
+                              arr.Ids.ElementAt(0),
+                              (g,d,s) => new Persistences.Entities.TimeSpan(g,d,s)
+                        );
+
+
+                  }
             }
+
+
       }
 
       public async Task DeleteHolidayAsync(
-            Guid Guid,
-            Guid DeviceGuid,
+            Guid HolidayGuid,
+          List<Guid> DeviceGuids,
             DateTime Start,
             DateTime End
             )
       {
-            var amico = await repo.GetAmicoByMacAsync(Mac);
-            var session = await time.CheckSessionAsync(amico.ip, amico.session);
-
-            await time.DeleteHolidayAsync(
-                  amico.ip,
-                 session,
-                 ComponentId
-            );
-
-
-
-
-      }
-
-      public Task DeleteHolidayAsync(Guid Guid, DateTime Start, DateTime End)
-      {
-            throw new NotImplementedException();
-      }
-
-      public async Task DeleteTimeZoneAsync(string Mac, short DeviceComponentId, short TzComponentId, List<short> IntervalComponentId)
-      {
-            var amico = await repo.GetAmicoByMacAsync(Mac);
-            var session = await time.CheckSessionAsync(amico.ip, amico.session);
-
-            await time.DeleteTimeZoneAsunc(
-                  amico.ip,
-                  session,
-                  TzComponentId
-            );
-
-            foreach (var id in IntervalComponentId)
+            foreach (var g in DeviceGuids)
             {
-                  await time.DeleteTimeSpanAsync(
-                  amico.ip,
-                  session,
-                  id
-            );
+                  var amico = await repo.GetAmicoByGuidAsync(g);
+                  var session = await time.CheckSessionAsync(amico.ip, amico.session);
+
+                  var hol = await repo.GetSlotIdByGuidAsync<Persistences.Entities.Holiday>(HolidayGuid);
+
+                  await time.DeleteHolidayAsync(
+                        amico.ip,
+                       session,
+                       hol
+                  );
+
+            }
+
+      }
+
+
+      public async Task DeleteTimeZoneAsync(
+            Guid TzGuid,
+          List<short> IntervalComponentId,
+          List<Guid> DeviceGuids
+      )
+      {
+            foreach (var g in DeviceGuids)
+            {
+                  var amico = await repo.GetAmicoByGuidAsync(g);
+                  var session = await time.CheckSessionAsync(amico.ip, amico.session);
+
+                  var tz = await repo.GetSlotIdByGuidAsync<Persistences.Entities.TimeZone>(TzGuid);
+
+                  await time.DeleteTimeZoneAsunc(
+                        amico.ip,
+                        session,
+                        tz
+                  );
+
+                  foreach (var id in IntervalComponentId)
+                  {
+                        await time.DeleteTimeSpanAsync(
+                        amico.ip,
+                        session,
+                        id
+                  );
+                  }
+                  }
+            
+
+
+      }
+
+
+
+      public async Task UpdateHolidayAsync(
+            Guid HolidayGuid, 
+            List<Guid> DeviceGuids, 
+              string Name, 
+            DateTime Start, 
+            DateTime End
+      )
+      {
+
+            foreach (var g in DeviceGuids)
+            {
+                  var amico = await repo.GetAmicoByGuidAsync(g);
+                  var session = await time.CheckSessionAsync(amico.ip, amico.session);
+
+                  var ComponentId = await repo.GetSlotIdByGuidAsync<Persistences.Entities.Holiday>(HolidayGuid);
+
+
+                  await time.UpdateHolidayAsync(
+                        amico.ip,
+                       session,
+                        Name,
+                        ComponentId,
+                        (int)DateTimeHelper.DateTimeToElapeSecond(Start),
+                        (int)DateTimeHelper.DateTimeToElapeSecond(End),
+                        1,
+                        1,
+                        1,
+                        0
+                  );
             }
 
 
-      }
-
-      public Task DeleteTimeZoneAsync(Guid DeviceGuid, Guid TzGuid, List<short> IntervalComponentId)
-      {
-            throw new NotImplementedException();
-      }
-
-      public async Task UpdateHolidayAsync(Guid guid, string Name, short DeviceComponentId, int ComponentId, string Mac, DateTime Start, DateTime End)
-      {
-            var amico = await repo.GetAmicoByMacAsync(Mac);
-            var session = await time.CheckSessionAsync(amico.ip, amico.session);
-
-
-            await time.UpdateHolidayAsync(
-                  amico.ip,
-                 session,
-                  Name,
-                  ComponentId,
-                  (int)DateTimeHelper.DateTimeToElapeSecond(Start),
-                  (int)DateTimeHelper.DateTimeToElapeSecond(End),
-                  1,
-                  1,
-                  1,
-                  0
-            );
-
 
       }
 
-      public Task UpdateHolidayAsync(Guid DeviceGuid, DateTime Start, DateTime End)
+
+      public async Task UpdateTimeZoneAsync(
+            Guid TzGuid,
+          string Name,
+          List<IntervalObject> Intervals,
+          List<Guid> DeviceGuids
+      )
       {
-            throw new NotImplementedException();
-      }
-
-      public async Task UpdateTimeZoneAsync(Guid Guid, short DeviceComponentId, short TzComponentId, string Name, string Mac, List<IntervalObject> Intervals)
-      {
-            var amico = await repo.GetAmicoByMacAsync(Mac);
-           var session = await time.CheckSessionAsync(amico.ip, amico.session);
-
-            // Create Time Zone
-            var arr = await time.CreateTimeZoneAsync(
-                  amico.ip,
-                 session,
-                  Name,
-                  TzComponentId
-            );
-
-            int i = 0;
-            foreach (var interval in Intervals)
+            foreach (var g in DeviceGuids)
             {
+                  var amico = await repo.GetAmicoByGuidAsync(g);
+                  var session = await time.CheckSessionAsync(amico.ip, amico.session);
 
-                  // Create Time Span
-                  await time.CreateTimeSpanAsync(
-                         amico.ip,
-                         session,
-                         TzComponentId,
-                         interval.ComponentId,
-                        interval.Start,
-                        interval.End,
-                         interval.Sun ? 1 : 0,
-                         interval.Mon ? 1 : 0,
-                         interval.Tue ? 1 : 0,
-                         interval.Wed ? 1 : 0,
-                         interval.Thu ? 1 : 0,
-                         interval.Fri ? 1 : 0,
-                         interval.Sat ? 1 : 0,
-                         1,
-                         1,
-                         1
-                   );
+                  var TzComponentId = await repo.GetSlotIdByGuidAsync<Persistences.Entities.TimeZone>(TzGuid);
 
-                  i++;
+                  // Create Time Zone
+                  var arr = await time.UpdateTimeZoneAsync(
+                        amico.ip,
+                       session,
+                        Name,
+                        TzComponentId
+                  );
+
+
+                  var intervalComponentIds = await repo.GetSlotIdByGuidAsync<Persistences.Entities.TimeSpan>(TzGuid);
+
+                  foreach (var interval in Intervals)
+                  {
+
+                        var intervalComponentId = await repo.GetSlotIdByGuidAsync<Persistences.Entities.TimeSpan>(TzGuid);
+
+                        // Create Time Span
+                        await time.UpdateTimeSpanAsync(
+                               amico.ip,
+                               session,
+                               TzComponentId,
+                               intervalComponentId,
+                              interval.Start,
+                              interval.End,
+                               interval.Sun ? 1 : 0,
+                               interval.Mon ? 1 : 0,
+                               interval.Tue ? 1 : 0,
+                               interval.Wed ? 1 : 0,
+                               interval.Thu ? 1 : 0,
+                               interval.Fri ? 1 : 0,
+                               interval.Sat ? 1 : 0,
+                               1,
+                               1,
+                               1
+                         );
+
+                  }
             }
+
       }
 
-      public Task UpdateTimeZoneAsync(Guid DeviceGuid, Guid TzGuid, string Name, List<IntervalObject> Intervals)
-      {
-            throw new NotImplementedException();
-      }
+
 }
