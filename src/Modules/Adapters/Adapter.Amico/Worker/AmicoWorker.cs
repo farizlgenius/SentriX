@@ -55,7 +55,7 @@ public sealed class AmicoWorker(Channel<WebhookRequest> queue, ILogger<AmicoWork
                                                 {
                                                       var amico = scope.ServiceProvider.GetRequiredService<IAmicoRepository>();
                                                       var am = await amico.GetAmicoByMacAsync(d.Mac);
-                                                      await s.SaveCaptureAsync(await cmnd.CaptureAsync(d.Mac),$"{accessLog.Time}");
+                                                      await s.SaveCaptureAsync(await cmnd.CaptureAsync(d.Mac,d.Ip),$"{accessLog.Time}");
                                                       path=accessLog.Time;
                                                 }
                                                 await e.AddEventAsync(

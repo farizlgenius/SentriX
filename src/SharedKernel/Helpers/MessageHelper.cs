@@ -44,6 +44,7 @@ public static class MessageHelper
       public static class DB
       {
             public static string SaveRecordUnsuccessful = "Save record unsuccessful.";
+            public static string RecordNotFounds(string search) => $"Record not found in DB for {search}.";
             public static string RecordNotFound = "Record not found in DB.";
             public static string DeleteRecordUnsuccessful = "Delete record unsuccessful.";
             public static string UpdateRecordUnsuccessful = "Update record unsuccessful.";

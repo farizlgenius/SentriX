@@ -77,21 +77,28 @@ public sealed class AmicoRepository(AmicoDbContext context) : IAmicoRepository
       {
             return await context.Amicos.AsNoTracking()
             .Where(x => x.guid == guid)
-            .FirstOrDefaultAsync() ?? throw new Exception(MessageHelper.DB.RecordNotFound);
+            .FirstOrDefaultAsync() ?? throw new Exception(MessageHelper.DB.RecordNotFounds(guid.ToString()));
       }
 
       public async Task<Amicos> GetAmicoByMacAsync(string mac, CancellationToken ct = default)
       {
             return await context.Amicos
             .Where(x => mac.Equals(mac))
-            .FirstOrDefaultAsync() ?? throw new Exception(MessageHelper.DB.RecordNotFound);
+            .FirstOrDefaultAsync() ?? throw new Exception(MessageHelper.DB.RecordNotFounds(mac));
+      }
+
+      public async Task<Amicos> GetAmicoByIpAsync(string ip, CancellationToken ct = default)
+      {
+            return await context.Amicos
+            .Where(x => ip.Equals(x.ip))
+            .FirstOrDefaultAsync() ?? throw new Exception(MessageHelper.DB.RecordNotFounds(ip));
       }
 
       public async Task<TEntity> GetSlotByGuidAsync<TEntity>(Guid guid, CancellationToken ct = default) where TEntity : BaseSlot
       {
             return await context.Set<TEntity>()
             .Where(x => x.guid == guid)
-            .FirstOrDefaultAsync() ?? throw new Exception(MessageHelper.DB.RecordNotFound);
+            .FirstOrDefaultAsync() ?? throw new Exception(MessageHelper.DB.RecordNotFounds(guid.ToString()));
       }
 
       public async Task<int> GetSlotIdByGuidAsync<TEntity>(Guid Guid, CancellationToken ct = default) where TEntity : BaseSlot
@@ -107,6 +114,21 @@ public sealed class AmicoRepository(AmicoDbContext context) : IAmicoRepository
       {
             var entity = await context.Amicos
             .Where(x => x.mac.Equals(mac))
+            .FirstOrDefaultAsync();
+
+            if (entity is null)
+                  throw new Exception(MessageHelper.DB.RecordNotFound);
+
+            entity.UpdateSession(session);
+
+            context.Amicos.Update(entity);
+            await context.SaveChangesAsync(ct);
+      }
+
+      public async Task UpdateSessionByIpAsync(string ip, string session, CancellationToken ct = default)
+      {
+             var entity = await context.Amicos
+            .Where(x => x.ip.Equals(ip))
             .FirstOrDefaultAsync();
 
             if (entity is null)

@@ -7,6 +7,12 @@ namespace Host.Middlewares;
 
 public sealed class GlobalException : IMiddleware
 {
+      private readonly ILogger<GlobalException> _logger;
+
+      public GlobalException(ILogger<GlobalException> logger)
+      {
+            _logger = logger;
+      }
       public async Task InvokeAsync(HttpContext context, RequestDelegate next)
       {
             try
@@ -26,18 +32,23 @@ public sealed class GlobalException : IMiddleware
                   case BadRequestException:
                   case ArgumentException:
                         await BadRequestExceptionHandler(context, ex);
+                        _logger.LogWarning(ex,"Bad request. {Method} {Path}",context.Request.Method,context.Request.Path);
                         break;
                   case UnauthorizedAccessException:
                         await UnauthorizedAccessExceptionHandler(context, ex);
+                        _logger.LogWarning(ex,"Unauthorized access. {Method} {Path}",context.Request.Method,context.Request.Path);
                         break;
                   case ForbiddenException:
                         await ForbiddenExceptionHandler(context, ex);
+                        _logger.LogWarning(ex,"Forbidden access. {Method} {Path}",context.Request.Method,context.Request.Path);
                         break;
                   case NotFoundException:
                         await NotFoundExceptionHandler(context, ex);
+                        _logger.LogWarning(ex,"Not found. {Method} {Path}",context.Request.Method,context.Request.Path);
                         break;
                   default:
                         await HandleException(context, ex);
+                        _logger.LogError(ex,"Internal server error. {Method} {Path}",context.Request.Method,context.Request.Path);
                         break;
             }
       }
@@ -46,6 +57,7 @@ public sealed class GlobalException : IMiddleware
       {
             // Log the exception (you can use a logging framework here)
             Console.WriteLine($"An error occurred: {ex.Message}");
+            
 
             // Set the response status code and content
             context.Response.StatusCode = StatusCodes.Status400BadRequest;

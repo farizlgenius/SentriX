@@ -3,6 +3,7 @@ using Adapter.Abstraction.Interfaces;
 using Adapter.Amico.Enums;
 using Adapter.Amico.Helper;
 using Adapter.Amico.Interface;
+using Adapter.Amico.Interfaces;
 using Adapter.Amico.Model.Request;
 using Adapter.Amico.Model.Response;
 using Door.Contract.Queries;
@@ -11,7 +12,7 @@ using Time.Contract.Queries;
 
 namespace Adapter.Amico.Command;
 
-public sealed class DeviceCommand(IHttpClient client,IAmicoSetting setting,IMessageBus bus) : BaseCommand(client,setting),IDeviceCommand
+public sealed class DeviceCommand(IHttpClient client,IAmicoSetting setting,IMessageBus bus,IAmicoRepository repo) : BaseCommand(client,setting,repo),IDeviceCommand
 {
 
       public async Task ChangeLogin(string ip,string session)

@@ -22,20 +22,7 @@ public sealed class AmicoGroupAdapter(
             foreach (var d in Doors)
             {
                   var amico = await repo.GetAmicoByGuidAsync(d.DeviceGuid);
-                  var session = amico.session;
-
-                  if (amico.id == 0)
-                        throw new BadRequestException(MessageHelper.Common.NotFound(nameof(Amicos), d.DeviceGuid.ToString()));
-
-
-                  var res = await group.CheckSession(amico.ip, amico.session);
-
-                  if (!res.SessionIsValid)
-                  {
-                        var news = await group.LoginAsync(amico.ip);
-                        session = news.Session;
-                        await repo.UpdateSessionByMacAsync(amico.mac, news.Session);
-                  }
+                  var session = await group.CheckSessionAsync(amico.ip, amico.session);
 
                   // Create Access Rule Here
                    var arres = await group.CreateAccessRulesAsync(
@@ -101,56 +88,46 @@ public sealed class AmicoGroupAdapter(
       }
 
       public async Task DeleteGroup(
-            Guid DeviceGuid,
-            Guid GroupGuid
+            Guid GroupGuid,
+            List<Guid> DeviceGuids
       )
       {
-            var amico = await repo.GetAmicoByGuidAsync(DeviceGuid);
-            var session = amico.session;
-            
-
-            if (amico.id == 0)
-                  throw new BadRequestException(MessageHelper.Common.NotFound(nameof(Amicos), amico.mac));
-
-
-            var res = await group.CheckSession(amico.ip, amico.session);
-
-            if (!res.SessionIsValid)
+            foreach (var DeviceGuid in DeviceGuids)
             {
-                  var news = await group.LoginAsync(amico.ip);
-                  session = news.Session;
-                  await repo.UpdateSessionByMacAsync(amico.mac, news.Session);
-            }
+                  var amico = await repo.GetAmicoByGuidAsync(DeviceGuid);
+                  var session = await group.CheckSessionAsync(amico.ip, amico.session);
 
-            var groupSlot = await repo.GetSlotByGuidAsync<Group>(GroupGuid);
-            var accessRuleSlot = await repo.GetSlotByGuidAsync<AccessRule>(groupSlot.access_rule_guid);
+                  var groupSlot = await repo.GetSlotByGuidAsync<Group>(GroupGuid);
+                  var accessRuleSlot = await repo.GetSlotByGuidAsync<AccessRule>(groupSlot.access_rule_guid);
 
 
-            await group.DeleteAccessRuleTimeZoneAsync(
+                  await group.DeleteAccessRuleTimeZoneAsync(
+                              amico.ip,
+                              session,
+                              accessRuleSlot.slot_id
+                        );
+
+
+                  await group.DeleteGroupAccessRuleAsync(
+                             amico.ip,
+                             session,
+                             groupSlot.slot_id,
+                             accessRuleSlot.slot_id
+                       );
+
+                  await group.DeleteGroupAsync(
+                              amico.ip,
+                              session,
+                              groupSlot.slot_id
+                        );
+
+                  await group.DeleteAccessRuleAsync(
                         amico.ip,
                         session,
                         accessRuleSlot.slot_id
                   );
+            }
 
-
-            await group.DeleteGroupAccessRuleAsync(
-                       amico.ip,
-                       session,
-                       groupSlot.slot_id,
-                       accessRuleSlot.slot_id
-                 );
-
-            await group.DeleteGroupAsync(
-                        amico.ip,
-                        session,
-                        groupSlot.slot_id
-                  );
-
-            await group.DeleteAccessRuleAsync(
-                  amico.ip,
-                  session,
-                  accessRuleSlot.slot_id
-            );
       }
 
       public async Task UpdateGroup(
@@ -162,20 +139,7 @@ public sealed class AmicoGroupAdapter(
             foreach (var d in Doors)
             {
                   var amico = await repo.GetAmicoByGuidAsync(d.DeviceGuid);
-                  var session = amico.session;
-
-                  if (amico.id == 0)
-                        throw new BadRequestException(MessageHelper.Common.NotFound(nameof(Amicos), d.DeviceGuid.ToString()));
-
-
-                  var res = await group.CheckSession(amico.ip, amico.session);
-
-                  if (!res.SessionIsValid)
-                  {
-                        var news = await group.LoginAsync(amico.ip);
-                        session = news.Session;
-                        await repo.UpdateSessionByMacAsync(amico.mac, news.Session);
-                  }
+                  var session = await group.CheckSessionAsync(amico.ip, amico.session);
 
                   var groupSlot = await repo.GetSlotByGuidAsync<Group>(Guid);
                   var accessRuleSlot = await repo.GetSlotByGuidAsync<AccessRule>(groupSlot.access_rule_guid);

@@ -1,11 +1,12 @@
 using Adapter.Abstraction.Interfaces;
 using Adapter.Amico.Helper;
 using Adapter.Amico.Interface;
+using Adapter.Amico.Interfaces;
 using Adapter.Amico.Model.Request;
 
 namespace Adapter.Amico.Command;
 
-public sealed class CameraCommand(IHttpClient client, IAmicoSetting setting) : BaseCommand(client, setting), ICameraCommand
+public sealed class CameraCommand(IHttpClient client, IAmicoSetting setting, IAmicoRepository repo) : BaseCommand(client, setting, repo), ICameraCommand
 {
       public async Task<Stream> CaptureAsync(string ip, string session)
       {

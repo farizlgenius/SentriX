@@ -10,7 +10,7 @@ public sealed class AmicoDoorAdapter(
       IMessageBus bus
       ) : IAmicoDoorAdapter
 {
-      public Task CreateUpdateDoorAsync(
+      public Task CreateAsync(
             Guid DeviceGuid,
             Guid DoorGuid,
             string Metadata
@@ -19,7 +19,7 @@ public sealed class AmicoDoorAdapter(
             throw new NotImplementedException();
       }
 
-      public async Task DeleteDoorAsync(
+      public async Task DeleteAsync(
             Guid DeviceGuid,
             Guid DoorGuid,
             string Metadata
@@ -28,7 +28,7 @@ public sealed class AmicoDoorAdapter(
             throw new NotImplementedException();
       }
 
-      public Task UpdateDoorAsync(
+      public Task UpdateAsync(
             Guid DeviceGuid,
             Guid DoorGuid,
             string Metadata

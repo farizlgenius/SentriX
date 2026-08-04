@@ -4,19 +4,19 @@ namespace Adapter.Abstraction.Interfaces;
 
 public interface IDoorAdapter
 {
-      Task CreateUpdateDoorAsync(
+      Task CreateAsync(
             Guid DeviceGuid,
             Guid DoorGuid,
             string Metadata
       );
 
-      Task DeleteDoorAsync(
+      Task DeleteAsync(
             Guid DeviceGuid,
             Guid DoorGuid,
             string Metadata
       );
 
-      Task UpdateDoorAsync(
+      Task UpdateAsync(
             Guid DeviceGuid,
             Guid DoorGuid,
             string Metadata

@@ -22,7 +22,7 @@ public sealed class AeroDoorAdapter(
       IAeroRepository repo
       ) : IAeroDoorAdapter
 {
-      public async Task CreateUpdateDoorAsync(
+      public async Task CreateAsync(
             Guid DeviceGuid,
             Guid DoorGuid,
             string Metadata
@@ -309,7 +309,7 @@ public sealed class AeroDoorAdapter(
       }
 
       
-      public async Task DeleteDoorAsync(
+      public async Task DeleteAsync(
             Guid DeviceGuid,
             Guid DoorGuid,
             string Metadata
@@ -450,7 +450,7 @@ public sealed class AeroDoorAdapter(
     
       }
 
-      public async Task UpdateDoorAsync(
+      public async Task UpdateAsync(
             Guid DeviceGuid,
             Guid DoorGuid,
             string Metadata

@@ -3,13 +3,14 @@ using Adapter.Abstraction.Interfaces;
 using Adapter.Amico.Enums;
 using Adapter.Amico.Helper;
 using Adapter.Amico.Interface;
+using Adapter.Amico.Interfaces;
 using Adapter.Amico.Model.Objects;
 using Adapter.Amico.Model.Request;
 using Adapter.Amico.Model.Response;
 
 namespace Adapter.Amico.Command;
 
-public sealed class GroupCommand(IAmicoSetting setting, IHttpClient client) : BaseCommand(client, setting), IGroupCommand
+public sealed class GroupCommand(IAmicoSetting setting, IHttpClient client, IAmicoRepository repo) : BaseCommand(client, setting, repo), IGroupCommand
 {
       public async Task<CreateObjectResponse> CreateAccessRulesAsync(string ip, string session, string name, int type)
       {

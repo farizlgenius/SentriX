@@ -50,17 +50,9 @@ public sealed class AmicoDeviceAdapter(
 
       public async Task<string> GetDeviceInformationByMacAsync(string Mac)
       {
+
+            var session = await command.CheckSessionAsync(Mac);
             var amico = await repo.GetAmicoByMacAsync(Mac);
-            var session = amico.session;
-
-            var res = await command.CheckSession(amico.ip, amico.session);
-
-            if (!res.SessionIsValid)
-            {
-                  var news = await command.LoginAsync(amico.ip);
-                  session = news.Session;
-                  await repo.UpdateSessionByMacAsync(amico.mac,news.Session);
-            }
             
             var info = await command.DeviceInfoAsync(amico.ip,session);
 
@@ -120,13 +112,12 @@ public sealed class AmicoDeviceAdapter(
       public async Task<bool> GetDeviceStatusAsync(Guid Guid)
       {
             var amico = await repo.GetAmicoByGuidAsync(Guid);
-            var session = amico.session;
 
             if (amico.id == 0)
                   throw new BadRequestException(MessageHelper.Common.NotFound(nameof(Amicos), amico.mac));
 
 
-            var res = await command.CheckSession(amico.ip, amico.session);
+            var res = await command.CheckSessionAsync(amico.mac);
 
             return true;
       }

@@ -18,20 +18,7 @@ public sealed class AmicoTimeAdapter(
       public async Task ClearTimeAsync(Guid Guid)
       {
             var amico = await repo.GetAmicoByGuidAsync(Guid);
-            var session = amico.session;
-
-            if (amico.id == 0)
-                  throw new BadRequestException(MessageHelper.Common.NotFound(nameof(Amicos), amico.mac));
-
-
-            var res = await time.CheckSession(amico.ip, amico.session);
-
-            if (!res.SessionIsValid)
-            {
-                  var news = await time.LoginAsync(amico.ip);
-                  session = news.Session;
-                  await repo.UpdateSessionByMacAsync(amico.mac, news.Session);
-            }
+            var session = await time.CheckSessionAsync(amico.ip, amico.session);
 
             await time.ClearTimeAsync(
                   amico.ip,
@@ -51,20 +38,7 @@ public sealed class AmicoTimeAdapter(
             foreach (var g in DeviceGuids)
             {
                   var amico = await repo.GetAmicoByGuidAsync(g);
-                  var session = amico.session;
-
-                  if (amico.id == 0)
-                        throw new BadRequestException(MessageHelper.Common.NotFound(nameof(Amicos), amico.mac));
-
-
-                  var res = await time.CheckSession(amico.ip, amico.session);
-
-                  if (!res.SessionIsValid)
-                  {
-                        var news = await time.LoginAsync(amico.ip);
-                        session = news.Session;
-                        await repo.UpdateSessionByMacAsync(amico.mac, news.Session);
-                  }
+                  var session = await time.CheckSessionAsync(amico.ip, amico.session);
 
 
                   var response = await time.CreateHolidayAsync(
@@ -99,20 +73,7 @@ public sealed class AmicoTimeAdapter(
       public async Task CreateTimeZoneAsync(Guid DeviceGuid, Guid TzGuid, string Name, List<IntervalObject> Intervals)
       {
             var amico = await repo.GetAmicoByGuidAsync(DeviceGuid);
-            var session = amico.session;
-
-            if (amico.id == 0)
-                  throw new BadRequestException(MessageHelper.Common.NotFound(nameof(Amicos), amico.mac));
-
-
-            var res = await time.CheckSession(amico.ip, amico.session);
-
-            if (!res.SessionIsValid)
-            {
-                  var news = await time.LoginAsync(amico.ip);
-                  session = news.Session;
-                  await repo.UpdateSessionByMacAsync(amico.mac, news.Session);
-            }
+            var session = await time.CheckSessionAsync(amico.ip, amico.session);
 
             // Create Time Zone
             var response = await time.CreateTimeZoneAsync(
@@ -174,20 +135,7 @@ public sealed class AmicoTimeAdapter(
             )
       {
             var amico = await repo.GetAmicoByMacAsync(Mac);
-            var session = amico.session;
-
-            if (amico.id == 0)
-                  throw new BadRequestException(MessageHelper.Common.NotFound(nameof(Amicos), Mac));
-
-
-            var res = await time.CheckSession(amico.ip, amico.session);
-
-            if (!res.SessionIsValid)
-            {
-                  var news = await time.LoginAsync(amico.ip);
-                  session = news.Session;
-                  await repo.UpdateSessionByMacAsync(amico.mac, news.Session);
-            }
+            var session = await time.CheckSessionAsync(amico.ip, amico.session);
 
             await time.DeleteHolidayAsync(
                   amico.ip,
@@ -208,20 +156,7 @@ public sealed class AmicoTimeAdapter(
       public async Task DeleteTimeZoneAsync(string Mac, short DeviceComponentId, short TzComponentId, List<short> IntervalComponentId)
       {
             var amico = await repo.GetAmicoByMacAsync(Mac);
-            var session = amico.session;
-
-            if (amico.id == 0)
-                  throw new BadRequestException(MessageHelper.Common.NotFound(nameof(Amicos), Mac));
-
-
-            var res = await time.CheckSession(amico.ip, amico.session);
-
-            if (!res.SessionIsValid)
-            {
-                  var news = await time.LoginAsync(amico.ip);
-                  session = news.Session;
-                  await repo.UpdateSessionByMacAsync(amico.mac, news.Session);
-            }
+            var session = await time.CheckSessionAsync(amico.ip, amico.session);
 
             await time.DeleteTimeZoneAsunc(
                   amico.ip,
@@ -249,20 +184,7 @@ public sealed class AmicoTimeAdapter(
       public async Task UpdateHolidayAsync(Guid guid, string Name, short DeviceComponentId, int ComponentId, string Mac, DateTime Start, DateTime End)
       {
             var amico = await repo.GetAmicoByMacAsync(Mac);
-            var session = amico.session;
-
-            if (amico.id == 0)
-                  throw new BadRequestException(MessageHelper.Common.NotFound(nameof(Amicos), Mac));
-
-
-            var res = await time.CheckSession(amico.ip, amico.session);
-
-            if (!res.SessionIsValid)
-            {
-                  var news = await time.LoginAsync(amico.ip);
-                  session = news.Session;
-                  await repo.UpdateSessionByMacAsync(amico.mac, news.Session);
-            }
+            var session = await time.CheckSessionAsync(amico.ip, amico.session);
 
 
             await time.UpdateHolidayAsync(
@@ -289,20 +211,7 @@ public sealed class AmicoTimeAdapter(
       public async Task UpdateTimeZoneAsync(Guid Guid, short DeviceComponentId, short TzComponentId, string Name, string Mac, List<IntervalObject> Intervals)
       {
             var amico = await repo.GetAmicoByMacAsync(Mac);
-            var session = amico.session;
-
-            if (amico.id == 0)
-                  throw new BadRequestException(MessageHelper.Common.NotFound(nameof(Amicos), Mac));
-
-
-            var res = await time.CheckSession(amico.ip, amico.session);
-
-            if (!res.SessionIsValid)
-            {
-                  var news = await time.LoginAsync(amico.ip);
-                  session = news.Session;
-                  await repo.UpdateSessionByMacAsync(amico.mac, news.Session);
-            }
+           var session = await time.CheckSessionAsync(amico.ip, amico.session);
 
             // Create Time Zone
             var arr = await time.CreateTimeZoneAsync(

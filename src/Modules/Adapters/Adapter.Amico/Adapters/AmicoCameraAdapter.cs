@@ -9,19 +9,9 @@ public sealed class AmicoCameraAdapter(
       IAmicoRepository repo
       ) : IAmicoCameraAdapter
 {
-      public async Task<Stream> CaptureAsync(string Mac)
+      public async Task<Stream> CaptureAsync(string Ip,string Mac)
       {
-            var amico = await repo.GetAmicoByMacAsync(Mac);
-            var session = amico.session;
-
-            var res = await command.CheckSession(amico.ip, amico.session);
-
-            if (!res.SessionIsValid)
-            {
-                  var news = await command.LoginAsync(amico.ip);
-                  session = news.Session;
-                  await repo.UpdateSessionByMacAsync(amico.mac,news.Session);
-            }
-            return await command.CaptureAsync(amico.ip,session);
+            var session = await command.CheckSessionAsync(Mac);
+            return await command.CaptureAsync(Ip,session);
       }
 }

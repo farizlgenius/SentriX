@@ -11,14 +11,16 @@ public class BaseCommand : IBaseCommand
 {
       protected IHttpClient Client { get; }
       protected IAmicoSetting Setting { get; }
+      private IAmicoRepository _repo { get; }
 
-      protected BaseCommand(IHttpClient client, IAmicoSetting setting)
+      protected BaseCommand(IHttpClient client, IAmicoSetting setting,IAmicoRepository repo)
       {
             Client = client;
             Setting = setting;
+            _repo = repo;      
       }
 
-      public async Task<CheckSessionResponse> CheckSession(string ip, string session)
+      private async Task<CheckSessionResponse> CheckSession(string ip, string session)
       {
             return await Client.SendAsync<CheckSessionResponse>(
                   HttpMethod.Post,
@@ -49,7 +51,7 @@ public class BaseCommand : IBaseCommand
             ) ?? new LoginResponse();
       }
 
-      public async Task<bool> LogoutAsync(string ip, string session)
+      private async Task<bool> LogoutAsync(string ip, string session)
       {
             var queryParams = new Dictionary<string, string?>
             {
@@ -63,5 +65,54 @@ public class BaseCommand : IBaseCommand
             );
 
             return true;
+      }
+
+      public async Task<string> CheckSessionAsync(string mac)
+      {
+            var amico = await _repo.GetAmicoByMacAsync(mac);
+            var session = amico.session;
+
+            var res = await CheckSession(amico.ip, amico.session);
+
+            if (!res.SessionIsValid)
+            {
+                  var news = await LoginAsync(amico.ip, isFirst: false);
+                  session = news.Session;
+                  await _repo.UpdateSessionByMacAsync(amico.mac, news.Session);
+            }
+
+            return session;
+      }
+
+      public async Task<string> CheckSessionAsync(Guid guid)
+      {
+            var amico = await _repo.GetAmicoByGuidAsync(guid);
+            var session = amico.session;
+
+            var res = await CheckSession(amico.ip, amico.session);
+
+            if (!res.SessionIsValid)
+            {
+                  var news = await LoginAsync(amico.ip, isFirst: false);
+                  session = news.Session;
+                  await _repo.UpdateSessionByMacAsync(amico.mac, news.Session);
+            }
+
+            return session;
+      }
+
+      public async Task<string> CheckSessionAsync(string ip,string session)
+      {
+
+            var res = await CheckSession(ip, session);
+
+            if (!res.SessionIsValid)
+            {
+                  var news = await LoginAsync(ip, isFirst: false);
+                  session = news.Session;
+                  await _repo.UpdateSessionByIpAsync(ip, news.Session);
+            }
+
+            return session;
       }
 }

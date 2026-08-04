@@ -41,7 +41,8 @@ public interface ITimeAdapter
 
      Task UpdateTimeZoneAsync(
           Guid TzGuid,
-          string Name, List<IntervalObject> Intervals,
+          string Name, 
+          List<IntervalObject> Intervals,
           List<Guid> DeviceGuids
           );
 
