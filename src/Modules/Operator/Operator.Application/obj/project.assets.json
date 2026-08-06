@@ -631,19 +631,6 @@
           }
         }
       },
-      "Location.Contract/1.0.0": {
-        "type": "project",
-        "framework": ".NETCoreApp,Version=v10.0",
-        "dependencies": {
-          "SharedKernel": "1.0.0"
-        },
-        "compile": {
-          "bin/placeholder/Location.Contract.dll": {}
-        },
-        "runtime": {
-          "bin/placeholder/Location.Contract.dll": {}
-        }
-      },
       "Operator.Contract/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v10.0",
@@ -1642,11 +1629,6 @@
         "serilog.sinks.file.nuspec"
       ]
     },
-    "Location.Contract/1.0.0": {
-      "type": "project",
-      "path": "../../Contracts/Location.Contract/Location.Contract.csproj",
-      "msbuildProject": "../../Contracts/Location.Contract/Location.Contract.csproj"
-    },
     "Operator.Contract/1.0.0": {
       "type": "project",
       "path": "../../Contracts/Operator.Contract/Operator.Contract.csproj",
@@ -1665,7 +1647,6 @@
   },
   "projectFileDependencyGroups": {
     "net10.0": [
-      "Location.Contract >= 1.0.0",
       "MediatR >= 14.1.0",
       "Operator.Contract >= 1.0.0",
       "Operator.Domain >= 1.0.0"
@@ -1697,9 +1678,6 @@
         "net10.0": {
           "targetAlias": "net10.0",
           "projectReferences": {
-            "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Contracts/Location.Contract/Location.Contract.csproj": {
-              "projectPath": "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Contracts/Location.Contract/Location.Contract.csproj"
-            },
             "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Contracts/Operator.Contract/Operator.Contract.csproj": {
               "projectPath": "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Contracts/Operator.Contract/Operator.Contract.csproj"
             },

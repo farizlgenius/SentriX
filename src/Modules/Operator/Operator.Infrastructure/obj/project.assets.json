@@ -733,24 +733,10 @@
           }
         }
       },
-      "Location.Contract/1.0.0": {
-        "type": "project",
-        "framework": ".NETCoreApp,Version=v10.0",
-        "dependencies": {
-          "SharedKernel": "1.0.0"
-        },
-        "compile": {
-          "bin/placeholder/Location.Contract.dll": {}
-        },
-        "runtime": {
-          "bin/placeholder/Location.Contract.dll": {}
-        }
-      },
       "Operator.Application/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v10.0",
         "dependencies": {
-          "Location.Contract": "1.0.0",
           "MediatR": "14.1.0",
           "Operator.Contract": "1.0.0",
           "Operator.Domain": "1.0.0"
@@ -1920,11 +1906,6 @@
         "serilog.sinks.file.7.0.0.nupkg.sha512",
         "serilog.sinks.file.nuspec"
       ]
-    },
-    "Location.Contract/1.0.0": {
-      "type": "project",
-      "path": "../../Contracts/Location.Contract/Location.Contract.csproj",
-      "msbuildProject": "../../Contracts/Location.Contract/Location.Contract.csproj"
     },
     "Operator.Application/1.0.0": {
       "type": "project",

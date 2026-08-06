@@ -9,6 +9,7 @@ using Adapter.Amico;
 using AeroAdapter.Application.Interfaces;
 using Auth.Infrastructure;
 using Cache.Infrastructure;
+using Core.Infrastructure;
 using Device.Infrastructure;
 using Door.Infrastructure;
 using Events.Infrastructure;
@@ -17,7 +18,6 @@ using Host.Helpers;
 using Host.Logging;
 using Host.Middlewares;
 using Input.Infrastructure;
-using Location.Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
@@ -80,7 +80,6 @@ public class Program
         builder.Services.AddAuth(builder.Configuration);
         builder.Services.AddCache(builder.Configuration);
         builder.Services.AddOperator(builder.Configuration);
-        builder.Services.AddLocation(builder.Configuration);
         builder.Services.AddAero(builder.Configuration);
         builder.Services.AddAmico(builder.Configuration);
         builder.Services.AddRole(builder.Configuration);
@@ -97,11 +96,12 @@ public class Program
         builder.Services.AddUser(builder.Configuration);
         builder.Services.AddStorage(builder.Configuration);
         builder.Services.AddSetting(builder.Configuration);
+        builder.Services.AddCore(builder.Configuration);
 
 
         // Replace default logging with Serilog
-            // builder.Host.UseSerilog();
-            builder.Host.ConfigureEnterpriseLogging();
+        // builder.Host.UseSerilog();
+        builder.Host.ConfigureEnterpriseLogging();
 
         // ==========================
         // MediatR
@@ -137,14 +137,14 @@ public class Program
         {
             options.InvalidModelStateResponseFactory = context =>
             {
-               var errors = context.ModelState
-                .Where(x => x.Value?.Errors.Count > 0)
-                .ToDictionary(
-                    x => x.Key,
-                    x => x.Value!.Errors
-                        .Select(e => e.ErrorMessage)
-                        .ToArray()
-                );
+                var errors = context.ModelState
+                 .Where(x => x.Value?.Errors.Count > 0)
+                 .ToDictionary(
+                     x => x.Key,
+                     x => x.Value!.Errors
+                         .Select(e => e.ErrorMessage)
+                         .ToArray()
+                 );
 
                 return new BadRequestObjectResult(
                     new ValidateBaseResponse<object>(
@@ -152,9 +152,9 @@ public class Program
                         HttpStatusCode.BadRequest,
                         false,
                         "Validation failed.",
-                        Errors:errors
+                        Errors: errors
                     )
-                );  
+                );
             };
         });
 
@@ -211,36 +211,36 @@ public class Program
                         return Task.CompletedTask;
                     },
 
-                        OnChallenge = async context =>
-                        {
-                              context.HandleResponse(); // stop default 401 page
+                    OnChallenge = async context =>
+                    {
+                        context.HandleResponse(); // stop default 401 page
 
-                              var message = "Jwt Token invalid or missing";
+                        var message = "Jwt Token invalid or missing";
 
-                              if (context.AuthenticateFailure != null)
-                                    message = context.AuthenticateFailure.Message;
+                        if (context.AuthenticateFailure != null)
+                            message = context.AuthenticateFailure.Message;
 
-                              await AuthResponseHelper.Write401(context.Response, message);
-                        },
+                        await AuthResponseHelper.Write401(context.Response, message);
+                    },
 
-                        OnForbidden = async context =>
-                        {
-                              await AuthResponseHelper.Write403(context.Response);
-                        },
+                    OnForbidden = async context =>
+                    {
+                        await AuthResponseHelper.Write403(context.Response);
+                    },
 
-                        OnAuthenticationFailed = context =>
-                        {
-                              Console.WriteLine("❌ JWT FAILED: " + context.Exception.Message);
-                              return Task.CompletedTask;
-                        },
+                    OnAuthenticationFailed = context =>
+                    {
+                        Console.WriteLine("❌ JWT FAILED: " + context.Exception.Message);
+                        return Task.CompletedTask;
+                    },
 
-                        OnTokenValidated = context =>
-                        {
-                              Console.WriteLine("✅ TOKEN VALIDATED");
-                              return Task.CompletedTask;
-                        },
+                    OnTokenValidated = context =>
+                    {
+                        Console.WriteLine("✅ TOKEN VALIDATED");
+                        return Task.CompletedTask;
+                    },
 
-                    
+
                 };
             });
 
@@ -312,7 +312,7 @@ public class Program
 
         app.Lifetime.ApplicationStarted.Register(() =>
 {
-_ = Task.Run(() => readDriver.GetTransactionUntilShutDownAsync());
+    _ = Task.Run(() => readDriver.GetTransactionUntilShutDownAsync());
 });
 
 

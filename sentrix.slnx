@@ -23,12 +23,7 @@
 <Project Path="src/Modules/Input/Input.Domain/Input.Domain.csproj" />
 <Project Path="src/Modules/Input/Input.Infrastructure/Input.Infrastructure.csproj" />
 </Folder>
-<Folder Name="/src/Modules/Location/">
-<Project Path="src/Modules/Location/Location.Application/Location.Application.csproj" />
-
-<Project Path="src/Modules/Location/Location.Domain/Location.Domain.csproj" />
-<Project Path="src/Modules/Location/Location.Infrastructure/Location.Infrastructure.csproj" />
-</Folder>
+<Folder Name="/src/Modules/Location/" />
 <Folder Name="/src/Modules/Notifier/">
 <Project Path="src/Modules/Notifier/Notifier.Client/Notifier.Client.csproj" />
 </Folder>
@@ -88,7 +83,6 @@
 <Project Path="src/Modules/Contracts/Group.Contract/Group.Contract.csproj" />
 <Project Path="src/Modules/Contracts/Input.Contract/Input.Contract.csproj" />
 <Project Path="src/Modules/Contracts/License.Contract/License.Contract.csproj" />
-<Project Path="src/Modules/Contracts/Location.Contract/Location.Contract.csproj" />
 <Project Path="src/Modules/Contracts/Notifier.Contract/Notifier.Contract.csproj" />
 <Project Path="src/Modules/Contracts/Operator.Contract/Operator.Contract.csproj" />
 <Project Path="src/Modules/Contracts/Auth.Contract/Auth.Contract.csproj" />

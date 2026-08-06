@@ -60,6 +60,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="../Modules/Contracts/Core.Contract/Core.Contract.csproj" />
+    <ProjectReference Include="../Modules/Core/Core.Infrastructure/Core.Infrastructure.csproj" />
     <ProjectReference Include="..\Modules\Adapters\Adapter.Aero\Adapter.Aero.csproj" />
     <ProjectReference Include="..\Modules\Adapters\Adapter.Amico\Adapter.Amico.csproj" />
     <ProjectReference Include="..\Modules\Auth\Auth.Infrastructure\Auth.Infrastructure.csproj" />
@@ -71,7 +73,6 @@
     <ProjectReference Include="..\Modules\Contracts\Events.Contract\Events.Contract.csproj" />
     <ProjectReference Include="..\Modules\Contracts\Group.Contract\Group.Contract.csproj" />
     <ProjectReference Include="..\Modules\Contracts\Input.Contract\Input.Contract.csproj" />
-    <ProjectReference Include="..\Modules\Contracts\Location.Contract\Location.Contract.csproj" />
     <ProjectReference Include="..\Modules\Contracts\Output.Contract\Output.Contract.csproj" />
     <ProjectReference Include="..\Modules\Contracts\Setting.Contract\Setting.Contract.csproj" />
     <ProjectReference Include="..\Modules\Contracts\Storage.Contract\Storage.Contract.csproj" />
@@ -82,7 +83,6 @@
     <ProjectReference Include="..\Modules\Events\Events.Infrastructure\Events.Infrastructure.csproj" />
     <ProjectReference Include="..\Modules\Group\Group.Infrastructure\Group.Infrastructure.csproj" />
     <ProjectReference Include="..\Modules\Input\Input.Infrastructure\Input.Infrastructure.csproj" />
-    <ProjectReference Include="..\Modules\Location\Location.Infrastructure\Location.Infrastructure.csproj" />
     <ProjectReference Include="..\Modules\Notifier\Notifier.Client\Notifier.Client.csproj" />
     <ProjectReference Include="..\Modules\Operator\Operator.Infrastructure\Operator.Infrastructure.csproj" />
     <ProjectReference Include="..\Modules\Output\Output.Infrastructure\Output.Infrastructure.csproj" />

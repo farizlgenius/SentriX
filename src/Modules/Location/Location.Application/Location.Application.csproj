@@ -13,9 +13,4 @@
     <Folder Include="Queries\" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\Contracts\Location.Contract\Location.Contract.csproj" />
-    <ProjectReference Include="..\Location.Domain\Location.Domain.csproj" />
-  </ItemGroup>
-
 </Project>

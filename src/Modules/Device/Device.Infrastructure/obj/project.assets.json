@@ -1140,7 +1140,6 @@
           "Device.Domain": "1.0.0",
           "Group.Contract": "1.0.0",
           "Input.Contract": "1.0.0",
-          "Location.Contract": "1.0.0",
           "Output.Contract": "1.0.0",
           "Setting.Contract": "1.0.0",
           "User.Contract": "1.0.0"
@@ -1215,19 +1214,6 @@
         },
         "runtime": {
           "bin/placeholder/Input.Contract.dll": {}
-        }
-      },
-      "Location.Contract/1.0.0": {
-        "type": "project",
-        "framework": ".NETCoreApp,Version=v10.0",
-        "dependencies": {
-          "SharedKernel": "1.0.0"
-        },
-        "compile": {
-          "bin/placeholder/Location.Contract.dll": {}
-        },
-        "runtime": {
-          "bin/placeholder/Location.Contract.dll": {}
         }
       },
       "Output.Contract/1.0.0": {
@@ -2924,11 +2910,6 @@
       "type": "project",
       "path": "../../Contracts/Input.Contract/Input.Contract.csproj",
       "msbuildProject": "../../Contracts/Input.Contract/Input.Contract.csproj"
-    },
-    "Location.Contract/1.0.0": {
-      "type": "project",
-      "path": "../../Contracts/Location.Contract/Location.Contract.csproj",
-      "msbuildProject": "../../Contracts/Location.Contract/Location.Contract.csproj"
     },
     "Output.Contract/1.0.0": {
       "type": "project",

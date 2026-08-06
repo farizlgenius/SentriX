@@ -1615,6 +1615,60 @@
           "bin/placeholder/Cache.Infrastructure.dll": {}
         }
       },
+      "Core.Application/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v10.0",
+        "dependencies": {
+          "Core.Contract": "1.0.0",
+          "Core.Domain": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/Core.Application.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Core.Application.dll": {}
+        }
+      },
+      "Core.Contract/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v10.0",
+        "dependencies": {
+          "SharedKernel": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/Core.Contract.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Core.Contract.dll": {}
+        }
+      },
+      "Core.Domain/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v10.0",
+        "dependencies": {
+          "SharedKernel": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/Core.Domain.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Core.Domain.dll": {}
+        }
+      },
+      "Core.Infrastructure/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v10.0",
+        "dependencies": {
+          "Core.Application": "1.0.0",
+          "Npgsql.EntityFrameworkCore.PostgreSQL": "10.0.1"
+        },
+        "compile": {
+          "bin/placeholder/Core.Infrastructure.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Core.Infrastructure.dll": {}
+        }
+      },
       "Device.Application/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v10.0",
@@ -1624,7 +1678,6 @@
           "Device.Domain": "1.0.0",
           "Group.Contract": "1.0.0",
           "Input.Contract": "1.0.0",
-          "Location.Contract": "1.0.0",
           "Output.Contract": "1.0.0",
           "Setting.Contract": "1.0.0",
           "User.Contract": "1.0.0"
@@ -1900,62 +1953,6 @@
           "bin/placeholder/Input.Infrastructure.dll": {}
         }
       },
-      "Location.Application/1.0.0": {
-        "type": "project",
-        "framework": ".NETCoreApp,Version=v10.0",
-        "dependencies": {
-          "Location.Contract": "1.0.0",
-          "Location.Domain": "1.0.0"
-        },
-        "compile": {
-          "bin/placeholder/Location.Application.dll": {}
-        },
-        "runtime": {
-          "bin/placeholder/Location.Application.dll": {}
-        }
-      },
-      "Location.Contract/1.0.0": {
-        "type": "project",
-        "framework": ".NETCoreApp,Version=v10.0",
-        "dependencies": {
-          "SharedKernel": "1.0.0"
-        },
-        "compile": {
-          "bin/placeholder/Location.Contract.dll": {}
-        },
-        "runtime": {
-          "bin/placeholder/Location.Contract.dll": {}
-        }
-      },
-      "Location.Domain/1.0.0": {
-        "type": "project",
-        "framework": ".NETCoreApp,Version=v10.0",
-        "dependencies": {
-          "SharedKernel": "1.0.0"
-        },
-        "compile": {
-          "bin/placeholder/Location.Domain.dll": {}
-        },
-        "runtime": {
-          "bin/placeholder/Location.Domain.dll": {}
-        }
-      },
-      "Location.Infrastructure/1.0.0": {
-        "type": "project",
-        "framework": ".NETCoreApp,Version=v10.0",
-        "dependencies": {
-          "Location.Application": "1.0.0",
-          "Location.Contract": "1.0.0",
-          "Npgsql.EntityFrameworkCore.PostgreSQL": "10.0.1",
-          "SharedKernel": "1.0.0"
-        },
-        "compile": {
-          "bin/placeholder/Location.Infrastructure.dll": {}
-        },
-        "runtime": {
-          "bin/placeholder/Location.Infrastructure.dll": {}
-        }
-      },
       "Notifier.Client/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v10.0",
@@ -1987,7 +1984,6 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v10.0",
         "dependencies": {
-          "Location.Contract": "1.0.0",
           "MediatR": "14.1.0",
           "Operator.Contract": "1.0.0",
           "Operator.Domain": "1.0.0"
@@ -2143,7 +2139,6 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v10.0",
         "dependencies": {
-          "Location.Contract": "1.0.0",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "10.0.1",
           "Role.Application": "1.0.0",
           "SharedKernel": "1.0.0"
@@ -5032,6 +5027,26 @@
       "path": "../Modules/Cache/Cache.Infrastrucure/Cache.Infrastructure.csproj",
       "msbuildProject": "../Modules/Cache/Cache.Infrastrucure/Cache.Infrastructure.csproj"
     },
+    "Core.Application/1.0.0": {
+      "type": "project",
+      "path": "../Modules/Core/Core.Application/Core.Application.csproj",
+      "msbuildProject": "../Modules/Core/Core.Application/Core.Application.csproj"
+    },
+    "Core.Contract/1.0.0": {
+      "type": "project",
+      "path": "../Modules/Contracts/Core.Contract/Core.Contract.csproj",
+      "msbuildProject": "../Modules/Contracts/Core.Contract/Core.Contract.csproj"
+    },
+    "Core.Domain/1.0.0": {
+      "type": "project",
+      "path": "../Modules/Core/Core.Domain/Core.Domain.csproj",
+      "msbuildProject": "../Modules/Core/Core.Domain/Core.Domain.csproj"
+    },
+    "Core.Infrastructure/1.0.0": {
+      "type": "project",
+      "path": "../Modules/Core/Core.Infrastructure/Core.Infrastructure.csproj",
+      "msbuildProject": "../Modules/Core/Core.Infrastructure/Core.Infrastructure.csproj"
+    },
     "Device.Application/1.0.0": {
       "type": "project",
       "path": "../Modules/Device/Device.Application/Device.Application.csproj",
@@ -5131,26 +5146,6 @@
       "type": "project",
       "path": "../Modules/Input/Input.Infrastructure/Input.Infrastructure.csproj",
       "msbuildProject": "../Modules/Input/Input.Infrastructure/Input.Infrastructure.csproj"
-    },
-    "Location.Application/1.0.0": {
-      "type": "project",
-      "path": "../Modules/Location/Location.Application/Location.Application.csproj",
-      "msbuildProject": "../Modules/Location/Location.Application/Location.Application.csproj"
-    },
-    "Location.Contract/1.0.0": {
-      "type": "project",
-      "path": "../Modules/Contracts/Location.Contract/Location.Contract.csproj",
-      "msbuildProject": "../Modules/Contracts/Location.Contract/Location.Contract.csproj"
-    },
-    "Location.Domain/1.0.0": {
-      "type": "project",
-      "path": "../Modules/Location/Location.Domain/Location.Domain.csproj",
-      "msbuildProject": "../Modules/Location/Location.Domain/Location.Domain.csproj"
-    },
-    "Location.Infrastructure/1.0.0": {
-      "type": "project",
-      "path": "../Modules/Location/Location.Infrastructure/Location.Infrastructure.csproj",
-      "msbuildProject": "../Modules/Location/Location.Infrastructure/Location.Infrastructure.csproj"
     },
     "Notifier.Client/1.0.0": {
       "type": "project",
@@ -5306,6 +5301,8 @@
       "Auth.Contract >= 1.0.0",
       "Auth.Infrastructure >= 1.0.0",
       "Cache.Infrastructure >= 1.0.0",
+      "Core.Contract >= 1.0.0",
+      "Core.Infrastructure >= 1.0.0",
       "Device.Contract >= 1.0.0",
       "Device.Infrastructure >= 1.0.0",
       "Door.Contract >= 1.0.0",
@@ -5316,8 +5313,6 @@
       "Group.Infrastructure >= 1.0.0",
       "Input.Contract >= 1.0.0",
       "Input.Infrastructure >= 1.0.0",
-      "Location.Contract >= 1.0.0",
-      "Location.Infrastructure >= 1.0.0",
       "MediatR >= 14.1.0",
       "MediatR.Contracts >= 2.0.1",
       "Microsoft.AspNetCore.Authentication.JwtBearer >= 10.0.7",
@@ -5391,6 +5386,9 @@
             "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Contracts/Auth.Contract/Auth.Contract.csproj": {
               "projectPath": "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Contracts/Auth.Contract/Auth.Contract.csproj"
             },
+            "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Contracts/Core.Contract/Core.Contract.csproj": {
+              "projectPath": "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Contracts/Core.Contract/Core.Contract.csproj"
+            },
             "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Contracts/Device.Contract/Device.Contract.csproj": {
               "projectPath": "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Contracts/Device.Contract/Device.Contract.csproj"
             },
@@ -5405,9 +5403,6 @@
             },
             "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Contracts/Input.Contract/Input.Contract.csproj": {
               "projectPath": "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Contracts/Input.Contract/Input.Contract.csproj"
-            },
-            "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Contracts/Location.Contract/Location.Contract.csproj": {
-              "projectPath": "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Contracts/Location.Contract/Location.Contract.csproj"
             },
             "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Contracts/Output.Contract/Output.Contract.csproj": {
               "projectPath": "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Contracts/Output.Contract/Output.Contract.csproj"
@@ -5424,6 +5419,9 @@
             "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Contracts/User.Contract/User.Contract.csproj": {
               "projectPath": "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Contracts/User.Contract/User.Contract.csproj"
             },
+            "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Core/Core.Infrastructure/Core.Infrastructure.csproj": {
+              "projectPath": "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Core/Core.Infrastructure/Core.Infrastructure.csproj"
+            },
             "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Device/Device.Infrastructure/Device.Infrastructure.csproj": {
               "projectPath": "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Device/Device.Infrastructure/Device.Infrastructure.csproj"
             },
@@ -5438,9 +5436,6 @@
             },
             "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Input/Input.Infrastructure/Input.Infrastructure.csproj": {
               "projectPath": "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Input/Input.Infrastructure/Input.Infrastructure.csproj"
-            },
-            "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Location/Location.Infrastructure/Location.Infrastructure.csproj": {
-              "projectPath": "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Location/Location.Infrastructure/Location.Infrastructure.csproj"
             },
             "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Notifier/Notifier.Client/Notifier.Client.csproj": {
               "projectPath": "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Notifier/Notifier.Client/Notifier.Client.csproj"

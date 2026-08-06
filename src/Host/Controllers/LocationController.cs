@@ -1,77 +1,59 @@
-using Location.Contract.DTOs;
-using Location.Contract.Interfaces;
+using Core.Contract.DTOs.Location;
+using Core.Contract.Interfaces.Location;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using SharedKernel.Domain;
 
 namespace Host.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class LocationController(ILocation location) : ControllerBase
+    public class LocationController(ILocation loc) : ControllerBase
     {
-
-        [HttpGet]
-        public async Task<IActionResult> GetAsync()
+        [HttpGet("pagination")]
+        public async Task<IActionResult> GetPaginationAsync([FromQuery] PaginationParams param)
         {
-            var res = await location.GetAsync();
+            var res = await loc.GetPaginationAsync(param);
             return Ok(res);
         }
 
-        [HttpPost("range")]
-        public async Task<IActionResult> GetRangeLocationAsync([FromBody] RangeIdDto dto)
-        {
-            var res = await location.GetRangeLocationAsync(dto);
-            return Ok(res);
-        }
 
-        [HttpGet("pagination/countries")]
-        public async Task<IActionResult> GetCountriesAsync([FromQuery] int Page,[FromQuery] int PageSize,[FromQuery] string? Search)
-        {
-            var res = await location.GetCountriesPaginationAsync(Page, PageSize, Search ?? "");
-            return Ok(res);
-        }
-
-        [HttpGet("country")]
+        [HttpGet("countries")]
         public async Task<IActionResult> GetAllCountryAsync()
         {
-            var res = await location.GetAllCountriesAsync();
+            var res = await loc.GetCountriesAsync();
             return Ok(res);
         }
 
-        [HttpGet("pagination")]
-        public async Task<IActionResult> GetPaginationAsync([FromQuery] int Page, [FromQuery] int PageSize, [FromQuery] string? Search)
+        [HttpGet("{guid}")]
+        public async Task<IActionResult> GetByGuidAsync(Guid guid)
         {
-            var res = await location.GetPaginationAsync(Page, PageSize, Search ?? "");
+            var res = await loc.GetByGuidAsync(guid);
             return Ok(res);
         }
+
 
         [HttpPost]
         public async Task<IActionResult> CreateAsync([FromBody] CreateLocationDto dto)
         {
-            var res = await location.CreateAsync(dto);
+            var res = await loc.CreateAsync(dto);
             return Ok(res);
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteByIdAsync(int id)
+        [HttpDelete("{guid}")]
+        public async Task<IActionResult> DeleteByGuidAsync(Guid guid)
         {
-            var res = await location.DeleteByIdAsync(id);
+            var res = await loc.DeleteByGuidAsync(guid);
             return Ok(res);
         }
 
-        [HttpPost("delete/range")]
-        public async Task<IActionResult> DeleteRangeAsync([FromBody] RangeIdDto dto)
-        {
-            var res = await location.DeleteRangeAsync(dto);
-            return Ok(res);
-        }
 
         [HttpPut]
         public async Task<IActionResult> UpdateAsync([FromBody] UpdateLocationDto dto)
         {
-            var res = await location.UpdateAsync(dto);
+            var res = await loc.UpdateAsync(dto);
             return Ok(res);
         }
     }

@@ -663,19 +663,6 @@
           }
         }
       },
-      "Location.Contract/1.0.0": {
-        "type": "project",
-        "framework": ".NETCoreApp,Version=v10.0",
-        "dependencies": {
-          "SharedKernel": "1.0.0"
-        },
-        "compile": {
-          "bin/placeholder/Location.Contract.dll": {}
-        },
-        "runtime": {
-          "bin/placeholder/Location.Contract.dll": {}
-        }
-      },
       "Role.Application/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v10.0",
@@ -1731,11 +1718,6 @@
         "serilog.sinks.file.nuspec"
       ]
     },
-    "Location.Contract/1.0.0": {
-      "type": "project",
-      "path": "../../Contracts/Location.Contract/Location.Contract.csproj",
-      "msbuildProject": "../../Contracts/Location.Contract/Location.Contract.csproj"
-    },
     "Role.Application/1.0.0": {
       "type": "project",
       "path": "../Role.Application/Role.Application.csproj",
@@ -1759,7 +1741,6 @@
   },
   "projectFileDependencyGroups": {
     "net10.0": [
-      "Location.Contract >= 1.0.0",
       "Microsoft.Extensions.Configuration.FileExtensions >= 10.0.7",
       "Microsoft.Extensions.Configuration.Json >= 10.0.7",
       "Microsoft.Extensions.Options >= 10.0.7",
@@ -1795,9 +1776,6 @@
         "net10.0": {
           "targetAlias": "net10.0",
           "projectReferences": {
-            "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Contracts/Location.Contract/Location.Contract.csproj": {
-              "projectPath": "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Contracts/Location.Contract/Location.Contract.csproj"
-            },
             "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Role/Role.Application/Role.Application.csproj": {
               "projectPath": "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Role/Role.Application/Role.Application.csproj"
             },
