@@ -167,32 +167,7 @@ public sealed class DoorRepository(DoorDbContext context) : IDoorRepository
             return new Pagination<DoorDto>(param.pageNumber,param.pageSize,count,(int)Math.Ceiling(count / (double)param.pageSize),res);
       }
 
-      public async Task<short> GetLowestDoorComponentIdAsync(string Mac, CancellationToken ct = default)
-      {
-            return (short)await ComponentHelper.LowestUnassignedNumberAsync<Persistences.Entities.Doors>(
-                  context,
-                  x => x.mac.Equals(Mac),
-                  x => x.component_id,
-                  10,
-                  ct
-                  );
-      }
-
-      public async Task<short> GetLowestDoorComponentIdWithExceptionAsync(string Mac, List<int> Excepts, CancellationToken ct = default)
-      {
-            return await ComponentHelper.LowestUnassignedNumberAsync<Persistences.Entities.Doors>(
-                  context,
-                  Excepts,
-                  x => x.mac.Equals(Mac),
-                  x => new
-                  {
-                        x.component_id,
-                        x.second_component_id
-                  },
-                  10,
-                  ct
-                  );
-      }
+     
 
       public async Task<IEnumerable<OptionDto>> GetReaderModeAsync(CancellationToken ct = default)
       {

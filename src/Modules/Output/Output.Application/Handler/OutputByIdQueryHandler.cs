@@ -11,7 +11,7 @@ public sealed class OutputByIdQueryHandler(IOutputRepository repo) : IQueryHandl
 {
       public async Task<OutputDto> HandleAsync(OutputByIdQuery query, CancellationToken ct)
       {
-            var res = await repo.GetByIdAsync(query.Id,ct);
+            var res = await repo.GetByGuidAsync(query.Id,ct);
             if(res.Id == 0)
                   throw new BadRequestException(MessageHelper.Common.NotFound("Output",query.Id));
 

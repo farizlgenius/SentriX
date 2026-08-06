@@ -45,6 +45,7 @@ public sealed class AeroDeviceAdapter(
       )
       {
 
+            logger.LogInformation("Create Device {Mac} {ScpId} {LocationId}", Mac, ScpId, LocationId);
 
             // Read Structure 
             var res = writer.ScpStructureStatusRead(

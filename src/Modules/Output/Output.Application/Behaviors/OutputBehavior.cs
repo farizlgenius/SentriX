@@ -19,7 +19,8 @@ public sealed class OutputBehavior(IOutputRepository repo,IAdapterFactory factor
 {
       public async Task CommandOutputDto(OutputCommandDto dto, CancellationToken ct = default)
       {
-            var output = await bus.QueryAsync(new OutputByIdQuery(dto.Id));
+            var output = await repo.GetByGuidAsync(dto.Guid, ct);
+
             await factory.GetAdapter(dto.Type).Control.TriggerOutputAsync(
                   output.Mac,
                   output.DeviceComponentId,
@@ -67,7 +68,7 @@ public sealed class OutputBehavior(IOutputRepository repo,IAdapterFactory factor
 
       public async Task<OutputDto> DeleteByIdAsync(int id)
       {
-            var res = await repo.GetByIdAsync(id);
+            var res = await repo.GetByGuidAsync(id);
             
             if(res.Id == 0)
                   throw new BadRequestException(MessageHelper.Common.NotFound("Output", id));
@@ -119,7 +120,7 @@ public sealed class OutputBehavior(IOutputRepository repo,IAdapterFactory factor
             if(!await repo.IsAnyWithIdAsync(id))
                   throw new BadRequestException(MessageHelper.Common.NotFound("Output", id));
 
-            var output = await repo.GetByIdAsync(id);
+            var output = await repo.GetByGuidAsync(id);
 
             await factory.GetAdapter(output.Type).Control.TriggerOutputAsync(output.Mac,output.DeviceComponentId,output.ComponentId,Command);
             
@@ -127,7 +128,7 @@ public sealed class OutputBehavior(IOutputRepository repo,IAdapterFactory factor
 
       public async Task<OutputDto> UpdateAsync(OutputDto dto)
       {
-            var res = await repo.GetByIdAsync(dto.Id);
+            var res = await repo.GetByGuidAsync(dto.Id);
             if(res.Id == 0)
                   throw new BadRequestException(MessageHelper.Common.NotFound("Output", dto.Id));
 

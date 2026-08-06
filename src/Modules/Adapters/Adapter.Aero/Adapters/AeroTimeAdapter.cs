@@ -154,7 +154,7 @@ public sealed class AeroTimeAdapter(
 
 
       public async Task UpdateHolidayAsync(
-            Guid HolidayGuid, List<Guid> DeviceGuids, DateTime Start, DateTime End
+            Guid HolidayGuid, List<Guid> DeviceGuids,string Name, DateTime Start, DateTime End
             )
       {
             foreach (var g in DeviceGuids)

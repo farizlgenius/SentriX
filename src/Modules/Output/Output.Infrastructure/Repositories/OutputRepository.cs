@@ -73,11 +73,11 @@ public sealed class OutputRepository(OutputDbContext context) : IOutputRepositor
 
       }
 
-      public async Task<OutputDto> GetByIdAsync(int id, CancellationToken ct = default)
+      public async Task<OutputDto> GetByGuidAsync(Guid guid, CancellationToken ct = default)
       {
             return await context.Outputs.AsNoTracking()
             .OrderByDescending(x => x.id)
-            .Where(x => x.id == id)
+            .Where(x => x.guid == guid)
             .Select(e => new OutputDto(
                   e.id,
                   e.name,

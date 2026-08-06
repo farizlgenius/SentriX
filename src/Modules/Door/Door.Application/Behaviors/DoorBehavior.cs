@@ -18,44 +18,20 @@ public sealed class DoorBehavior(IDoorRepository repo,IMessageBus bus,IAdapterFa
 {
       public async Task<DoorDto> CreateAsync(CreateDoorDto dto)
       {
-            // Check first that mac is available 
-            var deviceFlag = await bus.QueryAsync(new IsAnyWithMacQuery(dto.Mac));
-            if(!deviceFlag)
-                  throw new BadRequestException(MessageHelper.Device.DeviceMacNotFound(dto.Mac));
+            var deviceGuid = await bus.QueryAsync(new DeviceByMac(dto.Mac));
 
-            short FirstComponentId = await repo.GetLowestDoorComponentIdWithExceptionAsync(dto.Mac,[]);
-            short SecondComponentId = -1;
-
-            if (dto.DoorType.Equals(DoorType.Dual.ToString()))
-            {
-                  SecondComponentId = await repo.GetLowestDoorComponentIdWithExceptionAsync(dto.Mac,[FirstComponentId]);
-            }
-
-           
-            
             var d = new Doors(
                   Guid.NewGuid(),
-                  dto.DeviceComponentId,
-                  dto.Mac,
-                  FirstComponentId,
-                  SecondComponentId,
                   dto.Name,
                   dto.DoorType,
                   dto.Metadata,
                   dto.Type,
                   dto.LocationId,
                   dto.IsActive,
-                  dto.IsDefault)
-                  ;
+                  dto.IsDefault);
 
 
-            await factory.GetAdapter(dto.Type).Door.CreateUpdateDoorAsync(
-                  dto.Mac,
-                  dto.DeviceComponentId,
-                  dto.Metadata,
-                  FirstComponentId,
-                  SecondComponentId
-                  );
+            await factory.GetAdapter(dto.Type).Door.CreateAsync(,d.Guid,dto.Metadata);
 
             // Save component used
 

@@ -10,7 +10,7 @@ public interface IOutputRepository
       Task<OutputDto> CreateAsync(Outputs dto,CancellationToken ct = default);
       Task<IEnumerable<short>> GetUnavailableOutputByModuleIdAsync(int moduleId,CancellationToken ct = default);
       Task<bool> IsAnyWithIdAsync(int Id,CancellationToken ct = default);
-      Task<OutputDto> GetByIdAsync(int id,CancellationToken ct = default);
+      Task<OutputDto> GetByGuidAsync(Guid guid,CancellationToken ct = default);
       Task<short> GetLowestOutputComponentIdByMacAsync(string Mac,CancellationToken ct = default);
       Task<OutputDto> DeleteByIdAsync(int id,CancellationToken ct= default);
       Task<OutputDto> UpdateAsync(Outputs dto,CancellationToken ct = default);

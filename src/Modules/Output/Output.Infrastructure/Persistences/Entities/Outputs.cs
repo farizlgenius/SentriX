@@ -4,7 +4,7 @@ using SharedKernel.Domain;
 
 namespace Output.Infrastructure.Persistences.Entities;
 
-public sealed class Outputs : BaseEntity
+public sealed class Outputs : BaseDbEntity
 {
       public string name { get; set; } = string.Empty;
       public string mac {get; set;} = string.Empty;

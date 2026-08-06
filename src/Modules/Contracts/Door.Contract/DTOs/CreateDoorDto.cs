@@ -3,9 +3,7 @@ using SharedKernel.Domain;
 namespace Door.Contract.DTOs;
 
 public sealed record CreateDoorDto(
-      Guid Guid,
       string Name,
-      short DeviceComponentId,
       string Mac,
       string DoorType,
       string Metadata,
@@ -13,4 +11,4 @@ public sealed record CreateDoorDto(
       string Type,
       bool IsActive,
       bool IsDefault
-      ) : BaseDtoEntity(Guid,LocationId,Type,IsActive,IsDefault);
+      ) : BaseDtoEntity(Guid.Empty,LocationId,Type,IsActive,IsDefault);
