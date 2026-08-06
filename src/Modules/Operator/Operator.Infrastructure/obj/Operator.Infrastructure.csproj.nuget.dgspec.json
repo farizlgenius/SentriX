@@ -1,36 +1,34 @@
 {
   "format": 1,
   "restore": {
-    "D:\\aero\\SentriX\\src\\Modules\\Operator\\Operator.Infrastructure\\Operator.Infrastructure.csproj": {}
+    "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Operator/Operator.Infrastructure/Operator.Infrastructure.csproj": {}
   },
   "projects": {
-    "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Location.Contract\\Location.Contract.csproj": {
+    "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Contracts/Location.Contract/Location.Contract.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Location.Contract\\Location.Contract.csproj",
+        "projectUniqueName": "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Contracts/Location.Contract/Location.Contract.csproj",
         "projectName": "Location.Contract",
-        "projectPath": "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Location.Contract\\Location.Contract.csproj",
-        "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-        "outputPath": "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Location.Contract\\obj\\",
+        "projectPath": "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Contracts/Location.Contract/Location.Contract.csproj",
+        "packagesPath": "/Users/far-izlengha/.nuget/packages/",
+        "outputPath": "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Contracts/Location.Contract/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "/Users/far-izlengha/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "/usr/local/share/dotnet/library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net10.0": {
-            "framework": "net10.0",
             "targetAlias": "net10.0",
             "projectReferences": {
-              "D:\\aero\\SentriX\\src\\SharedKernel\\SharedKernel.csproj": {
-                "projectPath": "D:\\aero\\SentriX\\src\\SharedKernel\\SharedKernel.csproj"
+              "/Users/far-izlengha/Documents/Project/SentriX/src/SharedKernel/SharedKernel.csproj": {
+                "projectPath": "/Users/far-izlengha/Documents/Project/SentriX/src/SharedKernel/SharedKernel.csproj"
               }
             }
           }
@@ -45,11 +43,10 @@
           "auditLevel": "low",
           "auditMode": "all"
         },
-        "SdkAnalysisLevel": "10.0.300"
+        "SdkAnalysisLevel": "10.0.100"
       },
       "frameworks": {
         "net10.0": {
-          "framework": "net10.0",
           "targetAlias": "net10.0",
           "imports": [
             "net461",
@@ -67,7 +64,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.301/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.101/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",
@@ -345,33 +342,31 @@
         }
       }
     },
-    "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Operator.Contract\\Operator.Contract.csproj": {
+    "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Contracts/Operator.Contract/Operator.Contract.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Operator.Contract\\Operator.Contract.csproj",
+        "projectUniqueName": "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Contracts/Operator.Contract/Operator.Contract.csproj",
         "projectName": "Operator.Contract",
-        "projectPath": "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Operator.Contract\\Operator.Contract.csproj",
-        "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-        "outputPath": "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Operator.Contract\\obj\\",
+        "projectPath": "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Contracts/Operator.Contract/Operator.Contract.csproj",
+        "packagesPath": "/Users/far-izlengha/.nuget/packages/",
+        "outputPath": "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Contracts/Operator.Contract/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "/Users/far-izlengha/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "/usr/local/share/dotnet/library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net10.0": {
-            "framework": "net10.0",
             "targetAlias": "net10.0",
             "projectReferences": {
-              "D:\\aero\\SentriX\\src\\SharedKernel\\SharedKernel.csproj": {
-                "projectPath": "D:\\aero\\SentriX\\src\\SharedKernel\\SharedKernel.csproj"
+              "/Users/far-izlengha/Documents/Project/SentriX/src/SharedKernel/SharedKernel.csproj": {
+                "projectPath": "/Users/far-izlengha/Documents/Project/SentriX/src/SharedKernel/SharedKernel.csproj"
               }
             }
           }
@@ -386,11 +381,10 @@
           "auditLevel": "low",
           "auditMode": "all"
         },
-        "SdkAnalysisLevel": "10.0.300"
+        "SdkAnalysisLevel": "10.0.100"
       },
       "frameworks": {
         "net10.0": {
-          "framework": "net10.0",
           "targetAlias": "net10.0",
           "imports": [
             "net461",
@@ -408,7 +402,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.301/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.101/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",
@@ -686,33 +680,31 @@
         }
       }
     },
-    "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Role.Contract\\Role.Contract.csproj": {
+    "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Contracts/Role.Contract/Role.Contract.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Role.Contract\\Role.Contract.csproj",
+        "projectUniqueName": "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Contracts/Role.Contract/Role.Contract.csproj",
         "projectName": "Role.Contract",
-        "projectPath": "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Role.Contract\\Role.Contract.csproj",
-        "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-        "outputPath": "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Role.Contract\\obj\\",
+        "projectPath": "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Contracts/Role.Contract/Role.Contract.csproj",
+        "packagesPath": "/Users/far-izlengha/.nuget/packages/",
+        "outputPath": "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Contracts/Role.Contract/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "/Users/far-izlengha/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "/usr/local/share/dotnet/library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net10.0": {
-            "framework": "net10.0",
             "targetAlias": "net10.0",
             "projectReferences": {
-              "D:\\aero\\SentriX\\src\\SharedKernel\\SharedKernel.csproj": {
-                "projectPath": "D:\\aero\\SentriX\\src\\SharedKernel\\SharedKernel.csproj"
+              "/Users/far-izlengha/Documents/Project/SentriX/src/SharedKernel/SharedKernel.csproj": {
+                "projectPath": "/Users/far-izlengha/Documents/Project/SentriX/src/SharedKernel/SharedKernel.csproj"
               }
             }
           }
@@ -727,11 +719,10 @@
           "auditLevel": "low",
           "auditMode": "all"
         },
-        "SdkAnalysisLevel": "10.0.300"
+        "SdkAnalysisLevel": "10.0.100"
       },
       "frameworks": {
         "net10.0": {
-          "framework": "net10.0",
           "targetAlias": "net10.0",
           "imports": [
             "net461",
@@ -749,7 +740,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.301/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.101/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",
@@ -1027,39 +1018,37 @@
         }
       }
     },
-    "D:\\aero\\SentriX\\src\\Modules\\Operator\\Operator.Application\\Operator.Application.csproj": {
+    "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Operator/Operator.Application/Operator.Application.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\aero\\SentriX\\src\\Modules\\Operator\\Operator.Application\\Operator.Application.csproj",
+        "projectUniqueName": "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Operator/Operator.Application/Operator.Application.csproj",
         "projectName": "Operator.Application",
-        "projectPath": "D:\\aero\\SentriX\\src\\Modules\\Operator\\Operator.Application\\Operator.Application.csproj",
-        "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-        "outputPath": "D:\\aero\\SentriX\\src\\Modules\\Operator\\Operator.Application\\obj\\",
+        "projectPath": "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Operator/Operator.Application/Operator.Application.csproj",
+        "packagesPath": "/Users/far-izlengha/.nuget/packages/",
+        "outputPath": "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Operator/Operator.Application/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "/Users/far-izlengha/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "/usr/local/share/dotnet/library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net10.0": {
-            "framework": "net10.0",
             "targetAlias": "net10.0",
             "projectReferences": {
-              "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Location.Contract\\Location.Contract.csproj": {
-                "projectPath": "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Location.Contract\\Location.Contract.csproj"
+              "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Contracts/Location.Contract/Location.Contract.csproj": {
+                "projectPath": "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Contracts/Location.Contract/Location.Contract.csproj"
               },
-              "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Operator.Contract\\Operator.Contract.csproj": {
-                "projectPath": "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Operator.Contract\\Operator.Contract.csproj"
+              "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Contracts/Operator.Contract/Operator.Contract.csproj": {
+                "projectPath": "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Contracts/Operator.Contract/Operator.Contract.csproj"
               },
-              "D:\\aero\\SentriX\\src\\Modules\\Operator\\Operator.Domain\\Operator.Domain.csproj": {
-                "projectPath": "D:\\aero\\SentriX\\src\\Modules\\Operator\\Operator.Domain\\Operator.Domain.csproj"
+              "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Operator/Operator.Domain/Operator.Domain.csproj": {
+                "projectPath": "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Operator/Operator.Domain/Operator.Domain.csproj"
               }
             }
           }
@@ -1074,11 +1063,10 @@
           "auditLevel": "low",
           "auditMode": "all"
         },
-        "SdkAnalysisLevel": "10.0.300"
+        "SdkAnalysisLevel": "10.0.100"
       },
       "frameworks": {
         "net10.0": {
-          "framework": "net10.0",
           "targetAlias": "net10.0",
           "dependencies": {
             "MediatR": {
@@ -1102,7 +1090,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.301/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.101/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",
@@ -1380,33 +1368,31 @@
         }
       }
     },
-    "D:\\aero\\SentriX\\src\\Modules\\Operator\\Operator.Domain\\Operator.Domain.csproj": {
+    "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Operator/Operator.Domain/Operator.Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\aero\\SentriX\\src\\Modules\\Operator\\Operator.Domain\\Operator.Domain.csproj",
+        "projectUniqueName": "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Operator/Operator.Domain/Operator.Domain.csproj",
         "projectName": "Operator.Domain",
-        "projectPath": "D:\\aero\\SentriX\\src\\Modules\\Operator\\Operator.Domain\\Operator.Domain.csproj",
-        "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-        "outputPath": "D:\\aero\\SentriX\\src\\Modules\\Operator\\Operator.Domain\\obj\\",
+        "projectPath": "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Operator/Operator.Domain/Operator.Domain.csproj",
+        "packagesPath": "/Users/far-izlengha/.nuget/packages/",
+        "outputPath": "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Operator/Operator.Domain/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "/Users/far-izlengha/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "/usr/local/share/dotnet/library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net10.0": {
-            "framework": "net10.0",
             "targetAlias": "net10.0",
             "projectReferences": {
-              "D:\\aero\\SentriX\\src\\SharedKernel\\SharedKernel.csproj": {
-                "projectPath": "D:\\aero\\SentriX\\src\\SharedKernel\\SharedKernel.csproj"
+              "/Users/far-izlengha/Documents/Project/SentriX/src/SharedKernel/SharedKernel.csproj": {
+                "projectPath": "/Users/far-izlengha/Documents/Project/SentriX/src/SharedKernel/SharedKernel.csproj"
               }
             }
           }
@@ -1421,11 +1407,10 @@
           "auditLevel": "low",
           "auditMode": "all"
         },
-        "SdkAnalysisLevel": "10.0.300"
+        "SdkAnalysisLevel": "10.0.100"
       },
       "frameworks": {
         "net10.0": {
-          "framework": "net10.0",
           "targetAlias": "net10.0",
           "imports": [
             "net461",
@@ -1443,7 +1428,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.301/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.101/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",
@@ -1721,42 +1706,40 @@
         }
       }
     },
-    "D:\\aero\\SentriX\\src\\Modules\\Operator\\Operator.Infrastructure\\Operator.Infrastructure.csproj": {
+    "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Operator/Operator.Infrastructure/Operator.Infrastructure.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\aero\\SentriX\\src\\Modules\\Operator\\Operator.Infrastructure\\Operator.Infrastructure.csproj",
+        "projectUniqueName": "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Operator/Operator.Infrastructure/Operator.Infrastructure.csproj",
         "projectName": "Operator.Infrastructure",
-        "projectPath": "D:\\aero\\SentriX\\src\\Modules\\Operator\\Operator.Infrastructure\\Operator.Infrastructure.csproj",
-        "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-        "outputPath": "D:\\aero\\SentriX\\src\\Modules\\Operator\\Operator.Infrastructure\\obj\\",
+        "projectPath": "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Operator/Operator.Infrastructure/Operator.Infrastructure.csproj",
+        "packagesPath": "/Users/far-izlengha/.nuget/packages/",
+        "outputPath": "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Operator/Operator.Infrastructure/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "/Users/far-izlengha/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "/usr/local/share/dotnet/library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net10.0": {
-            "framework": "net10.0",
             "targetAlias": "net10.0",
             "projectReferences": {
-              "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Role.Contract\\Role.Contract.csproj": {
-                "projectPath": "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Role.Contract\\Role.Contract.csproj"
+              "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Contracts/Role.Contract/Role.Contract.csproj": {
+                "projectPath": "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Contracts/Role.Contract/Role.Contract.csproj"
               },
-              "D:\\aero\\SentriX\\src\\Modules\\Operator\\Operator.Application\\Operator.Application.csproj": {
-                "projectPath": "D:\\aero\\SentriX\\src\\Modules\\Operator\\Operator.Application\\Operator.Application.csproj"
+              "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Operator/Operator.Application/Operator.Application.csproj": {
+                "projectPath": "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Operator/Operator.Application/Operator.Application.csproj"
               },
-              "D:\\aero\\SentriX\\src\\Modules\\Operator\\Operator.Domain\\Operator.Domain.csproj": {
-                "projectPath": "D:\\aero\\SentriX\\src\\Modules\\Operator\\Operator.Domain\\Operator.Domain.csproj"
+              "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Operator/Operator.Domain/Operator.Domain.csproj": {
+                "projectPath": "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Operator/Operator.Domain/Operator.Domain.csproj"
               },
-              "D:\\aero\\SentriX\\src\\SharedKernel\\SharedKernel.csproj": {
-                "projectPath": "D:\\aero\\SentriX\\src\\SharedKernel\\SharedKernel.csproj"
+              "/Users/far-izlengha/Documents/Project/SentriX/src/SharedKernel/SharedKernel.csproj": {
+                "projectPath": "/Users/far-izlengha/Documents/Project/SentriX/src/SharedKernel/SharedKernel.csproj"
               }
             }
           }
@@ -1771,11 +1754,10 @@
           "auditLevel": "low",
           "auditMode": "all"
         },
-        "SdkAnalysisLevel": "10.0.300"
+        "SdkAnalysisLevel": "10.0.100"
       },
       "frameworks": {
         "net10.0": {
-          "framework": "net10.0",
           "targetAlias": "net10.0",
           "dependencies": {
             "Microsoft.Extensions.Configuration": {
@@ -1811,7 +1793,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.301/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.101/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",
@@ -2089,29 +2071,27 @@
         }
       }
     },
-    "D:\\aero\\SentriX\\src\\SharedKernel\\SharedKernel.csproj": {
+    "/Users/far-izlengha/Documents/Project/SentriX/src/SharedKernel/SharedKernel.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\aero\\SentriX\\src\\SharedKernel\\SharedKernel.csproj",
+        "projectUniqueName": "/Users/far-izlengha/Documents/Project/SentriX/src/SharedKernel/SharedKernel.csproj",
         "projectName": "SharedKernel",
-        "projectPath": "D:\\aero\\SentriX\\src\\SharedKernel\\SharedKernel.csproj",
-        "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-        "outputPath": "D:\\aero\\SentriX\\src\\SharedKernel\\obj\\",
+        "projectPath": "/Users/far-izlengha/Documents/Project/SentriX/src/SharedKernel/SharedKernel.csproj",
+        "packagesPath": "/Users/far-izlengha/.nuget/packages/",
+        "outputPath": "/Users/far-izlengha/Documents/Project/SentriX/src/SharedKernel/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "/Users/far-izlengha/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "/usr/local/share/dotnet/library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net10.0": {
-            "framework": "net10.0",
             "targetAlias": "net10.0",
             "projectReferences": {}
           }
@@ -2126,11 +2106,10 @@
           "auditLevel": "low",
           "auditMode": "all"
         },
-        "SdkAnalysisLevel": "10.0.300"
+        "SdkAnalysisLevel": "10.0.100"
       },
       "frameworks": {
         "net10.0": {
-          "framework": "net10.0",
           "targetAlias": "net10.0",
           "dependencies": {
             "Npgsql.EntityFrameworkCore.PostgreSQL": {
@@ -2170,7 +2149,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.301/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.101/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",

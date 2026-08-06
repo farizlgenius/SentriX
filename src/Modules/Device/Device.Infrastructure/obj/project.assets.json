@@ -1,5 +1,5 @@
 {
-  "version": 4,
+  "version": 3,
   "targets": {
     "net10.0": {
       "Azure.Core/1.47.1": {
@@ -2969,38 +2969,36 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\User\\.nuget\\packages\\": {}
+    "/Users/far-izlengha/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\aero\\SentriX\\src\\Modules\\Device\\Device.Infrastructure\\Device.Infrastructure.csproj",
+      "projectUniqueName": "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Device/Device.Infrastructure/Device.Infrastructure.csproj",
       "projectName": "Device.Infrastructure",
-      "projectPath": "D:\\aero\\SentriX\\src\\Modules\\Device\\Device.Infrastructure\\Device.Infrastructure.csproj",
-      "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-      "outputPath": "D:\\aero\\SentriX\\src\\Modules\\Device\\Device.Infrastructure\\obj\\",
+      "projectPath": "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Device/Device.Infrastructure/Device.Infrastructure.csproj",
+      "packagesPath": "/Users/far-izlengha/.nuget/packages/",
+      "outputPath": "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Device/Device.Infrastructure/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "/Users/far-izlengha/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net10.0"
       ],
       "sources": {
-        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "/usr/local/share/dotnet/library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "net10.0": {
-          "framework": "net10.0",
           "targetAlias": "net10.0",
           "projectReferences": {
-            "D:\\aero\\SentriX\\src\\Modules\\Device\\Device.Application\\Device.Application.csproj": {
-              "projectPath": "D:\\aero\\SentriX\\src\\Modules\\Device\\Device.Application\\Device.Application.csproj"
+            "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Device/Device.Application/Device.Application.csproj": {
+              "projectPath": "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Device/Device.Application/Device.Application.csproj"
             },
-            "D:\\aero\\SentriX\\src\\SharedKernel\\SharedKernel.csproj": {
-              "projectPath": "D:\\aero\\SentriX\\src\\SharedKernel\\SharedKernel.csproj"
+            "/Users/far-izlengha/Documents/Project/SentriX/src/SharedKernel/SharedKernel.csproj": {
+              "projectPath": "/Users/far-izlengha/Documents/Project/SentriX/src/SharedKernel/SharedKernel.csproj"
             }
           }
         }
@@ -3015,11 +3013,10 @@
         "auditLevel": "low",
         "auditMode": "all"
       },
-      "SdkAnalysisLevel": "10.0.300"
+      "SdkAnalysisLevel": "10.0.100"
     },
     "frameworks": {
       "net10.0": {
-        "framework": "net10.0",
         "targetAlias": "net10.0",
         "dependencies": {
           "Microsoft.EntityFrameworkCore.SqlServer": {
@@ -3063,7 +3060,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.301/PortableRuntimeIdentifierGraph.json",
+        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.101/PortableRuntimeIdentifierGraph.json",
         "packagesToPrune": {
           "Microsoft.CSharp": "(,4.7.32767]",
           "Microsoft.VisualBasic": "(,10.4.32767]",

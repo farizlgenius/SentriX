@@ -102,6 +102,11 @@
 <Project Path="src/Modules/Contracts/Time.Contract/Time.Contract.csproj" />
 <Project Path="src/Modules/Contracts/User.Contract/User.Contract.csproj" />
 </Folder>
+<Folder Name="/src/Modules/Core/">
+<Project Path="src/Modules/Core/Core.Application/Core.Application.csproj" />
+<Project Path="src/Modules/Core/Core.Domain/Core.Domain.csproj" />
+<Project Path="src/Modules/Core/Core.Infrastructure/Core.Infrastructure.csproj" />
+</Folder>
 <Folder Name="/src/Modules/Device/">
 <Project Path="src/Modules/Device/Device.Application/Device.Application.csproj" />
 

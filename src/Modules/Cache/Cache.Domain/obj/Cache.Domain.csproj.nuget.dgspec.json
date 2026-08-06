@@ -1,32 +1,30 @@
 {
   "format": 1,
   "restore": {
-    "D:\\aero\\SentriX\\src\\Modules\\Cache\\Cache.Domain\\Cache.Domain.csproj": {}
+    "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Cache/Cache.Domain/Cache.Domain.csproj": {}
   },
   "projects": {
-    "D:\\aero\\SentriX\\src\\Modules\\Cache\\Cache.Domain\\Cache.Domain.csproj": {
+    "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Cache/Cache.Domain/Cache.Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\aero\\SentriX\\src\\Modules\\Cache\\Cache.Domain\\Cache.Domain.csproj",
+        "projectUniqueName": "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Cache/Cache.Domain/Cache.Domain.csproj",
         "projectName": "Cache.Domain",
-        "projectPath": "D:\\aero\\SentriX\\src\\Modules\\Cache\\Cache.Domain\\Cache.Domain.csproj",
-        "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-        "outputPath": "D:\\aero\\SentriX\\src\\Modules\\Cache\\Cache.Domain\\obj\\",
+        "projectPath": "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Cache/Cache.Domain/Cache.Domain.csproj",
+        "packagesPath": "/Users/far-izlengha/.nuget/packages/",
+        "outputPath": "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Cache/Cache.Domain/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "/Users/far-izlengha/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "/usr/local/share/dotnet/library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net10.0": {
-            "framework": "net10.0",
             "targetAlias": "net10.0",
             "projectReferences": {}
           }
@@ -41,11 +39,10 @@
           "auditLevel": "low",
           "auditMode": "all"
         },
-        "SdkAnalysisLevel": "10.0.300"
+        "SdkAnalysisLevel": "10.0.100"
       },
       "frameworks": {
         "net10.0": {
-          "framework": "net10.0",
           "targetAlias": "net10.0",
           "imports": [
             "net461",
@@ -63,7 +60,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.301/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.101/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",
