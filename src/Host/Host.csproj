@@ -68,29 +68,11 @@
     <ProjectReference Include="..\Modules\Cache\Cache.Infrastrucure\Cache.Infrastructure.csproj" />
     <ProjectReference Include="..\Modules\Contracts\Adapter.Abstraction\Adapter.Abstraction.csproj" />
     <ProjectReference Include="..\Modules\Contracts\Auth.Contract\Auth.Contract.csproj" />
-    <ProjectReference Include="..\Modules\Contracts\Device.Contract\Device.Contract.csproj" />
-    <ProjectReference Include="..\Modules\Contracts\Door.Contract\Door.Contract.csproj" />
-    <ProjectReference Include="..\Modules\Contracts\Events.Contract\Events.Contract.csproj" />
-    <ProjectReference Include="..\Modules\Contracts\Group.Contract\Group.Contract.csproj" />
-    <ProjectReference Include="..\Modules\Contracts\Input.Contract\Input.Contract.csproj" />
-    <ProjectReference Include="..\Modules\Contracts\Output.Contract\Output.Contract.csproj" />
     <ProjectReference Include="..\Modules\Contracts\Setting.Contract\Setting.Contract.csproj" />
     <ProjectReference Include="..\Modules\Contracts\Storage.Contract\Storage.Contract.csproj" />
-    <ProjectReference Include="..\Modules\Contracts\Time.Contract\Time.Contract.csproj" />
-    <ProjectReference Include="..\Modules\Contracts\User.Contract\User.Contract.csproj" />
-    <ProjectReference Include="..\Modules\Device\Device.Infrastructure\Device.Infrastructure.csproj" />
-    <ProjectReference Include="..\Modules\Door\Door.Infrastructure\Door.Infrastructure.csproj" />
-    <ProjectReference Include="..\Modules\Events\Events.Infrastructure\Events.Infrastructure.csproj" />
-    <ProjectReference Include="..\Modules\Group\Group.Infrastructure\Group.Infrastructure.csproj" />
-    <ProjectReference Include="..\Modules\Input\Input.Infrastructure\Input.Infrastructure.csproj" />
     <ProjectReference Include="..\Modules\Notifier\Notifier.Client\Notifier.Client.csproj" />
-    <ProjectReference Include="..\Modules\Operator\Operator.Infrastructure\Operator.Infrastructure.csproj" />
-    <ProjectReference Include="..\Modules\Output\Output.Infrastructure\Output.Infrastructure.csproj" />
-    <ProjectReference Include="..\Modules\Role\Role.Infrastructure\Role.Infrastructure.csproj" />
     <ProjectReference Include="..\Modules\Setting\Setting.Infrastructure\Setting.Infrastructure.csproj" />
     <ProjectReference Include="..\Modules\Storage\Storage.csproj" />
-    <ProjectReference Include="..\Modules\Time\Time.Infrastructure\Time.Infrastructure.csproj" />
-    <ProjectReference Include="..\Modules\User\User.Infrastructure\User.Infrastructure.csproj" />
     <ProjectReference Include="..\SharedKernel\SharedKernel.csproj" />
   </ItemGroup>
 

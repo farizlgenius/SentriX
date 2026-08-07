@@ -10,7 +10,6 @@
     <ProjectReference Include="..\..\..\SharedKernel\SharedKernel.csproj" />
     <ProjectReference Include="..\..\Contracts\Auth.Contract\Auth.Contract.csproj" />
     <ProjectReference Include="..\..\Contracts\Cache.Contract\Cache.Contract.csproj" />
-    <ProjectReference Include="..\..\Contracts\Operator.Contract\Operator.Contract.csproj" />
     <ProjectReference Include="..\Auth.Domain\Auth.Domain.csproj" />
   </ItemGroup>
 

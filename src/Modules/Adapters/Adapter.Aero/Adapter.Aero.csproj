@@ -9,14 +9,8 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\SharedKernel\SharedKernel.csproj" />
     <ProjectReference Include="..\..\Contracts\Adapter.Abstraction\Adapter.Abstraction.csproj" />
-    <ProjectReference Include="..\..\Contracts\Device.Contract\Device.Contract.csproj" />
-    <ProjectReference Include="..\..\Contracts\Events.Contract\Events.Contract.csproj" />
-    <ProjectReference Include="..\..\Contracts\Group.Contract\Group.Contract.csproj" />
-    <ProjectReference Include="..\..\Contracts\Input.Contract\Input.Contract.csproj" />
     <ProjectReference Include="..\..\Contracts\Notifier.Contract\Notifier.Contract.csproj" />
     <ProjectReference Include="..\..\Contracts\Setting.Contract\Setting.Contract.csproj" />
-    <ProjectReference Include="..\..\Contracts\Time.Contract\Time.Contract.csproj" />
-    <ProjectReference Include="..\..\Contracts\User.Contract\User.Contract.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -92,7 +92,13 @@ public sealed class AmicoDeviceAdapter(
             throw new NotImplementedException();
       }
 
-      public async Task CreateDeviceAsync(Guid Guid, string Ip, string Mac, short ComponentId,int LocationId)
+      public async Task CreateDeviceAsync(
+            Guid Guid, 
+            string Ip, 
+            string Mac, 
+            short ComponentId,
+            int LocationId
+            )
       {
             var res = await command.LoginAsync(Ip,true);
 

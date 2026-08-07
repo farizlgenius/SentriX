@@ -1,4 +1,5 @@
 
+using Adapter.Aero.Model;
 using Adapter.Aero.Persistences.Entities;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel.Domain;

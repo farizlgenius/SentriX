@@ -3,61 +3,24 @@
 <Folder Name="/src/Host/">
     <Project Path="src/Host/Host.csproj" />
  </Folder>
-<Folder Name="/src/Modules/Door/">
-<Project Path="src/Modules/Door/Door.Application/Door.Application.csproj" />
-<Project Path="src/Modules/Door/Door.Domain/Door.Domain.csproj" />
-<Project Path="src/Modules/Door/Door.Infrastructure/Door.Infrastructure.csproj" />
-</Folder>
-<Folder Name="/src/Modules/Events/">
-<Project Path="src/Modules/Events/Events.Application/Events.Application.csproj" />
-<Project Path="src/Modules/Events/Events.Domain/Events.Domain.csproj" />
-<Project Path="src/Modules/Events/Events.Infrastructure/Events.Infrastructure.csproj" />
-</Folder>
-<Folder Name="/src/Modules/Group/">
-<Project Path="src/Modules/Group/Group.Application/Group.Application.csproj" />
-<Project Path="src/Modules/Group/Group.Domain/Group.Domain.csproj" />
-<Project Path="src/Modules/Group/Group.Infrastructure/Group.Infrastructure.csproj" />
-</Folder>
-<Folder Name="/src/Modules/Input/">
-<Project Path="src/Modules/Input/Input.Application/Input.Application.csproj" />
-<Project Path="src/Modules/Input/Input.Domain/Input.Domain.csproj" />
-<Project Path="src/Modules/Input/Input.Infrastructure/Input.Infrastructure.csproj" />
-</Folder>
+<Folder Name="/src/Modules/Door/" />
+<Folder Name="/src/Modules/Events/" />
+<Folder Name="/src/Modules/Group/" />
+<Folder Name="/src/Modules/Input/" />
 <Folder Name="/src/Modules/Location/" />
 <Folder Name="/src/Modules/Notifier/">
 <Project Path="src/Modules/Notifier/Notifier.Client/Notifier.Client.csproj" />
 </Folder>
-<Folder Name="/src/Modules/Operator/">
-<Project Path="src/Modules/Operator/Operator.Application/Operator.Application.csproj" />
-
-<Project Path="src/Modules/Operator/Operator.Domain/Operator.Domain.csproj" />
-<Project Path="src/Modules/Operator/Operator.Infrastructure/Operator.Infrastructure.csproj" />
-</Folder>
-<Folder Name="/src/Modules/Output/">
-<Project Path="src/Modules/Output/Output.Application/Output.Application.csproj" />
-<Project Path="src/Modules/Output/Output.Domain/Output.Domain.csproj" />
-<Project Path="src/Modules/Output/Output.Infrastructure/Output.Infrastructure.csproj" />
-</Folder>
-<Folder Name="/src/Modules/Role/">
-<Project Path="src/Modules/Role/Role.Application/Role.Application.csproj" />
-<Project Path="src/Modules/Role/Role.Domain/Role.Domain.csproj" />
-<Project Path="src/Modules/Role/Role.Infrastructure/Role.Infrastructure.csproj" />
-</Folder>
+<Folder Name="/src/Modules/Operator/" />
+<Folder Name="/src/Modules/Output/" />
+<Folder Name="/src/Modules/Role/" />
 <Folder Name="/src/Modules/Setting/">
 <Project Path="src/Modules/Setting/Setting.Application/Setting.Application.csproj" />
 <Project Path="src/Modules/Setting/Setting.Domain/Setting.Domain.csproj" />
 <Project Path="src/Modules/Setting/Setting.Infrastructure/Setting.Infrastructure.csproj" />
 </Folder>
-<Folder Name="/src/Modules/Time/">
-<Project Path="src/Modules/Time/Time.Application/Time.Application.csproj" />
-<Project Path="src/Modules/Time/Time.Domain/Time.Domain.csproj" />
-<Project Path="src/Modules/Time/Time.Infrastructure/Time.Infrastructure.csproj" />
-</Folder>
-<Folder Name="/src/Modules/User/">
-<Project Path="src/Modules/User/User.Application/User.Application.csproj" />
-<Project Path="src/Modules/User/User.Domain/User.Domain.csproj" />
-<Project Path="src/Modules/User/User.Infrastructure/User.Infrastructure.csproj" />
-</Folder>
+<Folder Name="/src/Modules/Time/" />
+<Folder Name="/src/Modules/User/" />
  <Folder Name="/src/SharedKernel/">
  <Project Path="src/SharedKernel/SharedKernel.csproj" />
  </Folder>
@@ -78,35 +41,20 @@
 </Folder>
 <Folder Name="/src/Modules/Contracts/">
 <Project Path="src/Modules/Contracts/Core.Contract/Core.Contract.csproj" />
-<Project Path="src/Modules/Contracts/Door.Contract/Door.Contract.csproj" />
-<Project Path="src/Modules/Contracts/Events.Contract/Events.Contract.csproj" />
-<Project Path="src/Modules/Contracts/Group.Contract/Group.Contract.csproj" />
-<Project Path="src/Modules/Contracts/Input.Contract/Input.Contract.csproj" />
 <Project Path="src/Modules/Contracts/License.Contract/License.Contract.csproj" />
 <Project Path="src/Modules/Contracts/Notifier.Contract/Notifier.Contract.csproj" />
-<Project Path="src/Modules/Contracts/Operator.Contract/Operator.Contract.csproj" />
 <Project Path="src/Modules/Contracts/Auth.Contract/Auth.Contract.csproj" />
 <Project Path="src/Modules/Contracts/Cache.Contract/Cache.Contract.csproj" />
-<Project Path="src/Modules/Contracts/Device.Contract/Device.Contract.csproj" />
 <Project Path="src/Modules/Contracts/Adapter.Abstraction/Adapter.Abstraction.csproj" />
-<Project Path="src/Modules/Contracts/Output.Contract/Output.Contract.csproj" />
-<Project Path="src/Modules/Contracts/Role.Contract/Role.Contract.csproj" />
 <Project Path="src/Modules/Contracts/Setting.Contract/Setting.Contract.csproj" />
 <Project Path="src/Modules/Contracts/Storage.Contract/Storage.Contract.csproj" />
-<Project Path="src/Modules/Contracts/Time.Contract/Time.Contract.csproj" />
-<Project Path="src/Modules/Contracts/User.Contract/User.Contract.csproj" />
 </Folder>
 <Folder Name="/src/Modules/Core/">
 <Project Path="src/Modules/Core/Core.Application/Core.Application.csproj" />
 <Project Path="src/Modules/Core/Core.Domain/Core.Domain.csproj" />
 <Project Path="src/Modules/Core/Core.Infrastructure/Core.Infrastructure.csproj" />
 </Folder>
-<Folder Name="/src/Modules/Device/">
-<Project Path="src/Modules/Device/Device.Application/Device.Application.csproj" />
-
-<Project Path="src/Modules/Device/Device.Domain/Device.Domain.csproj" />
-<Project Path="src/Modules/Device/Device.Infrastructure/Device.Infrastructure.csproj" />
-</Folder>
+<Folder Name="/src/Modules/Device/" />
 <Folder Name="/src/Modules/Adapters/">
 
 <Project Path="src/Modules/Adapters/Adapter.Aero/Adapter.Aero.csproj" />

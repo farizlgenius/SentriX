@@ -1,5 +1,5 @@
 {
-  "version": 3,
+  "version": 4,
   "targets": {
     "net10.0": {
       "Microsoft.EntityFrameworkCore/10.0.4": {
@@ -750,7 +750,6 @@
           "Auth.Domain": "1.0.0",
           "Cache.Contract": "1.0.0",
           "Microsoft.IdentityModel.Tokens": "8.18.0",
-          "Operator.Contract": "1.0.0",
           "SharedKernel": "1.0.0",
           "System.IdentityModel.Tokens.Jwt": "8.18.0"
         },
@@ -765,7 +764,6 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v10.0",
         "dependencies": {
-          "Role.Contract": "1.0.0",
           "SharedKernel": "1.0.0"
         },
         "compile": {
@@ -793,32 +791,6 @@
         },
         "runtime": {
           "bin/placeholder/Cache.Contract.dll": {}
-        }
-      },
-      "Operator.Contract/1.0.0": {
-        "type": "project",
-        "framework": ".NETCoreApp,Version=v10.0",
-        "dependencies": {
-          "SharedKernel": "1.0.0"
-        },
-        "compile": {
-          "bin/placeholder/Operator.Contract.dll": {}
-        },
-        "runtime": {
-          "bin/placeholder/Operator.Contract.dll": {}
-        }
-      },
-      "Role.Contract/1.0.0": {
-        "type": "project",
-        "framework": ".NETCoreApp,Version=v10.0",
-        "dependencies": {
-          "SharedKernel": "1.0.0"
-        },
-        "compile": {
-          "bin/placeholder/Role.Contract.dll": {}
-        },
-        "runtime": {
-          "bin/placeholder/Role.Contract.dll": {}
         }
       },
       "SharedKernel/1.0.0": {
@@ -1985,16 +1957,6 @@
       "path": "../../Contracts/Cache.Contract/Cache.Contract.csproj",
       "msbuildProject": "../../Contracts/Cache.Contract/Cache.Contract.csproj"
     },
-    "Operator.Contract/1.0.0": {
-      "type": "project",
-      "path": "../../Contracts/Operator.Contract/Operator.Contract.csproj",
-      "msbuildProject": "../../Contracts/Operator.Contract/Operator.Contract.csproj"
-    },
-    "Role.Contract/1.0.0": {
-      "type": "project",
-      "path": "../../Contracts/Role.Contract/Role.Contract.csproj",
-      "msbuildProject": "../../Contracts/Role.Contract/Role.Contract.csproj"
-    },
     "SharedKernel/1.0.0": {
       "type": "project",
       "path": "../../../SharedKernel/SharedKernel.csproj",
@@ -2014,36 +1976,38 @@
     ]
   },
   "packageFolders": {
-    "/Users/far-izlengha/.nuget/packages/": {}
+    "C:\\Users\\User\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Auth/Auth.Infrastructure/Auth.Infrastructure.csproj",
+      "projectUniqueName": "D:\\aero\\SentriX\\src\\Modules\\Auth\\Auth.Infrastructure\\Auth.Infrastructure.csproj",
       "projectName": "Auth.Infrastructure",
-      "projectPath": "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Auth/Auth.Infrastructure/Auth.Infrastructure.csproj",
-      "packagesPath": "/Users/far-izlengha/.nuget/packages/",
-      "outputPath": "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Auth/Auth.Infrastructure/obj/",
+      "projectPath": "D:\\aero\\SentriX\\src\\Modules\\Auth\\Auth.Infrastructure\\Auth.Infrastructure.csproj",
+      "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
+      "outputPath": "D:\\aero\\SentriX\\src\\Modules\\Auth\\Auth.Infrastructure\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/Users/far-izlengha/.nuget/NuGet/NuGet.Config"
+        "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net10.0"
       ],
       "sources": {
-        "/usr/local/share/dotnet/library-packs": {},
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "net10.0": {
+          "framework": "net10.0",
           "targetAlias": "net10.0",
           "projectReferences": {
-            "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Auth/Auth.Application/Auth.Application.csproj": {
-              "projectPath": "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Auth/Auth.Application/Auth.Application.csproj"
+            "D:\\aero\\SentriX\\src\\Modules\\Auth\\Auth.Application\\Auth.Application.csproj": {
+              "projectPath": "D:\\aero\\SentriX\\src\\Modules\\Auth\\Auth.Application\\Auth.Application.csproj"
             },
-            "/Users/far-izlengha/Documents/Project/SentriX/src/SharedKernel/SharedKernel.csproj": {
-              "projectPath": "/Users/far-izlengha/Documents/Project/SentriX/src/SharedKernel/SharedKernel.csproj"
+            "D:\\aero\\SentriX\\src\\SharedKernel\\SharedKernel.csproj": {
+              "projectPath": "D:\\aero\\SentriX\\src\\SharedKernel\\SharedKernel.csproj"
             }
           }
         }
@@ -2058,10 +2022,11 @@
         "auditLevel": "low",
         "auditMode": "all"
       },
-      "SdkAnalysisLevel": "10.0.100"
+      "SdkAnalysisLevel": "10.0.300"
     },
     "frameworks": {
       "net10.0": {
+        "framework": "net10.0",
         "targetAlias": "net10.0",
         "dependencies": {
           "Microsoft.Extensions.Configuration": {
@@ -2105,7 +2070,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.101/PortableRuntimeIdentifierGraph.json",
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.301/PortableRuntimeIdentifierGraph.json",
         "packagesToPrune": {
           "Microsoft.CSharp": "(,4.7.32767]",
           "Microsoft.VisualBasic": "(,10.4.32767]",

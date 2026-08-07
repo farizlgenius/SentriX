@@ -13,7 +13,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\SharedKernel\SharedKernel.csproj" />
-    <ProjectReference Include="..\Role.Contract\Role.Contract.csproj" />
   </ItemGroup>
 
 </Project>
