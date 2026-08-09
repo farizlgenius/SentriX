@@ -1,6 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using SharedKernel.Entities;
-
 namespace Core.Infrastructure.Persistences.Entities;
 
 public sealed class Location : BaseEntity

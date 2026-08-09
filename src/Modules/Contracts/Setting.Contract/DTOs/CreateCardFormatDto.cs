@@ -22,4 +22,4 @@ public sealed record CreateCardFormatDto(
       short IcLoc = -1,
       int LocationId = 0,
       bool IsActive = true
-) : BaseDto(0,LocationId,"",IsActive);
+);

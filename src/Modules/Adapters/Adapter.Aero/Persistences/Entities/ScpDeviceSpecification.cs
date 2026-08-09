@@ -3,30 +3,30 @@ using SharedKernel.Domain;
 
 namespace Adapter.Aero.Persistences.Entities;
 
-public sealed class ScpDeviceSpecification : BaseEntity
+public sealed class ScpDeviceSpecification
 {
-       public short scp_id {get; set;}
-       public string mac {get; set;} = string.Empty;
-      public short n_msp1_port {get; set;} 
-      public int n_transcations {get; set;} 
-      public short n_sio {get; set;} 
-      public short n_mp {get; set;}
-      public short n_cp {get; set;}
-      public short n_acr {get; set;}
-      public short n_alvl {get; set;}
-      public short n_trgr {get; set;}
-      public short n_proc {get; set;}
-      public short gmt_offset {get; set;}
-      public short n_dst_id {get; set;}
-      public short n_tz {get; set;}
-      public short n_hol {get; set;}
-      public short n_mpg {get; set;}
-      public int n_tran_limit {get; set;}
-      public short n_oper_mode {get; set;}
-      public short oper_type {get; set;} = 1;
-      public short n_language {get; set;} = 0;
+      public short scp_id { get; set; }
+      public string mac { get; set; } = string.Empty;
+      public short n_msp1_port { get; set; }
+      public int n_transcations { get; set; }
+      public short n_sio { get; set; }
+      public short n_mp { get; set; }
+      public short n_cp { get; set; }
+      public short n_acr { get; set; }
+      public short n_alvl { get; set; }
+      public short n_trgr { get; set; }
+      public short n_proc { get; set; }
+      public short gmt_offset { get; set; }
+      public short n_dst_id { get; set; }
+      public short n_tz { get; set; }
+      public short n_hol { get; set; }
+      public short n_mpg { get; set; }
+      public int n_tran_limit { get; set; }
+      public short n_oper_mode { get; set; }
+      public short oper_type { get; set; } = 1;
+      public short n_language { get; set; } = 0;
 
-      public ScpDeviceSpecification(){}
+      public ScpDeviceSpecification() { }
 
       public ScpDeviceSpecification(short scp_id, string mac, short n_msp1_port, int n_transcations, short n_sio, short n_mp, short n_cp, short n_acr, short n_alvl, short n_trgr, short n_proc, short gmt_offset, short n_dst_id, short n_tz, short n_hol, short n_mpg, int n_tran_limit, short n_oper_mode, short oper_type, short n_language)
       {

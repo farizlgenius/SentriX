@@ -3,14 +3,14 @@ using SharedKernel.Domain;
 
 namespace Adapter.Aero.Persistences.Entities;
 
-public sealed class ElevatorAccessLevelSpecification : BaseEntity
+public sealed class ElevatorAccessLevelSpecification
 {
-      public short scp_id {get; set;}
-      public string mac {get; set;} = string.Empty;
-      public short max_ealvl {get; set;}
-      public short max_floors {get; set;}
+      public short scp_id { get; set; }
+      public string mac { get; set; } = string.Empty;
+      public short max_ealvl { get; set; }
+      public short max_floors { get; set; }
 
-      public ElevatorAccessLevelSpecification(){}
+      public ElevatorAccessLevelSpecification() { }
 
       public ElevatorAccessLevelSpecification(short scp_id, string mac, short max_ealvl, short max_floors)
       {

@@ -9,7 +9,7 @@ public class AmicoDbContext(DbContextOptions<AmicoDbContext> options) : DbContex
 {
       public const string Schema = "amico";
 
-      public DbSet<Amicos> Amicos {get; set;}
+      public DbSet<Amicos> Amicos { get; set; }
       public DbSet<Persistences.Entities.TimeSpan> TimeSpans { get; set; }
       public DbSet<Group> Groups { get; set; }
       public DbSet<AccessRule> AccessRules { get; set; }
@@ -17,7 +17,7 @@ public class AmicoDbContext(DbContextOptions<AmicoDbContext> options) : DbContex
       protected override void OnModelCreating(ModelBuilder modelBuilder)
       {
             base.OnModelCreating(modelBuilder);
-            
+
             // ⭐ Module schema
             modelBuilder.HasDefaultSchema(Schema);
 
@@ -36,25 +36,25 @@ public class AmicoDbContext(DbContextOptions<AmicoDbContext> options) : DbContex
 
             foreach (var entityType in modelBuilder.Model.GetEntityTypes())
             {
-                  if (typeof(AmicoDbEntity).IsAssignableFrom(entityType.ClrType))
-                  {
-                        modelBuilder.Entity(entityType.ClrType)
-                            .Property(nameof(AmicoDbEntity.created_at))
-                            .HasDefaultValueSql(utcNowSql)
-                            .ValueGeneratedOnAdd();
+                  // if (typeof(AmicoDbEntity).IsAssignableFrom(entityType.ClrType))
+                  // {
+                  //       modelBuilder.Entity(entityType.ClrType)
+                  //           .Property(nameof(AmicoDbEntity.created_at))
+                  //           .HasDefaultValueSql(utcNowSql)
+                  //           .ValueGeneratedOnAdd();
 
-                        modelBuilder.Entity(entityType.ClrType)
-                            .Property(nameof(AmicoDbEntity.updated_at))
-                            .HasDefaultValueSql(utcNowSql)
-                            .ValueGeneratedOnAdd();
+                  //       modelBuilder.Entity(entityType.ClrType)
+                  //           .Property(nameof(AmicoDbEntity.updated_at))
+                  //           .HasDefaultValueSql(utcNowSql)
+                  //           .ValueGeneratedOnAdd();
 
-                        modelBuilder.Entity(entityType.ClrType)
-                              .Property(nameof(AmicoDbEntity.guid))
-                              .HasDefaultValueSql("gen_random_uuid()")
-                              .ValueGeneratedOnAdd();
+                  //       modelBuilder.Entity(entityType.ClrType)
+                  //             .Property(nameof(AmicoDbEntity.guid))
+                  //             .HasDefaultValueSql("gen_random_uuid()")
+                  //             .ValueGeneratedOnAdd();
 
-                        
-                  }
+
+                  // }
 
                   if (typeof(BaseSlot).IsAssignableFrom(entityType.ClrType))
                   {
@@ -68,7 +68,7 @@ public class AmicoDbContext(DbContextOptions<AmicoDbContext> options) : DbContex
                             .HasDefaultValueSql(utcNowSql)
                             .ValueGeneratedOnAdd();
 
-                        
+
                   }
             }
 

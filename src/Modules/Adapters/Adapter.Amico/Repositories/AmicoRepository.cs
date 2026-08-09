@@ -103,13 +103,13 @@ public sealed class AmicoRepository(AmicoDbContext context) : IAmicoRepository
 
       public async Task<int> GetSlotIdByGuidAsync<TEntity>(Guid Guid, CancellationToken ct = default) where TEntity : BaseSlot
       {
-           var res= await context.Set<TEntity>()
-            .Where(x => x.guid == Guid)
-            .Select(x => x.slot_id)
-            .DefaultIfEmpty(-1)
-            .FirstAsync();
+            var res = await context.Set<TEntity>()
+             .Where(x => x.guid == Guid)
+             .Select(x => x.slot_id)
+             .DefaultIfEmpty(-1)
+             .FirstAsync();
 
-            if(res == -1)
+            if (res == -1)
                   throw new Exception(MessageHelper.DB.RecordNotFounds(Guid.ToString()));
 
             return res;
@@ -132,9 +132,9 @@ public sealed class AmicoRepository(AmicoDbContext context) : IAmicoRepository
 
       public async Task UpdateSessionByIpAsync(string ip, string session, CancellationToken ct = default)
       {
-             var entity = await context.Amicos
-            .Where(x => x.ip.Equals(ip))
-            .FirstOrDefaultAsync();
+            var entity = await context.Amicos
+           .Where(x => x.ip.Equals(ip))
+           .FirstOrDefaultAsync();
 
             if (entity is null)
                   throw new Exception(MessageHelper.DB.RecordNotFound);
@@ -147,7 +147,7 @@ public sealed class AmicoRepository(AmicoDbContext context) : IAmicoRepository
 
       public async Task<IEnumerable<int>> GetSlotIdsByGuidAsync<TEntity>(Guid Guid, CancellationToken ct = default) where TEntity : BaseSlot
       {
-            var res= await context.Set<TEntity>()
+            var res = await context.Set<TEntity>()
             .Where(x => x.guid == Guid)
             .Select(x => x.slot_id)
             .ToArrayAsync();

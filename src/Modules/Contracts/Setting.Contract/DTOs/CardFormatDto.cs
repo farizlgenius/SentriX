@@ -23,4 +23,4 @@ public sealed record CardFormatDto(
       short ComponentId = 0,
       int LocationId = 0,
       bool IsActive = true
-) : BaseDto(ComponentId,LocationId,"",IsActive);
+);

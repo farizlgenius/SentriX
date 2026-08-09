@@ -3,7 +3,7 @@ using SharedKernel.Domain;
 
 namespace Auth.Infrastructure.Persistence.Entities;
 
-public sealed class RefreshTokenAudit : BaseEntity
+public sealed class RefreshTokenAudit
 {
   public string username { get; set; } = string.Empty;
   public string user_id { get; set; } = string.Empty;
@@ -12,6 +12,6 @@ public sealed class RefreshTokenAudit : BaseEntity
   public DateTime expired_at { get; set; }
 
   public RefreshTokenAudit() { }
-  
+
 
 }
