@@ -1,7 +1,8 @@
 using System;
 using Adapter.Abstraction.Interfaces;
 
-namespace Adapter.Abstraction;
+
+namespace Adapter.Core;
 
 public sealed class AdapterFactory : IAdapterFactory
 {

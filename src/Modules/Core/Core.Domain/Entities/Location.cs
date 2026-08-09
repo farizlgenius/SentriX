@@ -15,9 +15,7 @@ public class Location
     string Name,
     string Description,
     int CountryId,
-    Guid Guid,
-    bool IsActive,
-    bool IsDefault
+    Guid Guid
   )
   {
     // Validate required fields
@@ -28,7 +26,5 @@ public class Location
     this.Description = Description;
     this.CountryId = CountryId;
     this.Guid = Guid;
-    this.IsActive = IsActive;
-    this.IsDefault = IsDefault;
   }
 }

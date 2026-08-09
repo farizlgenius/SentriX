@@ -6,7 +6,6 @@ using HID.Aero.ScpdNet.Wrapper;
 using Microsoft.Extensions.Logging;
 using SharedKernel.Helpers;
 using SharedKernel.Model;
-using Time.Contract.DTOs;
 
 namespace Adapter.Aero.Command;
 

@@ -1,92 +1,90 @@
-using Input.Contract.DTOs;
-using Input.Contract.Interfaces;
-using Microsoft.AspNetCore.Mvc;
-using SharedKernel.Domain;
+// using Microsoft.AspNetCore.Mvc;
+// using SharedKernel.Domain;
 
-namespace Host.Controllers;
+// namespace Host.Controllers;
 
-[Route("api/[controller]")]
-[ApiController]
-public sealed class InputController(IInput input) : ControllerBase
-{
-      [HttpGet("pagination")]
-      public async Task<IActionResult> GetInputPagination([FromQuery] PaginationParams param)
-      {
-            var res = await input.GetInputPagination(param);
-            return Ok(res);
-      }
+// [Route("api/[controller]")]
+// [ApiController]
+// public sealed class InputController(IInput input) : ControllerBase
+// {
+//       [HttpGet("pagination")]
+//       public async Task<IActionResult> GetInputPagination([FromQuery] PaginationParams param)
+//       {
+//             var res = await input.GetInputPagination(param);
+//             return Ok(res);
+//       }
 
-      [HttpPost]
-      public async Task<IActionResult> CreateInputAsync([FromBody] CreateInputDto dto)
-      {
-            var res = await input.CreateInputAsync(dto);
-            return Ok(res);
-      }
+//       [HttpPost]
+//       public async Task<IActionResult> CreateInputAsync([FromBody] CreateInputDto dto)
+//       {
+//             var res = await input.CreateInputAsync(dto);
+//             return Ok(res);
+//       }
 
-      [HttpDelete("{id}")]
-      public async Task<IActionResult> DeleteInputAsync(int id)
-      {
-            var res = await input.DeleteInputAsync(id);
-            return Ok(res);
-      }
+//       [HttpDelete("{id}")]
+//       public async Task<IActionResult> DeleteInputAsync(int id)
+//       {
+//             var res = await input.DeleteInputAsync(id);
+//             return Ok(res);
+//       }
 
-      [HttpPut]
-      public async Task<IActionResult> UpdateInpueAsync([FromBody]InputDto dto)
-      {
-            var res = await input.UpdateInputAsync(dto);
-            return Ok(res);
-      }
+//       [HttpPut]
+//       public async Task<IActionResult> UpdateInpueAsync([FromBody]InputDto dto)
+//       {
+//             var res = await input.UpdateInputAsync(dto);
+//             return Ok(res);
+//       }
 
-      [HttpPost("mask/{id}")]
-      public async Task<IActionResult> SetMaskAsync(int id,[FromBody]MaskDto dto)
-      {
-            await input.InputMaskAsync(id,dto.IsMask);
-            return Ok();
-      }
+//       [HttpPost("mask/{id}")]
+//       public async Task<IActionResult> SetMaskAsync(int id,[FromBody]MaskDto dto)
+//       {
+//             await input.InputMaskAsync(id,dto.IsMask);
+//             return Ok();
+//       }
 
-      [HttpGet("input/{id}")]
-      public async Task<IActionResult> GetAvailalbleInputByModuleIdAsync(int id)
-      {
-                  var res = await input.GetAvailalbleInputByModuleIdAsync(id);
-                  return Ok(res);
-      }
+//       [HttpGet("input/{id}")]
+//       public async Task<IActionResult> GetAvailalbleInputByModuleIdAsync(int id)
+//       {
+//                   var res = await input.GetAvailalbleInputByModuleIdAsync(id);
+//                   return Ok(res);
+//       }
 
       
 
-      // Monitor Group
+//       // Monitor Group
 
-      [HttpGet("group/pagination")]
-      public async Task<IActionResult> GetGroupPaginationAsync([FromQuery] PaginationParams param)
-      {
-            var res = await input.GetGroupPaginationAsync(param);
-            return Ok(res);
-      }
+//       [HttpGet("group/pagination")]
+//       public async Task<IActionResult> GetGroupPaginationAsync([FromQuery] PaginationParams param)
+//       {
+//             var res = await input.GetGroupPaginationAsync(param);
+//             return Ok(res);
+//       }
 
-      [HttpPost("group")]
-      public async Task<IActionResult> CreateInputGroupAsync([FromBody]CreateInputGroupDto dto)
-      {
-            var res = await input.CreateInputGroupAsync(dto);
-            return Ok(res);
-      }
+//       [HttpPost("group")]
+//       public async Task<IActionResult> CreateInputGroupAsync([FromBody]CreateInputGroupDto dto)
+//       {
+//             var res = await input.CreateInputGroupAsync(dto);
+//             return Ok(res);
+//       }
 
-      [HttpDelete("group/{id}")]
-      public async Task<IActionResult> DeleteInputGroupAsync(int id)
-      {
-            var res = await input.DeleteInputGroupAsync(id);
-            return Ok(res);
-      }
+//       [HttpDelete("group/{id}")]
+//       public async Task<IActionResult> DeleteInputGroupAsync(int id)
+//       {
+//             var res = await input.DeleteInputGroupAsync(id);
+//             return Ok(res);
+//       }
 
-      [HttpPut("group")]
-      public async Task<IActionResult> UpdateInputGroupAsync([FromBody]InputGroupDto dto)
-      {
-            var res = await input.UpdateInputGroupAsync(dto);
-            return Ok(res);
-      }
+//       [HttpPut("group")]
+//       public async Task<IActionResult> UpdateInputGroupAsync([FromBody]InputGroupDto dto)
+//       {
+//             var res = await input.UpdateInputGroupAsync(dto);
+//             return Ok(res);
+//       }
 
-      [HttpGet("mode")]
-      public async Task<IActionResult> GetInputModeAsync()
-      {
-            var res = await input.GetInputModeAsync();
-            return Ok(res);
-      }
-}
+//       [HttpGet("mode")]
+//       public async Task<IActionResult> GetInputModeAsync()
+//       {
+//             var res = await input.GetInputModeAsync();
+//             return Ok(res);
+//       }
+// }

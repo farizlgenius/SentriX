@@ -59,5 +59,6 @@
 
 <Project Path="src/Modules/Adapters/Adapter.Aero/Adapter.Aero.csproj" />
 <Project Path="src/Modules/Adapters/Adapter.Amico/Adapter.Amico.csproj" />
+<Project Path="src/Modules/Adapters/Adapter.Core/Adapter.Core.csproj" />
 </Folder>
 </Solution>

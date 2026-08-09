@@ -46,6 +46,10 @@ public sealed class GlobalException : IMiddleware
                         await NotFoundExceptionHandler(context, ex);
                         _logger.LogWarning(ex,"Not found. {Method} {Path}",context.Request.Method,context.Request.Path);
                         break;
+                  case DuplicateException:
+                        await DuplicateExceptionHandler(context,ex);
+                        _logger.LogWarning(ex,"Duplicated. {Method} {Path}",context.Request.Method,context.Request.Path);
+                        break;
                   default:
                         await HandleException(context, ex);
                         _logger.LogError(ex,"Internal server error. {Method} {Path}",context.Request.Method,context.Request.Path);
@@ -75,6 +79,28 @@ public sealed class GlobalException : IMiddleware
             return context.Response.WriteAsJsonAsync(response);
 
 
+      }
+
+      private Task DuplicateExceptionHandler(HttpContext context, Exception ex)
+      {
+            // Log the exception (you can use a logging framework here)
+            Console.WriteLine($"An error occurred: {ex.Message}");
+            
+
+            // Set the response status code and content
+            context.Response.StatusCode = StatusCodes.Status400BadRequest;
+            context.Response.ContentType = "application/json";
+
+            var response = new BaseResponse<object>(
+                  DateTime.UtcNow,
+                  System.Net.HttpStatusCode.BadRequest,
+                  false, 
+                  "Duplicated",
+                  Errors:new SharedKernel.Model.BaseErrorResponse(
+                        ex.Message
+                  ));
+
+            return context.Response.WriteAsJsonAsync(response);
       }
 
 

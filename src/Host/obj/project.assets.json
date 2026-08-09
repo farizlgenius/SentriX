@@ -73,7 +73,7 @@
           "Microsoft.AspNetCore.App"
         ]
       },
-      "Microsoft.AspNetCore.OpenApi/10.0.6": {
+      "Microsoft.AspNetCore.OpenApi/10.0.10": {
         "type": "package",
         "dependencies": {
           "Microsoft.OpenApi": "2.0.0"
@@ -613,7 +613,7 @@
           }
         }
       },
-      "Microsoft.OpenApi/2.0.0": {
+      "Microsoft.OpenApi/2.7.6": {
         "type": "package",
         "compile": {
           "lib/net8.0/Microsoft.OpenApi.dll": {
@@ -1187,6 +1187,19 @@
           "bin/placeholder/Adapter.Amico.dll": {}
         }
       },
+      "Adapter.Core/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v10.0",
+        "dependencies": {
+          "Adapter.Abstraction": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/Adapter.Core.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Adapter.Core.dll": {}
+        }
+      },
       "Auth.Application/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v10.0",
@@ -1356,7 +1369,10 @@
         },
         "runtime": {
           "bin/placeholder/Notifier.Client.dll": {}
-        }
+        },
+        "frameworkReferences": [
+          "Microsoft.AspNetCore.App"
+        ]
       },
       "Notifier.Contract/1.0.0": {
         "type": "project",
@@ -1543,7 +1559,7 @@
           "Microsoft.AspNetCore.App"
         ]
       },
-      "Microsoft.AspNetCore.OpenApi/10.0.6": {
+      "Microsoft.AspNetCore.OpenApi/10.0.10": {
         "type": "package",
         "dependencies": {
           "Microsoft.OpenApi": "2.0.0"
@@ -2083,7 +2099,7 @@
           }
         }
       },
-      "Microsoft.OpenApi/2.0.0": {
+      "Microsoft.OpenApi/2.7.6": {
         "type": "package",
         "compile": {
           "lib/net8.0/Microsoft.OpenApi.dll": {
@@ -2657,6 +2673,19 @@
           "bin/placeholder/Adapter.Amico.dll": {}
         }
       },
+      "Adapter.Core/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v10.0",
+        "dependencies": {
+          "Adapter.Abstraction": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/Adapter.Core.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Adapter.Core.dll": {}
+        }
+      },
       "Auth.Application/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v10.0",
@@ -2826,7 +2855,10 @@
         },
         "runtime": {
           "bin/placeholder/Notifier.Client.dll": {}
-        }
+        },
+        "frameworkReferences": [
+          "Microsoft.AspNetCore.App"
+        ]
       },
       "Notifier.Contract/1.0.0": {
         "type": "project",
@@ -3031,10 +3063,10 @@
         "microsoft.aspnetcore.authentication.jwtbearer.nuspec"
       ]
     },
-    "Microsoft.AspNetCore.OpenApi/10.0.6": {
-      "sha512": "WTAQe7MAbbKztRyeCRGZOqqlIqpMHDBz+jKo7LLY6hp4qRqn7iucR24u32KJVxV7mF3tSEfwXH96NgGSiDBw7A==",
+    "Microsoft.AspNetCore.OpenApi/10.0.10": {
+      "sha512": "d4Atx9IHq7JgX0F/h7Db+m9zAUzC+cKdI9k+OWnnyQIOUQtfvjIEuhvbjPigVMkAmPUgCbJ8Yp6M9ghUqHtJSQ==",
       "type": "package",
-      "path": "microsoft.aspnetcore.openapi/10.0.6",
+      "path": "microsoft.aspnetcore.openapi/10.0.10",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -3045,7 +3077,7 @@
         "build/Microsoft.AspNetCore.OpenApi.targets",
         "lib/net10.0/Microsoft.AspNetCore.OpenApi.dll",
         "lib/net10.0/Microsoft.AspNetCore.OpenApi.xml",
-        "microsoft.aspnetcore.openapi.10.0.6.nupkg.sha512",
+        "microsoft.aspnetcore.openapi.10.0.10.nupkg.sha512",
         "microsoft.aspnetcore.openapi.nuspec"
       ]
     },
@@ -4385,10 +4417,10 @@
         "microsoft.identitymodel.tokens.nuspec"
       ]
     },
-    "Microsoft.OpenApi/2.0.0": {
-      "sha512": "GGYLfzV/G/ct80OZ45JxnWP7NvMX1BCugn/lX7TH5o0lcVaviavsLMTxmFV2AybXWjbi3h6FF1vgZiTK6PXndw==",
+    "Microsoft.OpenApi/2.7.6": {
+      "sha512": "suM/dwWsQC8DEOcTeLQvKpXP0c2j/hllKD++IqCavZENr8Df1IgVDMCJRMZd2pGI1NSxMDWrhuPQXG+ZMRrSZA==",
       "type": "package",
-      "path": "microsoft.openapi/2.0.0",
+      "path": "microsoft.openapi/2.7.6",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -4399,7 +4431,7 @@
         "lib/netstandard2.0/Microsoft.OpenApi.dll",
         "lib/netstandard2.0/Microsoft.OpenApi.pdb",
         "lib/netstandard2.0/Microsoft.OpenApi.xml",
-        "microsoft.openapi.2.0.0.nupkg.sha512",
+        "microsoft.openapi.2.7.6.nupkg.sha512",
         "microsoft.openapi.nuspec"
       ]
     },
@@ -5160,6 +5192,11 @@
       "path": "../Modules/Adapters/Adapter.Amico/Adapter.Amico.csproj",
       "msbuildProject": "../Modules/Adapters/Adapter.Amico/Adapter.Amico.csproj"
     },
+    "Adapter.Core/1.0.0": {
+      "type": "project",
+      "path": "../Modules/Adapters/Adapter.Core/Adapter.Core.csproj",
+      "msbuildProject": "../Modules/Adapters/Adapter.Core/Adapter.Core.csproj"
+    },
     "Auth.Application/1.0.0": {
       "type": "project",
       "path": "../Modules/Auth/Auth.Application/Auth.Application.csproj",
@@ -5271,6 +5308,7 @@
       "Adapter.Abstraction >= 1.0.0",
       "Adapter.Aero >= 1.0.0",
       "Adapter.Amico >= 1.0.0",
+      "Adapter.Core >= 1.0.0",
       "Auth.Contract >= 1.0.0",
       "Auth.Infrastructure >= 1.0.0",
       "Cache.Infrastructure >= 1.0.0",
@@ -5279,8 +5317,9 @@
       "MediatR >= 14.1.0",
       "MediatR.Contracts >= 2.0.1",
       "Microsoft.AspNetCore.Authentication.JwtBearer >= 10.0.7",
-      "Microsoft.AspNetCore.OpenApi >= 10.0.6",
+      "Microsoft.AspNetCore.OpenApi >= 10.0.10",
       "Microsoft.EntityFrameworkCore.Design >= 10.0.7",
+      "Microsoft.OpenApi >= 2.7.6",
       "Notifier.Client >= 1.0.0",
       "Scalar.AspNetCore >= 2.14.11",
       "Serilog.AspNetCore >= 10.0.0",
@@ -5330,6 +5369,9 @@
             },
             "D:\\aero\\SentriX\\src\\Modules\\Adapters\\Adapter.Amico\\Adapter.Amico.csproj": {
               "projectPath": "D:\\aero\\SentriX\\src\\Modules\\Adapters\\Adapter.Amico\\Adapter.Amico.csproj"
+            },
+            "D:\\aero\\SentriX\\src\\Modules\\Adapters\\Adapter.Core\\Adapter.Core.csproj": {
+              "projectPath": "D:\\aero\\SentriX\\src\\Modules\\Adapters\\Adapter.Core\\Adapter.Core.csproj"
             },
             "D:\\aero\\SentriX\\src\\Modules\\Auth\\Auth.Infrastructure\\Auth.Infrastructure.csproj": {
               "projectPath": "D:\\aero\\SentriX\\src\\Modules\\Auth\\Auth.Infrastructure\\Auth.Infrastructure.csproj"
@@ -5401,11 +5443,15 @@
           },
           "Microsoft.AspNetCore.OpenApi": {
             "target": "Package",
-            "version": "[10.0.6, )"
+            "version": "[10.0.10, )"
           },
           "Microsoft.EntityFrameworkCore.Design": {
             "target": "Package",
             "version": "[10.0.7, )"
+          },
+          "Microsoft.OpenApi": {
+            "target": "Package",
+            "version": "[2.7.6, )"
           },
           "Scalar.AspNetCore": {
             "target": "Package",
@@ -5881,18 +5927,5 @@
         "#import": []
       }
     }
-  },
-  "logs": [
-    {
-      "code": "NU1903",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "Package 'Microsoft.OpenApi' 2.0.0 has a known high severity vulnerability, https://github.com/advisories/GHSA-v5pm-xwqc-g5wc",
-      "libraryId": "Microsoft.OpenApi",
-      "targetGraphs": [
-        "net10.0",
-        "net10.0/win-x64"
-      ]
-    }
-  ]
+  }
 }

@@ -10,7 +10,7 @@ public sealed class Module : BaseEntity
   public short address { get; set; }
   public string model { get; set; } = string.Empty;
   public Guid device_guid { get; set; }
-  public Device devices { get; set; } = default!;
+  public Device device { get; set; } = default!;
   public Module() { }
   public Module(Core.Domain.Entities.Module d) : base(d.Guid, d.LocationGuid, d.IsActive, d.IsDefault)
   {

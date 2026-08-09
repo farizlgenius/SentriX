@@ -7,7 +7,7 @@ using SharedKernel.Domain;
 using SharedKernel.Exceptions;
 using SharedKernel.Helpers;
 using SharedKernel.Model;
-using Time.Contract.DTOs;
+
 
 namespace Adapter.Amico.Adapters;
 

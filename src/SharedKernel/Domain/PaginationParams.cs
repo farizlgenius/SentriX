@@ -11,18 +11,18 @@ public sealed class PaginationParams
     public string search { get; set; } = string.Empty;
     public DateTime? startDate { get; set; }
     public DateTime? endDate { get; set; }
-    public int locationId { get; set; }
+    public Guid locationGuid { get; set; }
 
     public PaginationParams() { }
 
-    public PaginationParams(int pageNumber, int pageSize, string search, DateTime? startDate, DateTime? endDate, int locationId)
+    public PaginationParams(int pageNumber, int pageSize, string search, DateTime? startDate, DateTime? endDate, Guid locationGuid)
     {
         this.pageNumber = pageNumber;
         this.pageSize = pageSize;
         this.search = search.Trim();
         this.startDate = startDate;
         this.endDate = endDate;
-        this.locationId = locationId;
+        this.locationGuid = locationGuid;
     }
 
 

@@ -1,95 +1,95 @@
-using System;
-using System.Threading.Channels;
-using Adapter.Abstraction.Interfaces;
-using Adapter.Aero.Adapters;
-using Adapter.Aero.Command;
-using Adapter.Aero.Interfaces;
-using Adapter.Aero.Listener;
-using Adapter.Aero.Mapper;
-using Adapter.Aero.Model;
-using Adapter.Aero.Persistences;
-using Adapter.Aero.Repositories;
-using Adapter.Aero.Services;
-using Adapter.Aero.Worker;
-using AeroAdapter.Application.Interfaces;
-using AeroAdapter.Infrastructure.Writer;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
+// using System;
+// using System.Threading.Channels;
+// using Adapter.Abstraction.Interfaces;
+// using Adapter.Aero.Adapters;
+// using Adapter.Aero.Command;
+// using Adapter.Aero.Interfaces;
+// using Adapter.Aero.Listener;
+// using Adapter.Aero.Mapper;
+// using Adapter.Aero.Model;
+// using Adapter.Aero.Persistences;
+// using Adapter.Aero.Repositories;
+// using Adapter.Aero.Services;
+// using Adapter.Aero.Worker;
+// using AeroAdapter.Application.Interfaces;
+// using AeroAdapter.Infrastructure.Writer;
+// using Microsoft.EntityFrameworkCore;
+// using Microsoft.Extensions.Configuration;
+// using Microsoft.Extensions.DependencyInjection;
 
-namespace Adapter.Aero;
+// namespace Adapter.Aero;
 
-public static class AeroDependencyInjection
-{
-      public static IServiceCollection AddAero(
-        this IServiceCollection services,
-        IConfiguration configuration)
-      {
-            //       services.AddHttpClient<AeroHttpClient>(c =>
-            //   {
-            //       c.BaseAddress = new Uri("https://aero-api/");
-            //       c.Timeout = TimeSpan.FromSeconds(30);
-            //   });
+// public static class AeroDependencyInjection
+// {
+//       public static IServiceCollection AddAero(
+//         this IServiceCollection services,
+//         IConfiguration configuration)
+//       {
+//             //       services.AddHttpClient<AeroHttpClient>(c =>
+//             //   {
+//             //       c.BaseAddress = new Uri("https://aero-api/");
+//             //       c.Timeout = TimeSpan.FromSeconds(30);
+//             //   });
 
-            services.AddHostedService<ScpReplyWorker>();
-            services.AddSingleton<ReplyMessageListener>();
-            services.AddScoped<IObjectMapper, ScpReplyMapper>();
-
-
-
-            // ==========================
-            // Worker
-            // ==========================
-            services.AddSingleton(
-                Channel.CreateBounded<SCPReplyMessageDto>(
-                 new BoundedChannelOptions(10_000)
-                    {
-                        FullMode = BoundedChannelFullMode.DropOldest,
-                        SingleReader = true,
-                        SingleWriter = false
-                    }
-                )
-             );
-
-            services.AddScoped<IScpCommand, ScpCommand>();
-            services.AddScoped<IModuleCommand, ModuleCommand>();
-            services.AddScoped<IInputCommand, InputCommand>();
-            services.AddScoped<IOutputCommand,OutputCommand>();
-            services.AddScoped<IModuleCommand, ModuleCommand>();
-            services.AddScoped<IDriverCommand, DriverCommand>();
-            services.AddScoped<ITimeCommand,TimeCommand>();
-            services.AddScoped<IDoorCommand,DoorCommand>();
-            services.AddScoped<IGroupCommand,GroupCommand>();
-            services.AddScoped<IUserCommand,UserCommand>();
-            services.AddScoped<ISettingCommand,SettingCommand>();
+//             services.AddHostedService<ScpReplyWorker>();
+//             services.AddSingleton<ReplyMessageListener>();
+//             services.AddScoped<IObjectMapper, ScpReplyMapper>();
 
 
-            services.AddScoped<IScpService,ScpService>();
-            services.AddScoped<IAeroRepository,AeroRepository>();
+
+//             // ==========================
+//             // Worker
+//             // ==========================
+//             services.AddSingleton(
+//                 Channel.CreateBounded<SCPReplyMessageDto>(
+//                  new BoundedChannelOptions(10_000)
+//                     {
+//                         FullMode = BoundedChannelFullMode.DropOldest,
+//                         SingleReader = true,
+//                         SingleWriter = false
+//                     }
+//                 )
+//              );
+
+//             services.AddScoped<IScpCommand, ScpCommand>();
+//             services.AddScoped<IModuleCommand, ModuleCommand>();
+//             services.AddScoped<IInputCommand, InputCommand>();
+//             services.AddScoped<IOutputCommand,OutputCommand>();
+//             services.AddScoped<IModuleCommand, ModuleCommand>();
+//             services.AddScoped<IDriverCommand, DriverCommand>();
+//             services.AddScoped<ITimeCommand,TimeCommand>();
+//             services.AddScoped<IDoorCommand,DoorCommand>();
+//             services.AddScoped<IGroupCommand,GroupCommand>();
+//             services.AddScoped<IUserCommand,UserCommand>();
+//             services.AddScoped<ISettingCommand,SettingCommand>();
+
+
+//             services.AddScoped<IScpService,ScpService>();
+//             services.AddScoped<IAeroRepository,AeroRepository>();
                   
-            services.AddScoped<IAeroDeviceAdapter, AeroDeviceAdapter>();
-            services.AddScoped<IAeroOutputAdapter,AeroOutputAdapter>();
-            services.AddScoped<IAeroInputAdapter,AeroInputAdapter>();
-            services.AddScoped<IAeroTimeAdapter,AeroTimeAdapter>();
-            services.AddScoped<IAeroDoorAdapter,AeroDoorAdapter>();
-            services.AddScoped<IAeroGroupAdapter,AeroGroupAdapter>();
-            services.AddScoped<IAeroUserAdapter,AeroUserAdapter>();
-            services.AddScoped<IAeroSettingAdapter,AeroSettingAdapter>();
+//             services.AddScoped<IAeroDeviceAdapter, AeroDeviceAdapter>();
+//             services.AddScoped<IAeroOutputAdapter,AeroOutputAdapter>();
+//             services.AddScoped<IAeroInputAdapter,AeroInputAdapter>();
+//             services.AddScoped<IAeroTimeAdapter,AeroTimeAdapter>();
+//             services.AddScoped<IAeroDoorAdapter,AeroDoorAdapter>();
+//             services.AddScoped<IAeroGroupAdapter,AeroGroupAdapter>();
+//             services.AddScoped<IAeroUserAdapter,AeroUserAdapter>();
+//             services.AddScoped<IAeroSettingAdapter,AeroSettingAdapter>();
 
 
-            services.AddScoped<IAdapter, AeroAdapter>();
+//             services.AddScoped<IAdapter, AeroAdapter>();
 
-            services.AddSingleton<IIdReportService,IdReportService>();
+//             services.AddSingleton<IIdReportService,IdReportService>();
 
-            // ==========================
-            // Database
-            // ==========================
-            services.AddDbContext<AeroDbContext>(options =>
-                options.UseNpgsql(
-                configuration.GetConnectionString("PostgresConnection"),
-                npgsqlOptions => npgsqlOptions.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)
-                ));
+//             // ==========================
+//             // Database
+//             // ==========================
+//             services.AddDbContext<AeroDbContext>(options =>
+//                 options.UseNpgsql(
+//                 configuration.GetConnectionString("PostgresConnection"),
+//                 npgsqlOptions => npgsqlOptions.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)
+//                 ));
 
-            return services;
-      }
-}
+//             return services;
+//       }
+// }

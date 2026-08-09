@@ -1,9 +1,5 @@
 
 
-using SharedKernel.Domain;
-using SharedKernel.Model;
-using Time.Contract.DTOs;
-
 namespace Adapter.Abstraction.Interfaces;
 
 public interface ITimeAdapter
@@ -37,19 +33,19 @@ public interface ITimeAdapter
      // Time Zone
 
 
-     Task CreateTimeZoneAsync(
-           Guid TzGuid,
-           string Name,
-            List<IntervalObject> Intervals,
-            List<Guid> DeviceGuids
-      );
+     // Task CreateTimeZoneAsync(
+     //       Guid TzGuid,
+     //       string Name,
+     //        List<IntervalObject> Intervals,
+     //        List<Guid> DeviceGuids
+     //  );
 
-     Task UpdateTimeZoneAsync(
-          Guid TzGuid,
-          string Name, 
-          List<IntervalObject> Intervals,
-          List<Guid> DeviceGuids
-          );
+     // Task UpdateTimeZoneAsync(
+     //      Guid TzGuid,
+     //      string Name, 
+     //      List<IntervalObject> Intervals,
+     //      List<Guid> DeviceGuids
+     //      );
 
      Task DeleteTimeZoneAsync(
           Guid TzGuid,

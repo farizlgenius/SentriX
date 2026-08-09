@@ -1,5 +1,4 @@
 using SharedKernel.Model;
-using Time.Contract.DTOs;
 
 namespace Adapter.Aero.Interfaces;
 

@@ -5,7 +5,6 @@ using Adapter.Aero.Helpers;
 using Adapter.Aero.Interfaces;
 using Adapter.Aero.Model;
 using Adapter.Aero.Services;
-using Device.Contract.Queries;
 using HID.Aero.ScpdNet.Wrapper;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;

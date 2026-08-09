@@ -1,0 +1,133 @@
+using Core.Application.Interfaces.Location;
+using Core.Contract.DTOs.Location;
+using Core.Domain.Entities;
+using Core.Infrastructure.Persistences;
+using Microsoft.EntityFrameworkCore;
+using SharedKernel.Domain;
+using SharedKernel.Exceptions;
+
+namespace Core.Infrastructure.Repositories;
+
+public sealed class LocationRepository(CoreDbContext context) : ILocationRepository
+{
+      public async Task AddAsync(Location entity)
+      {
+            await context.Locations.AddAsync(
+                  new Persistences.Entities.Location(entity)
+            );
+            await context.SaveChangesAsync();
+      }
+
+      public async Task DeleteAsync(Location entity)
+      {
+            context.Locations.Remove(
+                  new Persistences.Entities.Location(entity)
+            );
+            await context.SaveChangesAsync();
+      }
+
+      public async Task<LocationDto> GetAsync(Guid guid)
+      {
+            return await context.Locations.AsNoTracking()
+                  .Where(x => x.guid == guid)
+                  .Select(x => new LocationDto(
+                        x.guid,
+                        x.name,
+                        x.description,
+                        x.country_id,
+                        x.is_active,
+                        x.is_default
+                  ))
+                  .FirstOrDefaultAsync() ?? throw new NotFoundException(nameof(Location), guid.ToString());
+      }
+
+      public async Task<IEnumerable<CountryDto>> GetCountriesAsync()
+      {
+            return await context.Countries
+                  .AsNoTracking()
+                  .Select(x => new CountryDto(
+                        x.id,
+                        x.name,
+                        x.code
+                  ))
+                  .ToArrayAsync();
+      }
+
+      public async Task<Pagination<LocationDto>> GetPaginationAsync(PaginationParams param)
+      {
+            var query = context.Locations
+                  .AsNoTracking()
+                  .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(param.search))
+            {
+                  if (!string.IsNullOrWhiteSpace(param.search))
+                  {
+                        var search = param.search.Trim();
+
+                        if (context.Database.IsNpgsql())
+                        {
+                              var pattern = $"%{search}%";
+
+                              query = query.Where(x =>
+                                  EF.Functions.ILike(x.name, pattern) ||
+                                  EF.Functions.ILike(x.description, pattern) 
+                              );
+                        }
+                        else // SQL Server
+                        {
+                              query = query.Where(x =>
+                                  x.name.Contains(search) ||
+                                  x.description.Contains(search) 
+                              );
+                        }
+
+                  }
+            }
+
+
+            if (param.startDate != null)
+            {
+                  var startUtc = DateTime.SpecifyKind(param.startDate.Value, DateTimeKind.Utc);
+                  query = query.Where(x => x.created_at >= startUtc);
+            }
+
+            if (param.endDate != null)
+            {
+                  var endUtc = DateTime.SpecifyKind(param.endDate.Value, DateTimeKind.Utc);
+                  query = query.Where(x => x.created_at <= endUtc);
+            }
+
+            var count = await query.CountAsync();
+
+            var res = await query
+                  .AsNoTracking()
+                  .OrderByDescending(e => e.created_at)
+                  .Skip((param.pageNumber - 1) * param.pageSize)
+                  .Take(param.pageSize)
+                  .Select(e => new LocationDto(
+                        e.guid,
+                        e.name,
+                        e.description,
+                        e.country_id,
+                        e.is_active,
+                        e.is_default
+                  )).ToListAsync();
+
+            return new Pagination<LocationDto>(
+                  param.pageNumber, 
+                  param.pageSize, 
+                  count, 
+                  (int)Math.Ceiling(count / (double)param.pageSize), 
+                  res
+                  ); 
+      }
+
+      public async Task UpdateAsync(Location entity)
+      {
+            context.Locations.Update(
+                  new Persistences.Entities.Location(entity)
+            );
+            await context.SaveChangesAsync();
+      }
+}

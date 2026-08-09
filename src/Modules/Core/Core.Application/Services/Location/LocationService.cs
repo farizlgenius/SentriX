@@ -9,7 +9,20 @@ public sealed class LocationService(ILocationRepository repo) : ILocation
 {
   public async Task<LocationDto> CreateAsync(CreateLocationDto dto)
   {
-    throw new NotImplementedException();
+
+    var d = new Core.Domain.Entities.Location(
+      dto.Name,
+      dto.Description,
+      dto.CountryId,
+      Guid.NewGuid()
+    );
+
+        // Check name is duplicate 
+    if(await repo.IsAnyByNameAsync(dto.Name))
+
+
+
+
   }
 
   public async Task<LocationDto> DeleteByGuidAsync(Guid guid)
@@ -29,12 +42,12 @@ public sealed class LocationService(ILocationRepository repo) : ILocation
 
   public async Task<IEnumerable<CountryDto>> GetCountriesAsync()
   {
-    throw new NotImplementedException();
+    return await repo.GetCountriesAsync();
   }
 
   public async Task<Pagination<LocationDto>> GetPaginationAsync(PaginationParams param)
   {
-    throw new NotImplementedException();
+    return await repo.GetPaginationAsync(param);
   }
 
   public async Task<LocationDto> UpdateAsync(UpdateLocationDto dto)

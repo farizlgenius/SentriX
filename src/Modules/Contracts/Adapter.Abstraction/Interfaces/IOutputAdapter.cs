@@ -1,6 +1,4 @@
 using System;
-using Output.Contract.DTOs;
-using SharedKernel.Domain;
 
 namespace Adapter.Abstraction.Interfaces;
 
@@ -17,7 +15,7 @@ public interface IOutputAdapter
             Guid DeviceGuid,
             string Metadata
       );
-      Task<IEnumerable<OptionDto>> GetRelayModeAsync();
+      // Task<IEnumerable<OptionDto>> GetRelayModeAsync();
       Task TriggerOutputAsync(
             Guid Guid,
             Guid DeviceGuid,

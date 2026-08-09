@@ -3,7 +3,7 @@ using Adapter.Abstraction.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Adapter.Abstraction;
+namespace Adapter.Core;
 
 public static class AdapterDependencyInjection
 {

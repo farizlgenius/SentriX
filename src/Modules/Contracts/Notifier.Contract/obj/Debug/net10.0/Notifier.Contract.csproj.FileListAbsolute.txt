@@ -73,10 +73,8 @@ C:/Users/Farizl/Desktop/Work/SentriX/src/Modules/Contracts/Notifier.Contract/obj
 D:\aero\SentriX\src\Modules\Contracts\Notifier.Contract\bin\Debug\net10.0\Notifier.Contract.deps.json
 D:\aero\SentriX\src\Modules\Contracts\Notifier.Contract\bin\Debug\net10.0\Notifier.Contract.dll
 D:\aero\SentriX\src\Modules\Contracts\Notifier.Contract\bin\Debug\net10.0\Notifier.Contract.pdb
-D:\aero\SentriX\src\Modules\Contracts\Notifier.Contract\bin\Debug\net10.0\Device.Contract.dll
 D:\aero\SentriX\src\Modules\Contracts\Notifier.Contract\bin\Debug\net10.0\SharedKernel.dll
 D:\aero\SentriX\src\Modules\Contracts\Notifier.Contract\bin\Debug\net10.0\SharedKernel.pdb
-D:\aero\SentriX\src\Modules\Contracts\Notifier.Contract\bin\Debug\net10.0\Device.Contract.pdb
 D:\aero\SentriX\src\Modules\Contracts\Notifier.Contract\obj\Debug\net10.0\Notifier.Contract.csproj.AssemblyReference.cache
 D:\aero\SentriX\src\Modules\Contracts\Notifier.Contract\obj\Debug\net10.0\Notifier.Contract.GeneratedMSBuildEditorConfig.editorconfig
 D:\aero\SentriX\src\Modules\Contracts\Notifier.Contract\obj\Debug\net10.0\Notifier.Contract.AssemblyInfoInputs.cache

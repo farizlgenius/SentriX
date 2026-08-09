@@ -1,5 +1,9 @@
 using System;
+using Core.Application.Interfaces.Location;
+using Core.Application.Services.Location;
+using Core.Contract.Interfaces.Location;
 using Core.Infrastructure.Persistences;
+using Core.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,7 +17,9 @@ public static class CoreDependencyInjection
     IConfiguration configuration)
   {
 
-    // services.AddScoped<IDoor, DoorBehavior>();
+    // Location
+    services.AddScoped<ILocation, LocationService>();
+    services.AddScoped<ILocationRepository, LocationRepository>();
 
     // ==========================
     // Database

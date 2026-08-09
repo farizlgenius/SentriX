@@ -7,7 +7,6 @@ using Adapter.Amico.Interfaces;
 using Adapter.Amico.Model.Request;
 using Adapter.Amico.Model.Response;
 using Adapter.Amico.Persistences.Entities;
-using Device.Contract.DTOs;
 using Serilog;
 using SharedKernel.Exceptions;
 using SharedKernel.Helpers;
@@ -43,10 +42,6 @@ public sealed class AmicoDeviceAdapter(
             throw new NotImplementedException();
       }
 
-      public Task<List<IdReportDto>> GetIdReportsAsync()
-      {
-            throw new NotImplementedException();
-      }
 
       public async Task<string> GetDeviceInformationByMacAsync(string Mac)
       {

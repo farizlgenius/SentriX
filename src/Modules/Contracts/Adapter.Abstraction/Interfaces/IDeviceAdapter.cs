@@ -1,6 +1,5 @@
 using System;
 using System.Text.Json;
-using Device.Contract.DTOs;
 
 namespace Adapter.Abstraction.Interfaces;
 
@@ -34,6 +33,6 @@ public interface IDeviceAdapter
       Task<bool> AsciiCommandAsync(Guid guid, string Command);
 
 
-      Task<List<IdReportDto>> GetIdReportsAsync();
+      // Task<List<IdReportDto>> GetIdReportsAsync();
 
 }

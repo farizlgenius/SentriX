@@ -6,18 +6,14 @@ using Adapter.Aero;
 using Adapter.Aero.Interfaces;
 using Adapter.Aero.Listener;
 using Adapter.Amico;
+using Adapter.Core;
 using AeroAdapter.Application.Interfaces;
 using Auth.Infrastructure;
 using Cache.Infrastructure;
 using Core.Infrastructure;
-using Device.Infrastructure;
-using Door.Infrastructure;
-using Events.Infrastructure;
-using Group.Infrastructure;
 using Host.Helpers;
 using Host.Logging;
 using Host.Middlewares;
-using Input.Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
@@ -25,9 +21,6 @@ using Microsoft.IdentityModel.Tokens;
 using Notifier.Client;
 using Notifier.Client.Hubs;
 using Npgsql.Internal.Postgres;
-using Operator.Infrastructure;
-using Output.Infrastructure;
-using Role.Infrastructure;
 using Scalar.AspNetCore;
 using Serilog;
 using Setting.Infrastructure;
@@ -36,8 +29,6 @@ using SharedKernel.Domain;
 using SharedKernel.Helpers;
 using SharedKernel.Model;
 using Storage;
-using Time.Infrastructure;
-using User.Infrastructure;
 
 
 namespace Host;
@@ -77,26 +68,16 @@ public class Program
         // ==========================
 
         builder.Services.AddHost(builder.Configuration);
-        builder.Services.AddAuth(builder.Configuration);
+        // builder.Services.AddAuth(builder.Configuration);
         builder.Services.AddCache(builder.Configuration);
-        builder.Services.AddOperator(builder.Configuration);
-        builder.Services.AddAero(builder.Configuration);
-        builder.Services.AddAmico(builder.Configuration);
-        builder.Services.AddRole(builder.Configuration);
+        // builder.Services.AddAero(builder.Configuration);
+        // builder.Services.AddAmico(builder.Configuration);
         builder.Services.AddShared(builder.Configuration);
-        builder.Services.AddDevice(builder.Configuration);
         builder.Services.AddNotifyModule(builder.Configuration);
-        builder.Services.AddEvents(builder.Configuration);
-        builder.Services.AddAdapter(builder.Configuration);
-        builder.Services.AddOutput(builder.Configuration);
-        builder.Services.AddInput(builder.Configuration);
-        builder.Services.AddTime(builder.Configuration);
-        builder.Services.AddDoor(builder.Configuration);
-        builder.Services.AddGroup(builder.Configuration);
-        builder.Services.AddUser(builder.Configuration);
         builder.Services.AddStorage(builder.Configuration);
-        builder.Services.AddSetting(builder.Configuration);
+        // builder.Services.AddSetting(builder.Configuration);
         builder.Services.AddCore(builder.Configuration);
+        builder.Services.AddAdapter(builder.Configuration);
 
 
         // Replace default logging with Serilog
@@ -285,44 +266,44 @@ public class Program
         /// ==========================
         /// Driver
         /// ==========================
-        var readDriver = app.Services.GetRequiredService<ReplyMessageListener>();
-        // var writer = app.Services.GetRequiredService<ICommandWriter>();
-        readDriver.TurnOnDebug();
+//         var readDriver = app.Services.GetRequiredService<ReplyMessageListener>();
+//         // var writer = app.Services.GetRequiredService<ICommandWriter>();
+//         readDriver.TurnOnDebug();
 
 
-        using (var scope = app.Services.CreateScope())
-        {
-            var w = scope.ServiceProvider.GetRequiredService<IDriverCommand>();
-            var w2 = scope.ServiceProvider.GetRequiredService<IScpCommand>();
+//         using (var scope = app.Services.CreateScope())
+//         {
+//             var w = scope.ServiceProvider.GetRequiredService<IDriverCommand>();
+//             var w2 = scope.ServiceProvider.GetRequiredService<IScpCommand>();
 
-            // Now you can safely use sys here
-            if (!w.SystemLevelSpecification())
-            {
-                Console.WriteLine("Initial driver failed. Shutting down app...");
-                app.Lifetime.StopApplication(); // graceful shutdown
-            }
+//             // Now you can safely use sys here
+//             if (!w.SystemLevelSpecification())
+//             {
+//                 Console.WriteLine("Initial driver failed. Shutting down app...");
+//                 app.Lifetime.StopApplication(); // graceful shutdown
+//             }
 
-            // Now you can safely use sys here
-            if (!w2.CreateChannel())
-            {
-                Console.WriteLine("Initial driver failed. Shutting down app...");
-                app.Lifetime.StopApplication(); // graceful shutdown
-            }
-        }
+//             // Now you can safely use sys here
+//             if (!w2.CreateChannel())
+//             {
+//                 Console.WriteLine("Initial driver failed. Shutting down app...");
+//                 app.Lifetime.StopApplication(); // graceful shutdown
+//             }
+//         }
 
-        app.Lifetime.ApplicationStarted.Register(() =>
-{
-    _ = Task.Run(() => readDriver.GetTransactionUntilShutDownAsync());
-});
+//         app.Lifetime.ApplicationStarted.Register(() =>
+// {
+//     _ = Task.Run(() => readDriver.GetTransactionUntilShutDownAsync());
+// });
 
 
-        app.Lifetime.ApplicationStopping.Register(async () =>
-        {
+//         app.Lifetime.ApplicationStopping.Register(async () =>
+//         {
 
-            readDriver.SetShutDownFlag();
-            readDriver.TurnOffDebug();
+//             readDriver.SetShutDownFlag();
+//             readDriver.TurnOffDebug();
 
-        });
+//         });
 
         app.UseSerilogRequestLogging();
 

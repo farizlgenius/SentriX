@@ -81,11 +81,9 @@ C:/Users/Farizl/Desktop/Work/SentriX/src/Modules/Notifier/Notifier.Client/obj/De
 D:\aero\SentriX\src\Modules\Notifier\Notifier.Client\bin\Debug\net10.0\Notifier.Client.deps.json
 D:\aero\SentriX\src\Modules\Notifier\Notifier.Client\bin\Debug\net10.0\Notifier.Client.dll
 D:\aero\SentriX\src\Modules\Notifier\Notifier.Client\bin\Debug\net10.0\Notifier.Client.pdb
-D:\aero\SentriX\src\Modules\Notifier\Notifier.Client\bin\Debug\net10.0\Device.Contract.dll
 D:\aero\SentriX\src\Modules\Notifier\Notifier.Client\bin\Debug\net10.0\Notifier.Contract.dll
 D:\aero\SentriX\src\Modules\Notifier\Notifier.Client\bin\Debug\net10.0\SharedKernel.dll
 D:\aero\SentriX\src\Modules\Notifier\Notifier.Client\bin\Debug\net10.0\Notifier.Contract.pdb
-D:\aero\SentriX\src\Modules\Notifier\Notifier.Client\bin\Debug\net10.0\Device.Contract.pdb
 D:\aero\SentriX\src\Modules\Notifier\Notifier.Client\bin\Debug\net10.0\SharedKernel.pdb
 D:\aero\SentriX\src\Modules\Notifier\Notifier.Client\obj\Debug\net10.0\Notifier.Client.csproj.AssemblyReference.cache
 D:\aero\SentriX\src\Modules\Notifier\Notifier.Client\obj\Debug\net10.0\Notifier.Client.GeneratedMSBuildEditorConfig.editorconfig

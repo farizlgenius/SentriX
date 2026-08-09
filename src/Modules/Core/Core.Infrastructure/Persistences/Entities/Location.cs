@@ -15,7 +15,8 @@ public sealed class Location
   public Country country { get; set; } = default!;
   public bool is_active { get; set; } = true;
   public bool is_default { get; set; } = false;
-  public ICollection<BaseEntity> base_entities { get; set; } = default!;
+  public ICollection<Device> devices   { get; set; } = default!;
+  public ICollection<Module> modules   { get; set; } = default!;
   public Location() { }
 
   public Location(Core.Domain.Entities.Location d)

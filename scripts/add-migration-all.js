@@ -7,20 +7,27 @@ if (!migrationName) {
     process.exit(1);
 }
 
+// const modules = [
+//     "src/Modules/Auth/Auth.Infrastructure",
+//     "src/Modules/Input/Input.Infrastructure",
+//     "src/Modules/User/User.Infrastructure",
+//     "src/Modules/Location/Location.Infrastructure",
+//     "src/Modules/Role/Role.Infrastructure",
+//     "src/Modules/Operator/Operator.Infrastructure",
+//     "src/Modules/Device/Device.Infrastructure",
+//     "src/Modules/Adapters/Adapter.Aero",
+//     "src/Modules/Events/Events.Infrastructure",
+//     "src/Modules/Output/Output.Infrastructure",
+//     "src/Modules/Time/Time.Infrastructure",
+//     "src/Modules/Door/Door.Infrastructure",
+//     "src/Modules/Group/Group.Infrastructure",
+//     "src/Modules/Setting/Setting.Infrastructure"
+// ];
+
 const modules = [
     "src/Modules/Auth/Auth.Infrastructure",
-    "src/Modules/Input/Input.Infrastructure",
-    "src/Modules/User/User.Infrastructure",
-    "src/Modules/Location/Location.Infrastructure",
-    "src/Modules/Role/Role.Infrastructure",
-    "src/Modules/Operator/Operator.Infrastructure",
-    "src/Modules/Device/Device.Infrastructure",
+    "src/Modules/Core/Core.Infrastructure",
     "src/Modules/Adapters/Adapter.Aero",
-    "src/Modules/Events/Events.Infrastructure",
-    "src/Modules/Output/Output.Infrastructure",
-    "src/Modules/Time/Time.Infrastructure",
-    "src/Modules/Door/Door.Infrastructure",
-    "src/Modules/Group/Group.Infrastructure",
     "src/Modules/Setting/Setting.Infrastructure"
 ];
 

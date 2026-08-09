@@ -1,8 +1,5 @@
 
 
-using SharedKernel.Domain;
-using Time.Contract.DTOs;
-
 namespace Adapter.Abstraction.Interfaces;
 
 public interface IUserAdapter

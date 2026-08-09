@@ -1,10 +1,13 @@
+using SharedKernel.Domain;
+
 namespace Core.Application.Interfaces;
 
-public interface IBaseRepository<T> where T : class
+public interface IBaseRepository<TDto,TDomain> where TDto : class where TDomain : class
 {
-  Task<T?> GetAsync(Guid guid);
-  Task<IEnumerable<T>> ListAsync();
-  Task AddAsync(T entity);
-  Task UpdateAsync(T entity);
-  Task DeleteAsync(T entity);
+  Task<TDto> GetAsync(Guid guid);
+  Task<Pagination<TDto>> GetPaginationAsync(PaginationParams param);
+  Task AddAsync(TDomain entity);
+  Task UpdateAsync(TDomain entity);
+  Task DeleteAsync(TDomain entity);
+  
 }

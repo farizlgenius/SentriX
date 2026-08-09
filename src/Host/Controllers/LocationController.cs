@@ -9,7 +9,6 @@ namespace Host.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
     public class LocationController(ILocation loc) : ControllerBase
     {
         [HttpGet("pagination")]
@@ -21,7 +20,7 @@ namespace Host.Controllers
 
 
         [HttpGet("countries")]
-        public async Task<IActionResult> GetAllCountryAsync()
+        public async Task<IActionResult> GetCountriesAsync()
         {
             var res = await loc.GetCountriesAsync();
             return Ok(res);
