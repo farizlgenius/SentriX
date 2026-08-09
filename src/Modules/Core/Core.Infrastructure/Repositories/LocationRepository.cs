@@ -3,6 +3,7 @@ using Core.Contract.DTOs.Location;
 using Core.Domain.Entities;
 using Core.Infrastructure.Persistences;
 using Microsoft.EntityFrameworkCore;
+using SharedKernel.Constants;
 using SharedKernel.Domain;
 using SharedKernel.Exceptions;
 
@@ -10,25 +11,41 @@ namespace Core.Infrastructure.Repositories;
 
 public sealed class LocationRepository(CoreDbContext context) : ILocationRepository
 {
-      public async Task AddAsync(Location entity)
+      public async Task AddAsync(Location entity, CancellationToken ct = default)
       {
             await context.Locations.AddAsync(
                   new Persistences.Entities.Location(entity)
             );
-            await context.SaveChangesAsync();
+
+            await context.SaveChangesAsync(ct);
       }
 
-      public async Task DeleteAsync(Location entity)
+      public async Task DeleteAsync(Guid guid, CancellationToken ct = default)
       {
-            context.Locations.Remove(
-                  new Persistences.Entities.Location(entity)
-            );
-            await context.SaveChangesAsync();
+            var entity = await context.Locations
+                  .Where(x => x.guid == guid)
+                  .FirstOrDefaultAsync();
+
+            context.Locations.Remove(entity ?? throw new NotFoundException(EntityType.Location, guid.ToString()));
+
+            await context.SaveChangesAsync(ct);
       }
 
-      public async Task<LocationDto> GetAsync(Guid guid)
+      public async Task DeleteRangeAsync(IEnumerable<Guid> guids, CancellationToken ct = default)
       {
-            return await context.Locations.AsNoTracking()
+            var entities = await context.Locations
+                  .Where(x => guids.Contains(x.guid))
+                  .ToArrayAsync();
+
+            context.Locations.RemoveRange(entities);
+
+            await context.SaveChangesAsync(ct);
+      }
+
+      public async Task<LocationDto> GetAsync(Guid guid, CancellationToken ct = default)
+      {
+            return await context.Locations
+                  .AsNoTracking()
                   .Where(x => x.guid == guid)
                   .Select(x => new LocationDto(
                         x.guid,
@@ -37,11 +54,10 @@ public sealed class LocationRepository(CoreDbContext context) : ILocationReposit
                         x.country_id,
                         x.is_active,
                         x.is_default
-                  ))
-                  .FirstOrDefaultAsync() ?? throw new NotFoundException(nameof(Location), guid.ToString());
+                  )).FirstOrDefaultAsync() ?? throw new NotFoundException(nameof(Location), guid.ToString());
       }
 
-      public async Task<IEnumerable<CountryDto>> GetCountriesAsync()
+      public async Task<IEnumerable<CountryDto>> GetCountriesAsync(CancellationToken ct = default)
       {
             return await context.Countries
                   .AsNoTracking()
@@ -53,7 +69,7 @@ public sealed class LocationRepository(CoreDbContext context) : ILocationReposit
                   .ToArrayAsync();
       }
 
-      public async Task<Pagination<LocationDto>> GetPaginationAsync(PaginationParams param)
+      public async Task<Pagination<LocationDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
       {
             var query = context.Locations
                   .AsNoTracking()
@@ -71,14 +87,14 @@ public sealed class LocationRepository(CoreDbContext context) : ILocationReposit
 
                               query = query.Where(x =>
                                   EF.Functions.ILike(x.name, pattern) ||
-                                  EF.Functions.ILike(x.description, pattern) 
+                                  EF.Functions.ILike(x.description, pattern)
                               );
                         }
                         else // SQL Server
                         {
                               query = query.Where(x =>
                                   x.name.Contains(search) ||
-                                  x.description.Contains(search) 
+                                  x.description.Contains(search)
                               );
                         }
 
@@ -115,19 +131,34 @@ public sealed class LocationRepository(CoreDbContext context) : ILocationReposit
                   )).ToListAsync();
 
             return new Pagination<LocationDto>(
-                  param.pageNumber, 
-                  param.pageSize, 
-                  count, 
-                  (int)Math.Ceiling(count / (double)param.pageSize), 
+                  param.pageNumber,
+                  param.pageSize,
+                  count,
+                  (int)Math.Ceiling(count / (double)param.pageSize),
                   res
-                  ); 
+                  );
       }
 
-      public async Task UpdateAsync(Location entity)
+      public async Task<bool> IsAnyByNameAsync(string name, CancellationToken ct = default)
+      {
+            return await context.Locations
+                  .AsNoTracking()
+                  .AnyAsync(x => x.name.Equals(name));
+      }
+
+      public async Task<bool> IsAnyGuidAsync(Guid guid, CancellationToken ct = default)
+      {
+            return await context.Locations
+                  .AsNoTracking()
+                  .AnyAsync(x => x.guid == guid);
+      }
+
+      public async Task UpdateAsync(Location entity, CancellationToken ct = default)
       {
             context.Locations.Update(
                   new Persistences.Entities.Location(entity)
             );
-            await context.SaveChangesAsync();
+
+            await context.SaveChangesAsync(ct);
       }
 }

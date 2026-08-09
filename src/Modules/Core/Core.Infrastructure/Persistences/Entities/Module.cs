@@ -1,8 +1,9 @@
+
+
 namespace Core.Infrastructure.Persistences.Entities;
 
 public sealed class Module : BaseEntity
 {
-  public string name { get; set; } = string.Empty;
   public string serial_number { get; set; } = string.Empty;
   public string fw { get; set; } = string.Empty;
   public string mac { get; set; } = string.Empty;
@@ -11,6 +12,7 @@ public sealed class Module : BaseEntity
   public string model { get; set; } = string.Empty;
   public Guid device_guid { get; set; }
   public Device device { get; set; } = default!;
+
   public Module() { }
   public Module(Core.Domain.Entities.Module d) : base(d.Guid, d.LocationGuid, d.IsActive, d.IsDefault)
   {

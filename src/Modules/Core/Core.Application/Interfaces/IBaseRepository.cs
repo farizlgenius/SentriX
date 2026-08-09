@@ -1,13 +1,19 @@
+
+
+using Core.Domain.Entities;
 using SharedKernel.Domain;
+
 
 namespace Core.Application.Interfaces;
 
-public interface IBaseRepository<TDto,TDomain> where TDto : class where TDomain : class
+public interface IBaseRepository<TDto, TDomain> where TDto : class where TDomain : class
 {
-  Task<TDto> GetAsync(Guid guid);
-  Task<Pagination<TDto>> GetPaginationAsync(PaginationParams param);
-  Task AddAsync(TDomain entity);
-  Task UpdateAsync(TDomain entity);
-  Task DeleteAsync(TDomain entity);
-  
+  Task<TDto> GetAsync(Guid guid, CancellationToken ct = default);
+  Task AddAsync(TDomain entity, CancellationToken ct = default);
+  Task UpdateAsync(TDomain entity, CancellationToken ct = default);
+  Task DeleteAsync(Guid guid, CancellationToken ct = default);
+  Task DeleteRangeAsync(IEnumerable<Guid> guids, CancellationToken ct = default);
+  Task<bool> IsAnyByNameAsync(string name, CancellationToken ct = default);
+  Task<bool> IsAnyGuidAsync(Guid guid, CancellationToken ct = default);
+
 }

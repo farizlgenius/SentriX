@@ -5,6 +5,6 @@ namespace Core.Contract.Interfaces.Location;
 
 public interface ILocation : IBase<LocationDto, CreateLocationDto, UpdateLocationDto>
 {
-  Task<IEnumerable<CountryDto>> GetCountriesAsync();
+  Task<IEnumerable<CountryDto>> GetCountriesAsync(CancellationToken ct = default);
 
 }

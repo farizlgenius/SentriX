@@ -1,5 +1,6 @@
 using Core.Infrastructure.Persistences.Entities;
 using Microsoft.EntityFrameworkCore;
+using SharedKernel.Entities;
 
 namespace Core.Infrastructure.Persistences;
 
