@@ -4,6 +4,7 @@ namespace Core.Infrastructure.Persistences.Entities;
 
 public sealed class Device : BaseEntity
 {
+  public string name {get; set;} = string.Empty;
   public string serial_number { get; set; } = string.Empty;
   public string mac { get; set; } = string.Empty;
   public string ip { get; set; } = string.Empty;
@@ -12,10 +13,14 @@ public sealed class Device : BaseEntity
   public string status { get; set; } = string.Empty;
   public DateTime synced_at { get; set; }
   public string metadata { get; set; } = string.Empty;
+
+  // Releation
+  public Guid location_guid {get; set;} = default!;
+  public Location location {get; set;} = default!;
   public ICollection<Module> modules { get; set; } = default!;
 
   public Device() { }
-  public Device(Core.Domain.Entities.Device domain) : base(domain.Guid, domain.LocationGuid, domain.IsActive, domain.IsDefault)
+  public Device(Core.Domain.Entities.Device domain) : base(domain.Guid)
   {
     this.name = domain.Name;
     this.serial_number = domain.SerialNumber;
@@ -26,7 +31,5 @@ public sealed class Device : BaseEntity
     this.status = domain.Status;
     this.synced_at = domain.SyncedAt;
     this.metadata = domain.Metadata;
-    this.updated_at = DateTime.UtcNow;
-    this.created_at = DateTime.UtcNow;
   }
 }

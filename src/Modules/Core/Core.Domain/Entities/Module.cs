@@ -14,10 +14,10 @@ public class Module : BaseDomain
   public int Port { get; private set; }
   public int Address { get; private set; }
   public string Model { get; private set; } = string.Empty;
+  public Guid LocationGuid { get; private set; } = default!;
+  public Guid DeviceGuid { get; private set; } = default!;
 
-  public Guid DeviceGuid { get; set; }
   public Module(
-    Guid Guid,
     string Name,
     string SerialNumber,
     string Fw,
@@ -25,9 +25,8 @@ public class Module : BaseDomain
     int Port,
     int Address,
     string Model,
-    Guid LocationGuid,
-    bool IsActive,
-    bool IsDefault) : base(Guid, LocationGuid, IsActive, IsDefault)
+    Guid LocationGuid
+    )
   {
     // Validate required fields
     ValidationHelper.IsNullOrEmpty(Name, nameof(Name));
@@ -39,5 +38,32 @@ public class Module : BaseDomain
     this.Port = Port;
     this.Address = Address;
     this.Model = Model;
+    this.LocationGuid = LocationGuid;
+    this.DeviceGuid = DeviceGuid;
+  }
+  public Module(
+    Guid Guid,
+    string Name,
+    string SerialNumber,
+    string Fw,
+    string Mac,
+    int Port,
+    int Address,
+    string Model,
+    Guid LocationGuid
+    ) : base(Guid)
+  {
+    // Validate required fields
+    ValidationHelper.IsNullOrEmpty(Name, nameof(Name));
+
+    this.Name = Name;
+    this.SerialNumber = SerialNumber;
+    this.Fw = Fw;
+    this.Mac = Mac;
+    this.Port = Port;
+    this.Address = Address;
+    this.Model = Model;
+    this.LocationGuid = LocationGuid;
+    this.DeviceGuid = DeviceGuid;
   }
 }

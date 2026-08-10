@@ -71,51 +71,118 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                               .ValueGeneratedOnAdd();
                   }
 
-                  if (typeof(Location).IsAssignableFrom(entityType.ClrType))
-                  {
-                        modelBuilder.Entity(entityType.ClrType)
-                              .Property(nameof(Location.created_at))
-                              .HasDefaultValueSql(utcNowSql)
-                              .ValueGeneratedOnAdd();
-
-                        modelBuilder.Entity(entityType.ClrType)
-                              .Property(nameof(Location.updated_at))
-                              .HasDefaultValueSql(utcNowSql)
-                              .ValueGeneratedOnAdd();
-
-                        modelBuilder.Entity(entityType.ClrType)
-                              .Property(nameof(Location.guid))
-                              .HasDefaultValueSql(guidSql)
-                              .ValueGeneratedOnAdd();
-                  }
-
-                  if (typeof(Country).IsAssignableFrom(entityType.ClrType))
-                  {
-                        modelBuilder.Entity(entityType.ClrType)
-                              .Property(nameof(Country.created_at))
-                              .HasDefaultValueSql(utcNowSql)
-                              .ValueGeneratedOnAdd();
-
-                        modelBuilder.Entity(entityType.ClrType)
-                              .Property(nameof(Country.updated_at))
-                              .HasDefaultValueSql(utcNowSql)
-                              .ValueGeneratedOnAdd();
-
-                  }
-
             }
 
 
-
-
-
-            // Configure relationships for Location and Country
+            // Configure relationships 
 
             modelBuilder.Entity<Location>()
                           .HasOne(l => l.country)
                           .WithMany(c => c.locations)
                           .HasForeignKey(l => l.country_id)
                           .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Location>()
+                  .HasMany(x => x.devices)
+                  .WithOne(x => x.location)
+                  .HasForeignKey(x => x.location_guid)
+                  .HasPrincipalKey(x => x.guid)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Location>()
+                  .HasMany(x => x.modules)
+                  .WithOne(x => x.location)
+                  .HasForeignKey(x => x.location_guid)
+                  .HasPrincipalKey(x => x.guid)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            // Device 
+
+            modelBuilder.Entity<Device>()
+                  .HasMany(x => x.modules)
+                  .WithOne(x => x.device)
+                  .HasForeignKey(x => x.device_guid)
+                  .HasPrincipalKey(x => x.guid)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            // User
+
+            modelBuilder.Entity<User>()
+                  .HasMany(x => x.cards)
+                  .WithOne(x => x.user)
+                  .HasForeignKey(x => x.user_guid)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<User>()
+                  .HasMany(x => x.license_plates)
+                  .WithOne(x => x.user)
+                  .HasForeignKey(x => x.user_guid)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<User>()
+                  .HasMany(x => x.qr_codes)
+                  .WithOne(x => x.user)
+                  .HasForeignKey(x => x.user_guid)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<User>()
+                  .HasMany(x => x.pins)
+                  .WithOne(x => x.user)
+                  .HasForeignKey(x => x.user_guid)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<User>()
+                  .HasOne(x => x.face)
+                  .WithOne(x => x.user)
+                  .HasForeignKey<User>(x => x.face_guid)
+                  .HasPrincipalKey<Face>(x => x.guid)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<User>()
+                  .HasMany(x => x.additionals)
+                  .WithOne(x => x.user)
+                  .HasForeignKey(x => x.user_guid)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            // Company
+
+            modelBuilder.Entity<Company>()
+                  .HasMany(x => x.users)
+                  .WithOne(x => x.company)
+                  .HasForeignKey(x => x.company_guid)
+                  .HasPrincipalKey(x => x.guid)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Department>()
+                  .HasMany(x => x.users)
+                  .WithOne(x => x.department)
+                  .HasForeignKey(x => x.department_guid)
+                  .HasPrincipalKey(x => x.guid)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Position>()
+                  .HasMany(x => x.users)
+                  .WithOne(x => x.position)
+                  .HasForeignKey(x => x.position_guid)
+                  .HasPrincipalKey(x => x.guid)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Company>()
+                  .HasMany(x => x.departments)
+                  .WithOne(x => x.company)
+                  .HasForeignKey(x => x.company_guid)
+                  .HasPrincipalKey(x => x.guid)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Department>()
+                  .HasMany(x => x.positions)
+                  .WithOne(x => x.department)
+                  .HasForeignKey(x => x.department_guid)
+                  .HasPrincipalKey(x => x.guid)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+
+            // Seed Default data
 
             modelBuilder.Entity<Location>()
                   .HasData(
@@ -303,28 +370,32 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   new Country { id = 178, name = "Default", code = "" }
                   );
 
-            modelBuilder.Entity<Location>()
-                  .HasMany(x => x.devices)
-                  .WithOne(x => x.location)
-                  .HasForeignKey(x => x.location_guid)
-                  .HasPrincipalKey(x => x.guid)
-                  .OnDelete(DeleteBehavior.Cascade);
+            
 
-            modelBuilder.Entity<Location>()
-                  .HasMany(x => x.modules)
-                  .WithOne(x => x.location)
-                  .HasForeignKey(x => x.location_guid)
-                  .HasPrincipalKey(x => x.guid)
-                  .OnDelete(DeleteBehavior.Cascade);
+            // Feature Data
+            modelBuilder.Entity<Feature>().HasData(
+                  new Feature { id = 1, name = "dashboard", },
+                  new Feature { id = 2, name = "events", },
+                  new Feature { id = 3, name = "location", },
+                  new Feature { id = 4, name = "alert", },
+                  new Feature { id = 5, name = "operator", },
+                  new Feature { id = 6, name = "device", },
+                  new Feature { id = 7, name = "control", },
+                  new Feature { id = 8, name = "monitor", },
+                  new Feature { id = 9, name = "monitorgroup", },
+                  new Feature { id = 10, name = "acr", },
+                  new Feature { id = 11, name = "user", },
+                  new Feature { id = 12, name = "group", },
+                  new Feature { id = 13, name = "area", },
+                  new Feature { id = 14, name = "time", },
+                  new Feature { id = 15, name = "trigger", },
+                  new Feature { id = 16, name = "map", },
+                  new Feature { id = 17, name = "report", },
+                  new Feature { id = 18, name = "setting", },
+                  new Feature { id = 19, name = "tools", }
+            );
 
-            // Device and Module relationship and data seeding
-
-            modelBuilder.Entity<Device>()
-                  .HasMany(x => x.modules)
-                  .WithOne(x => x.device)
-                  .HasForeignKey(x => x.device_guid)
-                  .HasPrincipalKey(x => x.guid)
-                  .OnDelete(DeleteBehavior.Cascade);
+            
 
       }
 }

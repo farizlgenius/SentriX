@@ -11,26 +11,21 @@ public sealed class Device : BaseDomain
   public string Status { get; private set; } = string.Empty;
   public DateTime SyncedAt { get; private set; } = default!;
   public string Metadata { get; private set; } = string.Empty;
+  public Guid LocationGuid { get; private set; } = default!;
+
 
   public Device(
-    string Name,
-    string SerialNumber,
-    string Mac,
-    string Ip,
-    int Port,
-    string Fw,
-    string Status,
-    DateTime SyncedAt,
-    string Metadata,
-    Guid Guid,
-    DateTime
-    CreatedAt,
-    DateTime
-    UpdatedAt,
-    Guid LocationGuid,
-    bool IsActive,
-    bool IsDefault
-    ) : base(Guid, LocationGuid, IsActive, IsDefault)
+   string Name,
+   string SerialNumber,
+   string Mac,
+   string Ip,
+   int Port,
+   string Fw,
+   string Status,
+   DateTime SyncedAt,
+   string Metadata,
+   Guid LocationGuid
+   )
   {
     this.Name = Name;
     this.SerialNumber = SerialNumber;
@@ -41,5 +36,32 @@ public sealed class Device : BaseDomain
     this.Status = Status;
     this.SyncedAt = SyncedAt;
     this.Metadata = Metadata;
+    this.LocationGuid = LocationGuid;
+  }
+
+  public Device(
+    Guid Guid,
+    string Name,
+    string SerialNumber,
+    string Mac,
+    string Ip,
+    int Port,
+    string Fw,
+    string Status,
+    DateTime SyncedAt,
+    string Metadata,
+    Guid LocationGuid
+    ) : base(Guid)
+  {
+    this.Name = Name;
+    this.SerialNumber = SerialNumber;
+    this.Mac = Mac;
+    this.Ip = Ip;
+    this.Port = Port;
+    this.Fw = Fw;
+    this.Status = Status;
+    this.SyncedAt = SyncedAt;
+    this.Metadata = Metadata;
+    this.LocationGuid = LocationGuid;
   }
 }
