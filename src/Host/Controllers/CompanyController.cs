@@ -50,4 +50,18 @@ public class CompanyController(ICompany com) : ControllerBase
     var res = await com.DeleteRangeAsync(guids);
     return Ok(res);
   }
+
+  [HttpPatch("enable/{guid}")]
+  public async Task<IActionResult> EnableAsync(Guid guid)
+  {
+    var res = await com.EnabledAsync(guid);
+    return Ok(res);
+  }
+
+  [HttpPatch("disable/{guid}")]
+  public async Task<IActionResult> DisableAsync(Guid guid)
+  {
+    var res = await com.DisabledAsync(guid);
+    return Ok(res);
+  }
 }

@@ -5,4 +5,6 @@ public static class EntityType
   public const string Device = "Device";
   public const string Location = "Location";
   public const string Company = "Company";
+  public const string Department = "Department";
+  public const string User = "User";
 }

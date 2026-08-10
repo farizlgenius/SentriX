@@ -162,8 +162,15 @@ public sealed class CompanyRepository(CoreDbContext context) : ICompanyRepositor
   public async Task<bool> IsAnyByNameAsync(string name, CancellationToken ct = default)
   {
     return await context.Companies
-                  .AsNoTracking()
-                  .AnyAsync(x => x.name.Equals(name));
+      .AsNoTracking()
+      .AnyAsync(x => x.name.Equals(name));
+  }
+
+  public async Task<bool> IsAnyDepartmentAsync(Guid guid, CancellationToken ct = default)
+  {
+    return await context.Companies
+      .AsNoTracking()
+      .AnyAsync(x => x.guid == guid && x.departments.Any());
   }
 
   public async Task<bool> IsAnyGuidAsync(Guid guid, CancellationToken ct = default)
@@ -171,6 +178,13 @@ public sealed class CompanyRepository(CoreDbContext context) : ICompanyRepositor
     return await context.Companies
                   .AsNoTracking()
                   .AnyAsync(x => x.guid == guid);
+  }
+
+  public async Task<bool> IsAnyUserAsync(Guid guid, CancellationToken ct = default)
+  {
+    return await context.Companies
+      .AsNoTracking()
+      .AnyAsync(x => x.guid == guid && x.users.Any());
   }
 
   public async Task<bool> IsDefaultAsync(Guid guid, CancellationToken ct = default)

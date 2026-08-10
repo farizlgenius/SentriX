@@ -1,7 +1,7 @@
 using System;
-using Core.Application.Interfaces.Location;
-using Core.Application.Services.Location;
-using Core.Contract.Interfaces.Location;
+using Core.Application.Interfaces;
+using Core.Application.Services;
+using Core.Contract.Interfaces;
 using Core.Infrastructure.Persistences;
 using Core.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -20,6 +20,10 @@ public static class CoreDependencyInjection
     // Location
     services.AddScoped<ILocation, LocationService>();
     services.AddScoped<ILocationRepository, LocationRepository>();
+
+    // Company
+    services.AddScoped<ICompany, CompanyService>();
+    services.AddScoped<ICompanyRepository, CompanyRepository>();
 
     // ==========================
     // Database
