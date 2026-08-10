@@ -238,10 +238,37 @@ public class Program
 
         var app = builder.Build();
 
-        app.UseMiddleware<GlobalException>();
         app.UseMiddleware<CorrelationMiddleware>();
 
+        app.UseSerilogRequestLogging(options =>
+{
+            options.GetLevel = (httpContext, elapsed, ex) =>
+            {
+                if (ex != null)
+                {
+                    return Serilog.Events.LogEventLevel.Debug;
+                }
 
+                return httpContext.Response.StatusCode >= 500
+                    ? Serilog.Events.LogEventLevel.Error
+                    : Serilog.Events.LogEventLevel.Information;
+            };
+        });
+
+        app.UseMiddleware<GlobalException>();
+
+        app.UseCors("CorsPolicy");
+
+        app.UseHttpsRedirection();
+
+        app.UseAuthentication();
+
+        app.UseAuthorization();
+
+        app.MapControllers();
+
+        app.MapHub<NotifierHub>("/notiHubs");
+        
         app.MapOpenApi();
 
 
@@ -305,20 +332,8 @@ public class Program
 
 //         });
 
-        app.UseSerilogRequestLogging();
 
-
-        app.UseCors("CorsPolicy");
-
-        app.UseHttpsRedirection();
-
-        app.UseAuthentication();
-
-        app.UseAuthorization();
-
-        app.MapControllers();
-
-        app.MapHub<NotifierHub>("/notiHubs");
+        
 
         app.Run();
     }

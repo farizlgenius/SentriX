@@ -69,19 +69,19 @@ public class BaseCommand : IBaseCommand
 
       public async Task<string> CheckSessionAsync(string mac)
       {
-            var amico = await _repo.GetAmicoByMacAsync(mac);
-            var session = amico.session;
+            // var amico = await _repo.GetAmicoByMacAsync(mac);
+            // var session = amico.session;
 
-            var res = await CheckSession(amico.ip, amico.session);
+            // var res = await CheckSession(amico.ip, amico.session);
 
-            if (!res.SessionIsValid)
-            {
-                  var news = await LoginAsync(amico.ip, isFirst: false);
-                  session = news.Session;
-                  await _repo.UpdateSessionByMacAsync(amico.mac, news.Session);
-            }
+            // if (!res.SessionIsValid)
+            // {
+            //       var news = await LoginAsync(amico.ip, isFirst: false);
+            //       session = news.Session;
+            //       await _repo.UpdateSessionByMacAsync(amico.mac, news.Session);
+            // }
 
-            return session;
+            return "";
       }
 
       public async Task<string> CheckSessionAsync(Guid guid)

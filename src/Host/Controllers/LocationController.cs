@@ -55,5 +55,12 @@ namespace Host.Controllers
             var res = await loc.UpdateAsync(dto);
             return Ok(res);
         }
+
+        [HttpDelete("range")]
+        public async Task<IActionResult> DeleteRangeAsync([FromBody] IEnumerable<Guid> guids)
+        {
+            var res = await loc.DeleteRangeAsync(guids);
+            return Ok(res);
+        }
     }
 }

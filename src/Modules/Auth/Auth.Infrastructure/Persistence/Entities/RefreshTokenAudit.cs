@@ -3,7 +3,7 @@ using SharedKernel.Domain;
 
 namespace Auth.Infrastructure.Persistence.Entities;
 
-public sealed class RefreshTokenAudit
+public sealed class RefreshTokenAudit : BaseEntity
 {
   public string username { get; set; } = string.Empty;
   public string user_id { get; set; } = string.Empty;

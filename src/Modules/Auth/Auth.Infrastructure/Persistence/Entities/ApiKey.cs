@@ -3,7 +3,7 @@ using SharedKernel.Domain;
 
 namespace Auth.Infrastructure.Persistence.Entities;
 
-public sealed class ApiKey
+public sealed class ApiKey : BaseEntity
 {
   public string key { get; set; } = string.Empty;
   public string owner { get; set; } = string.Empty;

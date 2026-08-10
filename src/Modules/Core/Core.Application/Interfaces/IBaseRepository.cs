@@ -15,5 +15,8 @@ public interface IBaseRepository<TDto, TDomain> where TDto : class where TDomain
   Task DeleteRangeAsync(IEnumerable<Guid> guids, CancellationToken ct = default);
   Task<bool> IsAnyByNameAsync(string name, CancellationToken ct = default);
   Task<bool> IsAnyGuidAsync(Guid guid, CancellationToken ct = default);
+  Task<bool> IsDefaultAsync(Guid guid, CancellationToken ct = default);
+  Task<bool> EnableAsync(Guid guid, CancellationToken ct = default);
+  Task<bool> DisableAsync(Guid guid, CancellationToken ct = default);
 
 }

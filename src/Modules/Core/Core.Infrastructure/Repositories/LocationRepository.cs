@@ -34,12 +34,42 @@ public sealed class LocationRepository(CoreDbContext context) : ILocationReposit
       public async Task DeleteRangeAsync(IEnumerable<Guid> guids, CancellationToken ct = default)
       {
             var entities = await context.Locations
-                  .Where(x => guids.Contains(x.guid))
+                  .Where(x => guids.Contains(x.guid) && x.is_default == false)
                   .ToArrayAsync();
 
             context.Locations.RemoveRange(entities);
 
             await context.SaveChangesAsync(ct);
+      }
+
+      public async Task<bool> DisableAsync(Guid guid, CancellationToken ct = default)
+      {
+            var en = await context.Locations
+                  .Where(x => x.guid == guid)
+                  .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.Location, guid.ToString());
+
+            en.is_active = false;
+
+            context.Locations.Update(en);
+
+            await context.SaveChangesAsync(ct);
+
+            return true;
+      }
+
+      public async Task<bool> EnableAsync(Guid guid, CancellationToken ct = default)
+      {
+           var en = await context.Locations
+                  .Where(x => x.guid == guid)
+                  .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.Location, guid.ToString());
+
+            en.is_active = true;
+
+            context.Locations.Update(en);
+
+            await context.SaveChangesAsync(ct);
+
+            return true;
       }
 
       public async Task<LocationDto> GetAsync(Guid guid, CancellationToken ct = default)
@@ -153,11 +183,24 @@ public sealed class LocationRepository(CoreDbContext context) : ILocationReposit
                   .AnyAsync(x => x.guid == guid);
       }
 
+      public async Task<bool> IsDefaultAsync(Guid guid, CancellationToken ct = default)
+      {
+            return await context.Locations
+                  .AsNoTracking()
+                  .AnyAsync(x => x.guid == guid && x.is_default);
+      }
+
       public async Task UpdateAsync(Location entity, CancellationToken ct = default)
       {
-            context.Locations.Update(
-                  new Persistences.Entities.Location(entity)
-            );
+            var en = await context.Locations
+                  .Where(x => x.guid == entity.Guid)
+                  .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.Location, entity.Guid.ToString());
+
+            en.name = entity.Name;
+            en.description = entity.Description;
+            en.country_id = entity.CountryId;
+
+            context.Locations.Update(en);
 
             await context.SaveChangesAsync(ct);
       }

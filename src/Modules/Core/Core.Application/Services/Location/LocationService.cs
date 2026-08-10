@@ -12,10 +12,10 @@ public sealed class LocationService(ILocationRepository repo) : ILocation
   public async Task<LocationDto> CreateAsync(CreateLocationDto dto, CancellationToken ct = default)
   {
     var d = new Core.Domain.Entities.Location(
+      Guid.NewGuid(),
       dto.Name,
       dto.Description,
-      dto.CountryId,
-      Guid.NewGuid()
+      dto.CountryId
     );
 
     // Check name is duplicate 
@@ -29,33 +29,64 @@ public sealed class LocationService(ILocationRepository repo) : ILocation
       d.Name,
       d.Description,
       d.CountryId,
-      d.IsActive,
-      d.IsDefault
+      true,
+      false
     );
   }
 
-  public async Task<bool> DeleteByGuidAsync(Guid guid, CancellationToken ct = default)
+  public async Task<Guid> DeleteByGuidAsync(Guid guid, CancellationToken ct = default)
   {
     // Check is any location with guid
-    if (await repo.IsAnyGuidAsync(guid, ct))
+    if (!await repo.IsAnyGuidAsync(guid, ct))
       throw new NotFoundException(EntityType.Location, guid.ToString());
+
+    // Check is default location
+    if(await repo.IsDefaultAsync(guid,ct))
+      throw new DefaultRecordException(MethodType.Delete, EntityType.Location, guid.ToString());
 
     // Check relate object here
 
     await repo.DeleteAsync(guid, ct);
 
-    return true;
+    return guid;
   }
 
   public async Task<IEnumerable<Guid>> DeleteRangeAsync(IEnumerable<Guid> guids, CancellationToken ct = default)
   {
     // Check if guids is empty 
     if (guids.Count() == 0)
-      throw new BadRequestException("Guids is empty.");
+      throw new NotFoundException(EntityType.Location);
+
+    foreach (var guid in guids)
+    {
+      // Check is any location with guid
+      if (!await repo.IsAnyGuidAsync(guid, ct))
+        throw new NotFoundException(EntityType.Location, guid.ToString());
+
+      // Check relate object here
+    }
 
     await repo.DeleteRangeAsync(guids);
 
     return guids;
+  }
+
+  public async Task<bool> DisabledAsync(Guid guid, CancellationToken ct = default)
+  {
+    // Check is any location with guid
+    if (!await repo.IsAnyGuidAsync(guid, ct))
+      throw new NotFoundException(EntityType.Location, guid.ToString());
+
+    return await repo.DisableAsync(guid, ct);
+  }
+
+  public async Task<bool> EnabledAsync(Guid guid, CancellationToken ct = default)
+  {
+    // Check is any location with guid
+    if (!await repo.IsAnyGuidAsync(guid, ct))
+      throw new NotFoundException(EntityType.Location, guid.ToString());
+
+    return await repo.EnableAsync(guid, ct);
   }
 
   public async Task<LocationDto> GetByGuidAsync(Guid guid, CancellationToken ct = default)
@@ -76,14 +107,14 @@ public sealed class LocationService(ILocationRepository repo) : ILocation
   public async Task<LocationDto> UpdateAsync(UpdateLocationDto dto, CancellationToken ct = default)
   {
     // Check is any location with guid
-    if (await repo.IsAnyGuidAsync(dto.Guid, ct))
+    if (!await repo.IsAnyGuidAsync(dto.Guid, ct))
       throw new NotFoundException(EntityType.Location, dto.Guid.ToString());
 
     var d = new Core.Domain.Entities.Location(
+      dto.Guid,
       dto.Name,
       dto.Description,
-      dto.CountryId,
-      dto.Guid
+      dto.CountryId
     );
 
     await repo.UpdateAsync(d);
@@ -93,8 +124,8 @@ public sealed class LocationService(ILocationRepository repo) : ILocation
       dto.Name,
       dto.Description,
       dto.CountryId,
-      dto.IsActive,
-      dto.IsDefault
+      true,
+      false
     );
 
 

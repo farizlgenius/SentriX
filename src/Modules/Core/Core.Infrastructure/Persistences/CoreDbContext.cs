@@ -119,7 +119,7 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
 
             modelBuilder.Entity<Location>()
                   .HasData(
-                        new Location { id = 1, name = "Main Location", description = "Main location descriptions", country_id = 178, is_default = true, is_active = true }
+                        new Location { id = 1, name = "Main Location", description = "Main location", country_id = 178, is_default = true, is_active = true }
                   );
 
             modelBuilder.Entity<Country>().HasData(

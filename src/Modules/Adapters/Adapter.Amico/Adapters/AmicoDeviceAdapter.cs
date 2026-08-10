@@ -46,12 +46,13 @@ public sealed class AmicoDeviceAdapter(
       public async Task<string> GetDeviceInformationByMacAsync(string Mac)
       {
 
-            var session = await command.CheckSessionAsync(Mac);
-            var amico = await repo.GetAmicoByMacAsync(Mac);
+            // var session = await command.CheckSessionAsync(Mac);
+            // var amico = await repo.GetAmicoByMacAsync(Mac);
             
-            var info = await command.DeviceInfoAsync(amico.ip,session);
+            // var info = await command.DeviceInfoAsync(amico.ip,session);
 
-            return JsonHelper.Serialize(info);
+            // return JsonHelper.Serialize(info);
+            return "";
 
       }
 

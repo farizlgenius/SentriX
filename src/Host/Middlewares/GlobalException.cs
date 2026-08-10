@@ -1,5 +1,6 @@
 using System;
 using System.Net;
+using Host.Helpers;
 using SharedKernel.Domain;
 using SharedKernel.Exceptions;
 
@@ -17,6 +18,13 @@ public sealed class GlobalException : IMiddleware
       {
             try
             {
+
+                  // Capture body before MVC binding
+                  var requestBody = await ExceptionHelper.GetRequestBodyAsync(context);
+
+                  // Store it in HttpContext.Items
+                  context.Items["RequestBody"] = requestBody;
+
                   await next(context);
             }
             catch (Exception ex)
@@ -27,41 +35,46 @@ public sealed class GlobalException : IMiddleware
 
       private async Task ExceptionSwitcher(HttpContext context, Exception ex)
       {
+            var requestBody = await ExceptionHelper.GetRequestBodyAsync(context);
+
             switch (ex)
-            {
-                  case BadRequestException:
-                  case ArgumentException:
-                        await BadRequestExceptionHandler(context, ex);
-                        _logger.LogWarning(ex,"Bad request. {Method} {Path}",context.Request.Method,context.Request.Path);
-                        break;
-                  case UnauthorizedAccessException:
-                        await UnauthorizedAccessExceptionHandler(context, ex);
-                        _logger.LogWarning(ex,"Unauthorized access. {Method} {Path}",context.Request.Method,context.Request.Path);
-                        break;
-                  case ForbiddenException:
-                        await ForbiddenExceptionHandler(context, ex);
-                        _logger.LogWarning(ex,"Forbidden access. {Method} {Path}",context.Request.Method,context.Request.Path);
-                        break;
-                  case NotFoundException:
-                        await NotFoundExceptionHandler(context, ex);
-                        _logger.LogWarning(ex,"Not found. {Method} {Path}",context.Request.Method,context.Request.Path);
-                        break;
-                  case DuplicateException:
-                        await DuplicateExceptionHandler(context,ex);
-                        _logger.LogWarning(ex,"Duplicated. {Method} {Path}",context.Request.Method,context.Request.Path);
-                        break;
-                  default:
-                        await HandleException(context, ex);
-                        _logger.LogError(ex,"Internal server error. {Method} {Path}",context.Request.Method,context.Request.Path);
-                        break;
-            }
+    {
+        case BadRequestException:
+        case ArgumentException:
+        case DefaultRecordException:
+            await BadRequestExceptionHandler(context, ex);
+            ExceptionHelper.LogException(_logger, context, ex, LogLevel.Warning, "Bad request", requestBody);
+            break;
+
+        case UnauthorizedAccessException:
+            await UnauthorizedAccessExceptionHandler(context, ex);
+            ExceptionHelper.LogException(_logger, context, ex, LogLevel.Warning, "Unauthorized access", requestBody);
+            break;
+
+        case ForbiddenException:
+            await ForbiddenExceptionHandler(context, ex);
+            ExceptionHelper.LogException(_logger, context, ex, LogLevel.Warning, "Forbidden access", requestBody);
+            break;
+
+        case NotFoundException:
+            await NotFoundExceptionHandler(context, ex);
+            ExceptionHelper.LogException(_logger, context, ex, LogLevel.Warning, "Not found", requestBody);
+            break;
+
+        case DuplicateException:
+            await DuplicateExceptionHandler(context, ex);
+            ExceptionHelper.LogException(_logger, context, ex, LogLevel.Warning, "Duplicated", requestBody);
+            break;
+
+        default:
+            await HandleException(context, ex);
+            ExceptionHelper.LogException(_logger, context, ex, LogLevel.Error, "Internal server error", requestBody);
+            break;
+    }
       }
 
       private Task BadRequestExceptionHandler(HttpContext context, Exception ex)
       {
-            // Log the exception (you can use a logging framework here)
-            Console.WriteLine($"An error occurred: {ex.Message}");
-            
 
             // Set the response status code and content
             context.Response.StatusCode = StatusCodes.Status400BadRequest;
@@ -83,9 +96,6 @@ public sealed class GlobalException : IMiddleware
 
       private Task DuplicateExceptionHandler(HttpContext context, Exception ex)
       {
-            // Log the exception (you can use a logging framework here)
-            Console.WriteLine($"An error occurred: {ex.Message}");
-            
 
             // Set the response status code and content
             context.Response.StatusCode = StatusCodes.Status400BadRequest;
@@ -106,9 +116,6 @@ public sealed class GlobalException : IMiddleware
 
       private Task UnauthorizedAccessExceptionHandler(HttpContext context, Exception ex)
       {
-            // Log the exception (you can use a logging framework here)
-            Console.WriteLine($"An error occurred: {ex.Message}");
-
             // Set the response status code and content
             context.Response.StatusCode = StatusCodes.Status401Unauthorized;
             context.Response.ContentType = "application/json";
@@ -127,8 +134,7 @@ public sealed class GlobalException : IMiddleware
 
       private Task NotFoundExceptionHandler(HttpContext context, Exception ex)
       {
-            // Log the exception (you can use a logging framework here)
-            Console.WriteLine($"An error occurred: {ex.Message}");
+
 
             // Set the response status code and content
             context.Response.StatusCode = StatusCodes.Status404NotFound;
@@ -147,8 +153,6 @@ public sealed class GlobalException : IMiddleware
 
       private Task ForbiddenExceptionHandler(HttpContext context, Exception ex)
       {
-            // Log the exception (you can use a logging framework here)
-            Console.WriteLine($"An error occurred: {ex.Message}");
 
             // Set the response status code and content
             context.Response.StatusCode = StatusCodes.Status403Forbidden;
@@ -168,9 +172,6 @@ public sealed class GlobalException : IMiddleware
 
       private Task HandleException(HttpContext context, Exception ex)
       {
-            // Log the exception (you can use a logging framework here)
-            Console.WriteLine($"An error occurred: {ex.Message}");
-
             // Set the response status code and content
             context.Response.StatusCode = StatusCodes.Status500InternalServerError;
             context.Response.ContentType = "application/json";

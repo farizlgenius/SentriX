@@ -1,9 +1,10 @@
 using System;
+using Auth.Infrastructure.Persistence.Entities;
 using SharedKernel.Domain;
 
 namespace Adapter.Aero.Persistences.Entities;
 
-public sealed class ElevatorAccessLevelSpecification
+public sealed class ElevatorAccessLevelSpecification : BaseEntity
 {
       public short scp_id { get; set; }
       public string mac { get; set; } = string.Empty;
