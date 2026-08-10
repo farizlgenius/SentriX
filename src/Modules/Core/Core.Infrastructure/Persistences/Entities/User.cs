@@ -4,7 +4,7 @@ public sealed class User : BaseEntity
 {
       public string username { get; set; } = string.Empty;
       public string password { get; set; } = string.Empty;
-      public string identification {get; set;} =string.Empty;
+      public string identification { get; set; } = string.Empty;
       public string title { get; set; } = string.Empty;
       public string firstname { get; set; } = string.Empty;
       public string middlename { get; set; } = string.Empty;
@@ -13,7 +13,7 @@ public sealed class User : BaseEntity
       public DateTime date_of_birth { get; set; }
       public string email { get; set; } = string.Empty;
       public string phone { get; set; } = string.Empty;
-      public bool is_operator {get; set;}
+      public bool is_operator { get; set; }
       public Guid? role_guid { get; set; }
       public Role? role { get; set; }
       public Guid? company_guid { get; set; }
@@ -26,14 +26,14 @@ public sealed class User : BaseEntity
       public DateTime active_time { get; set; }
       public DateTime expire_time { get; set; }
       public ICollection<UserAdditional> additionals { get; set; } = default!;
-      public ICollection<Card> cards {get; set;} = default!;
-      public ICollection<Pin> pins {get; set;} = default!;
+      public ICollection<Card> cards { get; set; } = default!;
+      public ICollection<Pin> pins { get; set; } = default!;
       public Guid? face_guid { get; set; }
       public Face? face { get; set; }
-      public ICollection<LicensePlate> license_plates {get; set;} = default!;
-      public ICollection<QrCode> qr_codes {get; set;} = default!;
+      public ICollection<LicensePlate> license_plates { get; set; } = default!;
+      public ICollection<QrCode> qr_codes { get; set; } = default!;
 
-      public User(){}
+      public User() { }
 
       public User(Core.Domain.Entities.User d) : base(d.Guid)
       {
@@ -58,7 +58,7 @@ public sealed class User : BaseEntity
             this.additionals = d.Additionals.Select(x => new UserAdditional(x)).ToArray();
             this.cards = d.Cards.Select(x => new Card(x)).ToArray();
             this.pins = d.Pins.Select(x => new Pin(x)).ToArray();
-            if(d.Face is not null)
+            if (d.Face is not null)
                   this.face = new Face(d.Face);
             this.license_plates = d.LicensePlates.Select(x => new LicensePlate(x)).ToArray();
             this.qr_codes = d.QrCodes.Select(x => new QrCode(x)).ToArray();

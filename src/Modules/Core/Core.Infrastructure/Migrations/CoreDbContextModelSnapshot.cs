@@ -23,21 +23,27 @@ namespace Core.Infrastructure.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.HasSequence("BaseEntitySequence");
-
-            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.BaseEntity", b =>
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Card", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasDefaultValueSql("nextval('core.\"BaseEntitySequence\"')");
+                        .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseSequence(b.Property<int>("id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<short>("bits")
+                        .HasColumnType("smallint");
+
+                    b.Property<int>("card_number")
+                        .HasColumnType("integer");
 
                     b.Property<DateTime>("created_at")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
                         .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.Property<int>("fac")
+                        .HasColumnType("integer");
 
                     b.Property<Guid>("guid")
                         .ValueGeneratedOnAdd()
@@ -50,8 +56,52 @@ namespace Core.Infrastructure.Migrations
                     b.Property<bool>("is_default")
                         .HasColumnType("boolean");
 
-                    b.Property<Guid>("location_guid")
+                    b.Property<DateTime>("updated_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.Property<Guid?>("user_guid")
                         .HasColumnType("uuid");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("user_guid");
+
+                    b.ToTable("Cards", "core");
+                });
+
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Company", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<string>("address")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("created_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.Property<string>("description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("guid")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<bool>("is_active")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("is_default")
+                        .HasColumnType("boolean");
 
                     b.Property<string>("name")
                         .IsRequired()
@@ -62,15 +112,9 @@ namespace Core.Infrastructure.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
 
-                    b.Property<string>("vendor")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.HasKey("id");
 
-                    b.ToTable("BaseEntity", "core");
-
-                    b.UseTpcMappingStrategy();
+                    b.ToTable("Companies", "core");
                 });
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Country", b =>
@@ -89,6 +133,17 @@ namespace Core.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
                         .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.Property<Guid>("guid")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<bool>("is_active")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("is_default")
+                        .HasColumnType("boolean");
 
                     b.Property<string>("name")
                         .IsRequired()
@@ -109,6 +164,9 @@ namespace Core.Infrastructure.Migrations
                             id = 1,
                             code = "AD",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Andorra",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -117,6 +175,9 @@ namespace Core.Infrastructure.Migrations
                             id = 2,
                             code = "AE",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "United Arab Emirates",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -125,6 +186,9 @@ namespace Core.Infrastructure.Migrations
                             id = 3,
                             code = "AF",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Afghanistan",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -133,6 +197,9 @@ namespace Core.Infrastructure.Migrations
                             id = 4,
                             code = "AG",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Antigua and Barbuda",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -141,6 +208,9 @@ namespace Core.Infrastructure.Migrations
                             id = 5,
                             code = "AI",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Anguilla",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -149,6 +219,9 @@ namespace Core.Infrastructure.Migrations
                             id = 6,
                             code = "AL",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Albania",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -157,6 +230,9 @@ namespace Core.Infrastructure.Migrations
                             id = 7,
                             code = "AM",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Armenia",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -165,6 +241,9 @@ namespace Core.Infrastructure.Migrations
                             id = 8,
                             code = "AN",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Netherlands Antilles",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -173,6 +252,9 @@ namespace Core.Infrastructure.Migrations
                             id = 9,
                             code = "AO",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Angola",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -181,6 +263,9 @@ namespace Core.Infrastructure.Migrations
                             id = 10,
                             code = "AQ",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Antarctica",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -189,6 +274,9 @@ namespace Core.Infrastructure.Migrations
                             id = 11,
                             code = "AR",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Argentina",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -197,6 +285,9 @@ namespace Core.Infrastructure.Migrations
                             id = 12,
                             code = "AS",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "American Samoa",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -205,6 +296,9 @@ namespace Core.Infrastructure.Migrations
                             id = 13,
                             code = "AT",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Austria",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -213,6 +307,9 @@ namespace Core.Infrastructure.Migrations
                             id = 14,
                             code = "AU",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Australia",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -221,6 +318,9 @@ namespace Core.Infrastructure.Migrations
                             id = 15,
                             code = "AW",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Aruba",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -229,6 +329,9 @@ namespace Core.Infrastructure.Migrations
                             id = 16,
                             code = "AZ",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Azerbaijan",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -237,6 +340,9 @@ namespace Core.Infrastructure.Migrations
                             id = 17,
                             code = "BA",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Bosnia and Herzegovina",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -245,6 +351,9 @@ namespace Core.Infrastructure.Migrations
                             id = 18,
                             code = "BB",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Barbados",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -253,6 +362,9 @@ namespace Core.Infrastructure.Migrations
                             id = 19,
                             code = "BD",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Bangladesh",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -261,6 +373,9 @@ namespace Core.Infrastructure.Migrations
                             id = 20,
                             code = "BE",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Belgium",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -269,6 +384,9 @@ namespace Core.Infrastructure.Migrations
                             id = 21,
                             code = "BF",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Burkina Faso",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -277,6 +395,9 @@ namespace Core.Infrastructure.Migrations
                             id = 22,
                             code = "BG",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Bulgaria",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -285,6 +406,9 @@ namespace Core.Infrastructure.Migrations
                             id = 23,
                             code = "BH",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Bahrain",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -293,6 +417,9 @@ namespace Core.Infrastructure.Migrations
                             id = 24,
                             code = "BI",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Burundi",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -301,6 +428,9 @@ namespace Core.Infrastructure.Migrations
                             id = 25,
                             code = "BJ",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Benin",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -309,6 +439,9 @@ namespace Core.Infrastructure.Migrations
                             id = 26,
                             code = "BM",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Bermuda",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -317,6 +450,9 @@ namespace Core.Infrastructure.Migrations
                             id = 27,
                             code = "BN",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Brunei",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -325,6 +461,9 @@ namespace Core.Infrastructure.Migrations
                             id = 28,
                             code = "BO",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Bolivia",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -333,6 +472,9 @@ namespace Core.Infrastructure.Migrations
                             id = 29,
                             code = "BR",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Brazil",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -341,6 +483,9 @@ namespace Core.Infrastructure.Migrations
                             id = 30,
                             code = "BS",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Bahamas",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -349,6 +494,9 @@ namespace Core.Infrastructure.Migrations
                             id = 31,
                             code = "BT",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Bhutan",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -357,6 +505,9 @@ namespace Core.Infrastructure.Migrations
                             id = 32,
                             code = "BV",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Bouvet Island",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -365,6 +516,9 @@ namespace Core.Infrastructure.Migrations
                             id = 33,
                             code = "BW",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Botswana",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -373,6 +527,9 @@ namespace Core.Infrastructure.Migrations
                             id = 34,
                             code = "BY",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Belarus",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -381,6 +538,9 @@ namespace Core.Infrastructure.Migrations
                             id = 35,
                             code = "BZ",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Belize",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -389,6 +549,9 @@ namespace Core.Infrastructure.Migrations
                             id = 36,
                             code = "CA",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Canada",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -397,6 +560,9 @@ namespace Core.Infrastructure.Migrations
                             id = 37,
                             code = "CC",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Cocos (Keeling) Islands",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -405,6 +571,9 @@ namespace Core.Infrastructure.Migrations
                             id = 38,
                             code = "CD",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Congo (DRC)",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -413,6 +582,9 @@ namespace Core.Infrastructure.Migrations
                             id = 39,
                             code = "CF",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Central African Republic",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -421,6 +593,9 @@ namespace Core.Infrastructure.Migrations
                             id = 40,
                             code = "CG",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Congo (Republic)",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -429,6 +604,9 @@ namespace Core.Infrastructure.Migrations
                             id = 41,
                             code = "CH",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Switzerland",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -437,6 +615,9 @@ namespace Core.Infrastructure.Migrations
                             id = 42,
                             code = "CI",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Côte d'Ivoire",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -445,6 +626,9 @@ namespace Core.Infrastructure.Migrations
                             id = 43,
                             code = "CK",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Cook Islands",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -453,6 +637,9 @@ namespace Core.Infrastructure.Migrations
                             id = 44,
                             code = "CL",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Chile",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -461,6 +648,9 @@ namespace Core.Infrastructure.Migrations
                             id = 45,
                             code = "CM",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Cameroon",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -469,6 +659,9 @@ namespace Core.Infrastructure.Migrations
                             id = 46,
                             code = "CN",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "China",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -477,6 +670,9 @@ namespace Core.Infrastructure.Migrations
                             id = 47,
                             code = "CO",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Colombia",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -485,6 +681,9 @@ namespace Core.Infrastructure.Migrations
                             id = 48,
                             code = "CR",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Costa Rica",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -493,6 +692,9 @@ namespace Core.Infrastructure.Migrations
                             id = 49,
                             code = "CU",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Cuba",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -501,6 +703,9 @@ namespace Core.Infrastructure.Migrations
                             id = 50,
                             code = "CV",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Cape Verde",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -509,6 +714,9 @@ namespace Core.Infrastructure.Migrations
                             id = 51,
                             code = "CX",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Christmas Island",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -517,6 +725,9 @@ namespace Core.Infrastructure.Migrations
                             id = 52,
                             code = "CY",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Cyprus",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -525,6 +736,9 @@ namespace Core.Infrastructure.Migrations
                             id = 53,
                             code = "CZ",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Czech Republic",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -533,6 +747,9 @@ namespace Core.Infrastructure.Migrations
                             id = 54,
                             code = "DE",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Germany",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -541,6 +758,9 @@ namespace Core.Infrastructure.Migrations
                             id = 55,
                             code = "DJ",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Djibouti",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -549,6 +769,9 @@ namespace Core.Infrastructure.Migrations
                             id = 56,
                             code = "DK",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Denmark",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -557,6 +780,9 @@ namespace Core.Infrastructure.Migrations
                             id = 57,
                             code = "DM",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Dominica",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -565,6 +791,9 @@ namespace Core.Infrastructure.Migrations
                             id = 58,
                             code = "DO",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Dominican Republic",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -573,6 +802,9 @@ namespace Core.Infrastructure.Migrations
                             id = 59,
                             code = "DZ",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Algeria",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -581,6 +813,9 @@ namespace Core.Infrastructure.Migrations
                             id = 60,
                             code = "EC",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Ecuador",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -589,6 +824,9 @@ namespace Core.Infrastructure.Migrations
                             id = 61,
                             code = "EE",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Estonia",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -597,6 +835,9 @@ namespace Core.Infrastructure.Migrations
                             id = 62,
                             code = "EG",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Egypt",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -605,6 +846,9 @@ namespace Core.Infrastructure.Migrations
                             id = 63,
                             code = "EH",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Western Sahara",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -613,6 +857,9 @@ namespace Core.Infrastructure.Migrations
                             id = 64,
                             code = "ER",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Eritrea",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -621,6 +868,9 @@ namespace Core.Infrastructure.Migrations
                             id = 65,
                             code = "ES",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Spain",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -629,6 +879,9 @@ namespace Core.Infrastructure.Migrations
                             id = 66,
                             code = "ET",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Ethiopia",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -637,6 +890,9 @@ namespace Core.Infrastructure.Migrations
                             id = 67,
                             code = "FI",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Finland",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -645,6 +901,9 @@ namespace Core.Infrastructure.Migrations
                             id = 68,
                             code = "FJ",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Fiji",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -653,6 +912,9 @@ namespace Core.Infrastructure.Migrations
                             id = 69,
                             code = "FK",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Falkland Islands",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -661,6 +923,9 @@ namespace Core.Infrastructure.Migrations
                             id = 70,
                             code = "FM",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Micronesia",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -669,6 +934,9 @@ namespace Core.Infrastructure.Migrations
                             id = 71,
                             code = "FO",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Faroe Islands",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -677,6 +945,9 @@ namespace Core.Infrastructure.Migrations
                             id = 72,
                             code = "FR",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "France",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -685,6 +956,9 @@ namespace Core.Infrastructure.Migrations
                             id = 73,
                             code = "GA",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Gabon",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -693,6 +967,9 @@ namespace Core.Infrastructure.Migrations
                             id = 74,
                             code = "GB",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "United Kingdom",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -701,6 +978,9 @@ namespace Core.Infrastructure.Migrations
                             id = 75,
                             code = "GD",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Grenada",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -709,6 +989,9 @@ namespace Core.Infrastructure.Migrations
                             id = 76,
                             code = "GE",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Georgia",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -717,6 +1000,9 @@ namespace Core.Infrastructure.Migrations
                             id = 77,
                             code = "GF",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "French Guiana",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -725,6 +1011,9 @@ namespace Core.Infrastructure.Migrations
                             id = 78,
                             code = "GG",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Guernsey",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -733,6 +1022,9 @@ namespace Core.Infrastructure.Migrations
                             id = 79,
                             code = "GH",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Ghana",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -741,6 +1033,9 @@ namespace Core.Infrastructure.Migrations
                             id = 80,
                             code = "GI",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Gibraltar",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -749,6 +1044,9 @@ namespace Core.Infrastructure.Migrations
                             id = 81,
                             code = "GL",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Greenland",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -757,6 +1055,9 @@ namespace Core.Infrastructure.Migrations
                             id = 82,
                             code = "GM",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Gambia",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -765,6 +1066,9 @@ namespace Core.Infrastructure.Migrations
                             id = 83,
                             code = "GN",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Guinea",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -773,6 +1077,9 @@ namespace Core.Infrastructure.Migrations
                             id = 84,
                             code = "GP",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Guadeloupe",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -781,6 +1088,9 @@ namespace Core.Infrastructure.Migrations
                             id = 85,
                             code = "GQ",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Equatorial Guinea",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -789,6 +1099,9 @@ namespace Core.Infrastructure.Migrations
                             id = 86,
                             code = "GR",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Greece",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -797,6 +1110,9 @@ namespace Core.Infrastructure.Migrations
                             id = 87,
                             code = "GT",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Guatemala",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -805,6 +1121,9 @@ namespace Core.Infrastructure.Migrations
                             id = 88,
                             code = "GU",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Guam",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -813,6 +1132,9 @@ namespace Core.Infrastructure.Migrations
                             id = 89,
                             code = "GW",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Guinea-Bissau",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -821,6 +1143,9 @@ namespace Core.Infrastructure.Migrations
                             id = 90,
                             code = "GY",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Guyana",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -829,6 +1154,9 @@ namespace Core.Infrastructure.Migrations
                             id = 91,
                             code = "HK",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Hong Kong",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -837,6 +1165,9 @@ namespace Core.Infrastructure.Migrations
                             id = 92,
                             code = "HN",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Honduras",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -845,6 +1176,9 @@ namespace Core.Infrastructure.Migrations
                             id = 93,
                             code = "HR",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Croatia",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -853,6 +1187,9 @@ namespace Core.Infrastructure.Migrations
                             id = 94,
                             code = "HT",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Haiti",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -861,6 +1198,9 @@ namespace Core.Infrastructure.Migrations
                             id = 95,
                             code = "HU",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Hungary",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -869,6 +1209,9 @@ namespace Core.Infrastructure.Migrations
                             id = 96,
                             code = "ID",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Indonesia",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -877,6 +1220,9 @@ namespace Core.Infrastructure.Migrations
                             id = 97,
                             code = "IE",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Ireland",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -885,6 +1231,9 @@ namespace Core.Infrastructure.Migrations
                             id = 98,
                             code = "IL",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Israel",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -893,6 +1242,9 @@ namespace Core.Infrastructure.Migrations
                             id = 99,
                             code = "IN",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "India",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -901,6 +1253,9 @@ namespace Core.Infrastructure.Migrations
                             id = 100,
                             code = "IQ",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Iraq",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -909,6 +1264,9 @@ namespace Core.Infrastructure.Migrations
                             id = 101,
                             code = "IR",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Iran",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -917,6 +1275,9 @@ namespace Core.Infrastructure.Migrations
                             id = 102,
                             code = "IS",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Iceland",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -925,6 +1286,9 @@ namespace Core.Infrastructure.Migrations
                             id = 103,
                             code = "IT",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Italy",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -933,6 +1297,9 @@ namespace Core.Infrastructure.Migrations
                             id = 104,
                             code = "JM",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Jamaica",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -941,6 +1308,9 @@ namespace Core.Infrastructure.Migrations
                             id = 105,
                             code = "JO",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Jordan",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -949,6 +1319,9 @@ namespace Core.Infrastructure.Migrations
                             id = 106,
                             code = "JP",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Japan",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -957,6 +1330,9 @@ namespace Core.Infrastructure.Migrations
                             id = 107,
                             code = "KE",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Kenya",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -965,6 +1341,9 @@ namespace Core.Infrastructure.Migrations
                             id = 108,
                             code = "KH",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Cambodia",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -973,6 +1352,9 @@ namespace Core.Infrastructure.Migrations
                             id = 109,
                             code = "KR",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "South Korea",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -981,6 +1363,9 @@ namespace Core.Infrastructure.Migrations
                             id = 110,
                             code = "KW",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Kuwait",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -989,6 +1374,9 @@ namespace Core.Infrastructure.Migrations
                             id = 111,
                             code = "KZ",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Kazakhstan",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -997,6 +1385,9 @@ namespace Core.Infrastructure.Migrations
                             id = 112,
                             code = "LA",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Laos",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1005,6 +1396,9 @@ namespace Core.Infrastructure.Migrations
                             id = 113,
                             code = "LB",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Lebanon",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1013,6 +1407,9 @@ namespace Core.Infrastructure.Migrations
                             id = 114,
                             code = "LK",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Sri Lanka",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1021,6 +1418,9 @@ namespace Core.Infrastructure.Migrations
                             id = 115,
                             code = "LR",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Liberia",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1029,6 +1429,9 @@ namespace Core.Infrastructure.Migrations
                             id = 116,
                             code = "LS",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Lesotho",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1037,6 +1440,9 @@ namespace Core.Infrastructure.Migrations
                             id = 117,
                             code = "LT",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Lithuania",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1045,6 +1451,9 @@ namespace Core.Infrastructure.Migrations
                             id = 118,
                             code = "LU",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Luxembourg",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1053,6 +1462,9 @@ namespace Core.Infrastructure.Migrations
                             id = 119,
                             code = "LV",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Latvia",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1061,6 +1473,9 @@ namespace Core.Infrastructure.Migrations
                             id = 120,
                             code = "LY",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Libya",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1069,6 +1484,9 @@ namespace Core.Infrastructure.Migrations
                             id = 121,
                             code = "MA",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Morocco",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1077,6 +1495,9 @@ namespace Core.Infrastructure.Migrations
                             id = 122,
                             code = "MC",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Monaco",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1085,6 +1506,9 @@ namespace Core.Infrastructure.Migrations
                             id = 123,
                             code = "MD",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Moldova",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1093,6 +1517,9 @@ namespace Core.Infrastructure.Migrations
                             id = 124,
                             code = "ME",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Montenegro",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1101,6 +1528,9 @@ namespace Core.Infrastructure.Migrations
                             id = 125,
                             code = "MG",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Madagascar",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1109,6 +1539,9 @@ namespace Core.Infrastructure.Migrations
                             id = 126,
                             code = "MV",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Maldives",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1117,6 +1550,9 @@ namespace Core.Infrastructure.Migrations
                             id = 127,
                             code = "MX",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Mexico",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1125,6 +1561,9 @@ namespace Core.Infrastructure.Migrations
                             id = 128,
                             code = "MY",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Malaysia",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1133,6 +1572,9 @@ namespace Core.Infrastructure.Migrations
                             id = 129,
                             code = "MZ",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Mozambique",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1141,6 +1583,9 @@ namespace Core.Infrastructure.Migrations
                             id = 130,
                             code = "NA",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Namibia",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1149,6 +1594,9 @@ namespace Core.Infrastructure.Migrations
                             id = 131,
                             code = "NG",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Nigeria",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1157,6 +1605,9 @@ namespace Core.Infrastructure.Migrations
                             id = 132,
                             code = "NL",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Netherlands",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1165,6 +1616,9 @@ namespace Core.Infrastructure.Migrations
                             id = 133,
                             code = "NO",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Norway",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1173,6 +1627,9 @@ namespace Core.Infrastructure.Migrations
                             id = 134,
                             code = "NP",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Nepal",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1181,6 +1638,9 @@ namespace Core.Infrastructure.Migrations
                             id = 135,
                             code = "NZ",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "New Zealand",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1189,6 +1649,9 @@ namespace Core.Infrastructure.Migrations
                             id = 136,
                             code = "OM",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Oman",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1197,6 +1660,9 @@ namespace Core.Infrastructure.Migrations
                             id = 137,
                             code = "PA",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Panama",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1205,6 +1671,9 @@ namespace Core.Infrastructure.Migrations
                             id = 138,
                             code = "PE",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Peru",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1213,6 +1682,9 @@ namespace Core.Infrastructure.Migrations
                             id = 139,
                             code = "PH",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Philippines",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1221,6 +1693,9 @@ namespace Core.Infrastructure.Migrations
                             id = 140,
                             code = "PK",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Pakistan",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1229,6 +1704,9 @@ namespace Core.Infrastructure.Migrations
                             id = 141,
                             code = "PL",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Poland",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1237,6 +1715,9 @@ namespace Core.Infrastructure.Migrations
                             id = 142,
                             code = "PT",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Portugal",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1245,6 +1726,9 @@ namespace Core.Infrastructure.Migrations
                             id = 143,
                             code = "QA",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Qatar",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1253,6 +1737,9 @@ namespace Core.Infrastructure.Migrations
                             id = 144,
                             code = "RO",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Romania",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1261,6 +1748,9 @@ namespace Core.Infrastructure.Migrations
                             id = 145,
                             code = "RS",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Serbia",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1269,6 +1759,9 @@ namespace Core.Infrastructure.Migrations
                             id = 146,
                             code = "RU",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Russia",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1277,6 +1770,9 @@ namespace Core.Infrastructure.Migrations
                             id = 147,
                             code = "RW",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Rwanda",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1285,6 +1781,9 @@ namespace Core.Infrastructure.Migrations
                             id = 148,
                             code = "SA",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Saudi Arabia",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1293,6 +1792,9 @@ namespace Core.Infrastructure.Migrations
                             id = 149,
                             code = "SE",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Sweden",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1301,6 +1803,9 @@ namespace Core.Infrastructure.Migrations
                             id = 150,
                             code = "SG",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Singapore",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1309,6 +1814,9 @@ namespace Core.Infrastructure.Migrations
                             id = 151,
                             code = "SI",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Slovenia",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1317,6 +1825,9 @@ namespace Core.Infrastructure.Migrations
                             id = 152,
                             code = "SK",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Slovakia",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1325,6 +1836,9 @@ namespace Core.Infrastructure.Migrations
                             id = 153,
                             code = "SN",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Senegal",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1333,6 +1847,9 @@ namespace Core.Infrastructure.Migrations
                             id = 154,
                             code = "SO",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Somalia",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1341,6 +1858,9 @@ namespace Core.Infrastructure.Migrations
                             id = 155,
                             code = "SR",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Suriname",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1349,6 +1869,9 @@ namespace Core.Infrastructure.Migrations
                             id = 156,
                             code = "SV",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "El Salvador",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1357,6 +1880,9 @@ namespace Core.Infrastructure.Migrations
                             id = 157,
                             code = "SY",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Syria",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1365,6 +1891,9 @@ namespace Core.Infrastructure.Migrations
                             id = 158,
                             code = "TH",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Thailand",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1373,6 +1902,9 @@ namespace Core.Infrastructure.Migrations
                             id = 159,
                             code = "TJ",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Tajikistan",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1381,6 +1913,9 @@ namespace Core.Infrastructure.Migrations
                             id = 160,
                             code = "TL",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Timor-Leste",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1389,6 +1924,9 @@ namespace Core.Infrastructure.Migrations
                             id = 161,
                             code = "TM",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Turkmenistan",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1397,6 +1935,9 @@ namespace Core.Infrastructure.Migrations
                             id = 162,
                             code = "TN",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Tunisia",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1405,6 +1946,9 @@ namespace Core.Infrastructure.Migrations
                             id = 163,
                             code = "TR",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Turkey",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1413,6 +1957,9 @@ namespace Core.Infrastructure.Migrations
                             id = 164,
                             code = "TW",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Taiwan",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1421,6 +1968,9 @@ namespace Core.Infrastructure.Migrations
                             id = 165,
                             code = "TZ",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Tanzania",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1429,6 +1979,9 @@ namespace Core.Infrastructure.Migrations
                             id = 166,
                             code = "UA",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Ukraine",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1437,6 +1990,9 @@ namespace Core.Infrastructure.Migrations
                             id = 167,
                             code = "UG",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Uganda",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1445,6 +2001,9 @@ namespace Core.Infrastructure.Migrations
                             id = 168,
                             code = "US",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "United States",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1453,6 +2012,9 @@ namespace Core.Infrastructure.Migrations
                             id = 169,
                             code = "UY",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Uruguay",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1461,6 +2023,9 @@ namespace Core.Infrastructure.Migrations
                             id = 170,
                             code = "UZ",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Uzbekistan",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1469,6 +2034,9 @@ namespace Core.Infrastructure.Migrations
                             id = 171,
                             code = "VA",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Vatican City",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1477,6 +2045,9 @@ namespace Core.Infrastructure.Migrations
                             id = 172,
                             code = "VE",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Venezuela",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1485,6 +2056,9 @@ namespace Core.Infrastructure.Migrations
                             id = 173,
                             code = "VN",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Vietnam",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1493,6 +2067,9 @@ namespace Core.Infrastructure.Migrations
                             id = 174,
                             code = "YE",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Yemen",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1501,6 +2078,9 @@ namespace Core.Infrastructure.Migrations
                             id = 175,
                             code = "ZA",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "South Africa",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1509,6 +2089,9 @@ namespace Core.Infrastructure.Migrations
                             id = 176,
                             code = "ZM",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Zambia",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1517,6 +2100,9 @@ namespace Core.Infrastructure.Migrations
                             id = 177,
                             code = "ZW",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Zimbabwe",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -1525,9 +2111,446 @@ namespace Core.Infrastructure.Migrations
                             id = 178,
                             code = "",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
                             name = "Default",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         });
+                });
+
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Department", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<Guid>("company_guid")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("created_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.Property<string>("description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("guid")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<bool>("is_active")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("is_default")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("updated_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("company_guid");
+
+                    b.ToTable("Departments", "core");
+                });
+
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Device", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<DateTime>("created_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.Property<string>("fw")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("guid")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<string>("ip")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("is_active")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("is_default")
+                        .HasColumnType("boolean");
+
+                    b.Property<Guid>("location_guid")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("mac")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("metadata")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("port")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("serial_number")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("status")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("synced_at")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("updated_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("location_guid");
+
+                    b.ToTable("Devices", "core");
+                });
+
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Face", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<DateTime>("created_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.Property<Guid>("guid")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<string>("image_name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("is_active")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("is_default")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime>("updated_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.Property<Guid?>("user_guid")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("id");
+
+                    b.ToTable("Faces", "core");
+                });
+
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Feature", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<DateTime>("created_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.Property<Guid>("guid")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<bool>("is_active")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("is_default")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("updated_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.HasKey("id");
+
+                    b.ToTable("Features", "core");
+
+                    b.HasData(
+                        new
+                        {
+                            id = 1,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("f1f1f528-1025-44de-8512-be5f269417e8"),
+                            is_active = true,
+                            is_default = false,
+                            name = "dashboard",
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            id = 2,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("62e7ede3-9152-476a-a4df-173cc16a12fe"),
+                            is_active = true,
+                            is_default = false,
+                            name = "events",
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            id = 3,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("c164d952-6649-49bb-95c9-2543695b8af6"),
+                            is_active = true,
+                            is_default = false,
+                            name = "location",
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            id = 4,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("14fa8dca-521d-4e1a-a582-0159df91aea9"),
+                            is_active = true,
+                            is_default = false,
+                            name = "alert",
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            id = 5,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("60239ccd-4cd7-441a-94c4-4a1577c79e38"),
+                            is_active = true,
+                            is_default = false,
+                            name = "operator",
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            id = 6,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("dc76438d-0e0d-4d60-88bc-0559cb81ce4a"),
+                            is_active = true,
+                            is_default = false,
+                            name = "device",
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            id = 7,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("77c0545d-ec94-4037-802f-2240bcc9020e"),
+                            is_active = true,
+                            is_default = false,
+                            name = "control",
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            id = 8,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("2242b3c0-06e7-4e07-be9f-7491584c57c9"),
+                            is_active = true,
+                            is_default = false,
+                            name = "monitor",
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            id = 9,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("8b5c31bb-706b-4fa5-b0f0-dd246f1e9a2b"),
+                            is_active = true,
+                            is_default = false,
+                            name = "monitorgroup",
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            id = 10,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("f2143a86-d2f1-47ad-a481-c74ecbdadc83"),
+                            is_active = true,
+                            is_default = false,
+                            name = "acr",
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            id = 11,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("b753863e-30f4-47aa-81b3-64dda55970da"),
+                            is_active = true,
+                            is_default = false,
+                            name = "user",
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            id = 12,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("5ab363b5-a921-41e5-949e-5129eb416097"),
+                            is_active = true,
+                            is_default = false,
+                            name = "group",
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            id = 13,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("4401f4d8-4145-4439-adab-d89cd3e3b2fb"),
+                            is_active = true,
+                            is_default = false,
+                            name = "area",
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            id = 14,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("f18ef407-cd4d-46e8-a9f5-cbc99b87a0e4"),
+                            is_active = true,
+                            is_default = false,
+                            name = "time",
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            id = 15,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("5699f80a-aa8c-4325-88cf-8ba31b85f976"),
+                            is_active = true,
+                            is_default = false,
+                            name = "trigger",
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            id = 16,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("76d4a40a-3fa8-4a9f-a7b5-2b63f57fd26d"),
+                            is_active = true,
+                            is_default = false,
+                            name = "map",
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            id = 17,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("24ebed55-6686-45a8-95a5-00e4e6516f4f"),
+                            is_active = true,
+                            is_default = false,
+                            name = "report",
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            id = 18,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("713bcbae-1755-4a94-ab82-0180a856c80a"),
+                            is_active = true,
+                            is_default = false,
+                            name = "setting",
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            id = 19,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("d57aac0d-1f61-4135-857b-cc1f51288d72"),
+                            is_active = true,
+                            is_default = false,
+                            name = "tools",
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        });
+                });
+
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.LicensePlate", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<DateTime>("created_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.Property<Guid>("guid")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<bool>("is_active")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("is_default")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("license_plate")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("updated_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.Property<Guid?>("user_guid")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("user_guid");
+
+                    b.ToTable("LicensePlates", "core");
                 });
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Location", b =>
@@ -1582,7 +2605,7 @@ namespace Core.Infrastructure.Migrations
                             id = 1,
                             country_id = 178,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            description = "Main location descriptions",
+                            description = "Main location",
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             is_active = true,
                             is_default = true,
@@ -1591,51 +2614,21 @@ namespace Core.Infrastructure.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Device", b =>
-                {
-                    b.HasBaseType("Core.Infrastructure.Persistences.Entities.BaseEntity");
-
-                    b.Property<string>("fw")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("ip")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("mac")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("metadata")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int>("port")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("serial_number")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("status")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("synced_at")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.HasIndex("location_guid");
-
-                    b.ToTable("Devices", "core");
-                });
-
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Module", b =>
                 {
-                    b.HasBaseType("Core.Infrastructure.Persistences.Entities.BaseEntity");
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
 
                     b.Property<short>("address")
                         .HasColumnType("smallint");
+
+                    b.Property<DateTime>("created_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
 
                     b.Property<Guid>("device_guid")
                         .HasColumnType("uuid");
@@ -1644,11 +2637,29 @@ namespace Core.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<Guid>("guid")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<bool>("is_active")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("is_default")
+                        .HasColumnType("boolean");
+
+                    b.Property<Guid>("location_guid")
+                        .HasColumnType("uuid");
+
                     b.Property<string>("mac")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("model")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("name")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -1659,6 +2670,13 @@ namespace Core.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<DateTime>("updated_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.HasKey("id");
+
                     b.HasIndex("device_guid");
 
                     b.HasIndex("location_guid");
@@ -1666,15 +2684,739 @@ namespace Core.Infrastructure.Migrations
                     b.ToTable("Modules", "core");
                 });
 
-            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Location", b =>
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Permission", b =>
                 {
-                    b.HasOne("Core.Infrastructure.Persistences.Entities.Country", "country")
-                        .WithMany("locations")
-                        .HasForeignKey("country_id")
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<DateTime>("created_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.Property<Guid>("feature_guid")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("guid")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<bool>("is_active")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("is_created")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("is_default")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("is_deleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("is_enabled")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("is_updated")
+                        .HasColumnType("boolean");
+
+                    b.Property<Guid>("role_guid")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("updated_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("feature_guid");
+
+                    b.HasIndex("role_guid");
+
+                    b.ToTable("Permissions", "core");
+
+                    b.HasData(
+                        new
+                        {
+                            id = 1,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            feature_guid = new Guid("f1f1f528-1025-44de-8512-be5f269417e8"),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_created = true,
+                            is_default = false,
+                            is_deleted = true,
+                            is_enabled = true,
+                            is_updated = true,
+                            role_guid = new Guid("fe527691-7b13-4294-98b5-cb95181f5453"),
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            id = 2,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            feature_guid = new Guid("62e7ede3-9152-476a-a4df-173cc16a12fe"),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_created = true,
+                            is_default = false,
+                            is_deleted = true,
+                            is_enabled = true,
+                            is_updated = true,
+                            role_guid = new Guid("fe527691-7b13-4294-98b5-cb95181f5453"),
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            id = 3,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            feature_guid = new Guid("c164d952-6649-49bb-95c9-2543695b8af6"),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_created = true,
+                            is_default = false,
+                            is_deleted = true,
+                            is_enabled = true,
+                            is_updated = true,
+                            role_guid = new Guid("fe527691-7b13-4294-98b5-cb95181f5453"),
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            id = 4,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            feature_guid = new Guid("14fa8dca-521d-4e1a-a582-0159df91aea9"),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_created = true,
+                            is_default = false,
+                            is_deleted = true,
+                            is_enabled = true,
+                            is_updated = true,
+                            role_guid = new Guid("fe527691-7b13-4294-98b5-cb95181f5453"),
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            id = 5,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            feature_guid = new Guid("60239ccd-4cd7-441a-94c4-4a1577c79e38"),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_created = true,
+                            is_default = false,
+                            is_deleted = true,
+                            is_enabled = true,
+                            is_updated = true,
+                            role_guid = new Guid("fe527691-7b13-4294-98b5-cb95181f5453"),
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            id = 6,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            feature_guid = new Guid("dc76438d-0e0d-4d60-88bc-0559cb81ce4a"),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_created = true,
+                            is_default = false,
+                            is_deleted = true,
+                            is_enabled = true,
+                            is_updated = true,
+                            role_guid = new Guid("fe527691-7b13-4294-98b5-cb95181f5453"),
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            id = 7,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            feature_guid = new Guid("77c0545d-ec94-4037-802f-2240bcc9020e"),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_created = true,
+                            is_default = false,
+                            is_deleted = true,
+                            is_enabled = true,
+                            is_updated = true,
+                            role_guid = new Guid("fe527691-7b13-4294-98b5-cb95181f5453"),
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            id = 8,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            feature_guid = new Guid("2242b3c0-06e7-4e07-be9f-7491584c57c9"),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_created = true,
+                            is_default = false,
+                            is_deleted = true,
+                            is_enabled = true,
+                            is_updated = true,
+                            role_guid = new Guid("fe527691-7b13-4294-98b5-cb95181f5453"),
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            id = 9,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            feature_guid = new Guid("8b5c31bb-706b-4fa5-b0f0-dd246f1e9a2b"),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_created = true,
+                            is_default = false,
+                            is_deleted = true,
+                            is_enabled = true,
+                            is_updated = true,
+                            role_guid = new Guid("fe527691-7b13-4294-98b5-cb95181f5453"),
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            id = 10,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            feature_guid = new Guid("f2143a86-d2f1-47ad-a481-c74ecbdadc83"),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_created = true,
+                            is_default = false,
+                            is_deleted = true,
+                            is_enabled = true,
+                            is_updated = true,
+                            role_guid = new Guid("fe527691-7b13-4294-98b5-cb95181f5453"),
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            id = 11,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            feature_guid = new Guid("b753863e-30f4-47aa-81b3-64dda55970da"),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_created = true,
+                            is_default = false,
+                            is_deleted = true,
+                            is_enabled = true,
+                            is_updated = true,
+                            role_guid = new Guid("fe527691-7b13-4294-98b5-cb95181f5453"),
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            id = 12,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            feature_guid = new Guid("5ab363b5-a921-41e5-949e-5129eb416097"),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_created = true,
+                            is_default = false,
+                            is_deleted = true,
+                            is_enabled = true,
+                            is_updated = true,
+                            role_guid = new Guid("fe527691-7b13-4294-98b5-cb95181f5453"),
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            id = 13,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            feature_guid = new Guid("4401f4d8-4145-4439-adab-d89cd3e3b2fb"),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_created = true,
+                            is_default = false,
+                            is_deleted = true,
+                            is_enabled = true,
+                            is_updated = true,
+                            role_guid = new Guid("fe527691-7b13-4294-98b5-cb95181f5453"),
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            id = 14,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            feature_guid = new Guid("f18ef407-cd4d-46e8-a9f5-cbc99b87a0e4"),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_created = true,
+                            is_default = false,
+                            is_deleted = true,
+                            is_enabled = true,
+                            is_updated = true,
+                            role_guid = new Guid("fe527691-7b13-4294-98b5-cb95181f5453"),
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            id = 15,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            feature_guid = new Guid("5699f80a-aa8c-4325-88cf-8ba31b85f976"),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_created = true,
+                            is_default = false,
+                            is_deleted = true,
+                            is_enabled = true,
+                            is_updated = true,
+                            role_guid = new Guid("fe527691-7b13-4294-98b5-cb95181f5453"),
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            id = 16,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            feature_guid = new Guid("76d4a40a-3fa8-4a9f-a7b5-2b63f57fd26d"),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_created = true,
+                            is_default = false,
+                            is_deleted = true,
+                            is_enabled = true,
+                            is_updated = true,
+                            role_guid = new Guid("fe527691-7b13-4294-98b5-cb95181f5453"),
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            id = 17,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            feature_guid = new Guid("24ebed55-6686-45a8-95a5-00e4e6516f4f"),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_created = true,
+                            is_default = false,
+                            is_deleted = true,
+                            is_enabled = true,
+                            is_updated = true,
+                            role_guid = new Guid("fe527691-7b13-4294-98b5-cb95181f5453"),
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            id = 18,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            feature_guid = new Guid("713bcbae-1755-4a94-ab82-0180a856c80a"),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_created = true,
+                            is_default = false,
+                            is_deleted = true,
+                            is_enabled = true,
+                            is_updated = true,
+                            role_guid = new Guid("fe527691-7b13-4294-98b5-cb95181f5453"),
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            id = 19,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            feature_guid = new Guid("d57aac0d-1f61-4135-857b-cc1f51288d72"),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_created = true,
+                            is_default = false,
+                            is_deleted = true,
+                            is_enabled = true,
+                            is_updated = true,
+                            role_guid = new Guid("fe527691-7b13-4294-98b5-cb95181f5453"),
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        });
+                });
+
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Pin", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<DateTime>("created_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.Property<Guid>("guid")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<bool>("is_active")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("is_default")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("pin")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("updated_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.Property<Guid?>("user_guid")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("user_guid");
+
+                    b.ToTable("Pins", "core");
+                });
+
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Position", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<DateTime>("created_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.Property<Guid>("department_guid")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("guid")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<bool>("is_active")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("is_default")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("updated_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("department_guid");
+
+                    b.ToTable("Positions", "core");
+                });
+
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.QrCode", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<DateTime>("created_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.Property<Guid>("guid")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<bool>("is_active")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("is_default")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("qr_code")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("updated_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.Property<Guid>("user_guid")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("user_guid");
+
+                    b.ToTable("QrCodes", "core");
+                });
+
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Role", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<DateTime>("created_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.Property<Guid>("guid")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<bool>("is_active")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("is_default")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("updated_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.HasKey("id");
+
+                    b.ToTable("Roles", "core");
+
+                    b.HasData(
+                        new
+                        {
+                            id = 1,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("fe527691-7b13-4294-98b5-cb95181f5453"),
+                            is_active = true,
+                            is_default = false,
+                            name = "Administrator",
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        });
+                });
+
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.User", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<DateTime>("active_time")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("address")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid?>("company_guid")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("created_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.Property<DateTime>("date_of_birth")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid?>("department_guid")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("email")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("expire_time")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid?>("face_guid")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("firstname")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("gender")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("guid")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<string>("identification")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("is_active")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("is_default")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("is_operator")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("lastname")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("middlename")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("password")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("phone")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid?>("position_guid")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("role_guid")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("title")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("updated_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.Property<string>("username")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("company_guid");
+
+                    b.HasIndex("department_guid");
+
+                    b.HasIndex("face_guid")
+                        .IsUnique();
+
+                    b.HasIndex("position_guid");
+
+                    b.HasIndex("role_guid");
+
+                    b.ToTable("Users", "core");
+
+                    b.HasData(
+                        new
+                        {
+                            id = 1,
+                            active_time = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            address = "Sentrix",
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            date_of_birth = new DateTime(1996, 9, 16, 0, 0, 0, 0, DateTimeKind.Utc),
+                            email = "support@sentrix.com",
+                            expire_time = new DateTime(9999, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            firstname = "Administrator",
+                            gender = "M",
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            identification = "Administrator",
+                            is_active = true,
+                            is_default = false,
+                            is_operator = true,
+                            lastname = "",
+                            middlename = "",
+                            password = "100000.lG1/4V/VRPZsbhf/Zqc4xw==.6vYcf+wEMSgqcaNhoZEdM9PaPxx2ZUErZhQbeMxo5OY=",
+                            phone = "",
+                            role_guid = new Guid("fe527691-7b13-4294-98b5-cb95181f5453"),
+                            title = "Mr.",
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            username = "admin"
+                        });
+                });
+
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.UserAdditional", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<string>("additional")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("created_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.Property<Guid>("guid")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<bool>("is_active")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("is_default")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime>("updated_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.Property<Guid>("user_guid")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("user_guid");
+
+                    b.ToTable("UserAdditionals", "core");
+                });
+
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Card", b =>
+                {
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.User", "user")
+                        .WithMany("cards")
+                        .HasForeignKey("user_guid")
+                        .HasPrincipalKey("guid")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("user");
+                });
+
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Department", b =>
+                {
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.Company", "company")
+                        .WithMany("departments")
+                        .HasForeignKey("company_guid")
+                        .HasPrincipalKey("guid")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("country");
+                    b.Navigation("company");
                 });
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Device", b =>
@@ -1687,6 +3429,28 @@ namespace Core.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("location");
+                });
+
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.LicensePlate", b =>
+                {
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.User", "user")
+                        .WithMany("license_plates")
+                        .HasForeignKey("user_guid")
+                        .HasPrincipalKey("guid")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("user");
+                });
+
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Location", b =>
+                {
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.Country", "country")
+                        .WithMany("locations")
+                        .HasForeignKey("country_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("country");
                 });
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Module", b =>
@@ -1710,9 +3474,150 @@ namespace Core.Infrastructure.Migrations
                     b.Navigation("location");
                 });
 
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Permission", b =>
+                {
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.Feature", "feature")
+                        .WithMany("permissions")
+                        .HasForeignKey("feature_guid")
+                        .HasPrincipalKey("guid")
+                        .OnDelete(DeleteBehavior.SetNull)
+                        .IsRequired();
+
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.Role", "role")
+                        .WithMany("permissions")
+                        .HasForeignKey("role_guid")
+                        .HasPrincipalKey("guid")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("feature");
+
+                    b.Navigation("role");
+                });
+
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Pin", b =>
+                {
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.User", "user")
+                        .WithMany("pins")
+                        .HasForeignKey("user_guid")
+                        .HasPrincipalKey("guid")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("user");
+                });
+
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Position", b =>
+                {
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.Department", "department")
+                        .WithMany("positions")
+                        .HasForeignKey("department_guid")
+                        .HasPrincipalKey("guid")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("department");
+                });
+
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.QrCode", b =>
+                {
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.User", "user")
+                        .WithMany("qr_codes")
+                        .HasForeignKey("user_guid")
+                        .HasPrincipalKey("guid")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("user");
+                });
+
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.User", b =>
+                {
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.Company", "company")
+                        .WithMany("users")
+                        .HasForeignKey("company_guid")
+                        .HasPrincipalKey("guid")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.Department", "department")
+                        .WithMany("users")
+                        .HasForeignKey("department_guid")
+                        .HasPrincipalKey("guid")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.Face", "face")
+                        .WithOne("user")
+                        .HasForeignKey("Core.Infrastructure.Persistences.Entities.User", "face_guid")
+                        .HasPrincipalKey("Core.Infrastructure.Persistences.Entities.Face", "guid")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.Position", "position")
+                        .WithMany("users")
+                        .HasForeignKey("position_guid")
+                        .HasPrincipalKey("guid")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.Role", "role")
+                        .WithMany("users")
+                        .HasForeignKey("role_guid")
+                        .HasPrincipalKey("guid")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("company");
+
+                    b.Navigation("department");
+
+                    b.Navigation("face");
+
+                    b.Navigation("position");
+
+                    b.Navigation("role");
+                });
+
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.UserAdditional", b =>
+                {
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.User", "user")
+                        .WithMany("additionals")
+                        .HasForeignKey("user_guid")
+                        .HasPrincipalKey("guid")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("user");
+                });
+
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Company", b =>
+                {
+                    b.Navigation("departments");
+
+                    b.Navigation("users");
+                });
+
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Country", b =>
                 {
                     b.Navigation("locations");
+                });
+
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Department", b =>
+                {
+                    b.Navigation("positions");
+
+                    b.Navigation("users");
+                });
+
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Device", b =>
+                {
+                    b.Navigation("modules");
+                });
+
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Face", b =>
+                {
+                    b.Navigation("user")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Feature", b =>
+                {
+                    b.Navigation("permissions");
                 });
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Location", b =>
@@ -1722,9 +3627,29 @@ namespace Core.Infrastructure.Migrations
                     b.Navigation("modules");
                 });
 
-            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Device", b =>
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Position", b =>
                 {
-                    b.Navigation("modules");
+                    b.Navigation("users");
+                });
+
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Role", b =>
+                {
+                    b.Navigation("permissions");
+
+                    b.Navigation("users");
+                });
+
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.User", b =>
+                {
+                    b.Navigation("additionals");
+
+                    b.Navigation("cards");
+
+                    b.Navigation("license_plates");
+
+                    b.Navigation("pins");
+
+                    b.Navigation("qr_codes");
                 });
 #pragma warning restore 612, 618
         }

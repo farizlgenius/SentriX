@@ -10,6 +10,19 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
       public DbSet<Country> Countries { get; set; }
       public DbSet<Device> Devices { get; set; }
       public DbSet<Module> Modules { get; set; }
+      public DbSet<Company> Companies { get; set; }
+      public DbSet<Department> Departments { get; set; }
+      public DbSet<Position> Positions { get; set; }
+      public DbSet<User> Users { get; set; }
+      public DbSet<UserAdditional> UserAdditionals { get; set; }
+      public DbSet<Card> Cards { get; set; }
+      public DbSet<Pin> Pins { get; set; }
+      public DbSet<LicensePlate> LicensePlates { get; set; }
+      public DbSet<QrCode> QrCodes { get; set; }
+      public DbSet<Face> Faces { get; set; }
+      public DbSet<Feature> Features { get; set; }
+      public DbSet<Permission> Permissions { get; set; }
+      public DbSet<Role> Roles { get; set; }
       protected override void OnModelCreating(ModelBuilder modelBuilder)
       {
             Console.WriteLine("=== Entities ===");
@@ -23,10 +36,10 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
             // ⭐ Module schema
             modelBuilder.HasDefaultSchema(Schema);
 
-            // BaseEntity supplies shared columns only. Map each concrete derived
-            // entity to its own table rather than creating a table for the
-            // inheritance root (the default TPH strategy).
-            modelBuilder.Entity<BaseEntity>().UseTpcMappingStrategy();
+            // // BaseEntity supplies shared columns only. Map each concrete derived
+            // // entity to its own table rather than creating a table for the
+            // // inheritance root (the default TPH strategy).
+            // modelBuilder.Entity<BaseEntity>().UseTpcMappingStrategy();
 
             // Make default datetime now
             var isSqlServer = Database.ProviderName == "Microsoft.EntityFrameworkCore.SqlServer";
@@ -111,24 +124,28 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   .HasMany(x => x.cards)
                   .WithOne(x => x.user)
                   .HasForeignKey(x => x.user_guid)
+                  .HasPrincipalKey(x => x.guid)
                   .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<User>()
                   .HasMany(x => x.license_plates)
                   .WithOne(x => x.user)
                   .HasForeignKey(x => x.user_guid)
+                  .HasPrincipalKey(x => x.guid)
                   .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<User>()
                   .HasMany(x => x.qr_codes)
                   .WithOne(x => x.user)
                   .HasForeignKey(x => x.user_guid)
+                  .HasPrincipalKey(x => x.guid)
                   .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<User>()
                   .HasMany(x => x.pins)
                   .WithOne(x => x.user)
                   .HasForeignKey(x => x.user_guid)
+                  .HasPrincipalKey(x => x.guid)
                   .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<User>()
@@ -142,6 +159,7 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   .HasMany(x => x.additionals)
                   .WithOne(x => x.user)
                   .HasForeignKey(x => x.user_guid)
+                  .HasPrincipalKey(x => x.guid)
                   .OnDelete(DeleteBehavior.Cascade);
 
             // Role
@@ -393,32 +411,255 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   new Country { id = 178, name = "Default", code = "" }
                   );
 
-            
+
 
             // Feature Data
             modelBuilder.Entity<Feature>().HasData(
-                  new Feature { id = 1, name = "dashboard", },
-                  new Feature { id = 2, name = "events", },
-                  new Feature { id = 3, name = "location", },
-                  new Feature { id = 4, name = "alert", },
-                  new Feature { id = 5, name = "operator", },
-                  new Feature { id = 6, name = "device", },
-                  new Feature { id = 7, name = "control", },
-                  new Feature { id = 8, name = "monitor", },
-                  new Feature { id = 9, name = "monitorgroup", },
-                  new Feature { id = 10, name = "acr", },
-                  new Feature { id = 11, name = "user", },
-                  new Feature { id = 12, name = "group", },
-                  new Feature { id = 13, name = "area", },
-                  new Feature { id = 14, name = "time", },
-                  new Feature { id = 15, name = "trigger", },
-                  new Feature { id = 16, name = "map", },
-                  new Feature { id = 17, name = "report", },
-                  new Feature { id = 18, name = "setting", },
-                  new Feature { id = 19, name = "tools", }
+                  new Feature { id = 1, guid = new Guid("f1f1f528-1025-44de-8512-be5f269417e8"), name = "dashboard", },
+                  new Feature { id = 2, guid = new Guid("62e7ede3-9152-476a-a4df-173cc16a12fe"), name = "events", },
+                  new Feature { id = 3, guid = new Guid("c164d952-6649-49bb-95c9-2543695b8af6"), name = "location", },
+                  new Feature { id = 4, guid = new Guid("14fa8dca-521d-4e1a-a582-0159df91aea9"), name = "alert", },
+                  new Feature { id = 5, guid = new Guid("60239ccd-4cd7-441a-94c4-4a1577c79e38"), name = "operator", },
+                  new Feature { id = 6, guid = new Guid("dc76438d-0e0d-4d60-88bc-0559cb81ce4a"), name = "device", },
+                  new Feature { id = 7, guid = new Guid("77c0545d-ec94-4037-802f-2240bcc9020e"), name = "control", },
+                  new Feature { id = 8, guid = new Guid("2242b3c0-06e7-4e07-be9f-7491584c57c9"), name = "monitor", },
+                  new Feature { id = 9, guid = new Guid("8b5c31bb-706b-4fa5-b0f0-dd246f1e9a2b"), name = "monitorgroup", },
+                  new Feature { id = 10, guid = new Guid("f2143a86-d2f1-47ad-a481-c74ecbdadc83"), name = "acr", },
+                  new Feature { id = 11, guid = new Guid("b753863e-30f4-47aa-81b3-64dda55970da"), name = "user", },
+                  new Feature { id = 12, guid = new Guid("5ab363b5-a921-41e5-949e-5129eb416097"), name = "group", },
+                  new Feature { id = 13, guid = new Guid("4401f4d8-4145-4439-adab-d89cd3e3b2fb"), name = "area", },
+                  new Feature { id = 14, guid = new Guid("f18ef407-cd4d-46e8-a9f5-cbc99b87a0e4"), name = "time", },
+                  new Feature { id = 15, guid = new Guid("5699f80a-aa8c-4325-88cf-8ba31b85f976"), name = "trigger", },
+                  new Feature { id = 16, guid = new Guid("76d4a40a-3fa8-4a9f-a7b5-2b63f57fd26d"), name = "map", },
+                  new Feature { id = 17, guid = new Guid("24ebed55-6686-45a8-95a5-00e4e6516f4f"), name = "report", },
+                  new Feature { id = 18, guid = new Guid("713bcbae-1755-4a94-ab82-0180a856c80a"), name = "setting", },
+                  new Feature { id = 19, guid = new Guid("d57aac0d-1f61-4135-857b-cc1f51288d72"), name = "tools", }
             );
 
-            
+            modelBuilder.Entity<Role>().HasData(
+                  new Role { id = 1, guid = new Guid("fe527691-7b13-4294-98b5-cb95181f5453"), name = "Administrator" }
+            );
+
+            modelBuilder.Entity<Permission>().HasData(
+                  new Permission
+                  {
+                        id = 1,
+                        role_guid = new Guid("fe527691-7b13-4294-98b5-cb95181f5453"),
+                        feature_guid = new Guid("f1f1f528-1025-44de-8512-be5f269417e8"),
+                        is_enabled = true,
+                        is_created = true,
+                        is_deleted = true,
+                        is_updated = true
+                  },
+                  new Permission
+                  {
+                        id = 2,
+                        role_guid = new Guid("fe527691-7b13-4294-98b5-cb95181f5453"),
+                        feature_guid = new Guid("62e7ede3-9152-476a-a4df-173cc16a12fe"),
+                        is_enabled = true,
+                        is_created = true,
+                        is_deleted = true,
+                        is_updated = true
+                  },
+                  new Permission
+                  {
+                        id = 3,
+                        role_guid = new Guid("fe527691-7b13-4294-98b5-cb95181f5453"),
+                        feature_guid = new Guid("c164d952-6649-49bb-95c9-2543695b8af6"),
+                        is_enabled = true,
+                        is_created = true,
+                        is_deleted = true,
+                        is_updated = true
+                  },
+                  new Permission
+                  {
+                        id = 4,
+                        role_guid = new Guid("fe527691-7b13-4294-98b5-cb95181f5453"),
+                        feature_guid = new Guid("14fa8dca-521d-4e1a-a582-0159df91aea9"),
+                        is_enabled = true,
+                        is_created = true,
+                        is_deleted = true,
+                        is_updated = true
+                  },
+                  new Permission
+                  {
+                        id = 5,
+                        role_guid = new Guid("fe527691-7b13-4294-98b5-cb95181f5453"),
+                        feature_guid = new Guid("60239ccd-4cd7-441a-94c4-4a1577c79e38"),
+                        is_enabled = true,
+                        is_created = true,
+                        is_deleted = true,
+                        is_updated = true
+                  },
+                  new Permission
+                  {
+                        id = 6,
+                        role_guid = new Guid("fe527691-7b13-4294-98b5-cb95181f5453"),
+                        feature_guid = new Guid("dc76438d-0e0d-4d60-88bc-0559cb81ce4a"),
+                        is_enabled = true,
+                        is_created = true,
+                        is_deleted = true,
+                        is_updated = true
+                  },
+                  new Permission
+                  {
+                        id = 7,
+                        role_guid = new Guid("fe527691-7b13-4294-98b5-cb95181f5453"),
+                        feature_guid = new Guid("77c0545d-ec94-4037-802f-2240bcc9020e"),
+                        is_enabled = true,
+                        is_created = true,
+                        is_deleted = true,
+                        is_updated = true
+                  },
+                  new Permission
+                  {
+                        id = 8,
+                        role_guid = new Guid("fe527691-7b13-4294-98b5-cb95181f5453"),
+                        feature_guid = new Guid("2242b3c0-06e7-4e07-be9f-7491584c57c9"),
+                        is_enabled = true,
+                        is_created = true,
+                        is_deleted = true,
+                        is_updated = true
+                  },
+                  new Permission
+                  {
+                        id = 9,
+                        role_guid = new Guid("fe527691-7b13-4294-98b5-cb95181f5453"),
+                        feature_guid = new Guid("8b5c31bb-706b-4fa5-b0f0-dd246f1e9a2b"),
+                        is_enabled = true,
+                        is_created = true,
+                        is_deleted = true,
+                        is_updated = true
+                  },
+                  new Permission
+                  {
+                        id = 10,
+                        role_guid = new Guid("fe527691-7b13-4294-98b5-cb95181f5453"),
+                        feature_guid = new Guid("f2143a86-d2f1-47ad-a481-c74ecbdadc83"),
+                        is_enabled = true,
+                        is_created = true,
+                        is_deleted = true,
+                        is_updated = true
+                  },
+                  new Permission
+                  {
+                        id = 11,
+                        role_guid = new Guid("fe527691-7b13-4294-98b5-cb95181f5453"),
+                        feature_guid = new Guid("b753863e-30f4-47aa-81b3-64dda55970da"),
+                        is_enabled = true,
+                        is_created = true,
+                        is_deleted = true,
+                        is_updated = true
+                  },
+                  new Permission
+                  {
+                        id = 12,
+                        role_guid = new Guid("fe527691-7b13-4294-98b5-cb95181f5453"),
+                        feature_guid = new Guid("5ab363b5-a921-41e5-949e-5129eb416097"),
+                        is_enabled = true,
+                        is_created = true,
+                        is_deleted = true,
+                        is_updated = true
+                  },
+                  new Permission
+                  {
+                        id = 13,
+                        role_guid = new Guid("fe527691-7b13-4294-98b5-cb95181f5453"),
+                        feature_guid = new Guid("4401f4d8-4145-4439-adab-d89cd3e3b2fb"),
+                        is_enabled = true,
+                        is_created = true,
+                        is_deleted = true,
+                        is_updated = true
+                  },
+                  new Permission
+                  {
+                        id = 14,
+                        role_guid = new Guid("fe527691-7b13-4294-98b5-cb95181f5453"),
+                        feature_guid = new Guid("f18ef407-cd4d-46e8-a9f5-cbc99b87a0e4"),
+                        is_enabled = true,
+                        is_created = true,
+                        is_deleted = true,
+                        is_updated = true
+                  },
+                  new Permission
+                  {
+                        id = 15,
+                        role_guid = new Guid("fe527691-7b13-4294-98b5-cb95181f5453"),
+                        feature_guid = new Guid("5699f80a-aa8c-4325-88cf-8ba31b85f976"),
+                        is_enabled = true,
+                        is_created = true,
+                        is_deleted = true,
+                        is_updated = true
+                  },
+                  new Permission
+                  {
+                        id = 16,
+                        role_guid = new Guid("fe527691-7b13-4294-98b5-cb95181f5453"),
+                        feature_guid = new Guid("76d4a40a-3fa8-4a9f-a7b5-2b63f57fd26d"),
+                        is_enabled = true,
+                        is_created = true,
+                        is_deleted = true,
+                        is_updated = true
+                  },
+                  new Permission
+                  {
+                        id = 17,
+                        role_guid = new Guid("fe527691-7b13-4294-98b5-cb95181f5453"),
+                        feature_guid = new Guid("24ebed55-6686-45a8-95a5-00e4e6516f4f"),
+                        is_enabled = true,
+                        is_created = true,
+                        is_deleted = true,
+                        is_updated = true
+                  },
+                  new Permission
+                  {
+                        id = 18,
+                        role_guid = new Guid("fe527691-7b13-4294-98b5-cb95181f5453"),
+                        feature_guid = new Guid("713bcbae-1755-4a94-ab82-0180a856c80a"),
+                        is_enabled = true,
+                        is_created = true,
+                        is_deleted = true,
+                        is_updated = true
+                  },
+                  new Permission
+                  {
+                        id = 19,
+                        role_guid = new Guid("fe527691-7b13-4294-98b5-cb95181f5453"),
+                        feature_guid = new Guid("d57aac0d-1f61-4135-857b-cc1f51288d72"),
+                        is_enabled = true,
+                        is_created = true,
+                        is_deleted = true,
+                        is_updated = true
+                  }
+            );
+
+            modelBuilder.Entity<User>().HasData(
+                  new User
+                  {
+                        id = 1,
+                        username = "admin",
+                        password = "100000.lG1/4V/VRPZsbhf/Zqc4xw==.6vYcf+wEMSgqcaNhoZEdM9PaPxx2ZUErZhQbeMxo5OY=",
+                        identification = "Administrator",
+                        title = "Mr.",
+                        firstname = "Administrator",
+                        middlename = "",
+                        lastname = "",
+                        gender = "M",
+                        date_of_birth = new DateTime(1996, 09, 16, 0, 0, 0, DateTimeKind.Utc),
+                        email = "support@sentrix.com",
+                        phone = "",
+                        is_operator = true,
+                        role_guid = new Guid("fe527691-7b13-4294-98b5-cb95181f5453"),
+                        address = "Sentrix",
+                        active_time = new DateTime(1970, 01, 01, 0, 0, 0, DateTimeKind.Utc),
+                        expire_time = new DateTime(9999, 01, 01, 0, 0, 0, DateTimeKind.Utc),
+
+                  }
+            );
+
+
+
+
 
       }
 }

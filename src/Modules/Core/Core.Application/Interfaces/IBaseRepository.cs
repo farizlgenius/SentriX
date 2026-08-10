@@ -18,5 +18,6 @@ public interface IBaseRepository<TDto, TDomain> where TDto : class where TDomain
   Task<bool> IsDefaultAsync(Guid guid, CancellationToken ct = default);
   Task<bool> EnableAsync(Guid guid, CancellationToken ct = default);
   Task<bool> DisableAsync(Guid guid, CancellationToken ct = default);
+  Task<Pagination<TDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default);
 
 }

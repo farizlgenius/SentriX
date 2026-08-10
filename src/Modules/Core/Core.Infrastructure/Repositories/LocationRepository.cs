@@ -1,4 +1,4 @@
-using Core.Application.Interfaces.Location;
+using Core.Application.Interfaces;
 using Core.Contract.DTOs.Location;
 using Core.Domain.Entities;
 using Core.Infrastructure.Persistences;
@@ -14,7 +14,7 @@ public sealed class LocationRepository(CoreDbContext context) : ILocationReposit
       public async Task AddAsync(Location entity, CancellationToken ct = default)
       {
             await context.Locations.AddAsync(
-                  new Persistences.Entities.Location(entity)
+                  new Persistences.Entities.Location(entity), ct
             );
 
             await context.SaveChangesAsync(ct);
@@ -24,7 +24,7 @@ public sealed class LocationRepository(CoreDbContext context) : ILocationReposit
       {
             var entity = await context.Locations
                   .Where(x => x.guid == guid)
-                  .FirstOrDefaultAsync();
+                  .FirstOrDefaultAsync(ct);
 
             context.Locations.Remove(entity ?? throw new NotFoundException(EntityType.Location, guid.ToString()));
 
@@ -35,7 +35,7 @@ public sealed class LocationRepository(CoreDbContext context) : ILocationReposit
       {
             var entities = await context.Locations
                   .Where(x => guids.Contains(x.guid) && x.is_default == false)
-                  .ToArrayAsync();
+                  .ToArrayAsync(ct);
 
             context.Locations.RemoveRange(entities);
 
@@ -46,7 +46,7 @@ public sealed class LocationRepository(CoreDbContext context) : ILocationReposit
       {
             var en = await context.Locations
                   .Where(x => x.guid == guid)
-                  .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.Location, guid.ToString());
+                  .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.Location, guid.ToString());
 
             en.is_active = false;
 
@@ -59,9 +59,9 @@ public sealed class LocationRepository(CoreDbContext context) : ILocationReposit
 
       public async Task<bool> EnableAsync(Guid guid, CancellationToken ct = default)
       {
-           var en = await context.Locations
-                  .Where(x => x.guid == guid)
-                  .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.Location, guid.ToString());
+            var en = await context.Locations
+                   .Where(x => x.guid == guid)
+                   .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.Location, guid.ToString());
 
             en.is_active = true;
 
