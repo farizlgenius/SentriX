@@ -1,3 +1,5 @@
+using SharedKernel.Helpers;
+
 namespace Core.Domain.Entities;
 
 public sealed class Device : BaseDomain
@@ -27,6 +29,11 @@ public sealed class Device : BaseDomain
    Guid LocationGuid
    )
   {
+    ValidationHelper.IsValidName(Name);
+    ValidationHelper.ValidateGuid(LocationGuid,nameof(LocationGuid));
+    ValidationHelper.IsNullOrEmpty(SerialNumber,nameof(SerialNumber));
+    ValidationHelper.IsNullOrEmpty(Mac,nameof(Mac));
+    ValidationHelper.IsNullOrEmpty(Ip,nameof(Ip));
     this.Name = Name;
     this.SerialNumber = SerialNumber;
     this.Mac = Mac;
@@ -53,6 +60,11 @@ public sealed class Device : BaseDomain
     Guid LocationGuid
     ) : base(Guid)
   {
+    ValidationHelper.IsValidName(Name);
+    ValidationHelper.ValidateGuid(LocationGuid,nameof(LocationGuid));
+    ValidationHelper.IsNullOrEmpty(SerialNumber,nameof(SerialNumber));
+    ValidationHelper.IsNullOrEmpty(Mac,nameof(Mac));
+    ValidationHelper.IsNullOrEmpty(Ip,nameof(Ip));
     this.Name = Name;
     this.SerialNumber = SerialNumber;
     this.Mac = Mac;

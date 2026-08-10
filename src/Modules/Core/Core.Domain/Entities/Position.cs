@@ -1,3 +1,5 @@
+using SharedKernel.Helpers;
+
 namespace Core.Domain.Entities;
 
 public sealed class Position : BaseDomain
@@ -11,6 +13,8 @@ public sealed class Position : BaseDomain
             Guid DepartmentGuid
       )
       {
+            ValidationHelper.IsValidName(Name);
+            ValidationHelper.ValidateGuid(DepartmentGuid,nameof(this.DepartmentGuid));
             this.Name = Name;
             this.DepartmentGuid = DepartmentGuid;
       }
@@ -21,6 +25,8 @@ public sealed class Position : BaseDomain
             Guid DepartmentGuid
       ) : base(Guid)
       {
+            ValidationHelper.IsValidName(Name);
+            ValidationHelper.ValidateGuid(DepartmentGuid,nameof(this.DepartmentGuid));
             this.Name = Name;
             this.DepartmentGuid = DepartmentGuid;
       }

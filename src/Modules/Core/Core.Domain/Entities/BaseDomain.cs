@@ -1,3 +1,5 @@
+using SharedKernel.Helpers;
+
 namespace Core.Domain.Entities;
 
 public class BaseDomain
@@ -13,6 +15,7 @@ public class BaseDomain
     Guid Guid
   )
   {
+    ValidationHelper.ValidateGuid(Guid, nameof(Guid));
     this.Guid = Guid;
   }
 

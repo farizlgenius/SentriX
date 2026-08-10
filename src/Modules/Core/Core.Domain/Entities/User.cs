@@ -1,3 +1,5 @@
+using SharedKernel.Helpers;
+
 namespace Core.Domain.Entities;
 
 public sealed class User : BaseDomain
@@ -52,12 +54,15 @@ public sealed class User : BaseDomain
     List<string> Additionals,
     List<Guid> Groups,
     List<Card> Cards,
-    List<LicensePlate> licensePlates,
+    List<LicensePlate> LicensePlates,
     List<Pin> Pins,
     List<QrCode> QrCodes,
     Face Face
 )
       {
+            ValidationHelper.IsValidName(Firstname);
+            ValidationHelper.IsValidOnlyCharAndDigit(Identification,nameof(this.Identification));
+            ValidationHelper.IsValidEmail(Email,nameof(Email));
             this.Username = Username;
             this.Identification = Identification;
             this.Title = Title;

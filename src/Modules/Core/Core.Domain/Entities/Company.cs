@@ -1,3 +1,5 @@
+using SharedKernel.Helpers;
+
 namespace Core.Domain.Entities;
 
 public sealed class Company : BaseDomain
@@ -12,6 +14,7 @@ public sealed class Company : BaseDomain
             string address
       )
       {
+            ValidationHelper.IsValidName(name);
             Name = name;
             Description = description;
             Address = address;

@@ -1,3 +1,5 @@
+using SharedKernel.Helpers;
+
 namespace Core.Domain.Entities;
 
 public sealed class Department : BaseDomain
@@ -11,6 +13,7 @@ public sealed class Department : BaseDomain
             Guid CompanyGuid
       )
       {
+            ValidationHelper.IsValidName(Name);
             this.Name = Name;
             this.Description = Description;
             this.CompanyGuid = CompanyGuid;
@@ -22,6 +25,7 @@ public sealed class Department : BaseDomain
             Guid CompanyGuid
             ) : base(Guid)
       {
+            ValidationHelper.IsValidName(Name);
             this.Name = Name;
             this.Description = Description;
             this.CompanyGuid = CompanyGuid;

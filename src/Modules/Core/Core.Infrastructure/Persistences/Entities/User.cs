@@ -37,7 +37,31 @@ public sealed class User : BaseEntity
 
       public User(Core.Domain.Entities.User d) : base(d.Guid)
       {
-            
+            this.username = d.Username;
+            this.identification = d.Identification;
+            this.title = d.Title;
+            this.firstname = d.FirstName;
+            this.middlename = d.MiddleName;
+            this.lastname = d.LastName;
+            this.gender = d.Gender;
+            this.date_of_birth = d.DateOfBirth;
+            this.email = d.Email;
+            this.phone = d.Phone;
+            this.is_operator = d.IsOperator;
+            this.role_guid = d.RoleGuid;
+            this.company_guid = d.CompanyGuid;
+            this.department_guid = d.DepartmentGuid;
+            this.position_guid = d.PositionGuid;
+            this.address = d.Address;
+            this.active_time = d.ActiveTime;
+            this.expire_time = d.ExpireTime;
+            this.additionals = d.Additionals.Select(x => new UserAdditional(x)).ToArray();
+            this.cards = d.Cards.Select(x => new Card(x)).ToArray();
+            this.pins = d.Pins.Select(x => new Pin(x)).ToArray();
+            if(d.Face is not null)
+                  this.face = new Face(d.Face);
+            this.license_plates = d.LicensePlates.Select(x => new LicensePlate(x)).ToArray();
+            this.qr_codes = d.QrCodes.Select(x => new QrCode(x)).ToArray();
       }
 
 }

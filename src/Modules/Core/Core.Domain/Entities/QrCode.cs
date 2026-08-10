@@ -1,3 +1,5 @@
+using SharedKernel.Helpers;
+
 namespace Core.Domain.Entities;
 
 public sealed class QrCode : BaseDomain
@@ -9,6 +11,8 @@ public sealed class QrCode : BaseDomain
             Guid UserGuid
       )
       {
+            ValidationHelper.IsNullOrEmpty(Qr,nameof(QrCodes));
+            ValidationHelper.ValidateGuid(UserGuid,nameof(this.UserGuid));
             this.QrCodes = Qr;
             this.UserGuid = UserGuid;
       }
@@ -19,6 +23,8 @@ public sealed class QrCode : BaseDomain
             Guid UserGuid
       ) : base(Guid)
       {
+            ValidationHelper.IsNullOrEmpty(Qr,nameof(QrCodes));
+            ValidationHelper.ValidateGuid(UserGuid,nameof(this.UserGuid));
             this.QrCodes = Qr;
             this.UserGuid = UserGuid;
       }

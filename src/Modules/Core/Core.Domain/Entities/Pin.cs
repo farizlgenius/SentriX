@@ -1,3 +1,5 @@
+using SharedKernel.Helpers;
+
 namespace Core.Domain.Entities;
 
 public sealed class Pin : BaseDomain
@@ -10,6 +12,8 @@ public sealed class Pin : BaseDomain
             Guid UserGuid
       )
       {
+            ValidationHelper.IsNullOrEmpty(Pin,nameof(Pins));
+            ValidationHelper.ValidateGuid(UserGuid,nameof(this.UserGuid));
             this.Pins = Pin;
             this.UserGuid = UserGuid;
       }
@@ -20,6 +24,8 @@ public sealed class Pin : BaseDomain
             Guid UserGuid
       ) : base(Guid)
       {
+            ValidationHelper.IsNullOrEmpty(Pin,nameof(Pins));
+            ValidationHelper.ValidateGuid(UserGuid,nameof(this.UserGuid));
             this.Pins = Pin;
             this.UserGuid = UserGuid;
       }

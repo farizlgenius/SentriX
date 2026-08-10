@@ -144,6 +144,29 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   .HasForeignKey(x => x.user_guid)
                   .OnDelete(DeleteBehavior.Cascade);
 
+            // Role
+
+            modelBuilder.Entity<Role>()
+                  .HasMany(x => x.users)
+                  .WithOne(x => x.role)
+                  .HasForeignKey(x => x.role_guid)
+                  .HasPrincipalKey(x => x.guid)
+                  .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<Role>()
+                  .HasMany(x => x.permissions)
+                  .WithOne(x => x.role)
+                  .HasForeignKey(x => x.role_guid)
+                  .HasPrincipalKey(x => x.guid)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Permission>()
+                  .HasOne(x => x.feature)
+                  .WithMany(x => x.permissions)
+                  .HasForeignKey(x => x.feature_guid)
+                  .HasPrincipalKey(x => x.guid)
+                  .OnDelete(DeleteBehavior.SetNull);
+
             // Company
 
             modelBuilder.Entity<Company>()

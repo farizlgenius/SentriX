@@ -1,3 +1,5 @@
+using SharedKernel.Helpers;
+
 namespace Core.Domain.Entities;
 
 public sealed class Role : BaseDomain
@@ -8,6 +10,7 @@ public sealed class Role : BaseDomain
             string Name
       ) 
       {
+            ValidationHelper.IsValidName(Name);
             this.Name = Name;
       }
       public Role(
@@ -15,6 +18,7 @@ public sealed class Role : BaseDomain
             string Name
       ) : base(Guid)
       {
+            ValidationHelper.IsValidName(Name);
             this.Name = Name;
       }
 }
