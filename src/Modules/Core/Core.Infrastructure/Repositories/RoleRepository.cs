@@ -89,6 +89,7 @@ public sealed class RoleRepository(CoreDbContext context) : IRoleRepository
                         p.is_updated,
                         p.is_deleted
                     )).ToList(),
+                    x.location_guid,
                     x.is_active,
                     x.is_default
                   )).FirstOrDefaultAsync() ?? throw new NotFoundException(nameof(Location), guid.ToString());
@@ -111,13 +112,13 @@ public sealed class RoleRepository(CoreDbContext context) : IRoleRepository
                               var pattern = $"%{search}%";
 
                               query = query.Where(x =>
-                                  EF.Functions.ILike(x.name, pattern) 
+                                  EF.Functions.ILike(x.name, pattern)
                               );
                         }
                         else // SQL Server
                         {
                               query = query.Where(x =>
-                                  x.name.Contains(search) 
+                                  x.name.Contains(search)
                               );
                         }
 
@@ -156,6 +157,7 @@ public sealed class RoleRepository(CoreDbContext context) : IRoleRepository
                               p.is_updated,
                               p.is_deleted
                         )).ToList(),
+                        e.location_guid,
                         e.is_active,
                         e.is_default
                   )).ToListAsync();
@@ -169,7 +171,7 @@ public sealed class RoleRepository(CoreDbContext context) : IRoleRepository
                   );
       }
 
-      public async Task<bool> IsAnyByNameAsync(string name, CancellationToken ct = default)
+      public async Task<bool> IsAnyByNameAndLocationGuidAsync(string name, Guid locationGuid, CancellationToken ct = default)
       {
             return await context.Roles
                   .AsNoTracking()
@@ -187,7 +189,15 @@ public sealed class RoleRepository(CoreDbContext context) : IRoleRepository
       {
             return await context.Roles
                   .AsNoTracking()
-                  .AnyAsync(x => x.name.Equals(Name) && x.lo)
+                  .AnyAsync(x => x.name.Equals(Name) && x.location_guid == locationGuid);
+      }
+
+      public async Task<bool> IsAnyOperatorAsync(Guid guid, CancellationToken ct = default)
+      {
+            return await context.Roles
+                  .AsNoTracking()
+                  .AnyAsync(x => x.guid == guid && x.operators.Any());
+
       }
 
       public async Task<bool> IsDefaultAsync(Guid guid, CancellationToken ct = default)

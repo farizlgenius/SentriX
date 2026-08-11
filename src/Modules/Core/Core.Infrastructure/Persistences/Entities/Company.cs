@@ -9,12 +9,15 @@ public sealed class Company : BaseEntity
       public ICollection<Department> departments { get; set; } = new List<Department>();
 
       // Relation
+      public Guid location_guid { get; set; }
+      public Location location { get; set; } = default!;
 
-      public Company(){}
+      public Company() { }
       public Company(Core.Domain.Entities.Company d) : base(d.Guid)
       {
             this.name = d.Name;
             this.description = d.Description;
             this.address = d.Address;
+            this.location_guid = d.LocationGuid;
       }
 }

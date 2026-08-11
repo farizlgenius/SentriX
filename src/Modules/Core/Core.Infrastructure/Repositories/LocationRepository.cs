@@ -169,7 +169,7 @@ public sealed class LocationRepository(CoreDbContext context) : ILocationReposit
                   );
       }
 
-      public async Task<bool> IsAnyByNameAsync(string name, CancellationToken ct = default)
+      public async Task<bool> IsAnyByNameAndLocationGuidAsync(string name, Guid locationGuid = default, CancellationToken ct = default)
       {
             return await context.Locations
                   .AsNoTracking()

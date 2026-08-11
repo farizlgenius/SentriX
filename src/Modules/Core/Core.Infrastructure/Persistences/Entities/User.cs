@@ -32,6 +32,8 @@ public sealed class User : BaseEntity
       public Face? face { get; set; }
       public ICollection<LicensePlate> license_plates { get; set; } = default!;
       public ICollection<QrCode> qr_codes { get; set; } = default!;
+      public Guid location_guid { get; set; }
+      public Location location { get; set; } = default!;
 
       public User() { }
 
@@ -62,6 +64,7 @@ public sealed class User : BaseEntity
                   this.face = new Face(d.Face);
             this.license_plates = d.LicensePlates.Select(x => new LicensePlate(x)).ToArray();
             this.qr_codes = d.QrCodes.Select(x => new QrCode(x)).ToArray();
+            this.location_guid = d.LocationGuid;
       }
 
 }

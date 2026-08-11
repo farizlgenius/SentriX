@@ -228,7 +228,7 @@ public sealed class DepartmentRepository(CoreDbContext context) : IDepartmentRep
           );
   }
 
-  public async Task<bool> IsAnyByNameAsync(string name, CancellationToken ct = default)
+  public async Task<bool> IsAnyByNameAndLocationGuidAsync(string name, Guid locationGui = default, CancellationToken ct = default)
   {
     return await context.Departments
       .AsNoTracking()

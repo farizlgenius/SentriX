@@ -9,4 +9,5 @@ public static class EntityType
   public const string Position = "Position";
   public const string User = "User";
   public const string Role = "Role";
+  public const string Operator = "Operator";
 }

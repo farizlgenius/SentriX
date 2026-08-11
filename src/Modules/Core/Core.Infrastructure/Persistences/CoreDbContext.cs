@@ -1,3 +1,4 @@
+using System.Security.Cryptography.X509Certificates;
 using Core.Infrastructure.Persistences.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -23,6 +24,7 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
       public DbSet<Feature> Features { get; set; }
       public DbSet<Permission> Permissions { get; set; }
       public DbSet<Role> Roles { get; set; }
+      public DbSet<Operator> Operators { get; set; }
       protected override void OnModelCreating(ModelBuilder modelBuilder)
       {
             Console.WriteLine("=== Entities ===");
@@ -89,11 +91,27 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
 
             // Configure relationships 
 
+            // Location
+
             modelBuilder.Entity<Location>()
                           .HasOne(l => l.country)
                           .WithMany(c => c.locations)
                           .HasForeignKey(l => l.country_id)
                           .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Location>()
+                  .HasMany(x => x.roles)
+                  .WithOne(x => x.location)
+                  .HasForeignKey(x => x.location_guid)
+                  .HasPrincipalKey(x => x.guid)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Location>()
+                  .HasMany(x => x.users)
+                  .WithOne(x => x.location)
+                  .HasForeignKey(x => x.location_guid)
+                  .HasPrincipalKey(x => x.guid)
+                  .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Location>()
                   .HasMany(x => x.devices)
@@ -108,6 +126,20 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   .HasForeignKey(x => x.location_guid)
                   .HasPrincipalKey(x => x.guid)
                   .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<OperatorLocation>()
+                  .HasOne(x => x.@operator)
+                  .WithMany(x => x.operator_locations)
+                  .HasForeignKey(x => x.operator_guid)
+                  .HasPrincipalKey(x => x.guid)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<OperatorLocation>()
+                        .HasOne(x => x.location)
+                        .WithMany(x => x.operator_locations)
+                        .HasForeignKey(x => x.location_guid)
+                        .HasPrincipalKey(x => x.guid)
+                        .OnDelete(DeleteBehavior.Cascade);
 
             // Device 
 
@@ -165,7 +197,7 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
             // Role
 
             modelBuilder.Entity<Role>()
-                  .HasMany(x => x.users)
+                  .HasMany(x => x.operators)
                   .WithOne(x => x.role)
                   .HasForeignKey(x => x.role_guid)
                   .HasPrincipalKey(x => x.guid)
@@ -227,7 +259,7 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
 
             modelBuilder.Entity<Location>()
                   .HasData(
-                        new Location { id = 1, name = "Main Location", description = "Main location", country_id = 178, is_default = true, is_active = true }
+                        new Location { id = 1, guid = new Guid("3a9c9947-d5ca-4bb2-b525-0499a340f1d6"), name = "Main Location", description = "Main location", country_id = 178, is_default = true, is_active = true }
                   );
 
             modelBuilder.Entity<Country>().HasData(
@@ -437,7 +469,7 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
             );
 
             modelBuilder.Entity<Role>().HasData(
-                  new Role { id = 1, guid = new Guid("fe527691-7b13-4294-98b5-cb95181f5453"), name = "Administrator" }
+                  new Role { id = 1, guid = new Guid("fe527691-7b13-4294-98b5-cb95181f5453"), name = "Administrator", location_guid = new Guid("3a9c9947-d5ca-4bb2-b525-0499a340f1d6"), is_default = true, is_active = true }
             );
 
             modelBuilder.Entity<Permission>().HasData(
@@ -633,26 +665,19 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   }
             );
 
-            modelBuilder.Entity<User>().HasData(
-                  new User
+            modelBuilder.Entity<Operator>().HasData(
+                  new Operator
                   {
                         id = 1,
                         username = "admin",
                         password = "100000.lG1/4V/VRPZsbhf/Zqc4xw==.6vYcf+wEMSgqcaNhoZEdM9PaPxx2ZUErZhQbeMxo5OY=",
-                        identification = "Administrator",
-                        title = "Mr.",
-                        firstname = "Administrator",
-                        middlename = "",
-                        lastname = "",
-                        gender = "M",
-                        date_of_birth = new DateTime(1996, 09, 16, 0, 0, 0, DateTimeKind.Utc),
                         email = "support@sentrix.com",
                         phone = "",
-                        is_operator = true,
                         role_guid = new Guid("fe527691-7b13-4294-98b5-cb95181f5453"),
-                        address = "Sentrix",
                         active_time = new DateTime(1970, 01, 01, 0, 0, 0, DateTimeKind.Utc),
                         expire_time = new DateTime(9999, 01, 01, 0, 0, 0, DateTimeKind.Utc),
+                        is_default = true,
+                        is_active = true
 
                   }
             );

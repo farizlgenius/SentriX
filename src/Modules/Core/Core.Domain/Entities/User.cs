@@ -26,11 +26,12 @@ public sealed class User : BaseDomain
       public DateTime ExpireTime { get; set; }
       public List<string> Additionals { get; private set; } = new List<string>();
       public List<Guid> Groups { get; private set; } = new List<Guid>();
-      public List<Card> Cards {get; private set;} = default!;
+      public List<Card> Cards { get; private set; } = default!;
       public List<LicensePlate> LicensePlates { get; private set; } = default!;
       public List<Pin> Pins { get; private set; } = default!;
-      public List<QrCode> QrCodes {get; private set;} = default!;
+      public List<QrCode> QrCodes { get; private set; } = default!;
       public Face? Face { get; private set; }
+      public Guid LocationGuid { get; private set; } = default!;
 
       public User(
     string Username,
@@ -57,12 +58,13 @@ public sealed class User : BaseDomain
     List<LicensePlate> LicensePlates,
     List<Pin> Pins,
     List<QrCode> QrCodes,
-    Face Face
+    Face Face,
+    Guid LocationGuid
 )
       {
             ValidationHelper.IsValidName(Firstname);
-            ValidationHelper.IsValidOnlyCharAndDigit(Identification,nameof(this.Identification));
-            ValidationHelper.IsValidEmail(Email,nameof(Email));
+            ValidationHelper.IsValidOnlyCharAndDigit(Identification, nameof(this.Identification));
+            ValidationHelper.IsValidEmail(Email, nameof(Email));
             this.Username = Username;
             this.Identification = Identification;
             this.Title = Title;
@@ -88,6 +90,7 @@ public sealed class User : BaseDomain
             this.Pins = Pins;
             this.QrCodes = QrCodes;
             this.Face = Face;
+            this.LocationGuid = LocationGuid;
       }
 
       public User(
@@ -116,7 +119,8 @@ public sealed class User : BaseDomain
      List<LicensePlate> LicensePlates,
      List<Pin> Pins,
      List<QrCode> QrCodes,
-     Face Face
+     Face Face,
+     Guid LocationGuid
  ) : base(Guid)
       {
             this.Username = Username;
@@ -144,6 +148,7 @@ public sealed class User : BaseDomain
             this.Pins = Pins;
             this.QrCodes = QrCodes;
             this.Face = Face;
+            this.LocationGuid = LocationGuid;
       }
 
 

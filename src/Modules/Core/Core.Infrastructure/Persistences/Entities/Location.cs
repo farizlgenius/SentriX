@@ -9,6 +9,10 @@ public sealed class Location : BaseEntity
   public Country country { get; set; } = default!;
   public ICollection<Device> devices { get; set; } = default!;
   public ICollection<Module> modules { get; set; } = default!;
+  public ICollection<Company> companies { get; set; } = default!;
+  public ICollection<User> users { get; set; } = default!;
+  public ICollection<Role> roles { get; set; } = default!;
+  public ICollection<OperatorLocation> operator_locations { get; set; } = default!;
   public Location() { }
   public Location(Core.Domain.Entities.Location d) : base(d.Guid)
   {
@@ -16,5 +20,5 @@ public sealed class Location : BaseEntity
     this.description = d.Description;
     this.country_id = d.CountryId;
   }
-  
+
 }

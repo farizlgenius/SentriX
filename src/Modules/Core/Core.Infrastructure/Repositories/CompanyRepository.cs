@@ -82,6 +82,7 @@ public sealed class CompanyRepository(CoreDbContext context) : ICompanyRepositor
                     x.name,
                     x.address,
                     x.description,
+                    x.location_guid,
                     x.is_active,
                     x.is_default
                   )).FirstOrDefaultAsync() ?? throw new NotFoundException(nameof(Location), guid.ToString());
@@ -146,6 +147,7 @@ public sealed class CompanyRepository(CoreDbContext context) : ICompanyRepositor
                 e.name,
                 e.address,
                 e.description,
+                e.location_guid,
                 e.is_active,
                 e.is_default
           )).ToListAsync();
@@ -159,21 +161,12 @@ public sealed class CompanyRepository(CoreDbContext context) : ICompanyRepositor
           );
   }
 
-  public async Task<bool> IsAnyByNameAsync(string name,Guid locationGuid, CancellationToken ct = default)
+  public async Task<bool> IsAnyByNameAndLocationGuidAsync(string name, Guid locationGuid, CancellationToken ct = default)
   {
-    if(locationGuid == Guid.Empty)
-    {
-      return await context.Companies
+    return await context.Companies
       .AsNoTracking()
-      .AnyAsync(x => x.name.Equals(name));
-    }
-    else
-    {
-      return await context.Companies
-      .AsNoTracking()
-      .AnyAsync(x => x.name.Equals(name) && x.locationGuid == locationGuid);
-    }
-    
+      .AnyAsync(x => x.name.Equals(name) && x.location_guid == locationGuid);
+
   }
 
   public async Task<bool> IsAnyDepartmentAsync(Guid guid, CancellationToken ct = default)

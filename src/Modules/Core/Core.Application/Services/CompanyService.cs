@@ -14,11 +14,12 @@ public sealed class CompanyService(ICompanyRepository repo) : ICompany
     var d = new Core.Domain.Entities.Company(
       dto.Name,
       dto.Description,
-      dto.Address
+      dto.Address,
+      dto.LocationGuid
     );
 
     // Check name is duplicate 
-    if (await repo.IsAnyByNameAsync(dto.Name))
+    if (await repo.IsAnyByNameAndLocationGuidAsync(dto.Name))
       throw new DuplicateException(EntityType.Company, dto.Name);
 
     await repo.AddAsync(d, ct);
@@ -28,6 +29,7 @@ public sealed class CompanyService(ICompanyRepository repo) : ICompany
       d.Name,
       d.Address,
       d.Description,
+      d.LocationGuid,
       true,
       false
     );
@@ -87,7 +89,7 @@ public sealed class CompanyService(ICompanyRepository repo) : ICompany
   {
     // Check is any location with guid
     if (!await repo.IsAnyGuidAsync(guid, ct))
-      throw new NotFoundException(EntityType.Location, guid.ToString());
+      throw new NotFoundException(EntityType.Company, guid.ToString());
 
     return await repo.DisableAsync(guid, ct);
   }
@@ -96,7 +98,7 @@ public sealed class CompanyService(ICompanyRepository repo) : ICompany
   {
     // Check is any location with guid
     if (!await repo.IsAnyGuidAsync(guid, ct))
-      throw new NotFoundException(EntityType.Location, guid.ToString());
+      throw new NotFoundException(EntityType.Company, guid.ToString());
 
     return await repo.EnableAsync(guid, ct);
   }
@@ -113,15 +115,16 @@ public sealed class CompanyService(ICompanyRepository repo) : ICompany
 
   public async Task<CompanyDto> UpdateAsync(UpdateCompanyDto dto, CancellationToken ct = default)
   {
-    // Check is any location with guid
+    // Check is any Company with guid
     if (!await repo.IsAnyGuidAsync(dto.Guid, ct))
-      throw new NotFoundException(EntityType.Location, dto.Guid.ToString());
+      throw new NotFoundException(EntityType.Company, dto.Guid.ToString());
 
     var d = new Core.Domain.Entities.Company(
       dto.Guid,
       dto.Name,
       dto.Description,
-      dto.Address
+      dto.Address,
+      dto.LocationGuid
     );
 
     await repo.UpdateAsync(d);
@@ -131,6 +134,7 @@ public sealed class CompanyService(ICompanyRepository repo) : ICompany
       dto.Name,
       dto.Description,
       dto.Address,
+      dto.LocationGuid,
       true,
       false
     );

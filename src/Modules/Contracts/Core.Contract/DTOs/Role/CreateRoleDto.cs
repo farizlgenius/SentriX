@@ -2,5 +2,6 @@ namespace Core.Contract.DTOs.Role;
 
 public sealed record CreateRoleDto(
       string Name,
-      List<PermissionDto> Permissions
+      List<PermissionDto> Permissions,
+      Guid LocationGuid
 );

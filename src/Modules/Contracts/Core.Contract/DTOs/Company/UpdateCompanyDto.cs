@@ -4,5 +4,6 @@ public sealed record UpdateCompanyDto(
   Guid Guid,
   string Name,
   string Address,
-  string Description
+  string Description,
+  Guid LocationGuid
 );

@@ -19,7 +19,7 @@ public sealed class LocationService(ILocationRepository repo) : ILocation
     );
 
     // Check name is duplicate 
-    if (await repo.IsAnyByNameAsync(dto.Name))
+    if (await repo.IsAnyByNameAndLocationGuidAsync(dto.Name))
       throw new DuplicateException(EntityType.Location, dto.Name);
 
     await repo.AddAsync(d, ct);

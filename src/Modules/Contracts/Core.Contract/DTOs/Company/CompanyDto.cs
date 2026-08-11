@@ -5,6 +5,7 @@ public sealed record CompanyDto(
   string Name,
   string Address,
   string Description,
+  Guid LocationGuid,
   bool IsActive,
   bool IsDefault
 );
