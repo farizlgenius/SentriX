@@ -20,7 +20,7 @@ namespace Host.Controllers
             }
 
             [HttpGet("{guid}")]
-            public async Task<IActionResult> GetAsync([FromQuery] Guid guid)
+            public async Task<IActionResult> GetAsync(Guid guid)
             {
                   var res = await role.GetByGuidAsync(guid);
                   return Ok(res);

@@ -91,6 +91,7 @@ public sealed class CompanyRepository(CoreDbContext context) : ICompanyRepositor
   public async Task<Pagination<CompanyDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
   {
     var query = context.Companies
+                  .Where(x => x.location_guid == param.locationGuid || x.is_default)
                   .AsNoTracking()
                   .AsQueryable();
 

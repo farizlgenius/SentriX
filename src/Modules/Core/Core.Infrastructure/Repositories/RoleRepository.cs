@@ -46,7 +46,7 @@ public sealed class RoleRepository(CoreDbContext context) : IRoleRepository
       {
             var en = await context.Roles
                   .Where(x => x.guid == guid)
-                  .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.Location, guid.ToString());
+                  .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.Role, guid.ToString());
 
             en.is_active = false;
 
@@ -61,7 +61,7 @@ public sealed class RoleRepository(CoreDbContext context) : IRoleRepository
       {
             var en = await context.Roles
                   .Where(x => x.guid == guid)
-                  .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.Location, guid.ToString());
+                  .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.Role, guid.ToString());
 
             en.is_active = true;
 
@@ -92,12 +92,13 @@ public sealed class RoleRepository(CoreDbContext context) : IRoleRepository
                     x.location_guid,
                     x.is_active,
                     x.is_default
-                  )).FirstOrDefaultAsync() ?? throw new NotFoundException(nameof(Location), guid.ToString());
+                  )).FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.Role, guid.ToString());
       }
 
       public async Task<Pagination<RoleDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
       {
             var query = context.Roles
+                  .Where(x => x.location_guid == param.locationGuid || x.is_default)
                   .AsNoTracking()
                   .AsQueryable();
 
@@ -148,15 +149,7 @@ public sealed class RoleRepository(CoreDbContext context) : IRoleRepository
                   .Select(e => new RoleDto(
                         e.guid,
                         e.name,
-                        e.permissions.Select(p => new PermissionDto(
-                              p.guid,
-                              p.feature_guid,
-                              p.role_guid,
-                              p.is_enabled,
-                              p.is_created,
-                              p.is_updated,
-                              p.is_deleted
-                        )).ToList(),
+                        new List<PermissionDto>(),
                         e.location_guid,
                         e.is_active,
                         e.is_default
@@ -202,7 +195,7 @@ public sealed class RoleRepository(CoreDbContext context) : IRoleRepository
 
       public async Task<bool> IsDefaultAsync(Guid guid, CancellationToken ct = default)
       {
-            return await context.Companies
+            return await context.Roles
                   .AsNoTracking()
                   .AnyAsync(x => x.guid == guid && x.is_default);
       }
@@ -212,7 +205,7 @@ public sealed class RoleRepository(CoreDbContext context) : IRoleRepository
             var en = await context.Roles
                   .Include(x => x.permissions)
                   .Where(x => x.guid == entity.Guid)
-                  .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.Location, entity.Guid.ToString());
+                  .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.Role, entity.Guid.ToString());
 
             // Delete old permission
             context.Permissions.RemoveRange(en.permissions);

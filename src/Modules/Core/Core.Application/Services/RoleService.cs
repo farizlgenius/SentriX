@@ -129,6 +129,7 @@ public sealed class RoleService(IRoleRepository repo) : IRole
                   throw new NotFoundException(EntityType.Role, dto.Guid.ToString());
 
             var d = new Core.Domain.Entities.Role(
+                  dto.Guid,
                   dto.Name,
                   dto.Permissions.Select(x => new Permission(
                         x.RoleGuid,
