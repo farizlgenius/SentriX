@@ -34,6 +34,7 @@ public sealed class DepartmentService(
               d.Guid,
               d.Name,
               d.Description,
+              d.CompanyGuid,
               true,
               false
             );
@@ -143,6 +144,7 @@ public sealed class DepartmentService(
               dto.Guid,
               dto.Name,
               dto.Description,
+              dto.CompanyGuid,
               true,
               false
             );

@@ -81,6 +81,7 @@ public sealed class PositionRepository(CoreDbContext context) : IPositionReposit
                             x.guid,
                             x.name,
                             x.description,
+                            x.department_guid,
                             x.is_active,
                             x.is_default
                           )).FirstOrDefaultAsync() ?? throw new NotFoundException(nameof(Location), guid.ToString());
@@ -142,6 +143,7 @@ public sealed class PositionRepository(CoreDbContext context) : IPositionReposit
                         e.guid,
                         e.name,
                         e.description,
+                        e.department_guid,
                         e.is_active,
                         e.is_default
                   )).ToListAsync();
@@ -212,6 +214,7 @@ public sealed class PositionRepository(CoreDbContext context) : IPositionReposit
                         e.guid,
                         e.name,
                         e.description,
+                        e.department_guid,
                         e.is_active,
                         e.is_default
                   )).ToListAsync();

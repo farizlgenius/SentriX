@@ -81,6 +81,7 @@ public sealed class DepartmentRepository(CoreDbContext context) : IDepartmentRep
                     x.guid,
                     x.name,
                     x.description,
+                    x.company_guid,
                     x.is_active,
                     x.is_default
                   )).FirstOrDefaultAsync() ?? throw new NotFoundException(nameof(Location), guid.ToString());
@@ -142,6 +143,7 @@ public sealed class DepartmentRepository(CoreDbContext context) : IDepartmentRep
                 e.guid,
                 e.name,
                 e.description,
+                e.company_guid,
                 e.is_active,
                 e.is_default
           )).ToListAsync();
@@ -212,6 +214,7 @@ public sealed class DepartmentRepository(CoreDbContext context) : IDepartmentRep
                 e.guid,
                 e.name,
                 e.description,
+                e.company_guid,
                 e.is_active,
                 e.is_default
           )).ToListAsync();

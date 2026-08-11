@@ -34,6 +34,7 @@ public sealed class PositionService(
               d.Guid,
               d.Name,
               d.Description,
+              d.DepartmentGuid,
               true,
               false
             );
@@ -139,6 +140,7 @@ public sealed class PositionService(
               dto.Guid,
               dto.Name,
               dto.Description,
+              dto.DepartmentGuid,
               true,
               false
             );
