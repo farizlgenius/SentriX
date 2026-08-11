@@ -13,7 +13,7 @@ public interface IBaseRepository<TDto, TDomain> where TDto : class where TDomain
   Task UpdateAsync(TDomain entity, CancellationToken ct = default);
   Task DeleteAsync(Guid guid, CancellationToken ct = default);
   Task DeleteRangeAsync(IEnumerable<Guid> guids, CancellationToken ct = default);
-  Task<bool> IsAnyByNameAsync(string name, CancellationToken ct = default);
+  Task<bool> IsAnyByNameAsync(string name,Guid locationGuid = default , CancellationToken ct = default);
   Task<bool> IsAnyGuidAsync(Guid guid, CancellationToken ct = default);
   Task<bool> IsDefaultAsync(Guid guid, CancellationToken ct = default);
   Task<bool> EnableAsync(Guid guid, CancellationToken ct = default);

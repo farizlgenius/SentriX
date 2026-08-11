@@ -159,11 +159,21 @@ public sealed class CompanyRepository(CoreDbContext context) : ICompanyRepositor
           );
   }
 
-  public async Task<bool> IsAnyByNameAsync(string name, CancellationToken ct = default)
+  public async Task<bool> IsAnyByNameAsync(string name,Guid locationGuid, CancellationToken ct = default)
   {
-    return await context.Companies
+    if(locationGuid == Guid.Empty)
+    {
+      return await context.Companies
       .AsNoTracking()
       .AnyAsync(x => x.name.Equals(name));
+    }
+    else
+    {
+      return await context.Companies
+      .AsNoTracking()
+      .AnyAsync(x => x.name.Equals(name) && x.locationGuid == locationGuid);
+    }
+    
   }
 
   public async Task<bool> IsAnyDepartmentAsync(Guid guid, CancellationToken ct = default)

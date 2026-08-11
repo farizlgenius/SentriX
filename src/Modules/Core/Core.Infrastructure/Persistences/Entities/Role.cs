@@ -7,6 +7,10 @@ public sealed class Role : BaseEntity
       // Releation
       public ICollection<User> users { get; set; } = default!;
       public ICollection<Permission> permissions { get; set; } = default!;
+      
+      // Releation
+      public Guid location_guid {get; set;} = default!;
+      public Location location {get; set;} = default!;
 
       public Role(){}
       public Role(Core.Domain.Entities.Role d) : base(d.Guid)

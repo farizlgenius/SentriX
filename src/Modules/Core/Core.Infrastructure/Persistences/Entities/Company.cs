@@ -8,6 +8,8 @@ public sealed class Company : BaseEntity
       public ICollection<User> users { get; set; } = new List<User>();
       public ICollection<Department> departments { get; set; } = new List<Department>();
 
+      // Relation
+
       public Company(){}
       public Company(Core.Domain.Entities.Company d) : base(d.Guid)
       {
