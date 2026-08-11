@@ -10,3 +10,15 @@
 /Users/far-izlengha/Documents/Project/SentriX/src/Modules/Contracts/Adapter.Abstraction/obj/Debug/net10.0/refint/Adapter.Abstraction.dll
 /Users/far-izlengha/Documents/Project/SentriX/src/Modules/Contracts/Adapter.Abstraction/obj/Debug/net10.0/Adapter.Abstraction.pdb
 /Users/far-izlengha/Documents/Project/SentriX/src/Modules/Contracts/Adapter.Abstraction/obj/Debug/net10.0/ref/Adapter.Abstraction.dll
+D:\aero\SentriX\src\Modules\Contracts\Adapter.Abstraction\bin\Debug\net10.0\Adapter.Abstraction.deps.json
+D:\aero\SentriX\src\Modules\Contracts\Adapter.Abstraction\bin\Debug\net10.0\Adapter.Abstraction.dll
+D:\aero\SentriX\src\Modules\Contracts\Adapter.Abstraction\bin\Debug\net10.0\Adapter.Abstraction.pdb
+D:\aero\SentriX\src\Modules\Contracts\Adapter.Abstraction\obj\Debug\net10.0\Adapter.Abstraction.GeneratedMSBuildEditorConfig.editorconfig
+D:\aero\SentriX\src\Modules\Contracts\Adapter.Abstraction\obj\Debug\net10.0\Adapter.Abstraction.AssemblyInfoInputs.cache
+D:\aero\SentriX\src\Modules\Contracts\Adapter.Abstraction\obj\Debug\net10.0\Adapter.Abstraction.AssemblyInfo.cs
+D:\aero\SentriX\src\Modules\Contracts\Adapter.Abstraction\obj\Debug\net10.0\Adapter.Abstraction.csproj.CoreCompileInputs.cache
+D:\aero\SentriX\src\Modules\Contracts\Adapter.Abstraction\obj\Debug\net10.0\Adapter.Abstraction.sourcelink.json
+D:\aero\SentriX\src\Modules\Contracts\Adapter.Abstraction\obj\Debug\net10.0\Adapter.Abstraction.dll
+D:\aero\SentriX\src\Modules\Contracts\Adapter.Abstraction\obj\Debug\net10.0\refint\Adapter.Abstraction.dll
+D:\aero\SentriX\src\Modules\Contracts\Adapter.Abstraction\obj\Debug\net10.0\Adapter.Abstraction.pdb
+D:\aero\SentriX\src\Modules\Contracts\Adapter.Abstraction\obj\Debug\net10.0\ref\Adapter.Abstraction.dll

@@ -10,24 +10,28 @@ public sealed class Position : BaseDomain
 
       public Position(
             string Name,
+            string Description,
             Guid DepartmentGuid
       )
       {
             ValidationHelper.IsValidName(Name);
             ValidationHelper.ValidateGuid(DepartmentGuid,nameof(this.DepartmentGuid));
             this.Name = Name;
+            this.Description = Description;
             this.DepartmentGuid = DepartmentGuid;
       }
 
       public Position(
             Guid Guid,
             string Name,
+            string Description,
             Guid DepartmentGuid
       ) : base(Guid)
       {
             ValidationHelper.IsValidName(Name);
             ValidationHelper.ValidateGuid(DepartmentGuid,nameof(this.DepartmentGuid));
             this.Name = Name;
+            this.Description = Description;
             this.DepartmentGuid = DepartmentGuid;
       }
 }

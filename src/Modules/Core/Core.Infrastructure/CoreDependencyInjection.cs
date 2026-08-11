@@ -25,6 +25,14 @@ public static class CoreDependencyInjection
     services.AddScoped<ICompany, CompanyService>();
     services.AddScoped<ICompanyRepository, CompanyRepository>();
 
+    // Department
+    services.AddScoped<IDepartment,DepartmentService>();
+    services.AddScoped<IDepartmentRepository,DepartmentRepository>();
+
+    // Position
+    services.AddScoped<IPosition,PositionService>();
+    services.AddScoped<IPositionRepository,PositionRepository>();
+
     // ==========================
     // Database
     // ==========================
