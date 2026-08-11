@@ -33,6 +33,10 @@ public static class CoreDependencyInjection
     services.AddScoped<IPosition,PositionService>();
     services.AddScoped<IPositionRepository,PositionRepository>();
 
+    // Feature
+    services.AddScoped<IFeature,FeatureService>();
+    services.AddScoped<IFeatureRepository,FeatureRepository>();
+
     // ==========================
     // Database
     // ==========================
