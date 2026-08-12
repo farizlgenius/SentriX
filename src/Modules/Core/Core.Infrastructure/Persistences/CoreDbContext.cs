@@ -26,6 +26,7 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
       public DbSet<Role> Roles { get; set; }
       public DbSet<Operator> Operators { get; set; }
       public DbSet<OperatorLocation> OperatorLocations { get; set; }
+      public DbSet<ComponentMapping> ComponentMappings { get; set; }
       protected override void OnModelCreating(ModelBuilder modelBuilder)
       {
             Console.WriteLine("=== Entities ===");
@@ -123,6 +124,13 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
 
             modelBuilder.Entity<Location>()
                   .HasMany(x => x.modules)
+                  .WithOne(x => x.location)
+                  .HasForeignKey(x => x.location_guid)
+                  .HasPrincipalKey(x => x.guid)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Location>()
+                  .HasMany(x => x.component_mapping)
                   .WithOne(x => x.location)
                   .HasForeignKey(x => x.location_guid)
                   .HasPrincipalKey(x => x.guid)

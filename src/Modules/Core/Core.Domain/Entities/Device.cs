@@ -9,12 +9,10 @@ public sealed class Device : BaseDomain
   public string Mac { get; private set; } = string.Empty;
   public string Ip { get; private set; } = string.Empty;
   public int Port { get; set; }
-  public string Fw { get; set; } = string.Empty;
-  public string Status { get; private set; } = string.Empty;
-  public DateTime SyncedAt { get; private set; } = default!;
+  public string Firmware { get; set; } = string.Empty;
   public string Metadata { get; private set; } = string.Empty;
-  public Guid LocationGuid { get; private set; } = default!;
-
+  public string Vendor { get; private set; } = string.Empty;
+  public Guid LocationGuid { get; private set; }
 
   public Device(
    string Name,
@@ -23,8 +21,7 @@ public sealed class Device : BaseDomain
    string Ip,
    int Port,
    string Fw,
-   string Status,
-   DateTime SyncedAt,
+   string Vendor,
    string Metadata,
    Guid LocationGuid
    )
@@ -39,10 +36,9 @@ public sealed class Device : BaseDomain
     this.Mac = Mac;
     this.Ip = Ip;
     this.Port = Port;
-    this.Fw = Fw;
-    this.Status = Status;
-    this.SyncedAt = SyncedAt;
+    this.Firmware = Fw;
     this.Metadata = Metadata;
+    this.Vendor = Vendor;
     this.LocationGuid = LocationGuid;
   }
 
@@ -54,8 +50,7 @@ public sealed class Device : BaseDomain
     string Ip,
     int Port,
     string Fw,
-    string Status,
-    DateTime SyncedAt,
+    string Vendor,
     string Metadata,
     Guid LocationGuid
     ) : base(Guid)
@@ -70,9 +65,8 @@ public sealed class Device : BaseDomain
     this.Mac = Mac;
     this.Ip = Ip;
     this.Port = Port;
-    this.Fw = Fw;
-    this.Status = Status;
-    this.SyncedAt = SyncedAt;
+    this.Firmware = Fw;
+    this.Vendor = Vendor;
     this.Metadata = Metadata;
     this.LocationGuid = LocationGuid;
   }

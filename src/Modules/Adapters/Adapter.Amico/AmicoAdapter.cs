@@ -7,7 +7,7 @@ namespace Adapter.Amico;
 
 public sealed class AmicoAdapter : IAdapter
 {
-      public string Vendor => Venders.AMICO;
+      public string Vendor => Abstraction.Constants.Vendor.AMICO;
 
       public IDeviceAdapter Device { get; }
 
@@ -15,13 +15,13 @@ public sealed class AmicoAdapter : IAdapter
 
       public IOutputAdapter Control { get; }
 
-      public ITimeAdapter Time {get;}
+      public ITimeAdapter Time { get; }
 
-      public IDoorAdapter Door {get;}
-      public IGroupAdapter Group {get;}
+      public IDoorAdapter Door { get; }
+      public IGroupAdapter Group { get; }
 
-      public IUserAdapter User {get;}
-      public ISettingAdapter Setting {get;}
+      public IUserAdapter User { get; }
+      public ISettingAdapter Setting { get; }
 
       public AmicoAdapter(
             IAmicoDeviceAdapter devices,

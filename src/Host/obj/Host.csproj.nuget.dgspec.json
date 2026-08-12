@@ -6171,6 +6171,9 @@
           "net10.0": {
             "targetAlias": "net10.0",
             "projectReferences": {
+              "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Contracts/Adapter.Abstraction/Adapter.Abstraction.csproj": {
+                "projectPath": "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Contracts/Adapter.Abstraction/Adapter.Abstraction.csproj"
+              },
               "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Contracts/Core.Contract/Core.Contract.csproj": {
                 "projectPath": "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Contracts/Core.Contract/Core.Contract.csproj"
               },

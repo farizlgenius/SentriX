@@ -1310,6 +1310,7 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v10.0",
         "dependencies": {
+          "Adapter.Abstraction": "1.0.0",
           "Core.Contract": "1.0.0",
           "Core.Domain": "1.0.0",
           "Setting.Contract": "1.0.0"

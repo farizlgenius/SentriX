@@ -7,7 +7,7 @@ namespace Adapter.Aero;
 
 public sealed class AeroAdapter : IAdapter
 {
-      public string Vendor => Venders.AERO;
+      public string Vendor => Abstraction.Constants.Vendor.AERO;
 
       public IDeviceAdapter Device { get; }
 
@@ -15,12 +15,12 @@ public sealed class AeroAdapter : IAdapter
 
       public IOutputAdapter Control { get; }
 
-      public ITimeAdapter Time {get;}
-      public IDoorAdapter Door {get;}
-      public IGroupAdapter Group {get;}
+      public ITimeAdapter Time { get; }
+      public IDoorAdapter Door { get; }
+      public IGroupAdapter Group { get; }
 
-      public IUserAdapter User {get;}
-      public ISettingAdapter Setting {get;}
+      public IUserAdapter User { get; }
+      public ISettingAdapter Setting { get; }
 
       public AeroAdapter(
             IAeroDeviceAdapter devices,

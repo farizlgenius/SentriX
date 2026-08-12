@@ -9,7 +9,7 @@ public class Module : BaseDomain
 {
   public string Name { get; private set; } = string.Empty;
   public string SerialNumber { get; private set; } = string.Empty;
-  public string Fw { get; private set; } = string.Empty;
+  public string Firmware { get; private set; } = string.Empty;
   public string Mac { get; private set; } = string.Empty;
   public int Port { get; private set; }
   public int Address { get; private set; }
@@ -35,7 +35,7 @@ public class Module : BaseDomain
     ValidationHelper.IsNullOrEmpty(Mac, nameof(Mac));
     this.Name = Name;
     this.SerialNumber = SerialNumber;
-    this.Fw = Fw;
+    this.Firmware = Fw;
     this.Mac = Mac;
     this.Port = Port;
     this.Address = Address;
@@ -63,7 +63,7 @@ public class Module : BaseDomain
 
     this.Name = Name;
     this.SerialNumber = SerialNumber;
-    this.Fw = Fw;
+    this.Firmware = Fw;
     this.Mac = Mac;
     this.Port = Port;
     this.Address = Address;
