@@ -21,8 +21,8 @@ public sealed class Operator : BaseEntity
     password = d.Password;
     email = d.Email;
     phone = d.Phone;
-    active_time = d.ActiveTime;
-    expire_time = d.ExpireTime;
+    active_time = d.JoinedDate;
+    expire_time = d.ExpiredDate;
     role_guid = d.RoleGuid;
     operator_locations = d.LocationGuids.Select(x => new OperatorLocation(
       d.Guid,

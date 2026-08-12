@@ -13,7 +13,7 @@ public sealed class Department : BaseDomain
             Guid CompanyGuid
       )
       {
-            ValidationHelper.IsValidName(Name);
+            ValidationHelper.Name(Name);
             this.Name = Name;
             this.Description = Description;
             this.CompanyGuid = CompanyGuid;
@@ -25,7 +25,7 @@ public sealed class Department : BaseDomain
             Guid CompanyGuid
             ) : base(Guid)
       {
-            ValidationHelper.IsValidName(Name);
+            ValidationHelper.Name(Name);
             this.Name = Name;
             this.Description = Description;
             this.CompanyGuid = CompanyGuid;

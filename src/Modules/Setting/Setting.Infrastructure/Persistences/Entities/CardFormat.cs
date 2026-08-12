@@ -2,7 +2,7 @@ using SharedKernel.Domain;
 
 namespace Setting.Infrastructure.Persistences.Entities;
 
-public sealed class CardFormat
+public sealed class CardFormat : BaseEntity
 {
 
       public string name { get; set; } = string.Empty;

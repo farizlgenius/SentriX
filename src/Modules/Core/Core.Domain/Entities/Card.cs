@@ -11,10 +11,10 @@ public sealed class Card : BaseDomain
 
       public Card(short bits, int fac, int cardNumber, Guid userGuid)
       {
-            ValidationHelper.ValidateNotMinus(bits, nameof(Bits));
-            ValidationHelper.ValidateNotMinus(fac, nameof(Fac));
-            ValidationHelper.ValidateNotMinus(cardNumber, nameof(CardNumber));
-            ValidationHelper.ValidateGuid(userGuid, nameof(UserGuid));
+            ValidationHelper.NotMinus(bits, nameof(Bits));
+            ValidationHelper.NotMinus(fac, nameof(Fac));
+            ValidationHelper.NotMinus(cardNumber, nameof(CardNumber));
+            ValidationHelper.GuidEmpty(userGuid, nameof(UserGuid));
             Bits = bits;
             Fac = fac;
             CardNumber = cardNumber;
@@ -23,10 +23,10 @@ public sealed class Card : BaseDomain
 
       public Card(Guid guid, short bits, int fac, int cardNumber, Guid userGuid) : base(guid)
       {
-            ValidationHelper.ValidateNotMinus(bits, nameof(Bits));
-            ValidationHelper.ValidateNotMinus(fac, nameof(Fac));
-            ValidationHelper.ValidateNotMinus(cardNumber, nameof(CardNumber));
-            ValidationHelper.ValidateGuid(userGuid, nameof(UserGuid));
+            ValidationHelper.NotMinus(bits, nameof(Bits));
+            ValidationHelper.NotMinus(fac, nameof(Fac));
+            ValidationHelper.NotMinus(cardNumber, nameof(CardNumber));
+            ValidationHelper.GuidEmpty(userGuid, nameof(UserGuid));
             Bits = bits;
             Fac = fac;
             CardNumber = cardNumber;

@@ -84,7 +84,7 @@ public sealed class LocationRepository(CoreDbContext context) : ILocationReposit
                         x.country_id,
                         x.is_active,
                         x.is_default
-                  )).FirstOrDefaultAsync() ?? throw new NotFoundException(nameof(Location), guid.ToString());
+                  )).FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.Location, guid.ToString());
       }
 
       public async Task<IEnumerable<CountryDto>> GetCountriesAsync(CancellationToken ct = default)

@@ -16,7 +16,7 @@ public sealed class Company : BaseDomain
             Guid locationGuid
       )
       {
-            ValidationHelper.IsValidName(name);
+            ValidationHelper.Name(name);
             Name = name;
             Description = description;
             Address = address;
@@ -31,8 +31,8 @@ public sealed class Company : BaseDomain
            Guid locationGuid
      ) : base(guid)
       {
-            ValidationHelper.IsValidName(name);
-            ValidationHelper.ValidateGuid(guid, nameof(this.Guid));
+            ValidationHelper.Name(name);
+            ValidationHelper.GuidEmpty(guid, nameof(this.Guid));
             Name = name;
             Description = description;
             Address = address;

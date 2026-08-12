@@ -29,10 +29,10 @@ public class Module : BaseDomain
     )
   {
     // Validate required fields
-    ValidationHelper.IsValidName(Name);
-    ValidationHelper.ValidateGuid(LocationGuid,nameof(LocationGuid));
-    ValidationHelper.IsNullOrEmpty(SerialNumber,nameof(SerialNumber));
-    ValidationHelper.IsNullOrEmpty(Mac,nameof(Mac));
+    ValidationHelper.Name(Name);
+    ValidationHelper.GuidEmpty(LocationGuid, nameof(LocationGuid));
+    ValidationHelper.IsNullOrEmpty(SerialNumber, nameof(SerialNumber));
+    ValidationHelper.IsNullOrEmpty(Mac, nameof(Mac));
     this.Name = Name;
     this.SerialNumber = SerialNumber;
     this.Fw = Fw;
@@ -56,10 +56,10 @@ public class Module : BaseDomain
     ) : base(Guid)
   {
     // Validate required fields
-    ValidationHelper.IsValidName(Name);
-    ValidationHelper.ValidateGuid(LocationGuid,nameof(LocationGuid));
-    ValidationHelper.IsNullOrEmpty(SerialNumber,nameof(SerialNumber));
-    ValidationHelper.IsNullOrEmpty(Mac,nameof(Mac));
+    ValidationHelper.Name(Name);
+    ValidationHelper.GuidEmpty(LocationGuid, nameof(LocationGuid));
+    ValidationHelper.IsNullOrEmpty(SerialNumber, nameof(SerialNumber));
+    ValidationHelper.IsNullOrEmpty(Mac, nameof(Mac));
 
     this.Name = Name;
     this.SerialNumber = SerialNumber;

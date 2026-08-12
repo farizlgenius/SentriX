@@ -15,7 +15,7 @@ public class BaseDomain
     Guid Guid
   )
   {
-    ValidationHelper.ValidateGuid(Guid, nameof(Guid));
+    ValidationHelper.GuidEmpty(Guid, nameof(Guid));
     this.Guid = Guid;
   }
 

@@ -4,15 +4,15 @@ namespace Core.Domain.Entities;
 
 public sealed class LicensePlate : BaseDomain
 {
-      public string LicensePlates {get; private set;} = string.Empty;
-      public Guid UserGuid {get; private set;}
+      public string LicensePlates { get; private set; } = string.Empty;
+      public Guid UserGuid { get; private set; }
       public LicensePlate(
             string Plate,
             Guid UserGuid
       )
       {
-            ValidationHelper.IsNullOrEmpty(Plate,nameof(LicensePlates));
-            ValidationHelper.ValidateGuid(UserGuid,nameof(this.UserGuid));
+            ValidationHelper.IsNullOrEmpty(Plate, nameof(LicensePlates));
+            ValidationHelper.GuidEmpty(UserGuid, nameof(this.UserGuid));
             this.LicensePlates = Plate;
             this.UserGuid = UserGuid;
       }
@@ -22,9 +22,9 @@ public sealed class LicensePlate : BaseDomain
             Guid UserGuid
             ) : base(Guid)
       {
-            ValidationHelper.IsNullOrEmpty(Plate,nameof(LicensePlates));
-            ValidationHelper.ValidateGuid(UserGuid,nameof(this.UserGuid));
-             this.LicensePlates = Plate;
+            ValidationHelper.IsNullOrEmpty(Plate, nameof(LicensePlates));
+            ValidationHelper.GuidEmpty(UserGuid, nameof(this.UserGuid));
+            this.LicensePlates = Plate;
             this.UserGuid = UserGuid;
       }
 }

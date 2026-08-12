@@ -10,4 +10,6 @@ public static class EntityType
   public const string User = "User";
   public const string Role = "Role";
   public const string Operator = "Operator";
+  public const string PasswordRule = "PasswordRule";
+  public const string WeakPassword = "WeakPassword";
 }

@@ -14,7 +14,7 @@ public sealed class Role : BaseDomain
             Guid LocationGuid
       )
       {
-            ValidationHelper.IsValidName(Name);
+            ValidationHelper.Name(Name);
             this.Name = Name;
             this.Permissions = Permissions;
             this.LocationGuid = LocationGuid;
@@ -26,7 +26,7 @@ public sealed class Role : BaseDomain
             Guid LocationGuid
       ) : base(Guid)
       {
-            ValidationHelper.IsValidName(Name);
+            ValidationHelper.Name(Name);
             this.Name = Name;
             this.Permissions = Permissions;
             this.LocationGuid = LocationGuid;

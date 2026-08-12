@@ -6,7 +6,7 @@ namespace SharedKernel.Helpers;
 
 public static partial class ValidationHelper
 {
-  [GeneratedRegex(@"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$",RegexOptions.Compiled | RegexOptions.IgnoreCase)]
+  [GeneratedRegex(@"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$", RegexOptions.Compiled | RegexOptions.IgnoreCase)]
   private static partial Regex EmailRegex();
 
   [GeneratedRegex(@"^[a-zA-Z0-9]*$")]
@@ -20,7 +20,7 @@ public static partial class ValidationHelper
 
 
 
-  public static void IsValidEmail(string? email,string parameterName)
+  public static void Email(string? email, string parameterName)
   {
     if (string.IsNullOrWhiteSpace(email))
       throw new ArgumentException($"'{email}' cannot be null or empty.", parameterName);
@@ -29,7 +29,7 @@ public static partial class ValidationHelper
       throw new ArgumentException($"'{email}' email format incorrect.", parameterName);
   }
 
-  public static void IsValidOnlyCharAndDigit(string name,string parameterName)
+  public static void CharAndDigit(string name, string parameterName)
   {
     if (string.IsNullOrWhiteSpace(name))
       throw new ArgumentException($"'{name}' cannot be null or empty.", parameterName);
@@ -38,7 +38,7 @@ public static partial class ValidationHelper
       throw new ArgumentException($"'{name}' only char and digit support.", parameterName);
   }
 
-  public static void IsValidName(string name)
+  public static void Name(string name)
   {
     if (string.IsNullOrWhiteSpace(name))
       throw new ArgumentException($"'{name}' cannot be null or empty.", name);
@@ -47,7 +47,7 @@ public static partial class ValidationHelper
       throw new ArgumentException($"'{name}' format incorrect.", name);
   }
 
-  public static void IsNullOrEmpty(string value,string paramter)
+  public static void IsNullOrEmpty(string value, string paramter)
   {
     if (string.IsNullOrWhiteSpace(value))
     {
@@ -55,7 +55,7 @@ public static partial class ValidationHelper
     }
   }
 
-  public static void ValidateNotMinus(int value, string parameterName)
+  public static void NotMinus(int value, string parameterName)
   {
     if (value < 0)
     {
@@ -63,19 +63,19 @@ public static partial class ValidationHelper
     }
   }
 
-   public static void ValidateGuid(Guid value, string parameterName)
+  public static void GuidEmpty(Guid value, string parameterName)
   {
-    if (value == Guid.Empty)
+    if (value == System.Guid.Empty)
     {
       throw new ArgumentException($"'{parameterName}' cannot be empty.", parameterName);
     }
   }
 
-  
 
-  public static void ValidateDigit(string value,string param)
+
+  public static void Digit(string value, string param)
   {
-    if(!DigitRegex().IsMatch(value))
+    if (!DigitRegex().IsMatch(value))
       throw new ArgumentException($"'{value}' must be only digit.", param);
   }
 
@@ -91,27 +91,58 @@ public static partial class ValidationHelper
 
   public static void ValidateDeviceType(string Type)
   {
-    if(string.IsNullOrWhiteSpace(Type))
+    if (string.IsNullOrWhiteSpace(Type))
       throw new ArgumentException("Device Type is empty");
 
     bool isMatch = Enum.TryParse<DeviceType>(Type, true, out _);
-    if(!isMatch)
+    if (!isMatch)
       throw new ArgumentException("Device Type is invalid");
   }
 
-  public static void ValidateDateTime(string value,DateTime dateTime)
+  public static void ValidateDateTime(string value, DateTime dateTime)
   {
-      if(value == default)
-        throw new ArgumentException($"'{value}' is invalid.", dateTime.ToString());
+    if (value == default)
+      throw new ArgumentException($"'{value}' is invalid.", dateTime.ToString());
   }
 
-  public static void ValidateActiveTime(DateTime active,DateTime expire)
+  public static void ValidateActiveTime(DateTime active, DateTime expire)
   {
-      if(active > expire)
-        throw new ArgumentException($"Active time must be lower than expire time.");
+    if (active > expire)
+      throw new ArgumentException($"Active time must be lower than expire time.");
 
-      if(active == expire)
-        throw new ArgumentException($"Active time must be lower than expire time.");
+    if (active == expire)
+      throw new ArgumentException($"Active time must be lower than expire time.");
+
+  }
+
+  public static string Password(
+    string password,
+    int len,
+    bool digit,
+    bool symbol,
+    bool upper,
+    bool lower
+    )
+  {
+    if (string.IsNullOrWhiteSpace(password))
+      return "Empty";
+    // Length
+    if (password.Length < len)
+      return $"Length must greater than {len}";
+
+    if (upper && !password.Any(char.IsUpper))
+      return $"Uppercase required";
+
+    if (lower && !password.Any(char.IsLower))
+      return $"Lowercase required";
+
+    if (digit && !password.Any(char.IsDigit))
+      return $"Digit required";
+
+    if (symbol && !password.Any(c => !char.IsLetterOrDigit(c)))
+      return $"Symbol required";
+
+    return string.Empty;
 
   }
 

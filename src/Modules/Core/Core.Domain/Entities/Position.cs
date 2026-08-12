@@ -14,8 +14,8 @@ public sealed class Position : BaseDomain
             Guid DepartmentGuid
       )
       {
-            ValidationHelper.IsValidName(Name);
-            ValidationHelper.ValidateGuid(DepartmentGuid, nameof(this.DepartmentGuid));
+            ValidationHelper.Name(Name);
+            ValidationHelper.GuidEmpty(DepartmentGuid, nameof(this.DepartmentGuid));
             this.Name = Name;
             this.Description = Description;
             this.DepartmentGuid = DepartmentGuid;
@@ -28,8 +28,8 @@ public sealed class Position : BaseDomain
             Guid DepartmentGuid
       ) : base(Guid)
       {
-            ValidationHelper.IsValidName(Name);
-            ValidationHelper.ValidateGuid(DepartmentGuid, nameof(this.DepartmentGuid));
+            ValidationHelper.Name(Name);
+            ValidationHelper.GuidEmpty(DepartmentGuid, nameof(this.DepartmentGuid));
             this.Name = Name;
             this.Description = Description;
             this.DepartmentGuid = DepartmentGuid;

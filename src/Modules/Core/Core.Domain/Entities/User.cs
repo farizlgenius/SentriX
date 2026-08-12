@@ -62,9 +62,9 @@ public sealed class User : BaseDomain
     Guid LocationGuid
 )
       {
-            ValidationHelper.IsValidName(Firstname);
-            ValidationHelper.IsValidOnlyCharAndDigit(Identification, nameof(this.Identification));
-            ValidationHelper.IsValidEmail(Email, nameof(Email));
+            ValidationHelper.Name(Firstname);
+            ValidationHelper.CharAndDigit(Identification, nameof(this.Identification));
+            ValidationHelper.Email(Email, nameof(Email));
             this.Username = Username;
             this.Identification = Identification;
             this.Title = Title;

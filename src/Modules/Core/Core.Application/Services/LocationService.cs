@@ -12,7 +12,6 @@ public sealed class LocationService(ILocationRepository repo) : ILocation
   public async Task<LocationDto> CreateAsync(CreateLocationDto dto, CancellationToken ct = default)
   {
     var d = new Core.Domain.Entities.Location(
-      Guid.NewGuid(),
       dto.Name,
       dto.Description,
       dto.CountryId

@@ -41,6 +41,10 @@ public static class CoreDependencyInjection
     services.AddScoped<IRole, RoleService>();
     services.AddScoped<IRoleRepository, RoleRepository>();
 
+    // Operator
+    services.AddScoped<IOperator, OperatorService>();
+    services.AddScoped<IOperatorRepository, OperatorRepository>();
+
     // ==========================
     // Database
     // ==========================
