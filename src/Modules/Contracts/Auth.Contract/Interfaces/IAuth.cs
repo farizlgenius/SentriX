@@ -9,5 +9,5 @@ public interface IAuth
       Task<AccessTokenDto> LoginAsync(LoginDto login);
       Task<AccessTokenDto> RefreshTokenAsync(string refreshToken);
       Task<string> LogoutAsync(string refreshToken);
-      // Task<MeDto> GetMeByUsernameAndRoleIdAsync(string username, int roleId);
+      Task<MeDto> GetMeByUsernameAndRoleGuidAsync(string username, Guid roleGuid);
 }

@@ -2,6 +2,7 @@ using Core.Application.Interfaces;
 using Core.Contract.DTOs.Location;
 using Core.Domain.Entities;
 using Core.Infrastructure.Persistences;
+using Core.Infrastructure.Persistences.Entities;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel.Constants;
 using SharedKernel.Domain;
@@ -11,11 +12,22 @@ namespace Core.Infrastructure.Repositories;
 
 public sealed class LocationRepository(CoreDbContext context) : ILocationRepository
 {
-      public async Task AddAsync(Location entity, CancellationToken ct = default)
+      public async Task AddAsync(Core.Domain.Entities.Location entity, CancellationToken ct = default)
       {
             await context.Locations.AddAsync(
                   new Persistences.Entities.Location(entity), ct
             );
+
+            await context.SaveChangesAsync(ct);
+      }
+
+      public async Task AddDefaultOperatorAsync(Guid operatorGuid, Guid locationGuid, CancellationToken ct = default)
+      {
+
+            await context.OperatorLocations
+                  .AddAsync(
+                        new OperatorLocation(operatorGuid, locationGuid), ct
+                  );
 
             await context.SaveChangesAsync(ct);
       }
@@ -190,7 +202,7 @@ public sealed class LocationRepository(CoreDbContext context) : ILocationReposit
                   .AnyAsync(x => x.guid == guid && x.is_default);
       }
 
-      public async Task UpdateAsync(Location entity, CancellationToken ct = default)
+      public async Task UpdateAsync(Core.Domain.Entities.Location entity, CancellationToken ct = default)
       {
             var en = await context.Locations
                   .Where(x => x.guid == entity.Guid)

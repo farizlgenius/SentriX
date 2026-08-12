@@ -105,6 +105,34 @@ public sealed class OperatorRepository(CoreDbContext context) : IOperatorReposit
       )).FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.Operator, guid.ToString());
   }
 
+  public async Task<OperatorDto> GetByUsernameAsync(string username, CancellationToken ct = default)
+  {
+    return await context.Operators
+      .AsNoTracking()
+      .Where(x => x.username.Equals(username))
+      .Select(x => new OperatorDto(
+        x.guid,
+        x.username,
+        x.email,
+        x.phone,
+        x.active_time,
+        x.expire_time,
+        x.role_guid,
+        x.operator_locations.Select(o => o.location_guid).ToList(),
+        x.is_active,
+        x.is_default
+      )).FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.Operator, username);
+  }
+
+  public async Task<Guid> GetDefaultLocationGuidAsync()
+  {
+    return await context.Operators
+      .AsNoTracking()
+      .Where(x => x.is_default)
+      .Select(x => x.guid)
+      .FirstOrDefaultAsync();
+  }
+
   public async Task<string> GetHashByUsernameAsync(string username, CancellationToken ct = default)
   {
     return await context.Operators
@@ -112,6 +140,15 @@ public sealed class OperatorRepository(CoreDbContext context) : IOperatorReposit
       .Where(x => x.username.Equals(username))
       .Select(x => x.password)
       .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.Operator, username);
+  }
+
+  public async Task<IEnumerable<Guid>> GetLocationGuidByUsernameAsync(string username, CancellationToken ct = default)
+  {
+    return await context.Operators
+      .AsNoTracking()
+      .Where(x => x.username.Equals(username))
+      .SelectMany(x => x.operator_locations.Select(x => x.location_guid))
+      .ToArrayAsync();
   }
 
   public async Task<Pagination<OperatorDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)

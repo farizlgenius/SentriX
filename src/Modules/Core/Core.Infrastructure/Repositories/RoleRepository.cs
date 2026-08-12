@@ -164,6 +164,22 @@ public sealed class RoleRepository(CoreDbContext context) : IRoleRepository
                   );
       }
 
+      public async Task<IEnumerable<PermissionDto>> GetPermissionByRoleGuidAsync(Guid guid, CancellationToken ct = default)
+      {
+            return await context.Permissions
+                  .AsNoTracking()
+                  .Where(x => x.role_guid == guid)
+                  .Select(x => new PermissionDto(
+                        x.guid,
+                        x.feature_guid,
+                        x.role_guid,
+                        x.is_enabled,
+                        x.is_created,
+                        x.is_updated,
+                        x.is_deleted
+                  )).ToArrayAsync();
+      }
+
       public async Task<bool> IsAnyByNameAndLocationGuidAsync(string name, Guid locationGuid, CancellationToken ct = default)
       {
             return await context.Roles

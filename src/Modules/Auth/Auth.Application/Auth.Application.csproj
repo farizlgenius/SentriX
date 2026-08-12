@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="../../Contracts/Core.Contract/Core.Contract.csproj" />
     <ProjectReference Include="..\..\..\SharedKernel\SharedKernel.csproj" />
     <ProjectReference Include="..\..\Contracts\Auth.Contract\Auth.Contract.csproj" />
     <ProjectReference Include="..\..\Contracts\Cache.Contract\Cache.Contract.csproj" />

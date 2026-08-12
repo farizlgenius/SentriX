@@ -25,6 +25,7 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
       public DbSet<Permission> Permissions { get; set; }
       public DbSet<Role> Roles { get; set; }
       public DbSet<Operator> Operators { get; set; }
+      public DbSet<OperatorLocation> OperatorLocations { get; set; }
       protected override void OnModelCreating(ModelBuilder modelBuilder)
       {
             Console.WriteLine("=== Entities ===");
@@ -669,6 +670,7 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   new Operator
                   {
                         id = 1,
+                        guid = new Guid("ed2b5887-9dcb-43bd-a6f8-988330df5181"),
                         username = "admin",
                         password = "100000.lG1/4V/VRPZsbhf/Zqc4xw==.6vYcf+wEMSgqcaNhoZEdM9PaPxx2ZUErZhQbeMxo5OY=",
                         email = "support@sentrix.com",
@@ -682,9 +684,17 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   }
             );
 
+            modelBuilder.Entity<OperatorLocation>()
+                  .HasData(
+                        new OperatorLocation
+                        {
+                              id = 1,
+                              guid = new Guid("88f16b53-b5b1-4c21-9324-968d58584b06"),
+                              location_guid = new Guid("3a9c9947-d5ca-4bb2-b525-0499a340f1d6"),
+                              operator_guid = new Guid("ed2b5887-9dcb-43bd-a6f8-988330df5181"),
 
-
-
+                        }
+                  );
 
       }
 }

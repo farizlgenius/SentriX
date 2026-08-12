@@ -7,7 +7,10 @@ using SharedKernel.Exceptions;
 
 namespace Core.Application.Services;
 
-public sealed class LocationService(ILocationRepository repo) : ILocation
+public sealed class LocationService(
+  ILocationRepository repo,
+  IOperatorRepository oper
+  ) : ILocation
 {
   public async Task<LocationDto> CreateAsync(CreateLocationDto dto, CancellationToken ct = default)
   {
@@ -22,6 +25,11 @@ public sealed class LocationService(ILocationRepository repo) : ILocation
       throw new DuplicateException(EntityType.Location, dto.Name);
 
     await repo.AddAsync(d, ct);
+
+    // Location
+    var operGuid = await oper.GetDefaultLocationGuidAsync();
+
+    await repo.AddDefaultOperatorAsync(operGuid, d.Guid);
 
     return new LocationDto(
       d.Guid,

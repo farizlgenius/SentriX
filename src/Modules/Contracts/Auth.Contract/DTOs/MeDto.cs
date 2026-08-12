@@ -1,7 +1,8 @@
-// using System;
-// using System.Net;
-// using SharedKernel.Domain;
+using System;
+using System.Net;
+using Core.Contract.DTOs.Role;
+using SharedKernel.Domain;
 
-// namespace Auth.Contract.DTOs;
+namespace Auth.Contract.DTOs;
 
-// public sealed record MeDto(List<int> Locations, List<PermissionDto> Permissions);
+public sealed record MeDto(IEnumerable<Guid> LocationGuids, IEnumerable<PermissionDto> Permissions);

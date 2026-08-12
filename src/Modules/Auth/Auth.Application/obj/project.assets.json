@@ -620,6 +620,7 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v10.0",
         "dependencies": {
+          "Core.Contract": "1.0.0",
           "SharedKernel": "1.0.0"
         },
         "compile": {
@@ -647,6 +648,19 @@
         },
         "runtime": {
           "bin/placeholder/Cache.Contract.dll": {}
+        }
+      },
+      "Core.Contract/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v10.0",
+        "dependencies": {
+          "SharedKernel": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/Core.Contract.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Core.Contract.dll": {}
         }
       },
       "SharedKernel/1.0.0": {
@@ -1632,6 +1646,11 @@
       "path": "../../Contracts/Cache.Contract/Cache.Contract.csproj",
       "msbuildProject": "../../Contracts/Cache.Contract/Cache.Contract.csproj"
     },
+    "Core.Contract/1.0.0": {
+      "type": "project",
+      "path": "../../Contracts/Core.Contract/Core.Contract.csproj",
+      "msbuildProject": "../../Contracts/Core.Contract/Core.Contract.csproj"
+    },
     "SharedKernel/1.0.0": {
       "type": "project",
       "path": "../../../SharedKernel/SharedKernel.csproj",
@@ -1643,6 +1662,7 @@
       "Auth.Contract >= 1.0.0",
       "Auth.Domain >= 1.0.0",
       "Cache.Contract >= 1.0.0",
+      "Core.Contract >= 1.0.0",
       "Microsoft.IdentityModel.Tokens >= 8.18.0",
       "SharedKernel >= 1.0.0",
       "System.IdentityModel.Tokens.Jwt >= 8.18.0"
@@ -1682,6 +1702,9 @@
             },
             "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Contracts/Cache.Contract/Cache.Contract.csproj": {
               "projectPath": "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Contracts/Cache.Contract/Cache.Contract.csproj"
+            },
+            "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Contracts/Core.Contract/Core.Contract.csproj": {
+              "projectPath": "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Contracts/Core.Contract/Core.Contract.csproj"
             },
             "/Users/far-izlengha/Documents/Project/SentriX/src/SharedKernel/SharedKernel.csproj": {
               "projectPath": "/Users/far-izlengha/Documents/Project/SentriX/src/SharedKernel/SharedKernel.csproj"

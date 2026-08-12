@@ -68,7 +68,7 @@ public class Program
         // ==========================
 
         builder.Services.AddHost(builder.Configuration);
-        // builder.Services.AddAuth(builder.Configuration);
+        builder.Services.AddAuth(builder.Configuration);
         builder.Services.AddCache(builder.Configuration);
         // builder.Services.AddAero(builder.Configuration);
         // builder.Services.AddAmico(builder.Configuration);
