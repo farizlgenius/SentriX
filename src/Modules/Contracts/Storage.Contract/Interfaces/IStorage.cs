@@ -3,11 +3,12 @@ namespace Storage.Contract.Interfaces;
 public interface IStorage
 {
       Task<bool> CheckKeyAsync();
-      Task SaveKeyAsync(byte[] pubData,byte[] priData);
-      Task<string> SaveCaptureAsync(byte[] data,string fileName);
+      Task SaveKeyAsync(byte[] pubData, byte[] priData);
+      Task<string> SaveCaptureAsync(byte[] data, string fileName);
       Task<string> SaveUserAsync(byte[] data, string fileName);
       Task<string> SaveMapAsync(byte[] data, string fileName);
       Task<string> ReadKeyAsync(string fileName);
+      Task<byte[]> ReadByteKeyAsync(string fileName);
       Task<Stream> ReadCaptureAsync(string fileName);
       Task<Stream> ReadUserAsync(string fileName);
       Task<Stream> ReadMapAsync(string fileName);

@@ -41,7 +41,7 @@ public sealed class DeviceService(
     else if (dto.Vendor.Equals(Vendor.AERO))
     {
       // var id = await com.get
-      await adapter.GetAdapter(dto.Vendor).Device.InititalDeviceAsync(,d.Ip,d.Mac);
+      // await adapter.GetAdapter(dto.Vendor).Device.InititalDeviceAsync(,d.Ip,d.Mac);
       // Aero get from mac and set guid
       var guid = await repo.GetGuidByMacAsync(dto.Mac);
       d.SetGuid(guid);

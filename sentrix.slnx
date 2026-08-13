@@ -41,7 +41,6 @@
 </Folder>
 <Folder Name="/src/Modules/Contracts/">
 <Project Path="src/Modules/Contracts/Core.Contract/Core.Contract.csproj" />
-<Project Path="src/Modules/Contracts/License.Contract/License.Contract.csproj" />
 <Project Path="src/Modules/Contracts/Notifier.Contract/Notifier.Contract.csproj" />
 <Project Path="src/Modules/Contracts/Auth.Contract/Auth.Contract.csproj" />
 <Project Path="src/Modules/Contracts/Cache.Contract/Cache.Contract.csproj" />

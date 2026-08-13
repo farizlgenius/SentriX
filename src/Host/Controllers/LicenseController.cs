@@ -31,8 +31,6 @@ public class LicenseController(ILicense lic) : ControllerBase
             return Ok(res);
       }
 
-
-
       [HttpPost]
       public async Task<IActionResult> CreateAsync()
       {

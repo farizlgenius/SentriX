@@ -7,6 +7,7 @@ using Adapter.Amico.Interfaces;
 using Adapter.Amico.Model.Objects;
 using Adapter.Amico.Model.Request;
 using Adapter.Amico.Model.Response;
+using SharedKernel.Interfaces;
 
 namespace Adapter.Amico.Command;
 
@@ -154,7 +155,7 @@ public sealed class GroupCommand(IAmicoSetting setting, IHttpClient client, IAmi
                         {
                               access_rule_time_zones = new
                               {
-                                    access_rule_id=access_rule_id
+                                    access_rule_id = access_rule_id
                               }
                         }
                         ),
@@ -180,8 +181,8 @@ public sealed class GroupCommand(IAmicoSetting setting, IHttpClient client, IAmi
                         {
                               group_access_rules = new
                               {
-                                    group_id=group_id,
-                                    access_rule_id=access_rule_id
+                                    group_id = group_id,
+                                    access_rule_id = access_rule_id
                               }
                         }
                         ),
@@ -255,7 +256,7 @@ public sealed class GroupCommand(IAmicoSetting setting, IHttpClient client, IAmi
                   ["session"] = session,
             };
 
-            var old = await Client.SendAsync<LoadObjectRequest,LoadObjectResponse>(
+            var old = await Client.SendAsync<LoadObjectRequest, LoadObjectResponse>(
                   HttpMethod.Post,
                   UriHelper.UriBuilder(ip, Setting.Secure),
                   Endpoint.LOAD_OBJECT,
@@ -270,7 +271,7 @@ public sealed class GroupCommand(IAmicoSetting setting, IHttpClient client, IAmi
                   queryParams: queryParams
             ) ?? new LoadObjectResponse();
 
-            if(old.access_rule_time_zones.Count() == 0)
+            if (old.access_rule_time_zones.Count() == 0)
                   return new UpdateObjectResponse();
 
             return await Client.SendAsync<UpdateObjectRequest<AccessRuleTimeZone>, UpdateObjectResponse>(
@@ -290,8 +291,8 @@ public sealed class GroupCommand(IAmicoSetting setting, IHttpClient client, IAmi
                         {
                               access_rule_time_zones = new
                               {
-                                   old.access_rule_time_zones.ElementAt(0).acccess_rule_id,
-                                   old.access_rule_time_zones.ElementAt(0).time_zone_id 
+                                    old.access_rule_time_zones.ElementAt(0).acccess_rule_id,
+                                    old.access_rule_time_zones.ElementAt(0).time_zone_id
                               }
                         }
                         ),
@@ -306,7 +307,7 @@ public sealed class GroupCommand(IAmicoSetting setting, IHttpClient client, IAmi
                   ["session"] = session,
             };
 
-            var old = await Client.SendAsync<LoadObjectRequest,LoadObjectResponse>(
+            var old = await Client.SendAsync<LoadObjectRequest, LoadObjectResponse>(
                   HttpMethod.Post,
                   UriHelper.UriBuilder(ip, Setting.Secure),
                   Endpoint.LOAD_OBJECT,
@@ -321,7 +322,7 @@ public sealed class GroupCommand(IAmicoSetting setting, IHttpClient client, IAmi
                   queryParams: queryParams
             ) ?? new LoadObjectResponse();
 
-            if(old.group_access_rules.Count() == 0)
+            if (old.group_access_rules.Count() == 0)
                   return new UpdateObjectResponse();
 
             return await Client.SendAsync<UpdateObjectRequest<GroupAccessRule>, UpdateObjectResponse>(
@@ -341,8 +342,8 @@ public sealed class GroupCommand(IAmicoSetting setting, IHttpClient client, IAmi
                         {
                               group_access_rules = new
                               {
-                                   old.group_access_rules.ElementAt(0).group_id,
-                                   old.group_access_rules.ElementAt(0).access_rule_id 
+                                    old.group_access_rules.ElementAt(0).group_id,
+                                    old.group_access_rules.ElementAt(0).access_rule_id
                               }
                         }
                         ),

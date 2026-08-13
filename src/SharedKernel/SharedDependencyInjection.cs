@@ -1,43 +1,47 @@
 using System;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using SharedKernel.Interfaces;
 using SharedKernel.Messaging;
+using SharedKernel.Services;
 
 namespace SharedKernel;
 
 public static class SharedDependencyInjection
 {
 
-      public static IServiceCollection AddShared(
-        this IServiceCollection services,
-        IConfiguration configuration)
-      {
+    public static IServiceCollection AddShared(
+      this IServiceCollection services,
+      IConfiguration configuration)
+    {
 
-            services.AddScoped<IMessageBus, MessageBus>();
+        services.AddHttpClient();
+        services.AddScoped<IMessageBus, MessageBus>();
+        services.AddScoped<IHttpClient, HttpClientService>();
 
 
-            services.Scan(scan => scan
-                .FromApplicationDependencies()
-                .AddClasses(c => c.AssignableTo(typeof(ICommandHandler<>)))
-                .AsImplementedInterfaces()
-                .WithScopedLifetime());
+        services.Scan(scan => scan
+            .FromApplicationDependencies()
+            .AddClasses(c => c.AssignableTo(typeof(ICommandHandler<>)))
+            .AsImplementedInterfaces()
+            .WithScopedLifetime());
 
-            services.Scan(scan => scan
-                .FromApplicationDependencies()
-                .AddClasses(c => c.AssignableTo(typeof(IQueryHandler<,>)))
-                .AsImplementedInterfaces()
-                .WithScopedLifetime());
+        services.Scan(scan => scan
+            .FromApplicationDependencies()
+            .AddClasses(c => c.AssignableTo(typeof(IQueryHandler<,>)))
+            .AsImplementedInterfaces()
+            .WithScopedLifetime());
 
-            services.Scan(scan => scan
-                .FromApplicationDependencies()
-                .AddClasses(c => c.AssignableTo(typeof(IEventHandler<>)))
-                .AsImplementedInterfaces()
-                .WithScopedLifetime());
+        services.Scan(scan => scan
+            .FromApplicationDependencies()
+            .AddClasses(c => c.AssignableTo(typeof(IEventHandler<>)))
+            .AsImplementedInterfaces()
+            .WithScopedLifetime());
 
-            
 
-            return services;
-      }
+
+        return services;
+    }
 
 }
 

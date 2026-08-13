@@ -1,6 +1,7 @@
 using System;
 using Core.Application.Interfaces;
 using Core.Application.Services;
+using Core.Application.ValueObjects;
 using Core.Contract.Interfaces;
 using Core.Infrastructure.Persistences;
 using Core.Infrastructure.Repositories;
@@ -16,6 +17,9 @@ public static class CoreDependencyInjection
     this IServiceCollection services,
     IConfiguration configuration)
   {
+    // App Setting
+    services.AddOptions<LicenseSetting>().Bind(configuration.GetSection("License")).ValidateOnStart();
+    services.AddSingleton<ILicenseSetting>(sp => sp.GetRequiredService<Microsoft.Extensions.Options.IOptions<LicenseSetting>>().Value);
 
     // Location
     services.AddScoped<ILocation, LocationService>();

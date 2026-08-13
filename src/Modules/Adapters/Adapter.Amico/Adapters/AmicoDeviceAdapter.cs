@@ -48,7 +48,7 @@ public sealed class AmicoDeviceAdapter(
 
             // var session = await command.CheckSessionAsync(Mac);
             // var amico = await repo.GetAmicoByMacAsync(Mac);
-            
+
             // var info = await command.DeviceInfoAsync(amico.ip,session);
 
             // return JsonHelper.Serialize(info);
@@ -56,13 +56,13 @@ public sealed class AmicoDeviceAdapter(
 
       }
 
-      public async Task<JsonElement> GetDeviceInformationByIpAsync(string Ip,bool? IsFirst)
+      public async Task<JsonElement> GetDeviceInformationByIpAsync(string Ip, bool? IsFirst)
       {
 
 
-            var res = await command.LoginAsync(Ip,IsFirst);
+            var res = await command.LoginAsync(Ip, IsFirst);
 
-            var info = await command.DeviceInfoAsync(Ip,res.Session);            
+            var info = await command.DeviceInfoAsync(Ip, res.Session);
 
             return JsonHelper.ToJsonElement(info);
 
@@ -89,14 +89,14 @@ public sealed class AmicoDeviceAdapter(
       }
 
       public async Task CreateDeviceAsync(
-            Guid Guid, 
-            string Ip, 
-            string Mac, 
+            Guid Guid,
+            string Ip,
+            string Mac,
             short ComponentId,
             int LocationId
             )
       {
-            var res = await command.LoginAsync(Ip,true);
+            var res = await command.LoginAsync(Ip, true);
 
             // await command.ChangeLogin(Ip,res.Session);
 
@@ -108,7 +108,7 @@ public sealed class AmicoDeviceAdapter(
             );
 
 
-            await command.VerifyDeviceComponentAsync(Ip,res.Session,LocationId);
+            await command.VerifyDeviceComponentAsync(Ip, res.Session, LocationId);
       }
 
       public async Task<bool> GetDeviceStatusAsync(Guid Guid)
@@ -126,6 +126,11 @@ public sealed class AmicoDeviceAdapter(
 
       public async Task DeleteDeviceAsync(Guid Guid, string Ip, string Mac, short ComponentId)
       {
-            await repo.DeleteAsync(Mac,Ip);
+            await repo.DeleteAsync(Mac, Ip);
+      }
+
+      public Task InititalDeviceAsync(int id, string Ip, string Mac)
+      {
+            throw new NotImplementedException();
       }
 }

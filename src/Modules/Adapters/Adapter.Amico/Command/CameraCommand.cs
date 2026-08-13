@@ -3,6 +3,7 @@ using Adapter.Amico.Helper;
 using Adapter.Amico.Interface;
 using Adapter.Amico.Interfaces;
 using Adapter.Amico.Model.Request;
+using SharedKernel.Interfaces;
 
 namespace Adapter.Amico.Command;
 
@@ -17,13 +18,13 @@ public sealed class CameraCommand(IHttpClient client, IAmicoSetting setting, IAm
 
             return await Client.SendStreamAsync<CaptureRequest>(
                   HttpMethod.Post,
-                  UriHelper.UriBuilder(ip,Setting.Secure),
+                  UriHelper.UriBuilder(ip, Setting.Secure),
                   Endpoint.CAPTURE,
                   new CaptureRequest(
                         "camera",
                         "rgb"
                   ),
-                  queryParams:queryParams
+                  queryParams: queryParams
             );
       }
 }

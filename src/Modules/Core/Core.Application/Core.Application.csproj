@@ -10,6 +10,7 @@
     <ProjectReference Include="../../Contracts/Adapter.Abstraction/Adapter.Abstraction.csproj" />
     <ProjectReference Include="../../Contracts/Core.Contract/Core.Contract.csproj" />
     <ProjectReference Include="../../Contracts/Setting.Contract/Setting.Contract.csproj" />
+    <ProjectReference Include="../../Contracts/Storage.Contract/Storage.Contract.csproj" />
     <ProjectReference Include="../Core.Domain/Core.Domain.csproj" />
   </ItemGroup>
 

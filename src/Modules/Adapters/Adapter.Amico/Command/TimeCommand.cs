@@ -6,6 +6,7 @@ using Adapter.Amico.Interfaces;
 using Adapter.Amico.Model.Objects;
 using Adapter.Amico.Model.Request;
 using Adapter.Amico.Model.Response;
+using SharedKernel.Interfaces;
 
 namespace Adapter.Amico.Command;
 

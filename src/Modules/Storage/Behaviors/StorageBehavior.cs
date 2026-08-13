@@ -17,8 +17,8 @@ public sealed class StorageBehavior : IStorage
             if (!Directory.Exists(_paths.Keys))
                   Directory.CreateDirectory(_paths.Keys);
 
-            var pubFile = Path.Combine(_paths.Keys,"pub_sign.key");
-            var priFile = Path.Combine(_paths.Keys,"pri_sign.key");
+            var pubFile = Path.Combine(_paths.Keys, "pub_sign.key");
+            var priFile = Path.Combine(_paths.Keys, "pri_sign.key");
 
             if (!File.Exists(pubFile)) File.Create(pubFile).Close();
             if (!File.Exists(priFile)) File.Create(priFile).Close();
@@ -29,20 +29,20 @@ public sealed class StorageBehavior : IStorage
             return pubContent || priContent;
       }
 
-      public async Task SaveKeyAsync(byte[] pubData,byte[] priData)
+      public async Task SaveKeyAsync(byte[] pubData, byte[] priData)
       {
             if (!Directory.Exists(_paths.Keys))
                   Directory.CreateDirectory(_paths.Keys);
 
-            var pubFile = Path.Combine(_paths.Keys,"pub_sign.key");
-            var priFile = Path.Combine(_paths.Keys,"pri_sign.key");
+            var pubFile = Path.Combine(_paths.Keys, "pub_sign.key");
+            var priFile = Path.Combine(_paths.Keys, "pri_sign.key");
 
             if (!File.Exists(pubFile)) File.Create(pubFile).Close();
             if (!File.Exists(priFile)) File.Create(priFile).Close();
 
             await File.WriteAllBytesAsync(pubFile, pubData);
             await File.WriteAllBytesAsync(priFile, priData);
-            
+
       }
 
       public async Task<string> SaveUserAsync(byte[] data, string fileName)
@@ -94,13 +94,29 @@ public sealed class StorageBehavior : IStorage
 
       public async Task<string> ReadKeyAsync(string fileName)
       {
-            var path = Path.Combine(_paths.Keys,fileName);
+            var path = Path.Combine(_paths.Keys, fileName);
 
             if (!File.Exists(path))
                   throw new FileNotFoundException("Key file not found", fileName);
 
+            if (new FileInfo(path).Length <= 0)
+                  throw new FileNotFoundException("Key empty", fileName);
+
             var bytes = await File.ReadAllBytesAsync(path);
             return Convert.ToBase64String(bytes);
+      }
+
+      public async Task<byte[]> ReadByteKeyAsync(string fileName)
+      {
+            var path = Path.Combine(_paths.Keys, fileName);
+
+            if (!File.Exists(path))
+                  throw new FileNotFoundException("Key file not found", fileName);
+
+            if (new FileInfo(path).Length <= 0)
+                  throw new FileNotFoundException("Key empty", fileName);
+
+            return await File.ReadAllBytesAsync(path);
       }
 
       public async Task<Stream> ReadUserAsync(string fileName)

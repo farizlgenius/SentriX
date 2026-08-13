@@ -4,6 +4,7 @@ using Adapter.Amico.Interface;
 using Adapter.Amico.Interfaces;
 using Adapter.Amico.Model.Request;
 using Adapter.Amico.Model.Response;
+using SharedKernel.Interfaces;
 
 namespace Adapter.Amico.Command;
 
@@ -13,11 +14,11 @@ public class BaseCommand : IBaseCommand
       protected IAmicoSetting Setting { get; }
       private IAmicoRepository _repo { get; }
 
-      protected BaseCommand(IHttpClient client, IAmicoSetting setting,IAmicoRepository repo)
+      protected BaseCommand(IHttpClient client, IAmicoSetting setting, IAmicoRepository repo)
       {
             Client = client;
             Setting = setting;
-            _repo = repo;      
+            _repo = repo;
       }
 
       private async Task<CheckSessionResponse> CheckSession(string ip, string session)
@@ -29,19 +30,19 @@ public class BaseCommand : IBaseCommand
             ) ?? new CheckSessionResponse();
       }
 
-      public async Task<LoginResponse> LoginAsync(string ip,bool? isFirst)
+      public async Task<LoginResponse> LoginAsync(string ip, bool? isFirst)
       {
             var login = "";
             var password = "";
-            if(isFirst ?? false)
+            if (isFirst ?? false)
             {
                   login = Setting.DefaultLogin;
-                  password=Setting.DefaultPassword;
+                  password = Setting.DefaultPassword;
             }
             else
             {
                   login = Setting.Login;
-                  password=Setting.Password;
+                  password = Setting.Password;
             }
             return await Client.SendAsync<LoginRequest, LoginResponse>(
                   HttpMethod.Post,
@@ -101,7 +102,7 @@ public class BaseCommand : IBaseCommand
             return session;
       }
 
-      public async Task<string> CheckSessionAsync(string ip,string session)
+      public async Task<string> CheckSessionAsync(string ip, string session)
       {
 
             var res = await CheckSession(ip, session);

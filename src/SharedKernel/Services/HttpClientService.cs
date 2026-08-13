@@ -1,10 +1,11 @@
 using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
-using Adapter.Abstraction.Interfaces;
 using Microsoft.AspNetCore.WebUtilities;
+using SharedKernel.Exceptions;
+using SharedKernel.Interfaces;
 
-namespace Adapter.Amico.Services;
+namespace SharedKernel.Services;
 
 public sealed class HttpClientService(IHttpClientFactory factory) : IHttpClient
 {
@@ -15,7 +16,7 @@ public sealed class HttpClientService(IHttpClientFactory factory) : IHttpClient
     };
 
 
-    public async Task<TResponse?> SendAsync<TRequest, TResponse>(
+    public async Task<TResponse> SendAsync<TRequest, TResponse>(
         HttpMethod method,
         string baseUrl,
         string endpoint,
@@ -57,16 +58,17 @@ public sealed class HttpClientService(IHttpClientFactory factory) : IHttpClient
         response.EnsureSuccessStatusCode();
 
         if (response.Content.Headers.ContentLength == 0)
-            return default;
+            throw new InvalidOperationException(
+            $"The HTTP response from '{endpoint}' was empty, but a non-null payload of type '{typeof(TResponse).Name}' was expected.");
 
 
         return await response.Content.ReadFromJsonAsync<TResponse>(
             JsonOptions,
-            ct);
+            ct) ?? throw new InvalidOperationException($"Failed to deserialize HTTP response from '{endpoint}' into a non-null instance of type '{typeof(TResponse).Name}'.");
     }
 
 
-    public async Task<TResponse?> SendAsync<TResponse>(
+    public async Task<TResponse> SendAsync<TResponse>(
         HttpMethod method,
         string baseUrl,
         string endpoint,
@@ -91,12 +93,13 @@ public sealed class HttpClientService(IHttpClientFactory factory) : IHttpClient
         response.EnsureSuccessStatusCode();
 
         if (response.Content.Headers.ContentLength == 0)
-            return default;
+            throw new InvalidOperationException(
+            $"The HTTP response from '{endpoint}' was empty, but a non-null payload of type '{typeof(TResponse).Name}' was expected.");
 
 
         return await response.Content.ReadFromJsonAsync<TResponse>(
             JsonOptions,
-            ct);
+            ct) ?? throw new InvalidOperationException($"Failed to deserialize HTTP response from '{endpoint}' into a non-null instance of type '{typeof(TResponse).Name}'.");
     }
 
 
@@ -222,47 +225,47 @@ public sealed class HttpClientService(IHttpClientFactory factory) : IHttpClient
             ct);
     }
 
-      public async Task<Stream> SendStreamAsync<TRequest>(
-    HttpMethod method,
-    string baseUrl,
-    string endpoint,
-    TRequest? request = default,
-    Dictionary<string, string>? headers = null,
-    Dictionary<string, string?>? queryParams = null,
-    CancellationToken ct = default)
-{
-    var message = CreateRequest(
-        method,
-        baseUrl,
-        endpoint,
-        headers,
-        queryParams);
-
-
-    if (request != null)
+    public async Task<Stream> SendStreamAsync<TRequest>(
+  HttpMethod method,
+  string baseUrl,
+  string endpoint,
+  TRequest? request = default,
+  Dictionary<string, string>? headers = null,
+  Dictionary<string, string?>? queryParams = null,
+  CancellationToken ct = default)
     {
-        var requestJson = JsonSerializer.Serialize(
-            request,
-            JsonOptions);
+        var message = CreateRequest(
+            method,
+            baseUrl,
+            endpoint,
+            headers,
+            queryParams);
 
-        message.Content = new StringContent(
-            requestJson,
-            Encoding.UTF8,
-            "application/json");
+
+        if (request != null)
+        {
+            var requestJson = JsonSerializer.Serialize(
+                request,
+                JsonOptions);
+
+            message.Content = new StringContent(
+                requestJson,
+                Encoding.UTF8,
+                "application/json");
+        }
+
+
+        var response = await factory
+            .CreateClient()
+            .SendAsync(
+                message,
+                HttpCompletionOption.ResponseHeadersRead,
+                ct);
+
+
+        response.EnsureSuccessStatusCode();
+
+
+        return await response.Content.ReadAsStreamAsync(ct);
     }
-
-
-    var response = await factory
-        .CreateClient()
-        .SendAsync(
-            message,
-            HttpCompletionOption.ResponseHeadersRead,
-            ct);
-
-
-    response.EnsureSuccessStatusCode();
-
-
-    return await response.Content.ReadAsStreamAsync(ct);
-}
 }
