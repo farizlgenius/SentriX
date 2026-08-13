@@ -6,11 +6,10 @@ namespace Adapter.Abstraction.Interfaces;
 public interface IDeviceAdapter
 {
 
-      Task CreateDeviceAsync(
-            int Guid,
+      Task InititalDeviceAsync(
+            int id,
             string Ip,
-            string Mac,
-            short ScpId
+            string Mac
             );
 
       Task DeleteDeviceAsync(Guid Guid, string Ip, string Mac, short ComponentId);

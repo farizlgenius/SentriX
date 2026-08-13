@@ -6,6 +6,7 @@ public sealed class ComponentMappping : BaseDomain
   public Guid InternalGuid { get; private set; }
   public int ExternalId { get; private set; }
   public string Mac { get; private set; } = string.Empty;
+  public string Vendor {get; private set;} = string.Empty;
   public Guid LocationGuid { get; private set; }
 
   public ComponentMappping(
@@ -13,6 +14,7 @@ public sealed class ComponentMappping : BaseDomain
     Guid @internal,
     int external,
     string mac,
+    string vendor,
     Guid locationGuid
   )
   {
@@ -20,6 +22,7 @@ public sealed class ComponentMappping : BaseDomain
     InternalGuid = @internal;
     ExternalId = external;
     Mac = mac;
+    Vendor = vendor;
     LocationGuid = locationGuid;
   }
   public ComponentMappping(
@@ -28,6 +31,7 @@ public sealed class ComponentMappping : BaseDomain
     Guid @internal,
     int external,
     string mac,
+     string vendor,
     Guid locationGuid
     ) : base(guid)
   {
@@ -35,6 +39,7 @@ public sealed class ComponentMappping : BaseDomain
     InternalGuid = @internal;
     ExternalId = external;
     Mac = mac;
+    Vendor = vendor;
     LocationGuid = locationGuid;
   }
 

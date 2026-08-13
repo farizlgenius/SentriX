@@ -31,6 +31,7 @@ public sealed class Device : BaseDomain
     ValidationHelper.IsNullOrEmpty(SerialNumber, nameof(SerialNumber));
     ValidationHelper.IsNullOrEmpty(Mac, nameof(Mac));
     ValidationHelper.IsNullOrEmpty(Ip, nameof(Ip));
+    ValidationHelper.Vendor(Vendor);
     this.Name = Name;
     this.SerialNumber = SerialNumber;
     this.Mac = Mac;
@@ -60,6 +61,7 @@ public sealed class Device : BaseDomain
     ValidationHelper.IsNullOrEmpty(SerialNumber, nameof(SerialNumber));
     ValidationHelper.IsNullOrEmpty(Mac, nameof(Mac));
     ValidationHelper.IsNullOrEmpty(Ip, nameof(Ip));
+    ValidationHelper.Vendor(Vendor);
     this.Name = Name;
     this.SerialNumber = SerialNumber;
     this.Mac = Mac;
@@ -70,4 +72,6 @@ public sealed class Device : BaseDomain
     this.Metadata = Metadata;
     this.LocationGuid = LocationGuid;
   }
+
+
 }

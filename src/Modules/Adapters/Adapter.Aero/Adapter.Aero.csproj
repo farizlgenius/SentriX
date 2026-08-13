@@ -9,6 +9,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\SharedKernel\SharedKernel.csproj" />
     <ProjectReference Include="..\..\Contracts\Adapter.Abstraction\Adapter.Abstraction.csproj" />
+    <ProjectReference Include="..\..\Contracts\Core.Contract\Core.Contract.csproj" />
     <ProjectReference Include="..\..\Contracts\Notifier.Contract\Notifier.Contract.csproj" />
     <ProjectReference Include="..\..\Contracts\Setting.Contract\Setting.Contract.csproj" />
   </ItemGroup>

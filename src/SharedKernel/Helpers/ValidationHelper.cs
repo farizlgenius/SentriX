@@ -1,4 +1,5 @@
 using System;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using SharedKernel.Enums;
 
@@ -114,6 +115,20 @@ public static partial class ValidationHelper
       throw new ArgumentException($"Active time must be lower than expire time.");
 
   }
+
+  public static void Vendor(string vendor)
+{
+    bool isValid = typeof(SharedKernel.Constants.Vendor)
+        .GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)
+        .Where(f => f.IsLiteral && !f.IsInitOnly)
+        .Select(f => f.GetValue(null) as string)
+        .Contains(vendor);
+
+    if (!isValid)
+    {
+        throw new ArgumentException($"Invalid vendor: {vendor}");
+    }
+}
 
   public static string Password(
     string password,

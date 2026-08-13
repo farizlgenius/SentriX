@@ -10,7 +10,8 @@ namespace Core.Application.Services;
 
 public sealed class DeviceService(
   IDeviceRepository repo,
-  IAdapterFactory adapter
+  IAdapterFactory adapter,
+  IComponentMappingRepository com
   ) : IDevice
 {
   public async Task<DeviceDto> CreateAsync(CreateDeviceDto dto, CancellationToken ct = default)
@@ -31,10 +32,21 @@ public sealed class DeviceService(
     if (await repo.IsAnyByNameAndLocationGuidAsync(d.Name, dto.LocationGuid, ct))
       throw new DuplicateException(EntityType.Device, d.Name);
 
-    // Send Command to device
-    await adapter.GetAdapter(dto.Vendor).Device.CreateDeviceAsync();
 
-    await repo.AddAsync(d, ct);
+    // Send Command to device
+    if (dto.Vendor.Equals(Vendor.AMICO))
+    {
+      await repo.AddAsync(d, ct);
+    }
+    else if (dto.Vendor.Equals(Vendor.AERO))
+    {
+      await adapter.GetAdapter(dto.Vendor).Device.InititalDeviceAsync(,d.Ip,d.Mac);
+      // Aero get from mac and set guid
+      var guid = await repo.GetGuidByMacAsync(dto.Mac);
+      d.SetGuid(guid);
+      await repo.UpdateAsync(d, ct);
+    }
+
 
     return new DeviceDto(
       d.Guid,

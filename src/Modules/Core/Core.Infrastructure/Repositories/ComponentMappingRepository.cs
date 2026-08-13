@@ -11,5 +11,13 @@ public sealed class ComponentMappingRepository(CoreDbContext context) : ICompone
     await context.ComponentMappings.AddAsync(
       new Persistences.Entities.ComponentMapping(entity)
     );
+
+    await context.SaveChangesAsync(ct);
   }
+
+  public async Task GetFreeIdByMacAndEntityAndVendorAsync(string mac, string entity, string vendor, CancellationToken ct = default)
+  {
+    return await conte
+  }
+
 }

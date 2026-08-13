@@ -19,4 +19,10 @@ public class BaseDomain
     this.Guid = Guid;
   }
 
+  public void SetGuid(Guid guid)
+  {
+    ValidationHelper.GuidEmpty(guid,nameof(Guid));
+    Guid = guid;
+  }
+
 }
