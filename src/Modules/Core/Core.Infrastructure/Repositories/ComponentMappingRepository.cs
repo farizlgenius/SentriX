@@ -15,9 +15,13 @@ public sealed class ComponentMappingRepository(CoreDbContext context) : ICompone
     await context.SaveChangesAsync(ct);
   }
 
-  public async Task GetFreeIdByMacAndEntityAndVendorAsync(string mac, string entity, string vendor, CancellationToken ct = default)
-  {
-    return await conte
-  }
+      public Task GetExternalIdByMacAsync(string mac, CancellationToken ct = default)
+      {
+            throw new NotImplementedException();
+      }
 
+      public Task GetFreeIdByMacAsync(string mac, CancellationToken ct = default)
+      {
+            throw new NotImplementedException();
+      }
 }

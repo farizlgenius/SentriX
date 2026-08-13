@@ -79,6 +79,9 @@ public class Program
         builder.Services.AddCore(builder.Configuration);
         builder.Services.AddAdapter(builder.Configuration);
 
+        // Startup Task
+        builder.Services.AddHostedService<StartupTask>();
+
 
         // Replace default logging with Serilog
         // builder.Host.UseSerilog();

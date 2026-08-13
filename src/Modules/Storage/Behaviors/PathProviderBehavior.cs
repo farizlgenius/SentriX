@@ -9,6 +9,7 @@ public sealed class PathProviderBehavior : IFilePathProvider
       public string Maps { get; }
       public string Operators {get;}
       public string Captures {get;}
+      public string Keys {get;}
 
       public PathProviderBehavior()
       {
@@ -19,10 +20,12 @@ public sealed class PathProviderBehavior : IFilePathProvider
             Maps = Path.Combine(runtimeRoot, "images", "maps");
             Operators = Path.Combine(runtimeRoot,"images","operators");
             Captures = Path.Combine(runtimeRoot,"images","captures");
+            Keys = Path.Combine(runtimeRoot,"key");
 
             Directory.CreateDirectory(Users);
             Directory.CreateDirectory(Maps);
             Directory.CreateDirectory(Operators);
             Directory.CreateDirectory(Captures);
+            Directory.CreateDirectory(Keys);
       }
 }
