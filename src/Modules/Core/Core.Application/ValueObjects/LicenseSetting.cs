@@ -8,5 +8,9 @@ public sealed class LicenseSetting : ILicenseSetting
 
   public string Uri { get; set; } = string.Empty;
 
-  public ILicenseEndpointSetting Endpoint { get; set; } = default!;
+  // ✅ Concrete type allows ConfigurationBinder to instantiate it
+    public LicenseEndpointSetting Endpoint { get; set; } = new();
+
+    // ✅ Explicit interface implementation guarantees ILicenseSetting compatibility
+    ILicenseEndpointSetting ILicenseSetting.Endpoint => Endpoint;
 }

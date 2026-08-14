@@ -17,9 +17,19 @@ public static class CoreDependencyInjection
     this IServiceCollection services,
     IConfiguration configuration)
   {
-    // App Setting
-    services.AddOptions<LicenseSetting>().Bind(configuration.GetSection("License")).ValidateOnStart();
-    services.AddSingleton<ILicenseSetting>(sp => sp.GetRequiredService<Microsoft.Extensions.Options.IOptions<LicenseSetting>>().Value);
+
+    // 1. Bind LicenseSetting (automatically binds nested LicenseEndpointSetting too)
+    services.AddOptions<LicenseSetting>()
+        .Bind(configuration.GetSection("License"))
+        .ValidateOnStart();
+
+    // 2. Register ILicenseSetting
+    services.AddSingleton<ILicenseSetting>(sp =>
+        sp.GetRequiredService<Microsoft.Extensions.Options.IOptions<LicenseSetting>>().Value);
+
+    // 3. Register ILicenseEndpointSetting by referencing the nested Endpoint
+    services.AddSingleton<ILicenseEndpointSetting>(sp =>
+        sp.GetRequiredService<ILicenseSetting>().Endpoint);
 
     // Location
     services.AddScoped<ILocation, LocationService>();
@@ -48,6 +58,11 @@ public static class CoreDependencyInjection
     // Operator
     services.AddScoped<IOperator, OperatorService>();
     services.AddScoped<IOperatorRepository, OperatorRepository>();
+
+    // License
+    services.AddScoped<ILicense,LicenseService>();
+    services.AddScoped<IMachine,MachineService>();
+
 
     // ==========================
     // Database

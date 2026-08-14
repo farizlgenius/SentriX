@@ -34,7 +34,7 @@ public sealed class LicenseService(
                   dto.Company,
                   dto.CustomerSite,
                   dto.MachineId,
-                  dto.Session
+                  Guid.NewGuid().ToString()
             );
             var res = await client.SendAsync<DemoReq,BaseResponse<DemoRes>>(
                   HttpMethod.Post,
