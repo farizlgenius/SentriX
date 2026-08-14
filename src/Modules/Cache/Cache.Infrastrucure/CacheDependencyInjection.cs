@@ -14,7 +14,7 @@ public static class CacheDependencyInjection
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        var redisOptions = configuration.GetSection("Redis").Get<Redis>();
+        var redisOptions = configuration.GetSection("Redis").Get<RedisSetting>();
 
         // 1. Redis disabled → fallback immediately
         if (redisOptions?.Enabled != true)

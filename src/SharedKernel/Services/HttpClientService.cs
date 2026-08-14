@@ -55,8 +55,16 @@ public sealed class HttpClientService(IHttpClientFactory factory) : IHttpClient
             ct);
 
 
-        response.EnsureSuccessStatusCode();
-
+        if (!response.IsSuccessStatusCode)
+        {
+            var responseBody = await response.Content.ReadAsStringAsync(ct);
+            throw new ApiHttpException(
+                message.Method,
+                message.RequestUri,
+                response.StatusCode,
+                response.ReasonPhrase,
+                responseBody);
+        }
         if (response.Content.Headers.ContentLength == 0)
             throw new InvalidOperationException(
             $"The HTTP response from '{endpoint}' was empty, but a non-null payload of type '{typeof(TResponse).Name}' was expected.");
@@ -90,7 +98,16 @@ public sealed class HttpClientService(IHttpClientFactory factory) : IHttpClient
             ct);
 
 
-        response.EnsureSuccessStatusCode();
+        if (!response.IsSuccessStatusCode)
+        {
+            var responseBody = await response.Content.ReadAsStringAsync(ct);
+            throw new ApiHttpException(
+                message.Method,
+                message.RequestUri,
+                response.StatusCode,
+                response.ReasonPhrase,
+                responseBody);
+        }
 
         if (response.Content.Headers.ContentLength == 0)
             throw new InvalidOperationException(
@@ -131,7 +148,16 @@ public sealed class HttpClientService(IHttpClientFactory factory) : IHttpClient
                 ct);
 
 
-        response.EnsureSuccessStatusCode();
+        if (!response.IsSuccessStatusCode)
+        {
+            var responseBody = await response.Content.ReadAsStringAsync(ct);
+            throw new ApiHttpException(
+                message.Method,
+                message.RequestUri,
+                response.StatusCode,
+                response.ReasonPhrase,
+                responseBody);
+        }
 
 
         return await response.Content.ReadAsStreamAsync(ct);
@@ -163,7 +189,16 @@ public sealed class HttpClientService(IHttpClientFactory factory) : IHttpClient
             .SendAsync(message, ct);
 
 
-        response.EnsureSuccessStatusCode();
+        if (!response.IsSuccessStatusCode)
+        {
+            var responseBody = await response.Content.ReadAsStringAsync(ct);
+            throw new ApiHttpException(
+                message.Method,
+                message.RequestUri,
+                response.StatusCode,
+                response.ReasonPhrase,
+                responseBody);
+        }
 
 
         return await response.Content.ReadAsByteArrayAsync(ct);
@@ -263,8 +298,16 @@ public sealed class HttpClientService(IHttpClientFactory factory) : IHttpClient
                 ct);
 
 
-        response.EnsureSuccessStatusCode();
-
+        if (!response.IsSuccessStatusCode)
+        {
+            var responseBody = await response.Content.ReadAsStringAsync(ct);
+            throw new ApiHttpException(
+                message.Method,
+                message.RequestUri,
+                response.StatusCode,
+                response.ReasonPhrase,
+                responseBody);
+        }
 
         return await response.Content.ReadAsStreamAsync(ct);
     }

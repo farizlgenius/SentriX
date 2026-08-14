@@ -87,13 +87,6 @@ public class Program
         // builder.Host.UseSerilog();
         builder.Host.ConfigureEnterpriseLogging();
 
-        // ==========================
-        // MediatR
-        // ==========================
-        builder.Services.AddMediatR(cfg =>
-            cfg.RegisterServicesFromAssemblies(
-        AppDomain.CurrentDomain.GetAssemblies()));
-
 
         // // ==========================
         // // Adding App Dependency Injection

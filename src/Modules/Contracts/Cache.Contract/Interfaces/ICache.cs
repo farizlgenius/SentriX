@@ -6,4 +6,6 @@ public interface ICache
 {
       Task<T?> GetAsync<T>(string key);
       Task SetAsync<T>(string key, T value, TimeSpan expiry);
+      Task<bool> KeyExistsAsync(string key);
+      Task<bool> DeleteAsync(string key);
 }
