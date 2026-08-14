@@ -1,3 +1,4 @@
+using System.Text;
 using Core.Application.Interfaces;
 using Core.Application.Models;
 using Core.Application.Models.Requests;
@@ -25,7 +26,46 @@ public sealed class LicenseService(
 
       public async Task<bool> GenerateDemoAsync(CreateDemoLicenseDto dto, CancellationToken ct = default)
       {
-            throw new NotImplementedException();
+            // Step 1 : Initial Handshake with license server
+            var handshakeRes = await InitHandshakeAsync();
+
+            // Step 2 : Send Session Id to license server to generate demo license
+            var body = new DemoReq(
+                  dto.Company,
+                  dto.CustomerSite,
+                  dto.MachineId,
+                  dto.Session
+            );
+            var res = await client.SendAsync<DemoReq,BaseResponse<DemoRes>>(
+                  HttpMethod.Post,
+                  licenseSetting.Uri,
+                  licenseSetting.Endpoint.Demo,
+                  body
+                  );
+
+            if (res.Data is null)
+                  throw new Exception(res.Message); 
+
+            // Step 3 : Decrypt License Content
+            var decryptedLicense = EncryptHelper.DecryptAes(Convert.FromBase64String(res.Data.Payload), handshakeRes.SharedKey);
+
+            // Step 4 : Parse License Payload
+            var licensePayload = EncryptHelper.ParsePayload(decryptedLicense);
+
+            // Step 5 : Verify License Signature
+            if (!EncryptHelper.VerifyData(decryptedLicense, licensePayload.signature, Convert.FromBase64String(res.Data.ServerSingPublic)))
+                  throw new Exception("License signature verify fail");
+
+            // Step 6 : Encrypt License Data
+            var key = EncryptHelper.Hash(licenseSetting.Secret);
+            var d = EncryptHelper.EncryptAes(Encoding.UTF8.GetBytes(key), licensePayload.license);
+
+            string licenseString = Encoding.UTF8.GetString(licensePayload.license);
+
+            // Step 6 : Save License File
+            await storage.SaveLicenseAsync(d,"license.lic");
+
+            return true;
       }
 
       public async Task<bool> GenerateLicenseAsync(CancellationToken ct = default)

@@ -7,4 +7,5 @@ public interface IFilePathProvider
       string Operators {get;}
       string Captures {get;}
       string Keys {get;}
+      string Licenses {get;}
 }

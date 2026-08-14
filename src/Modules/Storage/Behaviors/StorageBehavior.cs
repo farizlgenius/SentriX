@@ -276,4 +276,30 @@ public sealed class StorageBehavior : IStorage
 
             return path;
       }
+
+      public async Task SaveLicenseAsync(byte[] data, string fileName)
+      {
+             if (!Directory.Exists(_paths.Licenses))
+                  Directory.CreateDirectory(_paths.Licenses);
+
+            var licFile = Path.Combine(_paths.Licenses, "license.lic");
+
+            if (!File.Exists(licFile)) File.Create(licFile).Close();
+
+            await File.WriteAllBytesAsync(licFile, data);
+      }
+
+      public async Task<string> ReadLicenseAsync(string fileName)
+      {
+            var path = Path.Combine(_paths.Keys, fileName);
+
+            if (!File.Exists(path))
+                  throw new FileNotFoundException("Key file not found", fileName);
+
+            if (new FileInfo(path).Length <= 0)
+                  throw new FileNotFoundException("Key empty", fileName);
+
+            var bytes = await File.ReadAllBytesAsync(path);
+            return Convert.ToBase64String(bytes);
+      }
 }
