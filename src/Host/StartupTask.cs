@@ -1,3 +1,4 @@
+using System.Security.Cryptography;
 using SharedKernel.Helpers;
 using Storage.Contract.Interfaces;
 
@@ -29,7 +30,7 @@ public sealed class StartupTask : IHostedService
             {
 
                   // ⭐ STEP 3 — Your existing RSA key generation
-                  await EnsureLicenseKeysAsync();
+                  await CreateKey();
 
                   _logger.LogInformation("✅ StartupTask completed");
             }
@@ -40,7 +41,7 @@ public sealed class StartupTask : IHostedService
             }
       }
 
-      private async Task EnsureLicenseKeysAsync()
+      private async Task CreateKey()
       {
             using var scope = _scopeFactory.CreateScope();
             var services = scope.ServiceProvider;
@@ -52,10 +53,24 @@ public sealed class StartupTask : IHostedService
             if (isKeyGenerated)
                   return;
 
-            var signer = EncryptHelper.CreateSigner();
+            using var ecdsa = ECDsa.Create(ECCurve.NamedCurves.nistP256);
 
-      
-            await storage.SaveKeyAsync(signer.ExportSubjectPublicKeyInfo(),signer.ExportPkcs8PrivateKey());
+            var privateKey = ecdsa.ExportPkcs8PrivateKey();
+            var publicKey = ecdsa.ExportSubjectPublicKeyInfo();
+
+            Console.WriteLine("Private Key:");
+
+            Console.WriteLine(
+
+                Convert.ToBase64String(privateKey));
+
+            Console.WriteLine();
+
+            Console.WriteLine("Public Key:");
+
+            Console.WriteLine(Convert.ToBase64String(publicKey));
+
+            await storage.SaveKeyAsync(publicKey, privateKey);
 
       }
 }

@@ -60,8 +60,8 @@ public static class CoreDependencyInjection
     services.AddScoped<IOperatorRepository, OperatorRepository>();
 
     // License
-    services.AddScoped<ILicense,LicenseService>();
-    services.AddScoped<IMachine,MachineService>();
+    services.AddScoped<ILicense, LicenseService>();
+    services.AddScoped<IMachine, MachineService>();
 
 
     // ==========================

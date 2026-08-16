@@ -17,8 +17,8 @@ public sealed class StorageBehavior : IStorage
             if (!Directory.Exists(_paths.Keys))
                   Directory.CreateDirectory(_paths.Keys);
 
-            var pubFile = Path.Combine(_paths.Keys, "pub_sign.key");
-            var priFile = Path.Combine(_paths.Keys, "pri_sign.key");
+            var pubFile = Path.Combine(_paths.Keys, "pub.key");
+            var priFile = Path.Combine(_paths.Keys, "pri.key");
 
             if (!File.Exists(pubFile)) File.Create(pubFile).Close();
             if (!File.Exists(priFile)) File.Create(priFile).Close();
@@ -34,8 +34,8 @@ public sealed class StorageBehavior : IStorage
             if (!Directory.Exists(_paths.Keys))
                   Directory.CreateDirectory(_paths.Keys);
 
-            var pubFile = Path.Combine(_paths.Keys, "pub_sign.key");
-            var priFile = Path.Combine(_paths.Keys, "pri_sign.key");
+            var pubFile = Path.Combine(_paths.Keys, "pub.key");
+            var priFile = Path.Combine(_paths.Keys, "pri.key");
 
             if (!File.Exists(pubFile)) File.Create(pubFile).Close();
             if (!File.Exists(priFile)) File.Create(priFile).Close();
@@ -279,7 +279,7 @@ public sealed class StorageBehavior : IStorage
 
       public async Task SaveLicenseAsync(byte[] data, string fileName)
       {
-             if (!Directory.Exists(_paths.Licenses))
+            if (!Directory.Exists(_paths.Licenses))
                   Directory.CreateDirectory(_paths.Licenses);
 
             var licFile = Path.Combine(_paths.Licenses, "license.lic");
