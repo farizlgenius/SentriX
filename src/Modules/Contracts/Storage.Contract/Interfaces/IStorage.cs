@@ -3,12 +3,14 @@ namespace Storage.Contract.Interfaces;
 public interface IStorage
 {
       // License 
-      Task SaveLicenseAsync(byte[] data,string fileName);
+      Task SaveLicenseAsync(byte[] data, string fileName);
       Task<string> ReadLicenseAsync(string fileName);
 
       // Key
       Task<bool> CheckKeyAsync();
+      Task<bool> CheckEncKeyAsync();
       Task SaveKeyAsync(byte[] pubData, byte[] priData);
+      Task SaveEncKeyAsync(byte[] encPubData, byte[] encPriData);
       Task<string> ReadKeyAsync(string fileName);
       Task<byte[]> ReadByteKeyAsync(string fileName);
       void DeleteKeyAsync(string fileName);
@@ -32,5 +34,5 @@ public interface IStorage
       Task<Stream> ReadMapAsync(string fileName);
       Task<string> ReadMapBase64Async(string fileName);
       void DeleteMapAsync(string filename);
-      
+
 }

@@ -1,4 +1,5 @@
 using System.Security.Cryptography;
+using Host.Helpers;
 using SharedKernel.Helpers;
 using Storage.Contract.Interfaces;
 
@@ -48,29 +49,31 @@ public sealed class StartupTask : IHostedService
 
             var storage = services.GetRequiredService<IStorage>();
 
-            var isKeyGenerated = await storage.CheckKeyAsync();
+            if (!await storage.CheckKeyAsync())
+            {
+                  var key = KeyGenerator.GenerateEcdsa();
 
-            if (isKeyGenerated)
-                  return;
+                  Console.WriteLine("Private Key:");
+                  Console.WriteLine(Convert.ToBase64String(key.PrivateKey));
+                  Console.WriteLine();
+                  Console.WriteLine("Public Key:");
+                  Console.WriteLine(Convert.ToBase64String(key.PublicKey));
 
-            using var ecdsa = ECDsa.Create(ECCurve.NamedCurves.nistP256);
+                  await storage.SaveKeyAsync(key.PublicKey, key.PrivateKey);
+            }
 
-            var privateKey = ecdsa.ExportPkcs8PrivateKey();
-            var publicKey = ecdsa.ExportSubjectPublicKeyInfo();
+            if (!await storage.CheckEncKeyAsync())
+            {
+                  var encKey = EncryptionKeyGenerator.GenerateEcdh();
 
-            Console.WriteLine("Private Key:");
+                  Console.WriteLine("Enc Private Key:");
+                  Console.WriteLine(Convert.ToBase64String(encKey.PrivateKey));
+                  Console.WriteLine();
+                  Console.WriteLine("Enc Public Key:");
+                  Console.WriteLine(Convert.ToBase64String(encKey.PublicKey));
 
-            Console.WriteLine(
-
-                Convert.ToBase64String(privateKey));
-
-            Console.WriteLine();
-
-            Console.WriteLine("Public Key:");
-
-            Console.WriteLine(Convert.ToBase64String(publicKey));
-
-            await storage.SaveKeyAsync(publicKey, privateKey);
+                  await storage.SaveKeyAsync(encKey.PublicKey, encKey.PrivateKey);
+            }
 
       }
 }

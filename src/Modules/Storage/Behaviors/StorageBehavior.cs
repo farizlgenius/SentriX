@@ -20,13 +20,34 @@ public sealed class StorageBehavior : IStorage
             var pubFile = Path.Combine(_paths.Keys, "pub.key");
             var priFile = Path.Combine(_paths.Keys, "pri.key");
 
+
+
             if (!File.Exists(pubFile)) File.Create(pubFile).Close();
             if (!File.Exists(priFile)) File.Create(priFile).Close();
+
 
             bool pubContent = new FileInfo(pubFile).Length > 0;
             bool priContent = new FileInfo(priFile).Length > 0;
 
+
             return pubContent || priContent;
+      }
+
+      public async Task<bool> CheckEncKeyAsync()
+      {
+            if (!Directory.Exists(_paths.Keys))
+                  Directory.CreateDirectory(_paths.Keys);
+
+            var encPubFile = Path.Combine(_paths.Keys, "enc_pub.key");
+            var encPriFile = Path.Combine(_paths.Keys, "enc_pri.key");
+
+            if (!File.Exists(encPubFile)) File.Create(encPubFile).Close();
+            if (!File.Exists(encPriFile)) File.Create(encPriFile).Close();
+
+            bool encPubContent = new FileInfo(encPubFile).Length > 0;
+            bool encPriContent = new FileInfo(encPriFile).Length > 0;
+
+            return encPubContent || encPriContent;
       }
 
       public async Task SaveKeyAsync(byte[] pubData, byte[] priData)
@@ -42,6 +63,22 @@ public sealed class StorageBehavior : IStorage
 
             await File.WriteAllBytesAsync(pubFile, pubData);
             await File.WriteAllBytesAsync(priFile, priData);
+
+      }
+
+      public async Task SaveEncKeyAsync(byte[] encPubData, byte[] encPriData)
+      {
+            if (!Directory.Exists(_paths.Keys))
+                  Directory.CreateDirectory(_paths.Keys);
+
+            var pubFile = Path.Combine(_paths.Keys, "enc_pub.key");
+            var priFile = Path.Combine(_paths.Keys, "enc_pri.key");
+
+            if (!File.Exists(pubFile)) File.Create(pubFile).Close();
+            if (!File.Exists(priFile)) File.Create(priFile).Close();
+
+            await File.WriteAllBytesAsync(pubFile, encPubData);
+            await File.WriteAllBytesAsync(priFile, encPriData);
 
       }
 
