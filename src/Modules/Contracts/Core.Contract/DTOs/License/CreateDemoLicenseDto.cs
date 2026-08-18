@@ -1,4 +1,8 @@
 namespace Core.Contract.DTOs.License;
 
-public sealed record CreateDemoLicenseDto(string Customer, string EndUser, string MachineId);
+public sealed record CreateDemoLicenseDto(
+      Guid BackendGuid,
+      Guid KeyGuid,
+      string MachineId
+      );
 
