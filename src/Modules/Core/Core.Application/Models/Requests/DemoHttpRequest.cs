@@ -1,5 +1,8 @@
 namespace Core.Application.Models.Requests;
 
 public sealed record DemoHttpRequest(
-      string MachineId
+      string Customer,
+      string EndUser,
+      string MachineId,
+      string Product
 );
