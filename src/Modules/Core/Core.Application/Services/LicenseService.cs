@@ -82,7 +82,8 @@ public sealed class LicenseService(
                   {"X-Backend-Id",backendId},
                   {"X-Timestamp",timestamp.ToString()},
                   {"X-Request-Id",requestId},
-                  {"X-Signature",signature}
+                  {"X-Signature",signature},
+                  {"X-Public",}
             };
 
             var res = http.SendAsync<DemoHttpRequest, DemoHttpResponse>(
