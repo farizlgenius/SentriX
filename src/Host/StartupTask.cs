@@ -72,7 +72,7 @@ public sealed class StartupTask : IHostedService
                   Console.WriteLine("Enc Public Key:");
                   Console.WriteLine(Convert.ToBase64String(encKey.PublicKey));
 
-                  await storage.SaveKeyAsync(encKey.PublicKey, encKey.PrivateKey);
+                  await storage.SaveEncKeyAsync(encKey.PublicKey, encKey.PrivateKey);
             }
 
       }

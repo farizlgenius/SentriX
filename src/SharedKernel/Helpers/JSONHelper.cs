@@ -17,9 +17,9 @@ public static class JsonHelper
 
 
 
-      public static T? Deserialize<T>(string json)
+      public static T Deserialize<T>(string json)
       {
-            return JsonSerializer.Deserialize<T>(json, Options);
+            return JsonSerializer.Deserialize<T>(json, Options) ?? throw new Exception($"Deserialized invalid:{nameof(T)}");
       }
 
       public static T? Deserialize<T>(JsonElement element)

@@ -61,6 +61,7 @@ public static class CoreDependencyInjection
 
     // License
     services.AddScoped<ILicense, LicenseService>();
+    services.AddScoped<ILicenseRepository, LicenseRepostory>();
     services.AddScoped<IMachine, MachineService>();
 
 

@@ -9,6 +9,12 @@ namespace Host.Controllers;
 [ApiController]
 public class LicenseController(ILicense lic) : ControllerBase
 {
+      [HttpGet("machine")]
+      public async Task<IActionResult> GetMachineIdAsync()
+      {
+            var res = await lic.GetMachineIdAsync();
+            return Ok(res);
+      }
 
       [HttpPost("demo")]
       public async Task<IActionResult> RequestDemoAsync([FromBody] DemoLicenseDto dto)
