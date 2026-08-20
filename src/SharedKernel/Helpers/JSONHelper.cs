@@ -12,7 +12,9 @@ public static class JsonHelper
       private static readonly JsonSerializerOptions Options = new()
       {
             PropertyNameCaseInsensitive = true,
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+            WriteIndented = true
+
       };
 
 

@@ -26,225 +26,225 @@ public sealed class LicenseService(
       IMachine machine
       ) : ILicense
 {
-      public Task<bool> ActivateAsync(ActivateDto dto, CancellationToken ct = default)
-      {
-            throw new NotImplementedException();
-      }
+    public Task<bool> ActivateAsync(ActivateDto dto, CancellationToken ct = default)
+    {
+        throw new NotImplementedException();
+    }
 
 
-      public async Task<bool> DownloadAsync(DownloadLicenseDto dto, CancellationToken ct = default)
-      {
-            throw new NotImplementedException();
-      }
+    public async Task<bool> DownloadAsync(DownloadLicenseDto dto, CancellationToken ct = default)
+    {
+        throw new NotImplementedException();
+    }
 
-      public async Task<string> GetMachineIdAsync(CancellationToken ct = default)
-      {
-            return machine.Get();
-      }
+    public async Task<string> GetMachineIdAsync(CancellationToken ct = default)
+    {
+        return machine.Get();
+    }
 
-      public async Task<object> RequestDemoAsync(
+    public async Task<object> RequestDemoAsync(
 
-    DemoLicenseDto dto,
+  DemoLicenseDto dto,
 
-    CancellationToken ct = default)
+  CancellationToken ct = default)
 
-      {
+    {
 
-            ValidationHelper.IsNullOrEmpty(
+        ValidationHelper.IsNullOrEmpty(
 
-                dto.MachineId,
+            dto.MachineId,
 
-                nameof(dto.MachineId));
+            nameof(dto.MachineId));
 
-            ValidationHelper.IsNullOrEmpty(
+        ValidationHelper.IsNullOrEmpty(
 
-                dto.Customer,
+            dto.Customer,
 
-                nameof(dto.Customer));
+            nameof(dto.Customer));
 
-            ValidationHelper.IsNullOrEmpty(
+        ValidationHelper.IsNullOrEmpty(
 
-                dto.EndUser,
+            dto.EndUser,
 
-                nameof(dto.EndUser));
+            nameof(dto.EndUser));
 
-            // --------------------------------------------------
+        // --------------------------------------------------
 
-            // 1. Request metadata
+        // 1. Request metadata
 
-            // --------------------------------------------------
+        // --------------------------------------------------
 
-            var requestId =
+        var requestId =
 
-                Guid.NewGuid().ToString("N");
+            Guid.NewGuid().ToString("N");
 
-            var timestamp =
+        var timestamp =
 
-                DateTimeOffset.UtcNow
+            DateTimeOffset.UtcNow
 
-                    .ToUnixTimeSeconds();
+                .ToUnixTimeSeconds();
 
-            var backendId =
+        var backendId =
 
-                $"{timestamp}-{dto.Customer}/{dto.EndUser}";
+            $"{timestamp}-{dto.Customer}/{dto.EndUser}";
 
-            // --------------------------------------------------
+        // --------------------------------------------------
 
-            // 2. Create request object
+        // 2. Create request object
 
-            // --------------------------------------------------
+        // --------------------------------------------------
 
-            var body = new DemoHttpRequest(
+        var body = new DemoHttpRequest(
 
-                backendId,
+            backendId,
 
-                dto.Customer,
+            dto.Customer,
 
-                dto.EndUser,
+            dto.EndUser,
 
-                dto.MachineId,
+            dto.MachineId,
 
-                "Sentrix",
+            "Sentrix",
 
-                Convert.ToBase64String(
-
-                    await storage.ReadByteKeyAsync(
-
-                        "pub.key")),
-
-                Convert.ToBase64String(
-
-                    await storage.ReadByteKeyAsync(
-
-                        "enc_pub.key"))
-
-            );
-
-            // --------------------------------------------------
-
-            // 3. Serialize ONCE
-
-            // --------------------------------------------------
-
-            var bodyJson = JsonSerializer.Serialize(body);
-
-            //     JsonHelper.Serialize(body);
-
-            // --------------------------------------------------
-
-            // 4. Convert to bytes ONCE
-
-            // --------------------------------------------------
-
-            var bodyBytes =
-
-                Encoding.UTF8.GetBytes(bodyJson);
-
-            // var bodyBytes = JsonSerializer.SerializeToUtf8Bytes(body);
-
-            // --------------------------------------------------
-
-            // 5. Calculate Body Hash
-
-            // --------------------------------------------------
-
-            var bodyHash =
-
-                RequestSigner.ComputeBodyHash(
-
-                    bodyBytes);
-
-            // --------------------------------------------------
-
-            // 6. Build canonical request
-
-            // --------------------------------------------------
-
-            var canonical =
-
-                RequestSigner.BuildCanonicalRequest(
-
-                    HttpMethod.Post.Method,
-
-                    setting.Endpoint.Demo,
-
-                    requestId,
-
-                    timestamp,
-
-                    bodyBytes
-
-                );
-
-            Console.WriteLine("========== BACKEND ==========");
-
-            Console.WriteLine(
-
-                $"Body: {Encoding.UTF8.GetString(bodyBytes)}");
-
-            Console.WriteLine(
-
-                $"Body Hash: {bodyHash}");
-
-            Console.WriteLine(
-
-                $"Request ID: {requestId}");
-
-            Console.WriteLine(
-
-                $"Timestamp: {timestamp}");
-
-            Console.WriteLine(
-
-                $"Path: {setting.Endpoint.Demo}");
-
-            Console.WriteLine(
-
-                $"Canonical:");
-
-            Console.WriteLine(canonical);
-
-            // --------------------------------------------------
-
-            // 7. Get ECDSA private key
-
-            // --------------------------------------------------
-
-            var pri =
+            Convert.ToBase64String(
 
                 await storage.ReadByteKeyAsync(
 
-                    "pri.key");
+                    "pub.key")),
 
-            // --------------------------------------------------
+            Convert.ToBase64String(
 
-            // 8. Sign canonical request
+                await storage.ReadByteKeyAsync(
 
-            // --------------------------------------------------
+                    "enc_pub.key"))
 
-            var signature =
+        );
 
-                RequestSigner.Sign(
+        // --------------------------------------------------
 
-                    canonical,
+        // 3. Serialize ONCE
 
-                    pri);
+        // --------------------------------------------------
 
-            Console.WriteLine(
+        // var bodyJson = JsonSerializer.Serialize(body);
 
-                $"Signature: {signature}");
+        var bodyJson = JsonHelper.Serialize(body);
 
-            // --------------------------------------------------
+        // --------------------------------------------------
 
-            // 9. Create headers
+        // 4. Convert to bytes ONCE
 
-            // --------------------------------------------------
+        // --------------------------------------------------
 
-            var headers =
+        var bodyBytes =
 
-                new Dictionary<string, string>
+            Encoding.UTF8.GetBytes(bodyJson);
 
-                {
+        // var bodyBytes = JsonSerializer.SerializeToUtf8Bytes(body);
+
+        // --------------------------------------------------
+
+        // 5. Calculate Body Hash
+
+        // --------------------------------------------------
+
+        var bodyHash =
+
+            RequestSigner.ComputeBodyHash(
+
+                bodyBytes);
+
+        // --------------------------------------------------
+
+        // 6. Build canonical request
+
+        // --------------------------------------------------
+
+        var canonical =
+
+            RequestSigner.BuildCanonicalRequest(
+
+                HttpMethod.Post.Method,
+
+                setting.Endpoint.Demo,
+
+                requestId,
+
+                timestamp,
+
+                bodyBytes
+
+            );
+
+        Console.WriteLine("========== BACKEND ==========");
+
+        Console.WriteLine(
+
+            $"Body: {Encoding.UTF8.GetString(bodyBytes)}");
+
+        Console.WriteLine(
+
+            $"Body Hash: {bodyHash}");
+
+        Console.WriteLine(
+
+            $"Request ID: {requestId}");
+
+        Console.WriteLine(
+
+            $"Timestamp: {timestamp}");
+
+        Console.WriteLine(
+
+            $"Path: {setting.Endpoint.Demo}");
+
+        Console.WriteLine(
+
+            $"Canonical:");
+
+        Console.WriteLine(canonical);
+
+        // --------------------------------------------------
+
+        // 7. Get ECDSA private key
+
+        // --------------------------------------------------
+
+        var pri =
+
+            await storage.ReadByteKeyAsync(
+
+                "pri.key");
+
+        // --------------------------------------------------
+
+        // 8. Sign canonical request
+
+        // --------------------------------------------------
+
+        var signature =
+
+            RequestSigner.Sign(
+
+                canonical,
+
+                pri);
+
+        Console.WriteLine(
+
+            $"Signature: {signature}");
+
+        // --------------------------------------------------
+
+        // 9. Create headers
+
+        // --------------------------------------------------
+
+        var headers =
+
+            new Dictionary<string, string>
+
+            {
 
             {
 
@@ -298,177 +298,177 @@ public sealed class LicenseService(
 
             }
 
-                };
+            };
 
-            // --------------------------------------------------
+        // --------------------------------------------------
 
-            // 10. SEND THE EXACT SAME bodyJson
+        // 10. SEND THE EXACT SAME bodyJson
 
-            // --------------------------------------------------
+        // --------------------------------------------------
 
-            var res =
+        var res =
 
-                await http.SendAsync<
+            await http.SendAsync<
 
-                    DemoHttpRequest,
+                DemoHttpRequest,
 
-                    BaseResponse<DemoHttpResponse>>(
+                BaseResponse<DemoHttpResponse>>(
 
-                        HttpMethod.Post,
+                    HttpMethod.Post,
 
-                        setting.Uri,
+                    setting.Uri,
 
-                        setting.Endpoint.Demo,
+                    setting.Endpoint.Demo,
 
-                        body,
+                    body,
 
-                        headers,
+                    headers,
 
-                        ct: ct);
+                    ct: ct);
 
-            // --------------------------------------------------
+        // --------------------------------------------------
 
-            // 11. ECDH
+        // 11. ECDH
 
-            // --------------------------------------------------
+        // --------------------------------------------------
 
-            using var myEcdh =
+        using var myEcdh =
 
-                ECDiffieHellman.Create();
+            ECDiffieHellman.Create();
 
-            myEcdh.ImportPkcs8PrivateKey(
+        myEcdh.ImportPkcs8PrivateKey(
 
-                await storage.ReadByteKeyAsync(
+            await storage.ReadByteKeyAsync(
 
-                    "enc_pri.key"),
+                "enc_pri.key"),
 
-                out _);
+            out _);
 
-            using var otherEcdh =
+        using var otherEcdh =
 
-                ECDiffieHellman.Create();
+            ECDiffieHellman.Create();
 
-            otherEcdh.ImportSubjectPublicKeyInfo(
+        otherEcdh.ImportSubjectPublicKeyInfo(
 
-                Convert.FromBase64String(
+            Convert.FromBase64String(
 
-                    res.Data.EcdsaPublicKey),
+                res.Data.EcdsaPublicKey),
 
-                out _);
+            out _);
 
-            var sharedSecret =
+        var sharedSecret =
 
-                myEcdh.DeriveKeyMaterial(
+            myEcdh.DeriveKeyMaterial(
 
-                    otherEcdh.PublicKey);
+                otherEcdh.PublicKey);
 
-            Console.WriteLine(
+        Console.WriteLine(
 
-                $"Shared Secret: " +
+            $"Shared Secret: " +
+
+            Convert.ToBase64String(
+
+                sharedSecret));
+
+        // --------------------------------------------------
+
+        // 12. Decrypt response
+
+        // --------------------------------------------------
+
+        var aes =
+
+            new AesSecretProtector(
 
                 Convert.ToBase64String(
 
                     sharedSecret));
 
-            // --------------------------------------------------
+        var jsonBody =
 
-            // 12. Decrypt response
+            aes.Unprotect(
 
-            // --------------------------------------------------
+                res.Data.CipherText);
 
-            var aes =
+        if (jsonBody is null)
 
-                new AesSecretProtector(
+        {
 
-                    Convert.ToBase64String(
+            throw new Exception(
 
-                        sharedSecret));
+                "Decrypt data failed.");
 
-            var jsonBody =
+        }
 
-                aes.Unprotect(
+        // --------------------------------------------------
 
-                    res.Data.CipherText);
+        // 13. Verify License Server signature
 
-            if (jsonBody is null)
+        // --------------------------------------------------
 
-            {
+        using var ecdsa =
 
-                  throw new Exception(
+            ECDsa.Create();
 
-                      "Decrypt data failed.");
+        ecdsa.ImportSubjectPublicKeyInfo(
 
-            }
+            Convert.FromBase64String(
 
-            // --------------------------------------------------
+                res.Data.EcdsaPublicKey),
 
-            // 13. Verify License Server signature
+            out _);
 
-            // --------------------------------------------------
+        var verify =
 
-            using var ecdsa =
+            ecdsa.VerifyData(
 
-                ECDsa.Create();
+                Encoding.UTF8.GetBytes(
 
-            ecdsa.ImportSubjectPublicKeyInfo(
+                    jsonBody),
 
                 Convert.FromBase64String(
 
-                    res.Data.EcdsaPublicKey),
+                    res.Data.Signature),
 
-                out _);
+                HashAlgorithmName.SHA256);
 
-            var verify =
+        if (!verify)
 
-                ecdsa.VerifyData(
+        {
 
-                    Encoding.UTF8.GetBytes(
+            Console.WriteLine(
 
-                        jsonBody),
+                "========== RESPONSE SIGNATURE FAILED ==========");
 
-                    Convert.FromBase64String(
+            Console.WriteLine(
 
-                        res.Data.Signature),
+                $"JSON Body: {jsonBody}");
 
-                    HashAlgorithmName.SHA256);
+            Console.WriteLine(
 
-            if (!verify)
+                $"Signature: {res.Data.Signature}");
 
-            {
+            throw new Exception(
 
-                  Console.WriteLine(
+                "Verify signature failed.");
 
-                      "========== RESPONSE SIGNATURE FAILED ==========");
+        }
 
-                  Console.WriteLine(
+        // --------------------------------------------------
 
-                      $"JSON Body: {jsonBody}");
+        // 14. Deserialize license
 
-                  Console.WriteLine(
+        // --------------------------------------------------
 
-                      $"Signature: {res.Data.Signature}");
+        var license =
 
-                  throw new Exception(
+            JsonHelper.Deserialize<
 
-                      "Verify signature failed.");
+                LicensePayload>(
 
-            }
+                    jsonBody);
 
-            // --------------------------------------------------
+        return license;
 
-            // 14. Deserialize license
-
-            // --------------------------------------------------
-
-            var license =
-
-                JsonHelper.Deserialize<
-
-                    LicensePayload>(
-
-                        jsonBody);
-
-            return license;
-
-      }
+    }
 }

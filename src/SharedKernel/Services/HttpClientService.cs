@@ -11,8 +11,9 @@ public sealed class HttpClientService(IHttpClientFactory factory) : IHttpClient
 {
     private static readonly JsonSerializerOptions JsonOptions = new()
     {
-        // WriteIndented = true,
-        // PropertyNameCaseInsensitive = true
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+        PropertyNameCaseInsensitive = true,
+        WriteIndented = true
     };
 
 

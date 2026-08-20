@@ -1,6 +1,7 @@
 using System;
 using System.Text.Json;
 using Cache.Contract.Interfaces;
+using SharedKernel.Helpers;
 using StackExchange.Redis;
 
 namespace Cache.Infrastructure.CacheService;
@@ -22,7 +23,7 @@ public class CacheEnabled(IConnectionMultiplexer redis) : ICache
                   return default;
 
 
-            return JsonSerializer.Deserialize<T>(value.ToString()!);
+            return JsonHelper.Deserialize<T>(value.ToString()!);
       }
 
       public async Task<bool> KeyExistsAsync(string key)

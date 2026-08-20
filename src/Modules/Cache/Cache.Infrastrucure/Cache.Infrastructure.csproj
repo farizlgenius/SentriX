@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="../../../SharedKernel/SharedKernel.csproj" />
     <ProjectReference Include="..\..\Contracts\Cache.Contract\Cache.Contract.csproj" />
     <ProjectReference Include="..\Cache.Application\Cache.Application.csproj" />
   </ItemGroup>

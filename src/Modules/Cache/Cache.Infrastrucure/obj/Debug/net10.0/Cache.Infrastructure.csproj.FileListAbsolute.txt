@@ -38,3 +38,5 @@ D:/aero/SentriX/src/Modules/Cache/Cache.Infrastrucure/obj/Debug/net10.0/ref/Cach
 /Users/far-izlengha/Documents/Project/SentriX/src/Modules/Cache/Cache.Infrastrucure/obj/Debug/net10.0/refint/Cache.Infrastructure.dll
 /Users/far-izlengha/Documents/Project/SentriX/src/Modules/Cache/Cache.Infrastrucure/obj/Debug/net10.0/Cache.Infrastructure.pdb
 /Users/far-izlengha/Documents/Project/SentriX/src/Modules/Cache/Cache.Infrastrucure/obj/Debug/net10.0/ref/Cache.Infrastructure.dll
+/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Cache/Cache.Infrastrucure/bin/Debug/net10.0/SharedKernel.dll
+/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Cache/Cache.Infrastrucure/bin/Debug/net10.0/SharedKernel.pdb

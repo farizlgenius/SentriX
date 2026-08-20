@@ -1268,6 +1268,7 @@
         "dependencies": {
           "Cache.Application": "1.0.0",
           "Cache.Contract": "1.0.0",
+          "SharedKernel": "1.0.0",
           "StackExchange.Redis": "2.12.14"
         },
         "compile": {

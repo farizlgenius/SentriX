@@ -14,7 +14,7 @@ public sealed class LicensePayload : BaseDomain
   public SentrixLimit? Limits { get; set; }
   public string MachineId { get; set; } = null!;
 
-  public LicensePayload(int version, Guid licenseGuid, string backendId, string customer, string endUser, string product, string edition, DateTime issuedAtUtc, DateTime expiresAtUtc, SentrixLimit? limits, string machineBinding)
+  public LicensePayload(int version, Guid licenseGuid, string backendId, string customer, string endUser, string product, string edition, DateTime issuedAtUtc, DateTime expiresAtUtc, SentrixLimit? limits, string machineId)
   {
     Version = version;
     LicenseGuid = licenseGuid;
@@ -26,7 +26,7 @@ public sealed class LicensePayload : BaseDomain
     IssuedAtUtc = issuedAtUtc;
     ExpiresAtUtc = expiresAtUtc;
     Limits = limits;
-    MachineId = machineBinding;
+    MachineId = machineId;
   }
 
 

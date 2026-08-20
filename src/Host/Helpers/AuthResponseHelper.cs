@@ -1,5 +1,6 @@
 using System;
 using System.Text.Json;
+using SharedKernel.Helpers;
 
 namespace Host.Helpers;
 
@@ -10,7 +11,7 @@ public class AuthResponseHelper
     response.StatusCode = StatusCodes.Status401Unauthorized;
     response.ContentType = "application/json";
 
-    var json = JsonSerializer.Serialize(new
+    var json = JsonHelper.Serialize(new
     {
       status = 401,
       timestamp = DateTime.UtcNow,
@@ -25,7 +26,7 @@ public class AuthResponseHelper
     response.StatusCode = StatusCodes.Status403Forbidden;
     response.ContentType = "application/json";
 
-    var json = JsonSerializer.Serialize(new
+    var json = JsonHelper.Serialize(new
     {
       status = 403,
       timestamp = DateTime.UtcNow,

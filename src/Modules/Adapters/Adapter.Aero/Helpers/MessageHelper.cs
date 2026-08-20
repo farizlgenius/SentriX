@@ -5,30 +5,27 @@ using System.Text;
 using System.Text.Json;
 using Adapter.Aero.Constants;
 using Adapter.Aero.Enums;
+using SharedKernel.Helpers;
 
 namespace Adapter.Aero.Helpers;
 
 public sealed class LogMessageHelper
 {
-  public static byte[] Serialize<T>(T obj)
-        => Encoding.UTF8.GetBytes(JsonSerializer.Serialize(obj));
+    public static byte[] Serialize<T>(T obj)
+          => Encoding.UTF8.GetBytes(JsonHelper.Serialize(obj));
 
-  public static T Deserialize<T>(byte[] body)
-      {
-            var message = Encoding.UTF8.GetString(body);
-            Console.WriteLine($"Deserialized message: {message}");
-            var options = new JsonSerializerOptions
-{
-    PropertyNameCaseInsensitive = true
-};
-            return JsonSerializer.Deserialize<T>(message,options)!;
-      }
+    public static T Deserialize<T>(byte[] body)
+    {
+        var message = Encoding.UTF8.GetString(body);
+        Console.WriteLine($"Deserialized message: {message}");
+        return JsonHelper.Deserialize<T>(message)!;
+    }
 
-      public static string CommandSuccess(string type,long ScpId) => $"{type} on ScpId {ScpId}  - Successfully.";
-      public static string CommandUnsuccess(string type,long ScpId) => $"{type} on ScpId {ScpId}  - Unsuccessfully.";
+    public static string CommandSuccess(string type, long ScpId) => $"{type} on ScpId {ScpId}  - Successfully.";
+    public static string CommandUnsuccess(string type, long ScpId) => $"{type} on ScpId {ScpId}  - Unsuccessfully.";
 
 
-           // ================= JSON STYLE =================
+    // ================= JSON STYLE =================
     public static string ToJsonString(object? obj)
     {
         return ToJsonInternal(obj, 0, new HashSet<object>());
@@ -163,7 +160,7 @@ public sealed class LogMessageHelper
             || type == typeof(int)
             || type == typeof(short)
             || type == typeof(long);
-    }    
+    }
 
     private static string ToStringInternal(object? obj, int indent, HashSet<object> visited)
     {
