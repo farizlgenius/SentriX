@@ -11,7 +11,7 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
       public DbSet<Location> Locations { get; set; }
       public DbSet<Country> Countries { get; set; }
       public DbSet<Device> Devices { get; set; }
-      public DbSet<Module> Modules { get; set; }
+      public DbSet<SubDevice> SubDevices { get; set; }
       public DbSet<Company> Companies { get; set; }
       public DbSet<Department> Departments { get; set; }
       public DbSet<Position> Positions { get; set; }
@@ -23,10 +23,13 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
       public DbSet<QrCode> QrCodes { get; set; }
       public DbSet<Face> Faces { get; set; }
       public DbSet<Feature> Features { get; set; }
-      public DbSet<Permission> Permissions { get; set; }
+      public DbSet<FeaturePermission> Permissions { get; set; }
       public DbSet<Role> Roles { get; set; }
+      public DbSet<Module> Modules { get; set; }
       public DbSet<UserLocation> UserLocations { get; set; }
       public DbSet<ComponentMapping> ComponentMappings { get; set; }
+      public DbSet<Group> Groups { get; set; }
+      public DbSet<UserGroup> UserGroups { get; set; }
       protected override void OnModelCreating(ModelBuilder modelBuilder)
       {
             Console.WriteLine("=== Entities ===");
@@ -153,7 +156,7 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   x => x.guid
             ).IsUnique();
 
-            modelBuilder.Entity<Module>()
+            modelBuilder.Entity<SubDevice>()
             .HasIndex(
                   x => x.guid
             ).IsUnique();
@@ -168,7 +171,7 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   }
             ).IsUnique();
 
-            modelBuilder.Entity<Permission>()
+            modelBuilder.Entity<FeaturePermission>()
             .HasIndex(
                   x => x.guid
             ).IsUnique();
@@ -193,9 +196,11 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   x => new
                   {
                         x.guid,
+                        x.username,
                         x.identification,
                         x.firstname,
-                        x.lastname
+                        x.lastname,
+                        x.is_default
                   }
             ).IsUnique();
 
@@ -297,7 +302,7 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
             modelBuilder.Entity<User>()
                   .HasOne(x => x.face)
                   .WithOne(x => x.user)
-                  .HasForeignKey<User>(x => x.face_guid)
+                  .HasForeignKey<User>(x => x.face_id)
                   .HasPrincipalKey<Face>(x => x.guid)
                   .OnDelete(DeleteBehavior.Cascade);
 
@@ -308,28 +313,45 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   .HasPrincipalKey(x => x.guid)
                   .OnDelete(DeleteBehavior.Cascade);
 
+            // Module
+            modelBuilder.Entity<Module>()
+                  .HasMany(x => x.features)
+                  .WithOne(x => x.module)
+                  .HasForeignKey(x => x.module_id)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Module>()
+                  .HasMany(x => x.module_permissions)
+                  .WithOne(x => x.module)
+                  .HasForeignKey(x => x.module_id)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Feature>()
+                  .HasMany(x => x.feature_permission)
+                  .WithOne(x => x.feature)
+                  .HasForeignKey(x => x.feature_id)
+                  .OnDelete(DeleteBehavior.Cascade);
+
             // Role
 
             modelBuilder.Entity<Role>()
-                  .HasMany(x => x.operators)
+                  .HasMany(x => x.users)
                   .WithOne(x => x.role)
                   .HasForeignKey(x => x.role_id)
                   .HasPrincipalKey(x => x.guid)
                   .OnDelete(DeleteBehavior.SetNull);
 
             modelBuilder.Entity<Role>()
-                  .HasMany(x => x.permissions)
+                  .HasMany(x => x.module_permission)
                   .WithOne(x => x.role)
-                  .HasForeignKey(x => x.role_guid)
-                  .HasPrincipalKey(x => x.guid)
+                  .HasForeignKey(x => x.role_id)
                   .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<Permission>()
-                  .HasOne(x => x.feature)
-                  .WithMany(x => x.permissions)
-                  .HasForeignKey(x => x.feature_guid)
-                  .HasPrincipalKey(x => x.guid)
-                  .OnDelete(DeleteBehavior.SetNull);
+            modelBuilder.Entity<ModulePermission>()
+                  .HasMany(x => x.feature_permissions)
+                  .WithOne(x => x.module_permission)
+                  .HasForeignKey(x => x.module_permission_id)
+                  .OnDelete(DeleteBehavior.Cascade);
 
             // Company
 
@@ -357,7 +379,7 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
             modelBuilder.Entity<Company>()
                   .HasMany(x => x.departments)
                   .WithOne(x => x.company)
-                  .HasForeignKey(x => x.company_guid)
+                  .HasForeignKey(x => x.company_id)
                   .HasPrincipalKey(x => x.guid)
                   .OnDelete(DeleteBehavior.Cascade);
 
@@ -557,221 +579,272 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   new Country { id = 178, name = "Default", code = "" }
                   );
 
+            // Module Data
+
+            modelBuilder.Entity<Module>()
+                  .HasData(
+                        new Module { id = 1, name = "Access" },
+                        new Module { id = 2, name = "Visitor" },
+                        new Module { id = 3, name = "Time Attendance" }
+                  );
 
 
             // Feature Data
             modelBuilder.Entity<Feature>().HasData(
-                  new Feature { id = 1, guid = new Guid("f1f1f528-1025-44de-8512-be5f269417e8"), name = "dashboard", },
-                  new Feature { id = 2, guid = new Guid("62e7ede3-9152-476a-a4df-173cc16a12fe"), name = "events", },
-                  new Feature { id = 3, guid = new Guid("c164d952-6649-49bb-95c9-2543695b8af6"), name = "location", },
-                  new Feature { id = 4, guid = new Guid("14fa8dca-521d-4e1a-a582-0159df91aea9"), name = "alert", },
-                  new Feature { id = 5, guid = new Guid("60239ccd-4cd7-441a-94c4-4a1577c79e38"), name = "operator", },
-                  new Feature { id = 6, guid = new Guid("dc76438d-0e0d-4d60-88bc-0559cb81ce4a"), name = "device", },
-                  new Feature { id = 7, guid = new Guid("77c0545d-ec94-4037-802f-2240bcc9020e"), name = "control", },
-                  new Feature { id = 8, guid = new Guid("2242b3c0-06e7-4e07-be9f-7491584c57c9"), name = "monitor", },
-                  new Feature { id = 9, guid = new Guid("8b5c31bb-706b-4fa5-b0f0-dd246f1e9a2b"), name = "monitorgroup", },
-                  new Feature { id = 10, guid = new Guid("f2143a86-d2f1-47ad-a481-c74ecbdadc83"), name = "acr", },
-                  new Feature { id = 11, guid = new Guid("b753863e-30f4-47aa-81b3-64dda55970da"), name = "user", },
-                  new Feature { id = 12, guid = new Guid("5ab363b5-a921-41e5-949e-5129eb416097"), name = "group", },
-                  new Feature { id = 13, guid = new Guid("4401f4d8-4145-4439-adab-d89cd3e3b2fb"), name = "area", },
-                  new Feature { id = 14, guid = new Guid("f18ef407-cd4d-46e8-a9f5-cbc99b87a0e4"), name = "time", },
-                  new Feature { id = 15, guid = new Guid("5699f80a-aa8c-4325-88cf-8ba31b85f976"), name = "trigger", },
-                  new Feature { id = 16, guid = new Guid("76d4a40a-3fa8-4a9f-a7b5-2b63f57fd26d"), name = "map", },
-                  new Feature { id = 17, guid = new Guid("24ebed55-6686-45a8-95a5-00e4e6516f4f"), name = "report", },
-                  new Feature { id = 18, guid = new Guid("713bcbae-1755-4a94-ab82-0180a856c80a"), name = "setting", },
-                  new Feature { id = 19, guid = new Guid("d57aac0d-1f61-4135-857b-cc1f51288d72"), name = "tools", }
+                  // Access
+                  new Feature { id = 1, guid = new Guid("f1f1f528-1025-44de-8512-be5f269417e8"), module_id = 1, name = "dashboard", },
+                  new Feature { id = 2, guid = new Guid("62e7ede3-9152-476a-a4df-173cc16a12fe"), module_id = 1, name = "events", },
+                  new Feature { id = 3, guid = new Guid("c164d952-6649-49bb-95c9-2543695b8af6"), module_id = 1, name = "location", },
+                  new Feature { id = 4, guid = new Guid("14fa8dca-521d-4e1a-a582-0159df91aea9"), module_id = 1, name = "alert", },
+                  new Feature { id = 5, guid = new Guid("60239ccd-4cd7-441a-94c4-4a1577c79e38"), module_id = 1, name = "operator", },
+                  new Feature { id = 6, guid = new Guid("dc76438d-0e0d-4d60-88bc-0559cb81ce4a"), module_id = 1, name = "device", },
+                  new Feature { id = 7, guid = new Guid("77c0545d-ec94-4037-802f-2240bcc9020e"), module_id = 1, name = "control", },
+                  new Feature { id = 8, guid = new Guid("2242b3c0-06e7-4e07-be9f-7491584c57c9"), module_id = 1, name = "monitor", },
+                  new Feature { id = 9, guid = new Guid("8b5c31bb-706b-4fa5-b0f0-dd246f1e9a2b"), module_id = 1, name = "monitorgroup", },
+                  new Feature { id = 10, guid = new Guid("f2143a86-d2f1-47ad-a481-c74ecbdadc83"), module_id = 1, name = "acr", },
+                  new Feature { id = 11, guid = new Guid("b753863e-30f4-47aa-81b3-64dda55970da"), module_id = 1, name = "user", },
+                  new Feature { id = 12, guid = new Guid("5ab363b5-a921-41e5-949e-5129eb416097"), module_id = 1, name = "group", },
+                  new Feature { id = 13, guid = new Guid("4401f4d8-4145-4439-adab-d89cd3e3b2fb"), module_id = 1, name = "area", },
+                  new Feature { id = 14, guid = new Guid("f18ef407-cd4d-46e8-a9f5-cbc99b87a0e4"), module_id = 1, name = "time", },
+                  new Feature { id = 15, guid = new Guid("5699f80a-aa8c-4325-88cf-8ba31b85f976"), module_id = 1, name = "trigger", },
+                  new Feature { id = 16, guid = new Guid("76d4a40a-3fa8-4a9f-a7b5-2b63f57fd26d"), module_id = 1, name = "map", },
+                  new Feature { id = 17, guid = new Guid("24ebed55-6686-45a8-95a5-00e4e6516f4f"), module_id = 1, name = "report", },
+                  new Feature { id = 18, guid = new Guid("713bcbae-1755-4a94-ab82-0180a856c80a"), module_id = 1, name = "setting", },
+                  new Feature { id = 19, guid = new Guid("d57aac0d-1f61-4135-857b-cc1f51288d72"), module_id = 1, name = "tools", },
+                  // Visitor
+                  new Feature { id = 20, module_id = 2, name = "register" },
+                  new Feature { id = 21, module_id = 2, name = "appointment" },
+                  // Time
+                  new Feature { id = 22, module_id = 3, name = "report" }
             );
 
             modelBuilder.Entity<Role>().HasData(
                   new Role { id = 1, guid = new Guid("fe527691-7b13-4294-98b5-cb95181f5453"), name = "Administrator", location_id = 1, is_default = true, is_active = true }
             );
 
-            modelBuilder.Entity<Permission>().HasData(
-                  new Permission
+            modelBuilder.Entity<ModulePermission>()
+            .HasData(
+                  new ModulePermission { id = 1, module_id = 1, is_active = true, is_enabled = true, is_default = true, role_id = 1 },
+                  new ModulePermission { id = 1, module_id = 2, is_active = true, is_enabled = true, is_default = true, role_id = 1 },
+                  new ModulePermission { id = 1, module_id = 3, is_active = true, is_enabled = true, is_default = true, role_id = 1 }
+            );
+
+            modelBuilder.Entity<FeaturePermission>().HasData(
+                  new FeaturePermission
                   {
                         id = 1,
-                        role_guid = new Guid("fe527691-7b13-4294-98b5-cb95181f5453"),
-                        feature_guid = new Guid("f1f1f528-1025-44de-8512-be5f269417e8"),
+                        module_permission_id = 1,
+                        feature_id = 1,
                         is_enabled = true,
                         is_created = true,
                         is_deleted = true,
                         is_updated = true
                   },
-                  new Permission
+                  new FeaturePermission
                   {
                         id = 2,
-                        role_guid = new Guid("fe527691-7b13-4294-98b5-cb95181f5453"),
-                        feature_guid = new Guid("62e7ede3-9152-476a-a4df-173cc16a12fe"),
+                        module_permission_id = 1,
+                        feature_id = 2,
                         is_enabled = true,
                         is_created = true,
                         is_deleted = true,
                         is_updated = true
                   },
-                  new Permission
+                  new FeaturePermission
                   {
                         id = 3,
-                        role_guid = new Guid("fe527691-7b13-4294-98b5-cb95181f5453"),
-                        feature_guid = new Guid("c164d952-6649-49bb-95c9-2543695b8af6"),
+                        module_permission_id = 1,
+                        feature_id = 3,
                         is_enabled = true,
                         is_created = true,
                         is_deleted = true,
                         is_updated = true
                   },
-                  new Permission
+                  new FeaturePermission
                   {
                         id = 4,
-                        role_guid = new Guid("fe527691-7b13-4294-98b5-cb95181f5453"),
-                        feature_guid = new Guid("14fa8dca-521d-4e1a-a582-0159df91aea9"),
+                        module_permission_id = 1,
+                        feature_id = 4,
                         is_enabled = true,
                         is_created = true,
                         is_deleted = true,
                         is_updated = true
                   },
-                  new Permission
+                  new FeaturePermission
                   {
                         id = 5,
-                        role_guid = new Guid("fe527691-7b13-4294-98b5-cb95181f5453"),
-                        feature_guid = new Guid("60239ccd-4cd7-441a-94c4-4a1577c79e38"),
+                        module_permission_id = 1,
+                        feature_id = 5,
                         is_enabled = true,
                         is_created = true,
                         is_deleted = true,
                         is_updated = true
                   },
-                  new Permission
+                  new FeaturePermission
                   {
                         id = 6,
-                        role_guid = new Guid("fe527691-7b13-4294-98b5-cb95181f5453"),
-                        feature_guid = new Guid("dc76438d-0e0d-4d60-88bc-0559cb81ce4a"),
+                        module_permission_id = 1,
+                        feature_id = 5,
                         is_enabled = true,
                         is_created = true,
                         is_deleted = true,
                         is_updated = true
                   },
-                  new Permission
+                  new FeaturePermission
                   {
                         id = 7,
-                        role_guid = new Guid("fe527691-7b13-4294-98b5-cb95181f5453"),
-                        feature_guid = new Guid("77c0545d-ec94-4037-802f-2240bcc9020e"),
+                        module_permission_id = 1,
+                        feature_id = 7,
                         is_enabled = true,
                         is_created = true,
                         is_deleted = true,
                         is_updated = true
                   },
-                  new Permission
+                  new FeaturePermission
                   {
                         id = 8,
-                        role_guid = new Guid("fe527691-7b13-4294-98b5-cb95181f5453"),
-                        feature_guid = new Guid("2242b3c0-06e7-4e07-be9f-7491584c57c9"),
+                        module_permission_id = 1,
+                        feature_id = 8,
                         is_enabled = true,
                         is_created = true,
                         is_deleted = true,
                         is_updated = true
                   },
-                  new Permission
+                  new FeaturePermission
                   {
                         id = 9,
-                        role_guid = new Guid("fe527691-7b13-4294-98b5-cb95181f5453"),
-                        feature_guid = new Guid("8b5c31bb-706b-4fa5-b0f0-dd246f1e9a2b"),
+                        module_permission_id = 1,
+                        feature_id = 9,
                         is_enabled = true,
                         is_created = true,
                         is_deleted = true,
                         is_updated = true
                   },
-                  new Permission
+                  new FeaturePermission
                   {
                         id = 10,
-                        role_guid = new Guid("fe527691-7b13-4294-98b5-cb95181f5453"),
-                        feature_guid = new Guid("f2143a86-d2f1-47ad-a481-c74ecbdadc83"),
+                        module_permission_id = 1,
+                        feature_id = 10,
                         is_enabled = true,
                         is_created = true,
                         is_deleted = true,
                         is_updated = true
                   },
-                  new Permission
+                  new FeaturePermission
                   {
                         id = 11,
-                        role_guid = new Guid("fe527691-7b13-4294-98b5-cb95181f5453"),
-                        feature_guid = new Guid("b753863e-30f4-47aa-81b3-64dda55970da"),
+                        module_permission_id = 1,
+                        feature_id = 11,
                         is_enabled = true,
                         is_created = true,
                         is_deleted = true,
                         is_updated = true
                   },
-                  new Permission
+                  new FeaturePermission
                   {
                         id = 12,
-                        role_guid = new Guid("fe527691-7b13-4294-98b5-cb95181f5453"),
-                        feature_guid = new Guid("5ab363b5-a921-41e5-949e-5129eb416097"),
+                        module_permission_id = 1,
+                        feature_id = 12,
                         is_enabled = true,
                         is_created = true,
                         is_deleted = true,
                         is_updated = true
                   },
-                  new Permission
+                  new FeaturePermission
                   {
                         id = 13,
-                        role_guid = new Guid("fe527691-7b13-4294-98b5-cb95181f5453"),
-                        feature_guid = new Guid("4401f4d8-4145-4439-adab-d89cd3e3b2fb"),
+                        module_permission_id = 1,
+                        feature_id = 13,
                         is_enabled = true,
                         is_created = true,
                         is_deleted = true,
                         is_updated = true
                   },
-                  new Permission
+                  new FeaturePermission
                   {
                         id = 14,
-                        role_guid = new Guid("fe527691-7b13-4294-98b5-cb95181f5453"),
-                        feature_guid = new Guid("f18ef407-cd4d-46e8-a9f5-cbc99b87a0e4"),
+                        module_permission_id = 1,
+                        feature_id = 14,
                         is_enabled = true,
                         is_created = true,
                         is_deleted = true,
                         is_updated = true
                   },
-                  new Permission
+                  new FeaturePermission
                   {
                         id = 15,
-                        role_guid = new Guid("fe527691-7b13-4294-98b5-cb95181f5453"),
-                        feature_guid = new Guid("5699f80a-aa8c-4325-88cf-8ba31b85f976"),
+                        module_permission_id = 1,
+                        feature_id = 155,
                         is_enabled = true,
                         is_created = true,
                         is_deleted = true,
                         is_updated = true
                   },
-                  new Permission
+                  new FeaturePermission
                   {
                         id = 16,
-                        role_guid = new Guid("fe527691-7b13-4294-98b5-cb95181f5453"),
-                        feature_guid = new Guid("76d4a40a-3fa8-4a9f-a7b5-2b63f57fd26d"),
+                        module_permission_id = 1,
+                        feature_id = 16,
                         is_enabled = true,
                         is_created = true,
                         is_deleted = true,
                         is_updated = true
                   },
-                  new Permission
+                  new FeaturePermission
                   {
                         id = 17,
-                        role_guid = new Guid("fe527691-7b13-4294-98b5-cb95181f5453"),
-                        feature_guid = new Guid("24ebed55-6686-45a8-95a5-00e4e6516f4f"),
+                        module_permission_id = 1,
+                        feature_id = 17,
                         is_enabled = true,
                         is_created = true,
                         is_deleted = true,
                         is_updated = true
                   },
-                  new Permission
+                  new FeaturePermission
                   {
                         id = 18,
-                        role_guid = new Guid("fe527691-7b13-4294-98b5-cb95181f5453"),
-                        feature_guid = new Guid("713bcbae-1755-4a94-ab82-0180a856c80a"),
+                        module_permission_id = 1,
+                        feature_id = 18,
                         is_enabled = true,
                         is_created = true,
                         is_deleted = true,
                         is_updated = true
                   },
-                  new Permission
+                  new FeaturePermission
                   {
                         id = 19,
-                        role_guid = new Guid("fe527691-7b13-4294-98b5-cb95181f5453"),
-                        feature_guid = new Guid("d57aac0d-1f61-4135-857b-cc1f51288d72"),
+                        module_permission_id = 1,
+                        feature_id = 19,
+                        is_enabled = true,
+                        is_created = true,
+                        is_deleted = true,
+                        is_updated = true
+                  },
+                  new FeaturePermission
+                  {
+                        id = 20,
+                        module_permission_id = 2,
+                        feature_id = 20,
+                        is_enabled = true,
+                        is_created = true,
+                        is_deleted = true,
+                        is_updated = true
+                  },
+                  new FeaturePermission
+                  {
+                        id = 21,
+                        module_permission_id = 2,
+                        feature_id = 21,
+                        is_enabled = true,
+                        is_created = true,
+                        is_deleted = true,
+                        is_updated = true
+                  },
+                  new FeaturePermission
+                  {
+                        id = 22,
+                        module_permission_id = 3,
+                        feature_id = 22,
                         is_enabled = true,
                         is_created = true,
                         is_deleted = true,
@@ -779,29 +852,29 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   }
             );
 
-             modelBuilder.Entity<User>().HasData(
-                  new User
-                  {
-                        id = 1,
-                        guid = new Guid("ed2b5887-9dcb-43bd-a6f8-988330df5181"),
-                        username = "admin",
-                        password = "100000.lG1/4V/VRPZsbhf/Zqc4xw==.6vYcf+wEMSgqcaNhoZEdM9PaPxx2ZUErZhQbeMxo5OY=",
-                        user_code = "admin01",
-                        title=Title.Mr,
-                        firstname="admin",
-                        lastname="system",
-                        gender = Gender.M,
-                        date_of_birth = new DateTime(1970, 01, 01, 0, 0, 0, DateTimeKind.Utc),
-                        email = "support@sentrix.com",
-                        is_operator = true,
-                        role_id = 1,
-                        active_time = new DateTime(1970, 01, 01, 0, 0, 0, DateTimeKind.Utc),
-                        expire_time = new DateTime(9999, 01, 01, 0, 0, 0, DateTimeKind.Utc),
-                        is_default = true,
-                        is_active = true,
+            modelBuilder.Entity<User>().HasData(
+                 new User
+                 {
+                       id = 1,
+                       guid = new Guid("ed2b5887-9dcb-43bd-a6f8-988330df5181"),
+                       username = "admin",
+                       password = "100000.lG1/4V/VRPZsbhf/Zqc4xw==.6vYcf+wEMSgqcaNhoZEdM9PaPxx2ZUErZhQbeMxo5OY=",
+                       user_code = "admin01",
+                       title = Title.Mr,
+                       firstname = "admin",
+                       lastname = "system",
+                       gender = Gender.M,
+                       date_of_birth = new DateTime(1970, 01, 01, 0, 0, 0, DateTimeKind.Utc),
+                       email = "support@sentrix.com",
+                       is_operator = true,
+                       role_id = 1,
+                       active_time = new DateTime(1970, 01, 01, 0, 0, 0, DateTimeKind.Utc),
+                       expire_time = new DateTime(9999, 01, 01, 0, 0, 0, DateTimeKind.Utc),
+                       is_default = true,
+                       is_active = true,
 
-                  }
-            );
+                 }
+           );
 
             modelBuilder.Entity<UserLocation>()
                   .HasData(
@@ -811,7 +884,7 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                               location_id = 1
                         }
                   );
-      
+
 
       }
 }

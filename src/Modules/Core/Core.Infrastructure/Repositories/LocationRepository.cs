@@ -14,16 +14,23 @@ public sealed class LocationRepository(CoreDbContext context) : ILocationReposit
 {
       public async Task AddAsync(Core.Domain.Entities.Location entity, CancellationToken ct = default)
       {
-            await context.Locations.AddAsync(
-                  new Persistences.Entities.Location(entity), ct
-            );
+            await context.Database.BeginTransactionAsync(ct);
+            try
+            {
+                  var data = await context.Locations.AddAsync(new Persistences.Entities.Location(entity), ct);
 
-            await context.SaveChangesAsync(ct);
-      }
+                  await context.UserLocations.AddAsync(new Persistences.Entities.UserLocation(1, data.Entity.id));
 
-      public async Task AddDefaultUserAsync(int userId, int locationId, CancellationToken ct = default)
-      {
-            throw new NotImplementedException();
+                  await context.SaveChangesAsync(ct);
+
+                  await context.Database.CommitTransactionAsync(ct);
+            }
+            catch
+            {
+                  await context.Database.RollbackTransactionAsync(ct);
+                  throw;
+            }
+
       }
 
       public async Task DeleteAsync(Guid guid, CancellationToken ct = default)
@@ -112,8 +119,8 @@ public sealed class LocationRepository(CoreDbContext context) : ILocationReposit
                   .Select(x => x.id)
                   .FirstOrDefaultAsync();
 
-            if(res == 0)
-                  throw new NotFoundException(EntityType.Location,guid.ToString());
+            if (res == 0)
+                  throw new NotFoundException(EntityType.Location, guid.ToString());
 
             return res;
       }
@@ -188,7 +195,7 @@ public sealed class LocationRepository(CoreDbContext context) : ILocationReposit
                   );
       }
 
-      public async Task<bool> IsAnyByNameAndLocationGuidAsync(string name, Guid locationGuid = default, CancellationToken ct = default)
+      public async Task<bool> IsAnyByNameAndLocationIdAsync(string name, int locationId = default, CancellationToken ct = default)
       {
             return await context.Locations
                   .AsNoTracking()

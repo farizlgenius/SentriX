@@ -82,29 +82,29 @@ public sealed class CompanyRepository(CoreDbContext context) : ICompanyRepositor
                     x.name,
                     x.address,
                     x.description,
-                    x.location_guid,
+                    x.location_id,
                     x.is_active,
                     x.is_default
                   )).FirstOrDefaultAsync() ?? throw new NotFoundException(nameof(Location), guid.ToString());
   }
 
-      public async Task<int> GetIdByGuidAsync(Guid guid, CancellationToken ct = default)
-      {
-            var res = await context.Companies.AsNoTracking()
-              .Where(x => x.guid == guid)
-              .Select(x => x.id)
-              .FirstOrDefaultAsync();
+  public async Task<int> GetIdByGuidAsync(Guid guid, CancellationToken ct = default)
+  {
+    var res = await context.Companies.AsNoTracking()
+      .Where(x => x.guid == guid)
+      .Select(x => x.id)
+      .FirstOrDefaultAsync();
 
-              if(res == 0)
-                throw new NotFoundException(EntityType.Company,guid.ToString());
+    if (res == 0)
+      throw new NotFoundException(EntityType.Company, guid.ToString());
 
-              return res;
-      }
+    return res;
+  }
 
-      public async Task<Pagination<CompanyDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
+  public async Task<Pagination<CompanyDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
   {
     var query = context.Companies
-                  .Where(x => x.location_guid == param.locationGuid || x.is_default)
+                  .Where(x => x.location_id == param.locationGuid || x.is_default)
                   .AsNoTracking()
                   .AsQueryable();
 
@@ -175,11 +175,11 @@ public sealed class CompanyRepository(CoreDbContext context) : ICompanyRepositor
           );
   }
 
-  public async Task<bool> IsAnyByNameAndLocationGuidAsync(string name, Guid locationGuid, CancellationToken ct = default)
+  public async Task<bool> IsAnyByNameAndLocationIdAsync(string name, int locationId, CancellationToken ct = default)
   {
     return await context.Companies
       .AsNoTracking()
-      .AnyAsync(x => x.name.Equals(name) && x.location_guid == locationGuid);
+      .AnyAsync(x => x.name.Equals(name) && x.location_id == locationId);
 
   }
 

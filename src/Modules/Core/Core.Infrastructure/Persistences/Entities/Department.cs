@@ -6,7 +6,7 @@ public sealed class Department : BaseEntity
       public string description { get; set; } = string.Empty;
 
       // Relation
-      public Guid company_guid { get; set; }
+      public int company_id { get; set; }
       public Company company { get; set; } = default!;
       public ICollection<User> users { get; set; } = default!;
       public ICollection<Position> positions { get; set; } = default!;
@@ -16,6 +16,6 @@ public sealed class Department : BaseEntity
       {
             this.name = d.Name;
             this.description = d.Description;
-            this.company_guid = d.CompanyId;
+            this.company_id = d.CompanyId;
       }
 }

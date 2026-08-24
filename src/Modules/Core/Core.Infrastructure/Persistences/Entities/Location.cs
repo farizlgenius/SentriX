@@ -8,7 +8,7 @@ public sealed class Location : BaseEntity
   public int country_id { get; set; }
   public Country country { get; set; } = default!;
   public ICollection<Device> devices { get; set; } = default!;
-  public ICollection<Module> modules { get; set; } = default!;
+  public ICollection<SubDevice> modules { get; set; } = default!;
   public ICollection<Company> companies { get; set; } = default!;
   public ICollection<User> users { get; set; } = default!;
   public ICollection<Role> roles { get; set; } = default!;

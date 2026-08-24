@@ -9,7 +9,7 @@ public sealed class Company : BaseEntity
       public ICollection<Department> departments { get; set; } = new List<Department>();
 
       // Relation
-      public Guid location_guid { get; set; }
+      public int location_id { get; set; }
       public Location location { get; set; } = default!;
 
       public Company() { }
@@ -18,6 +18,6 @@ public sealed class Company : BaseEntity
             this.name = d.Name;
             this.description = d.Description;
             this.address = d.Address;
-            this.location_guid = d.LocationId;
+            this.location_id = d.LocationId;
       }
 }

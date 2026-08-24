@@ -53,7 +53,7 @@ public sealed class DeviceRepository(CoreDbContext context) : IDeviceRepository
             throw new NotImplementedException();
       }
 
-      public async Task<bool> IsAnyByNameAndLocationGuidAsync(string name, Guid locationGuid = default, CancellationToken ct = default)
+      public async Task<bool> IsAnyByNameAndLocationIdAsync(string name, Guid locationGuid = default, CancellationToken ct = default)
       {
             throw new NotImplementedException();
       }

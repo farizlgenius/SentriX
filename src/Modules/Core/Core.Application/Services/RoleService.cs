@@ -26,7 +26,7 @@ public sealed class RoleService(IRoleRepository repo) : IRole
             );
 
             // Check name is duplicate 
-            if (await repo.IsAnyByNameAndLocationGuidAsync(dto.Name, dto.LocationGuid))
+            if (await repo.IsAnyByNameAndLocationIdAsync(dto.Name, dto.LocationGuid))
                   throw new DuplicateException(EntityType.Role, dto.Name);
 
             await repo.AddAsync(d, ct);
@@ -34,7 +34,7 @@ public sealed class RoleService(IRoleRepository repo) : IRole
             return new RoleDto(
                   d.Guid,
                   d.Name,
-                  d.Permissions.Select(x => new PermissionDto(
+                  d.Modules.Select(x => new PermissionDto(
                         x.Guid,
                         x.FeatureGuid,
                         x.RoleGuid,
@@ -147,7 +147,7 @@ public sealed class RoleService(IRoleRepository repo) : IRole
             return new RoleDto(
               d.Guid,
               d.Name,
-              d.Permissions.Select(x => new PermissionDto(
+              d.Modules.Select(x => new PermissionDto(
                         x.Guid,
                         x.FeatureGuid,
                         x.RoleGuid,

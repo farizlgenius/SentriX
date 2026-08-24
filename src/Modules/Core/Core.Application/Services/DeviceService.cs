@@ -18,11 +18,15 @@ public sealed class DeviceService(
   public async Task<DeviceDto> CreateAsync(CreateDeviceDto dto, CancellationToken ct = default)
   {
 
+    if (!await loc.IsAnyGuidAsync(dto.LocationGuid))
+      throw new NotFoundException(EntityType.Location, dto.LocationGuid.ToString());
+
+    var locationId = await loc.GetIdByGuidAsync(dto.LocationGuid);
+
     // Check name is duplicate
-    if (await repo.IsAnyByNameAndLocationGuidAsync(dto.Name, dto.LocationGuid, ct))
+    if (await repo.IsAnyByNameAndLocationIdAsync(dto.Name, locationId, ct))
       throw new DuplicateException(EntityType.Device, dto.Name);
 
-    var locationId = await loc.GetIdByGuidAsync(dto.LocationGuid,ct);
 
 
     var d = new Core.Domain.Entities.Device(
@@ -37,7 +41,7 @@ public sealed class DeviceService(
       locationId
     );
 
-    
+
     // Send Command to device
     if (dto.Vendor.Equals(Vendor.AMICO))
     {

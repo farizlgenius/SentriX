@@ -18,13 +18,14 @@ public sealed class User : BaseDomain
       public string Email { get; private set; } = string.Empty;
       public string Phone { get; private set; } = string.Empty;
       public bool IsOperator { get; private set; } = false;
-      public int? RoleGuid { get; private set; }
+      public bool IsUser { get; private set; } = true;
+      public int? RoleId { get; private set; }
       public int? CompanyId { get; private set; }
       public int? DepartmentId { get; private set; }
       public int? PositionId { get; private set; }
       public string Address { get; private set; } = string.Empty;
-      public DateTime ActiveTime { get; set; }
-      public DateTime ExpireTime { get; set; }
+      public DateTime JoinedTime { get; set; }
+      public DateTime ExpiredTime { get; set; }
       public List<string> Additionals { get; private set; } = new List<string>();
       public List<Guid> Groups { get; private set; } = new List<Guid>();
       public List<Card> Cards { get; private set; } = default!;
@@ -33,6 +34,7 @@ public sealed class User : BaseDomain
       public List<QrCode> QrCodes { get; private set; } = default!;
       public Face? Face { get; private set; }
       public List<int> LocationIds { get; private set; } = default!;
+      public List<int> GroupIds { get; private set; } = default!;
 
       public User(
     string Username,
@@ -46,6 +48,7 @@ public sealed class User : BaseDomain
     string Email,
     string Phone,
     bool IsOperator,
+    bool IsUser,
     int RoleId,
     int CompanyId,
     int DepartmentId,
@@ -60,7 +63,8 @@ public sealed class User : BaseDomain
     List<Pin> Pins,
     List<QrCode> QrCodes,
     Face Face,
-    List<int> LocationIds
+    List<int> LocationIds,
+    List<int> GroupIds
 )
       {
             ValidationHelper.Name(Firstname);
@@ -77,13 +81,14 @@ public sealed class User : BaseDomain
             this.Email = Email;
             this.Phone = Phone;
             this.IsOperator = IsOperator;
-            this.RoleGuid = RoleId;
+            this.IsUser = IsUser;
+            this.RoleId = RoleId;
             this.CompanyId = CompanyId;
             this.DepartmentId = DepartmentId;
             this.PositionId = PositionId;
             this.Address = Address;
-            this.ActiveTime = ActiveTime;
-            this.ExpireTime = ExpireTime;
+            this.JoinedTime = ActiveTime;
+            this.ExpiredTime = ExpireTime;
             this.Additionals = Additionals;
             this.Groups = Groups;
             this.Cards = Cards;
@@ -92,6 +97,7 @@ public sealed class User : BaseDomain
             this.QrCodes = QrCodes;
             this.Face = Face;
             this.LocationIds = LocationIds;
+            this.GroupIds = GroupIds;
       }
 
       public User(
@@ -107,6 +113,7 @@ public sealed class User : BaseDomain
      string Email,
      string Phone,
      bool IsOperator,
+     bool IsUser,
      int RoleId,
      int CompanyId,
      int DepartmentId,
@@ -121,7 +128,8 @@ public sealed class User : BaseDomain
      List<Pin> Pins,
      List<QrCode> QrCodes,
      Face Face,
-     List<int> LocationIds
+     List<int> LocationIds,
+     List<int> GroupIds
  ) : base(Guid)
       {
             this.Username = Username;
@@ -135,13 +143,14 @@ public sealed class User : BaseDomain
             this.Email = Email;
             this.Phone = Phone;
             this.IsOperator = IsOperator;
-            this.RoleGuid = RoleId;
+            this.IsUser = IsUser;
+            this.RoleId = RoleId;
             this.CompanyId = CompanyId;
             this.DepartmentId = DepartmentId;
             this.PositionId = PositionId;
             this.Address = Address;
-            this.ActiveTime = ActiveTime;
-            this.ExpireTime = ExpireTime;
+            this.JoinedTime = ActiveTime;
+            this.ExpiredTime = ExpireTime;
             this.Additionals = Additionals;
             this.Groups = Groups;
             this.Cards = Cards;
@@ -150,6 +159,7 @@ public sealed class User : BaseDomain
             this.QrCodes = QrCodes;
             this.Face = Face;
             this.LocationIds = LocationIds;
+            this.GroupIds = GroupIds;
       }
 
 

@@ -227,7 +227,7 @@ public sealed class OperatorRepository(CoreDbContext context) : IOperatorReposit
           );
   }
 
-  public async Task<bool> IsAnyByNameAndLocationGuidAsync(string name, Guid locationGuid = default, CancellationToken ct = default)
+  public async Task<bool> IsAnyByNameAndLocationIdAsync(string name, Guid locationGuid = default, CancellationToken ct = default)
   {
     return await context.Operators
                   .AsNoTracking()
