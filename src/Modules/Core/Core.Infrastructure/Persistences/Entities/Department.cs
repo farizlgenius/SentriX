@@ -16,6 +16,6 @@ public sealed class Department : BaseEntity
       {
             this.name = d.Name;
             this.description = d.Description;
-            this.company_guid = d.CompanyGuid;
+            this.company_guid = d.CompanyId;
       }
 }

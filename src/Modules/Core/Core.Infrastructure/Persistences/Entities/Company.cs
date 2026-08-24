@@ -18,6 +18,6 @@ public sealed class Company : BaseEntity
             this.name = d.Name;
             this.description = d.Description;
             this.address = d.Address;
-            this.location_guid = d.LocationGuid;
+            this.location_guid = d.LocationId;
       }
 }

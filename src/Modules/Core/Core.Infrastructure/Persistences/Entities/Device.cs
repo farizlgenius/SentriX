@@ -15,7 +15,7 @@ public sealed class Device : BaseEntity
   public string metadata { get; set; } = string.Empty;
 
   // Releation
-  public Guid location_guid { get; set; } = default!;
+  public int location_id { get; set; } = default!;
   public Location location { get; set; } = default!;
   public ICollection<Module> modules { get; set; } = default!;
 
@@ -29,5 +29,6 @@ public sealed class Device : BaseEntity
     this.port = domain.Port;
     this.firmware = domain.Firmware;
     this.metadata = domain.Metadata;
+    location_id = domain.LocationId;
   }
 }

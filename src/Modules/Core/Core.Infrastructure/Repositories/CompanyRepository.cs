@@ -88,7 +88,20 @@ public sealed class CompanyRepository(CoreDbContext context) : ICompanyRepositor
                   )).FirstOrDefaultAsync() ?? throw new NotFoundException(nameof(Location), guid.ToString());
   }
 
-  public async Task<Pagination<CompanyDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
+      public async Task<int> GetIdByGuidAsync(Guid guid, CancellationToken ct = default)
+      {
+            var res = await context.Companies.AsNoTracking()
+              .Where(x => x.guid == guid)
+              .Select(x => x.id)
+              .FirstOrDefaultAsync();
+
+              if(res == 0)
+                throw new NotFoundException(EntityType.Company,guid.ToString());
+
+              return res;
+      }
+
+      public async Task<Pagination<CompanyDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
   {
     var query = context.Companies
                   .Where(x => x.location_guid == param.locationGuid || x.is_default)

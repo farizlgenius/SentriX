@@ -98,8 +98,8 @@ public sealed class OperatorRepository(CoreDbContext context) : IOperatorReposit
         x.phone,
         x.active_time,
         x.expire_time,
-        x.role_guid,
-        x.operator_locations.Select(x => x.location_guid).ToList(),
+        x.role_id,
+        x.operator_locations.Select(x => x.location_id).ToList(),
         x.is_active,
         x.is_default
       )).FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.Operator, guid.ToString());
@@ -117,8 +117,8 @@ public sealed class OperatorRepository(CoreDbContext context) : IOperatorReposit
         x.phone,
         x.active_time,
         x.expire_time,
-        x.role_guid,
-        x.operator_locations.Select(o => o.location_guid).ToList(),
+        x.role_id,
+        x.operator_locations.Select(o => o.location_id).ToList(),
         x.is_active,
         x.is_default
       )).FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.Operator, username);
@@ -147,7 +147,7 @@ public sealed class OperatorRepository(CoreDbContext context) : IOperatorReposit
     return await context.Operators
       .AsNoTracking()
       .Where(x => x.username.Equals(username))
-      .SelectMany(x => x.operator_locations.Select(x => x.location_guid))
+      .SelectMany(x => x.operator_locations.Select(x => x.location_id))
       .ToArrayAsync();
   }
 
@@ -212,8 +212,8 @@ public sealed class OperatorRepository(CoreDbContext context) : IOperatorReposit
                 e.phone,
                 e.active_time,
                 e.expire_time,
-                e.role_guid,
-                e.operator_locations.Select(x => x.location_guid).ToList(),
+                e.role_id,
+                e.operator_locations.Select(x => x.location_id).ToList(),
                 e.is_active,
                 e.is_default
           )).ToListAsync();

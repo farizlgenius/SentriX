@@ -3,44 +3,44 @@ namespace Core.Domain.Entities;
 public sealed class ComponentMappping : BaseDomain
 {
   public string Entity { get; private set; } = string.Empty;
-  public Guid InternalGuid { get; private set; }
+  public int InternalId { get; private set; }
   public int ExternalId { get; private set; }
   public string Mac { get; private set; } = string.Empty;
   public string Vendor {get; private set;} = string.Empty;
-  public Guid LocationGuid { get; private set; }
+  public int LocationId { get; private set; }
 
   public ComponentMappping(
     string entity,
-    Guid @internal,
+    int @internal,
     int external,
     string mac,
     string vendor,
-    Guid locationGuid
+    int locationId
   )
   {
     Entity = entity;
-    InternalGuid = @internal;
+    InternalId = @internal;
     ExternalId = external;
     Mac = mac;
     Vendor = vendor;
-    LocationGuid = locationGuid;
+    LocationId = locationId;
   }
   public ComponentMappping(
     Guid guid,
     string entity,
-    Guid @internal,
+    int @internal,
     int external,
     string mac,
      string vendor,
-    Guid locationGuid
+    int locationId
     ) : base(guid)
   {
     Entity = entity;
-    InternalGuid = @internal;
+    InternalId = @internal;
     ExternalId = external;
     Mac = mac;
     Vendor = vendor;
-    LocationGuid = locationGuid;
+    LocationId = locationId;
   }
 
 }

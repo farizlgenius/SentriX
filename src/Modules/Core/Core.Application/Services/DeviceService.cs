@@ -11,11 +11,20 @@ namespace Core.Application.Services;
 public sealed class DeviceService(
   IDeviceRepository repo,
   IAdapterFactory adapter,
-  IComponentMappingRepository com
+  IComponentMappingRepository com,
+  ILocationRepository loc
   ) : IDevice
 {
   public async Task<DeviceDto> CreateAsync(CreateDeviceDto dto, CancellationToken ct = default)
   {
+
+    // Check name is duplicate
+    if (await repo.IsAnyByNameAndLocationGuidAsync(dto.Name, dto.LocationGuid, ct))
+      throw new DuplicateException(EntityType.Device, dto.Name);
+
+    var locationId = await loc.GetIdByGuidAsync(dto.LocationGuid,ct);
+
+
     var d = new Core.Domain.Entities.Device(
       dto.Name,
       dto.SerialNumber,
@@ -25,14 +34,10 @@ public sealed class DeviceService(
       dto.Firmware,
       dto.Vendor,
       dto.Metadata,
-      dto.LocationGuid
+      locationId
     );
 
-    // Check name is duplicate
-    if (await repo.IsAnyByNameAndLocationGuidAsync(d.Name, dto.LocationGuid, ct))
-      throw new DuplicateException(EntityType.Device, d.Name);
-
-
+    
     // Send Command to device
     if (dto.Vendor.Equals(Vendor.AMICO))
     {
@@ -61,7 +66,7 @@ public sealed class DeviceService(
       d.Metadata,
       DateTime.UtcNow,
       DeviceStatus.PENDING,
-      d.LocationGuid,
+      dto.LocationGuid,
       true,
       false
     );

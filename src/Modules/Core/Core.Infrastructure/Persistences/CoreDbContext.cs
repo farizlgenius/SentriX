@@ -1,6 +1,7 @@
 using System.Security.Cryptography.X509Certificates;
 using Core.Infrastructure.Persistences.Entities;
 using Microsoft.EntityFrameworkCore;
+using SharedKernel.Enums;
 
 namespace Core.Infrastructure.Persistences;
 
@@ -24,8 +25,7 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
       public DbSet<Feature> Features { get; set; }
       public DbSet<Permission> Permissions { get; set; }
       public DbSet<Role> Roles { get; set; }
-      public DbSet<Operator> Operators { get; set; }
-      public DbSet<OperatorLocation> OperatorLocations { get; set; }
+      public DbSet<UserLocation> UserLocations { get; set; }
       public DbSet<ComponentMapping> ComponentMappings { get; set; }
       protected override void OnModelCreating(ModelBuilder modelBuilder)
       {
@@ -90,64 +90,169 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
 
             }
 
+            // Indexing and key setting 
+            modelBuilder.Entity<Card>()
+            .HasIndex(
+                  x => x.guid
+            ).IsUnique();
+
+            modelBuilder.Entity<Company>()
+            .HasIndex(
+                  x => x.guid
+            ).IsUnique();
+
+            modelBuilder.Entity<ComponentMapping>()
+            .HasIndex(x => new
+            {
+                  x.internal_id,
+                  x.external_id
+            });
+
+            modelBuilder.Entity<Country>()
+            .HasIndex(
+                  x => x.guid
+            ).IsUnique();
+
+            modelBuilder.Entity<Department>()
+            .HasIndex(
+                  x => x.guid
+            ).IsUnique();
+
+            modelBuilder.Entity<Device>()
+            .HasIndex(
+                  x => x.guid
+            ).IsUnique();
+
+            modelBuilder.Entity<Face>()
+            .HasIndex(
+                  x => x.guid
+            ).IsUnique();
+
+            modelBuilder.Entity<Feature>()
+            .HasIndex(
+                  x => x.guid
+            ).IsUnique();
+
+            modelBuilder.Entity<License>()
+            .HasIndex(
+                  x => x.guid
+            ).IsUnique();
+
+            modelBuilder.Entity<LicenseKey>()
+            .HasIndex(
+                  x => x.guid
+            ).IsUnique();
+
+            modelBuilder.Entity<LicensePlate>()
+            .HasIndex(
+                  x => x.guid
+            ).IsUnique();
+
+            modelBuilder.Entity<Location>()
+            .HasIndex(
+                  x => x.guid
+            ).IsUnique();
+
+            modelBuilder.Entity<Module>()
+            .HasIndex(
+                  x => x.guid
+            ).IsUnique();
+
+
+            modelBuilder.Entity<UserLocation>()
+            .HasIndex(
+                  x => new
+                  {
+                        x.user_id,
+                        x.location_id
+                  }
+            ).IsUnique();
+
+            modelBuilder.Entity<Permission>()
+            .HasIndex(
+                  x => x.guid
+            ).IsUnique();
+
+            modelBuilder.Entity<Pin>()
+            .HasIndex(
+                  x => x.guid
+            ).IsUnique();
+
+            modelBuilder.Entity<Position>()
+            .HasIndex(
+                  x => x.guid
+            ).IsUnique();
+
+            modelBuilder.Entity<QrCode>()
+            .HasIndex(
+                  x => x.guid
+            ).IsUnique();
+
+            modelBuilder.Entity<User>()
+            .HasIndex(
+                  x => new
+                  {
+                        x.guid,
+                        x.identification,
+                        x.firstname,
+                        x.lastname
+                  }
+            ).IsUnique();
+
+            modelBuilder.Entity<Role>()
+            .HasIndex(
+                  x => x.guid
+            ).IsUnique();
+
+            modelBuilder.Entity<UserAdditional>()
+            .HasIndex(
+                  x => x.guid
+            ).IsUnique();
 
             // Configure relationships 
 
             // Location
 
             modelBuilder.Entity<Location>()
-                          .HasOne(l => l.country)
-                          .WithMany(c => c.locations)
-                          .HasForeignKey(l => l.country_id)
-                          .OnDelete(DeleteBehavior.Cascade);
+                  .HasOne(l => l.country)
+                  .WithMany(c => c.locations)
+                  .HasForeignKey(l => l.country_id)
+                  .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Location>()
                   .HasMany(x => x.roles)
                   .WithOne(x => x.location)
-                  .HasForeignKey(x => x.location_guid)
-                  .HasPrincipalKey(x => x.guid)
-                  .OnDelete(DeleteBehavior.Cascade);
-
-            modelBuilder.Entity<Location>()
-                  .HasMany(x => x.users)
-                  .WithOne(x => x.location)
-                  .HasForeignKey(x => x.location_guid)
-                  .HasPrincipalKey(x => x.guid)
+                  .HasForeignKey(x => x.location_id)
                   .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Location>()
                   .HasMany(x => x.devices)
                   .WithOne(x => x.location)
-                  .HasForeignKey(x => x.location_guid)
-                  .HasPrincipalKey(x => x.guid)
+                  .HasForeignKey(x => x.location_id)
                   .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Location>()
                   .HasMany(x => x.modules)
                   .WithOne(x => x.location)
-                  .HasForeignKey(x => x.location_guid)
-                  .HasPrincipalKey(x => x.guid)
+                  .HasForeignKey(x => x.location_id)
                   .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Location>()
                   .HasMany(x => x.component_mapping)
                   .WithOne(x => x.location)
-                  .HasForeignKey(x => x.location_guid)
-                  .HasPrincipalKey(x => x.guid)
+                  .HasForeignKey(x => x.location_id)
                   .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<OperatorLocation>()
-                  .HasOne(x => x.@operator)
-                  .WithMany(x => x.operator_locations)
-                  .HasForeignKey(x => x.operator_guid)
-                  .HasPrincipalKey(x => x.guid)
+            modelBuilder.Entity<UserLocation>()
+                  .HasOne(x => x.user)
+                  .WithMany(x => x.user_locations)
+                  .HasForeignKey(x => x.user_id)
                   .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<OperatorLocation>()
+            modelBuilder.Entity<UserLocation>()
                         .HasOne(x => x.location)
-                        .WithMany(x => x.operator_locations)
-                        .HasForeignKey(x => x.location_guid)
-                        .HasPrincipalKey(x => x.guid)
+                        .WithMany(x => x.user_locations)
+                        .HasForeignKey(x => x.location_id)
                         .OnDelete(DeleteBehavior.Cascade);
 
             // Device 
@@ -155,7 +260,7 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
             modelBuilder.Entity<Device>()
                   .HasMany(x => x.modules)
                   .WithOne(x => x.device)
-                  .HasForeignKey(x => x.device_guid)
+                  .HasForeignKey(x => x.device_id)
                   .HasPrincipalKey(x => x.guid)
                   .OnDelete(DeleteBehavior.Cascade);
 
@@ -208,7 +313,7 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
             modelBuilder.Entity<Role>()
                   .HasMany(x => x.operators)
                   .WithOne(x => x.role)
-                  .HasForeignKey(x => x.role_guid)
+                  .HasForeignKey(x => x.role_id)
                   .HasPrincipalKey(x => x.guid)
                   .OnDelete(DeleteBehavior.SetNull);
 
@@ -231,21 +336,21 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
             modelBuilder.Entity<Company>()
                   .HasMany(x => x.users)
                   .WithOne(x => x.company)
-                  .HasForeignKey(x => x.company_guid)
+                  .HasForeignKey(x => x.company_id)
                   .HasPrincipalKey(x => x.guid)
                   .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Department>()
                   .HasMany(x => x.users)
                   .WithOne(x => x.department)
-                  .HasForeignKey(x => x.department_guid)
+                  .HasForeignKey(x => x.department_id)
                   .HasPrincipalKey(x => x.guid)
                   .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Position>()
                   .HasMany(x => x.users)
                   .WithOne(x => x.position)
-                  .HasForeignKey(x => x.position_guid)
+                  .HasForeignKey(x => x.position_id)
                   .HasPrincipalKey(x => x.guid)
                   .OnDelete(DeleteBehavior.Cascade);
 
@@ -478,7 +583,7 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
             );
 
             modelBuilder.Entity<Role>().HasData(
-                  new Role { id = 1, guid = new Guid("fe527691-7b13-4294-98b5-cb95181f5453"), name = "Administrator", location_guid = new Guid("3a9c9947-d5ca-4bb2-b525-0499a340f1d6"), is_default = true, is_active = true }
+                  new Role { id = 1, guid = new Guid("fe527691-7b13-4294-98b5-cb95181f5453"), name = "Administrator", location_id = 1, is_default = true, is_active = true }
             );
 
             modelBuilder.Entity<Permission>().HasData(
@@ -674,35 +779,39 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   }
             );
 
-            modelBuilder.Entity<Operator>().HasData(
-                  new Operator
+             modelBuilder.Entity<User>().HasData(
+                  new User
                   {
                         id = 1,
                         guid = new Guid("ed2b5887-9dcb-43bd-a6f8-988330df5181"),
                         username = "admin",
                         password = "100000.lG1/4V/VRPZsbhf/Zqc4xw==.6vYcf+wEMSgqcaNhoZEdM9PaPxx2ZUErZhQbeMxo5OY=",
+                        user_code = "admin01",
+                        title=Title.Mr,
+                        firstname="admin",
+                        lastname="system",
+                        gender = Gender.M,
+                        date_of_birth = new DateTime(1970, 01, 01, 0, 0, 0, DateTimeKind.Utc),
                         email = "support@sentrix.com",
-                        phone = "",
-                        role_guid = new Guid("fe527691-7b13-4294-98b5-cb95181f5453"),
+                        is_operator = true,
+                        role_id = 1,
                         active_time = new DateTime(1970, 01, 01, 0, 0, 0, DateTimeKind.Utc),
                         expire_time = new DateTime(9999, 01, 01, 0, 0, 0, DateTimeKind.Utc),
                         is_default = true,
-                        is_active = true
+                        is_active = true,
 
                   }
             );
 
-            modelBuilder.Entity<OperatorLocation>()
+            modelBuilder.Entity<UserLocation>()
                   .HasData(
-                        new OperatorLocation
+                        new UserLocation
                         {
-                              id = 1,
-                              guid = new Guid("88f16b53-b5b1-4c21-9324-968d58584b06"),
-                              location_guid = new Guid("3a9c9947-d5ca-4bb2-b525-0499a340f1d6"),
-                              operator_guid = new Guid("ed2b5887-9dcb-43bd-a6f8-988330df5181"),
-
+                              user_id = 1,
+                              location_id = 1
                         }
                   );
+      
 
       }
 }

@@ -70,8 +70,8 @@ public sealed class OperatorService(
       d.Phone,
       d.JoinedDate,
       d.ExpiredDate,
-      d.RoleGuid,
-      d.LocationGuids,
+      d.RoleId,
+      d.LocationIds,
       true,
       false
     );
@@ -169,8 +169,8 @@ public sealed class OperatorService(
       d.Phone,
       d.JoinedDate,
       d.ExpiredDate,
-      d.RoleGuid,
-      d.LocationGuids,
+      d.RoleId,
+      d.LocationIds,
       true,
       false
     );

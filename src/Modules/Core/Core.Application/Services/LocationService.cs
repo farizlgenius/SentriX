@@ -29,7 +29,7 @@ public sealed class LocationService(
     // Location
     var operGuid = await oper.GetDefaultLocationGuidAsync();
 
-    await repo.AddDefaultOperatorAsync(operGuid, d.Guid);
+    await repo.AddDefaultUserAsync(operGuid, d.Guid);
 
     return new LocationDto(
       d.Guid,

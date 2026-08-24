@@ -14,10 +14,10 @@ public sealed class Module : BaseEntity
 
   // Relation
 
-  public Guid device_guid { get; set; } = default!;
+  public int device_id { get; set; } = default!;
   public Device device { get; set; } = default!;
 
-  public Guid location_guid { get; set; } = default!;
+  public int location_id { get; set; } = default!;
   public Location location { get; set; } = default!;
 
   public Module() { }
@@ -28,7 +28,7 @@ public sealed class Module : BaseEntity
     firmware = d.Firmware;
     mac = d.Mac;
     model = d.Model;
-    device_guid = d.DeviceGuid;
-    location_guid = d.LocationGuid;
+    device_id = d.DeviceId;
+    location_id = d.LocationId;
   }
 }

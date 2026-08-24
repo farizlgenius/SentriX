@@ -14,12 +14,6 @@ public sealed class DepartmentService(
 {
       public async Task<DepartmentDto> CreateAsync(CreateDepartmentDto dto, CancellationToken ct = default)
       {
-            var d = new Core.Domain.Entities.Department(
-                  dto.Name,
-                  dto.Description,
-                  dto.CompanyGuid
-            );
-
             // Check Company Exists
             if(!await com.IsAnyGuidAsync(dto.CompanyGuid))
                   throw new NotFoundException(EntityType.Company,dto.CompanyGuid.ToString());
@@ -28,13 +22,23 @@ public sealed class DepartmentService(
             if (await dep.IsAnyNameByCompanyGuidAsync(dto.Name,dto.CompanyGuid))
                   throw new DuplicateException(EntityType.Department, dto.Name);
 
+            var companyId = await com.GetIdByGuidAsync(dto.CompanyGuid,ct);
+
+
+            var d = new Core.Domain.Entities.Department(
+                  dto.Name,
+                  dto.Description,
+                  companyId
+            );
+
+            
             await dep.AddAsync(d, ct);
 
             return new DepartmentDto(
               d.Guid,
               d.Name,
               d.Description,
-              d.CompanyGuid,
+              dto.CompanyGuid,
               true,
               false
             );
@@ -131,11 +135,13 @@ public sealed class DepartmentService(
             if(!await com.IsAnyGuidAsync(dto.CompanyGuid))
                   throw new NotFoundException(EntityType.Company,dto.CompanyGuid.ToString());
 
+            var companyId = await com.GetIdByGuidAsync(dto.CompanyGuid,ct);
+
             var d = new Core.Domain.Entities.Department(
               dto.Guid,
               dto.Name,
               dto.Description,
-              dto.CompanyGuid
+              companyId
             );
 
             await dep.UpdateAsync(d);

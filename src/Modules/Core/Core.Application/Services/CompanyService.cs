@@ -7,20 +7,30 @@ using SharedKernel.Exceptions;
 
 namespace Core.Application.Services;
 
-public sealed class CompanyService(ICompanyRepository repo) : ICompany
+public sealed class CompanyService(
+  ICompanyRepository repo,
+  ILocationRepository loc
+  ) : ICompany
 {
   public async Task<CompanyDto> CreateAsync(CreateCompanyDto dto, CancellationToken ct = default)
   {
+    if(!await loc.IsAnyGuidAsync(dto.LocationGuid))
+      throw new NotFoundException("Location",dto.LocationGuid.ToString());
+
+    var locationId = await loc.GetIdByGuidAsync(dto.LocationGuid,ct);
+
     var d = new Core.Domain.Entities.Company(
       dto.Name,
       dto.Description,
       dto.Address,
-      dto.LocationGuid
+      locationId
     );
 
     // Check name is duplicate 
     if (await repo.IsAnyByNameAndLocationGuidAsync(dto.Name))
       throw new DuplicateException(EntityType.Company, dto.Name);
+
+    
 
     await repo.AddAsync(d, ct);
 
@@ -29,7 +39,7 @@ public sealed class CompanyService(ICompanyRepository repo) : ICompany
       d.Name,
       d.Address,
       d.Description,
-      d.LocationGuid,
+      dto.LocationGuid,
       true,
       false
     );
@@ -119,12 +129,14 @@ public sealed class CompanyService(ICompanyRepository repo) : ICompany
     if (!await repo.IsAnyGuidAsync(dto.Guid, ct))
       throw new NotFoundException(EntityType.Company, dto.Guid.ToString());
 
+    var locationId = await loc.GetIdByGuidAsync(dto.LocationGuid,ct);
+
     var d = new Core.Domain.Entities.Company(
       dto.Guid,
       dto.Name,
       dto.Description,
       dto.Address,
-      dto.LocationGuid
+      locationId
     );
 
     await repo.UpdateAsync(d);

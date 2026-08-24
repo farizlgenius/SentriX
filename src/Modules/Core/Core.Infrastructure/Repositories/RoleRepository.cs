@@ -89,7 +89,7 @@ public sealed class RoleRepository(CoreDbContext context) : IRoleRepository
                         p.is_updated,
                         p.is_deleted
                     )).ToList(),
-                    x.location_guid,
+                    x.location_id,
                     x.is_active,
                     x.is_default
                   )).FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.Role, guid.ToString());
@@ -98,7 +98,7 @@ public sealed class RoleRepository(CoreDbContext context) : IRoleRepository
       public async Task<Pagination<RoleDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
       {
             var query = context.Roles
-                  .Where(x => x.location_guid == param.locationGuid || x.is_default)
+                  .Where(x => x.location_id == param.locationGuid || x.is_default)
                   .AsNoTracking()
                   .AsQueryable();
 
@@ -198,7 +198,7 @@ public sealed class RoleRepository(CoreDbContext context) : IRoleRepository
       {
             return await context.Roles
                   .AsNoTracking()
-                  .AnyAsync(x => x.name.Equals(Name) && x.location_guid == locationGuid);
+                  .AnyAsync(x => x.name.Equals(Name) && x.location_id == locationGuid);
       }
 
       public async Task<bool> IsAnyOperatorAsync(Guid guid, CancellationToken ct = default)

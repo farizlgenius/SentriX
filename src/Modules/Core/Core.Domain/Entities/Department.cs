@@ -6,28 +6,28 @@ public sealed class Department : BaseDomain
 {
       public string Name { get; private set; } = string.Empty;
       public string Description { get; private set; } = string.Empty;
-      public Guid CompanyGuid { get; private set; } = default!;
+      public int CompanyId { get; private set; } = default!;
       public Department(
             string Name,
             string Description,
-            Guid CompanyGuid
+            int CompanyId
       )
       {
             ValidationHelper.Name(Name);
             this.Name = Name;
             this.Description = Description;
-            this.CompanyGuid = CompanyGuid;
+            this.CompanyId = CompanyId;
       }
       public Department(
             Guid Guid,
             string Name,
             string Description,
-            Guid CompanyGuid
+            int CompanyId
             ) : base(Guid)
       {
             ValidationHelper.Name(Name);
             this.Name = Name;
             this.Description = Description;
-            this.CompanyGuid = CompanyGuid;
+            this.CompanyId = CompanyId;
       }
 }

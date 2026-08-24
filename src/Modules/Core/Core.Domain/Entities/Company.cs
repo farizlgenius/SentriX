@@ -7,20 +7,19 @@ public sealed class Company : BaseDomain
       public string Name { get; private set; } = string.Empty;
       public string Description { get; private set; } = string.Empty;
       public string Address { get; private set; } = string.Empty;
-      public Guid LocationGuid { get; private set; } = default!;
-
+      public int LocationId { get; private set; } 
       public Company(
             string name,
             string description,
             string address,
-            Guid locationGuid
+            int locationId
       )
       {
             ValidationHelper.Name(name);
             Name = name;
             Description = description;
             Address = address;
-            LocationGuid = locationGuid;
+            LocationId = locationId;
       }
 
       public Company(
@@ -28,7 +27,7 @@ public sealed class Company : BaseDomain
            string name,
            string description,
            string address,
-           Guid locationGuid
+           int locationId
      ) : base(guid)
       {
             ValidationHelper.Name(name);
@@ -36,6 +35,6 @@ public sealed class Company : BaseDomain
             Name = name;
             Description = description;
             Address = address;
-            LocationGuid = locationGuid;
+            LocationId = locationId;
       }
 }

@@ -21,15 +21,9 @@ public sealed class LocationRepository(CoreDbContext context) : ILocationReposit
             await context.SaveChangesAsync(ct);
       }
 
-      public async Task AddDefaultOperatorAsync(Guid operatorGuid, Guid locationGuid, CancellationToken ct = default)
+      public async Task AddDefaultUserAsync(int userId, int locationId, CancellationToken ct = default)
       {
-
-            await context.OperatorLocations
-                  .AddAsync(
-                        new OperatorLocation(operatorGuid, locationGuid), ct
-                  );
-
-            await context.SaveChangesAsync(ct);
+            throw new NotImplementedException();
       }
 
       public async Task DeleteAsync(Guid guid, CancellationToken ct = default)
@@ -109,6 +103,19 @@ public sealed class LocationRepository(CoreDbContext context) : ILocationReposit
                         x.code
                   ))
                   .ToArrayAsync();
+      }
+
+      public async Task<int> GetIdByGuidAsync(Guid guid, CancellationToken ct = default)
+      {
+            var res = await context.Locations.AsNoTracking()
+                  .Where(x => x.guid == guid)
+                  .Select(x => x.id)
+                  .FirstOrDefaultAsync();
+
+            if(res == 0)
+                  throw new NotFoundException(EntityType.Location,guid.ToString());
+
+            return res;
       }
 
       public async Task<Pagination<LocationDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)

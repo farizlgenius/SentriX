@@ -12,7 +12,7 @@ public sealed class Device : BaseDomain
   public string Firmware { get; set; } = string.Empty;
   public string Metadata { get; private set; } = string.Empty;
   public string Vendor { get; private set; } = string.Empty;
-  public Guid LocationGuid { get; private set; }
+  public int LocationId { get; private set; }
 
   public Device(
    string Name,
@@ -23,11 +23,11 @@ public sealed class Device : BaseDomain
    string Fw,
    string Vendor,
    string Metadata,
-   Guid LocationGuid
+   int LocationId
    )
   {
     ValidationHelper.Name(Name);
-    ValidationHelper.GuidEmpty(LocationGuid, nameof(LocationGuid));
+    ValidationHelper.NotMinus(LocationId, nameof(LocationId));
     ValidationHelper.IsNullOrEmpty(SerialNumber, nameof(SerialNumber));
     ValidationHelper.IsNullOrEmpty(Mac, nameof(Mac));
     ValidationHelper.IsNullOrEmpty(Ip, nameof(Ip));
@@ -40,7 +40,7 @@ public sealed class Device : BaseDomain
     this.Firmware = Fw;
     this.Metadata = Metadata;
     this.Vendor = Vendor;
-    this.LocationGuid = LocationGuid;
+    this.LocationId = LocationId;
   }
 
   public Device(
@@ -53,11 +53,11 @@ public sealed class Device : BaseDomain
     string Fw,
     string Vendor,
     string Metadata,
-    Guid LocationGuid
+    int LocationId
     ) : base(Guid)
   {
     ValidationHelper.Name(Name);
-    ValidationHelper.GuidEmpty(LocationGuid, nameof(LocationGuid));
+    ValidationHelper.NotMinus(LocationId, nameof(LocationId));
     ValidationHelper.IsNullOrEmpty(SerialNumber, nameof(SerialNumber));
     ValidationHelper.IsNullOrEmpty(Mac, nameof(Mac));
     ValidationHelper.IsNullOrEmpty(Ip, nameof(Ip));
@@ -70,7 +70,7 @@ public sealed class Device : BaseDomain
     this.Firmware = Fw;
     this.Vendor = Vendor;
     this.Metadata = Metadata;
-    this.LocationGuid = LocationGuid;
+    this.LocationId = LocationId;
   }
 
 

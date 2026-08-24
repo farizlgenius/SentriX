@@ -1,3 +1,4 @@
+using SharedKernel.Enums;
 using SharedKernel.Helpers;
 
 namespace Core.Domain.Entities;
@@ -8,19 +9,19 @@ public sealed class User : BaseDomain
       public string Username { get; private set; } = string.Empty;
       // public string Password {get; private set;} = string.Empty;
       public string Identification { get; private set; } = string.Empty;
-      public string Title { get; private set; } = string.Empty;
+      public Title Title { get; private set; } = Title.Mr;
       public string FirstName { get; private set; } = string.Empty;
       public string MiddleName { get; private set; } = string.Empty;
       public string LastName { get; private set; } = string.Empty;
-      public string Gender { get; private set; } = string.Empty;
+      public Gender Gender { get; private set; } = Gender.M;
       public DateTime DateOfBirth { get; private set; }
       public string Email { get; private set; } = string.Empty;
       public string Phone { get; private set; } = string.Empty;
       public bool IsOperator { get; private set; } = false;
-      public Guid? RoleGuid { get; private set; }
-      public Guid? CompanyGuid { get; private set; }
-      public Guid? DepartmentGuid { get; private set; }
-      public Guid? PositionGuid { get; private set; }
+      public int? RoleGuid { get; private set; }
+      public int? CompanyId { get; private set; }
+      public int? DepartmentId { get; private set; }
+      public int? PositionId { get; private set; }
       public string Address { get; private set; } = string.Empty;
       public DateTime ActiveTime { get; set; }
       public DateTime ExpireTime { get; set; }
@@ -31,24 +32,24 @@ public sealed class User : BaseDomain
       public List<Pin> Pins { get; private set; } = default!;
       public List<QrCode> QrCodes { get; private set; } = default!;
       public Face? Face { get; private set; }
-      public Guid LocationGuid { get; private set; } = default!;
+      public List<int> LocationIds { get; private set; } = default!;
 
       public User(
     string Username,
     string Identification,
-    string Title,
+    Title Title,
     string Firstname,
     string Middlename,
     string Lastname,
-    string Gender,
+    Gender Gender,
     DateTime DateOfBirth,
     string Email,
     string Phone,
     bool IsOperator,
-    Guid RoleGuid,
-    Guid CompanyGuid,
-    Guid DepartmentGuid,
-    Guid PositionGuid,
+    int RoleId,
+    int CompanyId,
+    int DepartmentId,
+    int PositionId,
     string Address,
     DateTime ActiveTime,
     DateTime ExpireTime,
@@ -59,7 +60,7 @@ public sealed class User : BaseDomain
     List<Pin> Pins,
     List<QrCode> QrCodes,
     Face Face,
-    Guid LocationGuid
+    List<int> LocationIds
 )
       {
             ValidationHelper.Name(Firstname);
@@ -76,10 +77,10 @@ public sealed class User : BaseDomain
             this.Email = Email;
             this.Phone = Phone;
             this.IsOperator = IsOperator;
-            this.RoleGuid = RoleGuid;
-            this.CompanyGuid = CompanyGuid;
-            this.DepartmentGuid = DepartmentGuid;
-            this.PositionGuid = PositionGuid;
+            this.RoleGuid = RoleId;
+            this.CompanyId = CompanyId;
+            this.DepartmentId = DepartmentId;
+            this.PositionId = PositionId;
             this.Address = Address;
             this.ActiveTime = ActiveTime;
             this.ExpireTime = ExpireTime;
@@ -90,26 +91,26 @@ public sealed class User : BaseDomain
             this.Pins = Pins;
             this.QrCodes = QrCodes;
             this.Face = Face;
-            this.LocationGuid = LocationGuid;
+            this.LocationIds = LocationIds;
       }
 
       public User(
      Guid Guid,
      string Username,
      string Identification,
-     string Title,
+     Title Title,
      string Firstname,
      string Middlename,
      string Lastname,
-     string Gender,
+     Gender Gender,
      DateTime DateOfBirth,
      string Email,
      string Phone,
      bool IsOperator,
-     Guid RoleGuid,
-     Guid CompanyGuid,
-     Guid DepartmentGuid,
-     Guid PositionGuid,
+     int RoleId,
+     int CompanyId,
+     int DepartmentId,
+     int PositionId,
      string Address,
      DateTime ActiveTime,
      DateTime ExpireTime,
@@ -120,7 +121,7 @@ public sealed class User : BaseDomain
      List<Pin> Pins,
      List<QrCode> QrCodes,
      Face Face,
-     Guid LocationGuid
+     List<int> LocationIds
  ) : base(Guid)
       {
             this.Username = Username;
@@ -134,10 +135,10 @@ public sealed class User : BaseDomain
             this.Email = Email;
             this.Phone = Phone;
             this.IsOperator = IsOperator;
-            this.RoleGuid = RoleGuid;
-            this.CompanyGuid = CompanyGuid;
-            this.DepartmentGuid = DepartmentGuid;
-            this.PositionGuid = PositionGuid;
+            this.RoleGuid = RoleId;
+            this.CompanyId = CompanyId;
+            this.DepartmentId = DepartmentId;
+            this.PositionId = PositionId;
             this.Address = Address;
             this.ActiveTime = ActiveTime;
             this.ExpireTime = ExpireTime;
@@ -148,7 +149,7 @@ public sealed class User : BaseDomain
             this.Pins = Pins;
             this.QrCodes = QrCodes;
             this.Face = Face;
-            this.LocationGuid = LocationGuid;
+            this.LocationIds = LocationIds;
       }
 
 

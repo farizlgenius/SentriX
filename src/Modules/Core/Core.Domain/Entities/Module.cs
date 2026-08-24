@@ -14,8 +14,8 @@ public class Module : BaseDomain
   public int Port { get; private set; }
   public int Address { get; private set; }
   public string Model { get; private set; } = string.Empty;
-  public Guid LocationGuid { get; private set; } = default!;
-  public Guid DeviceGuid { get; private set; } = default!;
+  public int LocationId { get; private set; } = default!;
+  public int DeviceId { get; private set; } = default!;
 
   public Module(
     string Name,
@@ -25,12 +25,13 @@ public class Module : BaseDomain
     int Port,
     int Address,
     string Model,
-    Guid LocationGuid
+    int LocationId,
+    int DeviceId
     )
   {
     // Validate required fields
     ValidationHelper.Name(Name);
-    ValidationHelper.GuidEmpty(LocationGuid, nameof(LocationGuid));
+    ValidationHelper.NotMinus(LocationId, nameof(LocationId));
     ValidationHelper.IsNullOrEmpty(SerialNumber, nameof(SerialNumber));
     ValidationHelper.IsNullOrEmpty(Mac, nameof(Mac));
     this.Name = Name;
@@ -40,8 +41,8 @@ public class Module : BaseDomain
     this.Port = Port;
     this.Address = Address;
     this.Model = Model;
-    this.LocationGuid = LocationGuid;
-    this.DeviceGuid = DeviceGuid;
+    this.LocationId = LocationId;
+    this.DeviceId = DeviceId;
   }
   public Module(
     Guid Guid,
@@ -52,12 +53,13 @@ public class Module : BaseDomain
     int Port,
     int Address,
     string Model,
-    Guid LocationGuid
+    int LocationId,
+    int DeviceId
     ) : base(Guid)
   {
     // Validate required fields
     ValidationHelper.Name(Name);
-    ValidationHelper.GuidEmpty(LocationGuid, nameof(LocationGuid));
+    ValidationHelper.NotMinus(LocationId, nameof(LocationId));
     ValidationHelper.IsNullOrEmpty(SerialNumber, nameof(SerialNumber));
     ValidationHelper.IsNullOrEmpty(Mac, nameof(Mac));
 
@@ -68,7 +70,7 @@ public class Module : BaseDomain
     this.Port = Port;
     this.Address = Address;
     this.Model = Model;
-    this.LocationGuid = LocationGuid;
-    this.DeviceGuid = DeviceGuid;
+    this.LocationId = LocationId;
+    this.DeviceId = DeviceId;
   }
 }

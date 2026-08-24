@@ -10,8 +10,8 @@ public sealed class Operator : BaseDomain
   public string Phone { get; set; } = string.Empty;
   public DateTime JoinedDate { get; set; } = DateTime.UtcNow;
   public DateTime ExpiredDate { get; set; } = DateTime.UtcNow.AddYears(1);
-  public Guid RoleGuid { get; set; }
-  public List<Guid> LocationGuids { get; set; } = default!;
+  public int RoleId { get; set; }
+  public List<int> LocationIds { get; set; } = default!;
 
   public Operator(
     string userName,
@@ -20,8 +20,8 @@ public sealed class Operator : BaseDomain
     string phone,
     DateTime join,
     DateTime expire,
-    Guid roleGuid,
-    List<Guid> locationGuids
+    int roleGuid,
+    List<int> locationGuids
   )
   {
     ValidationHelper.CharAndDigit(userName, nameof(Username));
@@ -33,8 +33,8 @@ public sealed class Operator : BaseDomain
     Phone = phone;
     JoinedDate = join;
     ExpiredDate = expire;
-    RoleGuid = roleGuid;
-    LocationGuids = locationGuids;
+    RoleId = roleGuid;
+    LocationIds = locationGuids;
   }
 
   public Operator(
@@ -45,8 +45,8 @@ public sealed class Operator : BaseDomain
     string phone,
     DateTime join,
     DateTime expire,
-    Guid roleGuid,
-    List<Guid> locationGuids
+    int roleId,
+    List<int> locationIds
   ) : base(Guid)
   {
     ValidationHelper.CharAndDigit(userName, nameof(Username));
@@ -58,8 +58,8 @@ public sealed class Operator : BaseDomain
     Phone = phone;
     JoinedDate = join;
     ExpiredDate = expire;
-    RoleGuid = roleGuid;
-    LocationGuids = locationGuids;
+    RoleId = roleId;
+    LocationIds = locationIds;
   }
 
   public Operator(
@@ -69,8 +69,8 @@ public sealed class Operator : BaseDomain
     string phone,
     DateTime join,
     DateTime expire,
-    Guid roleGuid,
-    List<Guid> locationGuids
+    int roleId,
+    List<int> locationIds
   ) : base(Guid)
   {
     ValidationHelper.CharAndDigit(userName, nameof(Username));
@@ -82,7 +82,7 @@ public sealed class Operator : BaseDomain
     Phone = phone;
     JoinedDate = join;
     ExpiredDate = expire;
-    RoleGuid = roleGuid;
-    LocationGuids = locationGuids;
+    RoleId = roleId;
+    LocationIds = locationIds;
   }
 }

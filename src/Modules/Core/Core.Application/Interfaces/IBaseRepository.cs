@@ -8,6 +8,7 @@ namespace Core.Application.Interfaces;
 
 public interface IBaseRepository<TDto, TDomain> where TDto : class where TDomain : class
 {
+  Task<int> GetIdByGuidAsync(Guid guid,CancellationToken ct = default);
   Task<TDto> GetAsync(Guid guid, CancellationToken ct = default);
   Task AddAsync(TDomain entity, CancellationToken ct = default);
   Task UpdateAsync(TDomain entity, CancellationToken ct = default);

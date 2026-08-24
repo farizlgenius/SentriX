@@ -43,7 +43,7 @@ public sealed class RoleService(IRoleRepository repo) : IRole
                         x.IsUpdated,
                         x.IsDeleted
                   )).ToList(),
-                  d.LocationGuid,
+                  d.LocationId,
                   true,
                   false
             );
@@ -156,7 +156,7 @@ public sealed class RoleService(IRoleRepository repo) : IRole
                         x.IsUpdated,
                         x.IsDeleted
                   )).ToList(),
-              d.LocationGuid,
+              d.LocationId,
               true,
               false
             );
