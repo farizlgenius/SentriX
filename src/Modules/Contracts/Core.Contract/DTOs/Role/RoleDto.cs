@@ -4,7 +4,7 @@ public sealed record RoleDto(
       Guid Guid,
       string Name,
       List<PermissionDto> Permissions,
-      Guid LocationGuid,
+      List<string> Locations,
       bool IsActive,
       bool IsDefault
 );

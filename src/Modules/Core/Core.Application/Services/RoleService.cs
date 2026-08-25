@@ -8,21 +8,20 @@ using SharedKernel.Exceptions;
 
 namespace Core.Application.Services;
 
-public sealed class RoleService(IRoleRepository repo) : IRole
+public sealed class RoleService(
+      IRoleRepository repo,
+      ILocationRepository loc
+      ) : IRole
 {
       public async Task<RoleDto> CreateAsync(CreateRoleDto dto, CancellationToken ct = default)
       {
+
             var d = new Core.Domain.Entities.Role(
                   dto.Name,
-                  dto.Permissions.Select(x => new Permission(
-                        x.RoleGuid,
-                        x.FeatureGuid,
-                        x.IsEnabled,
-                        x.IsCreated,
-                        x.IsUpdated,
-                        x.IsDeleted
+                  dto.Modules.Select(x => new Module(
+                        x.Name
                   )).ToList(),
-                  dto.LocationGuid
+                  dto.LocationGuids
             );
 
             // Check name is duplicate 
