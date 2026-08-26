@@ -80,7 +80,7 @@ public sealed class RoleRepository(CoreDbContext context) : IRoleRepository
                   .Select(x => new RoleDto(
                     x.guid,
                     x.name,
-                    x.modules.Select(p => new PermissionDto(
+                    x.module_permission.Select(p => new PermissionDto(
                         p.guid,
                         p.feature_guid,
                         p.role_guid,
@@ -93,6 +93,11 @@ public sealed class RoleRepository(CoreDbContext context) : IRoleRepository
                     x.is_active,
                     x.is_default
                   )).FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.Role, guid.ToString());
+      }
+
+      public Task<int> GetIdByGuidAsync(Guid guid, CancellationToken ct = default)
+      {
+            throw new NotImplementedException();
       }
 
       public async Task<Pagination<RoleDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
@@ -185,6 +190,11 @@ public sealed class RoleRepository(CoreDbContext context) : IRoleRepository
             return await context.Roles
                   .AsNoTracking()
                   .AnyAsync(x => x.name.Equals(name));
+      }
+
+      public Task<bool> IsAnyByNameAndLocationIdAsync(string name, int locationId = 0, CancellationToken ct = default)
+      {
+            throw new NotImplementedException();
       }
 
       public async Task<bool> IsAnyGuidAsync(Guid guid, CancellationToken ct = default)

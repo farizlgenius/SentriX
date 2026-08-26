@@ -225,12 +225,6 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Location>()
-                  .HasMany(x => x.roles)
-                  .WithOne(x => x.location)
-                  .HasForeignKey(x => x.location_id)
-                  .OnDelete(DeleteBehavior.Cascade);
-
-            modelBuilder.Entity<Location>()
                   .HasMany(x => x.devices)
                   .WithOne(x => x.location)
                   .HasForeignKey(x => x.location_id)
@@ -619,7 +613,7 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
             );
 
             modelBuilder.Entity<Role>().HasData(
-                  new Role { id = 1, guid = new Guid("fe527691-7b13-4294-98b5-cb95181f5453"), name = "Administrator", location_id = 1, is_default = true, is_active = true }
+                  new Role { id = 1, guid = new Guid("fe527691-7b13-4294-98b5-cb95181f5453"), name = "Administrator", is_default = true, is_active = true }
             );
 
             modelBuilder.Entity<ModulePermission>()

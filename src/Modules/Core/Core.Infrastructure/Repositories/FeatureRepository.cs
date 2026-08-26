@@ -11,9 +11,21 @@ public sealed class FeatureRepository(CoreDbContext context) : IFeatureRepositor
       {
             return await context.Features
             .AsNoTracking()
+            .OrderByDescending(x => x.id)
             .Select(x => new FeatureDto(
                   x.guid,
-                  x.name
+                  x.name,
+                  x.module.name
             )).ToArrayAsync(ct);
+      }
+
+      public async Task<int> GetIdByGuidAsync(Guid guid, CancellationToken ct = default)
+      {
+            return await context.Features
+                  .AsNoTracking()
+                  .Where(x => x.guid == guid)
+                  .OrderByDescending(x => x.id)
+                  .Select(x => x.id)
+                  .FirstOrDefaultAsync();
       }
 }

@@ -10,22 +10,27 @@ namespace Core.Application.Services;
 
 public sealed class RoleService(
       IRoleRepository repo,
-      ILocationRepository loc
+      IFeatureRepository feature
       ) : IRole
 {
       public async Task<RoleDto> CreateAsync(CreateRoleDto dto, CancellationToken ct = default)
       {
-
             var d = new Core.Domain.Entities.Role(
                   dto.Name,
-                  dto.Modules.Select(x => new Module(
-                        x.Name
-                  )).ToList(),
-                  dto.LocationGuids
+                  dto.ModulePermissions.Select(x => new ModulePermission(
+                        x.IsEnabled,
+                        x.FeaturePermission.Select(async s => new FeaturePermission(
+                              await feature.GetIdByGuidAsync(s.Guid),
+                              s.IsEnabled,
+                              s.IsCreated,
+                              s.IsUpdated,
+                              s.IsDeleted
+                        )).ToList()
+                  )).ToList()
             );
 
             // Check name is duplicate 
-            if (await repo.IsAnyByNameAndLocationIdAsync(dto.Name, dto.LocationGuid))
+            if (await repo.IsAnyByNameAndLocationIdAsync(dto.Name))
                   throw new DuplicateException(EntityType.Role, dto.Name);
 
             await repo.AddAsync(d, ct);
