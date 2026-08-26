@@ -12,7 +12,7 @@ public sealed class CompanyService(
   ILocationRepository loc
   ) : ICompany
 {
-  public async Task<CompanyDto> CreateAsync(CreateCompanyDto dto, CancellationToken ct = default)
+  public async Task<Guid> CreateAsync(CreateCompanyDto dto, CancellationToken ct = default)
   {
     if (!await loc.IsAnyGuidAsync(dto.LocationGuid))
       throw new NotFoundException("Location", dto.LocationGuid.ToString());
@@ -34,20 +34,11 @@ public sealed class CompanyService(
 
     await repo.AddAsync(d, ct);
 
-    return new CompanyDto(
-      d.Guid,
-      d.Name,
-      d.Address,
-      d.Description,
-      dto.LocationGuid,
-      true,
-      false
-    );
-
+    return d.Guid;
 
   }
 
-  public async Task<Guid> DeleteByGuidAsync(Guid guid, CancellationToken ct = default)
+  public async Task<bool> DeleteByGuidAsync(Guid guid, CancellationToken ct = default)
   {
     // Check is any location with guid
     if (!await repo.IsAnyGuidAsync(guid, ct))
@@ -67,7 +58,7 @@ public sealed class CompanyService(
 
     await repo.DeleteAsync(guid, ct);
 
-    return guid;
+    return true;
   }
 
   public async Task<IEnumerable<Guid>> DeleteRangeAsync(IEnumerable<Guid> guids, CancellationToken ct = default)
@@ -123,7 +114,7 @@ public sealed class CompanyService(
     return await repo.GetPaginationAsync(param, ct);
   }
 
-  public async Task<CompanyDto> UpdateAsync(UpdateCompanyDto dto, CancellationToken ct = default)
+  public async Task<Guid> UpdateAsync(UpdateCompanyDto dto, CancellationToken ct = default)
   {
     // Check is any Company with guid
     if (!await repo.IsAnyGuidAsync(dto.Guid, ct))
@@ -141,14 +132,6 @@ public sealed class CompanyService(
 
     await repo.UpdateAsync(d);
 
-    return new CompanyDto(
-      dto.Guid,
-      dto.Name,
-      dto.Description,
-      dto.Address,
-      dto.LocationGuid,
-      true,
-      false
-    );
+    return d.Guid;
   }
 }

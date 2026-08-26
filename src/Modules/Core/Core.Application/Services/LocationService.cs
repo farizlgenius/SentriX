@@ -11,7 +11,7 @@ public sealed class LocationService(
   ILocationRepository repo
   ) : ILocation
 {
-  public async Task<LocationDto> CreateAsync(CreateLocationDto dto, CancellationToken ct = default)
+  public async Task<Guid> CreateAsync(CreateLocationDto dto, CancellationToken ct = default)
   {
     var d = new Core.Domain.Entities.Location(
       dto.Name,
@@ -25,17 +25,10 @@ public sealed class LocationService(
 
     await repo.AddAsync(d, ct);
 
-    return new LocationDto(
-      d.Guid,
-      d.Name,
-      d.Description,
-      d.CountryId,
-      true,
-      false
-    );
+    return d.Guid;
   }
 
-  public async Task<Guid> DeleteByGuidAsync(Guid guid, CancellationToken ct = default)
+  public async Task<bool> DeleteByGuidAsync(Guid guid, CancellationToken ct = default)
   {
     // Check is any location with guid
     if (!await repo.IsAnyGuidAsync(guid, ct))
@@ -49,7 +42,7 @@ public sealed class LocationService(
 
     await repo.DeleteAsync(guid, ct);
 
-    return guid;
+    return true;
   }
 
   public async Task<IEnumerable<Guid>> DeleteRangeAsync(IEnumerable<Guid> guids, CancellationToken ct = default)
@@ -105,7 +98,7 @@ public sealed class LocationService(
     return await repo.GetPaginationAsync(param, ct);
   }
 
-  public async Task<LocationDto> UpdateAsync(UpdateLocationDto dto, CancellationToken ct = default)
+  public async Task<Guid> UpdateAsync(UpdateLocationDto dto, CancellationToken ct = default)
   {
     // Check is any location with guid
     if (!await repo.IsAnyGuidAsync(dto.Guid, ct))
@@ -120,14 +113,7 @@ public sealed class LocationService(
 
     await repo.UpdateAsync(d);
 
-    return new LocationDto(
-      dto.Guid,
-      dto.Name,
-      dto.Description,
-      dto.CountryId,
-      true,
-      false
-    );
+    return d.Guid;
 
 
   }

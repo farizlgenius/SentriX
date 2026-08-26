@@ -6,4 +6,5 @@ public interface IFeatureRepository
 {
       Task<IEnumerable<FeatureDto>> GetAsync(CancellationToken ct = default);
       Task<int> GetIdByGuidAsync(Guid guid,CancellationToken ct = default);
+      Task<Dictionary<Guid,int>> GetMapIdGuidByGuidsAsync(IEnumerable<Guid> guids,CancellationToken ct = default);
 }

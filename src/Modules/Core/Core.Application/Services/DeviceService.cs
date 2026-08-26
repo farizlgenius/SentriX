@@ -15,7 +15,7 @@ public sealed class DeviceService(
   ILocationRepository loc
   ) : IDevice
 {
-  public async Task<DeviceDto> CreateAsync(CreateDeviceDto dto, CancellationToken ct = default)
+  public async Task<Guid> CreateAsync(CreateDeviceDto dto, CancellationToken ct = default)
   {
 
     if (!await loc.IsAnyGuidAsync(dto.LocationGuid))
@@ -58,25 +58,10 @@ public sealed class DeviceService(
     }
 
 
-    return new DeviceDto(
-      d.Guid,
-      d.Name,
-      d.SerialNumber,
-      d.Mac,
-      d.Ip,
-      d.Port,
-      d.Firmware,
-      d.Vendor,
-      d.Metadata,
-      DateTime.UtcNow,
-      DeviceStatus.PENDING,
-      dto.LocationGuid,
-      true,
-      false
-    );
+    return d.Guid;
   }
 
-  public async Task<Guid> DeleteByGuidAsync(Guid guid, CancellationToken ct = default)
+  public async Task<bool> DeleteByGuidAsync(Guid guid, CancellationToken ct = default)
   {
     throw new NotImplementedException();
   }
@@ -106,7 +91,7 @@ public sealed class DeviceService(
     throw new NotImplementedException();
   }
 
-  public async Task<DeviceDto> UpdateAsync(UpdateDeviceDto dto, CancellationToken ct = default)
+  public async Task<Guid> UpdateAsync(UpdateDeviceDto dto, CancellationToken ct = default)
   {
     throw new NotImplementedException();
   }

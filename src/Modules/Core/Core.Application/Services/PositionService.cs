@@ -12,7 +12,7 @@ public sealed class PositionService(
       IDepartmentRepository com
       ) : IPosition
 {
-      public async Task<PositionDto> CreateAsync(CreatePositionDto dto, CancellationToken ct = default)
+      public async Task<Guid> CreateAsync(CreatePositionDto dto, CancellationToken ct = default)
       {
             var d = new Core.Domain.Entities.Position(
                   dto.Name,
@@ -30,17 +30,10 @@ public sealed class PositionService(
 
             await dep.AddAsync(d, ct);
 
-            return new PositionDto(
-              d.Guid,
-              d.Name,
-              d.Description,
-              d.DepartmentGuid,
-              true,
-              false
-            );
+            return d.Guid;
       }
 
-      public async Task<Guid> DeleteByGuidAsync(Guid guid, CancellationToken ct = default)
+      public async Task<bool> DeleteByGuidAsync(Guid guid, CancellationToken ct = default)
       {
             // Check is any location with guid
             if (!await dep.IsAnyGuidAsync(guid, ct))
@@ -58,7 +51,7 @@ public sealed class PositionService(
 
             await dep.DeleteAsync(guid, ct);
 
-            return guid;
+            return true;
       }
 
       public async Task<IEnumerable<Guid>> DeleteRangeAsync(IEnumerable<Guid> guids, CancellationToken ct = default)
@@ -117,7 +110,7 @@ public sealed class PositionService(
             return await dep.GetPaginationByDepartmentGuidAsync(param, companyGuid);
       }
 
-      public async Task<PositionDto> UpdateAsync(UpdatePositionDto dto, CancellationToken ct = default)
+      public async Task<Guid> UpdateAsync(UpdatePositionDto dto, CancellationToken ct = default)
       {
             // Check is any location with guid
             if (!await dep.IsAnyGuidAsync(dto.Guid, ct))
@@ -136,13 +129,6 @@ public sealed class PositionService(
 
             await dep.UpdateAsync(d);
 
-            return new PositionDto(
-              dto.Guid,
-              dto.Name,
-              dto.Description,
-              dto.DepartmentGuid,
-              true,
-              false
-            );
+            return d.Guid;
       }
 }

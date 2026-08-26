@@ -1,9 +1,7 @@
 namespace Core.Contract.DTOs.Role;
 
-public sealed record PermissionDto(
+public sealed record CreateFeaturePermissionDto(
       Guid Guid,
-      Guid FeatureGuid,
-      Guid RoleGuid,
       bool IsEnabled,
       bool IsCreated,
       bool IsUpdated,

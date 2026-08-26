@@ -28,4 +28,13 @@ public sealed class FeatureRepository(CoreDbContext context) : IFeatureRepositor
                   .Select(x => x.id)
                   .FirstOrDefaultAsync();
       }
+
+      public async Task<Dictionary<Guid, int>> GetMapIdGuidByGuidsAsync(IEnumerable<Guid> guids, CancellationToken ct = default)
+      {
+            return await context.Features
+                  .AsNoTracking()
+                  .Where(x => guids.Contains(x.guid))
+                  .OrderByDescending(x => x.id)
+                  .ToDictionaryAsync(x => x.guid,x => x.id,ct);
+      }
 }

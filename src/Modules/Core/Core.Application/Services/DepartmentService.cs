@@ -12,7 +12,7 @@ public sealed class DepartmentService(
       ICompanyRepository com
       ) : IDepartment
 {
-      public async Task<DepartmentDto> CreateAsync(CreateDepartmentDto dto, CancellationToken ct = default)
+      public async Task<Guid> CreateAsync(CreateDepartmentDto dto, CancellationToken ct = default)
       {
             // Check Company Exists
             if(!await com.IsAnyGuidAsync(dto.CompanyGuid))
@@ -34,17 +34,10 @@ public sealed class DepartmentService(
             
             await dep.AddAsync(d, ct);
 
-            return new DepartmentDto(
-              d.Guid,
-              d.Name,
-              d.Description,
-              dto.CompanyGuid,
-              true,
-              false
-            );
+            return d.Guid;
       }
 
-      public async Task<Guid> DeleteByGuidAsync(Guid guid, CancellationToken ct = default)
+      public async Task<bool> DeleteByGuidAsync(Guid guid, CancellationToken ct = default)
       {
             // Check is any location with guid
             if (!await dep.IsAnyGuidAsync(guid, ct))
@@ -64,7 +57,7 @@ public sealed class DepartmentService(
 
             await dep.DeleteAsync(guid, ct);
 
-            return guid;
+            return true;
       }
 
       public async Task<IEnumerable<Guid>> DeleteRangeAsync(IEnumerable<Guid> guids, CancellationToken ct = default)
@@ -125,7 +118,7 @@ public sealed class DepartmentService(
             return await dep.GetPaginationByCompanyGuidAsync(param,companyGuid);
       }
 
-      public async Task<DepartmentDto> UpdateAsync(UpdateDepartmentDto dto, CancellationToken ct = default)
+      public async Task<Guid> UpdateAsync(UpdateDepartmentDto dto, CancellationToken ct = default)
       {
             // Check is any location with guid
             if (!await dep.IsAnyGuidAsync(dto.Guid, ct))
@@ -146,13 +139,6 @@ public sealed class DepartmentService(
 
             await dep.UpdateAsync(d);
 
-            return new DepartmentDto(
-              dto.Guid,
-              dto.Name,
-              dto.Description,
-              dto.CompanyGuid,
-              true,
-              false
-            );
+            return d.Guid;
       }
 }

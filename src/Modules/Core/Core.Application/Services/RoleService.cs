@@ -13,14 +13,25 @@ public sealed class RoleService(
       IFeatureRepository feature
       ) : IRole
 {
-      public async Task<RoleDto> CreateAsync(CreateRoleDto dto, CancellationToken ct = default)
+      public async Task<Guid> CreateAsync(CreateRoleDto dto, CancellationToken ct = default)
       {
+            // Check name is duplicate 
+            if (await repo.IsAnyByNameAndLocationIdAsync(dto.Name))
+                  throw new DuplicateException(EntityType.Role, dto.Name);
+                  
+            var allGuids = dto.ModulePermissions
+                  .SelectMany(x => x.FeaturePermission.Select(f => f.Guid))
+                  .Distinct()
+                  .ToList();
+
+            var featureMap = await feature.GetMapIdGuidByGuidsAsync(allGuids,ct);
+
             var d = new Core.Domain.Entities.Role(
                   dto.Name,
                   dto.ModulePermissions.Select(x => new ModulePermission(
                         x.IsEnabled,
-                        x.FeaturePermission.Select(async s => new FeaturePermission(
-                              await feature.GetIdByGuidAsync(s.Guid),
+                        x.FeaturePermission.Select(s => new FeaturePermission(
+                              featureMap[s.Guid],
                               s.IsEnabled,
                               s.IsCreated,
                               s.IsUpdated,
@@ -29,33 +40,13 @@ public sealed class RoleService(
                   )).ToList()
             );
 
-            // Check name is duplicate 
-            if (await repo.IsAnyByNameAndLocationIdAsync(dto.Name))
-                  throw new DuplicateException(EntityType.Role, dto.Name);
-
             await repo.AddAsync(d, ct);
 
-            return new RoleDto(
-                  d.Guid,
-                  d.Name,
-                  d.Modules.Select(x => new PermissionDto(
-                        x.Guid,
-                        x.FeatureGuid,
-                        x.RoleGuid,
-                        x.IsEnabled,
-                        x.IsCreated,
-                        x.IsUpdated,
-                        x.IsDeleted
-                  )).ToList(),
-                  d.LocationId,
-                  true,
-                  false
-            );
-
+            return d.Guid;
 
       }
 
-      public async Task<Guid> DeleteByGuidAsync(Guid guid, CancellationToken ct = default)
+      public async Task<bool> DeleteByGuidAsync(Guid guid, CancellationToken ct = default)
       {
             // Check is any location with guid
             if (!await repo.IsAnyGuidAsync(guid, ct))
@@ -73,7 +64,7 @@ public sealed class RoleService(
 
             await repo.DeleteAsync(guid, ct);
 
-            return guid;
+            return true;
       }
 
       public async Task<IEnumerable<Guid>> DeleteRangeAsync(IEnumerable<Guid> guids, CancellationToken ct = default)
@@ -126,7 +117,7 @@ public sealed class RoleService(
             return await repo.GetPaginationAsync(param, ct);
       }
 
-      public async Task<RoleDto> UpdateAsync(UpdateRoleDto dto, CancellationToken ct = default)
+      public async Task<Guid> UpdateAsync(UpdateRoleDto dto, CancellationToken ct = default)
       {
             // Check is any location with guid
             if (!await repo.IsAnyGuidAsync(dto.Guid, ct))
@@ -135,7 +126,7 @@ public sealed class RoleService(
             var d = new Core.Domain.Entities.Role(
                   dto.Guid,
                   dto.Name,
-                  dto.Permissions.Select(x => new Permission(
+                  dto.ModulePermissions.Select(x => new Permission(
                         x.RoleGuid,
                         x.FeatureGuid,
                         x.IsEnabled,
@@ -148,21 +139,6 @@ public sealed class RoleService(
 
             await repo.UpdateAsync(d);
 
-            return new RoleDto(
-              d.Guid,
-              d.Name,
-              d.Modules.Select(x => new PermissionDto(
-                        x.Guid,
-                        x.FeatureGuid,
-                        x.RoleGuid,
-                        x.IsEnabled,
-                        x.IsCreated,
-                        x.IsUpdated,
-                        x.IsDeleted
-                  )).ToList(),
-              d.LocationId,
-              true,
-              false
-            );
+            return d.Guid;
       }
 }

@@ -11,7 +11,7 @@ namespace Core.Infrastructure.Repositories;
 
 public sealed class RoleRepository(CoreDbContext context) : IRoleRepository
 {
-      public async Task AddAsync(Role entity, CancellationToken ct = default)
+      public async Task<RoleDto> AddAsync(Role entity, CancellationToken ct = default)
       {
             await context.Roles.AddAsync(
                   new Persistences.Entities.Role(entity), ct
