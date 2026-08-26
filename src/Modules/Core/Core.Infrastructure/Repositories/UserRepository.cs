@@ -182,22 +182,272 @@ public sealed class UserRepository(CoreDbContext context) : IUserRepository
 
   public async Task<string> GetHashByUsernameAsync(string username, CancellationToken ct = default)
   {
-    throw new NotImplementedException();
+    return await context.Users
+      .AsNoTracking()
+      .Where(x => x.username.Equals(username))
+      .Select(x => x.password)
+      .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.Operator, username);
   }
 
   public async Task<int> GetIdByGuidAsync(Guid guid, CancellationToken ct = default)
   {
-    throw new NotImplementedException();
+    return await context.Users
+      .AsNoTracking()
+      .Where(x => x.guid == guid)
+      .OrderByDescending(x => x.id)
+      .Select(x => x.id)
+      .FirstOrDefaultAsync();
   }
 
   public async Task<IEnumerable<Guid>> GetLocationGuidByUsernameAsync(string username, CancellationToken ct = default)
   {
-    throw new NotImplementedException();
+    return await context.Users
+      .AsNoTracking()
+      .Where(x => x.username.Equals(username))
+      .SelectMany(x => x.user_locations.Select(x => x.location.guid))
+      .ToArrayAsync();
+  }
+
+  public async Task<Pagination<UserDto>> GetPaginationOperatorAsync(PaginationParams param, CancellationToken ct = default)
+  {
+    var query = context.Users
+                  .AsNoTracking()
+                  .Where(x => x.is_operator)
+                  .AsQueryable();
+
+    if (!string.IsNullOrWhiteSpace(param.search))
+    {
+      if (!string.IsNullOrWhiteSpace(param.search))
+      {
+        var search = param.search.Trim();
+
+        if (context.Database.IsNpgsql())
+        {
+          var pattern = $"%{search}%";
+
+          query = query.Where(x =>
+              EF.Functions.ILike(x.username, pattern) ||
+              EF.Functions.ILike(x.user_code, pattern) ||
+              EF.Functions.ILike(x.identification, pattern) ||
+              EF.Functions.ILike(x.title.ToString(), pattern) ||
+              EF.Functions.ILike(x.firstname, pattern) ||
+              EF.Functions.ILike(x.middlename, pattern) ||
+              EF.Functions.ILike(x.lastname, pattern) ||
+              EF.Functions.ILike(x.gender.ToString(), pattern) ||
+              EF.Functions.ILike(x.email, pattern) ||
+              EF.Functions.ILike(x.phone, pattern) ||
+              (x.company != null ? EF.Functions.ILike(x.company.name, pattern) : false) ||
+              (x.department != null ? EF.Functions.ILike(x.department.name, pattern) : false) ||
+              (x.position != null ? EF.Functions.ILike(x.position.name, pattern) : false) ||
+              EF.Functions.ILike(x.address, pattern)
+          );
+        }
+        else // SQL Server
+        {
+          query = query.Where(x =>
+              x.username.Contains(search) ||
+              x.user_code.Contains(search) ||
+              x.identification.Contains(search) ||
+              x.title.ToString().Contains(search) ||
+              x.firstname.Contains(search) ||
+              x.middlename.Contains(search) ||
+              x.lastname.Contains(search) ||
+              x.gender.ToString().Contains(search) ||
+              x.email.Contains(search) ||
+              x.phone.Contains(search) ||
+              (x.company != null ? x.company.name.Contains(search) : false) ||
+              (x.department != null ? x.department.name.Contains(search) : false) ||
+              (x.position != null ? x.position.name.Contains(search) : false) ||
+              x.address.Contains(search)
+          );
+        }
+
+      }
+    }
+
+
+    if (param.startDate != null)
+    {
+      var startUtc = DateTime.SpecifyKind(param.startDate.Value, DateTimeKind.Utc);
+      query = query.Where(x => x.created_at >= startUtc);
+    }
+
+    if (param.endDate != null)
+    {
+      var endUtc = DateTime.SpecifyKind(param.endDate.Value, DateTimeKind.Utc);
+      query = query.Where(x => x.created_at <= endUtc);
+    }
+
+    var count = await query.CountAsync();
+
+    var res = await query
+          .AsNoTracking()
+          .OrderByDescending(e => e.created_at)
+          .Skip((param.pageNumber - 1) * param.pageSize)
+          .Take(param.pageSize)
+          .Select(e => new UserDto(
+            e.guid,
+            e.username,
+            e.identification,
+            e.title,
+            e.firstname,
+            e.middlename,
+            e.lastname,
+            e.gender,
+            e.date_of_birth,
+            e.email,
+            e.phone,
+            e.is_operator,
+            e.is_user,
+            e.role != null ? e.role.name : string.Empty,
+            e.company != null ? e.company.name : string.Empty,
+            e.department != null ? e.department.name : string.Empty,
+            e.position != null ? e.position.name : string.Empty,
+            e.address,
+            e.active_time,
+            e.expire_time,
+            e.additionals.Select(x => x.additional).ToList(),
+            e.user_groups.Select(x => x.group.name).ToList(),
+            e.cards.Select(x => new CardDto(
+              x.bits,
+              x.fac,
+              x.card_number
+            )).ToList(),
+            e.license_plates.Select(l => new LicensePlateDto(l.license_plate)).ToList(),
+            e.pins.Select(x => new PinDto(x.pin)).ToList(),
+            e.qr_codes.Select(q => new QrCodeDto(q.qr_code)).ToList(),
+            new FaceDto(e.face != null ? e.face.image_name : string.Empty),
+            e.user_locations.Select(x => x.location.name).ToList()
+          )).ToListAsync();
+
+    return new Pagination<UserDto>(
+          param.pageNumber,
+          param.pageSize,
+          count,
+          (int)Math.Ceiling(count / (double)param.pageSize),
+          res
+          );
   }
 
   public async Task<Pagination<UserDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
   {
-    throw new NotImplementedException();
+    var query = context.Users
+                  .AsNoTracking()
+                  .Where(x => x.user_locations.Any(x => x.location.guid == param.locationGuid))
+                  .AsQueryable();
+
+    if (!string.IsNullOrWhiteSpace(param.search))
+    {
+      if (!string.IsNullOrWhiteSpace(param.search))
+      {
+        var search = param.search.Trim();
+
+        if (context.Database.IsNpgsql())
+        {
+          var pattern = $"%{search}%";
+
+          query = query.Where(x =>
+              EF.Functions.ILike(x.username, pattern) ||
+              EF.Functions.ILike(x.user_code, pattern) ||
+              EF.Functions.ILike(x.identification, pattern) ||
+              EF.Functions.ILike(x.title.ToString(), pattern) ||
+              EF.Functions.ILike(x.firstname, pattern) ||
+              EF.Functions.ILike(x.middlename, pattern) ||
+              EF.Functions.ILike(x.lastname, pattern) ||
+              EF.Functions.ILike(x.gender.ToString(), pattern) ||
+              EF.Functions.ILike(x.email, pattern) ||
+              EF.Functions.ILike(x.phone, pattern) ||
+              (x.company != null ? EF.Functions.ILike(x.company.name, pattern) : false) ||
+              (x.department != null ? EF.Functions.ILike(x.department.name, pattern) : false) ||
+              (x.position != null ? EF.Functions.ILike(x.position.name, pattern) : false) ||
+              EF.Functions.ILike(x.address, pattern)
+          );
+        }
+        else // SQL Server
+        {
+          query = query.Where(x =>
+              x.username.Contains(search) ||
+              x.user_code.Contains(search) ||
+              x.identification.Contains(search) ||
+              x.title.ToString().Contains(search) ||
+              x.firstname.Contains(search) ||
+              x.middlename.Contains(search) ||
+              x.lastname.Contains(search) ||
+              x.gender.ToString().Contains(search) ||
+              x.email.Contains(search) ||
+              x.phone.Contains(search) ||
+              (x.company != null ? x.company.name.Contains(search) : false) ||
+              (x.department != null ? x.department.name.Contains(search) : false) ||
+              (x.position != null ? x.position.name.Contains(search) : false) ||
+              x.address.Contains(search)
+          );
+        }
+
+      }
+    }
+
+
+    if (param.startDate != null)
+    {
+      var startUtc = DateTime.SpecifyKind(param.startDate.Value, DateTimeKind.Utc);
+      query = query.Where(x => x.created_at >= startUtc);
+    }
+
+    if (param.endDate != null)
+    {
+      var endUtc = DateTime.SpecifyKind(param.endDate.Value, DateTimeKind.Utc);
+      query = query.Where(x => x.created_at <= endUtc);
+    }
+
+    var count = await query.CountAsync();
+
+    var res = await query
+          .AsNoTracking()
+          .OrderByDescending(e => e.created_at)
+          .Skip((param.pageNumber - 1) * param.pageSize)
+          .Take(param.pageSize)
+          .Select(e => new UserDto(
+            e.guid,
+            e.username,
+            e.identification,
+            e.title,
+            e.firstname,
+            e.middlename,
+            e.lastname,
+            e.gender,
+            e.date_of_birth,
+            e.email,
+            e.phone,
+            e.is_operator,
+            e.is_user,
+            e.role != null ? e.role.name : string.Empty,
+            e.company != null ? e.company.name : string.Empty,
+            e.department != null ? e.department.name : string.Empty,
+            e.position != null ? e.position.name : string.Empty,
+            e.address,
+            e.active_time,
+            e.expire_time,
+            e.additionals.Select(x => x.additional).ToList(),
+            e.user_groups.Select(x => x.group.name).ToList(),
+            e.cards.Select(x => new CardDto(
+              x.bits,
+              x.fac,
+              x.card_number
+            )).ToList(),
+            e.license_plates.Select(l => new LicensePlateDto(l.license_plate)).ToList(),
+            e.pins.Select(x => new PinDto(x.pin)).ToList(),
+            e.qr_codes.Select(q => new QrCodeDto(q.qr_code)).ToList(),
+            new FaceDto(e.face != null ? e.face.image_name : string.Empty),
+            e.user_locations.Select(x => x.location.name).ToList()
+          )).ToListAsync();
+
+    return new Pagination<UserDto>(
+          param.pageNumber,
+          param.pageSize,
+          count,
+          (int)Math.Ceiling(count / (double)param.pageSize),
+          res
+          );
   }
 
   public async Task<bool> IsAnyByNameAndLocationIdAsync(string name, int locationId = default, CancellationToken ct = default)
@@ -228,5 +478,15 @@ public sealed class UserRepository(CoreDbContext context) : IUserRepository
   public async Task UpdateAsync(User entity, CancellationToken ct = default)
   {
     throw new NotImplementedException();
+  }
+
+  public async Task<Guid> GetRoleGuidByUsernameAsync(string username, CancellationToken ct = default)
+  {
+    return await context.Users
+      .AsNoTracking()
+      .Where(x => x.username.Equals(username) && x.is_operator)
+      .OrderByDescending(x => x.id)
+      .Select(x => x.role == null ? Guid.Empty : x.role.guid)
+      .FirstOrDefaultAsync(ct);
   }
 }

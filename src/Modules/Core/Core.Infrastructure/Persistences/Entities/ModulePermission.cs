@@ -15,7 +15,6 @@ public sealed class ModulePermission : BaseEntity
   {
     module_id = d.ModuleId;
     is_enabled = d.IsEnabled;
-    role_id = d.RoleId;
     feature_permissions = d.FeaturePermissions.Select(
       x => new Persistences.Entities.FeaturePermission(x)
     ).ToArray();

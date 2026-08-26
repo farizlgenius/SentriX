@@ -5,7 +5,6 @@ using Auth.Contract.Interfaces;
 using Auth.Domain.Enums;
 using Cache.Contract.Interfaces;
 using Core.Contract.Queries;
-using Serilog;
 using SharedKernel.Domain;
 using SharedKernel.Exceptions;
 using SharedKernel.Helpers;
@@ -44,7 +43,7 @@ public sealed class AuthService(IJwt jwt, ICache redis, IRefreshTokenAuditReposi
       throw new BadRequestException(MessageHelper.Auth.InvalidCredentials);
 
     // Get User
-    var user = await bus.QueryAsync(new OperatorByUsernameQuery(login.Username));
+    var user = await bus.QueryAsync(new UserByUsernameQuery(login.Username));
 
     // Generate token (for demonstration, using a simple string)
     var token = await jwt.GenerateTokenAsync(user);
@@ -99,7 +98,7 @@ public sealed class AuthService(IJwt jwt, ICache redis, IRefreshTokenAuditReposi
       throw new BadRequestException(MessageHelper.Auth.RefreshTokenInvalid);
 
     // Generate token (for demonstration, using a simple string)
-    var user = await bus.QueryAsync(new OperatorByUsernameQuery(refresh.Username));
+    var user = await bus.QueryAsync(new UserByUsernameQuery(refresh.Username));
     var token = await jwt.RefreshTokenAsync(user);
 
 

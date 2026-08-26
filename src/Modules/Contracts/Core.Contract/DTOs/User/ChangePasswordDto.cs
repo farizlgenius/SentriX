@@ -1,4 +1,4 @@
-namespace Core.Contract.DTOs.Operator;
+namespace Core.Contract.DTOs.User;
 
 public sealed record ChangePasswordDto(
   string Username,

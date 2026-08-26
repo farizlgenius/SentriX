@@ -5,27 +5,27 @@ namespace Core.Domain.Entities;
 public sealed class QrCode : BaseDomain
 {
       public string QrCodes { get; private set; } = string.Empty;
-      public Guid UserGuid { get; private set; } = default!;
+      public int UserId { get; private set; } = default!;
       public QrCode(
             string Qr,
-            Guid UserGuid
+            int UserId
       )
       {
             ValidationHelper.IsNullOrEmpty(Qr, nameof(QrCodes));
-            ValidationHelper.GuidEmpty(UserGuid, nameof(this.UserGuid));
+            ValidationHelper.NotMinus(UserId, nameof(this.UserId));
             this.QrCodes = Qr;
-            this.UserGuid = UserGuid;
+            this.UserId = UserId;
       }
 
       public QrCode(
             Guid Guid,
             string Qr,
-            Guid UserGuid
+            int UserId
       ) : base(Guid)
       {
             ValidationHelper.IsNullOrEmpty(Qr, nameof(QrCodes));
-            ValidationHelper.GuidEmpty(UserGuid, nameof(this.UserGuid));
+            ValidationHelper.NotMinus(UserId, nameof(this.UserId));
             this.QrCodes = Qr;
-            this.UserGuid = UserGuid;
+            this.UserId = UserId;
       }
 }

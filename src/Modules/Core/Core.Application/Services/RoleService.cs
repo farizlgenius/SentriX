@@ -10,7 +10,8 @@ namespace Core.Application.Services;
 
 public sealed class RoleService(
       IRoleRepository repo,
-      IFeatureRepository feature
+      IFeatureRepository feature,
+      IModuleRepository module
       ) : IRole
 {
       public async Task<Guid> CreateAsync(CreateRoleDto dto, CancellationToken ct = default)
@@ -18,20 +19,28 @@ public sealed class RoleService(
             // Check name is duplicate 
             if (await repo.IsAnyByNameAndLocationIdAsync(dto.Name))
                   throw new DuplicateException(EntityType.Role, dto.Name);
-                  
+
+            var moduleGuids = dto.ModulePermissions
+            .Select(x => x.Guid)
+            .Distinct()
+            .ToArray();
+
+            var moduleMap = await module.GetMapGuidAndMapByGuidsAsync(moduleGuids, ct);
+
             var allGuids = dto.ModulePermissions
                   .SelectMany(x => x.FeaturePermission.Select(f => f.Guid))
                   .Distinct()
                   .ToList();
 
-            var featureMap = await feature.GetMapIdGuidByGuidsAsync(allGuids,ct);
+            var featureMap = await feature.GetMapIdGuidByGuidsAsync(allGuids, ct);
 
             var d = new Core.Domain.Entities.Role(
                   dto.Name,
                   dto.ModulePermissions.Select(x => new ModulePermission(
                         x.IsEnabled,
+                        moduleMap[x.Guid].Item1,
                         x.FeaturePermission.Select(s => new FeaturePermission(
-                              featureMap[s.Guid],
+                              featureMap[s.Guid].Item1,
                               s.IsEnabled,
                               s.IsCreated,
                               s.IsUpdated,
@@ -58,7 +67,7 @@ public sealed class RoleService(
 
             // Check relate object here
 
-            if (await repo.IsAnyOperatorAsync(guid, ct))
+            if (await repo.IsAnyUserByGuidAsync(guid, ct))
                   throw new FoundRelateException(EntityType.Operator, guid.ToString(), EntityType.User);
 
 
@@ -80,7 +89,7 @@ public sealed class RoleService(
                         throw new NotFoundException(EntityType.Role, guid.ToString());
 
                   // Check relate object here
-                  if (await repo.IsAnyOperatorAsync(guid, ct))
+                  if (await repo.IsAnyUserByGuidAsync(guid, ct))
                         throw new FoundRelateException(EntityType.Operator, guid.ToString(), EntityType.User);
             }
 
@@ -123,18 +132,30 @@ public sealed class RoleService(
             if (!await repo.IsAnyGuidAsync(dto.Guid, ct))
                   throw new NotFoundException(EntityType.Role, dto.Guid.ToString());
 
+            var moduleAllGuids = dto.ModulePermissions.Select(x => x.Guid).ToArray();
+
+            var moduleMap = await module.GetMapGuidAndMapByGuidsAsync(moduleAllGuids, ct);
+
+            var allGuids = dto.ModulePermissions
+                  .SelectMany(x => x.FeaturePermission.Select(f => f.Guid))
+                  .Distinct()
+                  .ToList();
+
+            var featureMap = await feature.GetMapIdGuidByGuidsAsync(allGuids, ct);
+
             var d = new Core.Domain.Entities.Role(
-                  dto.Guid,
                   dto.Name,
-                  dto.ModulePermissions.Select(x => new Permission(
-                        x.RoleGuid,
-                        x.FeatureGuid,
+                  dto.ModulePermissions.Select(x => new ModulePermission(
                         x.IsEnabled,
-                        x.IsCreated,
-                        x.IsUpdated,
-                        x.IsDeleted
-                  )).ToList(),
-                  dto.LocationGuid
+                        moduleMap[x.Guid].Item1,
+                        x.FeaturePermission.Select(s => new FeaturePermission(
+                              featureMap[s.Guid].Item1,
+                              s.IsEnabled,
+                              s.IsCreated,
+                              s.IsUpdated,
+                              s.IsDeleted
+                        )).ToList()
+                  )).ToList()
             );
 
             await repo.UpdateAsync(d);

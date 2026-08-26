@@ -48,12 +48,22 @@ public sealed class DeviceRepository(CoreDbContext context) : IDeviceRepository
                   .FirstOrDefaultAsync();
       }
 
+      public async Task<int> GetIdByGuidAsync(Guid guid, CancellationToken ct = default)
+      {
+            return await context.Devices
+                  .AsNoTracking()
+                  .Where(x => x.guid == guid)
+                  .OrderByDescending(x => x.id)
+                  .Select(x => x.id)
+                  .FirstOrDefaultAsync();
+      }
+
       public async Task<Pagination<DeviceDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
       {
             throw new NotImplementedException();
       }
 
-      public async Task<bool> IsAnyByNameAndLocationIdAsync(string name, Guid locationGuid = default, CancellationToken ct = default)
+      public async Task<bool> IsAnyByNameAndLocationIdAsync(string name, int locationId = default, CancellationToken ct = default)
       {
             throw new NotImplementedException();
       }

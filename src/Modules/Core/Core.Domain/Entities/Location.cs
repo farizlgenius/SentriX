@@ -37,7 +37,6 @@ public class Location
     // Validate required fields
     ValidationHelper.IsNullOrEmpty(Name, nameof(Name));
     ValidationHelper.NotMinus(CountryId, nameof(CountryId));
-    ValidationHelper.GuidEmpty(Guid, nameof(Guid));
     this.Guid = Guid.NewGuid();
     this.Name = Name;
     this.Description = Description;

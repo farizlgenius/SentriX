@@ -23,7 +23,8 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
       public DbSet<QrCode> QrCodes { get; set; }
       public DbSet<Face> Faces { get; set; }
       public DbSet<Feature> Features { get; set; }
-      public DbSet<FeaturePermission> Permissions { get; set; }
+      public DbSet<FeaturePermission> FeaturePermissions { get; set; }
+      public DbSet<ModulePermission> ModulePermissions { get; set; }
       public DbSet<Role> Roles { get; set; }
       public DbSet<Module> Modules { get; set; }
       public DbSet<UserLocation> UserLocations { get; set; }
@@ -158,7 +159,11 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
 
             modelBuilder.Entity<SubDevice>()
             .HasIndex(
-                  x => x.guid
+                  x => new
+                  {
+                        x.guid,
+                        x.location_id
+                  }
             ).IsUnique();
 
 
@@ -257,10 +262,9 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
             // Device 
 
             modelBuilder.Entity<Device>()
-                  .HasMany(x => x.modules)
+                  .HasMany(x => x.sub_device)
                   .WithOne(x => x.device)
                   .HasForeignKey(x => x.device_id)
-                  .HasPrincipalKey(x => x.guid)
                   .OnDelete(DeleteBehavior.Cascade);
 
             // User
@@ -268,43 +272,37 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
             modelBuilder.Entity<User>()
                   .HasMany(x => x.cards)
                   .WithOne(x => x.user)
-                  .HasForeignKey(x => x.user_guid)
-                  .HasPrincipalKey(x => x.guid)
+                  .HasForeignKey(x => x.user_id)
                   .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<User>()
                   .HasMany(x => x.license_plates)
                   .WithOne(x => x.user)
-                  .HasForeignKey(x => x.user_guid)
-                  .HasPrincipalKey(x => x.guid)
+                  .HasForeignKey(x => x.user_id)
                   .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<User>()
                   .HasMany(x => x.qr_codes)
                   .WithOne(x => x.user)
-                  .HasForeignKey(x => x.user_guid)
-                  .HasPrincipalKey(x => x.guid)
+                  .HasForeignKey(x => x.user_id)
                   .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<User>()
                   .HasMany(x => x.pins)
                   .WithOne(x => x.user)
-                  .HasForeignKey(x => x.user_guid)
-                  .HasPrincipalKey(x => x.guid)
+                  .HasForeignKey(x => x.user_id)
                   .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<User>()
                   .HasOne(x => x.face)
                   .WithOne(x => x.user)
                   .HasForeignKey<User>(x => x.face_id)
-                  .HasPrincipalKey<Face>(x => x.guid)
                   .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<User>()
                   .HasMany(x => x.additionals)
                   .WithOne(x => x.user)
-                  .HasForeignKey(x => x.user_guid)
-                  .HasPrincipalKey(x => x.guid)
+                  .HasForeignKey(x => x.user_id)
                   .OnDelete(DeleteBehavior.Cascade);
 
             // Module
@@ -332,7 +330,6 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   .HasMany(x => x.users)
                   .WithOne(x => x.role)
                   .HasForeignKey(x => x.role_id)
-                  .HasPrincipalKey(x => x.guid)
                   .OnDelete(DeleteBehavior.SetNull);
 
             modelBuilder.Entity<Role>()
@@ -353,35 +350,30 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   .HasMany(x => x.users)
                   .WithOne(x => x.company)
                   .HasForeignKey(x => x.company_id)
-                  .HasPrincipalKey(x => x.guid)
                   .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Department>()
                   .HasMany(x => x.users)
                   .WithOne(x => x.department)
                   .HasForeignKey(x => x.department_id)
-                  .HasPrincipalKey(x => x.guid)
                   .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Position>()
                   .HasMany(x => x.users)
                   .WithOne(x => x.position)
                   .HasForeignKey(x => x.position_id)
-                  .HasPrincipalKey(x => x.guid)
                   .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Company>()
                   .HasMany(x => x.departments)
                   .WithOne(x => x.company)
                   .HasForeignKey(x => x.company_id)
-                  .HasPrincipalKey(x => x.guid)
                   .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Department>()
                   .HasMany(x => x.positions)
                   .WithOne(x => x.department)
-                  .HasForeignKey(x => x.department_guid)
-                  .HasPrincipalKey(x => x.guid)
+                  .HasForeignKey(x => x.department_id)
                   .OnDelete(DeleteBehavior.Cascade);
 
 
@@ -619,8 +611,8 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
             modelBuilder.Entity<ModulePermission>()
             .HasData(
                   new ModulePermission { id = 1, module_id = 1, is_active = true, is_enabled = true, is_default = true, role_id = 1 },
-                  new ModulePermission { id = 1, module_id = 2, is_active = true, is_enabled = true, is_default = true, role_id = 1 },
-                  new ModulePermission { id = 1, module_id = 3, is_active = true, is_enabled = true, is_default = true, role_id = 1 }
+                  new ModulePermission { id = 2, module_id = 2, is_active = true, is_enabled = true, is_default = true, role_id = 1 },
+                  new ModulePermission { id = 3, module_id = 3, is_active = true, is_enabled = true, is_default = true, role_id = 1 }
             );
 
             modelBuilder.Entity<FeaturePermission>().HasData(
@@ -678,7 +670,7 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   {
                         id = 6,
                         module_permission_id = 1,
-                        feature_id = 5,
+                        feature_id = 6,
                         is_enabled = true,
                         is_created = true,
                         is_deleted = true,
@@ -768,7 +760,7 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   {
                         id = 15,
                         module_permission_id = 1,
-                        feature_id = 155,
+                        feature_id = 15,
                         is_enabled = true,
                         is_created = true,
                         is_deleted = true,
@@ -874,6 +866,7 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   .HasData(
                         new UserLocation
                         {
+                              id = 1,
                               user_id = 1,
                               location_id = 1
                         }

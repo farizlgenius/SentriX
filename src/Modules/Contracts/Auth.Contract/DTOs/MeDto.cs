@@ -5,4 +5,4 @@ using SharedKernel.Domain;
 
 namespace Auth.Contract.DTOs;
 
-public sealed record MeDto(IEnumerable<Guid> LocationGuids, IEnumerable<PermissionDto> Permissions);
+public sealed record MeDto(IEnumerable<Guid> LocationGuids, IEnumerable<ModulePermissionDto> Permissions);

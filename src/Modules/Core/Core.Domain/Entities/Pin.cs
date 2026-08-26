@@ -5,28 +5,28 @@ namespace Core.Domain.Entities;
 public sealed class Pin : BaseDomain
 {
       public string Pins { get; private set; } = string.Empty;
-      public Guid UserGuid { get; private set; } = default!;
+      public int UserId { get; private set; } = default!;
 
       public Pin(
             string Pin,
-            Guid UserGuid
+            int UserId
       )
       {
             ValidationHelper.IsNullOrEmpty(Pin, nameof(Pins));
-            ValidationHelper.GuidEmpty(UserGuid, nameof(this.UserGuid));
+            ValidationHelper.NotMinus(UserId, nameof(this.UserId));
             this.Pins = Pin;
-            this.UserGuid = UserGuid;
+            this.UserId = UserId;
       }
 
       public Pin(
             Guid Guid,
             string Pin,
-            Guid UserGuid
+            int UserId
       ) : base(Guid)
       {
             ValidationHelper.IsNullOrEmpty(Pin, nameof(Pins));
-            ValidationHelper.GuidEmpty(UserGuid, nameof(this.UserGuid));
+            ValidationHelper.NotMinus(UserId, nameof(this.UserId));
             this.Pins = Pin;
-            this.UserGuid = UserGuid;
+            this.UserId = UserId;
       }
 }

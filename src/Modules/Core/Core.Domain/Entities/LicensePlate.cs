@@ -5,26 +5,26 @@ namespace Core.Domain.Entities;
 public sealed class LicensePlate : BaseDomain
 {
       public string LicensePlates { get; private set; } = string.Empty;
-      public Guid UserGuid { get; private set; }
+      public int UserId { get; private set; }
       public LicensePlate(
             string Plate,
-            Guid UserGuid
+            int UserId
       )
       {
             ValidationHelper.IsNullOrEmpty(Plate, nameof(LicensePlates));
-            ValidationHelper.GuidEmpty(UserGuid, nameof(this.UserGuid));
+            ValidationHelper.NotMinus(this.UserId, nameof(this.UserId));
             this.LicensePlates = Plate;
-            this.UserGuid = UserGuid;
+            this.UserId = UserId;
       }
       public LicensePlate(
             Guid Guid,
             string Plate,
-            Guid UserGuid
+            int UserId
             ) : base(Guid)
       {
             ValidationHelper.IsNullOrEmpty(Plate, nameof(LicensePlates));
-            ValidationHelper.GuidEmpty(UserGuid, nameof(this.UserGuid));
+            ValidationHelper.NotMinus(UserId, nameof(this.UserId));
             this.LicensePlates = Plate;
-            this.UserGuid = UserGuid;
+            this.UserId = UserId;
       }
 }

@@ -7,7 +7,7 @@ using Auth.Application.Interfaces;
 using Auth.Contract.DTOs;
 using Auth.Domain.Enums;
 using Cache.Contract.Interfaces;
-using Core.Contract.DTOs.Operator;
+using Core.Contract.DTOs.User;
 using Core.Contract.Queries;
 using Microsoft.IdentityModel.Tokens;
 using SharedKernel.Helpers;
@@ -24,13 +24,14 @@ public sealed class JwtService(IRefreshTokenAuditRepository repo, IJwtSetting se
   private readonly short _accessTokenMinutes = settings.AccessTokenMinutes;
   private readonly short _refreshTokenDays = settings.RefreshTokenDays;
   private readonly TimeSpan _ttl = TimeSpan.FromDays(settings.RefreshTokenDays);
-  public async Task<AccessTokenDto> GenerateTokenAsync(OperatorDto user)
+  public async Task<AccessTokenDto> GenerateTokenAsync(UserDto user)
   {
     var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secretKey));
     var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
     var now = DateTime.UtcNow;
 
     var locations = await bus.QueryAsync(new LocationGuidByUsernameQuery(user.Username));
+    var roleGuid = await bus.QueryAsync(new RoleGuidByUsernameQuery(user.Username));
 
     var claims = new[]
     {
@@ -39,7 +40,7 @@ public sealed class JwtService(IRefreshTokenAuditRepository repo, IJwtSetting se
                   new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
 
                   // Authorized
-                  new Claim("role_guid",user.RoleGuid.ToString()),
+                  new Claim("role_guid",roleGuid.ToString()),
                   new Claim("tenants",string.Join(",", locations.Select(l => l))),
 
             };
@@ -81,12 +82,13 @@ public sealed class JwtService(IRefreshTokenAuditRepository repo, IJwtSetting se
     );
   }
 
-  public async Task<AccessTokenDto> RefreshTokenAsync(OperatorDto user)
+  public async Task<AccessTokenDto> RefreshTokenAsync(UserDto user)
   {
     var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secretKey));
     var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
     var now = DateTime.UtcNow;
     var locations = await bus.QueryAsync(new LocationGuidByUsernameQuery(user.Username));
+    var roleGuid = await bus.QueryAsync(new RoleGuidByUsernameQuery(user.Username));
 
     var claims = new[]
     {
@@ -96,7 +98,7 @@ public sealed class JwtService(IRefreshTokenAuditRepository repo, IJwtSetting se
       new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
 
       // Authorized
-      new Claim("role_id",user.RoleGuid.ToString()),
+      new Claim("role_guid",roleGuid.ToString()),
       new Claim("tenants",string.Join(",", locations.Select(l => l))),
 
     };

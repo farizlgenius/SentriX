@@ -8,6 +8,13 @@ public sealed class UserLocation : BaseEntity
   public Location location { get; set; } = default!;
 
   public UserLocation() { }
+
+  public UserLocation(
+    int user
+  ) : base(Guid.NewGuid())
+  {
+    user_id = user;
+  }
   public UserLocation(
     int user,
     int loc

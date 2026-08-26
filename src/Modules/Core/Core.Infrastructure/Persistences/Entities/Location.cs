@@ -20,6 +20,8 @@ public sealed class Location : BaseEntity
     this.name = d.Name;
     this.description = d.Description;
     this.country_id = d.CountryId;
+
   }
+
 
 }

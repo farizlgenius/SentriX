@@ -22,7 +22,12 @@ public sealed class FeaturePermission : BaseDomain
     this.IsDeleted = IsDeleted;
   }
   public FeaturePermission(
-        Guid Guid
+        Guid Guid,
+        int FeatureId,
+        bool IsEnabled,
+        bool IsCreated,
+        bool IsUpdated,
+        bool IsDeleted
         ) : base(Guid)
   {
     this.FeatureId = FeatureId;

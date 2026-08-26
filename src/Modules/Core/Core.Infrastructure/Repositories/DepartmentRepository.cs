@@ -81,10 +81,20 @@ public sealed class DepartmentRepository(CoreDbContext context) : IDepartmentRep
                     x.guid,
                     x.name,
                     x.description,
-                    x.company_id,
+                    x.company.guid,
                     x.is_active,
                     x.is_default
                   )).FirstOrDefaultAsync() ?? throw new NotFoundException(nameof(Location), guid.ToString());
+  }
+
+  public async Task<int> GetIdByGuidAsync(Guid guid, CancellationToken ct = default)
+  {
+    return await context.Departments
+      .AsNoTracking()
+      .Where(x => x.guid == guid)
+      .OrderByDescending(x => x.id)
+      .Select(x => x.id)
+      .FirstOrDefaultAsync();
   }
 
   public async Task<Pagination<DepartmentDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
@@ -143,7 +153,7 @@ public sealed class DepartmentRepository(CoreDbContext context) : IDepartmentRep
                 e.guid,
                 e.name,
                 e.description,
-                e.company_id,
+                e.company.guid,
                 e.is_active,
                 e.is_default
           )).ToListAsync();
@@ -161,7 +171,7 @@ public sealed class DepartmentRepository(CoreDbContext context) : IDepartmentRep
   {
     var query = context.Departments
                   .AsNoTracking()
-                  .Where(x => x.company_id == companyGuid)
+                  .Where(x => x.company.guid == companyGuid)
                   .AsQueryable();
 
     if (!string.IsNullOrWhiteSpace(param.search))
@@ -214,7 +224,7 @@ public sealed class DepartmentRepository(CoreDbContext context) : IDepartmentRep
                 e.guid,
                 e.name,
                 e.description,
-                e.company_guid,
+                e.company.guid,
                 e.is_active,
                 e.is_default
           )).ToListAsync();
@@ -228,7 +238,7 @@ public sealed class DepartmentRepository(CoreDbContext context) : IDepartmentRep
           );
   }
 
-  public async Task<bool> IsAnyByNameAndLocationIdAsync(string name, Guid locationGui = default, CancellationToken ct = default)
+  public async Task<bool> IsAnyByNameAndLocationIdAsync(string name, int locationId = default, CancellationToken ct = default)
   {
     return await context.Departments
       .AsNoTracking()
@@ -245,8 +255,8 @@ public sealed class DepartmentRepository(CoreDbContext context) : IDepartmentRep
   public async Task<bool> IsAnyNameByCompanyGuidAsync(string name, Guid guid, CancellationToken ct = default)
   {
     return await context.Departments
-.AsNoTracking()
-.AnyAsync(x => x.name.Equals(name) && x.company_id == guid);
+      .AsNoTracking()
+      .AnyAsync(x => x.name.Equals(name) && x.company.guid == guid);
   }
 
   public async Task<bool> IsAnyPositionAsync(Guid guid, CancellationToken ct = default)

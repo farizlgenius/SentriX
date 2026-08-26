@@ -82,7 +82,7 @@ public sealed class CompanyRepository(CoreDbContext context) : ICompanyRepositor
                     x.name,
                     x.address,
                     x.description,
-                    x.location_id,
+                    x.location.guid,
                     x.is_active,
                     x.is_default
                   )).FirstOrDefaultAsync() ?? throw new NotFoundException(nameof(Location), guid.ToString());
@@ -104,7 +104,7 @@ public sealed class CompanyRepository(CoreDbContext context) : ICompanyRepositor
   public async Task<Pagination<CompanyDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
   {
     var query = context.Companies
-                  .Where(x => x.location_id == param.locationGuid || x.is_default)
+                  .Where(x => x.location.guid == param.locationGuid || x.is_default)
                   .AsNoTracking()
                   .AsQueryable();
 
@@ -161,7 +161,7 @@ public sealed class CompanyRepository(CoreDbContext context) : ICompanyRepositor
                 e.name,
                 e.address,
                 e.description,
-                e.location_guid,
+                e.location.guid,
                 e.is_active,
                 e.is_default
           )).ToListAsync();

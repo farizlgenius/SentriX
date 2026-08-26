@@ -8,7 +8,7 @@ public sealed class Card : BaseEntity
       public short bits { get; set; }
       public int fac { get; set; }
       public int card_number { get; set; }
-      public Guid? user_guid { get; set; }
+      public int? user_id { get; set; }
       public User user { get; set; } = default!;
 
       public Card() { }
@@ -18,7 +18,7 @@ public sealed class Card : BaseEntity
             this.bits = d.Bits;
             this.fac = d.Fac;
             this.card_number = d.CardNumber;
-            this.user_guid = d.UserGuid;
+            this.user_id = d.UserId;
       }
 
 

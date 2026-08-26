@@ -6,32 +6,32 @@ public sealed class Position : BaseDomain
 {
       public string Name { get; private set; } = string.Empty;
       public string Description { get; private set; } = string.Empty;
-      public Guid DepartmentGuid { get; private set; } = default!;
+      public int DepartmentId { get; private set; } = default!;
 
       public Position(
             string Name,
             string Description,
-            Guid DepartmentGuid
+            int DepartmentId
       )
       {
             ValidationHelper.Name(Name);
-            ValidationHelper.GuidEmpty(DepartmentGuid, nameof(this.DepartmentGuid));
+            ValidationHelper.NotMinus(DepartmentId, nameof(this.DepartmentId));
             this.Name = Name;
             this.Description = Description;
-            this.DepartmentGuid = DepartmentGuid;
+            this.DepartmentId = DepartmentId;
       }
 
       public Position(
             Guid Guid,
             string Name,
             string Description,
-            Guid DepartmentGuid
+            int DepartmentId
       ) : base(Guid)
       {
             ValidationHelper.Name(Name);
-            ValidationHelper.GuidEmpty(DepartmentGuid, nameof(this.DepartmentGuid));
+            ValidationHelper.NotMinus(DepartmentId, nameof(this.DepartmentId));
             this.Name = Name;
             this.Description = Description;
-            this.DepartmentGuid = DepartmentGuid;
+            this.DepartmentId = DepartmentId;
       }
 }

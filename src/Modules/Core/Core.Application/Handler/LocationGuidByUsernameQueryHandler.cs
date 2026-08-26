@@ -4,7 +4,7 @@ using SharedKernel.Messaging;
 
 namespace Core.Application.Handler;
 
-public sealed class LocationGuidByUsernameQueryHandler(IOperatorRepository repo) : IQueryHandler<LocationGuidByUsernameQuery, IEnumerable<Guid>>
+public sealed class LocationGuidByUsernameQueryHandler(IUserRepository repo) : IQueryHandler<LocationGuidByUsernameQuery, IEnumerable<Guid>>
 {
   public async Task<IEnumerable<Guid>> HandleAsync(LocationGuidByUsernameQuery query, CancellationToken ct)
   {

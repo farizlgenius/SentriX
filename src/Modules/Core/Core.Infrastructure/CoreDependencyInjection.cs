@@ -55,14 +55,16 @@ public static class CoreDependencyInjection
     services.AddScoped<IRole, RoleService>();
     services.AddScoped<IRoleRepository, RoleRepository>();
 
-    // Operator
-    services.AddScoped<IOperator, OperatorService>();
-    services.AddScoped<IOperatorRepository, OperatorRepository>();
+    services.AddScoped<IModuleRepository, ModuleRepository>();
 
     // License
     services.AddScoped<ILicense, LicenseService>();
     services.AddScoped<ILicenseRepository, LicenseRepostory>();
     services.AddScoped<IMachine, MachineService>();
+
+    // User
+    services.AddScoped<IUser, UserService>();
+    services.AddScoped<IUserRepository, UserRepository>();
 
 
     // ==========================

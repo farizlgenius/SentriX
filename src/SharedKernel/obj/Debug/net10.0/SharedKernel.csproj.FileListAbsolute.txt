@@ -24,16 +24,3 @@ D:/aero/SentriX/src/SharedKernel/obj/Debug/net10.0/ref/SharedKernel.dll
 /Users/far-izlengha/Documents/Project/SentriX/src/SharedKernel/obj/Debug/net10.0/refint/SharedKernel.dll
 /Users/far-izlengha/Documents/Project/SentriX/src/SharedKernel/obj/Debug/net10.0/SharedKernel.pdb
 /Users/far-izlengha/Documents/Project/SentriX/src/SharedKernel/obj/Debug/net10.0/ref/SharedKernel.dll
-D:\aero\SentriX\src\SharedKernel\bin\Debug\net10.0\SharedKernel.deps.json
-D:\aero\SentriX\src\SharedKernel\bin\Debug\net10.0\SharedKernel.dll
-D:\aero\SentriX\src\SharedKernel\bin\Debug\net10.0\SharedKernel.pdb
-D:\aero\SentriX\src\SharedKernel\obj\Debug\net10.0\SharedKernel.csproj.AssemblyReference.cache
-D:\aero\SentriX\src\SharedKernel\obj\Debug\net10.0\SharedKernel.GeneratedMSBuildEditorConfig.editorconfig
-D:\aero\SentriX\src\SharedKernel\obj\Debug\net10.0\SharedKernel.AssemblyInfoInputs.cache
-D:\aero\SentriX\src\SharedKernel\obj\Debug\net10.0\SharedKernel.AssemblyInfo.cs
-D:\aero\SentriX\src\SharedKernel\obj\Debug\net10.0\SharedKernel.csproj.CoreCompileInputs.cache
-D:\aero\SentriX\src\SharedKernel\obj\Debug\net10.0\SharedKernel.sourcelink.json
-D:\aero\SentriX\src\SharedKernel\obj\Debug\net10.0\SharedKernel.dll
-D:\aero\SentriX\src\SharedKernel\obj\Debug\net10.0\refint\SharedKernel.dll
-D:\aero\SentriX\src\SharedKernel\obj\Debug\net10.0\SharedKernel.pdb
-D:\aero\SentriX\src\SharedKernel\obj\Debug\net10.0\ref\SharedKernel.dll

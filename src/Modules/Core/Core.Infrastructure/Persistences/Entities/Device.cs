@@ -17,7 +17,7 @@ public sealed class Device : BaseEntity
   // Releation
   public int location_id { get; set; } = default!;
   public Location location { get; set; } = default!;
-  public ICollection<SubDevice> modules { get; set; } = default!;
+  public ICollection<SubDevice> sub_device { get; set; } = default!;
 
   public Device() { }
   public Device(Core.Domain.Entities.Device domain) : base(domain.Guid)

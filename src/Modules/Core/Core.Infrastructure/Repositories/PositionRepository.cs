@@ -81,10 +81,21 @@ public sealed class PositionRepository(CoreDbContext context) : IPositionReposit
                             x.guid,
                             x.name,
                             x.description,
-                            x.department_guid,
+                            x.department.name,
+                            x.department.company.name,
                             x.is_active,
                             x.is_default
                           )).FirstOrDefaultAsync() ?? throw new NotFoundException(nameof(Location), guid.ToString());
+      }
+
+      public async Task<int> GetIdByGuidAsync(Guid guid, CancellationToken ct = default)
+      {
+            return await context.Positions
+                  .AsNoTracking()
+                  .Where(x => x.guid == guid)
+                  .OrderByDescending(x => x.id)
+                  .Select(x => x.id)
+                  .FirstOrDefaultAsync();
       }
 
       public async Task<Pagination<PositionDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
@@ -139,14 +150,15 @@ public sealed class PositionRepository(CoreDbContext context) : IPositionReposit
                   .OrderByDescending(e => e.created_at)
                   .Skip((param.pageNumber - 1) * param.pageSize)
                   .Take(param.pageSize)
-                  .Select(e => new PositionDto(
-                        e.guid,
-                        e.name,
-                        e.description,
-                        e.department_guid,
-                        e.is_active,
-                        e.is_default
-                  )).ToListAsync();
+                  .Select(x => new PositionDto(
+                            x.guid,
+                            x.name,
+                            x.description,
+                            x.department.name,
+                            x.department.company.name,
+                            x.is_active,
+                            x.is_default
+                          )).ToListAsync();
 
             return new Pagination<PositionDto>(
                   param.pageNumber,
@@ -161,7 +173,7 @@ public sealed class PositionRepository(CoreDbContext context) : IPositionReposit
       {
             var query = context.Positions
                           .AsNoTracking()
-                          .Where(x => x.department_guid == guid)
+                          .Where(x => x.department.guid == guid)
                           .AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(param.search))
@@ -210,14 +222,15 @@ public sealed class PositionRepository(CoreDbContext context) : IPositionReposit
                   .OrderByDescending(e => e.created_at)
                   .Skip((param.pageNumber - 1) * param.pageSize)
                   .Take(param.pageSize)
-                  .Select(e => new PositionDto(
-                        e.guid,
-                        e.name,
-                        e.description,
-                        e.department_guid,
-                        e.is_active,
-                        e.is_default
-                  )).ToListAsync();
+                  .Select(x => new PositionDto(
+                            x.guid,
+                            x.name,
+                            x.description,
+                            x.department.name,
+                            x.department.company.name,
+                            x.is_active,
+                            x.is_default
+                          )).ToListAsync();
 
             return new Pagination<PositionDto>(
                   param.pageNumber,
@@ -235,6 +248,11 @@ public sealed class PositionRepository(CoreDbContext context) : IPositionReposit
               .AnyAsync(x => x.name.Equals(name));
       }
 
+      public Task<bool> IsAnyByNameAndLocationIdAsync(string name, int locationId = 0, CancellationToken ct = default)
+      {
+            throw new NotImplementedException();
+      }
+
       public async Task<bool> IsAnyGuidAsync(Guid guid, CancellationToken ct = default)
       {
             return await context.Positions
@@ -246,7 +264,7 @@ public sealed class PositionRepository(CoreDbContext context) : IPositionReposit
       {
             return await context.Positions
         .AsNoTracking()
-        .AnyAsync(x => x.name.Equals(name) && x.department_guid == guid);
+        .AnyAsync(x => x.name.Equals(name) && x.department.guid == guid);
       }
 
 

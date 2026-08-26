@@ -3,8 +3,7 @@ namespace Core.Contract.DTOs.Role;
 public sealed record RoleDto(
       Guid Guid,
       string Name,
-      List<PermissionDto> Permissions,
-      List<string> Locations,
+      List<ModulePermissionDto> ModulePermissionDtos,
       bool IsActive,
       bool IsDefault
 );

@@ -17,9 +17,14 @@ public sealed class LocationRepository(CoreDbContext context) : ILocationReposit
             await context.Database.BeginTransactionAsync(ct);
             try
             {
-                  var data = await context.Locations.AddAsync(new Persistences.Entities.Location(entity), ct);
+                  var location = new Persistences.Entities.Location(entity);
 
-                  await context.UserLocations.AddAsync(new Persistences.Entities.UserLocation(1, data.Entity.id));
+                  location.user_locations = new List<UserLocation>
+                  {
+                        new UserLocation(1)
+                  };
+                  var data = await context.Locations.AddAsync(location, ct);
+
 
                   await context.SaveChangesAsync(ct);
 

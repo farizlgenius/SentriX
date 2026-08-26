@@ -1,4 +1,3 @@
-using Core.Contract.DTOs.Operator;
 using Core.Contract.DTOs.User;
 
 namespace Core.Contract.Interfaces;

@@ -1,5 +1,4 @@
 using Core.Application.Interfaces;
-using Core.Contract.DTOs.Operator;
 using Core.Contract.DTOs.User;
 using Core.Contract.Interfaces;
 using Setting.Contract.Queries;
@@ -39,12 +38,12 @@ public sealed class UserService(
     return true;
   }
 
-  public async Task<UserDto> CreateAsync(CreateUserDto dto, CancellationToken ct = default)
+  public async Task<Guid> CreateAsync(CreateUserDto dto, CancellationToken ct = default)
   {
     throw new NotImplementedException();
   }
 
-  public async Task<Guid> DeleteByGuidAsync(Guid guid, CancellationToken ct = default)
+  public async Task<bool> DeleteByGuidAsync(Guid guid, CancellationToken ct = default)
   {
     throw new NotImplementedException();
   }
@@ -74,36 +73,8 @@ public sealed class UserService(
     throw new NotImplementedException();
   }
 
-  public async Task<UserDto> UpdateAsync(UpdateUserDto dto, CancellationToken ct = default)
+  public async Task<Guid> UpdateAsync(UpdateUserDto dto, CancellationToken ct = default)
   {
-    // Check is any location with guid
-    if (!await repo.IsAnyGuidAsync(dto.Guid, ct))
-      throw new NotFoundException(EntityType.Location, dto.Guid.ToString());
-
-    var d = new Core.Domain.Entities.Operator(
-      dto.Guid,
-      dto.Username,
-      dto.Email,
-      dto.Phone,
-      dto.JoinedDate,
-      dto.ExpiredDate,
-      dto.RoleGuid,
-      dto.LocationGuids
-    );
-
-    await repo.UpdateAsync(d);
-
-    return new OperatorDto(
-      d.Guid,
-      d.Username,
-      d.Email,
-      d.Phone,
-      d.JoinedDate,
-      d.ExpiredDate,
-      d.RoleId,
-      d.LocationIds,
-      true,
-      false
-    );
+    throw new NotImplementedException();
   }
 }

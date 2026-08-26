@@ -14,11 +14,6 @@ public sealed class PositionService(
 {
       public async Task<Guid> CreateAsync(CreatePositionDto dto, CancellationToken ct = default)
       {
-            var d = new Core.Domain.Entities.Position(
-                  dto.Name,
-                  dto.Description,
-                  dto.DepartmentGuid
-            );
 
             // Check Company Exists
             if (!await com.IsAnyGuidAsync(dto.DepartmentGuid))
@@ -27,6 +22,16 @@ public sealed class PositionService(
             // Check name is duplicate 
             if (await dep.IsAnyNameByDepartmentGuidAsync(dto.Name, dto.DepartmentGuid))
                   throw new DuplicateException(EntityType.Position, dto.Name);
+
+            var id = await com.GetIdByGuidAsync(dto.DepartmentGuid);
+
+            var d = new Core.Domain.Entities.Position(
+                  dto.Name,
+                  dto.Description,
+                  id
+            );
+
+
 
             await dep.AddAsync(d, ct);
 
@@ -120,11 +125,14 @@ public sealed class PositionService(
             if (!await com.IsAnyGuidAsync(dto.DepartmentGuid))
                   throw new NotFoundException(EntityType.Department, dto.DepartmentGuid.ToString());
 
+
+            var id = await com.GetIdByGuidAsync(dto.DepartmentGuid);
+
             var d = new Core.Domain.Entities.Position(
               dto.Guid,
               dto.Name,
               dto.Description,
-              dto.DepartmentGuid
+              id
             );
 
             await dep.UpdateAsync(d);

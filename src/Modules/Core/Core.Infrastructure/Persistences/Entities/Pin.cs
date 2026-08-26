@@ -7,10 +7,10 @@ public sealed class Pin : BaseEntity
 {
 
       public string pin { get; set; } = string.Empty;
-      public Guid? user_guid { get; set; }
+      public int? user_id { get; set; }
       public User user { get; set; } = default!;
 
-      public Pin(){}
+      public Pin() { }
 
       public Pin(Domain.Entities.Pin d)
       {
@@ -18,7 +18,7 @@ public sealed class Pin : BaseEntity
             this.pin = d.Pins;
             this.created_at = DateTime.UtcNow;
             this.updated_at = DateTime.UtcNow;
-            this.user_guid = d.UserGuid;
+            this.user_id = d.UserId;
       }
 
       public void Update(Domain.Entities.Pin d)

@@ -5,10 +5,11 @@ using SharedKernel.Messaging;
 
 namespace Core.Application.Handler;
 
-public sealed class PermissionByRoleGuidQueryHandler(IRoleRepository repo) : IQueryHandler<PermissionByRoleGuidQuery, IEnumerable<PermissionDto>>
+public sealed class PermissionByRoleGuidQueryHandler(IRoleRepository repo) : IQueryHandler<PermissionByRoleGuidQuery, IEnumerable<ModulePermissionDto>>
 {
-  public async Task<IEnumerable<PermissionDto>> HandleAsync(PermissionByRoleGuidQuery query, CancellationToken ct)
+  public async Task<IEnumerable<ModulePermissionDto>> HandleAsync(PermissionByRoleGuidQuery query, CancellationToken ct)
   {
-    return await repo.GetPermissionByRoleGuidAsync(query.roleGuid, ct);
+    var id = await repo.GetIdByGuidAsync(query.roleGuid);
+    return await repo.GetPermissionByRoleIdAsync(id, ct);
   }
 }
