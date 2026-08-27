@@ -12,9 +12,9 @@ import Select from "../components/form/Select";
 import { ScanButton } from "../components/common/ScanButton";
 
 const AppHeader: React.FC = () => {
-  const { locationId,locationOption,setLocationId,setLocationName } = useLocation();
+  const { locationId, locationOption, setLocationId, setLocationName } =
+    useLocation();
   const [isApplicationMenuOpen, setApplicationMenuOpen] = useState(false);
-
 
   const { isMobileOpen, toggleSidebar, toggleMobileSidebar } = useSidebar();
 
@@ -39,7 +39,6 @@ const AppHeader: React.FC = () => {
         inputRef.current?.focus();
       }
     };
-
 
     document.addEventListener("keydown", handleKeyDown);
 
@@ -124,7 +123,7 @@ const AppHeader: React.FC = () => {
             </svg>
           </button>
 
-          <div className="hidden lg:block">
+          {/* <div className="hidden lg:block">
             <form>
               <div className="relative">
                 <span className="absolute -translate-y-1/2 pointer-events-none left-4 top-1/2">
@@ -157,7 +156,7 @@ const AppHeader: React.FC = () => {
                 </button>
               </div>
             </form>
-          </div>
+          </div> */}
           <div className="ml-4 hidden min-w-[180px] flex-col border-l border-[var(--app-panel-border)] pl-4 xl:flex">
             <span className="text-[11px] font-semibold uppercase tracking-[0.14em] text-gray-500">
               Cloud Operations
@@ -172,23 +171,27 @@ const AppHeader: React.FC = () => {
             isApplicationMenuOpen ? "flex" : "hidden"
           } w-full items-center justify-between gap-4 px-5 py-4 shadow-theme-md lg:flex lg:justify-end lg:px-0 lg:shadow-none`}
         >
-
           <div className="flex items-center gap-2 2xsm:gap-3">
             {/* <!-- Location Selector --> */}
             <div className="flex-1">
-          <Select
-          defaultValue={locationId}
-          onChange={e => {
-              setLocationId(Number(e))
-              setLocationName(locationOption.find(x => x.value == Number(e))?.label ?? "");
-            }} icon={<LocationIcon className="h-5 w-5"/>} options={locationOption} name={"location"}  />
+              <Select
+                defaultValue={locationId}
+                onChange={(e) => {
+                  setLocationId(Number(e));
+                  setLocationName(
+                    locationOption.find((x) => x.value == Number(e))?.label ??
+                      "",
+                  );
+                }}
+                icon={<LocationIcon className="h-5 w-5" />}
+                options={locationOption}
+                name={"location"}
+              />
             </div>
-           
-            
-                         
-             {/* <!-- Language Toggler --> */}
+
+            {/* <!-- Language Toggler --> */}
             {/* <!-- Dark Mode Toggler --> */}
-            <ScanButton/>
+            <ScanButton />
             <ThemeToggleButton />
             <ThemeColorToggleButton />
             {/* <!-- Dark Mode Toggler --> */}

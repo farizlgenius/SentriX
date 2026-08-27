@@ -55,54 +55,57 @@ import { ReactComponent as MoreDotIcon } from "./moredot.svg?react";
 import { ReactComponent as AlertHexaIcon } from "./alert-hexa.svg?react";
 import { ReactComponent as ErrorHexaIcon } from "./info-hexa.svg?react";
 
-
 // ACS
 import { ReactComponent as HardwareIcon } from "./host.svg?react";
-import {ReactComponent as ScanIcon} from "./scan.svg?react";
-import {ReactComponent as SearchIcon} from "./search.svg?react";
-import {ReactComponent as ModuleIcon} from "./module.svg?react";
-import {ReactComponent as EventIcon} from "./event.svg?react";
-import {ReactComponent as ControlIcon} from "./control.svg?react";
-import {ReactComponent as AddIcon} from "./add.svg?react";
-import {ReactComponent as DoorIcon} from "./door.svg?react";
-import {ReactComponent as SettingIcon} from "./setting.svg?react";
-import {ReactComponent as ReportIcon} from "./report.svg?react";
-import {ReactComponent as CardIcon} from "./card.svg?react";
-import {ReactComponent as LockedIcon} from "./locked.svg?react";
-import {ReactComponent as UnlockIcon} from "./unlock.svg?react";
-import {ReactComponent as MomentIcon} from "./moment.svg?react";
-import {ReactComponent as AreaIcon} from "./area.svg?react";
-import {ReactComponent as DisableIcon} from "./disable.svg?react";
-import {ReactComponent as SpinerIcon} from "./spiner.svg?react";
-import {ReactComponent as ResetIcon} from "./reset.svg?react";
-import {ReactComponent as UploadIcon} from "./upload.svg?react";
-import {ReactComponent as ClearIcon} from "./clear.svg?react";
-import {ReactComponent as MaskIcon} from "./mask.svg?react";
-import {ReactComponent as UnmaskIcon} from "./unmask.svg?react";
-import {ReactComponent as MonitorPointGroupIcon} from "./mpg.svg?react";
-import {ReactComponent as CamIcon} from "./cam.svg?react";
-import {ReactComponent as LocationIcon} from "./location.svg?react";
-import {ReactComponent as TriggerIcon} from "./trigger.svg?react";
-import {ReactComponent as OperatorIcon} from "./operator.svg?react";
-import {ReactComponent as NotiIcon} from "./noti.svg?react";
-import {ReactComponent as Info2Icon} from "./info2.svg?react";
-import {ReactComponent as RoleIcon} from "./role.svg?react";
-import {ReactComponent as EditIcon} from "./edit.svg?react";
-import {ReactComponent as OnIcon} from "./on.svg?react";
-import {ReactComponent as OffIcon} from "./off.svg?react";
-import {ReactComponent as ToggleIcon} from "./toggle.svg?react";
-import {ReactComponent as MonitorIcon} from "./monitorpoint.svg?react";
-import {ReactComponent as TimezonIcon} from "./timezone.svg?react";
-import {ReactComponent as TransferIcon} from "./transfer.svg?react";
-import {ReactComponent as ToggleTranIcon} from "./toggletran.svg?react";
-import {ReactComponent as DoorInIcon} from "./in.svg?react";
-import {ReactComponent as DoorOutIcon} from "./out.svg?react";
-import {ReactComponent as LoadIcon} from "./loading.svg?react";
-import {ReactComponent as AmicoIcon} from "./amico.svg?react";
-import {ReactComponent as CancelCircleIcon} from "./cancel-circle.svg?react";
-import {ReactComponent as ToggleOnIcon} from "./toggle-on.svg?react";
-import {ReactComponent as ToggleOffIcon} from "./toggle-off.svg?react";
-import {ReactComponent as ImageIcon} from "./image.svg?react";
+import { ReactComponent as ScanIcon } from "./scan.svg?react";
+import { ReactComponent as SearchIcon } from "./search.svg?react";
+import { ReactComponent as ModuleIcon } from "./module.svg?react";
+import { ReactComponent as EventIcon } from "./event.svg?react";
+import { ReactComponent as ControlIcon } from "./control.svg?react";
+import { ReactComponent as AddIcon } from "./add.svg?react";
+import { ReactComponent as DoorIcon } from "./door.svg?react";
+import { ReactComponent as SettingIcon } from "./setting.svg?react";
+import { ReactComponent as ReportIcon } from "./report.svg?react";
+import { ReactComponent as CardIcon } from "./card.svg?react";
+import { ReactComponent as LockedIcon } from "./locked.svg?react";
+import { ReactComponent as UnlockIcon } from "./unlock.svg?react";
+import { ReactComponent as MomentIcon } from "./moment.svg?react";
+import { ReactComponent as AreaIcon } from "./area.svg?react";
+import { ReactComponent as DisableIcon } from "./disable.svg?react";
+import { ReactComponent as SpinerIcon } from "./spiner.svg?react";
+import { ReactComponent as ResetIcon } from "./reset.svg?react";
+import { ReactComponent as UploadIcon } from "./upload.svg?react";
+import { ReactComponent as ClearIcon } from "./clear.svg?react";
+import { ReactComponent as MaskIcon } from "./mask.svg?react";
+import { ReactComponent as UnmaskIcon } from "./unmask.svg?react";
+import { ReactComponent as MonitorPointGroupIcon } from "./mpg.svg?react";
+import { ReactComponent as CamIcon } from "./cam.svg?react";
+import { ReactComponent as LocationIcon } from "./location.svg?react";
+import { ReactComponent as TriggerIcon } from "./trigger.svg?react";
+import { ReactComponent as OperatorIcon } from "./operator.svg?react";
+import { ReactComponent as NotiIcon } from "./noti.svg?react";
+import { ReactComponent as Info2Icon } from "./info2.svg?react";
+import { ReactComponent as RoleIcon } from "./role.svg?react";
+import { ReactComponent as EditIcon } from "./edit.svg?react";
+import { ReactComponent as OnIcon } from "./on.svg?react";
+import { ReactComponent as OffIcon } from "./off.svg?react";
+import { ReactComponent as ToggleIcon } from "./toggle.svg?react";
+import { ReactComponent as MonitorIcon } from "./monitorpoint.svg?react";
+import { ReactComponent as TimezonIcon } from "./timezone.svg?react";
+import { ReactComponent as TransferIcon } from "./transfer.svg?react";
+import { ReactComponent as ToggleTranIcon } from "./toggletran.svg?react";
+import { ReactComponent as DoorInIcon } from "./in.svg?react";
+import { ReactComponent as DoorOutIcon } from "./out.svg?react";
+import { ReactComponent as LoadIcon } from "./loading.svg?react";
+import { ReactComponent as AmicoIcon } from "./amico.svg?react";
+import { ReactComponent as CancelCircleIcon } from "./cancel-circle.svg?react";
+import { ReactComponent as ToggleOnIcon } from "./toggle-on.svg?react";
+import { ReactComponent as ToggleOffIcon } from "./toggle-off.svg?react";
+import { ReactComponent as ImageIcon } from "./image.svg?react";
+import { ReactComponent as AcsIcon } from "./acs.svg?react";
+import { ReactComponent as VisitorIcon } from "./visitor.svg?react";
+import { ReactComponent as GuardIcon } from "./guard.svg?react";
+import { ReactComponent as TAIcon } from "./ta.svg?react";
 
 export {
   ErrorHexaIcon,
@@ -204,7 +207,12 @@ export {
   DoorOutIcon,
   LoadIcon,
   AmicoIcon,
-  CancelCircleIcon,ToggleOnIcon,
+  CancelCircleIcon,
+  ToggleOnIcon,
   ToggleOffIcon,
-  ImageIcon
+  ImageIcon,
+  AcsIcon,
+  VisitorIcon,
+  GuardIcon,
+  TAIcon,
 };

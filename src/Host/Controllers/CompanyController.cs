@@ -47,7 +47,7 @@ public class CompanyController(ICompany com) : ControllerBase
   [HttpDelete("range")]
   public async Task<IActionResult> DeleteRangeAsync([FromBody] IEnumerable<Guid> guids)
   {
-    var res = await com.DeleteRangeAsync(guids);
+    var res = await com.DeleteListAsync(guids);
     return Ok(res);
   }
 

@@ -28,11 +28,16 @@ import {
   NotiIcon,
   ControlIcon,
   MonitorIcon,
-  OnIcon
+  OnIcon,
+  AcsIcon,
+  VisitorIcon,
+  TimeIcon,
+  GuardIcon,
 } from "../icons";
 import { useSidebar } from "../context/SidebarContext";
 import { useAuth } from "../context/AuthContext";
-
+import Select from "../components/form/Select";
+import { Options } from "../model/Options";
 
 type NavItem = {
   id?: number;
@@ -42,75 +47,143 @@ type NavItem = {
   subItems?: { name: string; path: string; pro?: boolean; new?: boolean }[];
 };
 
+const defaultModuleOptions: Options[] = [
+  {
+    label: "Access Control",
+    value: 1,
+  },
+  {
+    label: "Visitor Management",
+    value: 2,
+  },
+  {
+    label: "Time Attendance",
+    value: 3,
+  },
+  {
+    label: "Guard Tour",
+    value: 4,
+  },
+];
 
-const navItems: NavItem[] = [
-
+const visitorNavItems: NavItem[] = [
   {
     id: 1,
     icon: <GridIcon />,
     name: "Dashboard",
-    path: "/"
+    path: "/",
+  },
+];
+
+const timeAttendanceNavItems: NavItem[] = [
+  {
+    id: 1,
+    icon: <GridIcon />,
+    name: "Dashboard",
+    path: "/",
+  },
+];
+
+const guardNavItems: NavItem[] = [
+  {
+    id: 1,
+    icon: <GridIcon />,
+    name: "Dashboard",
+    path: "/",
+  },
+];
+
+const acsNavItems: NavItem[] = [
+  {
+    id: 1,
+    icon: <GridIcon />,
+    name: "Dashboard",
+    path: "/",
   },
   {
     id: 2,
     name: "Events",
     icon: <EventIcon />,
-    path: "/event"
+    path: "/event",
   },
   {
     id: 3,
     name: "Locations",
     icon: <LocationIcon />,
-    path:"/location"
+    path: "/location",
   },
   {
     id: 4,
     name: "Alerts",
     icon: <NotiIcon />,
-    path: "/"
+    path: "/",
   },
   {
     id: 5,
     name: "Operators",
     icon: <OperatorIcon />,
-    subItems: [{ name: "Operator", path: "/operator" }, { name: "Role", path: "/role" }],
+    subItems: [
+      { name: "Operator", path: "/operator" },
+      { name: "Role", path: "/role" },
+    ],
   },
   {
     id: 6,
     name: "Devices",
     icon: <ModuleIcon />,
-    subItems: [{ name: "Devices", path: "/device", },{ name: "Lift Controller", path: "/lift", }],
-  },{
+    subItems: [
+      { name: "Devices", path: "/device" },
+      { name: "Lift Controller", path: "/lift" },
+    ],
+  },
+  {
     id: 7,
-    name:"Outputs",
-    icon:<ControlIcon />,
-    path:"/output"
-  },{
-    id:8,
-    name:"Inputs",
-    icon:<MonitorIcon/>,
-    path:"/input"
-  },{ 
-    id:9,
+    name: "Outputs",
+    icon: <ControlIcon />,
+    path: "/output",
+  },
+  {
+    id: 8,
+    name: "Inputs",
+    icon: <MonitorIcon />,
+    path: "/input",
+  },
+  {
+    id: 9,
     name: "Input Group",
-    icon:<GroupIcon/>, 
-    path: "/monitorgroup", },
+    icon: <GroupIcon />,
+    path: "/monitorgroup",
+  },
   {
     id: 10,
     icon: <DoorIcon />,
     name: "Access Point",
-    subItems: [{ name: "Door", path: "/door", }, { name: "Lift", path: "/lift", },{ name: "HL", path: "/hl", },{name:"Time Attendance",path:"/ta"},{name:"Guard Tour",path:"/guard"}],
-  }, {
+    subItems: [
+      { name: "Door", path: "/door" },
+      { name: "Lift", path: "/lift" },
+      { name: "HL", path: "/hl" },
+      { name: "Time Attendance", path: "/ta" },
+      { name: "Guard Tour", path: "/guard" },
+    ],
+  },
+  {
     id: 11,
     icon: <CardIcon />,
     name: "Users",
-    subItems: [{ name: "Users", path: "/user", }, { name: "Company", path: "/company", },{ name: "Department", path: "/department", },{ name: "Position", path: "/position", }],
-  }, {
+    subItems: [
+      { name: "Users", path: "/user" },
+      { name: "Company", path: "/company" },
+      { name: "Department", path: "/department" },
+      { name: "Position", path: "/position" },
+    ],
+  },
+  {
     id: 12,
     icon: <GroupIcon />,
     name: "Access Level",
     path: "/level",
-  }, {
+  },
+  {
     id: 13,
     icon: <AreaIcon />,
     name: "Access Area",
@@ -120,31 +193,49 @@ const navItems: NavItem[] = [
     id: 14,
     icon: <CalenderIcon />,
     name: "Time",
-    subItems: [{ name: "Time Zone", path: "/timezone", }, { name: "Holiday", path: "/holiday", }, { name: "Interval", path: "/interval", }],
+    subItems: [
+      { name: "Time Zone", path: "/timezone" },
+      { name: "Holiday", path: "/holiday" },
+      { name: "Interval", path: "/interval" },
+    ],
   },
   {
     id: 15,
     icon: <TriggerIcon />,
     name: "Trigger & Procedure",
-    subItems: [{ name: "Trigger", path: "/trigger", }, { name: "Procedure", path: "/procedure", }],
-  },{
-    id:16,
-    name:"Map",
-    icon:<OnIcon/>,
-    path:"/map"
+    subItems: [
+      { name: "Trigger", path: "/trigger" },
+      { name: "Procedure", path: "/procedure" },
+    ],
+  },
+  {
+    id: 16,
+    name: "Map",
+    icon: <OnIcon />,
+    path: "/map",
   },
   {
     id: 17,
     icon: <ReportIcon />,
     name: "Reports",
-    subItems: [{ name: "Transaction", path: "/report", }, { name: "Audit Trail", path: "/audit", }, { name: "Time Attendance", path: "/attendance", }],
+    subItems: [
+      { name: "Transaction", path: "/report" },
+      { name: "Audit Trail", path: "/audit" },
+      { name: "Time Attendance", path: "/attendance" },
+    ],
   },
   {
     id: 18,
     icon: <SettingIcon />,
     name: "Settings",
-    subItems: [{ name: "Card Format", path: "/cardformat", }, { name: "Reader LED", path: "/led", },{name:"Password Rule",path:"/pass"},{ name: "Send Command", path: "/command", }, { name: "Status", path: "/status", }],
-  }
+    subItems: [
+      { name: "Card Format", path: "/cardformat" },
+      { name: "Reader LED", path: "/led" },
+      { name: "Password Rule", path: "/pass" },
+      { name: "Send Command", path: "/command" },
+      { name: "Status", path: "/status" },
+    ],
+  },
 ];
 
 const othersItems: NavItem[] = [
@@ -152,60 +243,65 @@ const othersItems: NavItem[] = [
     icon: <PieChartIcon />,
     name: "Charts",
     subItems: [
-      { name: "Line Chart", path: "/line-chart", },
-      { name: "Bar Chart", path: "/bar-chart", },
+      { name: "Line Chart", path: "/line-chart" },
+      { name: "Bar Chart", path: "/bar-chart" },
     ],
   },
   {
     icon: <BoxCubeIcon />,
     name: "UI Elements",
     subItems: [
-      { name: "Alerts", path: "/alerts", },
-      { name: "Avatar", path: "/avatars", },
-      { name: "Badge", path: "/badge", },
-      { name: "Buttons", path: "/buttons", },
-      { name: "Images", path: "/images", },
-      { name: "Videos", path: "/videos", },
+      { name: "Alerts", path: "/alerts" },
+      { name: "Avatar", path: "/avatars" },
+      { name: "Badge", path: "/badge" },
+      { name: "Buttons", path: "/buttons" },
+      { name: "Images", path: "/images" },
+      { name: "Videos", path: "/videos" },
     ],
   },
   {
     icon: <PlugInIcon />,
     name: "Authentication",
     subItems: [
-      { name: "Sign In", path: "/signin", },
-      { name: "Sign Up", path: "/signup", },
+      { name: "Sign In", path: "/signin" },
+      { name: "Sign Up", path: "/signup" },
     ],
-  }
+  },
 ];
-
 
 const AppSidebar: React.FC = () => {
   const { isExpanded, isMobileOpen, isHovered, setIsHovered } = useSidebar();
   const location = useLocation();
-  const {isAllowedPermission} = useAuth();
+  const { isAllowedPermission, IsAllowModule } = useAuth();
+  const [selectedModule, setSelectedModule] = useState<number>(0);
+  // const [moduleOption, setModuleOption] = useState<Options[]>([]);
+  const moduleOption = defaultModuleOptions.filter((x) =>
+    IsAllowModule(Number(x.value)),
+  );
 
   const [openSubmenu, setOpenSubmenu] = useState<{
     type: "main" | "others";
     index: number;
   } | null>(null);
   const [subMenuHeight, setSubMenuHeight] = useState<Record<string, number>>(
-    {}
+    {},
   );
   const subMenuRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
   // const isActive = (path: string) => location.pathname === path;
   const isActive = useCallback(
     (path: string) => location.pathname === path,
-    [location.pathname]
+    [location.pathname],
   );
 
-
+  useEffect(() => {
+    setSelectedModule(Number(moduleOption[0].value));
+  }, []);
 
   useEffect(() => {
-
     let submenuMatched = false;
     ["main", "others"].forEach((menuType) => {
-      const items = menuType === "main" ? navItems : othersItems;
+      const items = menuType === "main" ? acsNavItems : othersItems;
       items.forEach((nav, index) => {
         if (nav.subItems) {
           nav.subItems.forEach((subItem) => {
@@ -237,6 +333,51 @@ const AppSidebar: React.FC = () => {
       }
     }
   }, [openSubmenu]);
+
+  const handleNavItemFilter = (module: number) => {
+    switch (module) {
+      case 1:
+        return acsNavItems;
+      case 2:
+        return visitorNavItems;
+      case 3:
+        return timeAttendanceNavItems;
+      case 4:
+        return guardNavItems;
+      default:
+        return [];
+    }
+  };
+
+  const handleNavItemWordFilter = (module: number) => {
+    switch (module) {
+      case 1:
+        return "Access Control";
+      case 2:
+        return "Visitor Management";
+      case 3:
+        return "Time Attendance";
+      case 4:
+        return "Guard Tour";
+      default:
+        return [];
+    }
+  };
+
+  const handleModuleIconFilter = (module: number) => {
+    switch (module) {
+      case 1:
+        return <AcsIcon className="h-5 w-5" />;
+      case 2:
+        return <VisitorIcon className="h-5 w-5" />;
+      case 3:
+        return <TimeIcon className="h-5 w-5" />;
+      case 4:
+        return <GuardIcon className="h-5 w-5" />;
+      default:
+        break;
+    }
+  };
 
   const handleSubmenuToggle = (index: number, menuType: "main" | "others") => {
     setOpenSubmenu((prevOpenSubmenu) => {
@@ -289,44 +430,50 @@ const AppSidebar: React.FC = () => {
             // </button>
             <button
               onClick={() => {
-                if (isAllowedPermission(nav.id ?? 0)) return;
+                if (isAllowedPermission(selectedModule, nav.id ?? 0)) return;
                 handleSubmenuToggle(index, menuType);
               }}
-              disabled={isAllowedPermission(nav.id ?? 0)}
-              className={`menu-item group flex items-center gap-2 ${isAllowedPermission(nav.id ?? 0)
+              disabled={isAllowedPermission(selectedModule, nav.id ?? 0)}
+              className={`menu-item group flex items-center gap-2 ${
+                isAllowedPermission(selectedModule, nav.id ?? 0)
                   ? "opacity-50 cursor-not-allowed"
-                  : openSubmenu?.type === menuType && openSubmenu?.index === index
+                  : openSubmenu?.type === menuType &&
+                      openSubmenu?.index === index
                     ? "menu-item-active"
                     : "menu-item-inactive cursor-pointer hover:bg-[var(--app-sidebar-hover)] hover:text-[var(--app-sidebar-hover-text)]"
-                } ${!isExpanded && !isHovered ? "lg:justify-center" : "lg:justify-start"
-                }`}
+              } ${
+                !isExpanded && !isHovered
+                  ? "lg:justify-center"
+                  : "lg:justify-start"
+              }`}
             >
               <span
-                className={`menu-item-icon-size ${isAllowedPermission(nav.id ?? 0)
+                className={`menu-item-icon-size ${
+                  isAllowedPermission(selectedModule, nav.id ?? 0)
                     ? "text-gray-400 dark:text-gray-500"
-                    : openSubmenu?.type === menuType && openSubmenu?.index === index
+                    : openSubmenu?.type === menuType &&
+                        openSubmenu?.index === index
                       ? "menu-item-icon-active"
                       : "menu-item-icon-inactive"
-                  }`}
+                }`}
               >
                 {nav.icon}
               </span>
 
               {(isExpanded || isHovered || isMobileOpen) && (
-                <span className="menu-item-text text-inherit">
-                  {nav.name}
-                </span>
+                <span className="menu-item-text text-inherit">{nav.name}</span>
               )}
 
               {(isExpanded || isHovered || isMobileOpen) && (
                 <ChevronDownIcon
-                  className={`ml-auto w-5 h-5 transition-transform duration-200 ${isAllowedPermission(nav.id ?? 0)
+                  className={`ml-auto w-5 h-5 transition-transform duration-200 ${
+                    isAllowedPermission(selectedModule, nav.id ?? 0)
                       ? "text-gray-400 dark:text-gray-500"
                       : openSubmenu?.type === menuType &&
-                        openSubmenu?.index === index
+                          openSubmenu?.index === index
                         ? "rotate-180 text-[var(--app-sidebar-active-text)]"
                         : "text-[var(--app-sidebar-muted)]"
-                    }`}
+                  }`}
                 />
               )}
             </button>
@@ -349,35 +496,42 @@ const AppSidebar: React.FC = () => {
               //     <span className="menu-item-text">{nav.name}</span>
               //   )}
               // </Link>
-                <Link
-                  to={isAllowedPermission(nav.id ?? 0) ? "#" : nav.path ?? ""}
-                  onClick={(e) => {
-                    if (isAllowedPermission(nav.id ?? 0)) e.preventDefault();
-                  }}
-                  className={`menu-item group flex items-center gap-2 ${isAllowedPermission(nav.id ?? 0)
-                      ? "opacity-50 cursor-not-allowed pointer-events-none"
+              <Link
+                to={
+                  isAllowedPermission(selectedModule, nav.id ?? 0)
+                    ? "#"
+                    : (nav.path ?? "")
+                }
+                onClick={(e) => {
+                  if (isAllowedPermission(selectedModule, nav.id ?? 0))
+                    e.preventDefault();
+                }}
+                className={`menu-item group flex items-center gap-2 ${
+                  isAllowedPermission(selectedModule, nav.id ?? 0)
+                    ? "opacity-50 cursor-not-allowed pointer-events-none"
+                    : isActive(nav.path ?? "")
+                      ? "menu-item-active"
+                      : "menu-item-inactive hover:bg-[var(--app-sidebar-hover)] hover:text-[var(--app-sidebar-hover-text)]"
+                }`}
+              >
+                <span
+                  className={`menu-item-icon-size ${
+                    isAllowedPermission(selectedModule, nav.id ?? 0)
+                      ? "text-gray-400 dark:text-gray-500"
                       : isActive(nav.path ?? "")
-                        ? "menu-item-active"
-                        : "menu-item-inactive hover:bg-[var(--app-sidebar-hover)] hover:text-[var(--app-sidebar-hover-text)]"
-                    }`}
+                        ? "menu-item-icon-active"
+                        : "menu-item-icon-inactive"
+                  }`}
                 >
-                  <span
-                    className={`menu-item-icon-size ${isAllowedPermission(nav.id ?? 0)
-                        ? "text-gray-400 dark:text-gray-500"
-                        : isActive(nav.path ?? "")
-                          ? "menu-item-icon-active"
-                          : "menu-item-icon-inactive"
-                      }`}
-                  >
-                    {nav.icon}
-                  </span>
+                  {nav.icon}
+                </span>
 
-                  {(isExpanded || isHovered || isMobileOpen) && (
-                    <span className="menu-item-text text-inherit">
-                      {nav.name}
-                    </span>
-                  )}
-                </Link>
+                {(isExpanded || isHovered || isMobileOpen) && (
+                  <span className="menu-item-text text-inherit">
+                    {nav.name}
+                  </span>
+                )}
+              </Link>
             )
           )}
           {nav.subItems && (isExpanded || isHovered || isMobileOpen) && (
@@ -398,10 +552,11 @@ const AppSidebar: React.FC = () => {
                   <li key={subItem.name}>
                     <Link
                       to={subItem.path}
-                      className={`menu-dropdown-item ${isActive(subItem.path)
+                      className={`menu-dropdown-item ${
+                        isActive(subItem.path)
                           ? "menu-dropdown-item-active"
                           : "menu-dropdown-item-inactive"
-                        } hover:bg-[var(--app-sidebar-hover)] hover:text-[var(--app-sidebar-hover-text)]`}
+                      } hover:bg-[var(--app-sidebar-hover)] hover:text-[var(--app-sidebar-hover-text)]`}
                     >
                       {subItem.name}
                     </Link>
@@ -418,11 +573,12 @@ const AppSidebar: React.FC = () => {
   return (
     <aside
       className={`fixed left-0 top-0 z-50 mt-16 flex h-screen flex-col border-r border-[var(--app-sidebar-border)] bg-[var(--app-sidebar-bg)] px-4 text-[var(--app-sidebar-text)] shadow-theme-lg backdrop-blur-xl transition-all duration-300 ease-in-out lg:mt-0
-        ${isExpanded || isMobileOpen
-          ? "w-[290px]"
-          : isHovered
+        ${
+          isExpanded || isMobileOpen
             ? "w-[290px]"
-            : "w-[90px]"
+            : isHovered
+              ? "w-[290px]"
+              : "w-[90px]"
         }
         ${isMobileOpen ? "translate-x-0" : "-translate-x-full"}
         lg:translate-x-0`}
@@ -430,11 +586,17 @@ const AppSidebar: React.FC = () => {
       onMouseLeave={() => setIsHovered(false)}
     >
       <div
-        className={`flex py-6 ${!isExpanded && !isHovered ? "lg:justify-center" : "justify-start"
-          }`}
+        className={`flex py-6 ${
+          !isExpanded && !isHovered ? "lg:justify-center" : "justify-start"
+        }`}
       >
-        <div className={`w-full rounded-2xl border border-[var(--app-sidebar-border)] bg-[var(--app-sidebar-surface)] p-3 shadow-theme-sm ${!isExpanded && !isHovered ? "lg:w-auto lg:rounded-xl lg:p-2.5" : ""}`}>
-          <Link to="/" className={`flex items-center gap-3 ${!isExpanded && !isHovered ? "lg:justify-center" : ""}`}>
+        <div
+          className={`w-full rounded-2xl border border-[var(--app-sidebar-border)] bg-[var(--app-sidebar-surface)] p-3 shadow-theme-sm ${!isExpanded && !isHovered ? "lg:w-auto lg:rounded-xl lg:p-2.5" : ""}`}
+        >
+          <Link
+            to="/"
+            className={`flex items-center gap-3 ${!isExpanded && !isHovered ? "lg:justify-center" : ""}`}
+          >
             <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-500/12 text-brand-500 shadow-theme-xs">
               <img
                 src="/images/logo/logo-icon.svg"
@@ -460,26 +622,43 @@ const AppSidebar: React.FC = () => {
         <nav className="mb-6">
           <div className="flex flex-col gap-5">
             <div className="rounded-2xl border border-[var(--app-sidebar-border)] bg-[var(--app-sidebar-section-bg)] p-3">
+              <div className="flex-1 mb-6 max-w-auto">
+                <Select
+                  defaultValue={selectedModule}
+                  onChange={(e) => {
+                    setSelectedModule(Number(e));
+                    // setLocationName(
+                    //   locationOption.find((x) => x.value == Number(e))
+                    //     ?.label ?? "",
+                    // );
+                  }}
+                  icon={handleModuleIconFilter(selectedModule)}
+                  options={moduleOption}
+                  name={"module"}
+                />
+              </div>
               <h2
-                className={`mb-4 flex text-[11px] font-semibold uppercase leading-[20px] tracking-[0.14em] text-[var(--app-sidebar-muted)] ${!isExpanded && !isHovered
+                className={`mb-4 flex text-[11px] font-semibold uppercase leading-[20px] tracking-[0.14em] text-[var(--app-sidebar-muted)] ${
+                  !isExpanded && !isHovered
                     ? "lg:justify-center"
                     : "justify-start"
-                  }`}
+                }`}
               >
                 {isExpanded || isHovered || isMobileOpen ? (
-                  "Services"
+                  handleNavItemWordFilter(selectedModule)
                 ) : (
                   <HorizontaLDots className="size-6" />
                 )}
               </h2>
-              {renderMenuItems(navItems, "main")}
+              {renderMenuItems(handleNavItemFilter(selectedModule), "main")}
             </div>
             <div className="rounded-2xl border border-[var(--app-sidebar-border)] bg-[var(--app-sidebar-section-bg)] p-3">
               <h2
-                className={`mb-4 flex text-[11px] font-semibold uppercase leading-[20px] tracking-[0.14em] text-[var(--app-sidebar-muted)] ${!isExpanded && !isHovered
+                className={`mb-4 flex text-[11px] font-semibold uppercase leading-[20px] tracking-[0.14em] text-[var(--app-sidebar-muted)] ${
+                  !isExpanded && !isHovered
                     ? "lg:justify-center"
                     : "justify-start"
-                  }`}
+                }`}
               >
                 {isExpanded || isHovered || isMobileOpen ? (
                   "Tools"

@@ -1,6 +1,6 @@
-export interface PermissionDto {
-  featureId: number;
-  featureName: string;
+export interface FeaturePermissionDto {
+  id: number;
+  name: string;
   isCreated: boolean;
   isEnabled: boolean;
   isDeleted: boolean;

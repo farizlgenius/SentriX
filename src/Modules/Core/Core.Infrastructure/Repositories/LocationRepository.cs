@@ -130,6 +130,22 @@ public sealed class LocationRepository(CoreDbContext context) : ILocationReposit
             return res;
       }
 
+      public async Task<IEnumerable<LocationDto>> GetListAsync(IEnumerable<Guid> guids, CancellationToken ct = default)
+      {
+            return await context.Locations
+                  .AsNoTracking()
+                  .Where(x => guids.Contains(x.guid))
+                  .OrderBy(x => x.id)
+                  .Select(e => new LocationDto(
+                        e.guid,
+                        e.name,
+                        e.description,
+                        e.country_id,
+                        e.is_active,
+                        e.is_default
+                  )).ToListAsync();
+      }
+
       public async Task<Pagination<LocationDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
       {
             var query = context.Locations

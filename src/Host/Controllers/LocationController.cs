@@ -18,6 +18,13 @@ namespace Host.Controllers
             return Ok(res);
         }
 
+        [HttpPost("list")]
+        public async Task<IActionResult> GetListAsync([FromBody] IEnumerable<Guid> guids)
+        {
+            var res = await loc.GetListAsync(guids);
+            return Ok(res);
+        }
+
 
         [HttpGet("countries")]
         public async Task<IActionResult> GetCountriesAsync()
@@ -56,10 +63,10 @@ namespace Host.Controllers
             return Ok(res);
         }
 
-        [HttpDelete("range")]
-        public async Task<IActionResult> DeleteRangeAsync([FromBody] IEnumerable<Guid> guids)
+        [HttpDelete("list")]
+        public async Task<IActionResult> DeleteListAsync([FromBody] IEnumerable<Guid> guids)
         {
-            var res = await loc.DeleteRangeAsync(guids);
+            var res = await loc.DeleteListAsync(guids);
             return Ok(res);
         }
     }

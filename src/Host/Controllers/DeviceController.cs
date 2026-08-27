@@ -49,7 +49,7 @@ namespace Host.Controllers
     [HttpDelete("range")]
     public async Task<IActionResult> DeleteRangeAsync([FromBody] IEnumerable<Guid> guids)
     {
-      var res = await device.DeleteRangeAsync(guids);
+      var res = await device.DeleteListAsync(guids);
       return Ok(res);
     }
 

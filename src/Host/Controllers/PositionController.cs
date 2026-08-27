@@ -18,9 +18,9 @@ public class PositionController(IPosition dep) : ControllerBase
       }
 
       [HttpGet("pagination/{guid}")]
-      public async Task<IActionResult> GetPaginationByDepartmentGuidAsync(Guid guid,[FromQuery] PaginationParams param)
+      public async Task<IActionResult> GetPaginationByDepartmentGuidAsync(Guid guid, [FromQuery] PaginationParams param)
       {
-            var res = await dep.GetPaginationByDepartmentGuidAsync(param,guid);
+            var res = await dep.GetPaginationByDepartmentGuidAsync(param, guid);
             return Ok(res);
       }
 
@@ -55,7 +55,7 @@ public class PositionController(IPosition dep) : ControllerBase
       [HttpDelete("range")]
       public async Task<IActionResult> DeleteRangeAsync([FromBody] IEnumerable<Guid> guids)
       {
-            var res = await dep.DeleteRangeAsync(guids);
+            var res = await dep.DeleteListAsync(guids);
             return Ok(res);
       }
 

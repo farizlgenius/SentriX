@@ -15,14 +15,14 @@ public sealed class DepartmentService(
       public async Task<Guid> CreateAsync(CreateDepartmentDto dto, CancellationToken ct = default)
       {
             // Check Company Exists
-            if(!await com.IsAnyGuidAsync(dto.CompanyGuid))
-                  throw new NotFoundException(EntityType.Company,dto.CompanyGuid.ToString());
+            if (!await com.IsAnyGuidAsync(dto.CompanyGuid))
+                  throw new NotFoundException(EntityType.Company, dto.CompanyGuid.ToString());
 
             // Check name is duplicate 
-            if (await dep.IsAnyNameByCompanyGuidAsync(dto.Name,dto.CompanyGuid))
+            if (await dep.IsAnyNameByCompanyGuidAsync(dto.Name, dto.CompanyGuid))
                   throw new DuplicateException(EntityType.Department, dto.Name);
 
-            var companyId = await com.GetIdByGuidAsync(dto.CompanyGuid,ct);
+            var companyId = await com.GetIdByGuidAsync(dto.CompanyGuid, ct);
 
 
             var d = new Core.Domain.Entities.Department(
@@ -31,7 +31,7 @@ public sealed class DepartmentService(
                   companyId
             );
 
-            
+
             await dep.AddAsync(d, ct);
 
             return d.Guid;
@@ -60,7 +60,7 @@ public sealed class DepartmentService(
             return true;
       }
 
-      public async Task<IEnumerable<Guid>> DeleteRangeAsync(IEnumerable<Guid> guids, CancellationToken ct = default)
+      public async Task<IEnumerable<Guid>> DeleteListAsync(IEnumerable<Guid> guids, CancellationToken ct = default)
       {
             // Check if guids is empty 
             if (guids.Count() == 0)
@@ -113,9 +113,9 @@ public sealed class DepartmentService(
             return await dep.GetPaginationAsync(param, ct);
       }
 
-      public async Task<Pagination<DepartmentDto>> GetPaginationByCompanyGuidAsync(PaginationParams param,Guid companyGuid, CancellationToken ct = default)
+      public async Task<Pagination<DepartmentDto>> GetPaginationByCompanyGuidAsync(PaginationParams param, Guid companyGuid, CancellationToken ct = default)
       {
-            return await dep.GetPaginationByCompanyGuidAsync(param,companyGuid);
+            return await dep.GetPaginationByCompanyGuidAsync(param, companyGuid);
       }
 
       public async Task<Guid> UpdateAsync(UpdateDepartmentDto dto, CancellationToken ct = default)
@@ -125,10 +125,10 @@ public sealed class DepartmentService(
                   throw new NotFoundException(EntityType.Location, dto.Guid.ToString());
 
             // Check Company Exists
-            if(!await com.IsAnyGuidAsync(dto.CompanyGuid))
-                  throw new NotFoundException(EntityType.Company,dto.CompanyGuid.ToString());
+            if (!await com.IsAnyGuidAsync(dto.CompanyGuid))
+                  throw new NotFoundException(EntityType.Company, dto.CompanyGuid.ToString());
 
-            var companyId = await com.GetIdByGuidAsync(dto.CompanyGuid,ct);
+            var companyId = await com.GetIdByGuidAsync(dto.CompanyGuid, ct);
 
             var d = new Core.Domain.Entities.Department(
               dto.Guid,

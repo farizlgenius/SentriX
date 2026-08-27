@@ -48,7 +48,7 @@ public sealed class UserService(
     throw new NotImplementedException();
   }
 
-  public async Task<IEnumerable<Guid>> DeleteRangeAsync(IEnumerable<Guid> guids, CancellationToken ct = default)
+  public async Task<IEnumerable<Guid>> DeleteListAsync(IEnumerable<Guid> guids, CancellationToken ct = default)
   {
     throw new NotImplementedException();
   }

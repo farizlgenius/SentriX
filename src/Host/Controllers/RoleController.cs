@@ -50,7 +50,7 @@ namespace Host.Controllers
             [HttpDelete("range")]
             public async Task<IActionResult> DeleteRangeAsync([FromBody] IEnumerable<Guid> guids)
             {
-                  var res = await role.DeleteRangeAsync(guids);
+                  var res = await role.DeleteListAsync(guids);
                   return Ok(res);
             }
 

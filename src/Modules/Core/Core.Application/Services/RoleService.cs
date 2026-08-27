@@ -76,7 +76,7 @@ public sealed class RoleService(
             return true;
       }
 
-      public async Task<IEnumerable<Guid>> DeleteRangeAsync(IEnumerable<Guid> guids, CancellationToken ct = default)
+      public async Task<IEnumerable<Guid>> DeleteListAsync(IEnumerable<Guid> guids, CancellationToken ct = default)
       {
             // Check if guids is empty 
             if (guids.Count() == 0)

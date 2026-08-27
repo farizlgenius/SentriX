@@ -81,9 +81,11 @@ public sealed class RoleRepository(CoreDbContext context) : IRoleRepository
                         e.guid,
                         e.name,
                         e.module_permission.Select(x => new ModulePermissionDto(
+                              x.module_id,
                               x.module.name,
                               x.is_enabled,
                               x.feature_permissions.Select(f => new FeaturePermissionDto(
+                                    f.feature_id,
                                     f.feature.name,
                                     f.is_enabled,
                                     f.is_created,
@@ -160,9 +162,11 @@ public sealed class RoleRepository(CoreDbContext context) : IRoleRepository
                         e.guid,
                         e.name,
                         e.module_permission.Select(x => new ModulePermissionDto(
+                              x.module_id,
                         x.module.name,
                         x.is_enabled,
                         x.feature_permissions.Select(x => new FeaturePermissionDto(
+                              x.feature_id,
                               x.feature.name,
                               x.is_enabled,
                               x.is_created,
@@ -189,9 +193,11 @@ public sealed class RoleRepository(CoreDbContext context) : IRoleRepository
                   .AsNoTracking()
                   .Where(x => x.role_id == id)
                   .Select(x => new ModulePermissionDto(
+                        x.module_id,
                         x.module.name,
                         x.is_enabled,
                         x.feature_permissions.Select(x => new FeaturePermissionDto(
+                              x.feature_id,
                               x.feature.name,
                               x.is_enabled,
                               x.is_created,
