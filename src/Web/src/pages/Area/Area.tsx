@@ -18,19 +18,27 @@ import { usePopup } from "../../context/PopupContext";
 import { AccessAreaToast } from "../../model/ToastMessage";
 import { AreaEndpoint } from "../../endpoint/AreaEndpoint";
 
-
-const AREA_HEADERS = ["Name", "Action"]
-const AREA_KEY = ["name"]
+const AREA_HEADERS = ["Name", "Action"];
+const AREA_KEY = ["name"];
 
 export const Area = () => {
-    const { toggleToast } = useToast();
-    const {locationId} = useLocation();
-    const {setPagination} = usePagination();
-    const { setRemove, setConfirmRemove,setConfirmCreate ,setCreate,setUpdate,setConfirmUpdate,setInfo,setMessage} = usePopup();
-    const { filterPermission } = useAuth();
-    const [refresh, setRefresh] = useState(false);
-    const toggleRefresh = () => setRefresh(!refresh);
-    var defaultDto: AreaDto = {
+  const { toggleToast } = useToast();
+  const { locationGuid: locationId } = useLocation();
+  const { setPagination } = usePagination();
+  const {
+    setRemove,
+    setConfirmRemove,
+    setConfirmCreate,
+    setCreate,
+    setUpdate,
+    setConfirmUpdate,
+    setInfo,
+    setMessage,
+  } = usePopup();
+  const { filterPermission } = useAuth();
+  const [refresh, setRefresh] = useState(false);
+  const toggleRefresh = () => setRefresh(!refresh);
+  var defaultDto: AreaDto = {
     // base
     name: "",
     multiOccupancy: -1,
@@ -45,136 +53,194 @@ export const Area = () => {
     isActive: true,
     scpId: 0,
     areaId: 0,
-    id: 0
-}
-    const [areaDto, setAreaDto] = useState<AreaDto>(defaultDto);
-    {/* Modal */ }
-    const [form,setForm] = useState<boolean>(false);
-    const [formType,setFormType] = useState<FormType>(FormType.CREATE);
+    id: 0,
+  };
+  const [areaDto, setAreaDto] = useState<AreaDto>(defaultDto);
+  {
+    /* Modal */
+  }
+  const [form, setForm] = useState<boolean>(false);
+  const [formType, setFormType] = useState<FormType>(FormType.CREATE);
 
-    const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-        console.log(e.currentTarget.name);
-        switch (e.currentTarget.name) {
-            case "add":
-                setFormType(FormType.CREATE)
-                setForm(true);
-                break;
-            case "delete":
-                if(selectedObjects.length == 0){            
-                    setMessage("Please select object")
-                    setInfo(true);
-                }
-                setConfirmRemove(() => async () => {
-                    var data:number[] = [];
-                    selectedObjects.map(async (a:AreaDto) => {
-                        data.push(a.id)
-                    })
-                    var res = await send.post(AreaEndpoint.DELETE_RANGE,data)
-                    if(Helper.handleToastByResCode(res,AccessAreaToast.DELETE_RANGE,toggleToast)){
-                        setRemove(false);
-                        toggleRefresh();
-                    }
-                })
-                setRemove(true);
-                break;
-            case "create":
-                setConfirmCreate(() => async () => {
-                    const res = await send.post(AreaEndpoint.CREATE,areaDto);
-                    if (Helper.handleToastByResCode(res, AccessAreaToast.CREATE, toggleToast)) {
-                        setForm(false)
-                        setAreaDto(defaultDto)
-                        toggleRefresh();
-                    }
-                })
-                setCreate(true);
-                break;
-            case "update":
-                setConfirmUpdate(() => async () => {
-                    const res = await send.put(AreaEndpoint.UPDATE,areaDto)
-                    if (Helper.handleToastByResCode(res, AccessAreaToast.UPDATE, toggleToast)) {
-                        setForm(false)
-                        setAreaDto(defaultDto)
-                        toggleRefresh();
-                    }
-                });
-                setUpdate(true)
-                break;
-            case "close":
-            case "cancel":
-                setAreaDto(defaultDto)
-                setForm(false);
-                break;
-            default:
-                break;
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    console.log(e.currentTarget.name);
+    switch (e.currentTarget.name) {
+      case "add":
+        setFormType(FormType.CREATE);
+        setForm(true);
+        break;
+      case "delete":
+        if (selectedObjects.length == 0) {
+          setMessage("Please select object");
+          setInfo(true);
         }
-    }
-
-    const handleRemove = (data: AreaDto) => {
         setConfirmRemove(() => async () => {
-            const res = await send.delete(AreaEndpoint.DELETE(data.id))
-        if (Helper.handleToastByResCode(res, AccessAreaToast.DELETE, toggleToast)) {
-            setRemove(false)
+          var data: number[] = [];
+          selectedObjects.map(async (a: AreaDto) => {
+            data.push(a.id);
+          });
+          var res = await send.post(AreaEndpoint.DELETE_RANGE, data);
+          if (
+            Helper.handleToastByResCode(
+              res,
+              AccessAreaToast.DELETE_RANGE,
+              toggleToast,
+            )
+          ) {
+            setRemove(false);
             toggleRefresh();
-        }
-        })
+          }
+        });
         setRemove(true);
+        break;
+      case "create":
+        setConfirmCreate(() => async () => {
+          const res = await send.post(AreaEndpoint.CREATE, areaDto);
+          if (
+            Helper.handleToastByResCode(
+              res,
+              AccessAreaToast.CREATE,
+              toggleToast,
+            )
+          ) {
+            setForm(false);
+            setAreaDto(defaultDto);
+            toggleRefresh();
+          }
+        });
+        setCreate(true);
+        break;
+      case "update":
+        setConfirmUpdate(() => async () => {
+          const res = await send.put(AreaEndpoint.UPDATE, areaDto);
+          if (
+            Helper.handleToastByResCode(
+              res,
+              AccessAreaToast.UPDATE,
+              toggleToast,
+            )
+          ) {
+            setForm(false);
+            setAreaDto(defaultDto);
+            toggleRefresh();
+          }
+        });
+        setUpdate(true);
+        break;
+      case "close":
+      case "cancel":
+        setAreaDto(defaultDto);
+        setForm(false);
+        break;
+      default:
+        break;
     }
+  };
 
+  const handleRemove = (data: AreaDto) => {
+    setConfirmRemove(() => async () => {
+      const res = await send.delete(AreaEndpoint.DELETE(data.id));
+      if (
+        Helper.handleToastByResCode(res, AccessAreaToast.DELETE, toggleToast)
+      ) {
+        setRemove(false);
+        toggleRefresh();
+      }
+    });
+    setRemove(true);
+  };
 
-    {/* handle Table Action */ }
-    const handleEdit = (data: AreaDto) => {
-        setAreaDto(data);
-        setFormType(FormType.UPDATE)
-        setForm(true);
+  {
+    /* handle Table Action */
+  }
+  const handleEdit = (data: AreaDto) => {
+    setAreaDto(data);
+    setFormType(FormType.UPDATE);
+    setForm(true);
+  };
+
+  const handleInfo = (data: AreaDto) => {
+    setAreaDto(data);
+    setFormType(FormType.INFO);
+    setForm(true);
+  };
+
+  {
+    /* Group Data */
+  }
+  const [areasDto, setAreasDto] = useState<AreaDto[]>([]);
+  const fetchData = async (
+    pageNumber: number,
+    pageSize: number,
+    locationId?: number,
+    search?: string,
+    startDate?: string,
+    endDate?: string,
+  ) => {
+    const res = await send.get(
+      AreaEndpoint.PAGINATION(
+        pageNumber,
+        pageSize,
+        locationId,
+        search,
+        startDate,
+        endDate,
+      ),
+    );
+    console.log(res?.data.data);
+    if (res && res.data.data) {
+      console.log(res.data.data);
+      setAreasDto(res.data.data.data);
+      setPagination(res.data.data.page);
     }
+  };
 
-    const handleInfo = (data:AreaDto) => {
-        setAreaDto(data);
-        setFormType(FormType.INFO)
-        setForm(true);
-    }
+  {
+    /* checkBox */
+  }
+  const [selectedObjects, setSelectedObjects] = useState<AreaDto[]>([]);
 
-    {/* Group Data */ }
-    const [areasDto, setAreasDto] = useState<AreaDto[]>([]);
-    const fetchData = async (pageNumber: number, pageSize: number,locationId?:number,search?: string, startDate?: string, endDate?: string) => {
-            const res = await send.get(AreaEndpoint.PAGINATION(pageNumber,pageSize,locationId,search, startDate, endDate));
-            console.log(res?.data.data)
-            if (res && res.data.data) {
-                console.log(res.data.data)
-                setAreasDto(res.data.data.data);
-                setPagination(res.data.data.page);
-            }
-        }
+  {
+    /* Form */
+  }
+  const createContent: FormContent[] = [
+    {
+      icon: <AreaIcon />,
+      label: "Area",
+      content: (
+        <AreaForm
+          dto={areaDto}
+          setDto={setAreaDto}
+          handleClick={handleClick}
+          type={formType}
+        />
+      ),
+    },
+  ];
 
-
-
-    {/* checkBox */ }
-    const [selectedObjects, setSelectedObjects] = useState<AreaDto[]>([]);
-    
-
-    {/* Form */ }
-    const createContent: FormContent[] = [
-        {
-            icon: <AreaIcon />,
-            label: "Area",
-            content: <AreaForm dto={areaDto} setDto={setAreaDto} handleClick={handleClick} type={formType} />
-        }
-    ];
-
-
-    return (
-        <>
-            <PageBreadcrumb pageTitle="Access Area" />
-            {form ?
-                <BaseForm tabContent={createContent} />
-                :
-                <div className="space-y-6">
-                    <BaseTable<AreaDto> headers={AREA_HEADERS} keys={AREA_KEY} data={areasDto} select={selectedObjects} setSelect={setSelectedObjects} onInfo={handleInfo} onEdit={handleEdit} onRemove={handleRemove} onClick={handleClick} permission={filterPermission(FeatureId.area)} fetchData={fetchData} locationId={locationId} />
-
-                </div>
-            }
-
-
-        </>
-    )
-}
+  return (
+    <>
+      <PageBreadcrumb pageTitle="Access Area" />
+      {form ? (
+        <BaseForm tabContent={createContent} />
+      ) : (
+        <div className="space-y-6">
+          <BaseTable<AreaDto>
+            headers={AREA_HEADERS}
+            keys={AREA_KEY}
+            data={areasDto}
+            select={selectedObjects}
+            setSelect={setSelectedObjects}
+            onInfo={handleInfo}
+            onEdit={handleEdit}
+            onRemove={handleRemove}
+            onClick={handleClick}
+            permission={filterPermission(FeatureId.area)}
+            fetchData={fetchData}
+            locationGuid={locationId}
+          />
+        </div>
+      )}
+    </>
+  );
+};

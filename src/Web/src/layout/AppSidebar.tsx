@@ -8,13 +8,9 @@ import {
   ChevronDownIcon,
   GridIcon,
   HorizontaLDots,
-  ListIcon,
   ModuleIcon,
-  PageIcon,
   PieChartIcon,
   PlugInIcon,
-  TableIcon,
-  UserCircleIcon,
   EventIcon,
   DoorIcon,
   GroupIcon,
@@ -37,7 +33,6 @@ import {
 import { useSidebar } from "../context/SidebarContext";
 import { useAuth } from "../context/AuthContext";
 import Select from "../components/form/Select";
-import { Options } from "../model/Options";
 
 type NavItem = {
   id?: number;
@@ -47,37 +42,18 @@ type NavItem = {
   subItems?: { name: string; path: string; pro?: boolean; new?: boolean }[];
 };
 
-const defaultModuleOptions: Options[] = [
-  {
-    label: "Access Control",
-    value: 1,
-  },
-  {
-    label: "Visitor Management",
-    value: 2,
-  },
-  {
-    label: "Time Attendance",
-    value: 3,
-  },
-  {
-    label: "Guard Tour",
-    value: 4,
-  },
-];
-
 const visitorNavItems: NavItem[] = [
   {
-    id: 1,
+    id: 21,
     icon: <GridIcon />,
-    name: "Dashboard",
+    name: "Appointment",
     path: "/",
   },
 ];
 
 const timeAttendanceNavItems: NavItem[] = [
   {
-    id: 1,
+    id: 22,
     icon: <GridIcon />,
     name: "Dashboard",
     path: "/",
@@ -272,12 +248,9 @@ const othersItems: NavItem[] = [
 const AppSidebar: React.FC = () => {
   const { isExpanded, isMobileOpen, isHovered, setIsHovered } = useSidebar();
   const location = useLocation();
-  const { isAllowedPermission, IsAllowModule } = useAuth();
-  const [selectedModule, setSelectedModule] = useState<number>(0);
+  const { isAllowedPermission, selectedModule, setSelectedModule, modules } =
+    useAuth();
   // const [moduleOption, setModuleOption] = useState<Options[]>([]);
-  const moduleOption = defaultModuleOptions.filter((x) =>
-    IsAllowModule(Number(x.value)),
-  );
 
   const [openSubmenu, setOpenSubmenu] = useState<{
     type: "main" | "others";
@@ -295,7 +268,7 @@ const AppSidebar: React.FC = () => {
   );
 
   useEffect(() => {
-    setSelectedModule(Number(moduleOption[0].value));
+    setSelectedModule(Number(modules[0].value));
   }, []);
 
   useEffect(() => {
@@ -633,7 +606,7 @@ const AppSidebar: React.FC = () => {
                     // );
                   }}
                   icon={handleModuleIconFilter(selectedModule)}
-                  options={moduleOption}
+                  options={modules}
                   name={"module"}
                 />
               </div>

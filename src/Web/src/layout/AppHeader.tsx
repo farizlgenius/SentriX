@@ -12,7 +12,7 @@ import Select from "../components/form/Select";
 import { ScanButton } from "../components/common/ScanButton";
 
 const AppHeader: React.FC = () => {
-  const { locationId, locationOption, setLocationId, setLocationName } =
+  const { locationGuid, locationOption, setLocationGuid, setLocationName } =
     useLocation();
   const [isApplicationMenuOpen, setApplicationMenuOpen] = useState(false);
 
@@ -175,9 +175,9 @@ const AppHeader: React.FC = () => {
             {/* <!-- Location Selector --> */}
             <div className="flex-1">
               <Select
-                defaultValue={locationId}
+                defaultValue={locationGuid}
                 onChange={(e) => {
-                  setLocationId(Number(e));
+                  setLocationGuid(e);
                   setLocationName(
                     locationOption.find((x) => x.value == Number(e))?.label ??
                       "",

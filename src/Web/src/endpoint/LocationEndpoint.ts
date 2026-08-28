@@ -9,12 +9,12 @@ export const LocationEndpoint = {
     search?: string | undefined,
     startDate?: string | undefined,
     endDate?: string | undefined,
-    locationId?: number,
+    locationGuid?: string,
   ) =>
-    `/api/${CONTROLLER}/pagination?Page=${page}&PageSize=${pageSize}${search == undefined || search == "" ? "" : `&Search=${search}`}${startDate == undefined ? "" : `&startDate=${startDate}`}${endDate == undefined ? "" : `&startDate=${endDate}`}${locationId !== undefined ? `&LocationId=${locationId}` : ""}`,
+    `/api/${CONTROLLER}/pagination?Page=${page}&PageSize=${pageSize}${search == undefined || search == "" ? "" : `&Search=${search}`}${startDate == undefined ? "" : `&startDate=${startDate}`}${endDate == undefined ? "" : `&startDate=${endDate}`}${locationGuid !== undefined ? `&LocationGuid=${locationGuid}` : ""}`,
   UPDATE: `/api/${CONTROLLER}`,
-  DELETE: (component: number) => `/api/${CONTROLLER}/${component}`,
+  DELETE: (guid: string) => `/api/${CONTROLLER}/${guid}`,
   GET_RANGE: `/api/${CONTROLLER}/list`,
-  DELETE_RANGE: `/api/${CONTROLLER}/delete/range`,
-  COUNTRY: `/api/${CONTROLLER}/country`,
+  DELETE_RANGE: `/api/${CONTROLLER}/list`,
+  COUNTRY: `/api/${CONTROLLER}/countries`,
 } as const;

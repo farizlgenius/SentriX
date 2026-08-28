@@ -5,6 +5,7 @@ public sealed record LocationDto(
   string Name,
   string Description,
   int CountryId,
+  string Country,
   bool IsActive,
   bool IsDefault
 );

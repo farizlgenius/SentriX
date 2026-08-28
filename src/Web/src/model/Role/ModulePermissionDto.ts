@@ -4,5 +4,5 @@ export interface ModulePermissionDto {
   id: number;
   name: string;
   isEnabled: boolean;
-  featurePermissions: FeaturePermissionDto[];
+  featurePermission: FeaturePermissionDto[];
 }

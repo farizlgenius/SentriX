@@ -100,6 +100,7 @@ public sealed class LocationRepository(CoreDbContext context) : ILocationReposit
                         x.name,
                         x.description,
                         x.country_id,
+                        x.country.name,
                         x.is_active,
                         x.is_default
                   )).FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.Location, guid.ToString());
@@ -141,6 +142,7 @@ public sealed class LocationRepository(CoreDbContext context) : ILocationReposit
                         e.name,
                         e.description,
                         e.country_id,
+                        e.country.name,
                         e.is_active,
                         e.is_default
                   )).ToListAsync();
@@ -203,6 +205,7 @@ public sealed class LocationRepository(CoreDbContext context) : ILocationReposit
                         e.name,
                         e.description,
                         e.country_id,
+                        e.country.name,
                         e.is_active,
                         e.is_default
                   )).ToListAsync();

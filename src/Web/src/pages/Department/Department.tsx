@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState } from "react";
 import { BaseForm } from "../UiElements/BaseForm";
 import PageBreadcrumb from "../../components/common/PageBreadCrumb";
 import { FormContent } from "../../model/Form/FormContent";
@@ -25,181 +25,275 @@ import { useLocation } from "../../context/LocationContext";
 
 var removeTarget: number = 0;
 
-
-export const HEADER: string[] = ["Name", "Action"]
+export const HEADER: string[] = ["Name", "Action"];
 export const KEY: string[] = ["name"];
 
 export const Department = () => {
-    const {locationId} = useLocation();
-        const [selectedCompany,setSelectedCompany] = useState<number>(-1);
-    const [companyOptions,setCompanyOptions] = useState<Options[]>([]);
+  const { locationGuid: locationId } = useLocation();
+  const [selectedCompany, setSelectedCompany] = useState<number>(-1);
+  const [companyOptions, setCompanyOptions] = useState<Options[]>([]);
 
-    const defaultDto: DepartmentDto = {
-        id: 0,
-        name: "",
-        description: "",
-        companyId: selectedCompany,
-        locationId: locationId,
-        isActive: true,
-        isDefault: false
-    }
+  const defaultDto: DepartmentDto = {
+    id: 0,
+    name: "",
+    description: "",
+    companyId: selectedCompany,
+    locationId: locationId,
+    isActive: true,
+    isDefault: false,
+  };
 
-    const { toggleToast } = useToast();
-    const { setPagination } = usePagination();
-    const { filterPermission } = useAuth();
-    const { setRemove, setConfirmRemove, setConfirmCreate, setInfo, setMessage, setCreate, setUpdate, setConfirmUpdate } = usePopup();
-    const [form, setForm] = useState<boolean>(false);
-    const [refresh, setRefresh] = useState<boolean>(false);
-    const toggleRefresh = () => setRefresh(!refresh)
-    const [departmentDto, setDepartmentDto] = useState<DepartmentDto>(defaultDto);
-    const [departmentsDto, setDepartmentsDto] = useState<DepartmentDto[]>([]);
-    const [select, setSelect] = useState<DepartmentDto[]>([])
-    const [formType, setFormType] = useState<FormType>(FormType.CREATE);
+  const { toggleToast } = useToast();
+  const { setPagination } = usePagination();
+  const { filterPermission } = useAuth();
+  const {
+    setRemove,
+    setConfirmRemove,
+    setConfirmCreate,
+    setInfo,
+    setMessage,
+    setCreate,
+    setUpdate,
+    setConfirmUpdate,
+  } = usePopup();
+  const [form, setForm] = useState<boolean>(false);
+  const [refresh, setRefresh] = useState<boolean>(false);
+  const toggleRefresh = () => setRefresh(!refresh);
+  const [departmentDto, setDepartmentDto] = useState<DepartmentDto>(defaultDto);
+  const [departmentsDto, setDepartmentsDto] = useState<DepartmentDto[]>([]);
+  const [select, setSelect] = useState<DepartmentDto[]>([]);
+  const [formType, setFormType] = useState<FormType>(FormType.CREATE);
 
+  const handleRemove = (data: DepartmentDto) => {
+    removeTarget = data.id;
+    setRemove(true);
+    setConfirmRemove(() => async () => {
+      const res = await api.delete(DepartmentEndpoint.DELETE(removeTarget));
+      if (
+        Helper.handleToastByResCode(res, DepartmentToast.DELETE, toggleToast)
+      ) {
+        toggleRefresh();
+        removeTarget = 0;
+      }
+    });
+  };
 
-    const handleRemove = (data: DepartmentDto) => {
-        removeTarget = data.id;
-        setRemove(true);
-        setConfirmRemove(() => async () => {
-            const res = await api.delete(DepartmentEndpoint.DELETE(removeTarget));
-            if (Helper.handleToastByResCode(res, DepartmentToast.DELETE, toggleToast)) {
-                toggleRefresh();
-                removeTarget = 0;
+  const handleInfo = (data: DepartmentDto) => {
+    setFormType(FormType.INFO);
+    setDepartmentDto(data);
+    setForm(true);
+  };
+
+  const handleEdit = (data: DepartmentDto) => {
+    setFormType(FormType.UPDATE);
+    setDepartmentDto(data);
+    setForm(true);
+  };
+
+  const handleClickWithEvent = (e: React.MouseEvent<HTMLButtonElement>) => {
+    switch (e.currentTarget.name) {
+      case "add":
+        setFormType(FormType.CREATE);
+        setForm(true);
+        break;
+      case "delete":
+        if (select.length == 0) {
+          setMessage("Please select object");
+          setInfo(true);
+        } else {
+          setConfirmRemove(() => async () => {
+            var data: number[] = [];
+            select.map(async (a: DepartmentDto) => {
+              data.push(a.id);
+            });
+            var res = await send.post(DepartmentEndpoint.DELETE_RANGE, {
+              ids: data,
+            });
+            if (
+              Helper.handleToastByResCode(
+                res,
+                DepartmentToast.DELETE_RANGE,
+                toggleToast,
+              )
+            ) {
+              setRemove(false);
+              toggleRefresh();
             }
-        })
-    }
-
-    const handleInfo = (data: DepartmentDto) => {
-        setFormType(FormType.INFO);
-        setDepartmentDto(data);
-        setForm(true);
-    }
-
-    const handleEdit = (data: DepartmentDto) => {
-        setFormType(FormType.UPDATE);
-        setDepartmentDto(data);
-        setForm(true);
-    }
-
-    const handleClickWithEvent = (e: React.MouseEvent<HTMLButtonElement>) => {
-        switch (e.currentTarget.name) {
-            case "add":
-                setFormType(FormType.CREATE);
-                setForm(true);
-                break;
-            case "delete":
-                if (select.length == 0) {
-                    setMessage("Please select object")
-                    setInfo(true);
-                } else {
-                    setConfirmRemove(() => async () => {
-                        var data: number[] = [];
-                        select.map(async (a: DepartmentDto) => {
-                            data.push(a.id)
-                        })
-                        var res = await send.post(DepartmentEndpoint.DELETE_RANGE, {
-                            ids: data
-                        })
-                        if (Helper.handleToastByResCode(res, DepartmentToast.DELETE_RANGE, toggleToast)) {
-                            setRemove(false);
-                            toggleRefresh();
-                        }
-                    })
-                    setRemove(true);
-                }
-                break;
-            case "create":
-                setConfirmCreate(() => async () => {
-                    const res = await send.post(DepartmentEndpoint.CREATE, departmentDto);
-                    if (Helper.handleToastByResCode(res, DepartmentToast.CREATE, toggleToast)) {
-                        setForm(false)
-                        toggleRefresh();
-                        setDepartmentDto(defaultDto)
-                    }
-                })
-                setCreate(true);
-                break;
-            case "update":
-                setConfirmUpdate(() => async () => {
-                    const res = await api.put(DepartmentEndpoint.UPDATE, departmentDto);
-                    if (Helper.handleToastByResCode(res, DepartmentToast.UPDATE, toggleToast)) {
-                        setForm(false)
-                        toggleRefresh();
-                    }
-                })
-                setUpdate(true);
-                break;
-            case "close":
-            case "cancel":
-                setDepartmentDto(defaultDto)
-                setForm(false);
-                break;
-            default:
-                break;
+          });
+          setRemove(true);
         }
+        break;
+      case "create":
+        setConfirmCreate(() => async () => {
+          const res = await send.post(DepartmentEndpoint.CREATE, departmentDto);
+          if (
+            Helper.handleToastByResCode(
+              res,
+              DepartmentToast.CREATE,
+              toggleToast,
+            )
+          ) {
+            setForm(false);
+            toggleRefresh();
+            setDepartmentDto(defaultDto);
+          }
+        });
+        setCreate(true);
+        break;
+      case "update":
+        setConfirmUpdate(() => async () => {
+          const res = await api.put(DepartmentEndpoint.UPDATE, departmentDto);
+          if (
+            Helper.handleToastByResCode(
+              res,
+              DepartmentToast.UPDATE,
+              toggleToast,
+            )
+          ) {
+            setForm(false);
+            toggleRefresh();
+          }
+        });
+        setUpdate(true);
+        break;
+      case "close":
+      case "cancel":
+        setDepartmentDto(defaultDto);
+        setForm(false);
+        break;
+      default:
+        break;
     }
+  };
 
-    const fetchData = async (pageNumber: number, pageSize: number, locationId?: number, search?: string, startDate?: string, endDate?: string) => {
-        console.log(locationId);
-        const res = await send.get(DepartmentEndpoint.PAGINATION_BY_COMPANY(pageNumber, pageSize,selectedCompany,locationId,search, startDate, endDate));
-        if (res.data.success) {
-            setDepartmentsDto(res.data.data.items);
-            setPagination(res.data.data);
-        }
+  const fetchData = async (
+    pageNumber: number,
+    pageSize: number,
+    locationId?: number,
+    search?: string,
+    startDate?: string,
+    endDate?: string,
+  ) => {
+    console.log(locationId);
+    const res = await send.get(
+      DepartmentEndpoint.PAGINATION_BY_COMPANY(
+        pageNumber,
+        pageSize,
+        selectedCompany,
+        locationId,
+        search,
+        startDate,
+        endDate,
+      ),
+    );
+    if (res.data.success) {
+      setDepartmentsDto(res.data.data.items);
+      setPagination(res.data.data);
     }
+  };
 
-    const fetchDataImd = async (pageNumber: number, pageSize: number,companyId:number, locationId?: number, search?: string, startDate?: string, endDate?: string) => {
-        console.log(locationId);
-        const res = await send.get(DepartmentEndpoint.PAGINATION_BY_COMPANY(pageNumber, pageSize,companyId,locationId,search, startDate, endDate));
-        if (res.data.success) {
-            setDepartmentsDto(res.data.data.items);
-            setPagination(res.data.data);
-        }
-    } 
+  const fetchDataImd = async (
+    pageNumber: number,
+    pageSize: number,
+    companyId: number,
+    locationId?: number,
+    search?: string,
+    startDate?: string,
+    endDate?: string,
+  ) => {
+    console.log(locationId);
+    const res = await send.get(
+      DepartmentEndpoint.PAGINATION_BY_COMPANY(
+        pageNumber,
+        pageSize,
+        companyId,
+        locationId,
+        search,
+        startDate,
+        endDate,
+      ),
+    );
+    if (res.data.success) {
+      setDepartmentsDto(res.data.data.items);
+      setPagination(res.data.data);
+    }
+  };
 
-    const tabContent: FormContent[] = [
+  const tabContent: FormContent[] = [
+    {
+      icon: <LocationIcon />,
+      label: "Intevals",
+      content: (
+        <DepartmentForm
+          type={formType}
+          dto={departmentDto}
+          setDto={setDepartmentDto}
+          handleClick={handleClickWithEvent}
+        />
+      ),
+    },
+  ];
+
+  const fetchCompany = async () => {
+    var res = await send.get(CompanyEndpoint.GET_BY_LOCATION(locationId));
+    res.data.data.map((a: CompanyDto) => {
+      setCompanyOptions((prev) => [
+        ...prev,
         {
-            icon: <LocationIcon />,
-            label: "Intevals",
-            content: <DepartmentForm type={formType} dto={departmentDto} setDto={setDepartmentDto} handleClick={handleClickWithEvent} />
-        }
-    ];
+          label: a.name,
+          value: a.id,
+          description: a.description,
+        },
+      ]);
+    });
+  };
 
-    const fetchCompany = async () => {
-        var res = await send.get(CompanyEndpoint.GET_BY_LOCATION(locationId));
-        res.data.data.map((a:CompanyDto) => {
-            setCompanyOptions((prev) => ([...prev,{
-                label:a.name,
-                value:a.id,
-                description:a.description
-            }]))
-        })
-    }
+  useEffect(() => {
+    fetchCompany();
+  }, []);
 
-    useEffect(() => {
-        fetchCompany();
-    },[])
-
-    return (
-        <>
-            <PageBreadcrumb pageTitle="Departments" />
-            {form ?
-                <BaseForm tabContent={tabContent} header={""} desc={""} />
-                :
-                <div className="space-y-6">
-                    <div className="rounded-xl border border-gray-200 p-6 dark:border-gray-800 border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03] " >
-                              <div className="gap-3"> 
-                                    <Label>Company Selector</Label>
-                                    <Select options={companyOptions} name="Company" defaultValue={selectedCompany} onChange={e => {
-                                        setSelectedCompany(Number(e));
-                                        setDepartmentDto(prev => ({ ...prev, companyId: Number(e) }))
-                                        fetchDataImd(1,10,Number(e),locationId);
-                                    } }/>
-                              </div>
-                        </div>
-                    <BaseTable<DepartmentDto> headers={HEADER} keys={KEY} data={departmentsDto} select={select} setSelect={setSelect} onEdit={handleEdit} onRemove={handleRemove} onClick={handleClickWithEvent} permission={filterPermission(FeatureId.user)} onInfo={handleInfo} fetchData={fetchData} refresh={refresh} locationId={selectedCompany == -1 ? -1 : locationId} />
-                </div>
-            }
-        </>
-    )
-}
+  return (
+    <>
+      <PageBreadcrumb pageTitle="Departments" />
+      {form ? (
+        <BaseForm tabContent={tabContent} header={""} desc={""} />
+      ) : (
+        <div className="space-y-6">
+          <div className="rounded-xl border border-gray-200 p-6 dark:border-gray-800 border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03] ">
+            <div className="gap-3">
+              <Label>Company Selector</Label>
+              <Select
+                options={companyOptions}
+                name="Company"
+                defaultValue={selectedCompany}
+                onChange={(e) => {
+                  setSelectedCompany(Number(e));
+                  setDepartmentDto((prev) => ({
+                    ...prev,
+                    companyId: Number(e),
+                  }));
+                  fetchDataImd(1, 10, Number(e), locationId);
+                }}
+              />
+            </div>
+          </div>
+          <BaseTable<DepartmentDto>
+            headers={HEADER}
+            keys={KEY}
+            data={departmentsDto}
+            select={select}
+            setSelect={setSelect}
+            onEdit={handleEdit}
+            onRemove={handleRemove}
+            onClick={handleClickWithEvent}
+            permission={filterPermission(FeatureId.user)}
+            onInfo={handleInfo}
+            fetchData={fetchData}
+            refresh={refresh}
+            locationGuid={selectedCompany == -1 ? -1 : locationId}
+          />
+        </div>
+      )}
+    </>
+  );
+};

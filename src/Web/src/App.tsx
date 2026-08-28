@@ -92,7 +92,7 @@ export default function App() {
   const { showToast, ToastContainer, toggleToast } = useToast();
   const { loading, Loading } = useLoading();
   const { setIdReports } = useIdReport();
-  const { locationId } = useLocation();
+  const { locationGuid: locationId } = useLocation();
 
   const [license, setLicense] = useState<boolean>(true);
   const [loginDto, setLoginDto] = useState<LoginDto>({
@@ -115,8 +115,6 @@ export default function App() {
     }
   };
 
-  
-
   {
     /* License Check */
   }
@@ -138,47 +136,47 @@ export default function App() {
     }
   };
 
-
-useEffect(() => {
-  checkLicense();
+  useEffect(() => {
+    checkLicense();
     if (!license) {
       navigate("/license");
       return;
     }
-},[])
+  }, []);
 
-const fetchIdReport = async () => {
+  const fetchIdReport = async () => {
     var res = await send.get(DeviceEndpoint.ID_REPORT);
-   setIdReports(res.data);
+    setIdReports(res.data);
+  };
+
+  {
+    /* UseEffect */
   }
+  useEffect(() => {
+    const setup = async () => {
+      const connection = SignalRService.getConnection();
+      if (!connection) return;
 
-{/* UseEffect */ }
- useEffect(() => {
-  const setup = async () => {
-    const connection = SignalRService.getConnection();
-    if (!connection) return;
+      connection.on(SignalRTopic.IDREPORT, (payload: any) => {
+        console.log("Received realtime update:", payload);
 
-    connection.on(SignalRTopic.IDREPORT, (payload: any) => {
-      console.log("Received realtime update:", payload);
+        // ⭐ unwrap { reports: [...] }
+        const list = Array.isArray(payload?.reports) ? payload.reports : [];
 
-      // ⭐ unwrap { reports: [...] }
-      const list = Array.isArray(payload?.reports) ? payload.reports : [];
+        setIdReports(list);
+      });
 
-      setIdReports(list);
-    });
+      await SignalRService.joinGroup(SignalRTopic.IDREPORT);
+      fetchIdReport();
+    };
 
-    await SignalRService.joinGroup(SignalRTopic.IDREPORT);
-    fetchIdReport();
-  };
+    setup();
 
-  setup();
-
-  return () => {
-    const connection = SignalRService.getConnection();
-    connection?.off(SignalRTopic.IDREPORT);
-  };
-}, []);
-
+    return () => {
+      const connection = SignalRService.getConnection();
+      connection?.off(SignalRTopic.IDREPORT);
+    };
+  }, []);
 
   return (
     <>
@@ -214,7 +212,6 @@ const fetchIdReport = async () => {
               <ProtectedRoute>
                 <AppLayout />
               </ProtectedRoute>
-
             }
           >
             <Route index path="/" element={<Home />} />
@@ -223,7 +220,7 @@ const fetchIdReport = async () => {
             <Route path="/company" element={<Company />} />
             <Route path="/department" element={<Department />} />
             <Route path="/position" element={<Position />} />
-            < Route path="/scan" element={<Scan />}/>
+            <Route path="/scan" element={<Scan />} />
             <Route path="/device" element={<Device />} />
             <Route path="/event" element={<Event />} />
             <Route path="/output" element={<Output />} />

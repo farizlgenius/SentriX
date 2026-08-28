@@ -10,129 +10,172 @@ import { ModuleEndpoint } from "../../endpoint/ModuleEndpoint";
 import api, { send } from "../../api/api";
 import { useLocation } from "../../context/LocationContext";
 import { FormProp, FormType } from "../../model/Form/FormProp";
-import { FormActions, FormField, FormSection } from "../../components/form/template/FormTemplate";
+import {
+  FormActions,
+  FormField,
+  FormSection,
+} from "../../components/form/template/FormTemplate";
 import { DeviceType } from "../../enum/DeviceType";
 
-
-
-const OutputForm: React.FC<PropsWithChildren<FormProp<OutputDto>>> = ({ handleClick, dto, setDto, type }) => {
-  const { locationId } = useLocation();
+const OutputForm: React.FC<PropsWithChildren<FormProp<OutputDto>>> = ({
+  handleClick,
+  dto,
+  setDto,
+  type,
+}) => {
+  const { locationGuid: locationId } = useLocation();
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setDto(prev => ({ ...prev, [e.target.name]: e.target.value }))
-  }
+    setDto((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
 
-  {/* Select */ }
-  const [controllerOption, setControllerOption] = useState<Options[]>([])
+  {
+    /* Select */
+  }
+  const [controllerOption, setControllerOption] = useState<Options[]>([]);
   const [moduleOption, setModuleOption] = useState<Options[]>([]);
   const [relayOption, setRelayOption] = useState<Options[]>([]);
   const [offlineModeOption, setOfflineModeOption] = useState<Options[]>([]);
   const [driveModeOption, setDriverModeOption] = useState<Options[]>([]);
-  const [controller,setController] = useState<number>(-1);
+  const [controller, setController] = useState<number>(-1);
 
-  const handleSelect = async (value: string, e: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleSelect = async (
+    value: string,
+    e: React.ChangeEvent<HTMLSelectElement>,
+  ) => {
     switch (e.target.name) {
       case "driverId":
-        fetchModuleByDeviceId(controllerOption.find(a => a.value == Number(value))?.additionalInfo)
-        setDto((prev) => ({ ...prev, deviceComponentId: Number(value), mac: controllerOption.find(a => a.value == Number(value))?.description ?? "" }))
+        fetchModuleByDeviceId(
+          controllerOption.find((a) => a.value == Number(value))
+            ?.additionalInfo,
+        );
+        setDto((prev) => ({
+          ...prev,
+          deviceComponentId: Number(value),
+          mac:
+            controllerOption.find((a) => a.value == Number(value))
+              ?.description ?? "",
+        }));
         break;
       case "moduleId":
-        fetchOutput(moduleOption.find(a => a.value == Number(value))?.additionalInfo);
-        setDto((prev) => ({ ...prev, moduleComponentId: Number(value), model: moduleOption.find(a => a.value == Number(value))?.label ?? "" }))
+        fetchOutput(
+          moduleOption.find((a) => a.value == Number(value))?.additionalInfo,
+        );
+        setDto((prev) => ({
+          ...prev,
+          moduleComponentId: Number(value),
+          model:
+            moduleOption.find((a) => a.value == Number(value))?.label ?? "",
+        }));
         break;
       case "offlineMode":
         console.log(value);
-        setDto(prev => ({ ...prev, offlineMode: Number(value) }))
+        setDto((prev) => ({ ...prev, offlineMode: Number(value) }));
         break;
       case "driveMode":
         console.log(value);
-        setDto(prev => ({ ...prev, driveMode: Number(value) }))
+        setDto((prev) => ({ ...prev, driveMode: Number(value) }));
         break;
       default:
         setDto((prev) => ({ ...prev, [e.target.name]: value }));
         break;
     }
-  }
+  };
 
-  {/* Controller Data */ }
+  {
+    /* Controller Data */
+  }
   const fetchDevice = async () => {
-    const res = await send.get(DeviceEndpoint.GET(locationId,DeviceType.AERO.toString()));
+    const res = await send.get(
+      DeviceEndpoint.GET(locationId, DeviceType.AERO.toString()),
+    );
     console.log(res);
     if (res.data) {
       res.data.map((a: Options) => {
-        setControllerOption(prev => [...prev, {
-          label: a.label,
-          value: a.value,
-          additionalInfo:a.additionalInfo,
-          description:a.description,
-          isTaken:a.isTaken
-        }])
-      })
+        setControllerOption((prev) => [
+          ...prev,
+          {
+            label: a.label,
+            value: a.value,
+            additionalInfo: a.additionalInfo,
+            description: a.description,
+            isTaken: a.isTaken,
+          },
+        ]);
+      });
     }
-  }
+  };
 
   const fetchOfflineMode = async () => {
-
     let res = await api.get(OutputEndpoint.RELAY_OFFLINE_MODE);
     if (res.data) {
       res.data.map((a: Options) => {
-        setOfflineModeOption((prev) => [...prev, {
-          label: a.label,
-          value: a.value,
-          additionalInfo:a.additionalInfo,
-          description:a.description
-        }]);
+        setOfflineModeOption((prev) => [
+          ...prev,
+          {
+            label: a.label,
+            value: a.value,
+            additionalInfo: a.additionalInfo,
+            description: a.description,
+          },
+        ]);
       });
     }
-
-
-  }
+  };
 
   const fetchDriveMode = async () => {
-
     let res = await api.get(OutputEndpoint.RELAY_DRIVE_MODE);
     if (res.data) {
       res.data.map((a: Options) => {
-        setDriverModeOption((prev) => [...prev, {
-          label: a.label,
-          value: a.value,
-          additionalInfo:a.additionalInfo,
-          description:a.description
-        }]);
+        setDriverModeOption((prev) => [
+          ...prev,
+          {
+            label: a.label,
+            value: a.value,
+            additionalInfo: a.additionalInfo,
+            description: a.description,
+          },
+        ]);
       });
     }
-
-
-  }
+  };
 
   const fetchModuleByDeviceId = async (value: number) => {
     const res = await send.get(ModuleEndpoint.GET_BY_DEVICE_ID(value));
-    console.log(res)
+    console.log(res);
     if (res.data) {
       res.data.map((a: Options) => {
-        setModuleOption((prev) => [...prev, {
-          label: a.label,
-          value: a.value,
-          additionalInfo:a.additionalInfo,
-          description:a.description,
-          isTaken:a.isTaken
-        }])
-      })
+        setModuleOption((prev) => [
+          ...prev,
+          {
+            label: a.label,
+            value: a.value,
+            additionalInfo: a.additionalInfo,
+            description: a.description,
+            isTaken: a.isTaken,
+          },
+        ]);
+      });
     }
-  }
+  };
 
   const fetchOutput = async (value: number) => {
     var res = await send.get(OutputEndpoint.OUTPUT(value));
     if (res) {
       res.data.map((a: number) => {
-        setRelayOption((prev) => [...prev, {
-          label: `Relay ${a + 1}`,
-          value: a.toString()
-        }]);
+        setRelayOption((prev) => [
+          ...prev,
+          {
+            label: `Relay ${a + 1}`,
+            value: a.toString(),
+          },
+        ]);
       });
     }
-  }
+  };
 
-  {/* UseEffect */ }
+  {
+    /* UseEffect */
+  }
   useEffect(() => {
     fetchDevice();
     fetchOfflineMode();
@@ -145,11 +188,22 @@ const OutputForm: React.FC<PropsWithChildren<FormProp<OutputDto>>> = ({ handleCl
 
   return (
     <>
-      <FormSection title="Control Point Details" description="Name the location, assign its country, and add a short description." className="pb-10 mb-5">
+      <FormSection
+        title="Control Point Details"
+        description="Name the location, assign its country, and add a short description."
+        className="pb-10 mb-5"
+      >
         <div className="grid gap-5 grid-cols-2 md:grid-cols-2 gap-x-10 gap-y-6 mb-8 p-5">
           <FormField>
             <Label htmlFor="name">Control Point Name</Label>
-            <Input disabled={type == FormType.INFO} name="name" value={dto.name} type="text" id="name" onChange={handleChange} />
+            <Input
+              disabled={type == FormType.INFO}
+              name="name"
+              value={dto.name}
+              type="text"
+              id="name"
+              onChange={handleChange}
+            />
           </FormField>
           <FormField>
             <Label>Controller</Label>
@@ -200,9 +254,8 @@ const OutputForm: React.FC<PropsWithChildren<FormProp<OutputDto>>> = ({ handleCl
               defaultValue={dto.offlineMode}
               disabled={type == FormType.INFO}
             />
-
           </FormField>
-           <FormField>
+          <FormField>
             <Label>Drive Mode</Label>
             <Select
               name="driveMode"
@@ -213,14 +266,22 @@ const OutputForm: React.FC<PropsWithChildren<FormProp<OutputDto>>> = ({ handleCl
               defaultValue={dto.driveMode}
               disabled={type == FormType.INFO}
             />
-
           </FormField>
           <FormField>
             <Label htmlFor="defaultPulseTime">Pulse Time (second)</Label>
-            <Input disabled={type == FormType.INFO} defaultValue={0} value={dto.defaultPulse} min="0" max="500" name="defaultPulse" type="number" id="defaultPulse" onChange={handleChange} />
+            <Input
+              disabled={type == FormType.INFO}
+              defaultValue={0}
+              value={dto.defaultPulse}
+              min="0"
+              max="500"
+              name="defaultPulse"
+              type="number"
+              id="defaultPulse"
+              onChange={handleChange}
+            />
           </FormField>
         </div>
-
       </FormSection>
       <FormActions
         // disabled={isReadOnly}
@@ -230,12 +291,8 @@ const OutputForm: React.FC<PropsWithChildren<FormProp<OutputDto>>> = ({ handleCl
         submitName={type == FormType.UPDATE ? "update" : "create"}
         typeLabel={type == FormType.UPDATE ? "Update" : "Create"}
       />
-
-
     </>
-
-
   );
-}
+};
 
 export default OutputForm;

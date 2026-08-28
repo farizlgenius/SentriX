@@ -1,342 +1,424 @@
-import React, { useEffect, useState } from 'react'
-import PageBreadcrumb from '../../components/common/PageBreadCrumb'
-import { ControlIcon, OffIcon, OnIcon, ToggleIcon } from '../../icons';
-import OutputForm from './OutputForm';
-import Logger from '../../utility/Logger';
-import { OutputDto } from '../../model/ControlPoint/OutputDto';
-import { StatusDto } from '../../model/StatusDto';
-import Helper from '../../utility/Helper';
-import { useToast } from '../../context/ToastContext';
-import { ControlPointToast } from '../../model/ToastMessage';
-import { OutputEndpoint } from '../../endpoint/ControlPointEndpoint';
-import { send } from '../../api/api';
-import { useLocation } from '../../context/LocationContext';
-import { BaseTable } from '../UiElements/BaseTable';
-import { useAuth } from '../../context/AuthContext';
-import { FeatureId } from '../../enum/FeatureId';
-import { TableCell } from '../../components/ui/table';
-import Badge from '../../components/ui/badge/Badge';
-import { ActionButton } from '../../model/ActionButton';
-import { BaseForm } from '../UiElements/BaseForm';
-import { FormContent } from '../../model/Form/FormContent';
-import SignalRService from '../../services/SignalRService';
-import { usePopup } from '../../context/PopupContext';
-import { FormType } from '../../model/Form/FormProp';
-import { usePagination } from '../../context/PaginationContext';
-import { DeviceType } from '../../enum/DeviceType';
-import { SignalRTopic } from '../../constants/signalr-constant';
+import React, { useEffect, useState } from "react";
+import PageBreadcrumb from "../../components/common/PageBreadCrumb";
+import { ControlIcon, OffIcon, OnIcon, ToggleIcon } from "../../icons";
+import OutputForm from "./OutputForm";
+import Logger from "../../utility/Logger";
+import { OutputDto } from "../../model/ControlPoint/OutputDto";
+import { StatusDto } from "../../model/StatusDto";
+import Helper from "../../utility/Helper";
+import { useToast } from "../../context/ToastContext";
+import { ControlPointToast } from "../../model/ToastMessage";
+import { OutputEndpoint } from "../../endpoint/ControlPointEndpoint";
+import { send } from "../../api/api";
+import { useLocation } from "../../context/LocationContext";
+import { BaseTable } from "../UiElements/BaseTable";
+import { useAuth } from "../../context/AuthContext";
+import { FeatureId } from "../../enum/FeatureId";
+import { TableCell } from "../../components/ui/table";
+import Badge from "../../components/ui/badge/Badge";
+import { ActionButton } from "../../model/ActionButton";
+import { BaseForm } from "../UiElements/BaseForm";
+import { FormContent } from "../../model/Form/FormContent";
+import SignalRService from "../../services/SignalRService";
+import { usePopup } from "../../context/PopupContext";
+import { FormType } from "../../model/Form/FormProp";
+import { usePagination } from "../../context/PaginationContext";
+import { DeviceType } from "../../enum/DeviceType";
+import { SignalRTopic } from "../../constants/signalr-constant";
 
 // Define Global Variable
 
-
-
-export const OUTPUT_TABLE_HEADER: string[] = ["Name","Pulse Time", "Status", "Action"]
-export const OUTPUT_KEY: string[] = ["name","defaultPulse"];
+export const OUTPUT_TABLE_HEADER: string[] = [
+  "Name",
+  "Pulse Time",
+  "Status",
+  "Action",
+];
+export const OUTPUT_KEY: string[] = ["name", "defaultPulse"];
 
 const Output = () => {
-    const { toggleToast } = useToast();
-    const {token} = useAuth();
-    const { setPagination } = usePagination();
-    const { locationId } = useLocation();
-    const { filterPermission } = useAuth();
-    const { setCreate,setRemove,setMessage,setUpdate,setInfo,setConfirmCreate,setConfirmRemove,setConfirmUpdate } = usePopup();
-    const [refresh, setRefresh] = useState(false);
-    const toggleRefresh = () => setRefresh(!refresh);
-    const [form,setForm] = useState<boolean>(false);
-    const [formType,setFormType] = useState<FormType>(FormType.CREATE)
+  const { toggleToast } = useToast();
+  const { token } = useAuth();
+  const { setPagination } = usePagination();
+  const { locationGuid: locationId } = useLocation();
+  const { filterPermission } = useAuth();
+  const {
+    setCreate,
+    setRemove,
+    setMessage,
+    setUpdate,
+    setInfo,
+    setConfirmCreate,
+    setConfirmRemove,
+    setConfirmUpdate,
+  } = usePopup();
+  const [refresh, setRefresh] = useState(false);
+  const toggleRefresh = () => setRefresh(!refresh);
+  const [form, setForm] = useState<boolean>(false);
+  const [formType, setFormType] = useState<FormType>(FormType.CREATE);
 
+  {
+    /* handle Table Action */
+  }
+  const handleEdit = (data: OutputDto) => {
+    setControlPointDto(data);
+    setFormType(FormType.UPDATE);
+    setForm(true);
+  };
 
-    {/* handle Table Action */ }
-    const handleEdit = (data: OutputDto) => {
-        setControlPointDto(data)
-        setFormType(FormType.UPDATE)
-        setForm(true)
+  const handleInfo = (data: OutputDto) => {
+    console.log(data);
+    setControlPointDto(data);
+    setFormType(FormType.INFO);
+    setForm(true);
+  };
+
+  const handleRemove = (data: OutputDto) => {
+    setConfirmRemove(() => async () => {
+      const res = await send.delete(OutputEndpoint.DELETE(data.id));
+      if (
+        Helper.handleToastByResCode(res, ControlPointToast.DELETE, toggleToast)
+      ) {
+        toggleRefresh();
+      }
+    });
+    setRemove(true);
+  };
+
+  {
+    /* Output Data */
+  }
+  const defaultOutputDto: OutputDto = {
+    // Base
+    locationId: locationId,
+    // Detail
+    id: 0,
+    name: "",
+    outputNo: -1,
+    defaultPulse: 1,
+    model: "",
+    driveMode: -1,
+    offlineMode: -1,
+    mac: "",
+    componentId: -1,
+    deviceComponentId: -1,
+    moduleComponentId: -1,
+    type: DeviceType.AERO,
+    isActive: false,
+  };
+  const [controlPointDto, setControlPointDto] =
+    useState<OutputDto>(defaultOutputDto);
+  const [outputsDto, setOutputsDto] = useState<OutputDto[]>([]);
+  const [status, setStatus] = useState<StatusDto[]>([]);
+  const fetchData = async (
+    pageNumber: number,
+    pageSize: number,
+    locationId?: number,
+    search?: string,
+    startDate?: string,
+    endDate?: string,
+  ) => {
+    const res = await send.get(
+      OutputEndpoint.PAGINATION(
+        pageNumber,
+        pageSize,
+        locationId,
+        search,
+        startDate,
+        endDate,
+      ),
+    );
+    if (res && res.data) {
+      console.log(res.data);
+      setOutputsDto(res.data.items);
+      setPagination(res.data);
+
+      // Batch set state
+      const newStatuses = res.data.items.map((a: OutputDto) => ({
+        id: a.id,
+        componentId: 0,
+        status: 0,
+      }));
+
+      console.log(newStatuses);
+
+      setStatus((prev) => [...prev, ...newStatuses]);
+
+      // Fetch status for each
+      res.data.item.forEach((a: OutputDto) => {
+        fetchStatus(a.id);
+      });
     }
+  };
 
-    const handleInfo = (data:OutputDto) => {
-        console.log(data)
-        setControlPointDto(data);
-        setFormType(FormType.INFO);
+  const fetchStatus = async (outputId: number) => {
+    const res = send.get(OutputEndpoint.STATUS(outputId));
+    Logger.info(res);
+  };
+
+  {
+    /* UseEffect */
+  }
+  useEffect(() => {
+    const initSignalR = async () => {
+      if (!token) return;
+
+      await SignalRService.startConnection();
+      const connection = SignalRService.getConnection();
+      if (!connection) return;
+
+      connection.on(SignalRTopic.CP_STATUS, (reports: StatusDto) => {
+        // setIdReports(reports);
+      });
+
+      try {
+        await SignalRService.joinGroup(SignalRTopic.CP_STATUS);
+      } catch (err) {
+        console.error("Subscribe error:", err);
+      }
+    };
+
+    initSignalR();
+
+    return () => {
+      const connection = SignalRService.getConnection();
+      connection?.off(SignalRTopic.CP_STATUS);
+    };
+  }, []);
+
+  {
+    /* Button Command */
+  }
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    console.log(e.currentTarget.name);
+    switch (e.currentTarget.name) {
+      case "add":
+        setFormType(FormType.CREATE);
         setForm(true);
-    }
-
-    const handleRemove = (data: OutputDto) => {
+        break;
+      case "delete":
+        if (selectedObjects.length == 0) {
+          setMessage("Please select object");
+          setInfo(true);
+        }
         setConfirmRemove(() => async () => {
-            const res = await send.delete(OutputEndpoint.DELETE(data.id))
-            if(Helper.handleToastByResCode(res,ControlPointToast.DELETE,toggleToast)){
-                toggleRefresh();
-            }
-        })
+          var data: number[] = [];
+          selectedObjects.map(async (a: OutputDto) => {
+            data.push(a.id);
+          });
+          var res = await send.post(OutputEndpoint.DELETE_RANGE, data);
+          if (
+            Helper.handleToastByResCode(
+              res,
+              ControlPointToast.DELETE_RANGE,
+              toggleToast,
+            )
+          ) {
+            setRemove(false);
+            toggleRefresh();
+          }
+        });
         setRemove(true);
-    }
-
-
-    {/* Output Data */ }
-    const defaultOutputDto: OutputDto = {
-        // Base
-        locationId: locationId,
-        // Detail
-        id: 0,
-        name: "",
-        outputNo: -1,
-        defaultPulse: 1,
-        model: '',
-        driveMode: -1,
-        offlineMode:-1,        
-        mac: '',
-        componentId: -1,
-        deviceComponentId: -1,
-        moduleComponentId: -1,
-        type: DeviceType.AERO,
-        isActive: false
-    }
-    const [controlPointDto, setControlPointDto] = useState<OutputDto>(defaultOutputDto);
-    const [outputsDto, setOutputsDto] = useState<OutputDto[]>([]);
-    const [status, setStatus] = useState<StatusDto[]>([]);
-    const fetchData = async (pageNumber: number, pageSize: number,locationId?:number,search?: string, startDate?: string, endDate?: string) => {
-        const res = await send.get(OutputEndpoint.PAGINATION(pageNumber,pageSize,locationId,search, startDate, endDate));
-        if (res && res.data) {
-            console.log(res.data)
-            setOutputsDto(res.data.items);
-            setPagination(res.data);
-
-            // Batch set state
-            const newStatuses = res.data.items.map((a: OutputDto) => ({
-                id:a.id,
-                componentId: 0,
-                status: 0
-            }));
-
-            console.log(newStatuses);
-
-            setStatus((prev) => [...prev, ...newStatuses]);
-
-            // Fetch status for each
-            res.data.item.forEach((a: OutputDto) => {
-                fetchStatus(a.id);
+        break;
+      case "create":
+        console.log(controlPointDto);
+        setConfirmCreate(() => async () => {
+          const res = await send.post(OutputEndpoint.CREATE, controlPointDto);
+          if (
+            Helper.handleToastByResCode(
+              res,
+              ControlPointToast.CREATE,
+              toggleToast,
+            )
+          ) {
+            setForm(false);
+            toggleRefresh();
+          }
+        });
+        setCreate(true);
+        break;
+      case "update":
+        setConfirmUpdate(() => async () => {
+          const res = await send.put(OutputEndpoint.UPDATE, controlPointDto);
+          if (
+            Helper.handleToastByResCode(
+              res,
+              ControlPointToast.UPDATE,
+              toggleToast,
+            )
+          ) {
+            setForm(false);
+            toggleRefresh();
+          }
+        });
+        setUpdate(true);
+        break;
+      case "cancel":
+      case "close":
+        setControlPointDto(defaultOutputDto);
+        setForm(false);
+        break;
+      case "on":
+        console.log(selectedObjects);
+        if (selectedObjects.length > 0) {
+          selectedObjects.map(async (a: OutputDto) => {
+            const res = await send.post(OutputEndpoint.TRIGGER, {
+              id: a.id,
+              command: 2,
+              type: DeviceType.AERO,
             });
-
+            Helper.handleToastByResCode(
+              res,
+              ControlPointToast.TOGGLE,
+              toggleToast,
+            );
+          });
         }
-    };
 
-    const fetchStatus = async (outputId:number) => {
-        const res = send.get(OutputEndpoint.STATUS(outputId));
-        Logger.info(res);
-    };
-
-
-
-
-
-    {/* UseEffect */ }
-    useEffect(() => {
-        const initSignalR = async () => {
-              if (!token) return;
-        
-              await SignalRService.startConnection();
-              const connection = SignalRService.getConnection();
-              if (!connection) return;
-        
-              connection.on(SignalRTopic.CP_STATUS, (reports: StatusDto) => {
-                // setIdReports(reports);
-              });
-        
-              try {
-                await SignalRService.joinGroup(SignalRTopic.CP_STATUS);
-              } catch (err) {
-                console.error("Subscribe error:", err);
-              }
-        
-            };
-        
-            initSignalR();
-        
-            return () => {
-              const connection = SignalRService.getConnection();
-              connection?.off(SignalRTopic.CP_STATUS);
-            };
-
-    }, []);
-
-
-
-
-
-    {/* Button Command */ }
-    const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-        console.log(e.currentTarget.name)
-        switch (e.currentTarget.name) {
-            case "add":
-                setFormType(FormType.CREATE)
-                setForm(true)
-                break;
-            case "delete":
-                if(selectedObjects.length == 0){            
-                    setMessage("Please select object")
-                    setInfo(true);
-                }
-                setConfirmRemove(() => async () => {
-                    var data:number[] = [];
-                    selectedObjects.map(async (a:OutputDto) => {
-                        data.push(a.id)
-                    })
-                    var res = await send.post(OutputEndpoint.DELETE_RANGE,data)
-                    if(Helper.handleToastByResCode(res,ControlPointToast.DELETE_RANGE,toggleToast)){
-                        setRemove(false);
-                        toggleRefresh();
-                    }
-                })
-                setRemove(true);
-                break;
-            case "create":
-                console.log(controlPointDto)
-                setConfirmCreate(() => async () => {
-                    const res = await send.post(OutputEndpoint.CREATE, controlPointDto)
-                    if (Helper.handleToastByResCode(res, ControlPointToast.CREATE, toggleToast)) {
-                        setForm(false);
-                        toggleRefresh();
-                    }
-                })
-                setCreate(true);
-                break;
-            case "update":
-                setConfirmUpdate(() => async () => {
-                    const res = await send.put(OutputEndpoint.UPDATE,controlPointDto)
-                    if(Helper.handleToastByResCode(res,ControlPointToast.UPDATE,toggleToast)){
-                        setForm(false);
-                        toggleRefresh();
-                    }
-                })
-                setUpdate(true);
-                break;
-            case "cancel":
-            case "close":
-                setControlPointDto(defaultOutputDto)
-                setForm(false);
-                break;
-            case "on":
-                console.log(selectedObjects);
-                if (selectedObjects.length > 0) {
-                    selectedObjects.map(async (a: OutputDto) => {
-                        const res = await send.post(OutputEndpoint.TRIGGER,{
-                            id:a.id,
-                            command:2,
-                            type:DeviceType.AERO
-                        });
-                        Helper.handleToastByResCode(res, ControlPointToast.TOGGLE, toggleToast)
-                    });
-                }
-
-                break;
-            case "off":
-                if (selectedObjects.length > 0) {
-                    selectedObjects.map(async (a: OutputDto) => {
-                        const res = await send.post(OutputEndpoint.TRIGGER,{
-                            id:a.id,
-                            command:1,
-                            type:DeviceType.AERO
-                        });
-                        Helper.handleToastByResCode(res,  ControlPointToast.TOGGLE, toggleToast)
-                    });
-                }
-                break;
-            case "toggle":
-                if (selectedObjects.length > 0) {
-                    selectedObjects.map(async (a: OutputDto) => {
-                        const res = await send.post(OutputEndpoint.TRIGGER,{
-                            id:a.id,
-                            command:3,
-                            type:DeviceType.AERO
-                        });
-                        Helper.handleToastByResCode(res,  ControlPointToast.TOGGLE, toggleToast)
-                    });
-                }
-                break;
-            case "repeat":
-                if (selectedObjects.length > 0) {
-                    selectedObjects.map(async (a: OutputDto) => {
-                        const res = await send.post(OutputEndpoint.TRIGGER,{
-                            id:a.id,
-                            command:4,
-                            type:DeviceType.AERO
-                        });
-                        Helper.handleToastByResCode(res,  ControlPointToast.TOGGLE, toggleToast)
-                    });
-                }
-                break;
-            default:
-                break;
+        break;
+      case "off":
+        if (selectedObjects.length > 0) {
+          selectedObjects.map(async (a: OutputDto) => {
+            const res = await send.post(OutputEndpoint.TRIGGER, {
+              id: a.id,
+              command: 1,
+              type: DeviceType.AERO,
+            });
+            Helper.handleToastByResCode(
+              res,
+              ControlPointToast.TOGGLE,
+              toggleToast,
+            );
+          });
         }
-    };
-
-    {/* checkBox */ }
-    const [selectedObjects, setSelectedObjects] = useState<OutputDto[]>([]);
-   
-
-    const action: ActionButton[] = [
-        {
-            lable: "on",
-            buttonName: "On",
-            icon: <OnIcon />
-        },
-        {
-            lable: "off",
-            buttonName: "Off",
-            icon: <OffIcon />
-        }, {
-            lable: "toggle",
-            buttonName: "Toggle",
-            icon: <ToggleIcon />
+        break;
+      case "toggle":
+        if (selectedObjects.length > 0) {
+          selectedObjects.map(async (a: OutputDto) => {
+            const res = await send.post(OutputEndpoint.TRIGGER, {
+              id: a.id,
+              command: 3,
+              type: DeviceType.AERO,
+            });
+            Helper.handleToastByResCode(
+              res,
+              ControlPointToast.TOGGLE,
+              toggleToast,
+            );
+          });
         }
-    ]
-
-    const renderOptionalComponent = (data: any, statusDto: StatusDto[]) => {
-        return [
-            <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                <Badge
-                    size="sm"
-                    color={
-                        statusDto.find(b => b.componentId == data.deviceId)?.status == "Active"
-                            ? "success"
-                            : statusDto.find(b => b.componentId == data.deviceId)?.status == "Inactive"
-                                ? "error"
-                                : "warning"
-                    }
-                >
-                    {statusDto.find(b => b.componentId == data.deviceId)?.status == "" ? "Error" : statusDto.find(b => b.componentId == data.deviceId)?.status}
-                </Badge>
-            </TableCell>
-        ];
+        break;
+      case "repeat":
+        if (selectedObjects.length > 0) {
+          selectedObjects.map(async (a: OutputDto) => {
+            const res = await send.post(OutputEndpoint.TRIGGER, {
+              id: a.id,
+              command: 4,
+              type: DeviceType.AERO,
+            });
+            Helper.handleToastByResCode(
+              res,
+              ControlPointToast.TOGGLE,
+              toggleToast,
+            );
+          });
+        }
+        break;
+      default:
+        break;
     }
+  };
 
+  {
+    /* checkBox */
+  }
+  const [selectedObjects, setSelectedObjects] = useState<OutputDto[]>([]);
 
-    const formContent: FormContent[] = [
-        {
-            icon: <ControlIcon />,
-            label: "Control Point",
-            content: <OutputForm dto={controlPointDto} setDto={setControlPointDto} handleClick={handleClick} type={formType} />
-        }
-    ]
+  const action: ActionButton[] = [
+    {
+      lable: "on",
+      buttonName: "On",
+      icon: <OnIcon />,
+    },
+    {
+      lable: "off",
+      buttonName: "Off",
+      icon: <OffIcon />,
+    },
+    {
+      lable: "toggle",
+      buttonName: "Toggle",
+      icon: <ToggleIcon />,
+    },
+  ];
 
+  const renderOptionalComponent = (data: any, statusDto: StatusDto[]) => {
+    return [
+      <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+        <Badge
+          size="sm"
+          color={
+            statusDto.find((b) => b.componentId == data.deviceId)?.status ==
+            "Active"
+              ? "success"
+              : statusDto.find((b) => b.componentId == data.deviceId)?.status ==
+                  "Inactive"
+                ? "error"
+                : "warning"
+          }
+        >
+          {statusDto.find((b) => b.componentId == data.deviceId)?.status == ""
+            ? "Error"
+            : statusDto.find((b) => b.componentId == data.deviceId)?.status}
+        </Badge>
+      </TableCell>,
+    ];
+  };
 
-    return (
+  const formContent: FormContent[] = [
+    {
+      icon: <ControlIcon />,
+      label: "Control Point",
+      content: (
+        <OutputForm
+          dto={controlPointDto}
+          setDto={setControlPointDto}
+          handleClick={handleClick}
+          type={formType}
+        />
+      ),
+    },
+  ];
+
+  return (
+    <>
+      <PageBreadcrumb pageTitle="Control Point" />
+      {form ? (
         <>
-            <PageBreadcrumb pageTitle="Control Point" />
-            {
-                form
-                    ?
-                    <>
-                        <BaseForm tabContent={formContent} header={''} desc={''} />
-                    </>
-
-                    :
-                    <BaseTable<OutputDto> headers={OUTPUT_TABLE_HEADER} keys={OUTPUT_KEY} status={status} data={outputsDto} onEdit={handleEdit} onRemove={handleRemove} select={selectedObjects} setSelect={setSelectedObjects} onClick={handleClick} permission={filterPermission(FeatureId.control)} renderOptionalComponent={renderOptionalComponent} action={action} onInfo={handleInfo} fetchData={fetchData} locationId={locationId} refresh={refresh} />
-
-
-            }
-
+          <BaseForm tabContent={formContent} header={""} desc={""} />
         </>
-    )
-}
+      ) : (
+        <BaseTable<OutputDto>
+          headers={OUTPUT_TABLE_HEADER}
+          keys={OUTPUT_KEY}
+          status={status}
+          data={outputsDto}
+          onEdit={handleEdit}
+          onRemove={handleRemove}
+          select={selectedObjects}
+          setSelect={setSelectedObjects}
+          onClick={handleClick}
+          permission={filterPermission(FeatureId.control)}
+          renderOptionalComponent={renderOptionalComponent}
+          action={action}
+          onInfo={handleInfo}
+          fetchData={fetchData}
+          locationGuid={locationId}
+          refresh={refresh}
+        />
+      )}
+    </>
+  );
+};
 
-export default Output
+export default Output;

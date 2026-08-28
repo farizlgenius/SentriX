@@ -1,9 +1,7 @@
-export interface LocationDto {
-  guid: string;
+export interface CreateLocationDto {
   name: string;
   description: string;
   countryId: number;
-  country: string;
   isActive: boolean;
   isDefault: boolean;
 }
