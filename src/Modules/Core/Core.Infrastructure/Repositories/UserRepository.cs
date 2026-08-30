@@ -489,4 +489,9 @@ public sealed class UserRepository(CoreDbContext context) : IUserRepository
       .Select(x => x.role == null ? Guid.Empty : x.role.guid)
       .FirstOrDefaultAsync(ct);
   }
+
+  public Task<IEnumerable<UserDto>> GetByLocationAsync(Guid guid, CancellationToken ct = default)
+  {
+    throw new NotImplementedException();
+  }
 }

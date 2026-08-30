@@ -1,9 +1,8 @@
 export interface CompanyDto {
-    id:number;
-    name:string;
-    description:string;
-    address:string;
-    locationId:number;
-    isActive:boolean;
-    isDefault:boolean;
+  guid: string;
+  name: string;
+  description: string;
+  address: string;
+  isActive: boolean;
+  isDefault: boolean;
 }

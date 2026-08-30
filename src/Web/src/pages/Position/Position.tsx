@@ -23,27 +23,25 @@ import { DepartmentEndpoint } from "../../endpoint/DepartmentEndpoint";
 import { CompanyDto } from "../../model/Company/CompanyDto";
 import { CompanyEndpoint } from "../../endpoint/CompanyEndpoint";
 import { DepartmentDto } from "../../model/Department/DepartmentDto";
-import { useLocation } from "../../context/LocationContext";
 
-var removeTarget: number = 0;
-
-export const HEADER: string[] = ["Name", "Action"];
-export const KEY: string[] = ["name"];
+const HEADER: string[] = ["Name", "Action"];
+const KEY: string[] = ["name"];
 
 export const Position = () => {
-  const { locationGuid: locationId } = useLocation();
-  const [selectedDepartment, setSelectedDepartment] = useState<number>(-1);
+  const [selectedDepartment, setSelectedDepartment] = useState<string>("");
   const [departmentOptions, setDepartmentOptions] = useState<Options[]>([]);
-  const [selectedCompany, setSelectedCompany] = useState<number>(-1);
+  const [selectedCompany, setSelectedCompany] = useState<string>("");
   const [companyOptions, setCompanyOptions] = useState<Options[]>([]);
   const defaultDto: PositionDto = {
-    id: 0,
+    guid: "",
     name: "",
     description: "",
-    departmentId: selectedDepartment,
-    locationId: locationId,
+    departmentGuid: selectedDepartment,
     isActive: true,
     isDefault: false,
+    companyGuid: "",
+    company: "",
+    department: "",
   };
 
   const { toggleToast, updateToast } = useToast();
@@ -84,14 +82,12 @@ export const Position = () => {
     );
 
   const handleRemove = (data: PositionDto) => {
-    removeTarget = data.id;
     setRemove(true);
     setConfirmRemove(() => async () => {
       const toastId = createPendingToast("Removing position...");
-      const res = await api.delete(PositionEndpoint.DELETE(removeTarget));
+      const res = await api.delete(PositionEndpoint.DELETE(data.guid));
       if (resolveRequestToast(toastId, res, PositionToast.DELETE)) {
         toggleRefresh();
-        removeTarget = 0;
       }
     });
   };
@@ -123,13 +119,14 @@ export const Position = () => {
             const toastId = createPendingToast(
               "Removing selected positions...",
             );
-            var data: number[] = [];
+            const data: string[] = [];
             select.map(async (a: PositionDto) => {
-              data.push(a.id);
+              data.push(a.guid);
             });
-            var res = await send.post(PositionEndpoint.DELETE_RANGE, {
-              ids: data,
-            });
+            const res = await send.deleteBody(
+              PositionEndpoint.DELETE_RANGE,
+              data,
+            );
             if (resolveRequestToast(toastId, res, PositionToast.DELETE_RANGE)) {
               setRemove(false);
               toggleRefresh();
@@ -153,7 +150,7 @@ export const Position = () => {
       case "update":
         setConfirmUpdate(() => async () => {
           const toastId = createPendingToast("Updating position...");
-          const res = await api.put(PositionEndpoint.UPDATE, positionDto);
+          const res = await send.put(PositionEndpoint.UPDATE, positionDto);
           if (resolveRequestToast(toastId, res, PositionToast.UPDATE)) {
             setForm(false);
             toggleRefresh();
@@ -174,7 +171,7 @@ export const Position = () => {
   const fetchData = async (
     pageNumber: number,
     pageSize: number,
-    locationId?: number,
+    locationGuid?: string,
     search?: string,
     startDate?: string,
     endDate?: string,
@@ -183,34 +180,7 @@ export const Position = () => {
       PositionEndpoint.PAGINATION_BY_DEPART(
         pageNumber,
         pageSize,
-        selectedDepartment,
-        locationId,
-        search,
-        startDate,
-        endDate,
-      ),
-    );
-    if (res.data.success) {
-      setPositionsDto(res.data.data.items);
-      setPagination(res.data.data);
-    }
-  };
-
-  const fetchDataImd = async (
-    pageNumber: number,
-    pageSize: number,
-    departmentId: number,
-    locationId?: number,
-    search?: string,
-    startDate?: string,
-    endDate?: string,
-  ) => {
-    const res = await send.get(
-      PositionEndpoint.PAGINATION_BY_DEPART(
-        pageNumber,
-        pageSize,
-        departmentId,
-        locationId,
+        locationGuid ?? "",
         search,
         startDate,
         endDate,
@@ -239,14 +209,14 @@ export const Position = () => {
 
   const fetchCompany = async () => {
     setCompanyOptions([]);
-    var res = await send.get(CompanyEndpoint.GET_BY_LOCATION(locationId));
+    const res = await send.get(CompanyEndpoint.GET);
     if (res.data.success) {
       res.data.data.map((a: CompanyDto) => {
         setCompanyOptions((prev) => [
           ...prev,
           {
             label: a.name,
-            value: a.id,
+            value: a.guid,
             description: a.description,
           },
         ]);
@@ -254,7 +224,7 @@ export const Position = () => {
     }
   };
 
-  const fetchDepartments = async (company: number) => {
+  const fetchDepartments = async (company: string) => {
     setDepartmentOptions([]);
     const res = await send.get(DepartmentEndpoint.GET_BY_COMPANY(company));
     if (res.data.success) {
@@ -263,7 +233,7 @@ export const Position = () => {
           ...prev,
           {
             label: a.name,
-            value: a.id,
+            value: a.guid,
             description: a.description,
           },
         ]);
@@ -286,30 +256,38 @@ export const Position = () => {
             <div className="flex gap-10">
               <Label>Company Selector</Label>
               <Select
+                isString={true}
                 options={companyOptions}
                 name="Company"
                 defaultValue={selectedCompany}
                 onChange={(e) => {
                   setPositionsDto([]);
-                  setSelectedCompany(Number(e));
-                  setSelectedDepartment(-1);
-                  fetchDepartments(Number(e));
+                  setSelectedCompany(e);
+                  setSelectedDepartment("");
+                  fetchDepartments(e);
+                  setPositionDto((prev) => ({
+                    ...prev,
+                    companyGuid: e,
+                    company:
+                      companyOptions.find((x) => x.value == e)?.label ?? "",
+                  }));
                 }}
               />
               <Label>Department Selector</Label>
               <Select
+                isString={true}
                 options={departmentOptions}
                 name="Department"
                 defaultValue={selectedDepartment}
                 onChange={(e) => {
-                  setSelectedDepartment(Number(e));
+                  setSelectedDepartment(e);
                   setPositionDto((prev) => ({
                     ...prev,
-                    departmentId: Number(e),
+                    departmentGuid: e,
+                    department:
+                      departmentOptions.find((x) => x.value == e)?.label ?? "",
                   }));
-                  if (locationId != -1) {
-                    fetchDataImd(1, 10, Number(e), locationId);
-                  }
+                  fetchData(1, 10, e);
                 }}
               />
             </div>
@@ -323,15 +301,11 @@ export const Position = () => {
             onEdit={handleEdit}
             onRemove={handleRemove}
             onClick={handleClickWithEvent}
-            permission={filterPermission(FeatureId.location)}
+            permission={filterPermission(FeatureId.user)}
             onInfo={handleInfo}
             fetchData={fetchData}
             refresh={refresh}
-            locationGuid={
-              selectedCompany == -1 || selectedDepartment == -1
-                ? -1
-                : locationId
-            }
+            locationGuid={selectedDepartment}
           />
         </div>
       )}

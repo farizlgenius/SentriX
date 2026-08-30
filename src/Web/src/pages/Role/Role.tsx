@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import PageBreadcrumb from "../../components/common/PageBreadCrumb";
 import { useToast } from "../../context/ToastContext";
 import { RoleDto } from "../../model/Role/RoleDto";
@@ -20,8 +20,8 @@ import { usePagination } from "../../context/PaginationContext";
 import { CreateRoleDto } from "../../model/Role/CreateRoleDto";
 import { UpdateRoleDto } from "../../model/Role/UpdateRoleDto";
 
-export const LOCATION_HEADER: string[] = ["Name", "Status", "Action"];
-export const LOCATION_KEY: string[] = ["name"];
+const LOCATION_HEADER: string[] = ["Name", "Status", "Action"];
+const LOCATION_KEY: string[] = ["name"];
 
 export const Role = () => {
   const { toggleToast } = useToast();
@@ -41,12 +41,214 @@ export const Role = () => {
   const [form, setForm] = useState<boolean>(false);
   const [refresh, setRefresh] = useState<boolean>(false);
   const defaultDto: RoleDto = {
+    guid: "00000000-0000-0000-0000-000000010000",
     name: "",
-    permissions: [],
-    id: 0,
-    locationName: "",
+    modules: [
+      {
+        id: 1,
+        name: "Access Control",
+        isEnabled: false,
+        features: [
+          {
+            id: 1,
+            name: "dashboard",
+            isEnabled: false,
+            isCreated: false,
+            isUpdated: false,
+            isDeleted: false,
+          },
+          {
+            id: 2,
+
+            name: "events",
+            isEnabled: false,
+            isCreated: false,
+            isUpdated: false,
+            isDeleted: false,
+          },
+          {
+            id: 3,
+
+            name: "location",
+            isEnabled: false,
+            isCreated: false,
+            isUpdated: false,
+            isDeleted: false,
+          },
+          {
+            id: 4,
+
+            name: "alert",
+            isEnabled: false,
+            isCreated: false,
+            isUpdated: false,
+            isDeleted: false,
+          },
+          {
+            id: 5,
+
+            name: "operator",
+            isEnabled: false,
+            isCreated: false,
+            isUpdated: false,
+            isDeleted: false,
+          },
+          {
+            id: 6,
+            name: "device",
+            isEnabled: false,
+            isCreated: false,
+            isUpdated: false,
+            isDeleted: false,
+          },
+          {
+            id: 7,
+            name: "control",
+            isEnabled: false,
+            isCreated: false,
+            isUpdated: false,
+            isDeleted: false,
+          },
+          {
+            id: 8,
+            name: "monitor",
+            isEnabled: false,
+            isCreated: false,
+            isUpdated: false,
+            isDeleted: false,
+          },
+          {
+            id: 9,
+            name: "monitorgroup",
+            isEnabled: false,
+            isCreated: false,
+            isUpdated: false,
+            isDeleted: false,
+          },
+          {
+            id: 10,
+            name: "acr",
+            isEnabled: false,
+            isCreated: false,
+            isUpdated: false,
+            isDeleted: false,
+          },
+          {
+            id: 11,
+            name: "user",
+            isEnabled: false,
+            isCreated: false,
+            isUpdated: false,
+            isDeleted: false,
+          },
+          {
+            id: 12,
+            name: "group",
+            isEnabled: false,
+            isCreated: false,
+            isUpdated: false,
+            isDeleted: false,
+          },
+          {
+            id: 13,
+            name: "area",
+            isEnabled: false,
+            isCreated: false,
+            isUpdated: false,
+            isDeleted: false,
+          },
+          {
+            id: 14,
+            name: "time",
+            isEnabled: false,
+            isCreated: false,
+            isUpdated: false,
+            isDeleted: false,
+          },
+          {
+            id: 15,
+            name: "trigger",
+            isEnabled: false,
+            isCreated: false,
+            isUpdated: false,
+            isDeleted: false,
+          },
+          {
+            id: 16,
+            name: "map",
+            isEnabled: false,
+            isCreated: false,
+            isUpdated: false,
+            isDeleted: false,
+          },
+          {
+            id: 17,
+            name: "report",
+            isEnabled: false,
+            isCreated: false,
+            isUpdated: false,
+            isDeleted: false,
+          },
+          {
+            id: 18,
+            name: "setting",
+            isEnabled: false,
+            isCreated: false,
+            isUpdated: false,
+            isDeleted: false,
+          },
+          {
+            id: 19,
+            name: "tools",
+            isEnabled: false,
+            isCreated: false,
+            isUpdated: false,
+            isDeleted: false,
+          },
+        ],
+      },
+      {
+        id: 2,
+        name: "Visitor Management",
+        isEnabled: false,
+        features: [
+          {
+            id: 20,
+            name: "register",
+            isEnabled: false,
+            isCreated: false,
+            isUpdated: false,
+            isDeleted: false,
+          },
+          {
+            id: 21,
+            name: "appointment",
+            isEnabled: false,
+            isCreated: false,
+            isUpdated: false,
+            isDeleted: false,
+          },
+        ],
+      },
+      {
+        id: 3,
+        name: "Time Attendance",
+        isEnabled: false,
+        features: [
+          {
+            id: 22,
+            name: "report",
+            isEnabled: false,
+            isCreated: false,
+            isUpdated: false,
+            isDeleted: false,
+          },
+        ],
+      },
+    ],
     isActive: false,
     isDefault: false,
+    id: 0,
   };
 
   const [roleDto, setRoleDto] = useState<RoleDto>(defaultDto);
@@ -56,7 +258,7 @@ export const Role = () => {
 
   const handleRemove = (data: RoleDto) => {
     setConfirmRemove(() => async () => {
-      const res = await send.delete(RoleEndpoint.DELETE(data.id));
+      const res = await send.delete(RoleEndpoint.DELETE(data.guid));
       if (Helper.handleToastByResCode(res, RoleToast.DELETE, toggleToast)) {
         setRemove(false);
         toggleRefresh();
@@ -101,13 +303,11 @@ export const Role = () => {
           setInfo(true);
         } else {
           setConfirmRemove(() => async () => {
-            var data: number[] = [];
+            const data: string[] = [];
             selectedObjects.map(async (a: RoleDto) => {
-              data.push(a.id);
+              data.push(a.guid);
             });
-            var res = await send.post(RoleEndpoint.DELETE_RANGE, {
-              ids: data,
-            });
+            const res = await send.deleteBody(RoleEndpoint.DELETE_RANGE, data);
             if (
               Helper.handleToastByResCode(
                 res,
@@ -128,8 +328,7 @@ export const Role = () => {
         setConfirmCreate(() => async () => {
           const createDto: CreateRoleDto = {
             name: roleDto.name,
-            permissions: roleDto.permissions,
-            locationId: locationId,
+            modules: roleDto.modules,
           };
           const res = await send.post(RoleEndpoint.CREATE, createDto);
           if (Helper.handleToastByResCode(res, RoleToast.CREATE, toggleToast)) {
@@ -142,10 +341,9 @@ export const Role = () => {
       case "update":
         setConfirmUpdate(() => async () => {
           const updateDto: UpdateRoleDto = {
-            id: roleDto.id,
             name: roleDto.name,
-            permissions: roleDto.permissions,
-            locationId: locationId,
+            guid: roleDto.guid,
+            modules: roleDto.modules,
           };
           const res = await send.put(RoleEndpoint.UPDATE, updateDto);
           if (Helper.handleToastByResCode(res, RoleToast.UPDATE, toggleToast)) {
@@ -170,7 +368,7 @@ export const Role = () => {
   const fetchData = async (
     pageNumber: number,
     pageSize: number,
-    locationId?: number,
+    locationGuid?: string,
     search?: string,
     startDate?: string,
     endDate?: string,
@@ -179,7 +377,7 @@ export const Role = () => {
       RoleEndpoint.PAGINATION(
         pageNumber,
         pageSize,
-        locationId,
+        locationGuid,
         search,
         startDate,
         endDate,

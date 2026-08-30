@@ -52,7 +52,7 @@ public class PositionController(IPosition dep) : ControllerBase
             return Ok(res);
       }
 
-      [HttpDelete("range")]
+      [HttpDelete("list")]
       public async Task<IActionResult> DeleteRangeAsync([FromBody] IEnumerable<Guid> guids)
       {
             var res = await dep.DeleteListAsync(guids);

@@ -106,6 +106,11 @@ public sealed class LocationRepository(CoreDbContext context) : ILocationReposit
                   )).FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.Location, guid.ToString());
       }
 
+      public Task<IEnumerable<LocationDto>> GetByLocationAsync(Guid guid, CancellationToken ct = default)
+      {
+            throw new NotImplementedException();
+      }
+
       public async Task<IEnumerable<CountryDto>> GetCountriesAsync(CancellationToken ct = default)
       {
             return await context.Countries

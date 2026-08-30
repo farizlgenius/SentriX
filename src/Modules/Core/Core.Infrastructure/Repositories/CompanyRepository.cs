@@ -82,10 +82,30 @@ public sealed class CompanyRepository(CoreDbContext context) : ICompanyRepositor
                     x.name,
                     x.address,
                     x.description,
-                    x.location.guid,
                     x.is_active,
                     x.is_default
                   )).FirstOrDefaultAsync() ?? throw new NotFoundException(nameof(Location), guid.ToString());
+  }
+
+  public async Task<IEnumerable<CompanyDto>> GetAsync()
+  {
+    return await context.Companies
+      .AsNoTracking()
+      .OrderByDescending(x => x.id)
+      .Select(x => new CompanyDto(
+        x.guid,
+        x.name,
+        x.address,
+        x.description,
+        x.is_active,
+        x.is_default
+      ))
+      .ToArrayAsync();
+  }
+
+  public async Task<IEnumerable<CompanyDto>> GetByLocationAsync(Guid guid, CancellationToken ct = default)
+  {
+    throw new NotImplementedException();
   }
 
   public async Task<int> GetIdByGuidAsync(Guid guid, CancellationToken ct = default)
@@ -104,7 +124,6 @@ public sealed class CompanyRepository(CoreDbContext context) : ICompanyRepositor
   public async Task<Pagination<CompanyDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
   {
     var query = context.Companies
-                  .Where(x => x.location.guid == param.locationGuid || x.is_default)
                   .AsNoTracking()
                   .AsQueryable();
 
@@ -161,7 +180,6 @@ public sealed class CompanyRepository(CoreDbContext context) : ICompanyRepositor
                 e.name,
                 e.address,
                 e.description,
-                e.location.guid,
                 e.is_active,
                 e.is_default
           )).ToListAsync();
@@ -179,7 +197,7 @@ public sealed class CompanyRepository(CoreDbContext context) : ICompanyRepositor
   {
     return await context.Companies
       .AsNoTracking()
-      .AnyAsync(x => x.name.Equals(name) && x.location_id == locationId);
+      .AnyAsync(x => x.name.Equals(name));
 
   }
 

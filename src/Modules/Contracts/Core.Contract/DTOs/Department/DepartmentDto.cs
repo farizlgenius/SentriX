@@ -5,6 +5,7 @@ public sealed record DepartmentDto(
   string Name,
   string Description,
   Guid CompanyGuid,
+  string Company,
   bool IsActive,
   bool IsDefault
 );

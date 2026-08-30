@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { BaseForm } from "../UiElements/BaseForm";
 import PageBreadcrumb from "../../components/common/PageBreadCrumb";
-import { LocationDto } from "../../model/Location/LocationDto";
 import { FormContent } from "../../model/Form/FormContent";
 import { LocationIcon } from "../../icons";
 import { useToast } from "../../context/ToastContext";
@@ -19,13 +18,11 @@ import { CompanyDto } from "../../model/Company/CompanyDto";
 import { CompanyEndpoint } from "../../endpoint/CompanyEndpoint";
 import { CompanyForm } from "./CompanyForm";
 
-var removeTarget: number = 0;
-
-export const HEADER: string[] = ["Name", "Address", "Action"];
-export const KEY: string[] = ["name", "address"];
+const HEADER: string[] = ["Name", "Address", "Action"];
+const KEY: string[] = ["name", "address"];
 
 export const Company = () => {
-  const { locationGuid: locationId } = useLocation();
+  const { locationGuid } = useLocation();
   const { toggleToast } = useToast();
   const { setPagination } = usePagination();
   const { filterPermission } = useAuth();
@@ -43,11 +40,10 @@ export const Company = () => {
   const [refresh, setRefresh] = useState<boolean>(false);
   const toggleRefresh = () => setRefresh(!refresh);
   const defaultDto: CompanyDto = {
-    id: 0,
+    guid: "",
     name: "",
     description: "",
     address: "",
-    locationId: locationId,
     isActive: true,
     isDefault: false,
   };
@@ -58,13 +54,11 @@ export const Company = () => {
   const [formType, setFormType] = useState<FormType>(FormType.CREATE);
 
   const handleRemove = (data: CompanyDto) => {
-    removeTarget = data.id;
     setRemove(true);
     setConfirmRemove(() => async () => {
-      const res = await api.delete(CompanyEndpoint.DELETE(removeTarget));
+      const res = await api.delete(CompanyEndpoint.DELETE(data.guid));
       if (Helper.handleToastByResCode(res, CompanyToast.DELETE, toggleToast)) {
         toggleRefresh();
-        removeTarget = 0;
       }
     });
   };
@@ -97,13 +91,14 @@ export const Company = () => {
           setInfo(true);
         } else {
           setConfirmRemove(() => async () => {
-            var data: number[] = [];
+            const data: string[] = [];
             select.map(async (a: CompanyDto) => {
-              data.push(a.id);
+              data.push(a.guid);
             });
-            var res = await send.post(CompanyEndpoint.DELETE_RANGE, {
-              ids: data,
-            });
+            const res = await send.deleteBody(
+              CompanyEndpoint.DELETE_RANGE,
+              data,
+            );
             if (
               Helper.handleToastByResCode(
                 res,
@@ -157,7 +152,7 @@ export const Company = () => {
   const fetchData = async (
     pageNumber: number,
     pageSize: number,
-    locationId?: number,
+    locationGuid?: string,
     search?: string,
     startDate?: string,
     endDate?: string,
@@ -166,7 +161,6 @@ export const Company = () => {
       CompanyEndpoint.PAGINATION(
         pageNumber,
         pageSize,
-        locationId,
         search,
         startDate,
         endDate,
@@ -216,7 +210,7 @@ export const Company = () => {
             onInfo={handleInfo}
             fetchData={fetchData}
             refresh={refresh}
-            locationGuid={locationId}
+            locationGuid={locationGuid}
           />
         </div>
       )}

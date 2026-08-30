@@ -9,7 +9,7 @@ public sealed class Role : BaseDomain
 
       public Role(
             string Name,
-            List<ModulePermission> ModModulePermissionsules
+            List<ModulePermission> ModulePermissions
       )
       {
             ValidationHelper.Name(Name);
@@ -25,6 +25,6 @@ public sealed class Role : BaseDomain
             ValidationHelper.Name(Name);
             this.Name = Name;
             this.ModulePermissions = ModulePermissions;
- 
+
       }
 }

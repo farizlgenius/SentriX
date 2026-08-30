@@ -82,9 +82,32 @@ public sealed class DepartmentRepository(CoreDbContext context) : IDepartmentRep
                     x.name,
                     x.description,
                     x.company.guid,
+                    x.company.name,
                     x.is_active,
                     x.is_default
                   )).FirstOrDefaultAsync() ?? throw new NotFoundException(nameof(Location), guid.ToString());
+  }
+
+  public async Task<IEnumerable<DepartmentDto>> GetByCompanyAsync(Guid guid, CancellationToken ct = default)
+  {
+    return await context.Departments
+      .AsNoTracking()
+      .Where(x => x.company.guid == guid)
+      .OrderByDescending(x => x.id)
+      .Select(x => new DepartmentDto(
+        x.guid,
+        x.name,
+        x.description,
+        x.company.guid,
+        x.company.name,
+        x.is_active,
+        x.is_default
+      )).ToArrayAsync();
+  }
+
+  public Task<IEnumerable<DepartmentDto>> GetByLocationAsync(Guid guid, CancellationToken ct = default)
+  {
+    throw new NotImplementedException();
   }
 
   public async Task<int> GetIdByGuidAsync(Guid guid, CancellationToken ct = default)
@@ -154,6 +177,7 @@ public sealed class DepartmentRepository(CoreDbContext context) : IDepartmentRep
                 e.name,
                 e.description,
                 e.company.guid,
+                e.company.name,
                 e.is_active,
                 e.is_default
           )).ToListAsync();
@@ -225,6 +249,7 @@ public sealed class DepartmentRepository(CoreDbContext context) : IDepartmentRep
                 e.name,
                 e.description,
                 e.company.guid,
+                e.company.name,
                 e.is_active,
                 e.is_default
           )).ToListAsync();

@@ -15,17 +15,27 @@ import { Avatar } from "../../../pages/UiElements/Avatar";
 import { Gender } from "../../../enum/Gender";
 import { send } from "../../../api/api";
 import { CompanyEndpoint } from "../../../endpoint/CompanyEndpoint";
-import { useLocation } from "../../../context/LocationContext";
 import { Options } from "../../../model/Options";
 import { DepartmentEndpoint } from "../../../endpoint/DepartmentEndpoint";
 import { PositionEndpoint } from "../../../endpoint/PositionEndpoint";
 import Select from "../Select";
 import { FormField, FormSection } from "../template/FormTemplate";
+import { CompanyDto } from "../../../model/Company/CompanyDto";
+import { DepartmentDto } from "../../../model/Department/DepartmentDto";
+import { PositionDto } from "../../../model/Position/PositionDto";
+import { Title } from "../../../enum/Title";
 
 interface PersonalInformationFormProp extends FormProp<UserDto> {
   image: File | undefined;
   setImage: React.Dispatch<React.SetStateAction<File | undefined>>;
 }
+
+const defaultOptions: Options[] = [
+  {
+    label: "Not set",
+    value: "00000000-0000-0000-0000-000000000000",
+  },
+];
 
 export const PersonalInformationForm: React.FC<PersonalInformationFormProp> = ({
   dto,
@@ -35,17 +45,16 @@ export const PersonalInformationForm: React.FC<PersonalInformationFormProp> = ({
   image,
   setImage,
 }) => {
-  const { locationGuid: locationId } = useLocation();
   const isReadOnly = type == FormType.INFO;
   const [newImage, setNewImage] = useState<File | undefined>();
   const [file, setFile] = useState<boolean>(false);
   const [cam, setCam] = useState<boolean>(false);
   const [selectedValue, setSelectedValue] = useState<Gender | string>(
-    Gender.Male.toString(),
+    Gender.M.toString(),
   );
-  const [com, setCom] = useState<Options[]>([]);
-  const [dep, setDep] = useState<Options[]>([]);
-  const [pos, setPos] = useState<Options[]>([]);
+  const [com, setCom] = useState<Options[]>(defaultOptions);
+  const [dep, setDep] = useState<Options[]>(defaultOptions);
+  const [pos, setPos] = useState<Options[]>(defaultOptions);
 
   function generateEmployeeId(): string {
     return `${crypto.randomUUID().slice(0, 8).toUpperCase()}`;
@@ -58,7 +67,7 @@ export const PersonalInformationForm: React.FC<PersonalInformationFormProp> = ({
 
   const handleRadioChange = (value: string) => {
     setSelectedValue(value);
-    setDto((prev) => ({ ...prev, gender: value }));
+    // setDto((prev) => ({ ...prev, gender: value }));
   };
 
   const handleClickInternal = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -81,17 +90,16 @@ export const PersonalInformationForm: React.FC<PersonalInformationFormProp> = ({
   };
 
   const fetchCompany = async () => {
-    const res = await send.get(
-      CompanyEndpoint.GET_OPTION_BY_LOCATION(locationId),
-    );
-    if (res.data) {
-      res.data.map((a: Options) => {
+    const res = await send.get(CompanyEndpoint.GET);
+    console.log(res);
+    if (res) {
+      res.data.data.map((a: CompanyDto) => {
         setCom((prev) => [
           ...prev,
           {
-            label: a.label,
-            value: a.value,
-            additionalInfo: a.additionalInfo,
+            label: a.name,
+            value: a.guid,
+            additionalInfo: a.address,
             description: a.description,
             isTaken: false,
           },
@@ -100,20 +108,18 @@ export const PersonalInformationForm: React.FC<PersonalInformationFormProp> = ({
     }
   };
 
-  const fetchDepartment = async (companyId: number) => {
-    const res = await send.get(
-      DepartmentEndpoint.GET_OPTION_BY_COMPANY(companyId),
-    );
+  const fetchDepartment = async (guid: string) => {
+    const res = await send.get(DepartmentEndpoint.GET_BY_COMPANY(guid));
     console.log(res);
-    if (res.data) {
-      res.data.map((a: Options) => {
+    if (res) {
+      res.data.data.map((a: DepartmentDto) => {
         setDep((prev) => [
           ...prev,
           {
-            label: a.label,
-            value: a.value,
+            label: a.name,
+            value: a.guid,
             description: a.description,
-            additionalInfo: a.additionalInfo,
+            additionalInfo: "",
             isTaken: false,
           },
         ]);
@@ -121,18 +127,16 @@ export const PersonalInformationForm: React.FC<PersonalInformationFormProp> = ({
     }
   };
 
-  const fetchPosition = async (departmentId: number) => {
-    const res = await send.get(
-      PositionEndpoint.GET_OPTION_BY_DEPARTMENT(departmentId),
-    );
+  const fetchPosition = async (guid: string) => {
+    const res = await send.get(PositionEndpoint.GET_BY_DEPARTMENT(guid));
     if (res.data) {
-      res.data.map((a: Options) => {
+      res.data.data.map((a: PositionDto) => {
         setPos((prev) => [
           ...prev,
           {
-            label: a.label,
-            value: a.value,
-            additionalInfo: a.additionalInfo,
+            label: a.name,
+            value: a.guid,
+            additionalInfo: "",
             description: a.description,
             isTaken: false,
           },
@@ -151,7 +155,8 @@ export const PersonalInformationForm: React.FC<PersonalInformationFormProp> = ({
         <div className="flex flex-col gap-5">
           <div className="flex gap-5">
             <FormSection
-              title="Image"
+              overall="Profile Image"
+              title="Photo"
               description="Upload from file or take a live picture with webcam."
             >
               <FormField className="flex flex-col justify-center items-center gap-10">
@@ -188,25 +193,46 @@ export const PersonalInformationForm: React.FC<PersonalInformationFormProp> = ({
                   <>
                     <div className="h-56 w-56 overflow-hidden rounded-full border-4 border-white bg-white shadow-lg ring-1 ring-gray-200 dark:border-gray-900 dark:bg-gray-900 dark:ring-gray-700">
                       <Avatar
-                        userId={dto.userId}
+                        userId={dto.identification}
                         newImage={newImage}
                         image={image}
                       />
                     </div>
+
                     <div className="flex flex-wrap justify-center gap-3">
-                      <Button
+                      {/* <Button
                         disabled={isReadOnly}
                         name="file"
                         onClickWithEvent={handleClickInternal}
                         startIcon={<FileIcon />}
                       >
                         Browse
-                      </Button>
+                      </Button> */}
                       <Button
+                        disabled={isReadOnly}
+                        variant="outline"
+                        onClickWithEvent={handleClickInternal}
+                        name="file"
+                        startIcon={<FileIcon />}
+                        className="justify-center"
+                      >
+                        Browse
+                      </Button>
+                      {/* <Button
                         disabled={isReadOnly}
                         name="cam"
                         onClickWithEvent={handleClickInternal}
                         startIcon={<CamIcon />}
+                      >
+                        Take Picture
+                      </Button> */}
+                      <Button
+                        disabled={isReadOnly}
+                        variant="outline"
+                        onClickWithEvent={handleClickInternal}
+                        name="cam"
+                        startIcon={<CamIcon />}
+                        className="justify-center"
                       >
                         Take Picture
                       </Button>
@@ -216,32 +242,42 @@ export const PersonalInformationForm: React.FC<PersonalInformationFormProp> = ({
               </FormField>
             </FormSection>
             <FormSection
+              overall="User detail"
               title="Personal Information"
-              description="efwwefwefwef"
+              description="Fill the user detail and information for used in system."
             >
               <div className="grid gap-5 grid-cols-2 md:grid-cols-2 gap-x-10 gap-y-6 mb-8 p-5">
                 <div className="flex gap-3 mb-3 w-full col-span-2">
                   <FormField className="flex-1">
-                    <Label htmlFor="userId">Cardholder ID / Employee ID</Label>
+                    <Label htmlFor="userId">
+                      User Identification / Employee ID
+                    </Label>
                     <div className="flex gap-2">
-                      <Input
-                        disabled={isReadOnly}
-                        name="userId"
-                        type="text"
-                        id="cardHolderId"
-                        onChange={handleChange}
-                        value={dto.userId}
-                      />
+                      <div className="flex-2">
+                        <Input
+                          className=""
+                          placeholder="Identification"
+                          disabled={isReadOnly}
+                          name="userId"
+                          type="text"
+                          id="identification"
+                          onChange={handleChange}
+                          value={dto.identification}
+                        />
+                      </div>
+
                       <Button
+                        className="flex-1"
                         disabled={isReadOnly}
+                        variant="outline"
                         onClick={() =>
                           setDto((prev) => ({
                             ...prev,
-                            userId: generateEmployeeId(),
+                            identification: generateEmployeeId(),
                           }))
                         }
                       >
-                        Auto
+                        Generate
                       </Button>
                     </div>
                   </FormField>
@@ -250,14 +286,33 @@ export const PersonalInformationForm: React.FC<PersonalInformationFormProp> = ({
                 <div className="flex gap-3 mb-3 w-full col-span-2">
                   <FormField className="flex-1">
                     <Label htmlFor="title">Title</Label>
-                    <Input
-                      disabled={isReadOnly}
-                      name="title"
-                      type="text"
-                      id="title"
-                      onChange={handleChange}
-                      value={dto.title}
-                      placeholder="Mr."
+                    <Select
+                      options={[
+                        {
+                          label: Title.Mr,
+                          value: Title.Mr,
+                        },
+                        {
+                          label: Title.Miss,
+                          value: Title.Miss,
+                        },
+                        {
+                          label: Title.Ms,
+                          value: Title.Ms,
+                        },
+                        {
+                          label: Title.Other,
+                          value: Title.Other,
+                        },
+                      ]}
+                      onChange={(e) => {
+                        setDto((prev) => ({
+                          ...prev,
+                          title: e as Title,
+                        }));
+                      }}
+                      name={"title"}
+                      defaultValue={dto.title}
                     />
                   </FormField>
                   <FormField className="flex-2">
@@ -268,7 +323,7 @@ export const PersonalInformationForm: React.FC<PersonalInformationFormProp> = ({
                       type="text"
                       id="firstName"
                       onChange={handleChange}
-                      value={dto.firstName}
+                      value={dto.firstname}
                       placeholder="John"
                     />
                   </FormField>
@@ -280,7 +335,7 @@ export const PersonalInformationForm: React.FC<PersonalInformationFormProp> = ({
                       type="text"
                       id="middleName"
                       onChange={handleChange}
-                      value={dto.middleName}
+                      value={dto.middlename}
                       placeholder="Jr"
                     />
                   </FormField>
@@ -292,7 +347,7 @@ export const PersonalInformationForm: React.FC<PersonalInformationFormProp> = ({
                       type="text"
                       id="lastName"
                       onChange={handleChange}
-                      value={dto.lastName}
+                      value={dto.lastname}
                       placeholder="Doh"
                     />
                   </FormField>
@@ -304,8 +359,8 @@ export const PersonalInformationForm: React.FC<PersonalInformationFormProp> = ({
                       <Radio
                         id="gender1"
                         name="gender"
-                        value={Gender.Male.toString()}
-                        checked={selectedValue === Gender.Male.toString()}
+                        value={Gender.M.toString()}
+                        checked={selectedValue === Gender.M.toString()}
                         onChange={handleRadioChange}
                         label="Male"
                       />
@@ -315,8 +370,8 @@ export const PersonalInformationForm: React.FC<PersonalInformationFormProp> = ({
                       <Radio
                         id="gender2"
                         name="gender"
-                        value={Gender.Female.toString()}
-                        checked={selectedValue === Gender.Female.toString()}
+                        value={Gender.F.toString()}
+                        checked={selectedValue === Gender.F.toString()}
                         onChange={handleRadioChange}
                         label="Female"
                       />
@@ -325,8 +380,8 @@ export const PersonalInformationForm: React.FC<PersonalInformationFormProp> = ({
                       <Radio
                         id="gender3"
                         name="gender"
-                        value={Gender.Other.toString()}
-                        checked={selectedValue === Gender.Other.toString()}
+                        value={Gender.O.toString()}
+                        checked={selectedValue === Gender.O.toString()}
                         onChange={handleRadioChange}
                         label="Other"
                       />
@@ -342,10 +397,10 @@ export const PersonalInformationForm: React.FC<PersonalInformationFormProp> = ({
                     onChange={(date) =>
                       setDto((prev) => ({
                         ...prev,
-                        dateOfBirth: date[0].toISOString(),
+                        dateOfBirth: date[0],
                       }))
                     }
-                    value={dto.dateOfBirth}
+                    value={dto.dateOfBirth.toISOString()}
                   />
                 </FormField>
                 <FormField>
@@ -378,6 +433,7 @@ export const PersonalInformationForm: React.FC<PersonalInformationFormProp> = ({
                 <FormField className="col-span-2">
                   <Label>Address</Label>
                   <TextArea
+                    placeholder="Please enter address here"
                     disabled={isReadOnly}
                     value={dto.address}
                     onChange={(e: string) =>
@@ -390,37 +446,38 @@ export const PersonalInformationForm: React.FC<PersonalInformationFormProp> = ({
                     <Label>Company</Label>
                     <Select
                       name={"Company"}
+                      isString={true}
                       disabled={type == FormType.INFO}
                       onChange={(e) => {
-                        setDep([]);
-                        setPos([]);
+                        setDep(defaultOptions);
+                        setPos(defaultOptions);
                         setDto((prev) => ({
                           ...prev,
-                          companyId: Number(e),
-                          company:
-                            com.find((x) => x.value == Number(e))?.label ?? "",
+                          companyGuid: e,
+                          company: com.find((x) => x.value == e)?.label ?? "",
                         }));
-                        fetchDepartment(Number(e));
+                        fetchDepartment(e);
                       }}
-                      defaultValue={dto.companyId}
+                      defaultValue={dto.companyGuid}
                       options={com}
                     />
                   </FormField>
                   <FormField className="flex-1">
                     <Label>Department</Label>
                     <Select
+                      isString={true}
                       name={"Department"}
-                      defaultValue={dto.departmentId}
+                      defaultValue={dto.departmentGuid}
                       disabled={type == FormType.INFO}
                       onChange={(e) => {
-                        setPos([]);
+                        setPos(defaultOptions);
                         setDto((prev) => ({
                           ...prev,
-                          departmentId: Number(e),
+                          departmentGuid: e,
                           department:
-                            dep.find((x) => x.value == Number(e))?.label ?? "",
+                            dep.find((x) => x.value == e)?.label ?? "",
                         }));
-                        fetchPosition(Number(e));
+                        fetchPosition(e);
                       }}
                       options={dep}
                     />
@@ -428,17 +485,17 @@ export const PersonalInformationForm: React.FC<PersonalInformationFormProp> = ({
                   <FormField className="flex-1">
                     <Label>Position</Label>
                     <Select
+                      isString={true}
                       name={"Position"}
                       disabled={type == FormType.INFO}
                       onChange={(e) =>
                         setDto((prev) => ({
                           ...prev,
-                          positionId: Number(e),
-                          position:
-                            pos.find((x) => x.value == Number(e))?.label ?? "",
+                          positionId: e,
+                          position: pos.find((x) => x.value == e)?.label ?? "",
                         }))
                       }
-                      defaultValue={dto.positionId}
+                      defaultValue={dto.positionGuid}
                       options={pos}
                     />
                   </FormField>

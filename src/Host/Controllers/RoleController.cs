@@ -12,6 +12,13 @@ namespace Host.Controllers
       [ApiController]
       public class RoleController(IRole role) : ControllerBase
       {
+            [HttpGet]
+            public async Task<IActionResult> GetAsync()
+            {
+                  var res = await role.GetAsync();
+                  return Ok(res);
+            }
+
             [HttpGet("pagination")]
             public async Task<IActionResult> GetPaginationAsync([FromQuery] PaginationParams param)
             {
@@ -47,7 +54,7 @@ namespace Host.Controllers
                   return Ok(res);
             }
 
-            [HttpDelete("range")]
+            [HttpDelete("list")]
             public async Task<IActionResult> DeleteRangeAsync([FromBody] IEnumerable<Guid> guids)
             {
                   var res = await role.DeleteListAsync(guids);

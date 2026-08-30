@@ -105,6 +105,11 @@ public sealed class PositionService(
             return await dep.GetAsync(guid, ct);
       }
 
+      public Task<IEnumerable<PositionDto>> GetByLocationAsync(Guid guid, CancellationToken ct = default)
+      {
+            throw new NotImplementedException();
+      }
+
       public async Task<Pagination<PositionDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
       {
             return await dep.GetPaginationAsync(param, ct);

@@ -1,11 +1,11 @@
-
-
 export interface PositionDto {
-    id:number;
-    name:string;
-    description: string;
-    departmentId: number;
-    locationId:number;
-    isActive:boolean;
-    isDefault:boolean;
+  guid: string;
+  name: string;
+  description: string;
+  companyGuid: string;
+  company: string;
+  departmentGuid: string;
+  department: string;
+  isActive: boolean;
+  isDefault: boolean;
 }

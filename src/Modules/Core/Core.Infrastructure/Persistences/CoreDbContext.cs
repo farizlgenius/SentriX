@@ -176,6 +176,7 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   }
             ).IsUnique();
 
+
             modelBuilder.Entity<FeaturePermission>()
             .HasIndex(
                   x => x.guid
@@ -258,6 +259,7 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                         .WithMany(x => x.user_locations)
                         .HasForeignKey(x => x.location_id)
                         .OnDelete(DeleteBehavior.Cascade);
+
 
             // Device 
 
@@ -375,6 +377,7 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   .WithOne(x => x.department)
                   .HasForeignKey(x => x.department_id)
                   .OnDelete(DeleteBehavior.Cascade);
+
 
 
             // Seed Default data

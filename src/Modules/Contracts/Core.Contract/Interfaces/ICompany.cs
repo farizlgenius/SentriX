@@ -4,5 +4,5 @@ namespace Core.Contract.Interfaces;
 
 public interface ICompany : IBase<CompanyDto, CreateCompanyDto, UpdateCompanyDto>
 {
-
+  Task<IEnumerable<CompanyDto>> GetAsync();
 }

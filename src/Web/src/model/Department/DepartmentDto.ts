@@ -1,9 +1,9 @@
 export interface DepartmentDto {
-    id:number;
-    name:string;
-    description: string;
-    companyId: number;
-    locationId:number;
-    isActive:boolean;
-    isDefault:boolean;
+  guid: string;
+  name: string;
+  description: string;
+  companyGuid: string;
+  company: string;
+  isActive: boolean;
+  isDefault: boolean;
 }

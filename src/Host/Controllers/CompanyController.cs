@@ -9,10 +9,25 @@ namespace Host.Controllers;
 [ApiController]
 public class CompanyController(ICompany com) : ControllerBase
 {
+
+  [HttpGet]
+  public async Task<IActionResult> GetAsync()
+  {
+    var res = await com.GetAsync();
+    return Ok(res);
+  }
+
   [HttpGet("pagination")]
   public async Task<IActionResult> GetPaginationAsync([FromQuery] PaginationParams param)
   {
     var res = await com.GetPaginationAsync(param);
+    return Ok(res);
+  }
+
+  [HttpGet("/location/{guid}")]
+  public async Task<IActionResult> GetByLocationAsync([FromQuery] Guid guid)
+  {
+    var res = await com.GetByLocationAsync(guid);
     return Ok(res);
   }
 

@@ -82,6 +82,9 @@ namespace Core.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
 
+                    b.Property<int?>("Locationid")
+                        .HasColumnType("integer");
+
                     b.Property<string>("address")
                         .IsRequired()
                         .HasColumnType("text");
@@ -106,12 +109,6 @@ namespace Core.Infrastructure.Migrations
                     b.Property<bool>("is_default")
                         .HasColumnType("boolean");
 
-                    b.Property<int>("location_id")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("locationid")
-                        .HasColumnType("integer");
-
                     b.Property<string>("name")
                         .IsRequired()
                         .HasColumnType("text");
@@ -123,10 +120,10 @@ namespace Core.Infrastructure.Migrations
 
                     b.HasKey("id");
 
+                    b.HasIndex("Locationid");
+
                     b.HasIndex("guid")
                         .IsUnique();
-
-                    b.HasIndex("locationid");
 
                     b.ToTable("Companies", "core");
                 });
@@ -4011,13 +4008,9 @@ namespace Core.Infrastructure.Migrations
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Company", b =>
                 {
-                    b.HasOne("Core.Infrastructure.Persistences.Entities.Location", "location")
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.Location", null)
                         .WithMany("companies")
-                        .HasForeignKey("locationid")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("location");
+                        .HasForeignKey("Locationid");
                 });
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.ComponentMapping", b =>

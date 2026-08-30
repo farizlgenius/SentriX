@@ -1,7 +1,7 @@
 namespace Core.Contract.DTOs.Role;
 
 public sealed record CreateModulePermissionDto(
-      Guid Guid,
+      int Id,
       bool IsEnabled,
-      List<CreateFeaturePermissionDto> FeaturePermission
+      List<CreateFeaturePermissionDto> Features
 );

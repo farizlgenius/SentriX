@@ -88,6 +88,11 @@ public sealed class LocationService(
     return await repo.GetAsync(guid, ct);
   }
 
+  public Task<IEnumerable<LocationDto>> GetByLocationAsync(Guid guid, CancellationToken ct = default)
+  {
+    throw new NotImplementedException();
+  }
+
   public async Task<IEnumerable<CountryDto>> GetCountriesAsync(CancellationToken ct = default)
   {
     return await repo.GetCountriesAsync(ct);

@@ -1,10 +1,9 @@
-import { PermissionDto } from "./PermissionDto";
+import { ModulePermissionDto } from "./ModulePermissionDto";
 
-export interface RoleDto{
-    id:number;
-    name:string;
-    permissions:PermissionDto[];
-    locationName:string;
-    isActive:boolean;
-    isDefault:boolean;
+export interface RoleDto {
+  guid: string;
+  name: string;
+  modules: ModulePermissionDto[];
+  isActive: boolean;
+  isDefault: boolean;
 }

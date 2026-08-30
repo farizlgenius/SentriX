@@ -5,6 +5,7 @@
     "migbundle:all": "node scripts/bundle-all.js",
     "migup:all": "node scripts/update-migration-all.js",
     "migadd": "node scripts/add-migration.js",
+    "migup": "node scripts/update-migration.js",
     "dev": "dotnet watch --project src/Host"
   }
 }

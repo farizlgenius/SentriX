@@ -10,7 +10,6 @@ import { BaseTable } from "../UiElements/BaseTable";
 import api, { send } from "../../api/api";
 import { useAuth } from "../../context/AuthContext";
 import { usePopup } from "../../context/PopupContext";
-import { FeatureId } from "../../enum/FeatureId";
 import { FormType } from "../../model/Form/FormProp";
 import { usePagination } from "../../context/PaginationContext";
 import { DepartmentDto } from "../../model/Department/DepartmentDto";
@@ -21,24 +20,21 @@ import Label from "../../components/form/Label";
 import { Options } from "../../model/Options";
 import { CompanyEndpoint } from "../../endpoint/CompanyEndpoint";
 import { CompanyDto } from "../../model/Company/CompanyDto";
-import { useLocation } from "../../context/LocationContext";
+import { FeatureId } from "../../enum/FeatureId";
 
-var removeTarget: number = 0;
-
-export const HEADER: string[] = ["Name", "Action"];
-export const KEY: string[] = ["name"];
+const HEADER: string[] = ["Name", "Action"];
+const KEY: string[] = ["name"];
 
 export const Department = () => {
-  const { locationGuid: locationId } = useLocation();
-  const [selectedCompany, setSelectedCompany] = useState<number>(-1);
+  const [selectedCompany, setSelectedCompany] = useState<string>("");
   const [companyOptions, setCompanyOptions] = useState<Options[]>([]);
 
   const defaultDto: DepartmentDto = {
-    id: 0,
+    guid: "",
     name: "",
     description: "",
-    companyId: selectedCompany,
-    locationId: locationId,
+    companyGuid: selectedCompany,
+    company: "",
     isActive: true,
     isDefault: false,
   };
@@ -65,15 +61,13 @@ export const Department = () => {
   const [formType, setFormType] = useState<FormType>(FormType.CREATE);
 
   const handleRemove = (data: DepartmentDto) => {
-    removeTarget = data.id;
     setRemove(true);
     setConfirmRemove(() => async () => {
-      const res = await api.delete(DepartmentEndpoint.DELETE(removeTarget));
+      const res = await api.delete(DepartmentEndpoint.DELETE(data.guid));
       if (
         Helper.handleToastByResCode(res, DepartmentToast.DELETE, toggleToast)
       ) {
         toggleRefresh();
-        removeTarget = 0;
       }
     });
   };
@@ -102,13 +96,14 @@ export const Department = () => {
           setInfo(true);
         } else {
           setConfirmRemove(() => async () => {
-            var data: number[] = [];
+            const data: string[] = [];
             select.map(async (a: DepartmentDto) => {
-              data.push(a.id);
+              data.push(a.guid);
             });
-            var res = await send.post(DepartmentEndpoint.DELETE_RANGE, {
-              ids: data,
-            });
+            const res = await send.deleteBody(
+              DepartmentEndpoint.DELETE_RANGE,
+              data,
+            );
             if (
               Helper.handleToastByResCode(
                 res,
@@ -169,45 +164,16 @@ export const Department = () => {
   const fetchData = async (
     pageNumber: number,
     pageSize: number,
-    locationId?: number,
+    locationGuid?: string,
     search?: string,
     startDate?: string,
     endDate?: string,
   ) => {
-    console.log(locationId);
     const res = await send.get(
       DepartmentEndpoint.PAGINATION_BY_COMPANY(
         pageNumber,
         pageSize,
-        selectedCompany,
-        locationId,
-        search,
-        startDate,
-        endDate,
-      ),
-    );
-    if (res.data.success) {
-      setDepartmentsDto(res.data.data.items);
-      setPagination(res.data.data);
-    }
-  };
-
-  const fetchDataImd = async (
-    pageNumber: number,
-    pageSize: number,
-    companyId: number,
-    locationId?: number,
-    search?: string,
-    startDate?: string,
-    endDate?: string,
-  ) => {
-    console.log(locationId);
-    const res = await send.get(
-      DepartmentEndpoint.PAGINATION_BY_COMPANY(
-        pageNumber,
-        pageSize,
-        companyId,
-        locationId,
+        locationGuid ?? "",
         search,
         startDate,
         endDate,
@@ -235,14 +201,15 @@ export const Department = () => {
   ];
 
   const fetchCompany = async () => {
-    var res = await send.get(CompanyEndpoint.GET_BY_LOCATION(locationId));
+    const res = await send.get(CompanyEndpoint.GET);
     res.data.data.map((a: CompanyDto) => {
       setCompanyOptions((prev) => [
         ...prev,
         {
           label: a.name,
-          value: a.id,
+          value: a.guid,
           description: a.description,
+          additionalInfo: a.address,
         },
       ]);
     });
@@ -264,15 +231,18 @@ export const Department = () => {
               <Label>Company Selector</Label>
               <Select
                 options={companyOptions}
+                isString={true}
                 name="Company"
                 defaultValue={selectedCompany}
                 onChange={(e) => {
-                  setSelectedCompany(Number(e));
+                  setSelectedCompany(e);
                   setDepartmentDto((prev) => ({
                     ...prev,
-                    companyId: Number(e),
+                    companyGuid: e,
+                    company:
+                      companyOptions.find((x) => x.value == e)?.label ?? "",
                   }));
-                  fetchDataImd(1, 10, Number(e), locationId);
+                  fetchData(1, 10, e);
                 }}
               />
             </div>
@@ -290,7 +260,7 @@ export const Department = () => {
             onInfo={handleInfo}
             fetchData={fetchData}
             refresh={refresh}
-            locationGuid={selectedCompany == -1 ? -1 : locationId}
+            locationGuid={selectedCompany}
           />
         </div>
       )}

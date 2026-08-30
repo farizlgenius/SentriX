@@ -9,9 +9,7 @@ using SharedKernel.Exceptions;
 namespace Core.Application.Services;
 
 public sealed class RoleService(
-      IRoleRepository repo,
-      IFeatureRepository feature,
-      IModuleRepository module
+      IRoleRepository repo
       ) : IRole
 {
       public async Task<Guid> CreateAsync(CreateRoleDto dto, CancellationToken ct = default)
@@ -20,27 +18,13 @@ public sealed class RoleService(
             if (await repo.IsAnyByNameAndLocationIdAsync(dto.Name))
                   throw new DuplicateException(EntityType.Role, dto.Name);
 
-            var moduleGuids = dto.ModulePermissions
-            .Select(x => x.Guid)
-            .Distinct()
-            .ToArray();
-
-            var moduleMap = await module.GetMapGuidAndMapByGuidsAsync(moduleGuids, ct);
-
-            var allGuids = dto.ModulePermissions
-                  .SelectMany(x => x.FeaturePermission.Select(f => f.Guid))
-                  .Distinct()
-                  .ToList();
-
-            var featureMap = await feature.GetMapIdGuidByGuidsAsync(allGuids, ct);
-
             var d = new Core.Domain.Entities.Role(
                   dto.Name,
-                  dto.ModulePermissions.Select(x => new ModulePermission(
+                  dto.Modules.Select(x => new ModulePermission(
                         x.IsEnabled,
-                        moduleMap[x.Guid].Item1,
-                        x.FeaturePermission.Select(s => new FeaturePermission(
-                              featureMap[s.Guid].Item1,
+                        x.Id,
+                        x.Features.Select(s => new FeaturePermission(
+                              s.Id,
                               s.IsEnabled,
                               s.IsCreated,
                               s.IsUpdated,
@@ -116,9 +100,19 @@ public sealed class RoleService(
             return await repo.EnableAsync(guid, ct);
       }
 
+      public async Task<IEnumerable<RoleDto>> GetAsync(CancellationToken ct = default)
+      {
+            return await repo.GetAsync(ct);
+      }
+
       public async Task<RoleDto> GetByGuidAsync(Guid guid, CancellationToken ct = default)
       {
             return await repo.GetAsync(guid, ct);
+      }
+
+      public Task<IEnumerable<RoleDto>> GetByLocationAsync(Guid guid, CancellationToken ct = default)
+      {
+            throw new NotImplementedException();
       }
 
       public async Task<Pagination<RoleDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
@@ -132,24 +126,14 @@ public sealed class RoleService(
             if (!await repo.IsAnyGuidAsync(dto.Guid, ct))
                   throw new NotFoundException(EntityType.Role, dto.Guid.ToString());
 
-            var moduleAllGuids = dto.ModulePermissions.Select(x => x.Guid).ToArray();
-
-            var moduleMap = await module.GetMapGuidAndMapByGuidsAsync(moduleAllGuids, ct);
-
-            var allGuids = dto.ModulePermissions
-                  .SelectMany(x => x.FeaturePermission.Select(f => f.Guid))
-                  .Distinct()
-                  .ToList();
-
-            var featureMap = await feature.GetMapIdGuidByGuidsAsync(allGuids, ct);
 
             var d = new Core.Domain.Entities.Role(
                   dto.Name,
-                  dto.ModulePermissions.Select(x => new ModulePermission(
+                  dto.Modules.Select(x => new ModulePermission(
                         x.IsEnabled,
-                        moduleMap[x.Guid].Item1,
-                        x.FeaturePermission.Select(s => new FeaturePermission(
-                              featureMap[s.Guid].Item1,
+                        x.Id,
+                        x.Features.Select(s => new FeaturePermission(
+                              s.Id,
                               s.IsEnabled,
                               s.IsCreated,
                               s.IsUpdated,

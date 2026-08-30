@@ -103,9 +103,19 @@ public sealed class DepartmentService(
             return await dep.EnableAsync(guid, ct);
       }
 
+      public async Task<IEnumerable<DepartmentDto>> GetByCompanyAsync(Guid guid, CancellationToken ct = default)
+      {
+            return await dep.GetByCompanyAsync(guid);
+      }
+
       public async Task<DepartmentDto> GetByGuidAsync(Guid guid, CancellationToken ct = default)
       {
             return await dep.GetAsync(guid, ct);
+      }
+
+      public Task<IEnumerable<DepartmentDto>> GetByLocationAsync(Guid guid, CancellationToken ct = default)
+      {
+            throw new NotImplementedException();
       }
 
       public async Task<Pagination<DepartmentDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)

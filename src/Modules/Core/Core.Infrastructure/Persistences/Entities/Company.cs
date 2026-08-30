@@ -8,9 +8,6 @@ public sealed class Company : BaseEntity
       public ICollection<User> users { get; set; } = new List<User>();
       public ICollection<Department> departments { get; set; } = new List<Department>();
 
-      // Relation
-      public int location_id { get; set; }
-      public Location location { get; set; } = default!;
 
       public Company() { }
       public Company(Core.Domain.Entities.Company d) : base(d.Guid)
@@ -18,6 +15,5 @@ public sealed class Company : BaseEntity
             this.name = d.Name;
             this.description = d.Description;
             this.address = d.Address;
-            this.location_id = d.LocationId;
       }
 }

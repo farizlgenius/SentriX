@@ -81,11 +81,18 @@ public sealed class PositionRepository(CoreDbContext context) : IPositionReposit
                             x.guid,
                             x.name,
                             x.description,
+                            x.department.guid,
                             x.department.name,
+                            x.department.company.guid,
                             x.department.company.name,
                             x.is_active,
                             x.is_default
                           )).FirstOrDefaultAsync() ?? throw new NotFoundException(nameof(Location), guid.ToString());
+      }
+
+      public Task<IEnumerable<PositionDto>> GetByLocationAsync(Guid guid, CancellationToken ct = default)
+      {
+            throw new NotImplementedException();
       }
 
       public async Task<int> GetIdByGuidAsync(Guid guid, CancellationToken ct = default)
@@ -154,7 +161,9 @@ public sealed class PositionRepository(CoreDbContext context) : IPositionReposit
                             x.guid,
                             x.name,
                             x.description,
+                            x.department.guid,
                             x.department.name,
+                            x.department.company.guid,
                             x.department.company.name,
                             x.is_active,
                             x.is_default
@@ -226,7 +235,9 @@ public sealed class PositionRepository(CoreDbContext context) : IPositionReposit
                             x.guid,
                             x.name,
                             x.description,
+                            x.department.guid,
                             x.department.name,
+                            x.department.company.guid,
                             x.department.company.name,
                             x.is_active,
                             x.is_default

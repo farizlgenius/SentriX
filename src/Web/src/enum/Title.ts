@@ -1,3 +1,6 @@
-export enum TITLE{
-       Mr, Ms, Mrs, Dr, Prof, Other
+export enum Title {
+  Mr = "Mr",
+  Ms = "Ms",
+  Miss = "Miss",
+  Other = "Other",
 }

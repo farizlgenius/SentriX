@@ -1,4 +1,11 @@
-import React, { createContext, JSX, useContext, useEffect, useMemo, useState } from "react";
+import React, {
+  createContext,
+  JSX,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import Toast from "../pages/UiElements/Toast";
 
 export type ToastType = "success" | "error" | "warning" | "pending";
@@ -17,7 +24,11 @@ export type ToastItem = {
 interface ToastContextInterface {
   showToast: boolean;
   setShowToast: React.Dispatch<React.SetStateAction<boolean>>;
-  toggleToast: (toastType: ToastType, toastMessage: string, options?: ToastOptions) => string;
+  toggleToast: (
+    toastType: ToastType,
+    toastMessage: string,
+    options?: ToastOptions,
+  ) => string;
   updateToast: (id: string, updates: Partial<Omit<ToastItem, "id">>) => void;
   removeToast: (id: string) => void;
   ToastContainer: () => JSX.Element;
@@ -27,7 +38,9 @@ const DEFAULT_TOAST_DURATION = 3000;
 
 const ToastContext = createContext<ToastContextInterface | null>(null);
 
-export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [toastList, setToastList] = useState<ToastItem[]>([]);
   const [showToast, setShowToast] = useState(false);
 
@@ -35,7 +48,11 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     setShowToast(toastList.length > 0);
   }, [toastList]);
 
-  const toggleToast = (toastType: ToastType, toastMessage: string, options?: ToastOptions) => {
+  const toggleToast = (
+    toastType: ToastType,
+    toastMessage: string,
+    options?: ToastOptions,
+  ) => {
     const id = `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
 
     setToastList((prev) => [
@@ -44,7 +61,9 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         id,
         type: toastType,
         message: toastMessage,
-        duration: options?.duration ?? (toastType === "pending" ? undefined : DEFAULT_TOAST_DURATION),
+        duration:
+          options?.duration ??
+          (toastType === "pending" ? undefined : DEFAULT_TOAST_DURATION),
       },
     ]);
 
@@ -63,10 +82,10 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
                   ? updates.duration
                   : updates.type === "pending"
                     ? undefined
-                    : toast.duration ?? DEFAULT_TOAST_DURATION,
+                    : (toast.duration ?? DEFAULT_TOAST_DURATION),
             }
-          : toast
-      )
+          : toast,
+      ),
     );
   };
 
@@ -92,12 +111,19 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
           </div>
         );
       },
-    [toastList]
+    [toastList],
   );
 
   return (
     <ToastContext.Provider
-      value={{ ToastContainer, showToast, setShowToast, toggleToast, updateToast, removeToast }}
+      value={{
+        ToastContainer,
+        showToast,
+        setShowToast,
+        toggleToast,
+        updateToast,
+        removeToast,
+      }}
     >
       {children}
     </ToastContext.Provider>

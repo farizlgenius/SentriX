@@ -15,11 +15,13 @@ import { ActionButton } from "../../model/ActionButton";
 import { FormType } from "../../model/Form/FormProp";
 import { usePopup } from "../../context/PopupContext";
 import { usePagination } from "../../context/PaginationContext";
-import { TableCell } from "../../components/ui/table";
-import { Avatar } from "../UiElements/Avatar";
 import UserForm from "./UserForm";
 import { FormContent } from "../../model/Form/FormContent";
 import { BaseForm } from "../UiElements/BaseForm";
+import { TableCell } from "../../components/ui/table";
+import { Avatar } from "../UiElements/Avatar";
+import { Title } from "../../enum/Title";
+import { Gender } from "../../enum/Gender";
 
 const CARDHOLDER_HEAD: string[] = [
   "Image",
@@ -41,7 +43,7 @@ const CARDHOLDER_KEY: string[] = [
 ];
 
 const User = () => {
-  const { locationGuid: locationId } = useLocation();
+  const { locationGuid } = useLocation();
   const { setPagination } = usePagination();
   const { filterPermission } = useAuth();
   const {
@@ -57,40 +59,50 @@ const User = () => {
   const { toggleToast } = useToast();
   const [refresh, setRefresh] = useState(false);
   const toggleRefresh = () => setRefresh(!refresh);
-  const [cardHoldersDto, setCardHoldersDto] = useState<UserDto[]>([]);
+  const [usersDto, setUsersDto] = useState<UserDto[]>([]);
   const [formType, setFormType] = useState<FormType>(FormType.CREATE);
 
   const defaultDto: UserDto = {
-    userId: "",
-    title: "",
-    firstName: "",
-    middleName: "",
-    lastName: "",
-    gender: "",
-    dateOfBirth: "",
+    guid: "",
+    username: "",
+    password: "",
+    identification: "",
+    title: Title.Mr,
+    firstname: "",
+    middlename: "",
+    lastname: "",
+    gender: Gender.M,
+    dateOfBirth: new Date(),
     email: "",
     phone: "",
-    companyId: -1,
-    departmentId: -1,
-    positionId: -1,
-    address: "",
-    flag: 0,
-    additionals: [],
-    image: "",
-    credentials: [],
-    groups: [],
-    locationId: locationId,
-    id: 0,
-    name: "",
-    isActive: false,
+    isOperator: false,
+    isUser: false,
+    role: "",
     company: "",
     department: "",
     position: "",
-    vacationId: 0,
+    address: "",
+    joinedDate: new Date(),
+    expiredDate: new Date(),
+    additionals: [],
+    groups: [],
+    cards: [],
+    licensePlates: [],
+    pins: [],
+    qrCodes: [],
+    face: {
+      imageName: "",
+    },
+    locations: [],
     isDefault: false,
+    isActive: false,
+    roleGuid: "",
+    companyGuid: "00000000-0000-0000-0000-000000000000",
+    departmentGuid: "00000000-0000-0000-0000-000000000000",
+    positionGuid: "00000000-0000-0000-0000-000000000000",
   };
 
-  const [cardHolderDto, setCardHolderDto] = useState<UserDto>(defaultDto);
+  const [userDto, setUserDto] = useState<UserDto>(defaultDto);
   const [image, setImage] = useState<File | undefined>();
   {
     /* Modal */
@@ -111,11 +123,11 @@ const User = () => {
           setInfo(true);
         }
         setConfirmRemove(() => async () => {
-          var data: number[] = [];
+          const data: string[] = [];
           selectedObjects.map(async (a: UserDto) => {
-            data.push(a.id);
+            data.push(a.guid);
           });
-          var res = await send.post(UserEndpoint.DELETE_RANGE, data);
+          const res = await send.deleteBody(UserEndpoint.DELETE_RANGE, data);
           if (
             Helper.handleToastByResCode(
               res,
@@ -131,7 +143,7 @@ const User = () => {
         break;
       case "create":
         setConfirmCreate(() => async () => {
-          const res1 = await send.post(UserEndpoint.CREATE, cardHolderDto);
+          const res1 = await send.post(UserEndpoint.CREATE, userDto);
           if (
             Helper.handleToastByResCode(res1, UserToast.CREATE, toggleToast)
           ) {
@@ -139,18 +151,18 @@ const User = () => {
               const payload = new FormData();
               payload.append("image", image);
               const res2 = await send.postForm(
-                UserEndpoint.UPLOAD(cardHolderDto.userId),
+                UserEndpoint.UPLOAD(userDto.identification),
                 payload,
               );
               if (
                 Helper.handleToastByResCode(res2, UserToast.CREATE, toggleToast)
               ) {
-                setCardHolderDto(defaultDto);
+                setUserDto(defaultDto);
                 setForm(false);
                 toggleRefresh();
               }
             } else {
-              setCardHolderDto(defaultDto);
+              setUserDto(defaultDto);
               setForm(false);
               toggleRefresh();
             }
@@ -160,9 +172,9 @@ const User = () => {
         break;
       case "update":
         setConfirmUpdate(() => async () => {
-          const res = await send.put(UserEndpoint.UPDATE, cardHolderDto);
+          const res = await send.put(UserEndpoint.UPDATE, userDto);
           if (Helper.handleToastByResCode(res, UserToast.UPDATE, toggleToast)) {
-            setCardHolderDto(defaultDto);
+            setUserDto(defaultDto);
             setForm(false);
             toggleRefresh();
           }
@@ -172,7 +184,7 @@ const User = () => {
       case "cancle":
       case "close":
         setForm(false);
-        setCardHolderDto(defaultDto);
+        setUserDto(defaultDto);
         break;
       default:
         break;
@@ -185,19 +197,19 @@ const User = () => {
   const handleEdit = (data: UserDto) => {
     console.log(data);
     setFormType(FormType.UPDATE);
-    setCardHolderDto(data);
+    setUserDto(data);
     setForm(true);
   };
 
   const handleInfo = (data: UserDto) => {
     setFormType(FormType.INFO);
-    setCardHolderDto(data);
+    setUserDto(data);
     setForm(true);
   };
 
   const handleRemove = (data: UserDto) => {
     setConfirmRemove(() => async () => {
-      const res = await send.delete(UserEndpoint.DELETE(data.id));
+      const res = await send.delete(UserEndpoint.DELETE(data.guid));
       if (Helper.handleToastByResCode(res, UserToast.DELETE, toggleToast))
         toggleRefresh();
     });
@@ -206,7 +218,7 @@ const User = () => {
   const fetchData = async (
     pageNumber: number,
     pageSize: number,
-    locationId?: number,
+    locationGuid?: string,
     search?: string,
     startDate?: string,
     endDate?: string,
@@ -215,7 +227,7 @@ const User = () => {
       UserEndpoint.PAGINATION(
         pageNumber,
         pageSize,
-        locationId,
+        locationGuid,
         search,
         startDate,
         endDate,
@@ -223,7 +235,7 @@ const User = () => {
     );
     console.log(res);
     if (res.data.success) {
-      setCardHoldersDto(res.data.data.items);
+      setUsersDto(res.data.data.items);
       setPagination(res.data.data);
     }
   };
@@ -239,8 +251,8 @@ const User = () => {
       content: (
         <UserForm
           type={formType}
-          dto={cardHolderDto}
-          setDto={setCardHolderDto}
+          dto={userDto}
+          setDto={setUserDto}
           handleClick={handleClick}
           image={image}
           setImage={setImage}
@@ -270,14 +282,14 @@ const User = () => {
 
   return (
     <>
-      <PageBreadcrumb pageTitle="Card Holders" />
+      <PageBreadcrumb pageTitle="Users" />
       {form ? (
         <BaseForm tabContent={content} header={""} desc={""} />
       ) : (
         <BaseTable<UserDto>
           headers={CARDHOLDER_HEAD}
           keys={CARDHOLDER_KEY}
-          data={cardHoldersDto}
+          data={usersDto}
           select={selectedObjects}
           setSelect={setSelectedObjects}
           onClick={handleClick}
@@ -287,7 +299,7 @@ const User = () => {
           permission={filterPermission(FeatureId.user)}
           action={action}
           fetchData={fetchData}
-          locationGuid={locationId}
+          locationGuid={locationGuid}
           refresh={refresh}
           specialDisplay={[
             {
@@ -298,7 +310,7 @@ const User = () => {
                   className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400"
                 >
                   <div className="cursor-pointer w-11 h-11 overflow-hidden border border-gray-200 rounded-full dark:border-gray-800">
-                    <Avatar userId={d.userId} />
+                    <Avatar userId={d.identification} />
                   </div>
                 </TableCell>
               ),
@@ -310,7 +322,7 @@ const User = () => {
                   key={i}
                   className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400"
                 >
-                  {d.title} {d.firstName} {d.middleName} {d.lastName}
+                  {d.title} {d.firstname} {d.middlename} {d.lastname}
                 </TableCell>
               ),
             },

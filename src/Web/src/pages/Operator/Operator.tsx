@@ -9,7 +9,7 @@ import Helper from "../../utility/Helper";
 import { OperatorToast } from "../../model/ToastMessage";
 import { FormContent } from "../../model/Form/FormContent";
 import { OperatorEndpoint } from "../../endpoint/OperatorEndpoint";
-import { OperatorForm } from "../../components/form/operator/OperatorForm";
+import { OperatorForm } from "../../components/form/user/OperatorForm";
 import { useLocation } from "../../context/LocationContext";
 import { send } from "../../api/api";
 import { useAuth } from "../../context/AuthContext";

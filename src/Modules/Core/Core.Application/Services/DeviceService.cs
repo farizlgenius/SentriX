@@ -86,6 +86,11 @@ public sealed class DeviceService(
     throw new NotImplementedException();
   }
 
+  public Task<IEnumerable<DeviceDto>> GetByLocationAsync(Guid guid, CancellationToken ct = default)
+  {
+    throw new NotImplementedException();
+  }
+
   public async Task<Pagination<DeviceDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
   {
     throw new NotImplementedException();

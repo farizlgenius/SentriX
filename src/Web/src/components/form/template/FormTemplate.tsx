@@ -1,19 +1,30 @@
 import React from "react";
 import Button from "../../ui/button/Button";
+import Switch from "../switch/Switch";
 
-interface FormShellProps {
-  eyebrow?: string;
-  title: string;
-  description?: string;
-  children: React.ReactNode;
-  className?: string;
-}
+// interface FormShellProps {
+//   eyebrow?: string;
+//   title: string;
+//   description?: string;
+//   children: React.ReactNode;
+//   className?: string;
+// }
 
 interface FormSectionProps {
   title?: string;
   description?: string;
   children: React.ReactNode;
   className?: string;
+  overall?: string;
+}
+
+interface FormSectionCheckedProps {
+  title?: string;
+  description?: string;
+  children: React.ReactNode;
+  className?: string;
+  onChange: ((checked: boolean) => void) | undefined;
+  defaultChecked: boolean;
 }
 
 interface FormActionsProps {
@@ -51,15 +62,41 @@ interface FormActionsProps {
 export const FormSection: React.FC<FormSectionProps> = ({
   title,
   description,
+  overall = "",
   children,
   className = "",
 }) => {
   return (
-    <section className={`rounded-[24px] border border-[var(--app-panel-border)] bg-[var(--app-panel-muted)]/30 p-5 lg:p-6 ${className}`}>
-      {(title || description) && (
+    <section
+      className={`rounded-[24px] border border-[var(--app-panel-border)] bg-[var(--app-panel-muted)]/30 p-5 lg:p-6 ${className}`}
+    >
+      {(title || description || overall) && (
         <div className="mb-5">
-          {title && <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{title}</h3>}
-          {description && <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">{description}</p>}
+          {overall && (
+            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-brand-500">
+              {overall}
+            </p>
+          )}
+          {title && (
+            <h3 className="mt-2 text-2xl font-semibold text-gray-900 dark:text-white">
+              {title}
+            </h3>
+          )}
+          {description && (
+            <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+              {description}
+            </p>
+          )}
+          {/* {title && (
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+              {title}
+            </h3>
+          )} */}
+          {/* {description && (
+            <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+              {description}
+            </p>
+          )} */}
         </div>
       )}
       {children}
@@ -67,11 +104,57 @@ export const FormSection: React.FC<FormSectionProps> = ({
   );
 };
 
-export const FormGrid: React.FC<{ children: React.ReactNode; className?: string }> = ({ children, className = "" }) => {
-  return <div className={`grid gap-5 md:grid-cols-2 ${className}`}>{children}</div>;
+export const FormSectionChecked: React.FC<FormSectionCheckedProps> = ({
+  title,
+  description,
+  children,
+  className = "",
+  onChange,
+  defaultChecked,
+}) => {
+  return (
+    <section
+      className={`rounded-[24px] border border-[var(--app-panel-border)] bg-[var(--app-panel-muted)]/30 p-5 lg:p-6 ${className}`}
+    >
+      {(title || description) && (
+        <div className="flex justify-between items-start">
+          <div className="mb-5">
+            {title && (
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                {title}
+              </h3>
+            )}
+            {description && (
+              <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                {description}
+              </p>
+            )}
+          </div>
+          <Switch
+            defaultChecked={defaultChecked}
+            label={""}
+            onChange={onChange}
+          />
+        </div>
+      )}
+      {children}
+    </section>
+  );
 };
 
-export const FormField: React.FC<{ children: React.ReactNode; className?: string }> = ({ children, className = "" }) => {
+export const FormGrid: React.FC<{
+  children: React.ReactNode;
+  className?: string;
+}> = ({ children, className = "" }) => {
+  return (
+    <div className={`grid gap-5 md:grid-cols-2 ${className}`}>{children}</div>
+  );
+};
+
+export const FormField: React.FC<{
+  children: React.ReactNode;
+  className?: string;
+}> = ({ children, className = "" }) => {
   return <div className={`space-y-1 ${className}`}>{children}</div>;
 };
 

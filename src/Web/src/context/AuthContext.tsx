@@ -192,7 +192,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       console.log(permissions);
       return permissions
         .find((s) => s.id == selectedModule)
-        ?.featurePermission.find((x) => x.id == featureId);
+        ?.features.find((x) => x.id == featureId);
     },
     [permissions],
   );
@@ -202,8 +202,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       return !(
         permissions
           .find((x) => x.id == moduleId)
-          ?.featurePermission?.find((x) => x.id == featureId)?.isEnabled ??
-        false
+          ?.features?.find((x) => x.id == featureId)?.isEnabled ?? false
       );
     },
     [permissions],

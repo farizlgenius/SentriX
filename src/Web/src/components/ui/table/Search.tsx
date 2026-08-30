@@ -1,20 +1,22 @@
 import React, { PropsWithChildren, useEffect, useRef, useState } from "react";
 import { AddIcon, MoreDotIcon, TrashBinIcon } from "../../../icons";
-import { PermissionDto } from "../../../model/Role/PermissionDto";
 import { ActionButton } from "../../../model/ActionButton";
 import { usePagination } from "../../../context/PaginationContext";
 import { createPortal } from "react-dom";
+import { FeaturePermissionDto } from "../../../model/Role/FeaturePermissionDto";
 
 interface SearchProp {
   onClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
-  permission?: PermissionDto;
+  permission?: FeaturePermissionDto;
   action?: ActionButton[];
+  locationGuid?: string;
 }
 
 const Search: React.FC<PropsWithChildren<SearchProp>> = ({
   onClick,
   permission,
   action,
+  locationGuid,
 }) => {
   const { setSearch } = usePagination();
   const [isMoreOpen, setIsMoreOpen] = useState(false);
@@ -76,9 +78,10 @@ const Search: React.FC<PropsWithChildren<SearchProp>> = ({
           {permission?.isCreated && (
             <button
               onClick={onClick}
+              disabled={!locationGuid}
               name="add"
               type="button"
-              className="inline-flex items-center gap-2 rounded-lg bg-brand-500 px-4 py-2.5 text-sm font-medium text-white shadow-theme-xs transition hover:bg-brand-600"
+              className="inline-flex items-center gap-2 rounded-lg bg-brand-500 px-4 py-2.5 text-sm font-medium text-white shadow-theme-xs transition hover:bg-brand-600 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-brand-500"
             >
               <AddIcon />
               Add

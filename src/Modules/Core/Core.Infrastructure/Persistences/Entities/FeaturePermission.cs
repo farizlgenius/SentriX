@@ -17,6 +17,7 @@ public sealed class FeaturePermission : BaseEntity
       ) : base(d.Guid)
       {
             this.feature_id = d.FeatureId;
+            this.is_enabled = d.IsEnabled;
             this.is_deleted = d.IsEnabled;
             this.is_created = d.IsCreated;
             this.is_updated = d.IsUpdated;

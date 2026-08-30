@@ -46,23 +46,6 @@ export const CredentialForm: React.FC<PropsWithChildren<FormProp<UserDto>>> = ({
       credentials: prev.credentials.filter((x) => Number(x.cardNumber) !== id),
     }));
   };
-  var defaultCredential: CredentialDto = {
-    bits: 0,
-    issueCode: 0,
-    fac: -1,
-    cardNumber: 0,
-    pin: "",
-    active: new Date().toISOString(),
-    expire: new Date(
-      new Date().setFullYear(new Date().getFullYear() + 10),
-    ).toISOString(),
-    locationId: locationId,
-    isActive: true,
-    id: 0,
-    flag: 0,
-    useCount: 0,
-    apbLoc: 0,
-  };
   const [credentialDto, setCredentialDto] =
     useState<CredentialDto>(defaultCredential);
 
@@ -249,7 +232,7 @@ export const CredentialForm: React.FC<PropsWithChildren<FormProp<UserDto>>> = ({
             <h3 className="flex items-center gap-3 text-base font-medium text-gray-800 dark:text-white/90">
               Cards
               <span className="inline-flex rounded-full bg-gray-100 px-2 py-0.5 text-theme-xs font-medium text-gray-700 dark:bg-white/[0.03] dark:text-white/80">
-                {dto.credentials.length}/10
+                {dto.cards.length}/10
               </span>
             </h3>
           </div>
@@ -259,7 +242,7 @@ export const CredentialForm: React.FC<PropsWithChildren<FormProp<UserDto>>> = ({
               <div>
                 <div className="overflow-auto scrollbar-thin scrollbar-transparent h-64 w-full rounded-lg border px-4 py-3 text-sm shadow-theme-xs bg-transparent">
                   <div className="space-y-3">
-                    {dto.credentials.map((item) => {
+                    {dto.cards.map((item) => {
                       const id = Number(item.cardNumber);
                       const isSelected = selectedId === id;
 
@@ -287,7 +270,7 @@ export const CredentialForm: React.FC<PropsWithChildren<FormProp<UserDto>>> = ({
                             <Info label="PIN" value={item.pin || "-"} />
                             <Info
                               label="Active"
-                              value={new Date(item.active).toLocaleDateString()}
+                              value={new Date(dto.active).toLocaleDateString()}
                             />
                             <Info
                               label="Deactive"

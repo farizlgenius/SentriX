@@ -17,7 +17,6 @@ const LocationContext = createContext<LocationContextInterface | null>(null);
 export const LocationProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [show, setShow] = useState<boolean>(false);
   const [locationGuid, setLocationGuid] = useState<string>("");
   const [locationName, setLocationName] = useState<string>("");
   const [locationList, setLocationList] = useState<LocationDto[]>([]);

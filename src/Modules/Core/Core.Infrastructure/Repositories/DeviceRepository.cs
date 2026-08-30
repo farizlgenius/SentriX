@@ -39,6 +39,11 @@ public sealed class DeviceRepository(CoreDbContext context) : IDeviceRepository
             throw new NotImplementedException();
       }
 
+      public Task<IEnumerable<DeviceDto>> GetByLocationAsync(Guid guid, CancellationToken ct = default)
+      {
+            throw new NotImplementedException();
+      }
+
       public async Task<Guid> GetGuidByMacAsync(string mac, CancellationToken ct = default)
       {
             return await context.Devices

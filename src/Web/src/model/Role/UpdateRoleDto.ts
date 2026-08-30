@@ -1,8 +1,7 @@
-import { PermissionDto } from "./PermissionDto";
+import { ModulePermissionDto } from "./ModulePermissionDto";
 
 export interface UpdateRoleDto {
-      id: number;
-      name: string;
-      permissions: PermissionDto[];
-      locationId: number;
+  guid: string;
+  name: string;
+  modules: ModulePermissionDto[];
 }

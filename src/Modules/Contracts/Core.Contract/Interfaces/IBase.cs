@@ -12,4 +12,5 @@ public interface IBase<T, CR, UP> where T : class where CR : class where UP : cl
   Task<Guid> UpdateAsync(UP dto, CancellationToken ct = default);
   Task<bool> EnabledAsync(Guid guid, CancellationToken ct = default);
   Task<bool> DisabledAsync(Guid guid, CancellationToken ct = default);
+  Task<IEnumerable<T>> GetByLocationAsync(Guid guid, CancellationToken ct = default);
 }

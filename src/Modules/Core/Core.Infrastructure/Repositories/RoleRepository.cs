@@ -98,6 +98,24 @@ public sealed class RoleRepository(CoreDbContext context) : IRoleRepository
                   )).FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.Role, guid.ToString());
       }
 
+      public async Task<IEnumerable<RoleDto>> GetAsync(CancellationToken ct = default)
+      {
+            return await context.Roles
+                  .AsNoTracking()
+                  .Select(e => new RoleDto(
+                        e.guid,
+                        e.name,
+                        new List<ModulePermissionDto>(),
+                        e.is_active,
+                        e.is_default
+                  )).ToArrayAsync();
+      }
+
+      public Task<IEnumerable<RoleDto>> GetByLocationAsync(Guid guid, CancellationToken ct = default)
+      {
+            throw new NotImplementedException();
+      }
+
       public async Task<int> GetIdByGuidAsync(Guid guid, CancellationToken ct = default)
       {
             return await context.Roles

@@ -1,4 +1,4 @@
-import axios, { AxiosResponse } from "axios";
+import axios, { AxiosError, AxiosResponse } from "axios";
 import { DaysInWeekDto } from "../model/Interval/DaysInWeekDto";
 import { Options } from "../model/Options";
 import { HttpCode } from "../enum/Httpcode";
@@ -50,13 +50,14 @@ class Helper {
   }
 
   static handleToastByResCode(
-    res: AxiosResponse<any, any> | null | undefined,
+    res: AxiosResponse<any> | AxiosError<any> | null | undefined,
     message: string,
     toggleToast: ToastFn,
     updateToast?: UpdateToastFn,
     toastId?: string,
   ): boolean {
-    console.log(res);
+    console.log("handleToastByResCode input:", res);
+
     const notify = (
       type: ToastType,
       toastMessage: string,
@@ -74,63 +75,81 @@ class Helper {
       toggleToast(type, toastMessage, { duration });
     };
 
-    if (res) {
-      if (axios.isAxiosError(res)) {
-        switch (res.status) {
-          case HttpCode.UNAUTHORIZED:
-            notify("error", res.data?.data.message || "Unauthorized");
-            return false;
-          case HttpCode.BAD_REQUEST:
-            notify("error", res.data?.data.message || "Bad Request");
-            return false;
-          case HttpCode.NOT_FOUND:
-            notify("error", res.data?.data.message || "Not Found");
-            return false;
-          case HttpCode.INTERNAL_ERROR:
-            notify("error", res.data?.data.message || "Internal Server Error");
-            console.log(res.data?.data);
-            //showPopup(false,[res.data.detail,res.data.message])
-            return false;
-          case HttpCode.NOT_ACCEPT:
-            notify("error", res.data?.data.message || "Not Acceptable");
-            return false;
-          default:
-            notify("error", res.data?.message);
-            return false;
-        }
-      }
-      switch (res.status) {
-        case HttpCode.OK:
-          notify("success", message);
-          return true;
-        case HttpCode.CREATED:
-          notify("success", message);
-          return true;
-        case HttpCode.UNAUTHORIZED:
-          notify("error", res.data.errors.exception);
-          return false;
-        case HttpCode.BAD_REQUEST:
-          notify("error", res.data.errors.exception);
-          return false;
-        case HttpCode.NOT_FOUND:
-          notify("error", res.data.errors.exception);
-          return false;
-        case HttpCode.INTERNAL_ERROR:
-          notify("error", res.data.errors.exception);
-          console.log("####1");
-          console.log(res.data);
-          //showPopup(false,[res.data.detail,res.data.message])
-          return false;
-        case HttpCode.NOT_ACCEPT:
-          notify("error", res.data.errors.exception);
-          return false;
-        default:
-          notify("error", "error with code : " + res.data.code);
-          return false;
-      }
-    } else {
+    if (!res) {
       notify("error", APIToast.API_ERROR);
       return false;
+    }
+
+    // Handle Axios Error (HTTP 4xx/5xx responses)
+    if (axios.isAxiosError(res)) {
+      const status = res.response?.status;
+      const data = res.response?.data;
+
+      console.log(res.response);
+
+      // Helper to safely extract error message from common response shapes
+      const errorMessage =
+        data?.errors?.exception ||
+        data?.message ||
+        data?.detail ||
+        data?.title ||
+        res.message ||
+        "An unexpected error occurred";
+
+      switch (status) {
+        case HttpCode.UNAUTHORIZED:
+          notify("error", errorMessage || "Unauthorized");
+          return false;
+        case HttpCode.BAD_REQUEST:
+          notify("error", errorMessage || "Bad Request");
+          return false;
+        case HttpCode.NOT_FOUND:
+          notify("error", errorMessage || "Not Found");
+          return false;
+        case HttpCode.NOT_ACCEPT:
+          notify("error", errorMessage || "Not Acceptable");
+          return false;
+        case HttpCode.INTERNAL_ERROR:
+          notify("error", errorMessage || "Internal Server Error");
+          return false;
+        default:
+          notify("error", errorMessage);
+          return false;
+      }
+    }
+
+    const errorMessage =
+      res.data?.errors?.exception ||
+      res.data?.message ||
+      res.data?.detail ||
+      res.data?.title ||
+      "An unexpected error occurred";
+
+    // Handle Successful Axios Responses (HTTP 2xx)
+    const status = res.status;
+    switch (status) {
+      case HttpCode.OK:
+      case HttpCode.CREATED:
+        notify("success", message);
+        return true;
+      case HttpCode.UNAUTHORIZED:
+        notify("error", errorMessage || "Unauthorized");
+        return false;
+      case HttpCode.BAD_REQUEST:
+        notify("error", errorMessage || "Bad Request");
+        return false;
+      case HttpCode.NOT_FOUND:
+        notify("error", errorMessage || "Not Found");
+        return false;
+      case HttpCode.NOT_ACCEPT:
+        notify("error", errorMessage || "Not Acceptable");
+        return false;
+      case HttpCode.INTERNAL_ERROR:
+        notify("error", errorMessage || "Internal Server Error");
+        return false;
+      default:
+        notify("error", errorMessage);
+        return false;
     }
   }
 

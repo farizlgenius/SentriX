@@ -8,29 +8,21 @@ using SharedKernel.Exceptions;
 namespace Core.Application.Services;
 
 public sealed class CompanyService(
-  ICompanyRepository repo,
-  ILocationRepository loc
+  ICompanyRepository repo
   ) : ICompany
 {
   public async Task<Guid> CreateAsync(CreateCompanyDto dto, CancellationToken ct = default)
   {
-    if (!await loc.IsAnyGuidAsync(dto.LocationGuid))
-      throw new NotFoundException("Location", dto.LocationGuid.ToString());
-
-    var locationId = await loc.GetIdByGuidAsync(dto.LocationGuid, ct);
 
     var d = new Core.Domain.Entities.Company(
       dto.Name,
       dto.Description,
-      dto.Address,
-      locationId
+      dto.Address
     );
 
     // Check name is duplicate 
     if (await repo.IsAnyByNameAndLocationIdAsync(dto.Name))
       throw new DuplicateException(EntityType.Company, dto.Name);
-
-
 
     await repo.AddAsync(d, ct);
 
@@ -104,9 +96,19 @@ public sealed class CompanyService(
     return await repo.EnableAsync(guid, ct);
   }
 
+  public async Task<IEnumerable<CompanyDto>> GetAsync()
+  {
+    return await repo.GetAsync();
+  }
+
   public async Task<CompanyDto> GetByGuidAsync(Guid guid, CancellationToken ct = default)
   {
     return await repo.GetAsync(guid, ct);
+  }
+
+  public async Task<IEnumerable<CompanyDto>> GetByLocationAsync(Guid guid, CancellationToken ct = default)
+  {
+    return await repo.GetByLocationAsync(guid);
   }
 
   public async Task<Pagination<CompanyDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
@@ -120,14 +122,11 @@ public sealed class CompanyService(
     if (!await repo.IsAnyGuidAsync(dto.Guid, ct))
       throw new NotFoundException(EntityType.Company, dto.Guid.ToString());
 
-    var locationId = await loc.GetIdByGuidAsync(dto.LocationGuid, ct);
-
     var d = new Core.Domain.Entities.Company(
       dto.Guid,
       dto.Name,
       dto.Description,
-      dto.Address,
-      locationId
+      dto.Address
     );
 
     await repo.UpdateAsync(d);

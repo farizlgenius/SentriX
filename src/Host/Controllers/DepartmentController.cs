@@ -16,6 +16,13 @@ public class DepartmentController(IDepartment dep) : ControllerBase
             return Ok(res);
       }
 
+      [HttpGet("company/{guid}")]
+      public async Task<IActionResult> GetByCompanyAsync(Guid guid)
+      {
+            var res = await dep.GetByCompanyAsync(guid);
+            return Ok(res);
+      }
+
       [HttpGet("pagination/{guid}")]
       public async Task<IActionResult> GetPaginationByCompanyGuidAsync(Guid guid, [FromQuery] PaginationParams param)
       {

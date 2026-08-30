@@ -68,6 +68,11 @@ public sealed class UserService(
     throw new NotImplementedException();
   }
 
+  public Task<IEnumerable<UserDto>> GetByLocationAsync(Guid guid, CancellationToken ct = default)
+  {
+    throw new NotImplementedException();
+  }
+
   public async Task<Pagination<UserDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
   {
     throw new NotImplementedException();
