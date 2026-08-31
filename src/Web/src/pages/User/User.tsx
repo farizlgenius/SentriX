@@ -22,6 +22,16 @@ import { TableCell } from "../../components/ui/table";
 import { Avatar } from "../UiElements/Avatar";
 import { Title } from "../../enum/Title";
 import { Gender } from "../../enum/Gender";
+import { LicensePlateDto } from "../../model/User/LicensePlateDto";
+import { PinDto } from "../../model/User/PinDto";
+import { QrCodeDto } from "../../model/User/QrCodeDto";
+import { FaceDto } from "../../model/User/FaceDto";
+import { PersonalInformationForm } from "../../components/form/user/PersonalInformationForm";
+import { OperatorForm } from "../../components/form/user/OperatorForm";
+import { LocationForm } from "../../components/form/user/LocationForm";
+import { GroupForm } from "../../components/form/user/GroupForm";
+import { CredentialForm } from "../../components/form/user/CredentialForm";
+import { UserSettingForm } from "../../components/form/user/UserSettingForm";
 
 const CARDHOLDER_HEAD: string[] = [
   "Image",
@@ -62,6 +72,22 @@ const User = () => {
   const [usersDto, setUsersDto] = useState<UserDto[]>([]);
   const [formType, setFormType] = useState<FormType>(FormType.CREATE);
 
+  const defaultLicensePlate : LicensePlateDto = {
+    licensePlate :""
+  }
+
+  const defaultPin : PinDto = {
+    pin:""
+  }
+
+  const defaultQrCode : QrCodeDto = {
+    qrCode:""
+  }
+
+  const defaultFace : FaceDto = {
+    imageName :""
+  }
+
   const defaultDto: UserDto = {
     guid: "",
     username: "",
@@ -87,12 +113,10 @@ const User = () => {
     additionals: [],
     groups: [],
     cards: [],
-    licensePlates: [],
-    pins: [],
-    qrCodes: [],
-    face: {
-      imageName: "",
-    },
+    licensePlates: defaultLicensePlate,
+    pins: defaultPin,
+    qrCodes: defaultQrCode,
+    face:defaultFace,
     locations: [],
     isDefault: false,
     isActive: false,
@@ -247,9 +271,9 @@ const User = () => {
 
   const content: FormContent[] = [
     {
-      label: "Users",
+      label: "Personal Information",
       content: (
-        <UserForm
+        <PersonalInformationForm
           type={formType}
           dto={userDto}
           setDto={setUserDto}
@@ -260,6 +284,76 @@ const User = () => {
       ),
       icon: <UserIcon />,
     },
+    {
+      label: "Operator Information",
+      content: (
+        <OperatorForm
+          type={formType}
+          dto={userDto}
+          setDto={setUserDto}
+          handleClick={handleClick}
+          // image={image}
+          // setImage={setImage}
+        />
+      ),
+      icon: <UserIcon />,
+    },
+    {
+      label: "Location Information",
+      content: (
+        <LocationForm
+          type={formType}
+          dto={userDto}
+          setDto={setUserDto}
+          handleClick={handleClick}
+          // image={image}
+          // setImage={setImage}
+        />
+      ),
+      icon: <UserIcon />,
+    },
+    {
+      label: "Access Level Information",
+      content: (
+        <GroupForm
+          type={formType}
+          dto={userDto}
+          setDto={setUserDto}
+          handleClick={handleClick}
+          // image={image}
+          // setImage={setImage}
+        />
+      ),
+      icon: <UserIcon />,
+    },
+    {
+      label: "Credential Information",
+      content: (
+        <CredentialForm
+          type={formType}
+          dto={userDto}
+          setDto={setUserDto}
+          handleClick={handleClick}
+          // image={image}
+          // setImage={setImage}
+        />
+      ),
+      icon: <UserIcon />,
+    },
+    {
+      label: "User Setting Information",
+      content: (
+        <UserSettingForm
+          type={formType}
+          dto={userDto}
+          setDto={setUserDto}
+          handleClick={handleClick}
+          // image={image}
+          // setImage={setImage}
+        />
+      ),
+      icon: <UserIcon />,
+    }
   ];
 
   const action: ActionButton[] = [
@@ -284,7 +378,7 @@ const User = () => {
     <>
       <PageBreadcrumb pageTitle="Users" />
       {form ? (
-        <BaseForm tabContent={content} header={""} desc={""} />
+        <BaseForm handleClick={handleClick} type={formType} tabContent={content} header={""} desc={""} />
       ) : (
         <BaseTable<UserDto>
           headers={CARDHOLDER_HEAD}

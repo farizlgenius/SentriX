@@ -1,17 +1,25 @@
 import React, { PropsWithChildren, useState } from "react"
 import { FormContent } from "../../model/Form/FormContent";
 import StepProgress from "../../components/form/StepProgress";
+import Button from "../../components/ui/button/Button";
+import { FormType } from "../../model/Form/FormProp";
 
 
 interface FormProp {
   tabContent: FormContent[];
   header?:string;
   desc?:string;
+  type:FormType
+  handleClick?:(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
 }
 
-export const BaseForm: React.FC<PropsWithChildren<FormProp>> = ({ tabContent,header = "",desc = "" }) => {
+export const BaseForm: React.FC<PropsWithChildren<FormProp>> = ({ tabContent,type,handleClick,header = "",desc = "" }) => {
   const [activeTab, setActiveTab] = useState<string>(tabContent[0].label);
   const currentStepIndex = Math.max(0, tabContent.findIndex((tab) => tab.label === activeTab));
+
+  const currentStep = tabContent[currentStepIndex];
+  const isFirstStep = currentStepIndex === 0;
+  const isLastStep = currentStepIndex === tabContent.length - 1;
 
   const goToStep = (stepIndex: number) => {
     if (stepIndex < 0 || stepIndex >= tabContent.length) return;
@@ -49,9 +57,54 @@ export const BaseForm: React.FC<PropsWithChildren<FormProp>> = ({ tabContent,hea
                 </div>
 
               }
-
+              
             </div>)
         })}
+
+         <div className="mt-6 flex w-full items-center justify-between gap-3">
+          <div>
+            {!isFirstStep && (
+              <Button
+                variant="outline"
+                onClick={() => goToStep(currentStepIndex - 1)}
+                className="min-w-[120px]"
+                size="sm"
+              >
+                Back
+              </Button>
+            )}
+          </div>
+          <div className="flex gap-3">
+            <Button
+              variant="danger"
+              onClickWithEvent={handleClick}
+              name="close"
+              className="min-w-[120px]"
+              size="sm"
+            >
+              Cancel
+            </Button>
+            {isLastStep ? (
+              <Button
+                disabled={type == FormType.INFO}
+                onClickWithEvent={handleClick}
+                name={type == FormType.UPDATE ? "update" : "create"}
+                className="min-w-[120px]"
+                size="sm"
+              >
+                {type == FormType.UPDATE ? "Update" : "Create"}
+              </Button>
+            ) : (
+              <Button
+                onClick={() => goToStep(currentStepIndex + 1)}
+                className="min-w-[120px]"
+                size="sm"
+              >
+                Next
+              </Button>
+            )}
+          </div>
+        </div>
 
       </div>
     </div>

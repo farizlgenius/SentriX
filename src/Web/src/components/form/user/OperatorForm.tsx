@@ -21,6 +21,7 @@ import { OperatorToast } from "../../../model/ToastMessage";
 import { useToast } from "../../../context/ToastContext";
 import { UserDto } from "../../../model/User/UserDto";
 import { SettingEndpoint } from "../../../endpoint/SettingEndpoint";
+import { FormField, FormSection } from "../template/FormTemplate";
 
 type PasswordDto = {
   userName: string;
@@ -311,24 +312,13 @@ export const OperatorForm: React.FC<PropsWithChildren<FormProp<UserDto>>> = ({
       ) : (
         <div>
           <section className="space-y-6">
-            <div className="rounded-[28px] border border-[var(--app-panel-border)] bg-[var(--app-panel-bg)] p-6 shadow-theme-xs lg:p-8">
-              <div className="mb-6 flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.24em] text-brand-500">
-                    Operator Details
-                  </p>
-                  <h2 className="mt-2 text-2xl font-semibold text-gray-900 dark:text-white">
-                    Lean and focused form
-                  </h2>
-                  <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
-                    Clean inputs for account setup, contact details, role
-                    assignment, and location access.
-                  </p>
-                </div>
-              </div>
-
-              <div className="grid gap-5 md:grid-cols-2">
-                <div>
+            <FormSection
+              overall="Operator Details"
+              title="Lean and focused form"
+              description="Clean inputs for account setup, contact details, role assignment, and location access."
+              >
+                <div className="grid gap-5 md:grid-cols-2">
+                <FormField>
                   <Label htmlFor="username">Username</Label>
                   <Input
                     disabled={
@@ -340,7 +330,7 @@ export const OperatorForm: React.FC<PropsWithChildren<FormProp<UserDto>>> = ({
                     value={dto.username}
                     placeholder="operator.account"
                   />
-                </div>
+                </FormField>
                 <div className="w-full max-w-xs">
                   <Label>Password</Label>
                   {type === FormType.UPDATE || type === FormType.CREATE ? (
@@ -387,7 +377,8 @@ export const OperatorForm: React.FC<PropsWithChildren<FormProp<UserDto>>> = ({
                   />
                 </div>
               </div>
-            </div>
+              </FormSection>
+
           </section>
         </div>
       )}

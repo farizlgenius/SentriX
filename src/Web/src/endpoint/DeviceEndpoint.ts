@@ -3,8 +3,8 @@ import { DeviceType } from "../enum/DeviceType";
 const CONTROLLER = `device`;
 
 export const DeviceEndpoint = {
-    GET:(locationId:number,type:string) => `/api/${CONTROLLER}/option/${type}/${locationId}`,
-    GET_OPTION_BY_TYPE:(locationId:number,type:string) => `/api/${CONTROLLER}/option/${type}/${locationId}`,
+    GET:(locationId:number | string,type:string) => `/api/${CONTROLLER}/option/${type}/${locationId}`,
+    GET_OPTION_BY_TYPE:(locationId:number | string,type:string) => `/api/${CONTROLLER}/option/${type}/${locationId}`,
     PAGINATION:(pageNumber:number,pageSize:number,locationId?:number | undefined,search?:string | undefined,startDate?:string | undefined,endDate?:string | undefined) => `/api/${CONTROLLER}/pagination?PageNumber=${pageNumber}&PageSize=${pageSize}${search == undefined || search == "" ? "" : `&search=${search}`}${startDate == undefined ? "" : `&startDate=${startDate}`}${endDate == undefined ? "" : `&startDate=${endDate}`}${locationId == undefined ? "" : `&locationId=${locationId}`}`,
     TYPE: `/api/${CONTROLLER}/type`,
     DELETE:(guid:string) => `/api/${CONTROLLER}/${guid}`,

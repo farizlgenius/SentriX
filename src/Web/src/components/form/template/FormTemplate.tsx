@@ -36,6 +36,7 @@ interface FormActionsProps {
   onCancel?: (e: React.MouseEvent<HTMLButtonElement>) => void;
   submitLabel?: string;
   cancelLabel?: string;
+  altrBtn?:React.ReactNode;
 }
 
 // export const FormShell: React.FC<FormShellProps> = ({
@@ -167,6 +168,7 @@ export const FormActions: React.FC<FormActionsProps> = ({
   onCancel,
   submitLabel,
   cancelLabel = "Cancel",
+    altrBtn
 }) => {
   return (
     <div className="mt-5 flex flex-wrap justify-end gap-3">
@@ -178,6 +180,7 @@ export const FormActions: React.FC<FormActionsProps> = ({
       >
         {submitLabel ?? typeLabel}
       </Button>
+      {altrBtn}
       <Button
         variant="outline"
         onClickWithEvent={onCancel}

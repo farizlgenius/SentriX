@@ -22,3 +22,15 @@ D:/aero/SentriX/src/Modules/Contracts/Cache.Contract/obj/Debug/net10.0/ref/Cache
 /Users/far-izlengha/Documents/Project/SentriX/src/Modules/Contracts/Cache.Contract/obj/Debug/net10.0/refint/Cache.Contract.dll
 /Users/far-izlengha/Documents/Project/SentriX/src/Modules/Contracts/Cache.Contract/obj/Debug/net10.0/Cache.Contract.pdb
 /Users/far-izlengha/Documents/Project/SentriX/src/Modules/Contracts/Cache.Contract/obj/Debug/net10.0/ref/Cache.Contract.dll
+D:\aero\SentriX\src\Modules\Contracts\Cache.Contract\bin\Debug\net10.0\Cache.Contract.deps.json
+D:\aero\SentriX\src\Modules\Contracts\Cache.Contract\bin\Debug\net10.0\Cache.Contract.dll
+D:\aero\SentriX\src\Modules\Contracts\Cache.Contract\bin\Debug\net10.0\Cache.Contract.pdb
+D:\aero\SentriX\src\Modules\Contracts\Cache.Contract\obj\Debug\net10.0\Cache.Contract.GeneratedMSBuildEditorConfig.editorconfig
+D:\aero\SentriX\src\Modules\Contracts\Cache.Contract\obj\Debug\net10.0\Cache.Contract.AssemblyInfoInputs.cache
+D:\aero\SentriX\src\Modules\Contracts\Cache.Contract\obj\Debug\net10.0\Cache.Contract.AssemblyInfo.cs
+D:\aero\SentriX\src\Modules\Contracts\Cache.Contract\obj\Debug\net10.0\Cache.Contract.csproj.CoreCompileInputs.cache
+D:\aero\SentriX\src\Modules\Contracts\Cache.Contract\obj\Debug\net10.0\Cache.Contract.sourcelink.json
+D:\aero\SentriX\src\Modules\Contracts\Cache.Contract\obj\Debug\net10.0\Cache.Contract.dll
+D:\aero\SentriX\src\Modules\Contracts\Cache.Contract\obj\Debug\net10.0\refint\Cache.Contract.dll
+D:\aero\SentriX\src\Modules\Contracts\Cache.Contract\obj\Debug\net10.0\Cache.Contract.pdb
+D:\aero\SentriX\src\Modules\Contracts\Cache.Contract\obj\Debug\net10.0\ref\Cache.Contract.dll
