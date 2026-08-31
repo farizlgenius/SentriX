@@ -31,11 +31,14 @@ public sealed class User : BaseEntity
       public DateTime expire_time { get; set; }
       public ICollection<UserAdditional> additionals { get; set; } = default!;
       public ICollection<Card> cards { get; set; } = default!;
-      public ICollection<Pin> pins { get; set; } = default!;
+      public int? pin_id { get; set; }
+      public Pin? pin { get; set; }
       public int? face_id { get; set; }
       public Face? face { get; set; }
-      public ICollection<LicensePlate> license_plates { get; set; } = default!;
-      public ICollection<QrCode> qr_codes { get; set; } = default!;
+      public int? license_plate_id { get; set; }
+      public LicensePlate? license_plate { get; set; }
+      public int? qr_code_id { get; set; }
+      public QrCode? qr_code { get; set; }
       public ICollection<UserLocation> user_locations { get; set; } = default!;
       public ICollection<UserGroup> user_groups { get; set; } = default!;
 
@@ -63,11 +66,14 @@ public sealed class User : BaseEntity
             this.expire_time = d.ExpiredTime;
             this.additionals = d.Additionals.Select(x => new UserAdditional(x)).ToArray();
             this.cards = d.Cards.Select(x => new Card(x)).ToArray();
-            this.pins = d.Pins.Select(x => new Pin(x)).ToArray();
+            if (d.Pin is not null)
+                  this.pin = new Pin(d.Pin);
             if (d.Face is not null)
                   this.face = new Face(d.Face);
-            this.license_plates = d.LicensePlates.Select(x => new LicensePlate(x)).ToArray();
-            this.qr_codes = d.QrCodes.Select(x => new QrCode(x)).ToArray();
+            if (d.LicensePlate is not null)
+                  this.license_plate = new LicensePlate(d.LicensePlate);
+            if (d.QrCode is not null)
+                  this.qr_code = new QrCode(d.QrCode);
             this.user_locations = d.LocationIds.Select(x => new UserLocation(
 
             )).ToArray();

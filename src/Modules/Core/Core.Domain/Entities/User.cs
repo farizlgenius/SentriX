@@ -7,7 +7,7 @@ public sealed class User : BaseDomain
 {
 
       public string Username { get; private set; } = string.Empty;
-      // public string Password {get; private set;} = string.Empty;
+      public string Password { get; private set; } = string.Empty;
       public string Identification { get; private set; } = string.Empty;
       public Title Title { get; private set; } = Title.Mr;
       public string FirstName { get; private set; } = string.Empty;
@@ -29,15 +29,16 @@ public sealed class User : BaseDomain
       public List<string> Additionals { get; private set; } = new List<string>();
       public List<Guid> Groups { get; private set; } = new List<Guid>();
       public List<Card> Cards { get; private set; } = default!;
-      public List<LicensePlate> LicensePlates { get; private set; } = default!;
-      public List<Pin> Pins { get; private set; } = default!;
-      public List<QrCode> QrCodes { get; private set; } = default!;
+      public LicensePlate? LicensePlate { get; private set; }
+      public Pin? Pin { get; private set; }
+      public QrCode? QrCode { get; private set; }
       public Face? Face { get; private set; }
       public List<int> LocationIds { get; private set; } = default!;
       public List<int> GroupIds { get; private set; } = default!;
 
       public User(
     string Username,
+    string Password,
     string Identification,
     Title Title,
     string Firstname,
@@ -47,30 +48,31 @@ public sealed class User : BaseDomain
     DateTime DateOfBirth,
     string Email,
     string Phone,
+    string Address,
+    DateTime ActiveTime,
+    DateTime ExpireTime,
+    List<string> Additionals,
+    List<int> LocationIds,
+    List<int> GroupIds,
     bool IsOperator,
     bool IsUser,
     int RoleId,
     int CompanyId,
     int DepartmentId,
     int PositionId,
-    string Address,
-    DateTime ActiveTime,
-    DateTime ExpireTime,
-    List<string> Additionals,
-    List<Guid> Groups,
     List<Card> Cards,
-    List<LicensePlate> LicensePlates,
-    List<Pin> Pins,
-    List<QrCode> QrCodes,
-    Face Face,
-    List<int> LocationIds,
-    List<int> GroupIds
+    LicensePlate? LicensePlate = null,
+    Pin? Pin = null,
+    QrCode? QrCode = null,
+    Face? Face = null
 )
       {
             ValidationHelper.Name(Firstname);
             ValidationHelper.CharAndDigit(Identification, nameof(this.Identification));
             ValidationHelper.Email(Email, nameof(Email));
+            ValidationHelper.IsNullOrEmpty(Password, nameof(Password));
             this.Username = Username;
+            this.Password = PasswordHasher.HashPassword(Password);
             this.Identification = Identification;
             this.Title = Title;
             this.FirstName = Firstname;
@@ -92,9 +94,9 @@ public sealed class User : BaseDomain
             this.Additionals = Additionals;
             this.Groups = Groups;
             this.Cards = Cards;
-            this.LicensePlates = LicensePlates;
-            this.Pins = Pins;
-            this.QrCodes = QrCodes;
+            this.LicensePlate = LicensePlate;
+            this.Pin = Pin;
+            this.QrCode = QrCode;
             this.Face = Face;
             this.LocationIds = LocationIds;
             this.GroupIds = GroupIds;
@@ -103,36 +105,41 @@ public sealed class User : BaseDomain
       public User(
      Guid Guid,
      string Username,
-     string Identification,
-     Title Title,
-     string Firstname,
-     string Middlename,
-     string Lastname,
-     Gender Gender,
-     DateTime DateOfBirth,
-     string Email,
-     string Phone,
-     bool IsOperator,
-     bool IsUser,
-     int RoleId,
-     int CompanyId,
-     int DepartmentId,
-     int PositionId,
-     string Address,
-     DateTime ActiveTime,
-     DateTime ExpireTime,
-     List<string> Additionals,
-     List<Guid> Groups,
-     List<Card> Cards,
-     List<LicensePlate> LicensePlates,
-     List<Pin> Pins,
-     List<QrCode> QrCodes,
-     Face Face,
-     List<int> LocationIds,
-     List<int> GroupIds
+     string Password,
+    string Identification,
+    Title Title,
+    string Firstname,
+    string Middlename,
+    string Lastname,
+    Gender Gender,
+    DateTime DateOfBirth,
+    string Email,
+    string Phone,
+    string Address,
+    DateTime ActiveTime,
+    DateTime ExpireTime,
+    List<string> Additionals,
+    List<int> LocationIds,
+    List<int> GroupIds,
+    bool IsOperator,
+    bool IsUser,
+    int RoleId,
+    int CompanyId,
+    int DepartmentId,
+    int PositionId,
+    List<Card> Cards,
+    LicensePlate? LicensePlate = null,
+    Pin? Pin = null,
+    QrCode? QrCode = null,
+    Face? Face = null
  ) : base(Guid)
       {
+            ValidationHelper.Name(Firstname);
+            ValidationHelper.CharAndDigit(Identification, nameof(this.Identification));
+            ValidationHelper.Email(Email, nameof(Email));
+            ValidationHelper.IsNullOrEmpty(Password, nameof(Password));
             this.Username = Username;
+            this.Password = PasswordHasher.HashPassword(Password);
             this.Identification = Identification;
             this.Title = Title;
             this.FirstName = Firstname;
@@ -154,9 +161,9 @@ public sealed class User : BaseDomain
             this.Additionals = Additionals;
             this.Groups = Groups;
             this.Cards = Cards;
-            this.LicensePlates = LicensePlates;
-            this.Pins = Pins;
-            this.QrCodes = QrCodes;
+            this.LicensePlate = LicensePlate;
+            this.Pin = Pin;
+            this.QrCode = QrCode;
             this.Face = Face;
             this.LocationIds = LocationIds;
             this.GroupIds = GroupIds;

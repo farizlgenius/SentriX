@@ -1,6 +1,8 @@
 using Core.Application.Interfaces;
 using Core.Contract.DTOs.User;
 using Core.Contract.Interfaces;
+using Core.Contract.Queries;
+using Core.Domain.Entities;
 using Setting.Contract.Queries;
 using SharedKernel.Constants;
 using SharedKernel.Domain;
@@ -40,7 +42,51 @@ public sealed class UserService(
 
   public async Task<Guid> CreateAsync(CreateUserDto dto, CancellationToken ct = default)
   {
-    throw new NotImplementedException();
+
+    var roleId = await bus.QueryAsync(new RoleIdByGuidQuery(dto.RoleGuid));
+    var companyId = await bus.QueryAsync(new CompanyIdByGuidQuery(dto.CompanyGuid));
+    var departmentId = await bus.QueryAsync(new DepartmentIdByGuidQuery(dto.DepartmentGuid));
+    var positionId = await bus.QueryAsync(new PositionIdByGuidQuery(dto.PositionGuid));
+
+    var d = new User(
+      dto.Username,
+      dto.Identification,
+      dto.Password,
+      dto.Title,
+      dto.Firstname,
+      dto.Middlename,
+      dto.Lastname,
+      dto.Gender,
+      dto.DateOfBirth,
+      dto.Email,
+      dto.Phone,
+      dto.Address,
+      dto.JoinedDate,
+      dto.ExpiredDate,
+      dto.Additionals,
+      dto.Locations,
+      dto.Groups,
+      dto.IsOperator,
+      dto.IsUser,
+      roleId,
+      companyId,
+      departmentId,
+      positionId,
+      dto.Cards,
+      dto.LicensePlate,
+      dto.Pin,
+      dto.QrCode,
+      dto.Face
+    );
+    // Check that if username and identification is already exists
+    if (await repo.IsAnyUsernameAsync(dto.Username))
+      throw new DuplicateException(EntityType.User, dto.Username);
+
+    if (await repo.IsAnyIdentificationAsync(dto.Identification))
+      throw new DuplicateException(EntityType.User, dto.Username);
+
+
+
   }
 
   public async Task<bool> DeleteByGuidAsync(Guid guid, CancellationToken ct = default)

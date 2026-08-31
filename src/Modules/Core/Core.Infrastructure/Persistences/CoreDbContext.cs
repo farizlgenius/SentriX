@@ -278,21 +278,21 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<User>()
-                  .HasMany(x => x.license_plates)
+                  .HasOne(x => x.license_plate)
                   .WithOne(x => x.user)
-                  .HasForeignKey(x => x.user_id)
+                  .HasForeignKey<User>(x => x.license_plate_id)
                   .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<User>()
-                  .HasMany(x => x.qr_codes)
+                  .HasOne(x => x.qr_code)
                   .WithOne(x => x.user)
-                  .HasForeignKey(x => x.user_id)
+                  .HasForeignKey<User>(x => x.qr_code_id)
                   .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<User>()
-                  .HasMany(x => x.pins)
+                  .HasOne(x => x.pin)
                   .WithOne(x => x.user)
-                  .HasForeignKey(x => x.user_id)
+                  .HasForeignKey<User>(x => x.pin_id)
                   .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<User>()

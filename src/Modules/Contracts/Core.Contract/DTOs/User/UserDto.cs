@@ -26,9 +26,9 @@ public sealed record UserDto(
   List<string> Additionals,
   List<string> Groups,
   List<CardDto> Cards,
-  List<LicensePlateDto> LicensePlates,
-  List<PinDto> Pins,
-  List<QrCodeDto> QrCodes,
+  LicensePlateDto LicensePlate,
+  PinDto Pin,
+  QrCodeDto QrCode,
   FaceDto Face,
   List<string> Locations
 );

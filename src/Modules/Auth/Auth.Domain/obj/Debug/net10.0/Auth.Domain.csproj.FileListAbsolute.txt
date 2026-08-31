@@ -22,15 +22,3 @@ D:/aero/SentriX/src/Modules/Auth/Auth.Domain/obj/Debug/net10.0/ref/Auth.Domain.d
 /Users/far-izlengha/Documents/Project/SentriX/src/Modules/Auth/Auth.Domain/obj/Debug/net10.0/refint/Auth.Domain.dll
 /Users/far-izlengha/Documents/Project/SentriX/src/Modules/Auth/Auth.Domain/obj/Debug/net10.0/Auth.Domain.pdb
 /Users/far-izlengha/Documents/Project/SentriX/src/Modules/Auth/Auth.Domain/obj/Debug/net10.0/ref/Auth.Domain.dll
-D:\aero\SentriX\src\Modules\Auth\Auth.Domain\bin\Debug\net10.0\Auth.Domain.deps.json
-D:\aero\SentriX\src\Modules\Auth\Auth.Domain\bin\Debug\net10.0\Auth.Domain.dll
-D:\aero\SentriX\src\Modules\Auth\Auth.Domain\bin\Debug\net10.0\Auth.Domain.pdb
-D:\aero\SentriX\src\Modules\Auth\Auth.Domain\obj\Debug\net10.0\Auth.Domain.GeneratedMSBuildEditorConfig.editorconfig
-D:\aero\SentriX\src\Modules\Auth\Auth.Domain\obj\Debug\net10.0\Auth.Domain.AssemblyInfoInputs.cache
-D:\aero\SentriX\src\Modules\Auth\Auth.Domain\obj\Debug\net10.0\Auth.Domain.AssemblyInfo.cs
-D:\aero\SentriX\src\Modules\Auth\Auth.Domain\obj\Debug\net10.0\Auth.Domain.csproj.CoreCompileInputs.cache
-D:\aero\SentriX\src\Modules\Auth\Auth.Domain\obj\Debug\net10.0\Auth.Domain.sourcelink.json
-D:\aero\SentriX\src\Modules\Auth\Auth.Domain\obj\Debug\net10.0\Auth.Domain.dll
-D:\aero\SentriX\src\Modules\Auth\Auth.Domain\obj\Debug\net10.0\refint\Auth.Domain.dll
-D:\aero\SentriX\src\Modules\Auth\Auth.Domain\obj\Debug\net10.0\Auth.Domain.pdb
-D:\aero\SentriX\src\Modules\Auth\Auth.Domain\obj\Debug\net10.0\ref\Auth.Domain.dll

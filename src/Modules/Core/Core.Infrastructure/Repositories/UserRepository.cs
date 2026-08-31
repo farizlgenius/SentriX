@@ -121,11 +121,9 @@ public sealed class UserRepository(CoreDbContext context) : IUserRepository
           c.fac,
           c.card_number
         )).ToList(),
-        x.license_plates.Select(
-          l => new LicensePlateDto(l.license_plate)
-        ).ToList(),
-        x.pins.Select(x => new PinDto(x.pin)).ToList(),
-        x.qr_codes.Select(x => new QrCodeDto(x.qr_code)).ToList(),
+        new LicensePlateDto(x.license_plate == null ? string.Empty : x.license_plate.license_plate),
+        new PinDto(x.pin == null ? string.Empty : x.pin.pin),
+        new QrCodeDto(x.qr_code == null ? string.Empty : x.qr_code.qr_code),
         new FaceDto(x.face == null ? string.Empty : x.face.image_name),
         x.user_locations.Select(x => x.location.name).ToList()
       )).FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.User, guid.ToString());
@@ -165,11 +163,9 @@ public sealed class UserRepository(CoreDbContext context) : IUserRepository
           c.fac,
           c.card_number
         )).ToList(),
-        x.license_plates.Select(
-          l => new LicensePlateDto(l.license_plate)
-        ).ToList(),
-        x.pins.Select(x => new PinDto(x.pin)).ToList(),
-        x.qr_codes.Select(x => new QrCodeDto(x.qr_code)).ToList(),
+        new LicensePlateDto(x.license_plate == null ? string.Empty : x.license_plate.license_plate),
+        new PinDto(x.pin == null ? string.Empty : x.pin.pin),
+        new QrCodeDto(x.qr_code == null ? string.Empty : x.qr_code.qr_code),
         new FaceDto(x.face == null ? string.Empty : x.face.image_name),
         x.user_locations.Select(x => x.location.name).ToList()
       )).FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.User, username);
@@ -313,10 +309,10 @@ public sealed class UserRepository(CoreDbContext context) : IUserRepository
               x.fac,
               x.card_number
             )).ToList(),
-            e.license_plates.Select(l => new LicensePlateDto(l.license_plate)).ToList(),
-            e.pins.Select(x => new PinDto(x.pin)).ToList(),
-            e.qr_codes.Select(q => new QrCodeDto(q.qr_code)).ToList(),
-            new FaceDto(e.face != null ? e.face.image_name : string.Empty),
+            new LicensePlateDto(e.license_plate == null ? string.Empty : e.license_plate.license_plate),
+        new PinDto(e.pin == null ? string.Empty : e.pin.pin),
+        new QrCodeDto(e.qr_code == null ? string.Empty : e.qr_code.qr_code),
+        new FaceDto(e.face == null ? string.Empty : e.face.image_name),
             e.user_locations.Select(x => x.location.name).ToList()
           )).ToListAsync();
 
@@ -434,10 +430,10 @@ public sealed class UserRepository(CoreDbContext context) : IUserRepository
               x.fac,
               x.card_number
             )).ToList(),
-            e.license_plates.Select(l => new LicensePlateDto(l.license_plate)).ToList(),
-            e.pins.Select(x => new PinDto(x.pin)).ToList(),
-            e.qr_codes.Select(q => new QrCodeDto(q.qr_code)).ToList(),
-            new FaceDto(e.face != null ? e.face.image_name : string.Empty),
+            new LicensePlateDto(e.license_plate == null ? string.Empty : e.license_plate.license_plate),
+        new PinDto(e.pin == null ? string.Empty : e.pin.pin),
+        new QrCodeDto(e.qr_code == null ? string.Empty : e.qr_code.qr_code),
+        new FaceDto(e.face == null ? string.Empty : e.face.image_name),
             e.user_locations.Select(x => x.location.name).ToList()
           )).ToListAsync();
 
@@ -493,5 +489,12 @@ public sealed class UserRepository(CoreDbContext context) : IUserRepository
   public Task<IEnumerable<UserDto>> GetByLocationAsync(Guid guid, CancellationToken ct = default)
   {
     throw new NotImplementedException();
+  }
+
+  public async Task<bool> IsAnyIdentificationAsync(string identification, CancellationToken ct = default)
+  {
+    return await context.Users
+      .AsNoTracking()
+      .AnyAsync(x => x.identification.Equals(identification));
   }
 }

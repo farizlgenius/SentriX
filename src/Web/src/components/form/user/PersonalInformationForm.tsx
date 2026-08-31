@@ -258,7 +258,7 @@ export const PersonalInformationForm: React.FC<PersonalInformationFormProp> = ({
                           className=""
                           placeholder="Identification"
                           disabled={isReadOnly}
-                          name="userId"
+                          name="identification"
                           type="text"
                           id="identification"
                           onChange={handleChange}
@@ -289,26 +289,26 @@ export const PersonalInformationForm: React.FC<PersonalInformationFormProp> = ({
                     <Select
                       options={[
                         {
-                          label: Title.Mr,
+                          label: Title.Mr.toString(),
                           value: Title.Mr,
                         },
                         {
-                          label: Title.Miss,
+                          label: Title.Miss.toString(),
                           value: Title.Miss,
                         },
                         {
-                          label: Title.Ms,
+                          label: Title.Ms.toString(),
                           value: Title.Ms,
                         },
                         {
-                          label: Title.Other,
+                          label: Title.Other.toString(),
                           value: Title.Other,
                         },
                       ]}
                       onChange={(e) => {
                         setDto((prev) => ({
                           ...prev,
-                          title: e as Title,
+                          title: Number(e),
                         }));
                       }}
                       name={"title"}
@@ -319,7 +319,7 @@ export const PersonalInformationForm: React.FC<PersonalInformationFormProp> = ({
                     <Label htmlFor="firstName">First Name</Label>
                     <Input
                       disabled={isReadOnly}
-                      name="firstName"
+                      name="firstname"
                       type="text"
                       id="firstName"
                       onChange={handleChange}
@@ -331,7 +331,7 @@ export const PersonalInformationForm: React.FC<PersonalInformationFormProp> = ({
                     <Label htmlFor="middleName">Middle Name</Label>
                     <Input
                       disabled={isReadOnly}
-                      name="middleName"
+                      name="middlename"
                       type="text"
                       id="middleName"
                       onChange={handleChange}
@@ -343,7 +343,7 @@ export const PersonalInformationForm: React.FC<PersonalInformationFormProp> = ({
                     <Label htmlFor="lastName">Last Name</Label>
                     <Input
                       disabled={isReadOnly}
-                      name="lastName"
+                      name="lastname"
                       type="text"
                       id="lastName"
                       onChange={handleChange}
@@ -486,7 +486,7 @@ export const PersonalInformationForm: React.FC<PersonalInformationFormProp> = ({
                     <Label>Position</Label>
                     <Select
                       isString={true}
-                      name={"Position"}
+                      name={"position"}
                       disabled={type == FormType.INFO}
                       onChange={(e) =>
                         setDto((prev) => ({
