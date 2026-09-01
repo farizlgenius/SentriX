@@ -106,9 +106,21 @@ public sealed class LocationRepository(CoreDbContext context) : ILocationReposit
                   )).FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.Location, guid.ToString());
       }
 
-      public Task<IEnumerable<LocationDto>> GetByLocationAsync(Guid guid, CancellationToken ct = default)
+
+      public async Task<IEnumerable<LocationDto>> GetByLocationAsync(Guid guid, int locationId, CancellationToken ct = default)
       {
-            throw new NotImplementedException();
+           return await context.Locations
+                  .AsNoTracking()
+                  .Where(x => x.id == locationId)
+                  .Select(x => new LocationDto(
+                        x.guid,
+                        x.name,
+                        x.description,
+                        x.country_id,
+                        x.country.name,
+                        x.is_active,
+                        x.is_default
+                  )).ToListAsync();
       }
 
       public async Task<IEnumerable<CountryDto>> GetCountriesAsync(CancellationToken ct = default)
@@ -134,6 +146,16 @@ public sealed class LocationRepository(CoreDbContext context) : ILocationReposit
                   throw new NotFoundException(EntityType.Location, guid.ToString());
 
             return res;
+      }
+
+      public async Task<IEnumerable<int>> GetIdsByGuidsAsync(IEnumerable<Guid> guids, CancellationToken ct = default)
+      {
+            return await context.Locations
+                  .AsNoTracking()
+                  .Where(x => guids.Contains(x.guid))
+                  .OrderByDescending(x => x.id)
+                  .Select(x => x.id)
+                  .ToListAsync();
       }
 
       public async Task<IEnumerable<LocationDto>> GetListAsync(IEnumerable<Guid> guids, CancellationToken ct = default)

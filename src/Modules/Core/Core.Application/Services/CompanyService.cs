@@ -1,14 +1,17 @@
 using Core.Application.Interfaces;
 using Core.Contract.DTOs.Company;
 using Core.Contract.Interfaces;
+using Core.Contract.Queries;
 using SharedKernel.Constants;
 using SharedKernel.Domain;
 using SharedKernel.Exceptions;
+using SharedKernel.Messaging;
 
 namespace Core.Application.Services;
 
 public sealed class CompanyService(
-  ICompanyRepository repo
+  ICompanyRepository repo,
+  IMessageBus bus
   ) : ICompany
 {
   public async Task<Guid> CreateAsync(CreateCompanyDto dto, CancellationToken ct = default)
@@ -106,9 +109,10 @@ public sealed class CompanyService(
     return await repo.GetAsync(guid, ct);
   }
 
-  public async Task<IEnumerable<CompanyDto>> GetByLocationAsync(Guid guid, CancellationToken ct = default)
+  public async Task<IEnumerable<CompanyDto>> GetByLocationAsync(Guid guid, Guid locationGuid, CancellationToken ct = default)
   {
-    return await repo.GetByLocationAsync(guid);
+    var locationId = await bus.QueryAsync(new LocationIdByGuidQuery(locationGuid));
+    return await repo.GetByLocationAsync(guid, locationId, ct);
   }
 
   public async Task<Pagination<CompanyDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)

@@ -72,7 +72,10 @@ public sealed class User : BaseDomain
             ValidationHelper.Email(Email, nameof(Email));
             ValidationHelper.IsNullOrEmpty(Password, nameof(Password));
             this.Username = Username;
-            this.Password = PasswordHasher.HashPassword(Password);
+            if(!string.IsNullOrEmpty(Password))
+            {
+                  this.Password = PasswordHasher.HashPassword(Password);
+            }
             this.Identification = Identification;
             this.Title = Title;
             this.FirstName = Firstname;

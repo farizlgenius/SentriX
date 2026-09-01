@@ -3,6 +3,7 @@ using SharedKernel.Enums;
 namespace Core.Contract.DTOs.User;
 
 public sealed record UpdateUserDto(
+  Guid Guid,
   string Username,
   string Identification,
   Title Title,

@@ -473,7 +473,67 @@ public sealed class UserRepository(CoreDbContext context) : IUserRepository
 
   public async Task UpdateAsync(User entity, CancellationToken ct = default)
   {
-    throw new NotImplementedException();
+
+
+    try
+    {
+      await context.Database.BeginTransactionAsync(ct);
+
+      var existingEntity = await context.Users
+      .Include(x => x.additionals)
+      .Include(x => x.cards)
+      .Include(x => x.user_groups)
+      .Include(x => x.user_locations)
+      .Include(x => x.license_plate)
+      .Include(x => x.pin)
+      .Include(x => x.qr_code)
+      .Include(x => x.face)
+      .Include(x => x.role)
+      .Include(x => x.company)
+      .Include(x => x.department)
+      .Include(x => x.position)
+      .Where(x => x.guid == entity.Guid)
+      .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.User, entity.Guid.ToString());
+
+      existingEntity.title = entity.Title;
+      existingEntity.firstname = entity.FirstName;
+      existingEntity.middlename = entity.MiddleName;
+      existingEntity.lastname = entity.LastName;
+      existingEntity.gender = entity.Gender;
+      existingEntity.date_of_birth = entity.DateOfBirth;
+      existingEntity.email = entity.Email;
+      existingEntity.phone = entity.Phone;
+      existingEntity.address = entity.Address;
+      existingEntity.active_time = entity.JoinedTime;
+      existingEntity.expire_time = entity.ExpiredTime;
+
+      existingEntity.additionals.Clear();
+      foreach (var additional in entity.Additionals)
+      {
+        existingEntity.additionals.Add(new Persistences.Entities.UserAdditional { additional = additional });
+      }
+      existingEntity.cards.Clear();
+      foreach (var card in entity.Cards)
+      {
+        existingEntity.cards.Add(new Persistences.Entities.Card(card));
+      }
+      existingEntity.license_plate = entity.LicensePlate;
+      existingEntity.pin = entity.Pin;
+      existingEntity.qr_code = entity.QrCode;
+      existingEntity.face = entity.Face;
+
+      context.Users.Update(existingEntity);
+
+      await context.SaveChangesAsync(ct);
+
+      await context.Database.CommitTransactionAsync(ct);
+    }
+    catch
+    {
+      await context.Database.RollbackTransactionAsync(ct);
+      throw;
+    }
+
   }
 
   public async Task<Guid> GetRoleGuidByUsernameAsync(string username, CancellationToken ct = default)
@@ -486,9 +546,45 @@ public sealed class UserRepository(CoreDbContext context) : IUserRepository
       .FirstOrDefaultAsync(ct);
   }
 
-  public Task<IEnumerable<UserDto>> GetByLocationAsync(Guid guid, CancellationToken ct = default)
+  public async Task<IEnumerable<UserDto>> GetByLocationAsync(Guid guid, int locationId, CancellationToken ct = default)
   {
-    throw new NotImplementedException();
+    return await context.Users
+      .AsNoTracking()
+      .Where(x => x.guid == guid && x.user_locations.Any(x => x.location_id == locationId))
+      .Select(e => new UserDto(
+            e.guid,
+            e.username,
+            e.identification,
+            e.title,
+            e.firstname,
+            e.middlename,
+            e.lastname,
+            e.gender,
+            e.date_of_birth,
+            e.email,
+            e.phone,
+            e.is_operator,
+            e.is_user,
+            e.role != null ? e.role.name : string.Empty,
+            e.company != null ? e.company.name : string.Empty,
+            e.department != null ? e.department.name : string.Empty,
+            e.position != null ? e.position.name : string.Empty,
+            e.address,
+            e.active_time,
+            e.expire_time,
+            e.additionals.Select(x => x.additional).ToList(),
+            e.user_groups.Select(x => x.group.name).ToList(),
+            e.cards.Select(x => new CardDto(
+              x.bits,
+              x.fac,
+              x.card_number
+            )).ToList(),
+            new LicensePlateDto(e.license_plate == null ? string.Empty : e.license_plate.license_plate),
+        new PinDto(e.pin == null ? string.Empty : e.pin.pin),
+        new QrCodeDto(e.qr_code == null ? string.Empty : e.qr_code.qr_code),
+        new FaceDto(e.face == null ? string.Empty : e.face.image_name),
+            e.user_locations.Select(x => x.location.name).ToList()
+          )).ToListAsync();
   }
 
   public async Task<bool> IsAnyIdentificationAsync(string identification, CancellationToken ct = default)
