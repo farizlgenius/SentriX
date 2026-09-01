@@ -113,6 +113,7 @@ public sealed class DepartmentService(
             return await dep.GetAsync(guid, ct);
       }
 
+
       public Task<IEnumerable<DepartmentDto>> GetByLocationAsync(Guid guid, CancellationToken ct = default)
       {
             throw new NotImplementedException();

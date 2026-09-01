@@ -2,15 +2,18 @@ using Adapter.Abstraction.Interfaces;
 using Core.Application.Interfaces;
 using Core.Contract.DTOs.Device;
 using Core.Contract.Interfaces;
+using Core.Contract.Queries;
 using SharedKernel.Constants;
 using SharedKernel.Domain;
 using SharedKernel.Exceptions;
+using SharedKernel.Messaging;
 
 namespace Core.Application.Services;
 
 public sealed class DeviceService(
   IDeviceRepository repo,
   IAdapterFactory adapter,
+  IMessageBus bus,
   IComponentMappingRepository com,
   ILocationRepository loc
   ) : IDevice
@@ -86,9 +89,11 @@ public sealed class DeviceService(
     throw new NotImplementedException();
   }
 
-  public Task<IEnumerable<DeviceDto>> GetByLocationAsync(Guid guid, CancellationToken ct = default)
+
+  public async Task<IEnumerable<DeviceDto>> GetByLocationAsync(Guid guid, CancellationToken ct = default)
   {
-    throw new NotImplementedException();
+    var locationId = await bus.QueryAsync(new LocationIdByGuidQuery(guid), ct);
+    return await repo.GetByLocationAsync(locationId, ct);
   }
 
   public async Task<Pagination<DeviceDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)

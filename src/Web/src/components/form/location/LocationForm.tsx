@@ -80,14 +80,14 @@ export const LocationForm: React.FC<
           </FormField>
         </div>
       </FormSection>
-      <FormActions
+      {/* <FormActions
         disabled={isReadOnly}
         onSubmit={handleClickWithEvent}
         onCancel={handleClickWithEvent}
         cancelName="close"
         submitName={type == FormType.UPDATE ? "update" : "create"}
         typeLabel={type == FormType.UPDATE ? "Update" : "Create"}
-      />
+      /> */}
     </>
   );
 };

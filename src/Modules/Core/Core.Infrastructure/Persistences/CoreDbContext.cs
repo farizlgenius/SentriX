@@ -94,6 +94,14 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
 
             }
 
+            modelBuilder.Entity<User>()
+            .Property(o => o.title)
+            .HasConversion<string>();
+
+            modelBuilder.Entity<User>()
+            .Property(o => o.gender)
+            .HasConversion<string>();
+
             // Indexing and key setting 
             modelBuilder.Entity<Card>()
             .HasIndex(
@@ -846,16 +854,18 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                  {
                        id = 1,
                        guid = new Guid("ed2b5887-9dcb-43bd-a6f8-988330df5181"),
+                       identification = "admin",
                        username = "admin",
                        password = "100000.lG1/4V/VRPZsbhf/Zqc4xw==.6vYcf+wEMSgqcaNhoZEdM9PaPxx2ZUErZhQbeMxo5OY=",
                        user_code = "admin01",
                        title = Title.Mr,
                        firstname = "admin",
                        lastname = "system",
-                       gender = Gender.M,
+                       gender = Gender.Male,
                        date_of_birth = new DateTime(1970, 01, 01, 0, 0, 0, DateTimeKind.Utc),
                        email = "support@sentrix.com",
                        is_operator = true,
+                       is_user = false,
                        role_id = 1,
                        active_time = new DateTime(1970, 01, 01, 0, 0, 0, DateTimeKind.Utc),
                        expire_time = new DateTime(9999, 01, 01, 0, 0, 0, DateTimeKind.Utc),

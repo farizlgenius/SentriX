@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Core.Infrastructure.Migrations
 {
     [DbContext(typeof(CoreDbContext))]
-    [Migration("20260826160426_EditRoleTable")]
-    partial class EditRoleTable
+    [Migration("20260901173124_InitialDb")]
+    partial class InitialDb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -85,6 +85,9 @@ namespace Core.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
 
+                    b.Property<int?>("Locationid")
+                        .HasColumnType("integer");
+
                     b.Property<string>("address")
                         .IsRequired()
                         .HasColumnType("text");
@@ -109,12 +112,6 @@ namespace Core.Infrastructure.Migrations
                     b.Property<bool>("is_default")
                         .HasColumnType("boolean");
 
-                    b.Property<int>("location_id")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("locationid")
-                        .HasColumnType("integer");
-
                     b.Property<string>("name")
                         .IsRequired()
                         .HasColumnType("text");
@@ -126,10 +123,10 @@ namespace Core.Infrastructure.Migrations
 
                     b.HasKey("id");
 
+                    b.HasIndex("Locationid");
+
                     b.HasIndex("guid")
                         .IsUnique();
-
-                    b.HasIndex("locationid");
 
                     b.ToTable("Companies", "core");
                 });
@@ -2342,10 +2339,6 @@ namespace Core.Infrastructure.Migrations
                         .HasColumnType("uuid")
                         .HasDefaultValueSql("gen_random_uuid()");
 
-                    b.Property<string>("image_name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<bool>("is_active")
                         .HasColumnType("boolean");
 
@@ -2357,8 +2350,8 @@ namespace Core.Infrastructure.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
 
-                    b.Property<Guid?>("user_guid")
-                        .HasColumnType("uuid");
+                    b.Property<int?>("user_id")
+                        .HasColumnType("integer");
 
                     b.HasKey("id");
 
@@ -3193,8 +3186,6 @@ namespace Core.Infrastructure.Migrations
                     b.HasIndex("guid")
                         .IsUnique();
 
-                    b.HasIndex("user_id");
-
                     b.ToTable("LicensePlates", "core");
                 });
 
@@ -3458,8 +3449,6 @@ namespace Core.Infrastructure.Migrations
                     b.HasIndex("guid")
                         .IsUnique();
 
-                    b.HasIndex("user_id");
-
                     b.ToTable("Pins", "core");
                 });
 
@@ -3553,8 +3542,6 @@ namespace Core.Infrastructure.Migrations
 
                     b.HasIndex("guid")
                         .IsUnique();
-
-                    b.HasIndex("user_id");
 
                     b.ToTable("QrCodes", "core");
                 });
@@ -3736,8 +3723,9 @@ namespace Core.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("gender")
-                        .HasColumnType("integer");
+                    b.Property<string>("gender")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<Guid>("guid")
                         .ValueGeneratedOnAdd()
@@ -3764,6 +3752,9 @@ namespace Core.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<int?>("license_plate_id")
+                        .HasColumnType("integer");
+
                     b.Property<string>("middlename")
                         .IsRequired()
                         .HasColumnType("text");
@@ -3776,14 +3767,21 @@ namespace Core.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<int?>("pin_id")
+                        .HasColumnType("integer");
+
                     b.Property<int?>("position_id")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("qr_code_id")
                         .HasColumnType("integer");
 
                     b.Property<int?>("role_id")
                         .HasColumnType("integer");
 
-                    b.Property<int>("title")
-                        .HasColumnType("integer");
+                    b.Property<string>("title")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<DateTime>("updated_at")
                         .ValueGeneratedOnAdd()
@@ -3809,7 +3807,16 @@ namespace Core.Infrastructure.Migrations
                     b.HasIndex("face_id")
                         .IsUnique();
 
+                    b.HasIndex("license_plate_id")
+                        .IsUnique();
+
+                    b.HasIndex("pin_id")
+                        .IsUnique();
+
                     b.HasIndex("position_id");
+
+                    b.HasIndex("qr_code_id")
+                        .IsUnique();
 
                     b.HasIndex("role_id");
 
@@ -3829,19 +3836,19 @@ namespace Core.Infrastructure.Migrations
                             email = "support@sentrix.com",
                             expire_time = new DateTime(9999, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             firstname = "admin",
-                            gender = 0,
+                            gender = "Male",
                             guid = new Guid("ed2b5887-9dcb-43bd-a6f8-988330df5181"),
-                            identification = "",
+                            identification = "admin",
                             is_active = true,
                             is_default = true,
                             is_operator = true,
-                            is_user = true,
+                            is_user = false,
                             lastname = "system",
                             middlename = "",
                             password = "100000.lG1/4V/VRPZsbhf/Zqc4xw==.6vYcf+wEMSgqcaNhoZEdM9PaPxx2ZUErZhQbeMxo5OY=",
                             phone = "",
                             role_id = 1,
-                            title = 0,
+                            title = "Mr",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             user_code = "admin01",
                             username = "admin"
@@ -4014,13 +4021,9 @@ namespace Core.Infrastructure.Migrations
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Company", b =>
                 {
-                    b.HasOne("Core.Infrastructure.Persistences.Entities.Location", "location")
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.Location", null)
                         .WithMany("companies")
-                        .HasForeignKey("locationid")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("location");
+                        .HasForeignKey("Locationid");
                 });
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.ComponentMapping", b =>
@@ -4086,16 +4089,6 @@ namespace Core.Infrastructure.Migrations
                     b.Navigation("module_permission");
                 });
 
-            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.LicensePlate", b =>
-                {
-                    b.HasOne("Core.Infrastructure.Persistences.Entities.User", "user")
-                        .WithMany("license_plates")
-                        .HasForeignKey("user_id")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.Navigation("user");
-                });
-
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Location", b =>
                 {
                     b.HasOne("Core.Infrastructure.Persistences.Entities.Country", "country")
@@ -4126,16 +4119,6 @@ namespace Core.Infrastructure.Migrations
                     b.Navigation("role");
                 });
 
-            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Pin", b =>
-                {
-                    b.HasOne("Core.Infrastructure.Persistences.Entities.User", "user")
-                        .WithMany("pins")
-                        .HasForeignKey("user_id")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.Navigation("user");
-                });
-
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Position", b =>
                 {
                     b.HasOne("Core.Infrastructure.Persistences.Entities.Department", "department")
@@ -4145,17 +4128,6 @@ namespace Core.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("department");
-                });
-
-            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.QrCode", b =>
-                {
-                    b.HasOne("Core.Infrastructure.Persistences.Entities.User", "user")
-                        .WithMany("qr_codes")
-                        .HasForeignKey("user_id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("user");
                 });
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Role", b =>
@@ -4205,9 +4177,24 @@ namespace Core.Infrastructure.Migrations
                         .HasForeignKey("Core.Infrastructure.Persistences.Entities.User", "face_id")
                         .OnDelete(DeleteBehavior.Cascade);
 
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.LicensePlate", "license_plate")
+                        .WithOne("user")
+                        .HasForeignKey("Core.Infrastructure.Persistences.Entities.User", "license_plate_id")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.Pin", "pin")
+                        .WithOne("user")
+                        .HasForeignKey("Core.Infrastructure.Persistences.Entities.User", "pin_id")
+                        .OnDelete(DeleteBehavior.Cascade);
+
                     b.HasOne("Core.Infrastructure.Persistences.Entities.Position", "position")
                         .WithMany("users")
                         .HasForeignKey("position_id")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.QrCode", "qr_code")
+                        .WithOne("user")
+                        .HasForeignKey("Core.Infrastructure.Persistences.Entities.User", "qr_code_id")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Core.Infrastructure.Persistences.Entities.Role", "role")
@@ -4221,7 +4208,13 @@ namespace Core.Infrastructure.Migrations
 
                     b.Navigation("face");
 
+                    b.Navigation("license_plate");
+
+                    b.Navigation("pin");
+
                     b.Navigation("position");
+
+                    b.Navigation("qr_code");
 
                     b.Navigation("role");
                 });
@@ -4310,6 +4303,12 @@ namespace Core.Infrastructure.Migrations
                     b.Navigation("feature_permission");
                 });
 
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.LicensePlate", b =>
+                {
+                    b.Navigation("user")
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Location", b =>
                 {
                     b.Navigation("companies");
@@ -4339,9 +4338,21 @@ namespace Core.Infrastructure.Migrations
                     b.Navigation("feature_permissions");
                 });
 
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Pin", b =>
+                {
+                    b.Navigation("user")
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Position", b =>
                 {
                     b.Navigation("users");
+                });
+
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.QrCode", b =>
+                {
+                    b.Navigation("user")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Role", b =>
@@ -4356,12 +4367,6 @@ namespace Core.Infrastructure.Migrations
                     b.Navigation("additionals");
 
                     b.Navigation("cards");
-
-                    b.Navigation("license_plates");
-
-                    b.Navigation("pins");
-
-                    b.Navigation("qr_codes");
 
                     b.Navigation("user_groups");
 

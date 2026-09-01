@@ -15,7 +15,6 @@ import { ActionButton } from "../../model/ActionButton";
 import { FormType } from "../../model/Form/FormProp";
 import { usePopup } from "../../context/PopupContext";
 import { usePagination } from "../../context/PaginationContext";
-import UserForm from "./UserForm";
 import { FormContent } from "../../model/Form/FormContent";
 import { BaseForm } from "../UiElements/BaseForm";
 import { TableCell } from "../../components/ui/table";
@@ -45,7 +44,7 @@ const CARDHOLDER_HEAD: string[] = [
 ];
 const CARDHOLDER_KEY: string[] = [
   "avatar",
-  "userId",
+  "userCode",
   "name",
   "company",
   "department",
@@ -72,21 +71,21 @@ const User = () => {
   const [usersDto, setUsersDto] = useState<UserDto[]>([]);
   const [formType, setFormType] = useState<FormType>(FormType.CREATE);
 
-  const defaultLicensePlate : LicensePlateDto = {
-    licensePlate :""
-  }
+  const defaultLicensePlate: LicensePlateDto = {
+    licensePlate: "",
+  };
 
-  const defaultPin : PinDto = {
-    pin:""
-  }
+  const defaultPin: PinDto = {
+    pin: "",
+  };
 
-  const defaultQrCode : QrCodeDto = {
-    qrCode:""
-  }
+  const defaultQrCode: QrCodeDto = {
+    qrCode: "",
+  };
 
-  const defaultFace : FaceDto = {
-    imageName :""
-  }
+  const defaultFace: FaceDto = {
+    imageName: "",
+  };
 
   const defaultDto: UserDto = {
     guid: "",
@@ -113,10 +112,10 @@ const User = () => {
     additionals: [],
     groups: [],
     cards: [],
-    licensePlates: defaultLicensePlate,
-    pins: defaultPin,
-    qrCodes: defaultQrCode,
-    face:defaultFace,
+    licensePlate: defaultLicensePlate,
+    pin: defaultPin,
+    qrCode: defaultQrCode,
+    face: defaultFace,
     locations: [],
     isDefault: false,
     isActive: false,
@@ -124,6 +123,7 @@ const User = () => {
     companyGuid: "00000000-0000-0000-0000-000000000000",
     departmentGuid: "00000000-0000-0000-0000-000000000000",
     positionGuid: "00000000-0000-0000-0000-000000000000",
+    userCode: "",
   };
 
   const [userDto, setUserDto] = useState<UserDto>(defaultDto);
@@ -175,7 +175,7 @@ const User = () => {
               const payload = new FormData();
               payload.append("image", image);
               const res2 = await send.postForm(
-                UserEndpoint.UPLOAD(userDto.identification),
+                UserEndpoint.UPLOAD(res1.data.data),
                 payload,
               );
               if (
@@ -353,7 +353,7 @@ const User = () => {
         />
       ),
       icon: <UserIcon />,
-    }
+    },
   ];
 
   const action: ActionButton[] = [
@@ -378,7 +378,13 @@ const User = () => {
     <>
       <PageBreadcrumb pageTitle="Users" />
       {form ? (
-        <BaseForm handleClick={handleClick} type={formType} tabContent={content} header={""} desc={""} />
+        <BaseForm
+          handleClick={handleClick}
+          type={formType}
+          tabContent={content}
+          header={""}
+          desc={""}
+        />
       ) : (
         <BaseTable<UserDto>
           headers={CARDHOLDER_HEAD}
@@ -404,7 +410,7 @@ const User = () => {
                   className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400"
                 >
                   <div className="cursor-pointer w-11 h-11 overflow-hidden border border-gray-200 rounded-full dark:border-gray-800">
-                    <Avatar userId={d.identification} />
+                    <Avatar userId={d.guid} />
                   </div>
                 </TableCell>
               ),

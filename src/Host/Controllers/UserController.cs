@@ -18,6 +18,20 @@ public class UserController(IUser user) : ControllerBase
     return Ok(res);
   }
 
+  [HttpGet("operator/pagination")]
+  public async Task<IActionResult> GetOperatorPaginationAsync([FromQuery] PaginationParams param)
+  {
+    var res = await user.GetOnlyOperatorAsync(param);
+    return Ok(res);
+  }
+
+  [HttpGet("user/pagination")]
+  public async Task<IActionResult> GetUserOnlyPaginationAsync([FromQuery] PaginationParams param)
+  {
+    var res = await user.GetOnlyUserAsync(param);
+    return Ok(res);
+  }
+
   [HttpPatch]
   public async Task<IActionResult> ChangePasswordAsync([FromBody] ChangePasswordDto dto)
   {
@@ -46,21 +60,21 @@ public class UserController(IUser user) : ControllerBase
     return Ok(res);
   }
 
-  // [HttpGet("image/{userid}")]
-  // [Produces("image/png")]
-  // public async Task<IActionResult> GetImageAsync(string userid)
-  // {
-  //   var stream = await user.GetImageByUserIdAsync(userid);
-  //   return File(stream, "image/png");
-  // }
+  [HttpGet("image/{guid}")]
+  [Produces("image/png")]
+  public async Task<IActionResult> GetImageAsync(Guid guid)
+  {
+    var stream = await user.GetImageByGuidAsync(guid);
+    return File(stream, "image/png");
+  }
 
-  // [HttpPost("image/upload/{userid}")]
-  // [Consumes("multipart/form-data")]
-  // public async Task<IActionResult> UploadImageAsync([FromForm] UploadImageDto request, string userid)
-  // {
-  //   await user.UploadImageAsync(userid, request.Image.OpenReadStream());
-  //   return Ok();
-  // }
+  [HttpPost("image/upload/{guid}")]
+  [Consumes("multipart/form-data")]
+  public async Task<IActionResult> UploadImageAsync([FromForm] UploadImageDto request, Guid guid)
+  {
+    await user.UploadImageAsync(guid, request.Image.OpenReadStream());
+    return Ok();
+  }
 
 
 

@@ -17,6 +17,6 @@ export const UserEndpoint = {
   CREATE: `/api/${CONTROLLER}`,
   SCAN: `/api/${CONTROLLER}/scan`,
   DELETE_RANGE: `/api/${CONTROLLER}/delete/range`,
-  UPLOAD: (userid: string) => `/api/${CONTROLLER}/image/upload/${userid}`,
-  IMAGE: (userId: string) => `/api/${CONTROLLER}/image/${userId}`,
+  UPLOAD: (guid: string) => `/api/${CONTROLLER}/image/upload/${guid}`,
+  IMAGE: (guid: string) => `/api/${CONTROLLER}/image/${guid}`,
 } as const;

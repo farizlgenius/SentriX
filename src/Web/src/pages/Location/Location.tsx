@@ -58,7 +58,7 @@ export const Location = () => {
     setRemove(true);
     setConfirmRemove(() => async () => {
       const res = await send.delete(LocationEndpoint.DELETE(data.guid));
-      console.log(res.data.errors.exception);
+      console.log(res);
       if (Helper.handleToastByResCode(res, LocationToast.DELETE, toggleToast)) {
         fetchMeTrigger();
         toggleRefresh();
@@ -201,7 +201,13 @@ export const Location = () => {
     <>
       <PageBreadcrumb pageTitle="Locations" />
       {form ? (
-        <BaseForm tabContent={tabContent} header={"Location"} desc={""} />
+        <BaseForm
+          handleClick={handleClickWithEvent}
+          tabContent={tabContent}
+          header={"Location"}
+          desc={""}
+          type={formType}
+        />
       ) : (
         <div className="space-y-6">
           <BaseTable<LocationDto>

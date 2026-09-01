@@ -8,6 +8,7 @@ import { QrCodeDto } from "./QrCodeDto";
 
 export interface UserDto {
   guid: string;
+  userCode: string;
   username: string;
   password: string;
   identification: string;
@@ -35,9 +36,9 @@ export interface UserDto {
   additionals: string[];
   groups: string[];
   cards: CardDto[];
-  licensePlates: LicensePlateDto;
-  pins: PinDto;
-  qrCodes: QrCodeDto;
+  licensePlate: LicensePlateDto;
+  pin: PinDto;
+  qrCode: QrCodeDto;
   face: FaceDto;
   locations: string[];
   isDefault: boolean;

@@ -18,7 +18,6 @@ public sealed class Card : BaseEntity
             this.bits = d.Bits;
             this.fac = d.Fac;
             this.card_number = d.CardNumber;
-            this.user_id = d.UserId;
       }
 
 

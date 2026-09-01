@@ -22,6 +22,7 @@ import { useToast } from "../../../context/ToastContext";
 import { UserDto } from "../../../model/User/UserDto";
 import { SettingEndpoint } from "../../../endpoint/SettingEndpoint";
 import { FormField, FormSection } from "../template/FormTemplate";
+import Switch from "../switch/Switch";
 
 type PasswordDto = {
   userName: string;
@@ -316,69 +317,85 @@ export const OperatorForm: React.FC<PropsWithChildren<FormProp<UserDto>>> = ({
               overall="Operator Details"
               title="Lean and focused form"
               description="Clean inputs for account setup, contact details, role assignment, and location access."
-              >
-                <div className="grid gap-5 md:grid-cols-2">
-                <FormField>
-                  <Label htmlFor="username">Username</Label>
-                  <Input
-                    disabled={
-                      type === FormType.INFO || type === FormType.UPDATE
-                    }
-                    name="username"
-                    id="username"
-                    onChange={handleChange}
-                    value={dto.username}
-                    placeholder="operator.account"
-                  />
-                </FormField>
-                <div className="w-full max-w-xs">
-                  <Label>Password</Label>
-                  {type === FormType.UPDATE || type === FormType.CREATE ? (
-                    <Button
-                      onClick={handleChangePassword}
-                      disabled={isReadOnly}
-                      variant={dto.password.length > 0 ? "green" : "primary"}
-                      className="w-full justify-center"
-                    >
-                      {type === FormType.UPDATE
-                        ? "Change Password"
-                        : dto.password.length === 0
-                          ? "Set Password"
-                          : "Password Ready"}
-                    </Button>
-                  ) : (
-                    <Input
-                      disabled
-                      name="password"
-                      type="password"
-                      value={dto.password}
-                    />
-                  )}
-                </div>
+            >
+              <div className="flex flex-col gap-5">
+                <Switch
+                  label={"Is Operator"}
+                  onChange={(e) =>
+                    setDto((prev) => ({
+                      ...prev,
+                      isOperator: e,
+                      username: e ? prev.username : "",
+                      password: e ? prev.password : "",
+                    }))
+                  }
+                />
+                {dto.isOperator && (
+                  <div className="grid gap-5 md:grid-cols-2">
+                    <FormField>
+                      <Label htmlFor="username">Username</Label>
+                      <Input
+                        disabled={
+                          type === FormType.INFO || type === FormType.UPDATE
+                        }
+                        name="username"
+                        id="username"
+                        onChange={handleChange}
+                        value={dto.username}
+                        placeholder="operator.account"
+                      />
+                    </FormField>
+                    <div className="w-full max-w-xs">
+                      <Label>Password</Label>
+                      {type === FormType.UPDATE || type === FormType.CREATE ? (
+                        <Button
+                          onClick={handleChangePassword}
+                          disabled={isReadOnly}
+                          variant={
+                            dto.password.length > 0 ? "green" : "primary"
+                          }
+                          className="w-full justify-center"
+                        >
+                          {type === FormType.UPDATE
+                            ? "Change Password"
+                            : dto.password.length === 0
+                              ? "Set Password"
+                              : "Password Ready"}
+                        </Button>
+                      ) : (
+                        <Input
+                          disabled
+                          name="password"
+                          type="password"
+                          value={dto.password}
+                        />
+                      )}
+                    </div>
 
-                <div>
-                  <Label htmlFor="role">Role</Label>
-                  <Select
-                    disabled={isReadOnly}
-                    isString={true}
-                    options={roles}
-                    defaultValue={dto.roleGuid}
-                    onChange={(e) =>
-                      setDto((prev) => ({
-                        ...prev,
-                        roleGuid: e,
-                        role:
-                          roles.find((option) => option.value === e)?.label ??
-                          "",
-                      }))
-                    }
-                    name="roleId"
-                    placeholder="Select role"
-                  />
-                </div>
+                    <div>
+                      <Label htmlFor="role">Role</Label>
+                      <Select
+                        disabled={isReadOnly}
+                        isString={true}
+                        options={roles}
+                        defaultValue={dto.roleGuid}
+                        onChange={(e) =>
+                          setDto((prev) => ({
+                            ...prev,
+                            roleGuid: e,
+                            role:
+                              roles.find((option) => option.value === e)
+                                ?.label ?? "",
+                          }))
+                        }
+                        name="roleId"
+                        placeholder="Select role"
+                      />
+                    </div>
+                  </div>
+                )}
               </div>
-              </FormSection>
-
+            </FormSection>
           </section>
         </div>
       )}

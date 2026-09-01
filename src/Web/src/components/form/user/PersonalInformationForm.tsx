@@ -249,8 +249,41 @@ export const PersonalInformationForm: React.FC<PersonalInformationFormProp> = ({
               <div className="grid gap-5 grid-cols-2 md:grid-cols-2 gap-x-10 gap-y-6 mb-8 p-5">
                 <div className="flex gap-3 mb-3 w-full col-span-2">
                   <FormField className="flex-1">
+                    <Label htmlFor="userCode">User Code / Employee ID</Label>
+                    <div className="flex gap-2">
+                      <div className="flex-2">
+                        <Input
+                          className=""
+                          placeholder="User Code"
+                          disabled={isReadOnly}
+                          name="userCode"
+                          type="text"
+                          id="userCode"
+                          onChange={handleChange}
+                          value={dto.userCode}
+                        />
+                      </div>
+                      <Button
+                        className="flex-1"
+                        disabled={isReadOnly}
+                        variant="outline"
+                        onClick={() =>
+                          setDto((prev) => ({
+                            ...prev,
+                            userCode: generateEmployeeId(),
+                            identification: generateEmployeeId(),
+                          }))
+                        }
+                      >
+                        Generate
+                      </Button>
+                    </div>
+                  </FormField>
+                </div>
+                <div className="flex gap-3 mb-3 w-full col-span-2">
+                  <FormField className="flex-1">
                     <Label htmlFor="userId">
-                      User Identification / Employee ID
+                      Identification / Document ID No.
                     </Label>
                     <div className="flex gap-2">
                       <div className="flex-2">
@@ -265,20 +298,6 @@ export const PersonalInformationForm: React.FC<PersonalInformationFormProp> = ({
                           value={dto.identification}
                         />
                       </div>
-
-                      <Button
-                        className="flex-1"
-                        disabled={isReadOnly}
-                        variant="outline"
-                        onClick={() =>
-                          setDto((prev) => ({
-                            ...prev,
-                            identification: generateEmployeeId(),
-                          }))
-                        }
-                      >
-                        Generate
-                      </Button>
                     </div>
                   </FormField>
                 </div>

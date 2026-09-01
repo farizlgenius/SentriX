@@ -4,6 +4,7 @@ namespace Core.Contract.DTOs.User;
 
 public sealed record UserDto(
   Guid Guid,
+  string UserCode,
   string Username,
   string Identification,
   Title Title,
@@ -29,6 +30,5 @@ public sealed record UserDto(
   LicensePlateDto LicensePlate,
   PinDto Pin,
   QrCodeDto QrCode,
-  FaceDto Face,
   List<string> Locations
 );

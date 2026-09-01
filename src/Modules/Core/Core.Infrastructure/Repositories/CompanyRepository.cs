@@ -103,9 +103,20 @@ public sealed class CompanyRepository(CoreDbContext context) : ICompanyRepositor
       .ToArrayAsync();
   }
 
-  public async Task<IEnumerable<CompanyDto>> GetByLocationAsync(Guid guid, CancellationToken ct = default)
+
+  public async Task<IEnumerable<CompanyDto>> GetByLocationAsync(int locationId, CancellationToken ct = default)
   {
-    throw new NotImplementedException();
+    return await context.Companies
+      .AsNoTracking()
+      .Select(x => new CompanyDto(
+        x.guid,
+        x.name,
+        x.address,
+        x.description,
+        x.is_active,
+        x.is_default
+      ))
+      .ToArrayAsync();
   }
 
   public async Task<int> GetIdByGuidAsync(Guid guid, CancellationToken ct = default)

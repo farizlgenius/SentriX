@@ -111,7 +111,8 @@ public sealed class RoleRepository(CoreDbContext context) : IRoleRepository
                   )).ToArrayAsync();
       }
 
-      public Task<IEnumerable<RoleDto>> GetByLocationAsync(Guid guid, CancellationToken ct = default)
+
+      public Task<IEnumerable<RoleDto>> GetByLocationAsync(int locationId, CancellationToken ct = default)
       {
             throw new NotImplementedException();
       }

@@ -4,6 +4,7 @@ namespace Core.Contract.DTOs.User;
 
 public sealed record UpdateUserDto(
   Guid Guid,
+  string UserCode,
   string Username,
   string Identification,
   Title Title,

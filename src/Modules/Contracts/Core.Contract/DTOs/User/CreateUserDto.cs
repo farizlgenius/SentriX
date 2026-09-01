@@ -3,6 +3,7 @@ using SharedKernel.Enums;
 namespace Core.Contract.DTOs.User;
 
 public sealed record CreateUserDto(
+  string UserCode,
   string Username,
   string Password,
   string Identification,

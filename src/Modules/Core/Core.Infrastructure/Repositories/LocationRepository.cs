@@ -107,20 +107,20 @@ public sealed class LocationRepository(CoreDbContext context) : ILocationReposit
       }
 
 
-      public async Task<IEnumerable<LocationDto>> GetByLocationAsync(Guid guid, int locationId, CancellationToken ct = default)
+      public async Task<IEnumerable<LocationDto>> GetByLocationAsync(int locationId, CancellationToken ct = default)
       {
-           return await context.Locations
-                  .AsNoTracking()
-                  .Where(x => x.id == locationId)
-                  .Select(x => new LocationDto(
-                        x.guid,
-                        x.name,
-                        x.description,
-                        x.country_id,
-                        x.country.name,
-                        x.is_active,
-                        x.is_default
-                  )).ToListAsync();
+            return await context.Locations
+                   .AsNoTracking()
+                   .Where(x => x.id == locationId)
+                   .Select(x => new LocationDto(
+                         x.guid,
+                         x.name,
+                         x.description,
+                         x.country_id,
+                         x.country.name,
+                         x.is_active,
+                         x.is_default
+                   )).ToListAsync();
       }
 
       public async Task<IEnumerable<CountryDto>> GetCountriesAsync(CancellationToken ct = default)

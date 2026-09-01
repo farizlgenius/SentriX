@@ -9,7 +9,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Core.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class EditRole : Migration
+    public partial class InitialDb : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -44,8 +44,7 @@ namespace Core.Infrastructure.Migrations
                 {
                     id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    image_name = table.Column<string>(type: "text", nullable: false),
-                    user_guid = table.Column<Guid>(type: "uuid", nullable: true),
+                    user_id = table.Column<int>(type: "integer", nullable: true),
                     guid = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
                     created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
                     updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
@@ -114,6 +113,26 @@ namespace Core.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "LicensePlates",
+                schema: "core",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    license_plate = table.Column<string>(type: "text", nullable: false),
+                    user_id = table.Column<int>(type: "integer", nullable: true),
+                    guid = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    is_active = table.Column<bool>(type: "boolean", nullable: false),
+                    is_default = table.Column<bool>(type: "boolean", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_LicensePlates", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Modules",
                 schema: "core",
                 columns: table => new
@@ -130,6 +149,46 @@ namespace Core.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Modules", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Pins",
+                schema: "core",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    pin = table.Column<string>(type: "text", nullable: false),
+                    user_id = table.Column<int>(type: "integer", nullable: true),
+                    guid = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    is_active = table.Column<bool>(type: "boolean", nullable: false),
+                    is_default = table.Column<bool>(type: "boolean", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Pins", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "QrCodes",
+                schema: "core",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    qr_code = table.Column<string>(type: "text", nullable: false),
+                    user_id = table.Column<int>(type: "integer", nullable: false),
+                    guid = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    is_active = table.Column<bool>(type: "boolean", nullable: false),
+                    is_default = table.Column<bool>(type: "boolean", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_QrCodes", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
@@ -197,8 +256,7 @@ namespace Core.Infrastructure.Migrations
                     name = table.Column<string>(type: "text", nullable: false),
                     description = table.Column<string>(type: "text", nullable: false),
                     address = table.Column<string>(type: "text", nullable: false),
-                    location_id = table.Column<int>(type: "integer", nullable: false),
-                    locationid = table.Column<int>(type: "integer", nullable: false),
+                    Locationid = table.Column<int>(type: "integer", nullable: true),
                     guid = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
                     created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
                     updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
@@ -209,12 +267,11 @@ namespace Core.Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_Companies", x => x.id);
                     table.ForeignKey(
-                        name: "FK_Companies_Locations_locationid",
-                        column: x => x.locationid,
+                        name: "FK_Companies_Locations_Locationid",
+                        column: x => x.Locationid,
                         principalSchema: "core",
                         principalTable: "Locations",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "id");
                 });
 
             migrationBuilder.CreateTable(
@@ -385,7 +442,6 @@ namespace Core.Infrastructure.Migrations
                 {
                     id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    name = table.Column<string>(type: "text", nullable: false),
                     module_id = table.Column<int>(type: "integer", nullable: false),
                     is_enabled = table.Column<bool>(type: "boolean", nullable: false),
                     role_id = table.Column<int>(type: "integer", nullable: false),
@@ -449,7 +505,6 @@ namespace Core.Infrastructure.Migrations
                 {
                     id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    name = table.Column<string>(type: "text", nullable: false),
                     feature_id = table.Column<int>(type: "integer", nullable: false),
                     module_permission_id = table.Column<int>(type: "integer", nullable: false),
                     is_enabled = table.Column<bool>(type: "boolean", nullable: false),
@@ -492,11 +547,11 @@ namespace Core.Infrastructure.Migrations
                     password = table.Column<string>(type: "text", nullable: false),
                     user_code = table.Column<string>(type: "text", nullable: false),
                     identification = table.Column<string>(type: "text", nullable: false),
-                    title = table.Column<int>(type: "integer", nullable: false),
+                    title = table.Column<string>(type: "text", nullable: false),
                     firstname = table.Column<string>(type: "text", nullable: false),
                     middlename = table.Column<string>(type: "text", nullable: false),
                     lastname = table.Column<string>(type: "text", nullable: false),
-                    gender = table.Column<int>(type: "integer", nullable: false),
+                    gender = table.Column<string>(type: "text", nullable: false),
                     date_of_birth = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     email = table.Column<string>(type: "text", nullable: false),
                     phone = table.Column<string>(type: "text", nullable: false),
@@ -509,7 +564,10 @@ namespace Core.Infrastructure.Migrations
                     address = table.Column<string>(type: "text", nullable: false),
                     active_time = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     expire_time = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    pin_id = table.Column<int>(type: "integer", nullable: true),
                     face_id = table.Column<int>(type: "integer", nullable: true),
+                    license_plate_id = table.Column<int>(type: "integer", nullable: true),
+                    qr_code_id = table.Column<int>(type: "integer", nullable: true),
                     Locationid = table.Column<int>(type: "integer", nullable: true),
                     guid = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
                     created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
@@ -542,16 +600,37 @@ namespace Core.Infrastructure.Migrations
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
+                        name: "FK_Users_LicensePlates_license_plate_id",
+                        column: x => x.license_plate_id,
+                        principalSchema: "core",
+                        principalTable: "LicensePlates",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
                         name: "FK_Users_Locations_Locationid",
                         column: x => x.Locationid,
                         principalSchema: "core",
                         principalTable: "Locations",
                         principalColumn: "id");
                     table.ForeignKey(
+                        name: "FK_Users_Pins_pin_id",
+                        column: x => x.pin_id,
+                        principalSchema: "core",
+                        principalTable: "Pins",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
                         name: "FK_Users_Positions_position_id",
                         column: x => x.position_id,
                         principalSchema: "core",
                         principalTable: "Positions",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Users_QrCodes_qr_code_id",
+                        column: x => x.qr_code_id,
+                        principalSchema: "core",
+                        principalTable: "QrCodes",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -585,87 +664,6 @@ namespace Core.Infrastructure.Migrations
                     table.PrimaryKey("PK_Cards", x => x.id);
                     table.ForeignKey(
                         name: "FK_Cards_Users_user_id",
-                        column: x => x.user_id,
-                        principalSchema: "core",
-                        principalTable: "Users",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "LicensePlates",
-                schema: "core",
-                columns: table => new
-                {
-                    id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    license_plate = table.Column<string>(type: "text", nullable: false),
-                    user_id = table.Column<int>(type: "integer", nullable: true),
-                    guid = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
-                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
-                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
-                    is_active = table.Column<bool>(type: "boolean", nullable: false),
-                    is_default = table.Column<bool>(type: "boolean", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_LicensePlates", x => x.id);
-                    table.ForeignKey(
-                        name: "FK_LicensePlates_Users_user_id",
-                        column: x => x.user_id,
-                        principalSchema: "core",
-                        principalTable: "Users",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Pins",
-                schema: "core",
-                columns: table => new
-                {
-                    id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    pin = table.Column<string>(type: "text", nullable: false),
-                    user_id = table.Column<int>(type: "integer", nullable: true),
-                    guid = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
-                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
-                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
-                    is_active = table.Column<bool>(type: "boolean", nullable: false),
-                    is_default = table.Column<bool>(type: "boolean", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Pins", x => x.id);
-                    table.ForeignKey(
-                        name: "FK_Pins_Users_user_id",
-                        column: x => x.user_id,
-                        principalSchema: "core",
-                        principalTable: "Users",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "QrCodes",
-                schema: "core",
-                columns: table => new
-                {
-                    id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    qr_code = table.Column<string>(type: "text", nullable: false),
-                    user_id = table.Column<int>(type: "integer", nullable: false),
-                    guid = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
-                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
-                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
-                    is_active = table.Column<bool>(type: "boolean", nullable: false),
-                    is_default = table.Column<bool>(type: "boolean", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_QrCodes", x => x.id);
-                    table.ForeignKey(
-                        name: "FK_QrCodes_Users_user_id",
                         column: x => x.user_id,
                         principalSchema: "core",
                         principalTable: "Users",
@@ -1020,48 +1018,48 @@ namespace Core.Infrastructure.Migrations
             migrationBuilder.InsertData(
                 schema: "core",
                 table: "ModulePermissions",
-                columns: new[] { "id", "is_active", "is_default", "is_enabled", "module_id", "name", "role_id" },
+                columns: new[] { "id", "is_active", "is_default", "is_enabled", "module_id", "role_id" },
                 values: new object[,]
                 {
-                    { 1, true, true, true, 1, "", 1 },
-                    { 2, true, true, true, 2, "", 1 },
-                    { 3, true, true, true, 3, "", 1 }
+                    { 1, true, true, true, 1, 1 },
+                    { 2, true, true, true, 2, 1 },
+                    { 3, true, true, true, 3, 1 }
                 });
 
             migrationBuilder.InsertData(
                 schema: "core",
                 table: "Users",
-                columns: new[] { "id", "Locationid", "active_time", "address", "company_id", "date_of_birth", "department_id", "email", "expire_time", "face_id", "firstname", "gender", "guid", "identification", "is_active", "is_default", "is_operator", "is_user", "lastname", "middlename", "password", "phone", "position_id", "role_id", "title", "user_code", "username" },
-                values: new object[] { 1, null, new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "", null, new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), null, "support@sentrix.com", new DateTime(9999, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), null, "admin", 0, new Guid("ed2b5887-9dcb-43bd-a6f8-988330df5181"), "", true, true, true, true, "system", "", "100000.lG1/4V/VRPZsbhf/Zqc4xw==.6vYcf+wEMSgqcaNhoZEdM9PaPxx2ZUErZhQbeMxo5OY=", "", null, 1, 0, "admin01", "admin" });
+                columns: new[] { "id", "Locationid", "active_time", "address", "company_id", "date_of_birth", "department_id", "email", "expire_time", "face_id", "firstname", "gender", "guid", "identification", "is_active", "is_default", "is_operator", "is_user", "lastname", "license_plate_id", "middlename", "password", "phone", "pin_id", "position_id", "qr_code_id", "role_id", "title", "user_code", "username" },
+                values: new object[] { 1, null, new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "", null, new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), null, "support@sentrix.com", new DateTime(9999, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), null, "admin", "Male", new Guid("ed2b5887-9dcb-43bd-a6f8-988330df5181"), "admin", true, true, true, false, "system", null, "", "100000.lG1/4V/VRPZsbhf/Zqc4xw==.6vYcf+wEMSgqcaNhoZEdM9PaPxx2ZUErZhQbeMxo5OY=", "", null, null, null, 1, "Mr", "admin01", "admin" });
 
             migrationBuilder.InsertData(
                 schema: "core",
                 table: "FeaturePermissions",
-                columns: new[] { "id", "feature_id", "is_active", "is_created", "is_default", "is_deleted", "is_enabled", "is_updated", "module_permission_id", "name" },
+                columns: new[] { "id", "feature_id", "is_active", "is_created", "is_default", "is_deleted", "is_enabled", "is_updated", "module_permission_id" },
                 values: new object[,]
                 {
-                    { 1, 1, true, true, false, true, true, true, 1, "" },
-                    { 2, 2, true, true, false, true, true, true, 1, "" },
-                    { 3, 3, true, true, false, true, true, true, 1, "" },
-                    { 4, 4, true, true, false, true, true, true, 1, "" },
-                    { 5, 5, true, true, false, true, true, true, 1, "" },
-                    { 6, 6, true, true, false, true, true, true, 1, "" },
-                    { 7, 7, true, true, false, true, true, true, 1, "" },
-                    { 8, 8, true, true, false, true, true, true, 1, "" },
-                    { 9, 9, true, true, false, true, true, true, 1, "" },
-                    { 10, 10, true, true, false, true, true, true, 1, "" },
-                    { 11, 11, true, true, false, true, true, true, 1, "" },
-                    { 12, 12, true, true, false, true, true, true, 1, "" },
-                    { 13, 13, true, true, false, true, true, true, 1, "" },
-                    { 14, 14, true, true, false, true, true, true, 1, "" },
-                    { 15, 15, true, true, false, true, true, true, 1, "" },
-                    { 16, 16, true, true, false, true, true, true, 1, "" },
-                    { 17, 17, true, true, false, true, true, true, 1, "" },
-                    { 18, 18, true, true, false, true, true, true, 1, "" },
-                    { 19, 19, true, true, false, true, true, true, 1, "" },
-                    { 20, 20, true, true, false, true, true, true, 2, "" },
-                    { 21, 21, true, true, false, true, true, true, 2, "" },
-                    { 22, 22, true, true, false, true, true, true, 3, "" }
+                    { 1, 1, true, true, false, true, true, true, 1 },
+                    { 2, 2, true, true, false, true, true, true, 1 },
+                    { 3, 3, true, true, false, true, true, true, 1 },
+                    { 4, 4, true, true, false, true, true, true, 1 },
+                    { 5, 5, true, true, false, true, true, true, 1 },
+                    { 6, 6, true, true, false, true, true, true, 1 },
+                    { 7, 7, true, true, false, true, true, true, 1 },
+                    { 8, 8, true, true, false, true, true, true, 1 },
+                    { 9, 9, true, true, false, true, true, true, 1 },
+                    { 10, 10, true, true, false, true, true, true, 1 },
+                    { 11, 11, true, true, false, true, true, true, 1 },
+                    { 12, 12, true, true, false, true, true, true, 1 },
+                    { 13, 13, true, true, false, true, true, true, 1 },
+                    { 14, 14, true, true, false, true, true, true, 1 },
+                    { 15, 15, true, true, false, true, true, true, 1 },
+                    { 16, 16, true, true, false, true, true, true, 1 },
+                    { 17, 17, true, true, false, true, true, true, 1 },
+                    { 18, 18, true, true, false, true, true, true, 1 },
+                    { 19, 19, true, true, false, true, true, true, 1 },
+                    { 20, 20, true, true, false, true, true, true, 2 },
+                    { 21, 21, true, true, false, true, true, true, 2 },
+                    { 22, 22, true, true, false, true, true, true, 3 }
                 });
 
             migrationBuilder.InsertData(
@@ -1091,10 +1089,10 @@ namespace Core.Infrastructure.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Companies_locationid",
+                name: "IX_Companies_Locationid",
                 schema: "core",
                 table: "Companies",
-                column: "locationid");
+                column: "Locationid");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ComponentMappings_internal_id_external_id",
@@ -1202,12 +1200,6 @@ namespace Core.Infrastructure.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_LicensePlates_user_id",
-                schema: "core",
-                table: "LicensePlates",
-                column: "user_id");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Locations_country_id",
                 schema: "core",
                 table: "Locations",
@@ -1240,12 +1232,6 @@ namespace Core.Infrastructure.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Pins_user_id",
-                schema: "core",
-                table: "Pins",
-                column: "user_id");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Positions_department_id",
                 schema: "core",
                 table: "Positions",
@@ -1264,12 +1250,6 @@ namespace Core.Infrastructure.Migrations
                 table: "QrCodes",
                 column: "guid",
                 unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_QrCodes_user_id",
-                schema: "core",
-                table: "QrCodes",
-                column: "user_id");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Roles_guid",
@@ -1368,16 +1348,37 @@ namespace Core.Infrastructure.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_Users_license_plate_id",
+                schema: "core",
+                table: "Users",
+                column: "license_plate_id",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Users_Locationid",
                 schema: "core",
                 table: "Users",
                 column: "Locationid");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Users_pin_id",
+                schema: "core",
+                table: "Users",
+                column: "pin_id",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Users_position_id",
                 schema: "core",
                 table: "Users",
                 column: "position_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_qr_code_id",
+                schema: "core",
+                table: "Users",
+                column: "qr_code_id",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Users_role_id",
@@ -1407,18 +1408,6 @@ namespace Core.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "LicenseKey",
-                schema: "core");
-
-            migrationBuilder.DropTable(
-                name: "LicensePlates",
-                schema: "core");
-
-            migrationBuilder.DropTable(
-                name: "Pins",
-                schema: "core");
-
-            migrationBuilder.DropTable(
-                name: "QrCodes",
                 schema: "core");
 
             migrationBuilder.DropTable(
@@ -1466,7 +1455,19 @@ namespace Core.Infrastructure.Migrations
                 schema: "core");
 
             migrationBuilder.DropTable(
+                name: "LicensePlates",
+                schema: "core");
+
+            migrationBuilder.DropTable(
+                name: "Pins",
+                schema: "core");
+
+            migrationBuilder.DropTable(
                 name: "Positions",
+                schema: "core");
+
+            migrationBuilder.DropTable(
+                name: "QrCodes",
                 schema: "core");
 
             migrationBuilder.DropTable(

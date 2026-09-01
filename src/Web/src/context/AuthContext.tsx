@@ -37,6 +37,8 @@ interface AuthContextType {
   selectedModule: number;
   setSelectedModule: React.Dispatch<React.SetStateAction<number>>;
   modules: Options[];
+  username: string;
+  imageName: string;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -63,6 +65,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const [permissions, setPermission] = useState<ModulePermissionDto[]>([]);
   const [modules, setModules] = useState<Options[]>([]);
   const [selectedModule, setSelectedModule] = useState<number>(1);
+  const [username, setUsername] = useState<string>("");
+  const [imageName, setImageName] = useState<string>("");
 
   const fetchMeTrigger = () => setFetch(!fetch);
 
@@ -100,6 +104,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     setModules([]);
     fetchLocation(res.data.data.locationGuids); // [1]
     setPermission(res.data.data.permissions);
+    setUsername(res.data.data.username);
+    setImageName(res.data.data.guid);
     setSelectedModule(res.data.data.permissions[0].id);
     res.data.data.permissions.map((p: ModulePermissionDto) => {
       setModules((prev) =>
@@ -234,6 +240,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         selectedModule,
         setSelectedModule,
         modules,
+        username,
+        imageName,
       }}
     >
       {children}

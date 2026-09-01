@@ -88,7 +88,7 @@ public sealed class LocationService(
     return await repo.GetAsync(guid, ct);
   }
 
-  public async Task<IEnumerable<LocationDto>> GetByLocationAsync(Guid guid, Guid locationGuid, CancellationToken ct = default)
+  public async Task<IEnumerable<LocationDto>> GetByLocationAsync(Guid guid, CancellationToken ct = default)
   {
     throw new NotImplementedException();
   }

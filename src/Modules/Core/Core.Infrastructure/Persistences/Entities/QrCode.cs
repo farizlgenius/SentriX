@@ -14,7 +14,6 @@ public sealed class QrCode : BaseEntity
       public QrCode(Domain.Entities.QrCode d) : base(d.Guid)
       {
             this.qr_code = d.QrCodes;
-            this.user_id = d.UserId;
       }
 
 }

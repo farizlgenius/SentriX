@@ -90,7 +90,8 @@ public sealed class PositionRepository(CoreDbContext context) : IPositionReposit
                           )).FirstOrDefaultAsync() ?? throw new NotFoundException(nameof(Location), guid.ToString());
       }
 
-      public Task<IEnumerable<PositionDto>> GetByLocationAsync(Guid guid, CancellationToken ct = default)
+
+      public Task<IEnumerable<PositionDto>> GetByLocationAsync(int locationId, CancellationToken ct = default)
       {
             throw new NotImplementedException();
       }

@@ -10,10 +10,10 @@ public sealed class UserLocation : BaseEntity
   public UserLocation() { }
 
   public UserLocation(
-    int user
+    int loc
   ) : base(Guid.NewGuid())
   {
-    user_id = user;
+    location_id = loc;
   }
   public UserLocation(
     int user,

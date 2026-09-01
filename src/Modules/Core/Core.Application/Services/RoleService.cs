@@ -110,6 +110,7 @@ public sealed class RoleService(
             return await repo.GetAsync(guid, ct);
       }
 
+
       public Task<IEnumerable<RoleDto>> GetByLocationAsync(Guid guid, CancellationToken ct = default)
       {
             throw new NotImplementedException();

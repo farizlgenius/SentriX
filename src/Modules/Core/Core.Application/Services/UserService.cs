@@ -9,11 +9,13 @@ using SharedKernel.Domain;
 using SharedKernel.Exceptions;
 using SharedKernel.Helpers;
 using SharedKernel.Messaging;
+using Storage.Contract.Interfaces;
 
 namespace Core.Application.Services;
 
 public sealed class UserService(
   IUserRepository repo,
+  IStorage file,
   IMessageBus bus
   ) : IUser
 {
@@ -43,17 +45,18 @@ public sealed class UserService(
   public async Task<Guid> CreateAsync(CreateUserDto dto, CancellationToken ct = default)
   {
 
-    var roleId = await bus.QueryAsync(new RoleIdByGuidQuery(dto.RoleGuid));
-    var companyId = await bus.QueryAsync(new CompanyIdByGuidQuery(dto.CompanyGuid));
-    var departmentId = await bus.QueryAsync(new DepartmentIdByGuidQuery(dto.DepartmentGuid));
-    var positionId = await bus.QueryAsync(new PositionIdByGuidQuery(dto.PositionGuid));
-    var locationIds = await bus.QueryAsync(new LocationIdsByGuidsQuery(dto.Locations));
-    var groupIds = await bus.QueryAsync(new GroupIdsByGuidsQuery(dto.Groups));
+    var roleId = dto.RoleGuid == Guid.Empty ? 0 : await bus.QueryAsync(new RoleIdByGuidQuery(dto.RoleGuid));
+    var companyId = dto.CompanyGuid == Guid.Empty ? 0 : await bus.QueryAsync(new CompanyIdByGuidQuery(dto.CompanyGuid));
+    var departmentId = dto.DepartmentGuid == Guid.Empty ? 0 : await bus.QueryAsync(new DepartmentIdByGuidQuery(dto.DepartmentGuid));
+    var positionId = dto.PositionGuid == Guid.Empty ? 0 : await bus.QueryAsync(new PositionIdByGuidQuery(dto.PositionGuid));
+    var locationIds = dto.Locations.Count() == 0 ? new List<int>() : await bus.QueryAsync(new LocationIdsByGuidsQuery(dto.Locations));
+    var groupIds = dto.Groups.Count() == 0 ? new List<int>() : await bus.QueryAsync(new GroupIdsByGuidsQuery(dto.Groups));
 
     var d = new User(
+      dto.UserCode,
       dto.Username,
-      dto.Identification,
       dto.Password,
+      dto.Identification,
       dto.Title,
       dto.Firstname,
       dto.Middlename,
@@ -79,10 +82,9 @@ public sealed class UserService(
         x.Fac,
         x.CardNumber
         )).ToList(),
-      dto.LicensePlate is null ? null : new LicensePlate(dto.LicensePlate.LicensePlate),
-      dto.Pin is null ? null : new Pin(dto.Pin.Pin),
-      dto.QrCode is null ? null : new QrCode(dto.QrCode.QrCode),
-      dto.Face is null ? null : new Face(dto.Face.ImageName)
+      dto.LicensePlate is null || string.IsNullOrWhiteSpace(dto.LicensePlate.LicensePlate) ? null : new LicensePlate(dto.LicensePlate.LicensePlate),
+      dto.Pin is null || string.IsNullOrWhiteSpace(dto.Pin.Pin) ? null : new Pin(dto.Pin.Pin),
+      dto.QrCode is null || string.IsNullOrWhiteSpace(dto.QrCode.QrCode) ? null : new QrCode(dto.QrCode.QrCode)
     );
     // Check that if username and identification is already exists
     if (await repo.IsAnyUsernameAsync(dto.Username))
@@ -146,10 +148,28 @@ public sealed class UserService(
     return await repo.GetAsync(guid, ct);
   }
 
-  public async Task<IEnumerable<UserDto>> GetByLocationAsync(Guid guid, Guid locationGuid, CancellationToken ct = default)
+  public async Task<IEnumerable<UserDto>> GetByLocationAsync(Guid guid, CancellationToken ct = default)
   {
-    var locationId = await bus.QueryAsync(new LocationIdByGuidQuery(locationGuid));
-    return await repo.GetByLocationAsync(guid, locationId, ct);
+    var locationId = await bus.QueryAsync(new LocationIdByGuidQuery(guid));
+    return await repo.GetByLocationAsync(locationId, ct);
+  }
+
+  public async Task<Stream> GetImageByGuidAsync(Guid guid, CancellationToken ct = default)
+  {
+    if (!await repo.IsAnyGuidAsync(guid))
+      throw new NotFoundException(EntityType.User, guid.ToString());
+
+    return await file.ReadUserAsync(guid.ToString());
+  }
+
+  public async Task<Pagination<UserDto>> GetOnlyOperatorAsync(PaginationParams param, CancellationToken ct = default)
+  {
+    return await repo.GetPaginationOperatorAsync(param, ct);
+  }
+
+  public async Task<Pagination<UserDto>> GetOnlyUserAsync(PaginationParams param, CancellationToken ct = default)
+  {
+    return await repo.GetPaginationUserAsync(param, ct);
   }
 
   public async Task<Pagination<UserDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
@@ -159,7 +179,7 @@ public sealed class UserService(
 
   public async Task<Guid> UpdateAsync(UpdateUserDto dto, CancellationToken ct = default)
   {
-    if(!await repo.IsAnyGuidAsync(dto.Guid))
+    if (!await repo.IsAnyGuidAsync(dto.Guid))
       throw new NotFoundException(EntityType.User, dto.Guid.ToString());
 
     var roleId = await bus.QueryAsync(new RoleIdByGuidQuery(dto.RoleGuid));
@@ -170,6 +190,7 @@ public sealed class UserService(
     var groupIds = await bus.QueryAsync(new GroupIdsByGuidsQuery(dto.Groups));
 
     var d = new User(
+      dto.UserCode,
       dto.Username,
       dto.Identification,
       string.Empty,
@@ -200,8 +221,7 @@ public sealed class UserService(
         )).ToList(),
       dto.LicensePlate is null ? null : new LicensePlate(dto.LicensePlate.LicensePlate),
       dto.Pin is null ? null : new Pin(dto.Pin.Pin),
-      dto.QrCode is null ? null : new QrCode(dto.QrCode.QrCode),
-      dto.Face is null ? null : new Face(dto.Face.ImageName)
+      dto.QrCode is null ? null : new QrCode(dto.QrCode.QrCode)
     );
 
     // Send command to update user to device
@@ -210,6 +230,19 @@ public sealed class UserService(
 
     return d.Guid;
 
-    
+
+  }
+
+  public async Task<bool> UploadImageAsync(Guid guid, Stream stream, CancellationToken ct = default)
+  {
+    if (!await repo.IsAnyGuidAsync(guid))
+      throw new NotFoundException(EntityType.User, guid.ToString());
+
+
+    var path = await file.SaveUserAsync(stream, guid.ToString());
+
+    await repo.UpdateImagePathAsync(guid, ct);
+
+    return true;
   }
 }

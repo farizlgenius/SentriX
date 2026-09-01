@@ -12,18 +12,9 @@ public sealed class Pin : BaseEntity
 
       public Pin() { }
 
-      public Pin(Domain.Entities.Pin d)
+      public Pin(Domain.Entities.Pin d) : base(d.Guid)
       {
-            this.guid = d.Guid;
             this.pin = d.Pins;
-            this.created_at = DateTime.UtcNow;
-            this.updated_at = DateTime.UtcNow;
-            this.user_id = d.UserId;
       }
 
-      public void Update(Domain.Entities.Pin d)
-      {
-            this.pin = d.Pins;
-            this.updated_at = DateTime.UtcNow;
-      }
 }

@@ -95,6 +95,7 @@ public sealed class UserRepository(CoreDbContext context) : IUserRepository
       .Where(x => x.guid == guid)
       .Select(x => new UserDto(
         x.guid,
+        x.user_code,
         x.username,
         x.identification,
         x.title,
@@ -124,7 +125,6 @@ public sealed class UserRepository(CoreDbContext context) : IUserRepository
         new LicensePlateDto(x.license_plate == null ? string.Empty : x.license_plate.license_plate),
         new PinDto(x.pin == null ? string.Empty : x.pin.pin),
         new QrCodeDto(x.qr_code == null ? string.Empty : x.qr_code.qr_code),
-        new FaceDto(x.face == null ? string.Empty : x.face.image_name),
         x.user_locations.Select(x => x.location.name).ToList()
       )).FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.User, guid.ToString());
   }
@@ -137,6 +137,7 @@ public sealed class UserRepository(CoreDbContext context) : IUserRepository
       .Where(x => x.username.Equals(username))
       .Select(x => new UserDto(
         x.guid,
+        x.user_code,
         x.username,
         x.identification,
         x.title,
@@ -166,7 +167,6 @@ public sealed class UserRepository(CoreDbContext context) : IUserRepository
         new LicensePlateDto(x.license_plate == null ? string.Empty : x.license_plate.license_plate),
         new PinDto(x.pin == null ? string.Empty : x.pin.pin),
         new QrCodeDto(x.qr_code == null ? string.Empty : x.qr_code.qr_code),
-        new FaceDto(x.face == null ? string.Empty : x.face.image_name),
         x.user_locations.Select(x => x.location.name).ToList()
       )).FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.User, username);
   }
@@ -283,6 +283,7 @@ public sealed class UserRepository(CoreDbContext context) : IUserRepository
           .Take(param.pageSize)
           .Select(e => new UserDto(
             e.guid,
+            e.user_code,
             e.username,
             e.identification,
             e.title,
@@ -312,7 +313,6 @@ public sealed class UserRepository(CoreDbContext context) : IUserRepository
             new LicensePlateDto(e.license_plate == null ? string.Empty : e.license_plate.license_plate),
         new PinDto(e.pin == null ? string.Empty : e.pin.pin),
         new QrCodeDto(e.qr_code == null ? string.Empty : e.qr_code.qr_code),
-        new FaceDto(e.face == null ? string.Empty : e.face.image_name),
             e.user_locations.Select(x => x.location.name).ToList()
           )).ToListAsync();
 
@@ -404,6 +404,7 @@ public sealed class UserRepository(CoreDbContext context) : IUserRepository
           .Take(param.pageSize)
           .Select(e => new UserDto(
             e.guid,
+            e.user_code,
             e.username,
             e.identification,
             e.title,
@@ -433,7 +434,6 @@ public sealed class UserRepository(CoreDbContext context) : IUserRepository
             new LicensePlateDto(e.license_plate == null ? string.Empty : e.license_plate.license_plate),
         new PinDto(e.pin == null ? string.Empty : e.pin.pin),
         new QrCodeDto(e.qr_code == null ? string.Empty : e.qr_code.qr_code),
-        new FaceDto(e.face == null ? string.Empty : e.face.image_name),
             e.user_locations.Select(x => x.location.name).ToList()
           )).ToListAsync();
 
@@ -471,7 +471,7 @@ public sealed class UserRepository(CoreDbContext context) : IUserRepository
       .AnyAsync(x => x.guid.Equals(guid) && x.is_default);
   }
 
-  public async Task UpdateAsync(User entity, CancellationToken ct = default)
+  public async Task UpdateAsync(User user, CancellationToken ct = default)
   {
 
 
@@ -479,50 +479,169 @@ public sealed class UserRepository(CoreDbContext context) : IUserRepository
     {
       await context.Database.BeginTransactionAsync(ct);
 
-      var existingEntity = await context.Users
-      .Include(x => x.additionals)
-      .Include(x => x.cards)
-      .Include(x => x.user_groups)
-      .Include(x => x.user_locations)
-      .Include(x => x.license_plate)
-      .Include(x => x.pin)
-      .Include(x => x.qr_code)
-      .Include(x => x.face)
-      .Include(x => x.role)
-      .Include(x => x.company)
-      .Include(x => x.department)
-      .Include(x => x.position)
-      .Where(x => x.guid == entity.Guid)
-      .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.User, entity.Guid.ToString());
+      var entity = await context.Users
+      .Where(x => x.guid == user.Guid)
+      .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.User, user.Guid.ToString());
 
-      existingEntity.title = entity.Title;
-      existingEntity.firstname = entity.FirstName;
-      existingEntity.middlename = entity.MiddleName;
-      existingEntity.lastname = entity.LastName;
-      existingEntity.gender = entity.Gender;
-      existingEntity.date_of_birth = entity.DateOfBirth;
-      existingEntity.email = entity.Email;
-      existingEntity.phone = entity.Phone;
-      existingEntity.address = entity.Address;
-      existingEntity.active_time = entity.JoinedTime;
-      existingEntity.expire_time = entity.ExpiredTime;
 
-      existingEntity.additionals.Clear();
-      foreach (var additional in entity.Additionals)
+      // Mapping the properties from the domain entity to the persistence entity
+      entity.title = user.Title;
+      entity.firstname = user.FirstName;
+      entity.middlename = user.MiddleName;
+      entity.lastname = user.LastName;
+      entity.gender = user.Gender;
+      entity.date_of_birth = user.DateOfBirth;
+      entity.email = user.Email;
+      entity.phone = user.Phone;
+      entity.address = user.Address;
+      entity.active_time = user.JoinedTime;
+      entity.expire_time = user.ExpiredTime;
+
+      // Company
+      entity.company_id = user.CompanyId;
+
+      // Department 
+      entity.department_id = user.DepartmentId;
+
+      // Position
+      entity.position_id = user.PositionId;
+
+      // Additional
+
+      var existingAdditionals = await context.UserAdditionals
+        .Where(x => x.user_id == entity.id)
+        .ToListAsync(ct);
+
+      var incomingAdditionals = user.Additionals.Select(a => a.ToLower()).ToHashSet();
+
+      foreach (var item in existingAdditionals)
       {
-        existingEntity.additionals.Add(new Persistences.Entities.UserAdditional { additional = additional });
+        if (!incomingAdditionals.Contains(item.additional.ToLower()))
+        {
+          context.UserAdditionals.Remove(item);
+        }
       }
-      existingEntity.cards.Clear();
-      foreach (var card in entity.Cards)
-      {
-        existingEntity.cards.Add(new Persistences.Entities.Card(card));
-      }
-      existingEntity.license_plate = entity.LicensePlate;
-      existingEntity.pin = entity.Pin;
-      existingEntity.qr_code = entity.QrCode;
-      existingEntity.face = entity.Face;
 
-      context.Users.Update(existingEntity);
+      var existingValueAdditional = existingAdditionals.Select(a => a.additional.ToLower()).ToHashSet();
+
+      foreach (var additional in incomingAdditionals)
+      {
+
+        if (!existingValueAdditional.Contains(additional.ToLower()))
+        {
+
+          context.UserAdditionals.Add(
+              new Persistences.Entities.UserAdditional
+              {
+                user_id = entity.id,
+                additional = additional
+              });
+        }
+      }
+
+      // Card 
+
+      var existingCards = await context.Cards
+        .Where(x => x.user_id == entity.id)
+        .ToListAsync(ct);
+
+      var incomingCards = user.Cards.Select(c => new Card(c.Bits, c.Fac, c.Fac)).ToHashSet();
+
+      foreach (var item in existingCards)
+      {
+        if (!incomingCards.Any(c => c.Bits == item.bits && c.Fac == item.fac && c.CardNumber == item.card_number))
+        {
+          context.Cards.Remove(item);
+        }
+      }
+
+      var existingValueCards = existingCards.Select(c => new Card(c.bits, c.fac, c.card_number)).ToHashSet();
+
+      foreach (var card in incomingCards)
+      {
+        if (!existingValueCards.Any(c => c.Bits == card.Bits && c.Fac == card.Fac && c.CardNumber == card.CardNumber))
+        {
+          context.Cards.Add(
+              new Persistences.Entities.Card(card)
+              {
+                user_id = entity.id,
+                bits = card.Bits,
+                fac = card.Fac,
+                card_number = card.CardNumber
+              });
+        }
+      }
+
+      entity.license_plate = user.LicensePlate is null ? null : new Persistences.Entities.LicensePlate(user.LicensePlate);
+      entity.pin = user.Pin is null ? null : new Persistences.Entities.Pin(user.Pin);
+      entity.qr_code = user.QrCode is null ? null : new Persistences.Entities.QrCode(user.QrCode);
+
+      // User Locations
+      var existingUserLocations = await context.UserLocations
+        .Where(x => x.user_id == entity.id)
+        .ToListAsync(ct);
+
+      var incomingUserLocationIds = user.LocationIds.Select(l => l).ToHashSet();
+
+      var existingUserLocationIds = existingUserLocations.Select(l => l.location_id).ToHashSet();
+
+      // Remove Relationships that are not in the incoming list
+      foreach (var existingLocation in existingUserLocations)
+      {
+        if (!incomingUserLocationIds.Contains(existingLocation.location_id))
+        {
+          context.UserLocations.Remove(existingLocation);
+        }
+      }
+
+      // Add new Relationships that are not in the existing list
+      foreach (var incomingLocationId in incomingUserLocationIds)
+      {
+        if (!existingUserLocationIds.Contains(incomingLocationId))
+        {
+          context.UserLocations.Add(
+              new Persistences.Entities.UserLocation
+              {
+                user_id = entity.id,
+                location_id = incomingLocationId
+              });
+        }
+      }
+
+      // User Groups
+
+      var existingUserGroups = await context.UserGroups
+        .Where(x => x.user_id == entity.id)
+        .ToListAsync(ct);
+
+      var incomingUserGroupIds = user.GroupIds.Select(g => g).ToHashSet();
+
+      var existingUserGroupIds = existingUserGroups.Select(g => g.group_id).ToHashSet();
+
+      // Remove Relationships that are not in the incoming list
+      foreach (var existingGroup in existingUserGroups)
+      {
+        if (!incomingUserGroupIds.Contains(existingGroup.group_id))
+        {
+          context.UserGroups.Remove(existingGroup);
+        }
+      }
+
+      // Add new Relationships that are not in the existing list
+      foreach (var incomingGroupId in incomingUserGroupIds)
+      {
+        if (!existingUserGroupIds.Contains(incomingGroupId))
+        {
+          context.UserGroups.Add(
+              new Persistences.Entities.UserGroup
+              {
+                user_id = entity.id,
+                group_id = incomingGroupId
+              });
+        }
+      }
+
+      context.Users.Update(entity);
 
       await context.SaveChangesAsync(ct);
 
@@ -546,13 +665,14 @@ public sealed class UserRepository(CoreDbContext context) : IUserRepository
       .FirstOrDefaultAsync(ct);
   }
 
-  public async Task<IEnumerable<UserDto>> GetByLocationAsync(Guid guid, int locationId, CancellationToken ct = default)
+  public async Task<IEnumerable<UserDto>> GetByLocationAsync(int locationId, CancellationToken ct = default)
   {
     return await context.Users
       .AsNoTracking()
-      .Where(x => x.guid == guid && x.user_locations.Any(x => x.location_id == locationId))
+      .Where(x => x.user_locations.Any(x => x.location_id == locationId))
       .Select(e => new UserDto(
             e.guid,
+            e.user_code,
             e.username,
             e.identification,
             e.title,
@@ -582,7 +702,6 @@ public sealed class UserRepository(CoreDbContext context) : IUserRepository
             new LicensePlateDto(e.license_plate == null ? string.Empty : e.license_plate.license_plate),
         new PinDto(e.pin == null ? string.Empty : e.pin.pin),
         new QrCodeDto(e.qr_code == null ? string.Empty : e.qr_code.qr_code),
-        new FaceDto(e.face == null ? string.Empty : e.face.image_name),
             e.user_locations.Select(x => x.location.name).ToList()
           )).ToListAsync();
   }
@@ -592,5 +711,139 @@ public sealed class UserRepository(CoreDbContext context) : IUserRepository
     return await context.Users
       .AsNoTracking()
       .AnyAsync(x => x.identification.Equals(identification));
+  }
+
+  public async Task<Pagination<UserDto>> GetPaginationUserAsync(PaginationParams param, CancellationToken ct = default)
+  {
+    var query = context.Users
+                  .AsNoTracking()
+                  .Where(x => x.user_locations.Any(x => x.location.guid == param.locationGuid) && x.is_user)
+                  .AsQueryable();
+
+    if (!string.IsNullOrWhiteSpace(param.search))
+    {
+      if (!string.IsNullOrWhiteSpace(param.search))
+      {
+        var search = param.search.Trim();
+
+        if (context.Database.IsNpgsql())
+        {
+          var pattern = $"%{search}%";
+
+          query = query.Where(x =>
+              EF.Functions.ILike(x.username, pattern) ||
+              EF.Functions.ILike(x.user_code, pattern) ||
+              EF.Functions.ILike(x.identification, pattern) ||
+              EF.Functions.ILike(x.title.ToString(), pattern) ||
+              EF.Functions.ILike(x.firstname, pattern) ||
+              EF.Functions.ILike(x.middlename, pattern) ||
+              EF.Functions.ILike(x.lastname, pattern) ||
+              EF.Functions.ILike(x.gender.ToString(), pattern) ||
+              EF.Functions.ILike(x.email, pattern) ||
+              EF.Functions.ILike(x.phone, pattern) ||
+              (x.company != null ? EF.Functions.ILike(x.company.name, pattern) : false) ||
+              (x.department != null ? EF.Functions.ILike(x.department.name, pattern) : false) ||
+              (x.position != null ? EF.Functions.ILike(x.position.name, pattern) : false) ||
+              EF.Functions.ILike(x.address, pattern)
+          );
+        }
+        else // SQL Server
+        {
+          query = query.Where(x =>
+              x.username.Contains(search) ||
+              x.user_code.Contains(search) ||
+              x.identification.Contains(search) ||
+              x.title.ToString().Contains(search) ||
+              x.firstname.Contains(search) ||
+              x.middlename.Contains(search) ||
+              x.lastname.Contains(search) ||
+              x.gender.ToString().Contains(search) ||
+              x.email.Contains(search) ||
+              x.phone.Contains(search) ||
+              (x.company != null ? x.company.name.Contains(search) : false) ||
+              (x.department != null ? x.department.name.Contains(search) : false) ||
+              (x.position != null ? x.position.name.Contains(search) : false) ||
+              x.address.Contains(search)
+          );
+        }
+
+      }
+    }
+
+
+    if (param.startDate != null)
+    {
+      var startUtc = DateTime.SpecifyKind(param.startDate.Value, DateTimeKind.Utc);
+      query = query.Where(x => x.created_at >= startUtc);
+    }
+
+    if (param.endDate != null)
+    {
+      var endUtc = DateTime.SpecifyKind(param.endDate.Value, DateTimeKind.Utc);
+      query = query.Where(x => x.created_at <= endUtc);
+    }
+
+    var count = await query.CountAsync();
+
+    var res = await query
+          .AsNoTracking()
+          .OrderByDescending(e => e.created_at)
+          .Skip((param.pageNumber - 1) * param.pageSize)
+          .Take(param.pageSize)
+          .Select(e => new UserDto(
+            e.guid,
+            e.user_code,
+            e.username,
+            e.identification,
+            e.title,
+            e.firstname,
+            e.middlename,
+            e.lastname,
+            e.gender,
+            e.date_of_birth,
+            e.email,
+            e.phone,
+            e.is_operator,
+            e.is_user,
+            e.role != null ? e.role.name : string.Empty,
+            e.company != null ? e.company.name : string.Empty,
+            e.department != null ? e.department.name : string.Empty,
+            e.position != null ? e.position.name : string.Empty,
+            e.address,
+            e.active_time,
+            e.expire_time,
+            e.additionals.Select(x => x.additional).ToList(),
+            e.user_groups.Select(x => x.group.name).ToList(),
+            e.cards.Select(x => new CardDto(
+              x.bits,
+              x.fac,
+              x.card_number
+            )).ToList(),
+            new LicensePlateDto(e.license_plate == null ? string.Empty : e.license_plate.license_plate),
+        new PinDto(e.pin == null ? string.Empty : e.pin.pin),
+        new QrCodeDto(e.qr_code == null ? string.Empty : e.qr_code.qr_code),
+            e.user_locations.Select(x => x.location.name).ToList()
+          )).ToListAsync();
+
+    return new Pagination<UserDto>(
+          param.pageNumber,
+          param.pageSize,
+          count,
+          (int)Math.Ceiling(count / (double)param.pageSize),
+          res
+          );
+  }
+
+  public async Task UpdateImagePathAsync(Guid guid, CancellationToken ct = default)
+  {
+    var entity = await context.Users
+      .Where(x => x.guid == guid)
+      .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.User, guid.ToString());
+
+    entity.face = new Persistences.Entities.Face(guid);
+
+    context.Users.Update(entity);
+    await context.SaveChangesAsync(ct);
+
   }
 }

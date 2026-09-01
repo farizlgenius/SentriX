@@ -18,7 +18,8 @@ public sealed class AuthService(IJwt jwt, ICache redis, IRefreshTokenAuditReposi
   {
     var locations = await bus.QueryAsync(new LocationGuidByUsernameQuery(username));
     var permissions = await bus.QueryAsync(new PermissionByRoleGuidQuery(roleGuid));
-    return new MeDto(locations, permissions);
+    var user = await bus.QueryAsync(new UserByUsernameQuery(username));
+    return new MeDto(user.Guid, user.Username, locations, permissions);
   }
 
   public async Task<AccessTokenDto> LoginAsync(LoginDto login)

@@ -15,6 +15,7 @@ public interface IUserRepository : IBaseRepository<UserDto, User>
   Task<UserDto> GetByUsernameAsync(string username, CancellationToken ct = default);
   Task<Guid> GetDefaultLocationGuidAsync();
   Task<Pagination<UserDto>> GetPaginationOperatorAsync(PaginationParams param, CancellationToken ct = default);
-
+  Task<Pagination<UserDto>> GetPaginationUserAsync(PaginationParams param, CancellationToken ct = default);
+  Task UpdateImagePathAsync(Guid guid, CancellationToken ct = default);
 
 }

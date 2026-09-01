@@ -3,10 +3,11 @@ import { DropdownItem } from "../ui/dropdown/DropdownItem";
 import { Dropdown } from "../ui/dropdown/Dropdown";
 import { useNavigate } from "react-router";
 import { useAuth } from "../../context/AuthContext";
+import { Avatar } from "../../pages/UiElements/Avatar";
 
 export default function UserDropdown() {
-   const {signOut} = useAuth();
-   const nav = useNavigate()
+  const { signOut, username, imageName } = useAuth();
+  const nav = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
 
   function toggleDropdown() {
@@ -23,10 +24,11 @@ export default function UserDropdown() {
         className="dropdown-toggle flex items-center rounded-lg border border-[var(--app-panel-border)] bg-[var(--app-panel-bg)] px-2 py-1.5 text-gray-700 shadow-theme-xs dark:text-gray-300"
       >
         <span className="mr-3 overflow-hidden rounded-full h-11 w-11">
-          <img src="/images/user/owner.jpg" alt="User" />
+          {/* <img src={`/images/user/${imageName}.jpg`} alt="User" /> */}
+          <Avatar userId={imageName} />
         </span>
 
-        <span className="mr-1 block text-theme-sm font-medium">John Doe</span>
+        <span className="mr-1 block text-theme-sm font-medium">{username}</span>
         <svg
           className={`stroke-gray-500 dark:stroke-gray-400 transition-transform duration-200 ${
             isOpen ? "rotate-180" : ""
@@ -140,12 +142,11 @@ export default function UserDropdown() {
         </ul>
         <div
           onClick={async () => {
-            if(await signOut()){
-              nav("/login")
-            }else{
-              nav("/")
+            if (await signOut()) {
+              nav("/login");
+            } else {
+              nav("/");
             }
-            
           }}
           className="group mt-3 flex items-center gap-3 rounded-lg px-3 py-2 font-medium text-gray-700 text-theme-sm hover:bg-[var(--app-panel-muted)] hover:text-brand-500 dark:text-gray-300"
         >

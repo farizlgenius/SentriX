@@ -105,7 +105,7 @@ public sealed class DepartmentRepository(CoreDbContext context) : IDepartmentRep
       )).ToArrayAsync();
   }
 
-  public Task<IEnumerable<DepartmentDto>> GetByLocationAsync(Guid guid, CancellationToken ct = default)
+  public Task<IEnumerable<DepartmentDto>> GetByLocationAsync(int locationId, CancellationToken ct = default)
   {
     throw new NotImplementedException();
   }
