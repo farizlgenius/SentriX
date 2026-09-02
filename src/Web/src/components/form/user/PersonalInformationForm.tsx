@@ -50,7 +50,7 @@ export const PersonalInformationForm: React.FC<PersonalInformationFormProp> = ({
   const [file, setFile] = useState<boolean>(false);
   const [cam, setCam] = useState<boolean>(false);
   const [selectedValue, setSelectedValue] = useState<Gender | string>(
-    Gender.M.toString(),
+    Gender.Male.toString(),
   );
   const [com, setCom] = useState<Options[]>(defaultOptions);
   const [dep, setDep] = useState<Options[]>(defaultOptions);
@@ -308,19 +308,19 @@ export const PersonalInformationForm: React.FC<PersonalInformationFormProp> = ({
                     <Select
                       options={[
                         {
-                          label: Title.Mr.toString(),
+                          label: Title[Title.Mr],
                           value: Title.Mr,
                         },
                         {
-                          label: Title.Miss.toString(),
+                          label: Title[Title.Miss],
                           value: Title.Miss,
                         },
                         {
-                          label: Title.Ms.toString(),
+                          label: Title[Title.Ms],
                           value: Title.Ms,
                         },
                         {
-                          label: Title.Other.toString(),
+                          label: Title[Title.Other],
                           value: Title.Other,
                         },
                       ]}
@@ -378,8 +378,8 @@ export const PersonalInformationForm: React.FC<PersonalInformationFormProp> = ({
                       <Radio
                         id="gender1"
                         name="gender"
-                        value={Gender.M.toString()}
-                        checked={selectedValue === Gender.M.toString()}
+                        value={Gender.Male.toString()}
+                        checked={selectedValue === Gender.Male.toString()}
                         onChange={handleRadioChange}
                         label="Male"
                       />
@@ -389,8 +389,8 @@ export const PersonalInformationForm: React.FC<PersonalInformationFormProp> = ({
                       <Radio
                         id="gender2"
                         name="gender"
-                        value={Gender.F.toString()}
-                        checked={selectedValue === Gender.F.toString()}
+                        value={Gender.Female.toString()}
+                        checked={selectedValue === Gender.Female.toString()}
                         onChange={handleRadioChange}
                         label="Female"
                       />
@@ -399,8 +399,8 @@ export const PersonalInformationForm: React.FC<PersonalInformationFormProp> = ({
                       <Radio
                         id="gender3"
                         name="gender"
-                        value={Gender.O.toString()}
-                        checked={selectedValue === Gender.O.toString()}
+                        value={Gender.Other.toString()}
+                        checked={selectedValue === Gender.Other.toString()}
                         onChange={handleRadioChange}
                         label="Other"
                       />

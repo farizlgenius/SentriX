@@ -1,3 +1,4 @@
+using SharedKernel.Enums;
 using SharedKernel.Helpers;
 
 namespace Core.Domain.Entities;
@@ -6,6 +7,12 @@ public sealed class Operator : BaseDomain
 {
   public string Username { get; set; } = string.Empty;
   public string Password { get; set; } = string.Empty;
+  public Title Title { get; set; } = Title.Mr;
+  public string Firstname { get; set; } = string.Empty;
+  public string Middlename { get; set; } = string.Empty;
+  public string Lastname { get; set; } = string.Empty;
+  public Gender Gender { get; set; } = Gender.Male;
+  public string Mobile { get; set; } = string.Empty;
   public string Email { get; set; } = string.Empty;
   public string Phone { get; set; } = string.Empty;
   public DateTime JoinedDate { get; set; } = DateTime.UtcNow;

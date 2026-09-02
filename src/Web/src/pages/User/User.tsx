@@ -26,7 +26,7 @@ import { PinDto } from "../../model/User/PinDto";
 import { QrCodeDto } from "../../model/User/QrCodeDto";
 import { FaceDto } from "../../model/User/FaceDto";
 import { PersonalInformationForm } from "../../components/form/user/PersonalInformationForm";
-import { OperatorForm } from "../../components/form/user/OperatorForm";
+import { UserOperatorForm } from "../../components/form/user/UserOperatorForm";
 import { LocationForm } from "../../components/form/user/LocationForm";
 import { GroupForm } from "../../components/form/user/GroupForm";
 import { CredentialForm } from "../../components/form/user/CredentialForm";
@@ -96,7 +96,7 @@ const User = () => {
     firstname: "",
     middlename: "",
     lastname: "",
-    gender: Gender.M,
+    gender: Gender.Male,
     dateOfBirth: new Date(),
     email: "",
     phone: "",
@@ -287,7 +287,7 @@ const User = () => {
     {
       label: "Operator Information",
       content: (
-        <OperatorForm
+        <UserOperatorForm
           type={formType}
           dto={userDto}
           setDto={setUserDto}
@@ -422,7 +422,7 @@ const User = () => {
                   key={i}
                   className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400"
                 >
-                  {d.title} {d.firstname} {d.middlename} {d.lastname}
+                  {Title[d.title]} {d.firstname} {d.middlename} {d.lastname}
                 </TableCell>
               ),
             },

@@ -74,7 +74,7 @@ public sealed class User : BaseEntity
                   this.license_plate = new LicensePlate(d.LicensePlate);
             if (d.QrCode is not null)
                   this.qr_code = new QrCode(d.QrCode);
-            this.user_locations = d.LocationIds.Select(x => new UserLocation(x)).ToArray();
+            this.user_locations = d.LocationIds.Select(x => new UserLocation(0,x)).ToArray();
       }
 
 }

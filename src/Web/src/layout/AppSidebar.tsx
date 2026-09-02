@@ -148,7 +148,6 @@ const acsNavItems: NavItem[] = [
     name: "Users",
     subItems: [
       { name: "Users", path: "/user" },
-      { name: "Role", path: "/role" },
       { name: "Company", path: "/company" },
       { name: "Department", path: "/department" },
       { name: "Position", path: "/position" },

@@ -7,7 +7,7 @@ import { UserSettingForm } from "../../components/form/user/UserSettingForm";
 import { UserDto } from "../../model/User/UserDto";
 import { FormProp, FormType } from "../../model/Form/FormProp";
 import StepProgress from "../../components/form/StepProgress";
-import { OperatorForm } from "../../components/form/user/OperatorForm";
+import { UserOperatorForm } from "../../components/form/user/UserOperatorForm";
 import { LocationForm } from "../../components/form/user/LocationForm";
 
 interface UserFormProps extends FormProp<UserDto> {
@@ -112,7 +112,7 @@ const UserForm: React.FC<PropsWithChildren<UserFormProps>> = ({
         )}
 
         {activeStep == UserFormStep.Operator && (
-          <OperatorForm type={type} setDto={setDto} dto={dto} />
+          <UserOperatorForm type={type} setDto={setDto} dto={dto} />
         )}
 
         {activeStep == UserFormStep.Location && (

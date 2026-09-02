@@ -21,7 +21,7 @@ public sealed class LocationRepository(CoreDbContext context) : ILocationReposit
 
                   location.user_locations = new List<UserLocation>
                   {
-                        new UserLocation(1)
+                        new UserLocation(1, 0)
                   };
                   var data = await context.Locations.AddAsync(location, ct);
 

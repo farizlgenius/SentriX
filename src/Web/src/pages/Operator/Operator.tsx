@@ -9,7 +9,7 @@ import Helper from "../../utility/Helper";
 import { OperatorToast } from "../../model/ToastMessage";
 import { FormContent } from "../../model/Form/FormContent";
 import { OperatorEndpoint } from "../../endpoint/OperatorEndpoint";
-import { OperatorForm } from "../../components/form/user/OperatorForm";
+import { UserOperatorForm } from "../../components/form/user/UserOperatorForm";
 import { useLocation } from "../../context/LocationContext";
 import { send } from "../../api/api";
 import { useAuth } from "../../context/AuthContext";
@@ -17,20 +17,23 @@ import { FeatureId } from "../../enum/FeatureId";
 import { usePopup } from "../../context/PopupContext";
 import { FormType } from "../../model/Form/FormProp";
 import { usePagination } from "../../context/PaginationContext";
+import { Title } from "../../enum/Title";
+import { Gender } from "../../enum/Gender";
+import { OperatorForm } from "../../components/form/operator/OperatorForm";
 
 const defaultDto: OperatorDto = {
+  guid: "",
   username: "",
-  email: "",
-  title: "",
-  firstName: "",
-  middleName: "",
-  lastName: "",
-  mobile: "",
-  id: 0,
-  gender: "",
   password: "",
-  roleId: 0,
-  locationId: [],
+  email: "",
+  title: Title.Mr,
+  firstname: "",
+  middlename: "",
+  lastname: "",
+  mobile: "",
+  gender: Gender.Male,
+  roleGuid: "",
+  locationGuids: [],
   isActive: true,
   isDefault: false,
 };
@@ -62,7 +65,7 @@ export const Operator = () => {
 
   const handleRemove = (data: OperatorDto) => {
     setConfirmRemove(() => async () => {
-      const res = await send.delete(OperatorEndpoint.DELETE(data.id));
+      const res = await send.delete(OperatorEndpoint.DELETE(data.guid));
       if (Helper.handleToastByResCode(res, OperatorToast.DELETE, toggleToast)) {
         setRemove(false);
         toggleRefresh();
@@ -109,9 +112,9 @@ export const Operator = () => {
           setInfo(true);
         } else {
           setConfirmRemove(() => async () => {
-            var data: number[] = [];
+            var data: string[] = [];
             selectedObjects.map(async (a: OperatorDto) => {
-              data.push(a.id);
+              data.push(a.guid);
             });
             var res = await send.post(OperatorEndpoint.DELETE_RANGE, data);
             if (
@@ -188,7 +191,7 @@ export const Operator = () => {
   const fetchData = async (
     pageNumber: number,
     pageSize: number,
-    locationId?: number | undefined,
+    locationGuid?: string | undefined,
     search?: string,
     startDate?: string,
     endDate?: string,
@@ -197,7 +200,7 @@ export const Operator = () => {
       OperatorEndpoint.PAGINATION(
         pageNumber,
         pageSize,
-        locationId,
+        locationGuid,
         search,
         startDate,
         endDate,
@@ -213,7 +216,7 @@ export const Operator = () => {
     <>
       <PageBreadcrumb pageTitle="Operators" />
       {form ? (
-        <BaseForm tabContent={tabContent} header={""} desc={""} />
+        <BaseForm type={formType} handleClick={handleClick} tabContent={tabContent} header={""} desc={""} />
       ) : (
         <div className="space-y-6">
           <BaseTable<OperatorDto>

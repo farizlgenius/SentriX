@@ -31,7 +31,7 @@ type PasswordDto = {
   con: string;
 };
 
-export const OperatorForm: React.FC<PropsWithChildren<FormProp<UserDto>>> = ({
+export const UserOperatorForm: React.FC<PropsWithChildren<FormProp<UserDto>>> = ({
   dto,
   setDto,
   type,

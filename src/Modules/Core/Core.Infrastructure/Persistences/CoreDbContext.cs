@@ -31,6 +31,8 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
       public DbSet<ComponentMapping> ComponentMappings { get; set; }
       public DbSet<Group> Groups { get; set; }
       public DbSet<UserGroup> UserGroups { get; set; }
+      public DbSet<Operator> Operators { get; set; }
+      public DbSet<OperatorLocation> OperatorLocations { get; set; }
       protected override void OnModelCreating(ModelBuilder modelBuilder)
       {
             Console.WriteLine("=== Entities ===");
@@ -99,6 +101,14 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
             .HasConversion<string>();
 
             modelBuilder.Entity<User>()
+            .Property(o => o.gender)
+            .HasConversion<string>();
+
+            modelBuilder.Entity<Operator>()
+            .Property(o => o.title)
+            .HasConversion<string>();
+
+            modelBuilder.Entity<Operator>()
             .Property(o => o.gender)
             .HasConversion<string>();
 
@@ -265,6 +275,18 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
             modelBuilder.Entity<UserLocation>()
                         .HasOne(x => x.location)
                         .WithMany(x => x.user_locations)
+                        .HasForeignKey(x => x.location_id)
+                        .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<OperatorLocation>()
+                        .HasOne(x => x.@operator)
+                        .WithMany(x => x.operator_locations)
+                        .HasForeignKey(x => x.operator_id)
+                        .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<OperatorLocation>()
+                        .HasOne(x => x.location)
+                        .WithMany(x => x.operator_locations)
                         .HasForeignKey(x => x.location_id)
                         .OnDelete(DeleteBehavior.Cascade);
 
