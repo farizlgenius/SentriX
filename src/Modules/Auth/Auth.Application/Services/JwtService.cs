@@ -7,6 +7,7 @@ using Auth.Application.Interfaces;
 using Auth.Contract.DTOs;
 using Auth.Domain.Enums;
 using Cache.Contract.Interfaces;
+using Core.Contract.DTOs.Operator;
 using Core.Contract.DTOs.User;
 using Core.Contract.Queries;
 using Microsoft.IdentityModel.Tokens;
@@ -24,7 +25,7 @@ public sealed class JwtService(IRefreshTokenAuditRepository repo, IJwtSetting se
   private readonly short _accessTokenMinutes = settings.AccessTokenMinutes;
   private readonly short _refreshTokenDays = settings.RefreshTokenDays;
   private readonly TimeSpan _ttl = TimeSpan.FromDays(settings.RefreshTokenDays);
-  public async Task<AccessTokenDto> GenerateTokenAsync(UserDto user)
+  public async Task<AccessTokenDto> GenerateTokenAsync(OperatorDto user)
   {
     var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secretKey));
     var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
@@ -82,7 +83,7 @@ public sealed class JwtService(IRefreshTokenAuditRepository repo, IJwtSetting se
     );
   }
 
-  public async Task<AccessTokenDto> RefreshTokenAsync(UserDto user)
+  public async Task<AccessTokenDto> RefreshTokenAsync(OperatorDto user)
   {
     var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secretKey));
     var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);

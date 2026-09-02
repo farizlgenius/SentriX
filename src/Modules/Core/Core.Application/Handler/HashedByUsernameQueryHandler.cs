@@ -4,10 +4,10 @@ using SharedKernel.Messaging;
 
 namespace Core.Application.Handler;
 
-public sealed class HashedByUsernameQueryHandler(IUserRepository repo) : IQueryHandler<HashedByUsernameQuery, string>
+public sealed class HashedByUsernameQueryHandler(IOperatorRepository repo) : IQueryHandler<HashedByUsernameQuery, string>
 {
   public async Task<string> HandleAsync(HashedByUsernameQuery query, CancellationToken ct)
   {
-    return await repo.GetHashByUsernameAsync(query.username, ct);
+    return await repo.GetPassowrdByUsernameAsync(query.username, ct);
   }
 }

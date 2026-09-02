@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import PageBreadcrumb from "../../components/common/PageBreadCrumb";
 import { useToast } from "../../context/ToastContext";
 import { BaseForm } from "../UiElements/BaseForm";
@@ -9,7 +9,6 @@ import Helper from "../../utility/Helper";
 import { OperatorToast } from "../../model/ToastMessage";
 import { FormContent } from "../../model/Form/FormContent";
 import { OperatorEndpoint } from "../../endpoint/OperatorEndpoint";
-import { UserOperatorForm } from "../../components/form/user/UserOperatorForm";
 import { useLocation } from "../../context/LocationContext";
 import { send } from "../../api/api";
 import { useAuth } from "../../context/AuthContext";
@@ -27,19 +26,22 @@ const defaultDto: OperatorDto = {
   password: "",
   email: "",
   title: Title.Mr,
-  firstname: "",
-  middlename: "",
-  lastname: "",
-  mobile: "",
+  firstName: "",
+  middleName: "",
+  lastName: "",
+  phone: "",
   gender: Gender.Male,
+  joinedDate: new Date(),
+  expiredDate: new Date(new Date().setFullYear(new Date().getFullYear() + 10)),
   roleGuid: "",
+  role: "",
   locationGuids: [],
   isActive: true,
   isDefault: false,
 };
 
-export const HEADER: string[] = ["Username", "Email", "Enable", "Action"];
-export const KEY: string[] = ["username", "email"];
+const HEADER: string[] = ["Username", "Email", "Enable", "Action"];
+const KEY: string[] = ["username", "email"];
 
 export const Operator = () => {
   const { setPagination } = usePagination();
@@ -80,6 +82,7 @@ export const Operator = () => {
   const handleEdit = (data: OperatorDto) => {
     data.password = "";
     setOperatorDto(data);
+    console.log(data);
     setFormType(
       filterPermission(FeatureId.operator)?.isUpdated && !data.isDefault
         ? FormType.UPDATE
@@ -112,11 +115,11 @@ export const Operator = () => {
           setInfo(true);
         } else {
           setConfirmRemove(() => async () => {
-            var data: string[] = [];
+            const data: string[] = [];
             selectedObjects.map(async (a: OperatorDto) => {
               data.push(a.guid);
             });
-            var res = await send.post(OperatorEndpoint.DELETE_RANGE, data);
+            const res = await send.post(OperatorEndpoint.DELETE_RANGE, data);
             if (
               Helper.handleToastByResCode(
                 res,
@@ -216,7 +219,13 @@ export const Operator = () => {
     <>
       <PageBreadcrumb pageTitle="Operators" />
       {form ? (
-        <BaseForm type={formType} handleClick={handleClick} tabContent={tabContent} header={""} desc={""} />
+        <BaseForm
+          type={formType}
+          handleClick={handleClick}
+          tabContent={tabContent}
+          header={""}
+          desc={""}
+        />
       ) : (
         <div className="space-y-6">
           <BaseTable<OperatorDto>

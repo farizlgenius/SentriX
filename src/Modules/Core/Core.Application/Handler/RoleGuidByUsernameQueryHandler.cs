@@ -4,7 +4,7 @@ using SharedKernel.Messaging;
 
 namespace Core.Application.Handler;
 
-public sealed class RoleGuidByUsernameQueryHandler(IUserRepository repo) : IQueryHandler<RoleGuidByUsernameQuery, Guid>
+public sealed class RoleGuidByUsernameQueryHandler(IOperatorRepository repo) : IQueryHandler<RoleGuidByUsernameQuery, Guid>
 {
   public async Task<Guid> HandleAsync(RoleGuidByUsernameQuery query, CancellationToken ct)
   {

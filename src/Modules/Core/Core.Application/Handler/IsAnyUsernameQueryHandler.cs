@@ -4,7 +4,7 @@ using SharedKernel.Messaging;
 
 namespace Core.Application.Handler;
 
-public sealed class IsAnyUsernameQueryHandler(IUserRepository repo) : IQueryHandler<IsAnyUsernameQuery, bool>
+public sealed class IsAnyUsernameQueryHandler(IOperatorRepository repo) : IQueryHandler<IsAnyUsernameQuery, bool>
 {
   public async Task<bool> HandleAsync(IsAnyUsernameQuery query, CancellationToken ct)
   {

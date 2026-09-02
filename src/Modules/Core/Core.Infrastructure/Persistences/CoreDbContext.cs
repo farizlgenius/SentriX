@@ -118,6 +118,17 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   x => x.guid
             ).IsUnique();
 
+            modelBuilder.Entity<Operator>()
+            .HasIndex(
+                  x => new
+                  {
+                        x.guid,
+                        x.id,
+                        x.username
+                  }
+            )
+            .IsUnique();
+
             modelBuilder.Entity<Company>()
             .HasIndex(
                   x => x.guid
@@ -356,10 +367,18 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   .HasForeignKey(x => x.feature_id)
                   .OnDelete(DeleteBehavior.Cascade);
 
+
+
             // Role
 
             modelBuilder.Entity<Role>()
                   .HasMany(x => x.users)
+                  .WithOne(x => x.role)
+                  .HasForeignKey(x => x.role_id)
+                  .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<Role>()
+                  .HasMany(x => x.operators)
                   .WithOne(x => x.role)
                   .HasForeignKey(x => x.role_id)
                   .OnDelete(DeleteBehavior.SetNull);
@@ -871,41 +890,72 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   }
             );
 
-            modelBuilder.Entity<User>().HasData(
-                 new User
-                 {
-                       id = 1,
-                       guid = new Guid("ed2b5887-9dcb-43bd-a6f8-988330df5181"),
-                       identification = "admin",
-                       username = "admin",
-                       password = "100000.lG1/4V/VRPZsbhf/Zqc4xw==.6vYcf+wEMSgqcaNhoZEdM9PaPxx2ZUErZhQbeMxo5OY=",
-                       user_code = "admin01",
-                       title = Title.Mr,
-                       firstname = "admin",
-                       lastname = "system",
-                       gender = Gender.Male,
-                       date_of_birth = new DateTime(1970, 01, 01, 0, 0, 0, DateTimeKind.Utc),
-                       email = "support@sentrix.com",
-                       is_operator = true,
-                       is_user = false,
-                       role_id = 1,
-                       active_time = new DateTime(1970, 01, 01, 0, 0, 0, DateTimeKind.Utc),
-                       expire_time = new DateTime(9999, 01, 01, 0, 0, 0, DateTimeKind.Utc),
-                       is_default = true,
-                       is_active = true,
+            //       modelBuilder.Entity<User>().HasData(
+            //            new User
+            //            {
+            //                  id = 1,
+            //                  guid = new Guid("ed2b5887-9dcb-43bd-a6f8-988330df5181"),
+            //                  identification = "admin",
+            //                  username = "admin",
+            //                  password = "100000.lG1/4V/VRPZsbhf/Zqc4xw==.6vYcf+wEMSgqcaNhoZEdM9PaPxx2ZUErZhQbeMxo5OY=",
+            //                  user_code = "admin01",
+            //                  title = Title.Mr,
+            //                  firstname = "admin",
+            //                  lastname = "system",
+            //                  gender = Gender.Male,
+            //                  date_of_birth = new DateTime(1970, 01, 01, 0, 0, 0, DateTimeKind.Utc),
+            //                  email = "support@sentrix.com",
+            //                  is_operator = true,
+            //                  is_user = false,
+            //                  role_id = 1,
+            //                  active_time = new DateTime(1970, 01, 01, 0, 0, 0, DateTimeKind.Utc),
+            //                  expire_time = new DateTime(9999, 01, 01, 0, 0, 0, DateTimeKind.Utc),
+            //                  is_default = true,
+            //                  is_active = true,
 
-                 }
-           );
+            //            }
+            //      );
 
-            modelBuilder.Entity<UserLocation>()
+            //       modelBuilder.Entity<UserLocation>()
+            //             .HasData(
+            //                   new UserLocation
+            //                   {
+            //                         id = 1,
+            //                         user_id = 1,
+            //                         location_id = 1
+            //                   }
+            //             );
+
+            modelBuilder.Entity<Operator>()
+            .HasData(
+                  new Operator
+                  {
+                        id = 1,
+                        username = "admin",
+                        password = "100000.lG1/4V/VRPZsbhf/Zqc4xw==.6vYcf+wEMSgqcaNhoZEdM9PaPxx2ZUErZhQbeMxo5OY=",
+                        title = Title.Mr,
+                        firstname = "Administrator",
+                        middlename = "",
+                        lastname = "System",
+                        gender = Gender.Male,
+                        phone = "",
+                        email = "support@sentrix.com",
+                        joined_date = new DateTime(1970, 01, 01, 0, 0, 0, DateTimeKind.Utc),
+                        role_id = 1
+
+                  }
+            );
+
+            modelBuilder.Entity<OperatorLocation>()
                   .HasData(
-                        new UserLocation
+                        new OperatorLocation
                         {
                               id = 1,
-                              user_id = 1,
+                              operator_id = 1,
                               location_id = 1
                         }
                   );
+
 
 
       }

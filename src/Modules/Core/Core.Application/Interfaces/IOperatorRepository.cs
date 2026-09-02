@@ -4,26 +4,20 @@ using SharedKernel.Domain;
 
 namespace Core.Application.Interfaces;
 
-public interface IOperatorRepository 
+public interface IOperatorRepository : IBaseRepository<OperatorDto, Operator>
 {
-      Task<string> GetPassowrdByUsernameAsync(string Username);
-      Task<bool> IsOperatorExistsByUsernameAsync(string Username);
-      Task<OperatorDto> GetOperatorByUsernameAsync(string Username);
-      Task AddOperatorLocationsAsync(int operatorId, int locationId,CancellationToken ct = default);
-      Task RemoveOperatorLocationsAsync(int locationId, CancellationToken ct);
-      Task RemoveOperatorLocationByLocationIdAsync(int locationId);
-      Task<Pagination<OperatorDto>> GetPagination(PaginationParams param,CancellationToken ct = default);
-      Task<bool> IsAnyWithLocationIdAsync(int LocationId);
-      Task<bool> IsAnyUsernameAsync(string Username);
-      Task<OperatorDto> AddAsync(Operator domain);
-      Task<OperatorDto> UpdateAsync(Operator domain);
-      Task<bool> IsAnyByIdAsync(int id);
-      Task<OperatorDto> DeleteByIdAsync(int id);
-      Task<bool> IsLocationIdsValidAsync(List<int> LocationIds);
-      Task<bool> IsValidRoleIdAsync(int RoleId);
+      Task<string> GetPassowrdByUsernameAsync(string username, CancellationToken ct = default);
+      Task<bool> IsOperatorExistsByUsernameAsync(string username, CancellationToken ct = default);
+      Task<OperatorDto> GetOperatorByUsernameAsync(string username, CancellationToken ct = default);
+      Task AddOperatorLocationsAsync(int operatorId, int locationId, CancellationToken ct = default);
+      Task RemoveOperatorLocationsAsync(int locationId, CancellationToken ct = default);
+      Task RemoveOperatorLocationByLocationIdAsync(int locationId, CancellationToken ct = default);
+
+      Task<bool> IsAnyUsernameAsync(string username, CancellationToken ct = default);
+      Task<bool> IsLocationIdsValidAsync(List<int> LocationIds, CancellationToken ct = default);
+      Task<bool> IsAnyEmailAsync(string email, CancellationToken ct = default);
 
       // New 
-      Task<List<int>> GetLocationIdsByUsernameAsync(string username, CancellationToken ct);
-      Task<int> GetLocationIdByUsernameAsync(string username);
-
+      Task<IEnumerable<Guid>> GetLocationGuidsByUsernameAsync(string username, CancellationToken ct = default);
+      Task<Guid> GetRoleGuidByUsernameAsync(string username, CancellationToken ct = default);
 }

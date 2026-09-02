@@ -29,6 +29,13 @@ public interface IStorage
       Task<string> SaveUserAsync(Stream stream, string fileName);
       void DeleteUserAsync(string filename);
 
+      // Operator
+      Task<string> SaveOperatorAsync(byte[] data, string fileName);
+      Task<Stream> ReadOperatorAsync(string fileName);
+      Task<string> ReadOperatorBase64Async(string fileName);
+      Task<string> SaveOperatorAsync(Stream stream, string fileName);
+      void DeleteOperatorAsync(string filename);
+
       // Map
       Task<string> SaveMapAsync(byte[] data, string fileName);
       Task<Stream> ReadMapAsync(string fileName);

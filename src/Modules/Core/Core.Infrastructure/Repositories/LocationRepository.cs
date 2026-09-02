@@ -19,9 +19,9 @@ public sealed class LocationRepository(CoreDbContext context) : ILocationReposit
             {
                   var location = new Persistences.Entities.Location(entity);
 
-                  location.user_locations = new List<UserLocation>
+                  location.operator_locations = new List<OperatorLocation>
                   {
-                        new UserLocation(1, 0)
+                        new OperatorLocation(1,0)
                   };
                   var data = await context.Locations.AddAsync(location, ct);
 
@@ -258,6 +258,15 @@ public sealed class LocationRepository(CoreDbContext context) : ILocationReposit
             return await context.Locations
                   .AsNoTracking()
                   .AnyAsync(x => x.guid == guid);
+      }
+
+      public async Task<IEnumerable<Guid>> IsAnyInvalidGuidsAsync(IEnumerable<Guid> guids, CancellationToken ct = default)
+      {
+            return await context.Locations
+                  .AsNoTracking()
+                  .Where(x => !guids.Contains(x.guid))
+                  .Select(x => x.guid)
+                  .ToListAsync();
       }
 
       public async Task<bool> IsDefaultAsync(Guid guid, CancellationToken ct = default)

@@ -8,12 +8,12 @@ import { LocationEndpoint } from "../../../endpoint/LocationEndpoint";
 import { send } from "../../../api/api";
 import { CountryDto } from "../../../model/Country/CountryDto";
 import Select from "../Select";
-import { FormActions, FormField, FormSection } from "../template/FormTemplate";
 import { LocationDto } from "../../../model/Location/LocationDto";
+import { FormField, FormSection } from "../template/FormTemplate";
 
 export const LocationForm: React.FC<
   PropsWithChildren<FormProp<LocationDto>>
-> = ({ type, handleClick: handleClickWithEvent, setDto, dto }) => {
+> = ({ type, setDto, dto }) => {
   const [country, setCountry] = useState<Options[]>([]);
   const isReadOnly = type == FormType.INFO;
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -33,11 +33,12 @@ export const LocationForm: React.FC<
   return (
     <>
       <FormSection
-        title="Location Details"
+        overall="Location Details"
+        title="Locations"
         description="Name the location, assign its country, and add a short description."
         className="pb-10"
       >
-        <div className="grid gap-5">
+        <div className="grid grid-cols-2 gap-5">
           <FormField>
             <Label htmlFor="name">Name</Label>
             <Input
@@ -67,7 +68,7 @@ export const LocationForm: React.FC<
               }}
             />
           </FormField>
-          <FormField>
+          <FormField className="col-span-2">
             <Label htmlFor="description">Description</Label>
             <TextArea
               disabled={isReadOnly}

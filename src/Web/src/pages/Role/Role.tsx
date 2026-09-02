@@ -246,9 +246,8 @@ export const Role = () => {
         ],
       },
     ],
-    isActive: false,
+    isActive: true,
     isDefault: false,
-    id: 0,
   };
 
   const [roleDto, setRoleDto] = useState<RoleDto>(defaultDto);
@@ -411,7 +410,13 @@ export const Role = () => {
     <>
       <PageBreadcrumb pageTitle="Roles" />
       {form ? (
-        <BaseForm tabContent={tabContent} header={""} desc={""} />
+        <BaseForm
+          handleClick={handleClick}
+          tabContent={tabContent}
+          header={""}
+          desc={""}
+          type={formType}
+        />
       ) : (
         <div className="space-y-6">
           <BaseTable<RoleDto>

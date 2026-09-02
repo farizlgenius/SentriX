@@ -18,8 +18,8 @@ public sealed class AuthService(IJwt jwt, ICache redis, IRefreshTokenAuditReposi
   {
     var locations = await bus.QueryAsync(new LocationGuidByUsernameQuery(username));
     var permissions = await bus.QueryAsync(new PermissionByRoleGuidQuery(roleGuid));
-    var user = await bus.QueryAsync(new UserByUsernameQuery(username));
-    return new MeDto(user.Guid, user.Username, locations, permissions);
+    var oper = await bus.QueryAsync(new OperatorByUsernameQuery(username));
+    return new MeDto(oper.Guid, oper.Username, locations, permissions);
   }
 
   public async Task<AccessTokenDto> LoginAsync(LoginDto login)
@@ -44,10 +44,10 @@ public sealed class AuthService(IJwt jwt, ICache redis, IRefreshTokenAuditReposi
       throw new BadRequestException(MessageHelper.Auth.InvalidCredentials);
 
     // Get User
-    var user = await bus.QueryAsync(new UserByUsernameQuery(login.Username));
+    var oper = await bus.QueryAsync(new OperatorByUsernameQuery(login.Username));
 
     // Generate token (for demonstration, using a simple string)
-    var token = await jwt.GenerateTokenAsync(user);
+    var token = await jwt.GenerateTokenAsync(oper);
 
     return new AccessTokenDto(
       token.AccessToken,
@@ -99,8 +99,8 @@ public sealed class AuthService(IJwt jwt, ICache redis, IRefreshTokenAuditReposi
       throw new BadRequestException(MessageHelper.Auth.RefreshTokenInvalid);
 
     // Generate token (for demonstration, using a simple string)
-    var user = await bus.QueryAsync(new UserByUsernameQuery(refresh.Username));
-    var token = await jwt.RefreshTokenAsync(user);
+    var oper = await bus.QueryAsync(new OperatorByUsernameQuery(refresh.Username));
+    var token = await jwt.RefreshTokenAsync(oper);
 
 
 

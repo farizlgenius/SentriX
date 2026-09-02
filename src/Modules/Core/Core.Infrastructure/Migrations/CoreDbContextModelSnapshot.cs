@@ -3405,6 +3405,169 @@ namespace Core.Infrastructure.Migrations
                         });
                 });
 
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Operator", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<DateTime>("created_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.Property<string>("email")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("expired_date")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("firstname")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("gender")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("guid")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<bool>("is_active")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("is_default")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime>("joined_date")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("lastname")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("middlename")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("password")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("phone")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("role_id")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("title")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("updated_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.Property<string>("username")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("role_id");
+
+                    b.HasIndex("guid", "id", "username")
+                        .IsUnique();
+
+                    b.ToTable("Operators", "core");
+
+                    b.HasData(
+                        new
+                        {
+                            id = 1,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            email = "support@sentrix.com",
+                            firstname = "Administrator",
+                            gender = "Male",
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
+                            joined_date = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            lastname = "System",
+                            middlename = "",
+                            password = "100000.lG1/4V/VRPZsbhf/Zqc4xw==.6vYcf+wEMSgqcaNhoZEdM9PaPxx2ZUErZhQbeMxo5OY=",
+                            phone = "",
+                            role_id = 1,
+                            title = "Mr",
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            username = "admin"
+                        });
+                });
+
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.OperatorLocation", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<DateTime>("created_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.Property<Guid>("guid")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<bool>("is_active")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("is_default")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("location_id")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("operator_id")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("updated_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("location_id");
+
+                    b.HasIndex("operator_id");
+
+                    b.ToTable("OperatorLocations", "core");
+
+                    b.HasData(
+                        new
+                        {
+                            id = 1,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
+                            location_id = 1,
+                            operator_id = 1,
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        });
+                });
+
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Pin", b =>
                 {
                     b.Property<int>("id")
@@ -3821,35 +3984,6 @@ namespace Core.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("Users", "core");
-
-                    b.HasData(
-                        new
-                        {
-                            id = 1,
-                            active_time = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            address = "",
-                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            date_of_birth = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            email = "support@sentrix.com",
-                            expire_time = new DateTime(9999, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            firstname = "admin",
-                            gender = "Male",
-                            guid = new Guid("ed2b5887-9dcb-43bd-a6f8-988330df5181"),
-                            identification = "admin",
-                            is_active = true,
-                            is_default = true,
-                            is_operator = true,
-                            is_user = false,
-                            lastname = "system",
-                            middlename = "",
-                            password = "100000.lG1/4V/VRPZsbhf/Zqc4xw==.6vYcf+wEMSgqcaNhoZEdM9PaPxx2ZUErZhQbeMxo5OY=",
-                            phone = "",
-                            role_id = 1,
-                            title = "Mr",
-                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            user_code = "admin01",
-                            username = "admin"
-                        });
                 });
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.UserAdditional", b =>
@@ -3991,19 +4125,6 @@ namespace Core.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("UserLocations", "core");
-
-                    b.HasData(
-                        new
-                        {
-                            id = 1,
-                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
-                            is_active = true,
-                            is_default = false,
-                            location_id = 1,
-                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            user_id = 1
-                        });
                 });
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Card", b =>
@@ -4114,6 +4235,36 @@ namespace Core.Infrastructure.Migrations
                     b.Navigation("module");
 
                     b.Navigation("role");
+                });
+
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Operator", b =>
+                {
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.Role", "role")
+                        .WithMany("operators")
+                        .HasForeignKey("role_id")
+                        .OnDelete(DeleteBehavior.SetNull)
+                        .IsRequired();
+
+                    b.Navigation("role");
+                });
+
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.OperatorLocation", b =>
+                {
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.Location", "location")
+                        .WithMany("operator_locations")
+                        .HasForeignKey("location_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.Operator", "operator")
+                        .WithMany("operator_locations")
+                        .HasForeignKey("operator_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("location");
+
+                    b.Navigation("operator");
                 });
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Position", b =>
@@ -4316,6 +4467,8 @@ namespace Core.Infrastructure.Migrations
 
                     b.Navigation("modules");
 
+                    b.Navigation("operator_locations");
+
                     b.Navigation("roles");
 
                     b.Navigation("user_locations");
@@ -4333,6 +4486,11 @@ namespace Core.Infrastructure.Migrations
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.ModulePermission", b =>
                 {
                     b.Navigation("feature_permissions");
+                });
+
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Operator", b =>
+                {
+                    b.Navigation("operator_locations");
                 });
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Pin", b =>
@@ -4355,6 +4513,8 @@ namespace Core.Infrastructure.Migrations
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Role", b =>
                 {
                     b.Navigation("module_permission");
+
+                    b.Navigation("operators");
 
                     b.Navigation("users");
                 });

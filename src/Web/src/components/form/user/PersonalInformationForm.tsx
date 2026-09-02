@@ -24,6 +24,8 @@ import { CompanyDto } from "../../../model/Company/CompanyDto";
 import { DepartmentDto } from "../../../model/Department/DepartmentDto";
 import { PositionDto } from "../../../model/Position/PositionDto";
 import { Title } from "../../../enum/Title";
+import { countries } from "../../../constants/phone-code";
+import PhoneInput from "../group-input/PhoneInput";
 
 interface PersonalInformationFormProp extends FormProp<UserDto> {
   image: File | undefined;
@@ -422,6 +424,7 @@ export const PersonalInformationForm: React.FC<PersonalInformationFormProp> = ({
                     value={dto.dateOfBirth.toISOString()}
                   />
                 </FormField>
+
                 <FormField>
                   <Label>Email</Label>
                   <div className="relative">
@@ -441,13 +444,7 @@ export const PersonalInformationForm: React.FC<PersonalInformationFormProp> = ({
                 </FormField>
                 <FormField>
                   <Label>Phone</Label>
-                  <Input
-                    disabled={isReadOnly}
-                    onChange={handleChange}
-                    value={dto.phone}
-                    name="phone"
-                    placeholder="+1 (555) 000-0000"
-                  />
+                  <PhoneInput countries={countries} />
                 </FormField>
                 <FormField className="col-span-2">
                   <Label>Address</Label>
@@ -519,6 +516,36 @@ export const PersonalInformationForm: React.FC<PersonalInformationFormProp> = ({
                     />
                   </FormField>
                 </div>
+                <FormField>
+                  <DatePicker
+                    isTime={false}
+                    id="Date"
+                    label="Joined Date"
+                    placeholder="Select a date"
+                    onChange={(date) =>
+                      setDto((prev) => ({
+                        ...prev,
+                        joinedDate: date[0],
+                      }))
+                    }
+                    value={dto.joinedDate.toISOString()}
+                  />
+                </FormField>
+                <FormField>
+                  <DatePicker
+                    isTime={false}
+                    id="Date"
+                    label="Expired Date"
+                    placeholder="Select a date"
+                    onChange={(date) =>
+                      setDto((prev) => ({
+                        ...prev,
+                        expiredDate: date[0],
+                      }))
+                    }
+                    value={dto.expiredDate.toISOString()}
+                  />
+                </FormField>
 
                 <FormField className="col-span-2">
                   <div className="flex justify-between mt-5">

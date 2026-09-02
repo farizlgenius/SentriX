@@ -16,6 +16,7 @@ import {
   EyeCloseIcon,
   EyeIcon,
   FileIcon,
+  LocationIcon,
 } from "../../../icons";
 import { send } from "../../../api/api";
 import { OperatorEndpoint } from "../../../endpoint/OperatorEndpoint";
@@ -24,7 +25,6 @@ import { OperatorToast } from "../../../model/ToastMessage";
 import { useToast } from "../../../context/ToastContext";
 import { SettingEndpoint } from "../../../endpoint/SettingEndpoint";
 import { FormField, FormSection } from "../template/FormTemplate";
-import Switch from "../switch/Switch";
 import { OperatorDto } from "../../../model/Operator/OperatorDto";
 import { NativeWebcam } from "../../../pages/UiElements/NativeWebcam";
 import Modals from "../../../pages/UiElements/Modals";
@@ -32,8 +32,12 @@ import DropzoneComponent from "../form-elements/DropZone";
 import { Title } from "../../../enum/Title";
 import { Gender } from "../../../enum/Gender";
 import Radio from "../input/Radio";
-import DatePicker from "../date-picker";
 import { Avatar } from "../../../pages/UiElements/Avatar";
+import PhoneInput from "../group-input/PhoneInput";
+import { countries } from "../../../constants/phone-code";
+import DatePicker from "../date-picker";
+import { LocationDto } from "../../../model/Location/LocationDto";
+import { useLocation } from "../../../context/LocationContext";
 
 type PasswordDto = {
   userName: string;
@@ -42,11 +46,9 @@ type PasswordDto = {
   con: string;
 };
 
-export const OperatorForm: React.FC<PropsWithChildren<FormProp<OperatorDto>>> = ({
-  dto,
-  setDto,
-  type,
-}) => {
+export const OperatorForm: React.FC<
+  PropsWithChildren<FormProp<OperatorDto>>
+> = ({ dto, setDto, type }) => {
   const defaultPassDto: PasswordDto = useMemo(
     () => ({
       userName: dto.username,
@@ -58,6 +60,18 @@ export const OperatorForm: React.FC<PropsWithChildren<FormProp<OperatorDto>>> = 
   );
 
   const { toggleToast } = useToast();
+  const { locationList } = useLocation();
+  const [locationsGuid, setLocationGuid] = useState<string>("");
+  const [selectedLocationGuids, setSelectedLocationGuids] = useState<string[]>(
+    [],
+  );
+  const [locations, setLocations] = useState<Options[]>(
+    locationList.map((l: LocationDto) => ({
+      label: l.name,
+      value: l.guid,
+      isTaken: false,
+    })),
+  );
 
   const [roles, setRoles] = useState<Options[]>([]);
   const [passForm, setPassForm] = useState<boolean>(false);
@@ -79,6 +93,7 @@ export const OperatorForm: React.FC<PropsWithChildren<FormProp<OperatorDto>>> = 
   const [newImage, setNewImage] = useState<File | undefined>();
   const [file, setFile] = useState<boolean>(false);
   const [cam, setCam] = useState<boolean>(false);
+
   const [selectedValue, setSelectedValue] = useState<Gender | string>(
     Gender.Male.toString(),
   );
@@ -94,6 +109,12 @@ export const OperatorForm: React.FC<PropsWithChildren<FormProp<OperatorDto>>> = 
 
   const handleChangePassword = () => {
     setPassForm(true);
+  };
+
+  const toggleLocationSelection = (data: string) => {
+    setSelectedLocationGuids((prev) =>
+      prev.includes(data) ? prev.filter((x) => x !== data) : [...prev, data],
+    );
   };
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
@@ -155,6 +176,44 @@ export const OperatorForm: React.FC<PropsWithChildren<FormProp<OperatorDto>>> = 
         })),
       );
     }
+  };
+
+  const addLocation = () => {
+    console.log(locationsGuid);
+    if (locationsGuid === "" || dto.locationGuids.includes(locationsGuid))
+      return;
+
+    setDto((prev) => ({
+      ...prev,
+      locationGuids: [...prev.locationGuids, locationsGuid],
+    }));
+
+    setLocations((prev) =>
+      Helper.updateOptionByValue(prev, locationsGuid, true),
+    );
+
+    setLocationGuid("");
+    console.log(dto.locationGuids);
+  };
+
+  const removeSelectedLocations = () => {
+    if (selectedLocationGuids.length === 0) return;
+
+    const idsToRemove = [...selectedLocationGuids];
+    setDto((prev) => ({
+      ...prev,
+      locationGuids: prev.locationGuids.filter(
+        (id) => !idsToRemove.includes(id),
+      ),
+    }));
+    setLocations((prev) =>
+      prev.map((option) =>
+        idsToRemove.includes(option.value.toString())
+          ? { ...option, isTaken: false }
+          : option,
+      ),
+    );
+    setSelectedLocationGuids([]);
   };
 
   const fetchPasswordRule = async () => {
@@ -352,56 +411,54 @@ export const OperatorForm: React.FC<PropsWithChildren<FormProp<OperatorDto>>> = 
           </div>
         </div>
       ) : (
-        <>
-
-          <div className="flex gap-5">
-            <FormSection
-              overall="Profile Image"
-              title="Photo"
-              description="Upload from file or take a live picture with webcam."
-            >
-              <FormField className="flex flex-col justify-center items-center gap-10">
-                {file || cam ? (
-                  file ? (
-                    <Modals
-                      handleClickWithEvent={handleClickInternal}
-                      body={
-                        <DropzoneComponent
-                          newImage={newImage}
-                          setNewImage={setNewImage}
-                          image={image}
-                          setImage={setImage}
-                          setFile={setFile}
-                        />
-                      }
-                    />
-                  ) : (
-                    <Modals
-                      isWide={true}
-                      handleClickWithEvent={handleClickInternal}
-                      body={
-                        <NativeWebcam
-                          setNewImage={setNewImage}
-                          image={image}
-                          setImage={setImage}
-                          modelStatus={cam}
-                          handleClick={handleClickInternal}
-                        />
-                      }
-                    />
-                  )
-                ) : (
-                  <>
-                    <div className="h-56 w-56 overflow-hidden rounded-full border-4 border-white bg-white shadow-lg ring-1 ring-gray-200 dark:border-gray-900 dark:bg-gray-900 dark:ring-gray-700">
-                      <Avatar
-                        userId={dto.guid}
+        <div className="gap-5 grid grid-cols-3">
+          <FormSection
+            overall="Profile Image"
+            title="Photo"
+            description="Upload from file or take a live picture with webcam."
+          >
+            <FormField className="flex flex-col justify-center items-center gap-10">
+              {file || cam ? (
+                file ? (
+                  <Modals
+                    handleClickWithEvent={handleClickInternal}
+                    body={
+                      <DropzoneComponent
                         newImage={newImage}
+                        setNewImage={setNewImage}
                         image={image}
+                        setImage={setImage}
+                        setFile={setFile}
                       />
-                    </div>
+                    }
+                  />
+                ) : (
+                  <Modals
+                    isWide={true}
+                    handleClickWithEvent={handleClickInternal}
+                    body={
+                      <NativeWebcam
+                        setNewImage={setNewImage}
+                        image={image}
+                        setImage={setImage}
+                        modelStatus={cam}
+                        handleClick={handleClickInternal}
+                      />
+                    }
+                  />
+                )
+              ) : (
+                <>
+                  <div className="h-56 w-56 overflow-hidden rounded-full border-4 border-white bg-white shadow-lg ring-1 ring-gray-200 dark:border-gray-900 dark:bg-gray-900 dark:ring-gray-700">
+                    <Avatar
+                      userId={dto.guid}
+                      newImage={newImage}
+                      image={image}
+                    />
+                  </div>
 
-                    <div className="flex flex-wrap justify-center gap-3">
-                      {/* <Button
+                  <div className="flex flex-wrap justify-center gap-3">
+                    {/* <Button
                         disabled={isReadOnly}
                         name="file"
                         onClickWithEvent={handleClickInternal}
@@ -409,17 +466,17 @@ export const OperatorForm: React.FC<PropsWithChildren<FormProp<OperatorDto>>> = 
                       >
                         Browse
                       </Button> */}
-                      <Button
-                        disabled={isReadOnly}
-                        variant="outline"
-                        onClickWithEvent={handleClickInternal}
-                        name="file"
-                        startIcon={<FileIcon />}
-                        className="justify-center"
-                      >
-                        Browse
-                      </Button>
-                      {/* <Button
+                    <Button
+                      disabled={isReadOnly}
+                      variant="outline"
+                      onClickWithEvent={handleClickInternal}
+                      name="file"
+                      startIcon={<FileIcon />}
+                      className="justify-center"
+                    >
+                      Browse
+                    </Button>
+                    {/* <Button
                         disabled={isReadOnly}
                         name="cam"
                         onClickWithEvent={handleClickInternal}
@@ -427,155 +484,152 @@ export const OperatorForm: React.FC<PropsWithChildren<FormProp<OperatorDto>>> = 
                       >
                         Take Picture
                       </Button> */}
-                      <Button
-                        disabled={isReadOnly}
-                        variant="outline"
-                        onClickWithEvent={handleClickInternal}
-                        name="cam"
-                        startIcon={<CamIcon />}
-                        className="justify-center"
-                      >
-                        Take Picture
-                      </Button>
-                    </div>
-                  </>
-                )}
+                    <Button
+                      disabled={isReadOnly}
+                      variant="outline"
+                      onClickWithEvent={handleClickInternal}
+                      name="cam"
+                      startIcon={<CamIcon />}
+                      className="justify-center"
+                    >
+                      Take Picture
+                    </Button>
+                  </div>
+                </>
+              )}
+            </FormField>
+          </FormSection>
+          <FormSection
+            className="col-span-2"
+            overall="Operator Details"
+            title="Lean and focused form"
+            description="Clean inputs for account setup, contact details, role assignment, and location access."
+          >
+            <div className="grid gap-5 grid-cols-2 md:grid-cols-2 gap-x-10 gap-y-6 mb-8 p-5">
+              <FormField>
+                <Label htmlFor="username">Username</Label>
+                <Input
+                  disabled={type === FormType.INFO || type === FormType.UPDATE}
+                  name="username"
+                  id="username"
+                  onChange={handleChange}
+                  value={dto.username}
+                  placeholder="operator.account"
+                />
               </FormField>
-            </FormSection>
-            <FormSection
-              overall="Operator Details"
-              title="Lean and focused form"
-              description="Clean inputs for account setup, contact details, role assignment, and location access."
-            >
-              <div className="grid gap-5 grid-cols-2 md:grid-cols-2 gap-x-10 gap-y-6 mb-8 p-5">
-                <FormField>
-                    <Label htmlFor="username">Username</Label>
-                    <Input
-                      disabled={
-                        type === FormType.INFO || type === FormType.UPDATE
-                      }
-                      name="username"
-                      id="username"
-                      onChange={handleChange}
-                      value={dto.username}
-                      placeholder="operator.account"
-                    />
-                  </FormField>
-                  <div className="w-full max-w-xs">
-                    <Label>Password</Label>
-                    {type === FormType.UPDATE || type === FormType.CREATE ? (
-                      <Button
-                        onClick={handleChangePassword}
-                        disabled={isReadOnly}
-                        variant={
-                          dto.password.length > 0 ? "green" : "primary"
-                        }
-                        className="w-full justify-center"
-                      >
-                        {type === FormType.UPDATE
-                          ? "Change Password"
-                          : dto.password.length === 0
-                            ? "Set Password"
-                            : "Password Ready"}
-                      </Button>
-                    ) : (
-                      <Input
-                        disabled
-                        name="password"
-                        type="password"
-                        value={dto.password}
-                      />
-                    )}
-                  </div>
-                  <div>
-                    <Label htmlFor="role">Role</Label>
-                    <Select
-                      disabled={isReadOnly}
-                      isString={true}
-                      options={roles}
-                      defaultValue={dto.roleGuid}
-                      onChange={(e) =>
-                        setDto((prev) => ({
-                          ...prev,
-                          roleGuid: e,
-                        }))
-                      }
-                      name="roleGuid"
-                      placeholder="Select role"
-                    />
-                  </div>
+              <div className="w-full max-w-xs">
+                <Label>Password</Label>
+                {type === FormType.UPDATE || type === FormType.CREATE ? (
+                  <Button
+                    onClick={handleChangePassword}
+                    disabled={isReadOnly}
+                    variant={dto.password.length > 0 ? "green" : "primary"}
+                    className="w-full justify-center"
+                  >
+                    {type === FormType.UPDATE
+                      ? "Change Password"
+                      : dto.password.length === 0
+                        ? "Set Password"
+                        : "Password Ready"}
+                  </Button>
+                ) : (
+                  <Input
+                    disabled
+                    name="password"
+                    type="password"
+                    value={dto.password}
+                  />
+                )}
+              </div>
+              <div>
+                <Label htmlFor="role">Role</Label>
+                <Select
+                  disabled={isReadOnly}
+                  isString={true}
+                  options={roles}
+                  defaultValue={dto.roleGuid}
+                  onChange={(e) =>
+                    setDto((prev) => ({
+                      ...prev,
+                      roleGuid: e,
+                    }))
+                  }
+                  name="roleGuid"
+                  placeholder="Select role"
+                />
+              </div>
 
-                <div className="flex gap-3 mb-3 w-full col-span-2">
-                  <FormField className="flex-1">
-                    <Label htmlFor="title">Title</Label>
-                    <Select
-                      options={[
-                        {
-                          label: Title[Title.Mr],
-                          value: Title.Mr,
-                        },
-                        {
-                          label: Title[Title.Miss],
-                          value: Title.Miss,
-                        },
-                        {
-                          label: Title[Title.Ms],
-                          value: Title.Ms,
-                        },
-                        {
-                          label: Title[Title.Other],
-                          value: Title.Other,
-                        },
-                      ]}
-                      onChange={(e) => {
-                        setDto((prev) => ({
-                          ...prev,
-                          title: Number(e),
-                        }));
-                      }}
-                      name={"title"}
-                      defaultValue={dto.title}
-                    />
-                  </FormField>
-                  <FormField className="flex-2">
-                    <Label htmlFor="firstName">First Name</Label>
-                    <Input
-                      disabled={isReadOnly}
-                      name="firstname"
-                      type="text"
-                      id="firstName"
-                      onChange={handleChange}
-                      value={dto.firstname}
-                      placeholder="John"
-                    />
-                  </FormField>
-                  <FormField className="flex-2">
-                    <Label htmlFor="middleName">Middle Name</Label>
-                    <Input
-                      disabled={isReadOnly}
-                      name="middlename"
-                      type="text"
-                      id="middleName"
-                      onChange={handleChange}
-                      value={dto.middlename}
-                      placeholder="Jr"
-                    />
-                  </FormField>
-                  <FormField className="flex-2">
-                    <Label htmlFor="lastName">Last Name</Label>
-                    <Input
-                      disabled={isReadOnly}
-                      name="lastname"
-                      type="text"
-                      id="lastName"
-                      onChange={handleChange}
-                      value={dto.lastname}
-                      placeholder="Doh"
-                    />
-                  </FormField>
-                </div>
-                <div className="col-span-2">
-<FormField>
+              <div className="flex gap-3 mb-3 w-full col-span-2">
+                <FormField className="flex-1">
+                  <Label htmlFor="title">Title</Label>
+                  <Select
+                    options={[
+                      {
+                        label: Title[Title.Mr],
+                        value: Title.Mr,
+                      },
+                      {
+                        label: Title[Title.Miss],
+                        value: Title.Miss,
+                      },
+                      {
+                        label: Title[Title.Ms],
+                        value: Title.Ms,
+                      },
+                      {
+                        label: Title[Title.Other],
+                        value: Title.Other,
+                      },
+                    ]}
+                    onChange={(e) => {
+                      setDto((prev) => ({
+                        ...prev,
+                        title: Number(e),
+                      }));
+                    }}
+                    name={"title"}
+                    defaultValue={dto.title}
+                  />
+                </FormField>
+                <FormField className="flex-2">
+                  <Label htmlFor="firstName">First Name</Label>
+                  <Input
+                    disabled={isReadOnly}
+                    name="firstName"
+                    type="text"
+                    id="firstName"
+                    onChange={handleChange}
+                    value={dto.firstName}
+                    placeholder="John"
+                  />
+                </FormField>
+                <FormField className="flex-2">
+                  <Label htmlFor="middleName">Middle Name</Label>
+                  <Input
+                    disabled={isReadOnly}
+                    name="middleName"
+                    type="text"
+                    id="middleName"
+                    onChange={handleChange}
+                    value={dto.middleName}
+                    placeholder="Jr"
+                  />
+                </FormField>
+                <FormField className="flex-2">
+                  <Label htmlFor="lastName">Last Name</Label>
+                  <Input
+                    disabled={isReadOnly}
+                    name="lastName"
+                    type="text"
+                    id="lastName"
+                    onChange={handleChange}
+                    value={dto.lastName}
+                    placeholder="Doh"
+                  />
+                </FormField>
+              </div>
+              <div className="col-span-2">
+                <FormField>
                   <Label htmlFor="gender">Gender</Label>
                   <div className="flex justify-around gap-3 pb-3">
                     <div className="flex flex-col flex-wrap gap-8">
@@ -611,43 +665,148 @@ export const OperatorForm: React.FC<PropsWithChildren<FormProp<OperatorDto>>> = 
                     </div>
                   </div>
                 </FormField>
-                </div>
-                
+              </div>
 
-                <FormField>
-                  <Label>Email</Label>
-                  <div className="relative">
-                    <Input
-                      disabled={isReadOnly}
-                      name="email"
-                      placeholder="info@gmail.com"
-                      type="text"
-                      className="pl-[62px]"
-                      onChange={handleChange}
-                      value={dto.email}
-                    />
-                    <span className="absolute left-0 top-1/2 -translate-y-1/2 border-r border-gray-200 px-3.5 py-3 text-gray-500 dark:border-gray-800 dark:text-gray-400">
-                      <EnvelopeIcon className="size-6" />
-                    </span>
-                  </div>
-                </FormField>
-                <FormField>
-                  <Label>Phone</Label>
+              <FormField>
+                <Label>Email</Label>
+                <div className="relative">
                   <Input
                     disabled={isReadOnly}
+                    name="email"
+                    placeholder="info@gmail.com"
+                    type="text"
+                    className="pl-[62px]"
                     onChange={handleChange}
-                    value={dto.mobile}
-                    name="mobile"
-                    placeholder="+1 (555) 000-0000"
+                    value={dto.email}
                   />
-                </FormField>
-
-
+                  <span className="absolute left-0 top-1/2 -translate-y-1/2 border-r border-gray-200 px-3.5 py-3 text-gray-500 dark:border-gray-800 dark:text-gray-400">
+                    <EnvelopeIcon className="size-6" />
+                  </span>
+                </div>
+              </FormField>
+              <FormField>
+                <Label>Phone</Label>
+                <PhoneInput
+                  countries={countries}
+                  onChange={(e) => setDto((prev) => ({ ...prev, phone: e }))}
+                />
+              </FormField>
+              <FormField>
+                <DatePicker
+                  isTime={false}
+                  id="Date"
+                  label="Joined Date"
+                  placeholder="Select a date"
+                  onChange={(date) =>
+                    setDto((prev) => ({
+                      ...prev,
+                      joinedDate: date[0],
+                    }))
+                  }
+                  value={dto.joinedDate.toString()}
+                />
+              </FormField>
+              <FormField>
+                {new Date(dto.expiredDate).getTime() ==
+                new Date("9999-01-01T00:00:00Z").getTime() ? (
+                  <>
+                    <Label>Expired Date</Label>
+                    <Input disabled={true} placeholder="No Expiry" />
+                  </>
+                ) : (
+                  <DatePicker
+                    isTime={false}
+                    id="Date"
+                    label="Expired Date"
+                    placeholder="Select a date"
+                    onChange={(date) =>
+                      setDto((prev) => ({
+                        ...prev,
+                        expiredDate: date[0],
+                      }))
+                    }
+                    value={dto.expiredDate.toString()}
+                  />
+                )}
+              </FormField>
+            </div>
+          </FormSection>
+          <FormSection
+            className="col-span-3"
+            overall="Location Access"
+            title="Manage assigned locations"
+            description="Add locations one by one, then tap cards below to mark which ones
+            should be removed."
+          >
+            <div className="flex flex-col gap-3 lg:flex-row">
+              <div className="flex-1">
+                <Label htmlFor="location">Location</Label>
+                <Select
+                  disabled={isReadOnly}
+                  isString={true}
+                  options={locations.filter((x) => x.isTaken == false)}
+                  defaultValue={locationsGuid}
+                  onChange={(value) => setLocationGuid(value)}
+                  name="location"
+                  placeholder="Select location"
+                />
               </div>
-            </FormSection>
-          </div>
-        </>
+              <div className="flex gap-3 lg:items-end">
+                <Button
+                  disabled={isReadOnly || locationsGuid === ""}
+                  onClick={addLocation}
+                  className="min-w-[120px] justify-center"
+                >
+                  Add
+                </Button>
+                <Button
+                  disabled={isReadOnly || selectedLocationGuids.length === 0}
+                  variant="danger"
+                  onClick={removeSelectedLocations}
+                  className="min-w-[120px] justify-center"
+                >
+                  Remove
+                </Button>
+              </div>
+            </div>
 
+            <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+              {dto.locationGuids.length > 0 ? (
+                dto.locationGuids.map((id, i) => (
+                  <button
+                    key={i}
+                    type="button"
+                    onClick={() => toggleLocationSelection(id)}
+                    className={`flex items-center gap-4 rounded-[22px] border px-4 py-4 text-left transition ${
+                      selectedLocationGuids.includes(id)
+                        ? "border-brand-500 bg-brand-50 dark:bg-brand-500/10"
+                        : "border-[var(--app-panel-border)] bg-[var(--app-panel-muted)]/30 hover:border-brand-300"
+                    }`}
+                  >
+                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[var(--app-panel-bg)] text-brand-500 shadow-sm">
+                      <LocationIcon />
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold text-gray-800 dark:text-white/90">
+                        {locations.find((location) => location.value === id)
+                          ?.label ?? `Location ${id}`}
+                      </p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">
+                        {selectedLocationGuids.includes(id)
+                          ? "Selected for removal"
+                          : "Assigned location"}
+                      </p>
+                    </div>
+                  </button>
+                ))
+              ) : (
+                <div className="col-span-full rounded-[22px] border border-dashed border-[var(--app-panel-border)] px-5 py-10 text-center text-sm text-gray-500 dark:text-gray-400">
+                  No locations assigned yet.
+                </div>
+              )}
+            </div>
+          </FormSection>
+        </div>
       )}
     </>
   );

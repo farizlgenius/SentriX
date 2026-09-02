@@ -339,4 +339,77 @@ public sealed class StorageBehavior : IStorage
             var bytes = await File.ReadAllBytesAsync(path);
             return Convert.ToBase64String(bytes);
       }
+
+      public async Task<string> SaveOperatorAsync(byte[] data, string fileName)
+      {
+            if (!Directory.Exists(_paths.Operators))
+                  Directory.CreateDirectory(_paths.Operators);
+
+            var path = Path.Combine(_paths.Operators, fileName);
+            await File.WriteAllBytesAsync(path, data);
+
+            return path;
+      }
+
+      public async Task<Stream> ReadOperatorAsync(string fileName)
+      {
+            var path = Path.Combine(_paths.Operators, fileName);
+
+            if (!File.Exists(path))
+                  throw new FileNotFoundException("Operator file not found", fileName);
+
+            Stream stream = new FileStream(
+                path,
+                FileMode.Open,
+                FileAccess.Read,
+                FileShare.Read
+            );
+
+            return await Task.FromResult(stream);
+      }
+
+      public async Task<string> ReadOperatorBase64Async(string fileName)
+      {
+            var path = Path.Combine(_paths.Operators, fileName);
+
+            if (!File.Exists(path))
+                  throw new FileNotFoundException("Operator file not found", fileName);
+
+            var bytes = await File.ReadAllBytesAsync(path);
+            return Convert.ToBase64String(bytes);
+      }
+
+      public async Task<string> SaveOperatorAsync(Stream stream, string fileName)
+      {
+            if (!Directory.Exists(_paths.Operators))
+                  Directory.CreateDirectory(_paths.Operators);
+
+            var safeFileName = Path.GetFileName(fileName);
+
+            var path = Path.Combine(
+                _paths.Operators,
+                safeFileName);
+
+            await using var fs = new FileStream(
+                path,
+                FileMode.Create,
+                FileAccess.Write,
+                FileShare.None,
+                bufferSize: 81920,
+                useAsync: true);
+
+            await stream.CopyToAsync(fs);
+
+            return path;
+      }
+
+      public void DeleteOperatorAsync(string filename)
+      {
+            var path = Path.Combine(_paths.Operators, filename);
+
+            if (!File.Exists(path))
+                  throw new FileNotFoundException("Operator file not found", filename);
+
+            File.Delete(path);
+      }
 }

@@ -1,15 +1,19 @@
+using SharedKernel.Enums;
+
 namespace Core.Contract.DTOs.Operator;
 
 public record UpdateOperatorDto(
-  int Id,
+  Guid Guid,
   string Username,
-  string Title,
+  Title Title,
   string Firstname,
   string Middlename,
   string Lastname,
-  string Gender,
+  Gender Gender,
   string Email,
-  string Mobile,
-  int RoleId,
-  List<int> LocationId
+  string Phone,
+  DateTime JoinedDate,
+  DateTime ExpiredDate,
+  Guid RoleGuid,
+  List<Guid> LocationGuids
   );

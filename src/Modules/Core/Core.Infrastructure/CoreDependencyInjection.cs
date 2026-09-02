@@ -70,6 +70,10 @@ public static class CoreDependencyInjection
     // services.AddScoped<IGroup, GroupService>();
     services.AddScoped<IGroupRepository, GroupRepository>();
 
+    // Operator
+    services.AddScoped<IOperator, OperatorService>();
+    services.AddScoped<IOperatorRepository, OperatorRepository>();
+
 
     // ==========================
     // Database

@@ -6,6 +6,7 @@ public sealed class Role : BaseEntity
 
       // Relation
       public ICollection<User> users { get; set; } = default!;
+      public ICollection<Operator> operators { get; set; } = default!;
       public ICollection<ModulePermission> module_permission { get; set; } = default!;
 
       public Role() { }

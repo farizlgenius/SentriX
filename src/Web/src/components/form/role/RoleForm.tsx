@@ -16,7 +16,6 @@ import Checkbox from "../input/Checkbox";
 import api from "../../../api/api";
 import { FeatureDto } from "../../../model/Feature/FeatureDto";
 import {
-  FormActions,
   FormField,
   FormSection,
   FormSectionChecked,
@@ -26,7 +25,6 @@ import { FeaturePermissionDto } from "../../../model/Role/FeaturePermissionDto";
 
 export const RoleForm: React.FC<PropsWithChildren<FormProp<RoleDto>>> = ({
   type,
-  handleClick: handleClickWithEvent,
   dto,
   setDto,
 }) => {
@@ -59,8 +57,9 @@ export const RoleForm: React.FC<PropsWithChildren<FormProp<RoleDto>>> = ({
     fetchFeatureList();
   }, []);
   return (
-    <>
+    <div className="grid gap-5">
       <FormSection
+        overall="Role Details"
         title="Role Details"
         description="Start with the role name, then fine-tune access below."
       >
@@ -76,11 +75,9 @@ export const RoleForm: React.FC<PropsWithChildren<FormProp<RoleDto>>> = ({
           />
         </FormField>
       </FormSection>
-
       {dto.modules.map((m: ModulePermissionDto) => {
         return (
           <FormSectionChecked
-            className="mt-10 mb-10"
             title={`${m.name} Permissions Matrix`}
             description="Enable a feature first, then grant the allowed actions."
             defaultChecked={m.isEnabled}
@@ -136,7 +133,7 @@ export const RoleForm: React.FC<PropsWithChildren<FormProp<RoleDto>>> = ({
                                       a.id == m.id
                                         ? {
                                             ...a,
-                                            isEnabled: checked,
+                                            // isEnabled: checked,
                                             features: a.features.map((f) => ({
                                               ...f,
                                               isEnabled: checked,
@@ -161,17 +158,17 @@ export const RoleForm: React.FC<PropsWithChildren<FormProp<RoleDto>>> = ({
                             Features
                           </TableCell>
                           <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400">
-                            <div className="flex justify-center item-center gap-2">
+                            <div className="flex justify-center item-center gap-1">
                               <p>Create</p>
                             </div>
                           </TableCell>
                           <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400">
-                            <div className="flex justify-center item-center gap-2">
+                            <div className="flex justify-center item-center gap-1">
                               <p>Modify</p>
                             </div>
                           </TableCell>
                           <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400">
-                            <div className="flex justify-center item-center gap-2">
+                            <div className="flex justify-center item-center gap-1">
                               <p>Delete</p>
                             </div>
                           </TableCell>
@@ -186,7 +183,35 @@ export const RoleForm: React.FC<PropsWithChildren<FormProp<RoleDto>>> = ({
                                             </TableCell > */}
                               <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400">
                                 <div className="flex gap-2 justify-center item-center">
-                                  <Switch
+                                  <Checkbox
+                                    checked={data.isEnabled}
+                                    onChange={(e) => {
+                                      setDto((prev) => ({
+                                        ...prev,
+                                        modules: prev.modules.map((a) =>
+                                          a.id == m.id
+                                            ? {
+                                                ...a,
+                                                features: a.features.map((f) =>
+                                                  f.id == data.id
+                                                    ? {
+                                                        ...f,
+                                                        isEnabled:
+                                                          e.target.checked,
+                                                      }
+                                                    : {
+                                                        ...f,
+                                                      },
+                                                ),
+                                              }
+                                            : {
+                                                ...a,
+                                              },
+                                        ),
+                                      }));
+                                    }}
+                                  />
+                                  {/* <Switch
                                     disabled={isReadOnly}
                                     defaultChecked={data.isEnabled}
                                     label={""}
@@ -214,7 +239,7 @@ export const RoleForm: React.FC<PropsWithChildren<FormProp<RoleDto>>> = ({
                                         ),
                                       }));
                                     }}
-                                  />
+                                  /> */}
                                 </div>
                               </TableCell>
                               <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400">
@@ -223,7 +248,7 @@ export const RoleForm: React.FC<PropsWithChildren<FormProp<RoleDto>>> = ({
                               {data.isEnabled && (
                                 <>
                                   <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400">
-                                    <div className="flex justify-center item-center gap-2">
+                                    <div className="flex justify-center item-center gap-1">
                                       <Checkbox
                                         disabled={isReadOnly}
                                         name="isCreated"
@@ -259,7 +284,7 @@ export const RoleForm: React.FC<PropsWithChildren<FormProp<RoleDto>>> = ({
                                     </div>
                                   </TableCell>
                                   <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400">
-                                    <div className="flex justify-center item-center gap-2">
+                                    <div className="flex justify-center item-center gap-1">
                                       <Checkbox
                                         disabled={isReadOnly}
                                         name="isUpdated"
@@ -295,7 +320,7 @@ export const RoleForm: React.FC<PropsWithChildren<FormProp<RoleDto>>> = ({
                                     </div>
                                   </TableCell>
                                   <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400">
-                                    <div className="flex justify-center item-center gap-2">
+                                    <div className="flex justify-center item-center gap-1">
                                       <Checkbox
                                         disabled={isReadOnly}
                                         name="isDeleted"
@@ -345,13 +370,13 @@ export const RoleForm: React.FC<PropsWithChildren<FormProp<RoleDto>>> = ({
         );
       })}
 
-      <FormActions
+      {/* <FormActions
         disabled={isReadOnly}
         onSubmit={handleClickWithEvent}
         onCancel={handleClickWithEvent}
         submitName={type == FormType.UPDATE ? "update" : "create"}
         typeLabel={type == FormType.UPDATE ? "Update" : "Create"}
-      />
-    </>
+      /> */}
+    </div>
   );
 };

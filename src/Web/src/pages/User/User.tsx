@@ -108,7 +108,9 @@ const User = () => {
     position: "",
     address: "",
     joinedDate: new Date(),
-    expiredDate: new Date(),
+    expiredDate: new Date(
+      new Date().setFullYear(new Date().getFullYear() + 10),
+    ),
     additionals: [],
     groups: [],
     cards: [],
