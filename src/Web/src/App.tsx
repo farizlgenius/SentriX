@@ -74,6 +74,7 @@ import { DeviceEndpoint } from "./endpoint/DeviceEndpoint";
 import Scan from "./pages/Scan/Scan";
 import Output from "./pages/Output/Output";
 import CommandStatus from "./pages/Diagnostic/CommandStatus";
+import { Visitor } from "./pages/Visitor/Visitor";
 
 export default function App() {
   const navigate = useNavigate();
@@ -245,6 +246,9 @@ export default function App() {
             <Route path="/report" element={<Reports />} />
             <Route path="/command" element={<Command />} />
             <Route path="/status" element={<CommandStatus />} />
+
+            {/* VMS */}
+            <Route path="/visitor" element={<Visitor />} />
 
             {/* Others Page */}
             <Route path="/profile" element={<UserProfiles />} />

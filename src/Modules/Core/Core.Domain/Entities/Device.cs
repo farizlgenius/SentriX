@@ -1,3 +1,4 @@
+using SharedKernel.Enums;
 using SharedKernel.Helpers;
 
 namespace Core.Domain.Entities;
@@ -11,7 +12,7 @@ public sealed class Device : BaseDomain
   public int Port { get; set; }
   public string Firmware { get; set; } = string.Empty;
   public string Metadata { get; private set; } = string.Empty;
-  public string Vendor { get; private set; } = string.Empty;
+  public Vendor Vendor { get; private set; } = Vendor.aero;
   public int LocationId { get; private set; }
 
   public Device(
@@ -21,7 +22,7 @@ public sealed class Device : BaseDomain
    string Ip,
    int Port,
    string Fw,
-   string Vendor,
+   Vendor Vendor,
    string Metadata,
    int LocationId
    )
@@ -31,7 +32,6 @@ public sealed class Device : BaseDomain
     ValidationHelper.IsNullOrEmpty(SerialNumber, nameof(SerialNumber));
     ValidationHelper.IsNullOrEmpty(Mac, nameof(Mac));
     ValidationHelper.IsNullOrEmpty(Ip, nameof(Ip));
-    ValidationHelper.Vendor(Vendor);
     this.Name = Name;
     this.SerialNumber = SerialNumber;
     this.Mac = Mac;
@@ -51,7 +51,7 @@ public sealed class Device : BaseDomain
     string Ip,
     int Port,
     string Fw,
-    string Vendor,
+    Vendor Vendor,
     string Metadata,
     int LocationId
     ) : base(Guid)
@@ -61,7 +61,6 @@ public sealed class Device : BaseDomain
     ValidationHelper.IsNullOrEmpty(SerialNumber, nameof(SerialNumber));
     ValidationHelper.IsNullOrEmpty(Mac, nameof(Mac));
     ValidationHelper.IsNullOrEmpty(Ip, nameof(Ip));
-    ValidationHelper.Vendor(Vendor);
     this.Name = Name;
     this.SerialNumber = SerialNumber;
     this.Mac = Mac;

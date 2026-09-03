@@ -44,6 +44,12 @@ type NavItem = {
 
 const visitorNavItems: NavItem[] = [
   {
+    id:21,
+    icon: <VisitorIcon />,
+    name: "Visitor",
+    path: "/visitor",
+  },
+  {
     id: 21,
     icon: <GridIcon />,
     name: "Appointment",

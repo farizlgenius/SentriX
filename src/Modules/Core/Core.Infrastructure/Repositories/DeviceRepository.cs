@@ -11,7 +11,9 @@ public sealed class DeviceRepository(CoreDbContext context) : IDeviceRepository
 {
       public async Task AddAsync(Device entity, CancellationToken ct = default)
       {
-            throw new NotImplementedException();
+            await context.Devices.AddAsync(
+                  new Persistences.Entities.Device(entity), ct);
+            await context.SaveChangesAsync(ct);
       }
 
       public async Task DeleteAsync(Guid guid, CancellationToken ct = default)

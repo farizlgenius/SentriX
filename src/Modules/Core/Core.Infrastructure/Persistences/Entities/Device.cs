@@ -1,5 +1,7 @@
 
 
+using SharedKernel.Enums;
+
 namespace Core.Infrastructure.Persistences.Entities;
 
 public sealed class Device : BaseEntity
@@ -10,6 +12,7 @@ public sealed class Device : BaseEntity
   public string ip { get; set; } = string.Empty;
   public int port { get; set; }
   public string firmware { get; set; } = string.Empty;
+  public Vendor vendor { get; set; } = Vendor.aero;
   public string configuration_status { get; set; } = string.Empty;
   public DateTime synced_at { get; set; }
   public string metadata { get; set; } = string.Empty;
@@ -28,6 +31,7 @@ public sealed class Device : BaseEntity
     this.ip = domain.Ip;
     this.port = domain.Port;
     this.firmware = domain.Firmware;
+    this.vendor = domain.Vendor;
     this.metadata = domain.Metadata;
     location_id = domain.LocationId;
   }

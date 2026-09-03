@@ -17,10 +17,10 @@ public sealed class OperatorService(
 {
       public async Task<Guid> CreateAsync(CreateOperatorDto dto, CancellationToken ct = default)
       {
-            if (!await repo.IsAnyUsernameAsync(dto.Username, ct))
+            if (await repo.IsAnyUsernameAsync(dto.Username, ct))
                   throw new BadRequestException(EntityType.Operator, "Username already exists.");
 
-            if (!await repo.IsAnyEmailAsync(dto.Email, ct))
+            if (await repo.IsAnyEmailAsync(dto.Email, ct))
                   throw new BadRequestException(EntityType.Operator, "Email already exists.");
 
             if (!await bus.QueryAsync(new IsValidRoleByGuidQuery(dto.RoleGuid)))

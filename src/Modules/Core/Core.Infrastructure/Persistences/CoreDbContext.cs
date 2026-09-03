@@ -112,6 +112,10 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
             .Property(o => o.gender)
             .HasConversion<string>();
 
+            modelBuilder.Entity<Device>()
+            .Property(o => o.vendor)
+            .HasConversion<string>();
+
             // Indexing and key setting 
             modelBuilder.Entity<Card>()
             .HasIndex(

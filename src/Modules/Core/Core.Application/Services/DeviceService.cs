@@ -14,17 +14,16 @@ public sealed class DeviceService(
   IDeviceRepository repo,
   IAdapterFactory adapter,
   IMessageBus bus,
-  IComponentMappingRepository com,
-  ILocationRepository loc
+  IComponentMappingRepository com
   ) : IDevice
 {
   public async Task<Guid> CreateAsync(CreateDeviceDto dto, CancellationToken ct = default)
   {
 
-    if (!await loc.IsAnyGuidAsync(dto.LocationGuid))
+    if (!await bus.QueryAsync(new IsAnyLocationByGuidQuery(dto.LocationGuid), ct))
       throw new NotFoundException(EntityType.Location, dto.LocationGuid.ToString());
 
-    var locationId = await loc.GetIdByGuidAsync(dto.LocationGuid);
+    var locationId = await bus.QueryAsync(new LocationIdByGuidQuery(dto.LocationGuid), ct);
 
     // Check name is duplicate
     if (await repo.IsAnyByNameAndLocationIdAsync(dto.Name, locationId, ct))
@@ -76,17 +75,25 @@ public sealed class DeviceService(
 
   public async Task<bool> DisabledAsync(Guid guid, CancellationToken ct = default)
   {
-    throw new NotImplementedException();
+    if(!await repo.IsAnyGuidAsync(guid, ct))
+      throw new NotFoundException(EntityType.Device, guid.ToString());
+
+    await repo.DisableAsync(guid, ct);
+    return true;
   }
 
   public async Task<bool> EnabledAsync(Guid guid, CancellationToken ct = default)
   {
-    throw new NotImplementedException();
+    if(!await repo.IsAnyGuidAsync(guid, ct))
+      throw new NotFoundException(EntityType.Device, guid.ToString());
+
+    await repo.EnableAsync(guid, ct);
+    return true;
   }
 
   public async Task<DeviceDto> GetByGuidAsync(Guid guid, CancellationToken ct = default)
   {
-    throw new NotImplementedException();
+    return await repo.GetAsync(guid, ct);
   }
 
 
@@ -98,7 +105,7 @@ public sealed class DeviceService(
 
   public async Task<Pagination<DeviceDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
   {
-    throw new NotImplementedException();
+    return await repo.GetPaginationAsync(param, ct);
   }
 
   public async Task<Guid> UpdateAsync(UpdateDeviceDto dto, CancellationToken ct = default)
