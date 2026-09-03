@@ -15,7 +15,6 @@ import {
   FormField,
   FormSection,
 } from "../../components/form/template/FormTemplate";
-import { DeviceType } from "../../enum/DeviceType";
 
 const OutputForm: React.FC<PropsWithChildren<FormProp<OutputDto>>> = ({
   handleClick,

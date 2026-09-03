@@ -1,20 +1,20 @@
+import { Vendor } from "../../enum/Vendor";
+import { AeroMetadata } from "./AeroMetadata";
+import { AmicoMetadata } from "./AmicoMetadata";
 
-
-export interface DeviceDto  {
-  guid:string;
+export interface DeviceDto {
+  guid: string;
   name: string;
-  componentId:number;
   serialNumber: string;
-  mac:string;
+  mac: string;
   ip: string;
-  port:string;
-  fw:string;
-  type:string;
-  status:string;
+  port: string;
+  firmware: string;
+  vendor: Vendor;
+  metadata: AeroMetadata | AmicoMetadata;
   syncedAt: Date;
-  locationId:number;
-  metadata:string;
-  isDefault:boolean;
-  isActive:boolean;
-  
+  configurationStatus: string;
+  locationGuid: string;
+  isDefault: boolean;
+  isActive: boolean;
 }

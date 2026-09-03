@@ -1,67 +1,79 @@
-import React, { PropsWithChildren, useState } from "react"
+import React, { PropsWithChildren, useState } from "react";
 import { FormContent } from "../../model/Form/FormContent";
 import StepProgress from "../../components/form/StepProgress";
 import Button from "../../components/ui/button/Button";
 import { FormType } from "../../model/Form/FormProp";
 
-
 interface FormProp {
   tabContent: FormContent[];
-  header?:string;
-  desc?:string;
-  type:FormType
-  handleClick?:(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+  header?: string;
+  desc?: string;
+  type: FormType;
+  handleClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
 }
 
-export const BaseForm: React.FC<PropsWithChildren<FormProp>> = ({ tabContent,type,handleClick,header = "",desc = "" }) => {
+export const BaseForm: React.FC<PropsWithChildren<FormProp>> = ({
+  tabContent,
+  type,
+  handleClick,
+  header = "",
+  desc = "",
+}) => {
   const [activeTab, setActiveTab] = useState<string>(tabContent[0].label);
-  const currentStepIndex = Math.max(0, tabContent.findIndex((tab) => tab.label === activeTab));
+  const currentStepIndex = Math.max(
+    0,
+    tabContent.findIndex((tab) => tab.label === activeTab),
+  );
 
-  const currentStep = tabContent[currentStepIndex];
+  // const currentStep = tabContent[currentStepIndex];
   const isFirstStep = currentStepIndex === 0;
   const isLastStep = currentStepIndex === tabContent.length - 1;
 
   const goToStep = (stepIndex: number) => {
     if (stepIndex < 0 || stepIndex >= tabContent.length) return;
     setActiveTab(tabContent[stepIndex].label);
-  }
-
+  };
 
   return (
     <div className="rounded-[32px] border border-[var(--app-panel-border)] bg-[var(--app-panel-bg)] p-6 shadow-theme-xs lg:p-8">
       <div className="mb-6 rounded-[24px] bg-[linear-gradient(180deg,rgba(59,130,246,0.10),rgba(255,255,255,0))] p-5 dark:bg-[linear-gradient(180deg,rgba(59,130,246,0.18),rgba(17,24,39,0))]">
-        <p className="text-xs font-semibold uppercase tracking-[0.24em] text-brand-500">SentriX</p>
-        <h2 className="mt-2 text-2xl font-semibold text-gray-900 dark:text-white">{header}</h2>
-        <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
-          {desc}
+        <p className="text-xs font-semibold uppercase tracking-[0.24em] text-brand-500">
+          SentriX
         </p>
+        <h2 className="mt-2 text-2xl font-semibold text-gray-900 dark:text-white">
+          {header}
+        </h2>
+        <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">{desc}</p>
       </div>
 
       <StepProgress
-        steps={tabContent.map((tab) => ({ key: tab.label, title: tab.label, detail: tab.label, icon: tab.icon }))}
+        steps={tabContent.map((tab) => ({
+          key: tab.label,
+          title: tab.label,
+          detail: tab.label,
+          icon: tab.icon,
+        }))}
         activeIndex={currentStepIndex}
         onStepClick={goToStep}
       />
 
       <div className="pt-6 dark:border-gray-800">
-
-        {tabContent.map((a: FormContent,i:number) => {
+        {tabContent.map((a: FormContent, i: number) => {
           return (
             <div key={i}>
-              {activeTab == a.label &&
+              {activeTab == a.label && (
                 <div className="text-sm text-gray-500 dark:text-gray-400">
                   {/* <h3 className="mb-1 text-xl font-medium text-gray-800 dark:text-white/90">
                     {a.label}
                   </h3> */}
                   {a.content}
                 </div>
-
-              }
-              
-            </div>)
+              )}
+            </div>
+          );
         })}
 
-         <div className="mt-6 flex w-full items-center justify-between gap-3">
+        <div className="mt-6 flex w-full items-center justify-between gap-3">
           <div>
             {!isFirstStep && (
               <Button
@@ -105,10 +117,9 @@ export const BaseForm: React.FC<PropsWithChildren<FormProp>> = ({ tabContent,typ
             )}
           </div>
         </div>
-
       </div>
     </div>
-  )
+  );
 
   //     return (
   //         <div className="rounded-xl border border-gray-200 p-6 dark:border-gray-800" x-data="{ activeTab: 'overview' }">
@@ -145,7 +156,7 @@ export const BaseForm: React.FC<PropsWithChildren<FormProp>> = ({ tabContent,typ
   //   </div>
 
   //   <div className="pt-4 dark:border-gray-800">
-  //     {activeTab  && 
+  //     {activeTab  &&
   //             <div>
   //       <h3 className="mb-1 text-xl font-medium text-gray-800 dark:text-white/90">
   //         Overview
@@ -159,8 +170,7 @@ export const BaseForm: React.FC<PropsWithChildren<FormProp>> = ({ tabContent,typ
   //     </div>
   //     }
 
-
-  // {activeTab && 
+  // {activeTab &&
   //         <div >
   //       <h3 className="mb-1 text-xl font-medium text-gray-800 dark:text-white/90">
   //         Notification
@@ -173,7 +183,6 @@ export const BaseForm: React.FC<PropsWithChildren<FormProp>> = ({ tabContent,typ
   //       </p>
   //     </div>
   // }
-
 
   //     <div >
   //       <h3 className="mb-1 text-xl font-medium text-gray-800 dark:text-white/90">
@@ -201,4 +210,4 @@ export const BaseForm: React.FC<PropsWithChildren<FormProp>> = ({ tabContent,typ
   //   </div>
   // </div>
   //     )
-}
+};

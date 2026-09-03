@@ -4,8 +4,6 @@ import {
   AmicoIcon,
   CancelCircleIcon,
   CheckCircleIcon,
-  ControlIcon,
-  Info2Icon,
   ModuleIcon,
   ResetIcon,
   ScanIcon,
@@ -13,7 +11,6 @@ import {
   TransferIcon,
   UploadIcon,
 } from "../../icons";
-import Modals from "../UiElements/Modals";
 import Helper from "../../utility/Helper";
 import { DeviceDto } from "../../model/Device/DeviceDto";
 import { IdReport } from "../../model/IdReport/IdReport";
@@ -32,8 +29,6 @@ import { useToast } from "../../context/ToastContext";
 import { HardwareToast } from "../../model/ToastMessage";
 import Badge from "../../components/ui/badge/Badge";
 import { TableCell } from "../../components/ui/table";
-import { HardwareMemAllocForm } from "../../components/form/device/HardwareMemAllocForm";
-import { HardwareComponentForm } from "../../components/form/device/HardwareComponentForm";
 import { EventStatusDto } from "../../model/Device/TranStatusDto";
 import { FormType } from "../../model/Form/FormProp";
 import { usePopup } from "../../context/PopupContext";
@@ -41,15 +36,16 @@ import { SetTranDto } from "../../model/Device/SetTranDto";
 import { usePagination } from "../../context/PaginationContext";
 import { useIdReport } from "../../context/IdReportContext";
 import { SignalRTopic } from "../../constants/signalr-constant";
-import SelectDeviceForm from "../../components/form/device/SelectDeviceForm";
-import { DeviceType } from "../../enum/DeviceType";
-import { AeroModuleDetailForm } from "../../components/form/device/AeroModuleDetailForm";
 import AeroDeviceForm from "../../components/form/device/AeroDeviceForm";
-import { AeroDtoMetadata as AeroDtoMetadata } from "../../model/Device/AeroDtoMetadata";
-import { mapFields } from "../../utility/Mapper";
-import AmicoDeviceForm from "../../components/form/device/AmicoDeviceForm";
-import { AmicoDtoMetadata } from "../../model/Device/AmicoDtoMetadata";
 import { CreateDeviceStrMetadataDto } from "../../model/Device/CreateDeviceStrMetadataDto";
+import { Vendor } from "../../enum/Vendor";
+import { AeroMetadata } from "../../model/Device/AeroMetadata";
+import { AmicoMetadata } from "../../model/Device/AmicoMetadata";
+import { FormSection } from "../../components/form/template/FormTemplate";
+import AmicoDeviceForm from "../../components/form/device/AmicoDeviceForm";
+import { AeroModuleDetailForm } from "../../components/form/device/AeroModuleDetailForm";
+import { AeroComponentForm } from "../../components/form/device/AeroComponentForm";
+import { AeroMemAllocForm } from "../../components/form/device/AeroMemAllocForm";
 
 const HEADER = [
   "Type",
@@ -87,81 +83,47 @@ const Device = () => {
 
   const defaultDto: DeviceDto = {
     guid: "",
-    componentId: 0,
     name: "",
     serialNumber: "",
     mac: "",
     ip: "",
     port: "",
-    fw: "",
-    type: "",
-    status: "",
+    firmware: "",
+    vendor: Vendor.aero,
     syncedAt: new Date(),
-    locationId: 0,
+    locationGuid: "",
     metadata: "",
     isDefault: false,
     isActive: false,
+    configurationStatus: "",
   };
 
-  const aeroDefault: AeroDtoMetadata = {
-    componentId: 0,
-    name: "",
-    serialNumber: "",
-    mac: "",
-    ip: "",
-    port: "",
-    fw: "",
-    type: "",
-    status: "",
-    syncedAt: new Date(),
-    locationId: locationId,
-    metadata: {
-      portOne: false,
-      protocolOne: -1,
-      baudRateOne: -1,
-      portTwo: false,
-      protocolTwo: -1,
-      baudRateTwo: -1,
-    },
+  const aeroMetadata: AeroMetadata = {
+    portOne: false,
+    protocolOne: 0,
+    baudRateOne: 0,
+    portTwo: false,
+    protocolTwo: 0,
+    baudRateTwo: 0,
   };
 
-  const amicoDefault: AmicoDtoMetadata = {
-    componentId: 0,
-    name: "",
-    serialNumber: "",
-    mac: "",
-    ip: "",
-    port: 0,
-    fw: "",
-    type: "",
-    status: "",
-    syncedAt: new Date(),
-    locationId: locationId,
-    metadata: {
-      deviceId: "",
-    },
+  const amicoMetadata: AmicoMetadata = {
+    deviceId: "",
   };
 
-  const [scan, setScan] = useState<boolean>(false);
-  const [selectType, setSelectType] = useState<boolean>(false);
   const [form, setForm] = useState<boolean>(false);
   const [formType, setFormType] = useState<FormType>(FormType.CREATE);
   const [currentDeviceType, setCurrentDeviceType] = useState<string>("");
   const [deviceDto, setDeviceDto] = useState<DeviceDto>(defaultDto);
-  const [aeroDto, setAeroDto] = useState<AeroDtoMetadata>(aeroDefault);
-  const [amicoDto, setAmicoDto] = useState<AmicoDtoMetadata>(amicoDefault);
   const [data, setData] = useState<DeviceDto[]>([]);
   const [status, setStatus] = useState<StatusDto[]>([]);
   const [tranStatus, setTranStatus] = useState<EventStatusDto[]>([]);
   const [select, setSelect] = useState<DeviceDto[]>([]);
 
-  const handleCloseModal = () => setScan(false);
-  const handleCloseSelect = () => setSelectType(false);
-
   const fetchData = async (
     pageNumber: number,
     pageSize: number,
-    fetchLocationId?: number,
+    locationGuid?: string,
     search?: string,
     startDate?: string,
     endDate?: string,
@@ -170,7 +132,7 @@ const Device = () => {
       DeviceEndpoint.PAGINATION(
         pageNumber,
         pageSize,
-        fetchLocationId,
+        locationGuid,
         search,
         startDate,
         endDate,
@@ -181,8 +143,8 @@ const Device = () => {
       setPagination(res.data.data);
 
       const newStatuses = res.data.data.items.map((item: DeviceDto) => ({
-        deviceGuid: item.guid,
-        componentId: item.componentId,
+        guid: item.guid,
+        mac: item.mac,
         status: false,
         tamper: -1,
         ac: -1,
@@ -264,23 +226,21 @@ const Device = () => {
     }
   };
 
-  const handleFormSelection = (type: string, data: any) => {
-    switch (type) {
-      case DeviceType.AERO:
-        const { metadata, ...rest } = data;
-        setAeroDto(mapFields(rest, { metadata: JSON.parse(metadata) }));
-        break;
-      case DeviceType.AMICO:
-        break;
-      default:
-        break;
-    }
-  };
+  // const handleFormSelection = (type: string, data: any) => {
+  //   switch (type) {
+  //     case DeviceType.AERO:
+  //       const { metadata, ...rest } = data;
+  //       setAeroDto(mapFields(rest, { metadata: JSON.parse(metadata) }));
+  //       break;
+  //     case DeviceType.AMICO:
+  //       break;
+  //     default:
+  //       break;
+  //   }
+  // };
 
   const handleEdit = (item: DeviceDto) => {
     setFormType(FormType.UPDATE);
-    setCurrentDeviceType(item.type);
-    handleFormSelection(item.type, item);
     setDeviceDto(item);
     setForm(true);
   };
@@ -298,8 +258,6 @@ const Device = () => {
 
   const handleInfo = (item: DeviceDto) => {
     setFormType(FormType.INFO);
-    setCurrentDeviceType(item.type);
-    handleFormSelection(item.type, item);
     setDeviceDto(item);
     setForm(true);
   };
@@ -308,8 +266,8 @@ const Device = () => {
     switch (e.currentTarget.name) {
       case "add":
         setFormType(FormType.CREATE);
+        setForm(true);
         setDeviceDto(defaultDto);
-        setSelectType(true);
         break;
       case "report":
         if (select.length === 0) {
@@ -363,23 +321,19 @@ const Device = () => {
         break;
       case "create":
         setConfirmCreate(() => async () => {
-          var req: CreateDeviceStrMetadataDto = mapDto(amicoDto);
+          const req: CreateDeviceStrMetadataDto = mapDto(amicoDto);
           const res = await send.post(DeviceEndpoint.CREATE, req);
           if (
             Helper.handleToastByResCode(res, HardwareToast.CREATE, toggleToast)
           ) {
             setForm(false);
             toggleRefresh();
-            setAmicoDto(amicoDefault);
           }
         });
         setCreate(true);
         break;
       case "type":
         setForm(true);
-        break;
-      case "scan":
-        setScan(true);
         break;
       case "close":
         setForm(false);
@@ -536,46 +490,120 @@ const Device = () => {
     ];
   };
 
+  // const aeroContent: FormContent[] = [
+  //   {
+  //     icon: <Info2Icon />,
+  //     label: "Device Information",
+  //     content: (
+  //       <DeviceForm
+  //         handleClick={handleClickWithEvent}
+  //         dto={aeroDto}
+  //         setDto={setAeroDto}
+  //         type={formType}
+  //       />
+  //     ),
+  //   },
+  //   {
+  //     icon: <ModuleIcon />,
+  //     label: "Module",
+  //     content: <AeroModuleDetailForm data={deviceDto} />,
+  //   },
+  //   {
+  //     icon: <TransferIcon />,
+  //     label: "Memory Allocate Detail",
+  //     content: <HardwareMemAllocForm data={deviceDto} />,
+  //   },
+  //   {
+  //     icon: <ControlIcon />,
+  //     label: "ComponentSync Detail",
+  //     content: <HardwareComponentForm data={deviceDto} />,
+  //   },
+  // ];
+
+  const deviceTypes = [
+    {
+      vendor: Vendor.aero,
+      name: "HID Aero X1100",
+      description: "Configure an Aero controller and its connected ports.",
+      icon: ModuleIcon,
+    },
+    {
+      vendor: Vendor.amico,
+      name: "HID Amico",
+      description: "Set up an Amico controller for streamlined access control.",
+      icon: AmicoIcon,
+    },
+  ];
+
+  const handleDeviceTypeSelect = (vendor: Vendor) => {
+    setCurrentDeviceType(Vendor[vendor]);
+    setDeviceDto((previous) => ({ ...previous, vendor: vendor }));
+  };
+
   const aeroContent: FormContent[] = [
     {
-      icon: <Info2Icon />,
+      icon: <ModuleIcon />,
       label: "Device Information",
       content: (
         <AeroDeviceForm
           handleClick={handleClickWithEvent}
-          dto={aeroDto}
-          setDto={setAeroDto}
           type={formType}
+          setDto={setDeviceDto}
+          dto={deviceDto}
         />
       ),
     },
     {
       icon: <ModuleIcon />,
-      label: "Module",
-      content: <AeroModuleDetailForm data={deviceDto} />,
+      label: "Sub-device Information",
+      content: (
+        <AeroModuleDetailForm
+          data={deviceDto}
+          // handleClick={handleClickWithEvent}
+          // type={formType}
+          // setDto={setDeviceDto}
+          // dto={deviceDto}
+        />
+      ),
     },
     {
-      icon: <TransferIcon />,
-      label: "Memory Allocate Detail",
-      content: <HardwareMemAllocForm data={deviceDto} />,
+      icon: <ModuleIcon />,
+      label: "Device Component",
+      content: (
+        <AeroComponentForm
+          data={deviceDto}
+          // handleClick={handleClickWithEvent}
+          // type={formType}
+          // setDto={setDeviceDto}
+          // dto={deviceDto}
+        />
+      ),
     },
     {
-      icon: <ControlIcon />,
-      label: "ComponentSync Detail",
-      content: <HardwareComponentForm data={deviceDto} />,
+      icon: <ModuleIcon />,
+      label: "Device Memory Alloc",
+      content: (
+        <AeroMemAllocForm
+          data={deviceDto}
+          // handleClick={handleClickWithEvent}
+          // type={formType}
+          // setDto={setDeviceDto}
+          // dto={deviceDto}
+        />
+      ),
     },
   ];
 
   const amicoContent: FormContent[] = [
     {
-      icon: <Info2Icon />,
+      icon: <ModuleIcon />,
       label: "Device Information",
       content: (
         <AmicoDeviceForm
           handleClick={handleClickWithEvent}
           type={formType}
-          setDto={setAmicoDto}
-          dto={amicoDto}
+          setDto={setDeviceDto}
+          dto={deviceDto}
         />
       ),
     },
@@ -583,50 +611,72 @@ const Device = () => {
 
   return (
     <>
-      {selectType && (
-        <Modals
-          body={
-            <SelectDeviceForm
-              setDeviceType={setCurrentDeviceType}
-              setSelectType={setSelectType}
-              setForm={setForm}
-            />
-          }
-          handleClickWithEvent={handleCloseSelect}
-        />
-      )}
-
-      {scan && (
-        <Modals
-          header="Scan"
-          body={
-            <div className="text-sm text-gray-500">
-              Scanning workspace is not changed in this screen yet.
-            </div>
-          }
-          handleClickWithEvent={handleCloseModal}
-        />
-      )}
-
       <PageBreadcrumb pageTitle="Device" />
-      <div className="space-y-6">
+      <div className="flex flex-col gap-5">
+        {form && formType !== FormType.INFO && (
+          <FormSection
+            overall="Device setup"
+            title="Choose device type"
+            description="Select the controller you want to add before completing its details."
+          >
+            <div className="grid gap-4 sm:grid-cols-2">
+              {deviceTypes.map((deviceType) => {
+                const Icon = deviceType.icon;
+                const isSelected = deviceDto.vendor === deviceType.vendor;
+
+                return (
+                  <button
+                    key={deviceType.vendor}
+                    type="button"
+                    aria-pressed={isSelected}
+                    onClick={() => handleDeviceTypeSelect(deviceType.vendor)}
+                    className={`group relative flex min-h-36 items-center gap-4 rounded-2xl border p-5 text-left transition-all duration-200 focus:outline-hidden focus:ring-4 focus:ring-brand-500/15 ${
+                      isSelected
+                        ? "border-brand-500 bg-brand-50 shadow-theme-xs dark:border-brand-400 dark:bg-brand-500/10"
+                        : "border-[var(--app-panel-border)] bg-[var(--app-panel-bg)] hover:-translate-y-0.5 hover:border-brand-300 hover:shadow-theme-xs dark:hover:border-brand-700"
+                    }`}
+                  >
+                    <span
+                      className={`flex size-14 shrink-0 items-center justify-center rounded-2xl transition-colors ${
+                        isSelected
+                          ? "bg-brand-500 text-white"
+                          : "bg-brand-50 text-brand-500 dark:bg-brand-500/10 dark:text-brand-300"
+                      }`}
+                    >
+                      <Icon className="size-7" />
+                    </span>
+                    <span className="min-w-0 pr-5">
+                      <span className="block text-base font-semibold text-gray-900 dark:text-white">
+                        {deviceType.name}
+                      </span>
+                      <span className="mt-1 block text-sm leading-5 text-gray-500 dark:text-gray-400">
+                        {deviceType.description}
+                      </span>
+                    </span>
+                    <span
+                      className={`absolute right-4 top-4 flex size-5 items-center justify-center rounded-full border transition-colors ${
+                        isSelected
+                          ? "border-brand-500 bg-brand-500 text-white"
+                          : "border-gray-300 bg-transparent dark:border-gray-600"
+                      }`}
+                    >
+                      {isSelected && <CheckCircleIcon className="size-3.5" />}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </FormSection>
+        )}
         {form ? (
           <BaseForm
+            type={formType}
+            handleClick={handleClickWithEvent}
             tabContent={
-              currentDeviceType === DeviceType.AMICO
-                ? amicoContent
-                : aeroContent
+              deviceDto.vendor == Vendor.aero ? aeroContent : amicoContent
             }
-            header={
-              currentDeviceType === DeviceType.AMICO
-                ? "AMICO Device Detail"
-                : "AERO Device Detail"
-            }
-            desc={
-              currentDeviceType === DeviceType.AMICO
-                ? "Single-tab AMICO detail with the existing form and a graphical module split."
-                : "Split detail workspace for AERO with information, module, memory allocation, and component sync tabs."
-            }
+            header={""}
+            desc={""}
           />
         ) : (
           <BaseTable<DeviceDto>
@@ -671,7 +721,7 @@ const Device = () => {
                     key={index}
                     className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400"
                   >
-                    {item.type === "AERO" ? (
+                    {item.vendor == Vendor.aero ? (
                       <ModuleIcon className="text-2xl" />
                     ) : (
                       <AmicoIcon className="text-2xl" />
@@ -689,7 +739,7 @@ const Device = () => {
 
 export default Device;
 
-function mapDto(amicoDto: AmicoDtoMetadata): CreateDeviceStrMetadataDto {
-  const { metadata, ...rest } = amicoDto;
-  return mapFields(rest, { metadata: JSON.stringify(metadata) });
-}
+// function mapDto(amicoDto: AmicoDtoMetadata): CreateDeviceStrMetadataDto {
+//   const { metadata, ...rest } = amicoDto;
+//   return mapFields(rest, { metadata: JSON.stringify(metadata) });
+// }

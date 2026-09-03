@@ -23,7 +23,6 @@ import SignalRService from "../../services/SignalRService";
 import { usePopup } from "../../context/PopupContext";
 import { FormType } from "../../model/Form/FormProp";
 import { usePagination } from "../../context/PaginationContext";
-import { DeviceType } from "../../enum/DeviceType";
 import { SignalRTopic } from "../../constants/signalr-constant";
 
 // Define Global Variable

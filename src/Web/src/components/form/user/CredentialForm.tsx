@@ -12,7 +12,6 @@ import { CredentialEndpoint } from "../../../endpoint/CredentialEndpoint";
 import { send } from "../../../api/api";
 import { DeviceEndpoint } from "../../../endpoint/DeviceEndpoint";
 import { DeviceDto } from "../../../model/Device/DeviceDto";
-import { DeviceType } from "../../../enum/DeviceType";
 import { DoorEndpoint } from "../../../endpoint/DoorEndpoint";
 import { DoorDto } from "../../../model/Door/DoorDto";
 import { ScanCardDto } from "../../../model/User/ScanCard";
@@ -22,6 +21,7 @@ import { CardDto } from "../../../model/User/CardDto";
 import Modals from "../../../pages/UiElements/Modals";
 import Select from "../Select";
 import Spinner from "../../../pages/UiElements/Spinner";
+import { Vendor } from "../../../enum/Vendor";
 
 const emptyCard: CardDto = { bits: 26, fac: 0, cardNumber: 0 };
 const maxCards = 10;
@@ -97,7 +97,7 @@ export const CredentialForm: React.FC<PropsWithChildren<FormProp<UserDto>>> = ({
   useEffect(() => {
     const fetchControllers = async () => {
       const response = await send.get(
-        DeviceEndpoint.GET(locationId, DeviceType.AERO),
+        DeviceEndpoint.GET(locationId, Vendor.aero),
       );
       if (response?.data?.data)
         setControllerOptions(

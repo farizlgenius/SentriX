@@ -1,16 +1,16 @@
 import { useEffect, useState } from "react";
 import PageBreadcrumb from "../../components/common/PageBreadCrumb";
-import TransactionTable from "../../components/tables/Tables/TransactionTable";
+
 import Pagination from "../../components/ui/table/Pagination";
 import { send } from "../../api/api";
 import { EventEndpoint } from "../../endpoint/TransactionEndpoint";
-import { EventDto } from "../../model/Event/EventDto";
+
 import SignalRService from "../../services/SignalRService";
 import DatePicker from "../../components/form/date-picker";
 import { PageProp } from "../../model/PageProp";
 import { useLocation } from "../../context/LocationContext";
 import { TableCell } from "../../components/ui/table";
-import { Avatar } from "../UiElements/Avatar";
+
 import { SignalRTopic } from "../../constants/signalr-constant";
 import { useAuth } from "../../context/AuthContext";
 import {
@@ -30,7 +30,6 @@ import {
 } from "../../icons";
 import { useTheme } from "../../context/ThemeContext";
 import CommandStatusTable from "../../components/tables/Tables/CommandStatusTable";
-import { DeviceType } from "../../enum/DeviceType";
 import { CommandEventDto } from "../../model/Event/CommandEventDto";
 import { EventCommandStatus } from "../../enum/CommandStatus";
 

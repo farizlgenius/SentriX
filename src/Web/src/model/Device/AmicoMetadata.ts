@@ -1,5 +1,3 @@
-
-
 export interface AmicoMetadata {
-      deviceId:string;
+  deviceId: string;
 }

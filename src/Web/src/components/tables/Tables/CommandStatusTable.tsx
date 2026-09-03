@@ -1,6 +1,5 @@
-
 import { PropsWithChildren, useMemo, useState } from "react";
-import { EventDto } from "../../../model/Event/EventDto";
+
 import {
   Table,
   TableBody,
@@ -12,7 +11,6 @@ import { TableSpecialDisplay } from "../../../model/TableSpecialDisplay";
 import { CommandEventDto } from "../../../model/Event/CommandEventDto";
 import { EventCommandStatus } from "../../../enum/CommandStatus";
 
-
 type SortDirection = "asc" | "desc";
 
 interface TableContents {
@@ -22,7 +20,12 @@ interface TableContents {
   specialDisplay?: TableSpecialDisplay<CommandEventDto>[];
 }
 
-const CommandStatusTable: React.FC<PropsWithChildren<TableContents>> = ({ tableHeaders, tableDatas, tableKeys, specialDisplay }) => {
+const CommandStatusTable: React.FC<PropsWithChildren<TableContents>> = ({
+  tableHeaders,
+  tableDatas,
+  tableKeys,
+  specialDisplay,
+}) => {
   const [sortKey, setSortKey] = useState<string>("dateTime");
   const [sortDirection, setSortDirection] = useState<SortDirection>("desc");
 
@@ -55,36 +58,36 @@ const CommandStatusTable: React.FC<PropsWithChildren<TableContents>> = ({ tableH
   };
 
   const columnWidths: Record<string, string> = {
-  timestamp: "w-[20%]",
-  name: "w-[15%]",
-  code: "w-[15%]",
-  remarks: "w-[50%]",
-};
+    timestamp: "w-[20%]",
+    name: "w-[15%]",
+    code: "w-[15%]",
+    remarks: "w-[50%]",
+  };
 
-const getRowStatusClass = (status: string) => {
-  switch (status) {
-    case EventCommandStatus.SUCCESSED:
-      return `
+  const getRowStatusClass = (status: string) => {
+    switch (status) {
+      case EventCommandStatus.SUCCESSED:
+        return `
         border-l-4 border-b-0 border-green-500
         bg-green-50 hover:bg-green-100
         dark:bg-green-500/10 dark:hover:bg-green-500/20
       `;
 
-    case EventCommandStatus.FAILED:
-      return `
+      case EventCommandStatus.FAILED:
+        return `
         border-l-4 border-red-500
         bg-red-50 hover:bg-red-100
         dark:bg-red-500/10 dark:hover:bg-red-500/20
       `;
 
-    default:
-      return `
+      default:
+        return `
         border-l-4 border-yellow-500
         bg-yellow-50 hover:bg-yellow-100
         dark:bg-yellow-500/10 dark:hover:bg-yellow-500/20
       `;
-  }
-};
+    }
+  };
 
   return (
     <>
@@ -108,48 +111,67 @@ const getRowStatusClass = (status: string) => {
                       className="group inline-flex items-center gap-1.5 transition-colors hover:text-brand-500"
                     >
                       <span>{head}</span>
-                      <span className={`inline-flex flex-col leading-none ${isActive ? "text-brand-500" : "text-gray-400 group-hover:text-brand-500"}`}>
-                        <svg className={`h-2 w-2 ${isActive && sortDirection === "asc" ? "opacity-100" : "opacity-40"}`} viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <span
+                        className={`inline-flex flex-col leading-none ${isActive ? "text-brand-500" : "text-gray-400 group-hover:text-brand-500"}`}
+                      >
+                        <svg
+                          className={`h-2 w-2 ${isActive && sortDirection === "asc" ? "opacity-100" : "opacity-40"}`}
+                          viewBox="0 0 10 10"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
                           <path d="M5 2L8 6H2L5 2Z" fill="currentColor" />
                         </svg>
-                        <svg className={`h-2 w-2 ${isActive && sortDirection === "desc" ? "opacity-100" : "opacity-40"}`} viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <svg
+                          className={`h-2 w-2 ${isActive && sortDirection === "desc" ? "opacity-100" : "opacity-40"}`}
+                          viewBox="0 0 10 10"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
                           <path d="M5 8L2 4H8L5 8Z" fill="currentColor" />
                         </svg>
                       </span>
                     </button>
                   </TableCell>
-                )
+                );
               })}
             </TableRow>
           </TableHeader>
           <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
             {sortedDatas.length === 0 && (
               <TableRow>
-                <TableCell className="px-4 py-8 text-center text-gray-500 text-theme-sm dark:text-gray-400" colspan={tableHeaders.length}>
+                <TableCell
+                  className="px-4 py-8 text-center text-gray-500 text-theme-sm dark:text-gray-400"
+                  colspan={tableHeaders.length}
+                >
                   No event records found
                 </TableCell>
               </TableRow>
             )}
-            {sortedDatas && sortedDatas.map((data: CommandEventDto, i: number) => (
-              <TableRow key={i} className={`transition-colors hover:bg-gray-50 dark:hover:bg-white/[0.02] ${getRowStatusClass(data.status)}`}>
-                {tableKeys.map((key: string, i: number) =>
-                    specialDisplay?.some(a => a.key == key) ?
-                      specialDisplay.find(a => a.key == key)?.content(data, i)
-                      :
+            {sortedDatas &&
+              sortedDatas.map((data: CommandEventDto, i: number) => (
+                <TableRow
+                  key={i}
+                  className={`transition-colors hover:bg-gray-50 dark:hover:bg-white/[0.02] ${getRowStatusClass(data.status)}`}
+                >
+                  {tableKeys.map((key: string, i: number) =>
+                    specialDisplay?.some((a) => a.key == key) ? (
+                      specialDisplay.find((a) => a.key == key)?.content(data, i)
+                    ) : (
                       <TableCell
                         key={i}
                         className={`px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400`}
                       >
                         {String(data[key as keyof typeof data])}
                       </TableCell>
-
-                )}
-              </TableRow>
-            ))}
+                    ),
+                  )}
+                </TableRow>
+              ))}
           </TableBody>
         </Table>
       </div>
     </>
   );
-}
+};
 export default CommandStatusTable;
