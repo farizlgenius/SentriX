@@ -318,6 +318,7 @@ namespace Core.Infrastructure.Migrations
                     ip = table.Column<string>(type: "text", nullable: false),
                     port = table.Column<int>(type: "integer", nullable: false),
                     firmware = table.Column<string>(type: "text", nullable: false),
+                    vendor = table.Column<string>(type: "text", nullable: false),
                     configuration_status = table.Column<string>(type: "text", nullable: false),
                     synced_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     metadata = table.Column<string>(type: "text", nullable: false),
@@ -471,6 +472,43 @@ namespace Core.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Operators",
+                schema: "core",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    username = table.Column<string>(type: "text", nullable: false),
+                    password = table.Column<string>(type: "text", nullable: false),
+                    title = table.Column<string>(type: "text", nullable: false),
+                    firstname = table.Column<string>(type: "text", nullable: false),
+                    middlename = table.Column<string>(type: "text", nullable: false),
+                    lastname = table.Column<string>(type: "text", nullable: false),
+                    gender = table.Column<string>(type: "text", nullable: false),
+                    phone = table.Column<string>(type: "text", nullable: false),
+                    email = table.Column<string>(type: "text", nullable: false),
+                    joined_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    expired_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    role_id = table.Column<int>(type: "integer", nullable: false),
+                    guid = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    is_active = table.Column<bool>(type: "boolean", nullable: false),
+                    is_default = table.Column<bool>(type: "boolean", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Operators", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_Operators_Roles_role_id",
+                        column: x => x.role_id,
+                        principalSchema: "core",
+                        principalTable: "Roles",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.SetNull);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Positions",
                 schema: "core",
                 columns: table => new
@@ -532,6 +570,40 @@ namespace Core.Infrastructure.Migrations
                         column: x => x.module_permission_id,
                         principalSchema: "core",
                         principalTable: "ModulePermissions",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "OperatorLocations",
+                schema: "core",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    operator_id = table.Column<int>(type: "integer", nullable: false),
+                    location_id = table.Column<int>(type: "integer", nullable: false),
+                    guid = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    is_active = table.Column<bool>(type: "boolean", nullable: false),
+                    is_default = table.Column<bool>(type: "boolean", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OperatorLocations", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_OperatorLocations_Locations_location_id",
+                        column: x => x.location_id,
+                        principalSchema: "core",
+                        principalTable: "Locations",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_OperatorLocations_Operators_operator_id",
+                        column: x => x.operator_id,
+                        principalSchema: "core",
+                        principalTable: "Operators",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -1028,9 +1100,9 @@ namespace Core.Infrastructure.Migrations
 
             migrationBuilder.InsertData(
                 schema: "core",
-                table: "Users",
-                columns: new[] { "id", "Locationid", "active_time", "address", "company_id", "date_of_birth", "department_id", "email", "expire_time", "face_id", "firstname", "gender", "guid", "identification", "is_active", "is_default", "is_operator", "is_user", "lastname", "license_plate_id", "middlename", "password", "phone", "pin_id", "position_id", "qr_code_id", "role_id", "title", "user_code", "username" },
-                values: new object[] { 1, null, new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "", null, new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), null, "support@sentrix.com", new DateTime(9999, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), null, "admin", "Male", new Guid("ed2b5887-9dcb-43bd-a6f8-988330df5181"), "admin", true, true, true, false, "system", null, "", "100000.lG1/4V/VRPZsbhf/Zqc4xw==.6vYcf+wEMSgqcaNhoZEdM9PaPxx2ZUErZhQbeMxo5OY=", "", null, null, null, 1, "Mr", "admin01", "admin" });
+                table: "Operators",
+                columns: new[] { "id", "email", "expired_date", "firstname", "gender", "is_active", "is_default", "joined_date", "lastname", "middlename", "password", "phone", "role_id", "title", "username" },
+                values: new object[] { 1, "support@sentrix.com", null, "Administrator", "Male", true, false, new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "System", "", "100000.lG1/4V/VRPZsbhf/Zqc4xw==.6vYcf+wEMSgqcaNhoZEdM9PaPxx2ZUErZhQbeMxo5OY=", "", 1, "Mr", "admin" });
 
             migrationBuilder.InsertData(
                 schema: "core",
@@ -1064,8 +1136,8 @@ namespace Core.Infrastructure.Migrations
 
             migrationBuilder.InsertData(
                 schema: "core",
-                table: "UserLocations",
-                columns: new[] { "id", "is_active", "is_default", "location_id", "user_id" },
+                table: "OperatorLocations",
+                columns: new[] { "id", "is_active", "is_default", "location_id", "operator_id" },
                 values: new object[] { 1, true, false, 1, 1 });
 
             migrationBuilder.CreateIndex(
@@ -1222,6 +1294,31 @@ namespace Core.Infrastructure.Migrations
                 name: "IX_ModulePermissions_role_id",
                 schema: "core",
                 table: "ModulePermissions",
+                column: "role_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OperatorLocations_location_id",
+                schema: "core",
+                table: "OperatorLocations",
+                column: "location_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OperatorLocations_operator_id",
+                schema: "core",
+                table: "OperatorLocations",
+                column: "operator_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Operators_guid_id_username",
+                schema: "core",
+                table: "Operators",
+                columns: new[] { "guid", "id", "username" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Operators_role_id",
+                schema: "core",
+                table: "Operators",
                 column: "role_id");
 
             migrationBuilder.CreateIndex(
@@ -1411,6 +1508,10 @@ namespace Core.Infrastructure.Migrations
                 schema: "core");
 
             migrationBuilder.DropTable(
+                name: "OperatorLocations",
+                schema: "core");
+
+            migrationBuilder.DropTable(
                 name: "SubDevices",
                 schema: "core");
 
@@ -1432,6 +1533,10 @@ namespace Core.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "ModulePermissions",
+                schema: "core");
+
+            migrationBuilder.DropTable(
+                name: "Operators",
                 schema: "core");
 
             migrationBuilder.DropTable(

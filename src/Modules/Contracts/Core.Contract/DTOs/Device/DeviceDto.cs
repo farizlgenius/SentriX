@@ -1,3 +1,5 @@
+using SharedKernel.Enums;
+
 namespace Core.Contract.DTOs.Device;
 
 public sealed record DeviceDto(
@@ -8,7 +10,7 @@ public sealed record DeviceDto(
   string Ip,
   int Port,
   string Firmware,
-  string Vendor,
+  Vendor Vendor,
   string Metadata,
   DateTime SyncedAt,
   string ConfigurationStatus,

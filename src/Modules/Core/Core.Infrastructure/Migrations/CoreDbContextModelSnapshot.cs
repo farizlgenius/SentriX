@@ -2308,6 +2308,10 @@ namespace Core.Infrastructure.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
 
+                    b.Property<string>("vendor")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.HasKey("id");
 
                     b.HasIndex("guid")

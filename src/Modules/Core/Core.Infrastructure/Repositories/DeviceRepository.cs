@@ -3,7 +3,9 @@ using Core.Contract.DTOs.Device;
 using Core.Domain.Entities;
 using Core.Infrastructure.Persistences;
 using Microsoft.EntityFrameworkCore;
+using SharedKernel.Constants;
 using SharedKernel.Domain;
+using SharedKernel.Exceptions;
 
 namespace Core.Infrastructure.Repositories;
 
@@ -18,33 +20,102 @@ public sealed class DeviceRepository(CoreDbContext context) : IDeviceRepository
 
       public async Task DeleteAsync(Guid guid, CancellationToken ct = default)
       {
-            throw new NotImplementedException();
+            var entity = await context.Devices
+                  .Where(x => x.guid == guid)
+                  .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.Device, guid.ToString());
+
+            context.Devices.Remove(entity);
+
+            await context.SaveChangesAsync(ct);
       }
 
       public async Task DeleteRangeAsync(IEnumerable<Guid> guids, CancellationToken ct = default)
       {
-            throw new NotImplementedException();
+            var entities = await context.Devices
+                  .AsNoTracking()
+                  .Where(x => guids.Contains(x.guid))
+                  .ToArrayAsync();
+
+            context.Devices.RemoveRange(entities);
+
+            await context.SaveChangesAsync(ct);
       }
 
       public async Task<bool> DisableAsync(Guid guid, CancellationToken ct = default)
       {
-            throw new NotImplementedException();
+            var entity = await context.Devices
+                  .Where(x => x.guid == guid)
+                  .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.Device, guid.ToString());
+
+            entity.is_active = false;
+
+            context.Devices.Update(entity);
+
+            await context.SaveChangesAsync(ct);
+
+            return true;
       }
 
       public async Task<bool> EnableAsync(Guid guid, CancellationToken ct = default)
       {
-            throw new NotImplementedException();
+            var entity = await context.Devices
+                  .Where(x => x.guid == guid)
+                  .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.Device, guid.ToString());
+
+            entity.is_active = true;
+
+            context.Devices.Update(entity);
+
+            await context.SaveChangesAsync(ct);
+
+            return true;
       }
 
       public async Task<DeviceDto> GetAsync(Guid guid, CancellationToken ct = default)
       {
-            throw new NotImplementedException();
+            return await context.Devices
+                  .AsNoTracking()
+                  .Where(x => x.guid == guid)
+                  .Select(x => new DeviceDto(
+                        x.guid,
+                        x.name,
+                        x.serial_number,
+                        x.mac,
+                        x.ip,
+                        x.port,
+                        x.firmware,
+                        x.vendor,
+                        x.metadata,
+                        x.synced_at,
+                        x.configuration_status,
+                        x.location.guid,
+                        x.is_active,
+                        x.is_default
+                  )).FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.Device, guid.ToString());
       }
 
 
-      public Task<IEnumerable<DeviceDto>> GetByLocationAsync(int locationId, CancellationToken ct = default)
+      public async Task<IEnumerable<DeviceDto>> GetByLocationAsync(int locationId, CancellationToken ct = default)
       {
-            throw new NotImplementedException();
+            return await context.Devices
+                  .AsNoTracking()
+                  .Where(x => x.location_id == locationId)
+                  .Select(x => new DeviceDto(
+                        x.guid,
+                        x.name,
+                        x.serial_number,
+                        x.mac,
+                        x.ip,
+                        x.port,
+                        x.firmware,
+                        x.vendor,
+                        x.metadata,
+                        x.synced_at,
+                        x.configuration_status,
+                        x.location.guid,
+                        x.is_active,
+                        x.is_default
+                  )).ToArrayAsync();
       }
 
       public async Task<Guid> GetGuidByMacAsync(string mac, CancellationToken ct = default)
@@ -73,21 +144,50 @@ public sealed class DeviceRepository(CoreDbContext context) : IDeviceRepository
 
       public async Task<bool> IsAnyByNameAndLocationIdAsync(string name, int locationId = default, CancellationToken ct = default)
       {
-            throw new NotImplementedException();
+            return await context.Devices
+                  .AsNoTracking()
+                  .AnyAsync(x => x.name.Equals(name) && x.location_id == locationId);
       }
 
       public async Task<bool> IsAnyGuidAsync(Guid guid, CancellationToken ct = default)
       {
-            throw new NotImplementedException();
+            return await context.Devices
+                  .AsNoTracking()
+                  .AnyAsync(x => x.guid == guid);
+      }
+
+      public async Task<bool> IsAnyMacAsync(string mac, CancellationToken ct = default)
+      {
+            return await context.Devices
+                  .AsNoTracking()
+                  .AnyAsync(x => x.mac.Equals(mac));
       }
 
       public async Task<bool> IsDefaultAsync(Guid guid, CancellationToken ct = default)
       {
-            throw new NotImplementedException();
+            return await context.Devices
+                  .AsNoTracking()
+                  .AnyAsync(x => x.guid == guid && x.is_default);
       }
 
       public async Task UpdateAsync(Device entity, CancellationToken ct = default)
       {
-            throw new NotImplementedException();
+            var en = await context.Devices
+                  .Where(x => x.guid == entity.Guid)
+                  .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.Device, entity.Guid.ToString());
+
+            en.name = entity.Name;
+            en.serial_number = entity.SerialNumber;
+            en.mac = entity.Mac;
+            en.ip = entity.Ip;
+            en.port = entity.Port;
+            en.firmware = entity.Firmware;
+            en.metadata = entity.Metadata;
+            en.vendor = entity.Vendor;
+            en.location_id = entity.LocationId;
+
+            context.Devices.Update(en);
+
+            await context.SaveChangesAsync(ct);
       }
 }

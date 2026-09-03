@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Core.Infrastructure.Migrations
 {
     [DbContext(typeof(CoreDbContext))]
-    [Migration("20260902145902_AddOperatorDetail")]
-    partial class AddOperatorDetail
+    [Migration("20260903134429_InitialDb")]
+    partial class InitialDb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -2310,6 +2310,10 @@ namespace Core.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
                         .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.Property<string>("vendor")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.HasKey("id");
 
