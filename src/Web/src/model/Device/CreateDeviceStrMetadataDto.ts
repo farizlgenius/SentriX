@@ -1,14 +1,15 @@
+import { Vendor } from "../../enum/Vendor";
+
 export interface CreateDeviceStrMetadataDto {
-    name:string;
-    componentId:number;
-    mac:string;
-    serialNumber:string;
-    ip:string;
-    port:number;
-    fw:string;
-    type:string;
-    syncedAt:Date;
-    status:string;
-    locationId:number;
-    metadata:string;
+  name: string;
+  serialNumber: string;
+  mac: string;
+  ip: string;
+  port: string;
+  firmware: string;
+  vendor: Vendor;
+  metadata: string;
+  syncedAt: Date;
+  configurationStatus: string;
+  locationGuid: string;
 }

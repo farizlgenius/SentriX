@@ -1,6 +1,7 @@
 
 
 using Core.Domain.Entities;
+using SharedKernel.Enums;
 using SharedKernel.Helpers;
 
 namespace Core.Domain.Entities;
@@ -13,7 +14,7 @@ public class SubDevice : BaseDomain
   public string Mac { get; private set; } = string.Empty;
   public int Port { get; private set; }
   public int Address { get; private set; }
-  public string Model { get; private set; } = string.Empty;
+  public DeviceModuleModel Model { get; private set; } = DeviceModuleModel.x100;
   public int LocationId { get; private set; } = default!;
   public int DeviceId { get; private set; } = default!;
 
@@ -24,7 +25,7 @@ public class SubDevice : BaseDomain
     string Mac,
     int Port,
     int Address,
-    string Model,
+    DeviceModuleModel Model,
     int LocationId,
     int DeviceId
     )
@@ -52,7 +53,7 @@ public class SubDevice : BaseDomain
     string Mac,
     int Port,
     int Address,
-    string Model,
+    DeviceModuleModel Model,
     int LocationId,
     int DeviceId
     ) : base(Guid)

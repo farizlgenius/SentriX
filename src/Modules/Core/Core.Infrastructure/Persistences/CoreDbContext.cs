@@ -11,7 +11,7 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
       public DbSet<Location> Locations { get; set; }
       public DbSet<Country> Countries { get; set; }
       public DbSet<Device> Devices { get; set; }
-      public DbSet<SubDevice> SubDevices { get; set; }
+      public DbSet<DeviceModule> SubDevices { get; set; }
       public DbSet<Company> Companies { get; set; }
       public DbSet<Department> Departments { get; set; }
       public DbSet<Position> Positions { get; set; }
@@ -116,6 +116,10 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
             .Property(o => o.vendor)
             .HasConversion<string>();
 
+            modelBuilder.Entity<DeviceModule>()
+            .Property(o => o.model)
+            .HasConversion<string>();
+
             // Indexing and key setting 
             modelBuilder.Entity<Card>()
             .HasIndex(
@@ -157,7 +161,23 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
 
             modelBuilder.Entity<Device>()
             .HasIndex(
-                  x => x.guid
+                  x => new
+                  {
+                        x.guid,
+                        x.mac,
+                        x.vendor
+                  }
+            ).IsUnique();
+
+            modelBuilder.Entity<DeviceModule>()
+            .HasIndex(
+                  x => new
+                  {
+                        x.device_id,
+                        x.mac,
+                        x.guid,
+                        x.location_id
+                  }
             ).IsUnique();
 
             modelBuilder.Entity<Face>()
@@ -189,16 +209,6 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
             .HasIndex(
                   x => x.guid
             ).IsUnique();
-
-            modelBuilder.Entity<SubDevice>()
-            .HasIndex(
-                  x => new
-                  {
-                        x.guid,
-                        x.location_id
-                  }
-            ).IsUnique();
-
 
             modelBuilder.Entity<UserLocation>()
             .HasIndex(
@@ -309,7 +319,7 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
             // Device 
 
             modelBuilder.Entity<Device>()
-                  .HasMany(x => x.sub_device)
+                  .HasMany(x => x.device_module)
                   .WithOne(x => x.device)
                   .HasForeignKey(x => x.device_id)
                   .OnDelete(DeleteBehavior.Cascade);

@@ -65,7 +65,7 @@ const KEY = ["type", "name", "mac", "fw", "ip", "port", "tranStatus"];
 const Device = () => {
   const { idReports, setIdReports } = useIdReport();
   const { setPagination } = usePagination();
-  const { locationGuid: locationId } = useLocation();
+  const { locationGuid } = useLocation();
   const { toggleToast } = useToast();
   const { filterPermission, token } = useAuth();
   const {
@@ -81,23 +81,6 @@ const Device = () => {
   const [refresh, setRefresh] = useState(false);
   const toggleRefresh = () => setRefresh(!refresh);
 
-  const defaultDto: DeviceDto = {
-    guid: "",
-    name: "",
-    serialNumber: "",
-    mac: "",
-    ip: "",
-    port: "",
-    firmware: "",
-    vendor: Vendor.aero,
-    syncedAt: new Date(),
-    locationGuid: "",
-    metadata: "",
-    isDefault: false,
-    isActive: false,
-    configurationStatus: "",
-  };
-
   const aeroMetadata: AeroMetadata = {
     portOne: false,
     protocolOne: 0,
@@ -109,6 +92,24 @@ const Device = () => {
 
   const amicoMetadata: AmicoMetadata = {
     deviceId: "",
+  };
+
+  const defaultDto: DeviceDto = {
+    guid: "",
+    name: "",
+    serialNumber: "",
+    mac: "",
+    ip: "",
+    port: "",
+    firmware: "",
+    vendor: Vendor.aero,
+    syncedAt: new Date(),
+    locationGuid: locationGuid,
+    metadata: aeroMetadata,
+    isDefault: false,
+    isActive: false,
+    configurationStatus: "",
+    deviceModules: [],
   };
 
   const [form, setForm] = useState<boolean>(false);
@@ -321,7 +322,10 @@ const Device = () => {
         break;
       case "create":
         setConfirmCreate(() => async () => {
-          const req: CreateDeviceStrMetadataDto = mapDto(amicoDto);
+          const req: CreateDeviceStrMetadataDto = {
+            ...deviceDto,
+            metadata: JSON.stringify(deviceDto.metadata),
+          };
           const res = await send.post(DeviceEndpoint.CREATE, req);
           if (
             Helper.handleToastByResCode(res, HardwareToast.CREATE, toggleToast)
@@ -408,7 +412,7 @@ const Device = () => {
       const connection = SignalRService.getConnection();
       connection?.off(SignalRTopic.IDREPORT);
     };
-  }, [refresh, locationId, token, setIdReports]);
+  }, [refresh, locationGuid, token, setIdReports]);
 
   const actionBtn: ActionButton[] = [
     {
@@ -694,7 +698,7 @@ const Device = () => {
             action={actionBtn}
             renderOptionalComponent={renderOptional}
             status={status}
-            locationGuid={locationId}
+            locationGuid={locationGuid}
             fetchData={fetchData}
             specialDisplay={[
               {
@@ -739,7 +743,7 @@ const Device = () => {
 
 export default Device;
 
-// function mapDto(amicoDto: AmicoDtoMetadata): CreateDeviceStrMetadataDto {
+// function mapDto(amicoDto: AmicoMetadata): CreateDeviceStrMetadataDto {
 //   const { metadata, ...rest } = amicoDto;
 //   return mapFields(rest, { metadata: JSON.stringify(metadata) });
 // }

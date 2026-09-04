@@ -31,6 +31,30 @@ public sealed class DeviceService(
       throw new DuplicateException(EntityType.Device, dto.Name);
 
 
+    var deviceModules = dto.DeviceModules.Select(x => new DeviceModule(
+        x.Name,
+        x.SerialNumber,
+        x.Mac,
+        x.Address,
+        x.Port,
+        x.Model
+        )).ToList();
+
+
+    // Add Internal
+
+    deviceModules.Add(
+       new DeviceModule(
+        "Internal",
+        dto.SerialNumber,
+        dto.Mac,
+        0,
+        dto.Port,
+        dto.Vendor == SharedKernel.Enums.Vendor.aero ? SharedKernel.Enums.DeviceModuleModel.x1100 : SharedKernel.Enums.DeviceModuleModel.amico
+        )
+    );
+
+
 
     var d = new Core.Domain.Entities.Device(
       dto.Name,
@@ -41,8 +65,11 @@ public sealed class DeviceService(
       dto.Firmware,
       dto.Vendor,
       dto.Metadata,
-      locationId
+      locationId,
+      deviceModules
     );
+
+
 
 
     // Send Command to device
@@ -156,7 +183,15 @@ public sealed class DeviceService(
       dto.Firmware,
       dto.Vendor,
       dto.Metadata,
-      locationId
+      locationId,
+      dto.DeviceModules.Select(x => new DeviceModule(
+        x.Name,
+        x.SerialNumber,
+        x.Mac,
+        x.Address,
+        x.Port,
+        x.Model
+        )).ToList()
     );
 
     await repo.UpdateAsync(d, ct);

@@ -88,6 +88,16 @@ public sealed class DeviceRepository(CoreDbContext context) : IDeviceRepository
                         x.metadata,
                         x.synced_at,
                         x.configuration_status,
+                        x.device_module.Select(d => new DeviceModuleDto(
+                              d.guid,
+                              d.name,
+                              d.serial_number,
+                              d.mac,
+                              d.firmware,
+                              d.port,
+                              d.address,
+                              d.model
+                        )).ToList(),
                         x.location.guid,
                         x.is_active,
                         x.is_default
@@ -112,6 +122,16 @@ public sealed class DeviceRepository(CoreDbContext context) : IDeviceRepository
                         x.metadata,
                         x.synced_at,
                         x.configuration_status,
+                        x.device_module.Select(d => new DeviceModuleDto(
+                              d.guid,
+                              d.name,
+                              d.serial_number,
+                              d.mac,
+                              d.firmware,
+                              d.port,
+                              d.address,
+                              d.model
+                        )).ToList(),
                         x.location.guid,
                         x.is_active,
                         x.is_default
@@ -139,7 +159,74 @@ public sealed class DeviceRepository(CoreDbContext context) : IDeviceRepository
 
       public async Task<Pagination<DeviceDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
       {
-            throw new NotImplementedException();
+            var query = context.Devices
+                  .Where(x => x.location_id == param.locationGuid)
+                  .AsNoTracking()
+                  .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(param.search))
+            {
+                  if (!string.IsNullOrWhiteSpace(param.search))
+                  {
+                        var search = param.search.Trim();
+
+                        if (context.Database.IsNpgsql())
+                        {
+                              var pattern = $"%{search}%";
+
+                              query = query.Where(x =>
+                                  EF.Functions.ILike(x.nam, pattern) ||
+                                  EF.Functions.ILike(x.description, pattern)
+                              );
+                        }
+                        else // SQL Server
+                        {
+                              query = query.Where(x =>
+                                  x.name.Contains(search) ||
+                                  x.description.Contains(search)
+                              );
+                        }
+
+                  }
+            }
+
+
+            if (param.startDate != null)
+            {
+                  var startUtc = DateTime.SpecifyKind(param.startDate.Value, DateTimeKind.Utc);
+                  query = query.Where(x => x.created_at >= startUtc);
+            }
+
+            if (param.endDate != null)
+            {
+                  var endUtc = DateTime.SpecifyKind(param.endDate.Value, DateTimeKind.Utc);
+                  query = query.Where(x => x.created_at <= endUtc);
+            }
+
+            var count = await query.CountAsync();
+
+            var res = await query
+                  .AsNoTracking()
+                  .OrderByDescending(e => e.created_at)
+                  .Skip((param.pageNumber - 1) * param.pageSize)
+                  .Take(param.pageSize)
+                  .Select(e => new DepartmentDto(
+                        e.guid,
+                        e.name,
+                        e.description,
+                        e.company.guid,
+                        e.company.name,
+                        e.is_active,
+                        e.is_default
+                  )).ToListAsync();
+
+            return new Pagination<DepartmentDto>(
+                  param.pageNumber,
+                  param.pageSize,
+                  count,
+                  (int)Math.Ceiling(count / (double)param.pageSize),
+                  res
+                  );
       }
 
       public async Task<bool> IsAnyByNameAndLocationIdAsync(string name, int locationId = default, CancellationToken ct = default)

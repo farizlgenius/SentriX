@@ -14,6 +14,7 @@ public sealed class Device : BaseDomain
   public string Metadata { get; private set; } = string.Empty;
   public Vendor Vendor { get; private set; } = Vendor.aero;
   public int LocationId { get; private set; }
+  public List<DeviceModule> DeviceModules { get; private set; } = default!;
 
   public Device(
    string Name,
@@ -24,7 +25,8 @@ public sealed class Device : BaseDomain
    string Fw,
    Vendor Vendor,
    string Metadata,
-   int LocationId
+   int LocationId,
+   List<DeviceModule> deviceModules
    )
   {
     ValidationHelper.Name(Name);
@@ -41,6 +43,7 @@ public sealed class Device : BaseDomain
     this.Metadata = Metadata;
     this.Vendor = Vendor;
     this.LocationId = LocationId;
+    this.DeviceModules = DeviceModules;
   }
 
   public Device(
@@ -53,7 +56,8 @@ public sealed class Device : BaseDomain
     string Fw,
     Vendor Vendor,
     string Metadata,
-    int LocationId
+    int LocationId,
+    List<DeviceModule> DeviceModules
     ) : base(Guid)
   {
     ValidationHelper.Name(Name);
@@ -70,6 +74,7 @@ public sealed class Device : BaseDomain
     this.Vendor = Vendor;
     this.Metadata = Metadata;
     this.LocationId = LocationId;
+    this.DeviceModules = DeviceModules;
   }
 
 

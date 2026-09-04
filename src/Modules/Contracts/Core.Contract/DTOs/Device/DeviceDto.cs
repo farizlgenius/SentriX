@@ -14,6 +14,7 @@ public sealed record DeviceDto(
   string Metadata,
   DateTime SyncedAt,
   string ConfigurationStatus,
+  List<DeviceModuleDto> DeviceModules,
   Guid LocationGuid,
   bool IsActive,
   bool IsDefault

@@ -12,5 +12,6 @@ public sealed record UpdateDeviceDto(
   string Firmware,
   Vendor Vendor,
   string Metadata,
-  Guid LocationGuid
+  Guid LocationGuid,
+  List<DeviceModuleDto> DeviceModules
 );

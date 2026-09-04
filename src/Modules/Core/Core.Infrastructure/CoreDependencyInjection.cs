@@ -74,6 +74,14 @@ public static class CoreDependencyInjection
     services.AddScoped<IOperator, OperatorService>();
     services.AddScoped<IOperatorRepository, OperatorRepository>();
 
+    // ComponentMapping
+    services.AddScoped<IComponentMapping, ComponentMappingService>();
+    services.AddScoped<IComponentMappingRepository, ComponentMappingRepository>();
+
+    // Device
+    services.AddScoped<IDevice, DeviceService>();
+    services.AddScoped<IDeviceRepository, DeviceRepository>();
+
 
     // ==========================
     // Database
