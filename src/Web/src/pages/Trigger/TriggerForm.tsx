@@ -18,7 +18,7 @@ import {
   TableRow,
 } from "../../components/ui/table";
 import { TransactionCodeDto } from "../../model/Event/TransactionCodeDto";
-import { TimeZoneEndPoint } from "../../endpoint/TimeZoneEndpoint";
+import { TimezoneEndPoint } from "../../endpoint/TimeZoneEndpoint";
 import { ProcedureEndpoint } from "../../endpoint/ProcedureEndpoint";
 import { TimeZoneDto } from "../../model/TimeZone/TimeZoneDto";
 import { ProcedureDto } from "../../model/Procedure/ProcedureDto";
@@ -175,7 +175,7 @@ export const TriggerForm: React.FC<PropsWithChildren<FormProp<TriggerDto>>> = ({
   };
 
   const fetchTimeZone = async () => {
-    var res = await send.get(TimeZoneEndPoint.GET);
+    var res = await send.get(TimezoneEndPoint.GET);
     if (res && res.data.data) {
       res.data.data.map((a: TimeZoneDto) => {
         setTz((prev) => [

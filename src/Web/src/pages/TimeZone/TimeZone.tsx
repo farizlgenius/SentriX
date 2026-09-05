@@ -6,7 +6,6 @@ import Helper from "../../utility/Helper";
 import { TimeZoneDto } from "../../model/TimeZone/TimeZoneDto";
 import { useToast } from "../../context/ToastContext";
 import { TimeZoneToast } from "../../model/ToastMessage";
-import { TimeZoneEndPoint } from "../../endpoint/TimeZoneEndpoint";
 import { useLocation } from "../../context/LocationContext";
 import { useAuth } from "../../context/AuthContext";
 import { send } from "../../api/api";
@@ -17,6 +16,7 @@ import { FormContent } from "../../model/Form/FormContent";
 import { usePopup } from "../../context/PopupContext";
 import { FormType } from "../../model/Form/FormProp";
 import { usePagination } from "../../context/PaginationContext";
+import { TimezoneEndPoint } from "../../endpoint/TimezoneEndpoint";
 
 const TIMEZONE_TABLE_HEAD: string[] = ["Name", "Action"];
 const TIMEZONE_KEY: string[] = ["name"];
@@ -47,14 +47,12 @@ const TimeZone = () => {
     /* Data */
   }
   const defaultDto: TimeZoneDto = {
-    locationId: locationId,
-    componentId: -1,
     isActive: true,
     name: "",
     intervals: [],
-    guid: "00000000-0000-0000-0000-000000000000",
-    type: "",
+    guid: "",
     isDefault: false,
+    locationGuid: "",
   };
 
   const [timeZoneDto, setTimeZoneDto] = useState<TimeZoneDto>(defaultDto);
@@ -73,11 +71,11 @@ const TimeZone = () => {
           setInfo(true);
         }
         setConfirmRemove(() => async () => {
-          var data: string[] = [];
+          const data: string[] = [];
           selectedObjects.map(async (a: TimeZoneDto) => {
             if (a.guid != null) data.push(a.guid);
           });
-          var res = await send.post(TimeZoneEndPoint.DELETE_RANGE, data);
+          const res = await send.post(TimezoneEndPoint.DELETE_RANGE, data);
           if (
             Helper.handleToastByResCode(
               res,
@@ -93,7 +91,7 @@ const TimeZone = () => {
         break;
       case "create":
         setConfirmCreate(() => async () => {
-          const res = await send.post(TimeZoneEndPoint.CREATE, timeZoneDto);
+          const res = await send.post(TimezoneEndPoint.CREATE, timeZoneDto);
           if (
             Helper.handleToastByResCode(res, TimeZoneToast.CREATE, toggleToast)
           ) {
@@ -110,7 +108,7 @@ const TimeZone = () => {
         break;
       case "update":
         setConfirmUpdate(() => async () => {
-          const res = await send.put(TimeZoneEndPoint.UPDATE, timeZoneDto);
+          const res = await send.put(TimezoneEndPoint.UPDATE, timeZoneDto);
           if (
             Helper.handleToastByResCode(res, TimeZoneToast.UPDATE, toggleToast)
           ) {
@@ -137,7 +135,7 @@ const TimeZone = () => {
   const handleRemove = async (data: TimeZoneDto) => {
     console.log(data);
     setConfirmRemove(() => async () => {
-      const res = await send.delete(TimeZoneEndPoint.DELETE(data.guid));
+      const res = await send.delete(TimezoneEndPoint.DELETE(data.guid));
       console.log(res);
       if (Helper.handleToastByResCode(res, TimeZoneToast.DELETE, toggleToast)) {
         toggleRefresh();
@@ -159,16 +157,16 @@ const TimeZone = () => {
   const fetchData = async (
     pageNumber: number,
     pageSize: number,
-    locationId?: number,
+    locationGuid?: string,
     search?: string,
     startDate?: string,
     endDate?: string,
   ) => {
     const res = await send.get(
-      TimeZoneEndPoint.PAGINATION(
+      TimezoneEndPoint.PAGINATION(
         pageNumber,
         pageSize,
-        locationId,
+        locationGuid,
         search,
         startDate,
         endDate,
@@ -203,7 +201,13 @@ const TimeZone = () => {
     <>
       <PageBreadcrumb pageTitle="Time Zone" />
       {form ? (
-        <BaseForm tabContent={tabContent} header={""} desc={""} />
+        <BaseForm
+          handleClick={handleClick}
+          type={formType}
+          tabContent={tabContent}
+          header={""}
+          desc={""}
+        />
       ) : (
         <BaseTable<TimeZoneDto>
           keys={TIMEZONE_KEY}

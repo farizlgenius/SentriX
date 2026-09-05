@@ -11,7 +11,7 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
       public DbSet<Location> Locations { get; set; }
       public DbSet<Country> Countries { get; set; }
       public DbSet<Device> Devices { get; set; }
-      public DbSet<DeviceModule> SubDevices { get; set; }
+      public DbSet<DeviceModule> DeviceModules { get; set; }
       public DbSet<Company> Companies { get; set; }
       public DbSet<Department> Departments { get; set; }
       public DbSet<Position> Positions { get; set; }

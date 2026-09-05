@@ -16,7 +16,6 @@ import Button from "../../components/ui/button/Button";
 import { BaseForm } from "../UiElements/BaseForm";
 import { HardwareIcon } from "../../icons";
 import { FormContent } from "../../model/Form/FormContent";
-import AeroCreateDeviceForm from "../../components/form/device/AeroCreateDeviceForm";
 import { FormType } from "../../model/Form/FormProp";
 import { CreateAeroDeviceDto } from "../../model/Device/CreateAeroDeviceDto";
 import Helper from "../../utility/Helper";

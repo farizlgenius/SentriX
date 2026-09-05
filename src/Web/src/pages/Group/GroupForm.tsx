@@ -4,7 +4,7 @@ import Input from "../../components/form/input/InputField";
 import Button from "../../components/ui/button/Button";
 import Select from "../../components/form/Select";
 import { Options } from "../../model/Options";
-import { TimeZoneEndPoint } from "../../endpoint/TimeZoneEndpoint";
+import { TimezoneEndPoint } from "../../endpoint/TimeZoneEndpoint";
 import { DoorEndpoint } from "../../endpoint/DoorEndpoint";
 import { GroupDto } from "../../model/Group/GroupDto";
 import { send } from "../../api/api";
@@ -102,7 +102,7 @@ const GroupForm: React.FC<PropsWithChildren<FormProp<GroupDto>>> = ({
 
   const fetchTimeZone = async () => {
     let res = await send.get(
-      TimeZoneEndPoint.GET_OPTION_BY_LOCATION(locationId),
+      TimezoneEndPoint.GET_OPTION_BY_LOCATION(locationId),
     );
     if (res.data) {
       res.data.map((a: Options) => {

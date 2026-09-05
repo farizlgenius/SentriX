@@ -44,7 +44,7 @@ type NavItem = {
 
 const visitorNavItems: NavItem[] = [
   {
-    id:21,
+    id: 21,
     icon: <VisitorIcon />,
     name: "Visitor",
     path: "/visitor",
@@ -178,7 +178,6 @@ const acsNavItems: NavItem[] = [
     subItems: [
       { name: "Time Zone", path: "/timezone" },
       { name: "Holiday", path: "/holiday" },
-      { name: "Interval", path: "/interval" },
     ],
   },
   {

@@ -1,6 +1,5 @@
 export interface StatusDto {
-  deviceGuid: string;
-  componentId: number;
+  guid: string;
   status: number | string;
   tamper: number | string;
   ac: number | string;

@@ -1,11 +1,9 @@
-
 export interface HolidayDto {
-  guid:string;
-  componentId:number;
-  name:string;
-  start:string;
-  end:string;
-  locationId:number;
-  isActive:boolean;
-  isDefault:boolean;
+  guid: string;
+  name: string;
+  start: Date;
+  end: Date;
+  locationGuid: string;
+  isActive: boolean;
+  isDefault: boolean;
 }

@@ -1,4 +1,4 @@
 export enum Vendor {
-  aero,
-  amico,
+  aero = 1,
+  amico = 2,
 }

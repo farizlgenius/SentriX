@@ -15,6 +15,7 @@ public sealed class DeviceRepository(CoreDbContext context) : IDeviceRepository
       {
             await context.Devices.AddAsync(
                   new Persistences.Entities.Device(entity), ct);
+
             await context.SaveChangesAsync(ct);
       }
 
@@ -160,7 +161,7 @@ public sealed class DeviceRepository(CoreDbContext context) : IDeviceRepository
       public async Task<Pagination<DeviceDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
       {
             var query = context.Devices
-                  .Where(x => x.location_id == param.locationGuid)
+                  .Where(x => x.location.guid == param.locationGuid)
                   .AsNoTracking()
                   .AsQueryable();
 
@@ -175,15 +176,18 @@ public sealed class DeviceRepository(CoreDbContext context) : IDeviceRepository
                               var pattern = $"%{search}%";
 
                               query = query.Where(x =>
-                                  EF.Functions.ILike(x.nam, pattern) ||
-                                  EF.Functions.ILike(x.description, pattern)
+                                  EF.Functions.ILike(x.name, pattern) ||
+                                  EF.Functions.ILike(x.mac, pattern) ||
+                                  EF.Functions.ILike(x.ip, pattern)
+
                               );
                         }
                         else // SQL Server
                         {
                               query = query.Where(x =>
                                   x.name.Contains(search) ||
-                                  x.description.Contains(search)
+                                  x.mac.Contains(search) ||
+                                  x.ip.Contains(search)
                               );
                         }
 
@@ -210,17 +214,34 @@ public sealed class DeviceRepository(CoreDbContext context) : IDeviceRepository
                   .OrderByDescending(e => e.created_at)
                   .Skip((param.pageNumber - 1) * param.pageSize)
                   .Take(param.pageSize)
-                  .Select(e => new DepartmentDto(
-                        e.guid,
-                        e.name,
-                        e.description,
-                        e.company.guid,
-                        e.company.name,
-                        e.is_active,
-                        e.is_default
+                  .Select(x => new DeviceDto(
+                        x.guid,
+                        x.name,
+                        x.serial_number,
+                        x.mac,
+                        x.ip,
+                        x.port,
+                        x.firmware,
+                        x.vendor,
+                        x.metadata,
+                        x.synced_at,
+                        x.configuration_status,
+                        x.device_module.Select(d => new DeviceModuleDto(
+                              d.guid,
+                              d.name,
+                              d.serial_number,
+                              d.mac,
+                              d.firmware,
+                              d.port,
+                              d.address,
+                              d.model
+                        )).ToList(),
+                        x.location.guid,
+                        x.is_active,
+                        x.is_default
                   )).ToListAsync();
 
-            return new Pagination<DepartmentDto>(
+            return new Pagination<DeviceDto>(
                   param.pageNumber,
                   param.pageSize,
                   count,

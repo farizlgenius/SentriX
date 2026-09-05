@@ -23,14 +23,13 @@ public sealed class DeviceModule : BaseEntity
   public Location location { get; set; } = default!;
 
   public DeviceModule() { }
-  public DeviceModule(Core.Domain.Entities.SubDevice d) : base(d.Guid)
+  public DeviceModule(Core.Domain.Entities.DeviceModule d) : base(d.Guid)
   {
     name = d.Name;
     serial_number = d.SerialNumber;
     firmware = d.Firmware;
     mac = d.Mac;
     model = d.Model;
-    device_id = d.DeviceId;
     location_id = d.LocationId;
   }
 }

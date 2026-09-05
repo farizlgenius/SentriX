@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { CalenderIcon, TimeIcon } from "../../icons";
 import PageBreadcrumb from "../../components/common/PageBreadCrumb";
 import HolidayForm from "./HolidayForm";
@@ -25,7 +25,7 @@ export const KEY: string[] = ["name", "start", "end"];
 
 const Holiday = () => {
   const { toggleToast } = useToast();
-  const { locationGuid: locationId } = useLocation();
+  const { locationGuid } = useLocation();
   const { filterPermission } = useAuth();
   const { setPagination } = usePagination();
   const {
@@ -43,13 +43,12 @@ const Holiday = () => {
   const [formType, setFormType] = useState<FormType>(FormType.CREATE);
   const defaultDto: HolidayDto = {
     name: "",
-    start: "",
-    end: "",
-    locationId: locationId,
+    start: new Date(),
+    end: new Date(),
+    locationGuid: locationGuid,
     isActive: true,
     isDefault: false,
     guid: "00000000-0000-0000-0000-000000000000",
-    componentId: 0,
   };
   const [holidatDto, setHolidayDto] = useState<HolidayDto>(defaultDto);
   {
@@ -70,11 +69,11 @@ const Holiday = () => {
           setInfo(true);
         }
         setConfirmRemove(() => async () => {
-          var data: string[] = [];
+          const data: string[] = [];
           selectedObjects.map(async (a: HolidayDto) => {
             data.push(a.guid);
           });
-          var res = await send.post(HolidayEndpoint.DELETE_RANGE, data);
+          const res = await send.post(HolidayEndpoint.DELETE_RANGE, data);
           if (
             Helper.handleToastByResCode(
               res,
@@ -154,7 +153,7 @@ const Holiday = () => {
   const fetchData = async (
     pageNumber: number,
     pageSize: number,
-    locationId?: number,
+    locationGuid?: string,
     search?: string,
     startDate?: string,
     endDate?: string,
@@ -163,7 +162,7 @@ const Holiday = () => {
       HolidayEndpoint.PAGINATION(
         pageNumber,
         pageSize,
-        locationId,
+        locationGuid,
         search,
         startDate,
         endDate,
@@ -198,7 +197,13 @@ const Holiday = () => {
     <>
       <PageBreadcrumb pageTitle="Holiday" />
       {form ? (
-        <BaseForm tabContent={content} header={""} desc={""} />
+        <BaseForm
+          tabContent={content}
+          header={""}
+          desc={""}
+          type={formType}
+          handleClick={handleClick}
+        />
       ) : (
         <BaseTable<HolidayDto>
           headers={HEADER}
@@ -213,7 +218,7 @@ const Holiday = () => {
           refresh={refresh}
           permission={filterPermission(FeatureId.time)}
           fetchData={fetchData}
-          locationGuid={locationId}
+          locationGuid={locationGuid}
           specialDisplay={[
             {
               key: "start",

@@ -60,7 +60,7 @@ const HEADER = [
   "Enable",
   "Action",
 ];
-const KEY = ["type", "name", "mac", "fw", "ip", "port", "tranStatus"];
+const KEY = ["type", "name", "mac", "firmware", "ip", "port", "tranStatus"];
 
 const Device = () => {
   const { idReports, setIdReports } = useIdReport();
@@ -80,6 +80,15 @@ const Device = () => {
   } = usePopup();
   const [refresh, setRefresh] = useState(false);
   const toggleRefresh = () => setRefresh(!refresh);
+
+  const [form, setForm] = useState<boolean>(false);
+  const [formType, setFormType] = useState<FormType>(FormType.CREATE);
+  const [currentDeviceType, setCurrentDeviceType] = useState<string>("");
+
+  const [data, setData] = useState<DeviceDto[]>([]);
+  const [status, setStatus] = useState<StatusDto[]>([]);
+  const [tranStatus, setTranStatus] = useState<EventStatusDto[]>([]);
+  const [select, setSelect] = useState<DeviceDto[]>([]);
 
   const aeroMetadata: AeroMetadata = {
     portOne: false,
@@ -102,7 +111,8 @@ const Device = () => {
     ip: "",
     port: "",
     firmware: "",
-    vendor: Vendor.aero,
+    vendor:
+      currentDeviceType == Vendor[Vendor.aero] ? Vendor.aero : Vendor.amico,
     syncedAt: new Date(),
     locationGuid: locationGuid,
     metadata: aeroMetadata,
@@ -112,14 +122,7 @@ const Device = () => {
     deviceModules: [],
   };
 
-  const [form, setForm] = useState<boolean>(false);
-  const [formType, setFormType] = useState<FormType>(FormType.CREATE);
-  const [currentDeviceType, setCurrentDeviceType] = useState<string>("");
   const [deviceDto, setDeviceDto] = useState<DeviceDto>(defaultDto);
-  const [data, setData] = useState<DeviceDto[]>([]);
-  const [status, setStatus] = useState<StatusDto[]>([]);
-  const [tranStatus, setTranStatus] = useState<EventStatusDto[]>([]);
-  const [select, setSelect] = useState<DeviceDto[]>([]);
 
   const fetchData = async (
     pageNumber: number,
@@ -202,7 +205,7 @@ const Device = () => {
     if (res.data.success) {
       setStatus((prev) =>
         prev.map((item) =>
-          item.deviceGuid === res.data.data.guid
+          item.guid === res.data.data.guid
             ? {
                 ...item,
                 status: res.data.data.status,
@@ -241,6 +244,8 @@ const Device = () => {
   // };
 
   const handleEdit = (item: DeviceDto) => {
+    const metadata = JSON.parse(item.metadata as string) as AeroMetadata;
+    item.metadata = metadata;
     setFormType(FormType.UPDATE);
     setDeviceDto(item);
     setForm(true);
@@ -458,16 +463,16 @@ const Device = () => {
           variant="solid"
           size="sm"
           color={
-            item.status == "RESET"
+            item.configurationStatus == "RESET"
               ? "error"
-              : item.status == "UPLOAD"
+              : item.configurationStatus == "UPLOAD"
                 ? "warning"
                 : "success"
           }
         >
-          {item.status === "RESET"
+          {item.configurationStatus === "RESET"
             ? "Reset"
-            : item.status === "UPLOAD"
+            : item.configurationStatus === "UPLOAD"
               ? "Upload"
               : "Synced"}
         </Badge>
@@ -479,50 +484,19 @@ const Device = () => {
         <Badge
           size="sm"
           color={
-            statusDto.find((statusItem) => statusItem.deviceGuid === item.guid)
+            statusDto.find((statusItem) => statusItem.guid === item.guid)
               ?.status
               ? "success"
               : "error"
           }
         >
-          {statusDto.find((statusItem) => statusItem.deviceGuid === item.guid)
-            ?.status
+          {statusDto.find((statusItem) => statusItem.guid === item.guid)?.status
             ? "Online"
             : "Offline"}
         </Badge>
       </TableCell>,
     ];
   };
-
-  // const aeroContent: FormContent[] = [
-  //   {
-  //     icon: <Info2Icon />,
-  //     label: "Device Information",
-  //     content: (
-  //       <DeviceForm
-  //         handleClick={handleClickWithEvent}
-  //         dto={aeroDto}
-  //         setDto={setAeroDto}
-  //         type={formType}
-  //       />
-  //     ),
-  //   },
-  //   {
-  //     icon: <ModuleIcon />,
-  //     label: "Module",
-  //     content: <AeroModuleDetailForm data={deviceDto} />,
-  //   },
-  //   {
-  //     icon: <TransferIcon />,
-  //     label: "Memory Allocate Detail",
-  //     content: <HardwareMemAllocForm data={deviceDto} />,
-  //   },
-  //   {
-  //     icon: <ControlIcon />,
-  //     label: "ComponentSync Detail",
-  //     content: <HardwareComponentForm data={deviceDto} />,
-  //   },
-  // ];
 
   const deviceTypes = [
     {
@@ -540,8 +514,9 @@ const Device = () => {
   ];
 
   const handleDeviceTypeSelect = (vendor: Vendor) => {
+    setDeviceDto(defaultDto);
     setCurrentDeviceType(Vendor[vendor]);
-    setDeviceDto((previous) => ({ ...previous, vendor: vendor }));
+    setDeviceDto((prev) => ({ ...prev, vendor: vendor }));
   };
 
   const aeroContent: FormContent[] = [
@@ -560,41 +535,17 @@ const Device = () => {
     {
       icon: <ModuleIcon />,
       label: "Sub-device Information",
-      content: (
-        <AeroModuleDetailForm
-          data={deviceDto}
-          // handleClick={handleClickWithEvent}
-          // type={formType}
-          // setDto={setDeviceDto}
-          // dto={deviceDto}
-        />
-      ),
+      content: <AeroModuleDetailForm data={deviceDto} />,
     },
     {
       icon: <ModuleIcon />,
       label: "Device Component",
-      content: (
-        <AeroComponentForm
-          data={deviceDto}
-          // handleClick={handleClickWithEvent}
-          // type={formType}
-          // setDto={setDeviceDto}
-          // dto={deviceDto}
-        />
-      ),
+      content: <AeroComponentForm data={deviceDto} />,
     },
     {
       icon: <ModuleIcon />,
       label: "Device Memory Alloc",
-      content: (
-        <AeroMemAllocForm
-          data={deviceDto}
-          // handleClick={handleClickWithEvent}
-          // type={formType}
-          // setDto={setDeviceDto}
-          // dto={deviceDto}
-        />
-      ),
+      content: <AeroMemAllocForm data={deviceDto} />,
     },
   ];
 

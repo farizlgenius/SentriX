@@ -164,6 +164,10 @@ class Helper {
     return startMinutes < endMinutes;
   }
 
+  // static isValidTimeRange(start: Date, end: Date): boolean {
+  //   return start < end;
+  // }
+
   static isDayEmpty(data: DaysInWeekDto): boolean {
     if (
       data.sunday ||

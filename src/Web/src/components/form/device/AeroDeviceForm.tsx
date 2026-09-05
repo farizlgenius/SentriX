@@ -55,7 +55,7 @@ const AeroDeviceForm: React.FC<PropsWithChildren<FormProp<DeviceDto>>> = ({
             <Input
               disabled={isReadOnly}
               placeholder="eg. 192.168.0.251"
-              name="mac"
+              name="ip"
               type="text"
               id="ip"
               onChange={handleChange}
@@ -67,7 +67,7 @@ const AeroDeviceForm: React.FC<PropsWithChildren<FormProp<DeviceDto>>> = ({
             <Input
               disabled={isReadOnly}
               placeholder="eg. 3001"
-              name="mac"
+              name="port"
               type="text"
               id="port"
               onChange={handleChange}
@@ -91,7 +91,7 @@ const AeroDeviceForm: React.FC<PropsWithChildren<FormProp<DeviceDto>>> = ({
             <Input
               disabled={isReadOnly}
               placeholder="Firmware"
-              name="fw"
+              name="firmware"
               type="text"
               id="fw"
               onChange={handleChange}

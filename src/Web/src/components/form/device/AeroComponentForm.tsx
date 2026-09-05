@@ -7,13 +7,11 @@ import {
   TableHeader,
   TableRow,
 } from "../../ui/table";
-import SignalRService from "../../../services/SignalRService";
 import { useToast } from "../../../context/ToastContext";
 import { DeviceEndpoint } from "../../../endpoint/DeviceEndpoint";
 import { send } from "../../../api/api";
 import { VerifyHardwareDeviceConfigDto } from "../../../model/Device/VerifyHardwareDeviceConfigDto";
 import { DeviceDto } from "../../../model/Device/DeviceDto";
-import { ScpConfiguration } from "../../../model/Device/ScpConfiguraion";
 import { CreateAeroDeviceDto } from "../../../model/Device/CreateAeroDeviceDto";
 import { FormSection } from "../template/FormTemplate";
 
@@ -36,17 +34,20 @@ export const AeroComponentForm: React.FC<
     }
   };
 
+  // useEffect(() => {
+  //   fetchData();
+  //   var connection = SignalRService.getConnection();
+
+  //   connection.on("SCP.DEVICE_CONFIGURATION", (status: ScpConfiguration) => {
+  //     console.log("Received SCP.DEVICE_CONFIGURATION:", status);
+  //     setDeviceConfig(status.configurations);
+  //   });
+  //   return () => {};
+  // }, []);
+
   useEffect(() => {
     fetchData();
-    var connection = SignalRService.getConnection();
-    connection.on("SCP.DEVICE_CONFIGURATION", (status: ScpConfiguration) => {
-      console.log("Received SCP.DEVICE_CONFIGURATION:", status);
-      setDeviceConfig(status.configurations);
-    });
-    return () => {};
   }, []);
-
-  useEffect(() => {});
 
   return (
     <FormSection
@@ -59,8 +60,9 @@ export const AeroComponentForm: React.FC<
           <TableHeader className="h-10 items-center gap-3 bg-[var(--app-panel-muted)] px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.12em] text-gray-400">
             <TableRow>
               <TableCell className="text-center">Components</TableCell>
-              <TableCell className="text-center">nMismatch Record</TableCell>
+              <TableCell className="text-center">Mismatch Record</TableCell>
               <TableCell className="text-center">Status</TableCell>
+              <TableCell className="text-center">Action</TableCell>
             </TableRow>
           </TableHeader>
           <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">

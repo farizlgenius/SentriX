@@ -12,7 +12,7 @@ export interface DeviceDto {
   port: string;
   firmware: string;
   vendor: Vendor;
-  metadata: AeroMetadata | AmicoMetadata;
+  metadata: AeroMetadata | AmicoMetadata | string;
   syncedAt: Date;
   configurationStatus: string;
   deviceModules: DeviceModuleDto[];

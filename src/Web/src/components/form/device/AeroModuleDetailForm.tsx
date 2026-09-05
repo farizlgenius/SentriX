@@ -1,5 +1,5 @@
 import { PropsWithChildren, useEffect, useState } from "react";
-import { ModuleIcon } from "../../../icons";
+import { ModuleIcon, TrashBinIcon } from "../../../icons";
 import {
   Table,
   TableBody,
@@ -7,15 +7,14 @@ import {
   TableHeader,
   TableRow,
 } from "../../ui/table";
-import { send } from "../../../api/api";
-import { ModuleEndpoint } from "../../../endpoint/ModuleEndpoint";
 import { DeviceDto } from "../../../model/Device/DeviceDto";
-import { ModuleDto } from "../../../model/Module/ModuleDto";
 import { StatusDto } from "../../../model/StatusDto";
 import SignalRService from "../../../services/SignalRService";
 import { SignalRTopic } from "../../../constants/signalr-constant";
 import Badge from "../../ui/badge/Badge";
 import { FormSection } from "../template/FormTemplate";
+import { DeviceModuleDto } from "../../../model/Device/DeviceModuleDto";
+import { DeviceModuleModel } from "../../../enum/DeviceModuleModel";
 
 interface AeroModuleDetailFormInterface {
   data: DeviceDto;
@@ -24,37 +23,14 @@ interface AeroModuleDetailFormInterface {
 export const AeroModuleDetailForm: React.FC<
   PropsWithChildren<AeroModuleDetailFormInterface>
 > = ({ data }) => {
-  const [modules, setModules] = useState<ModuleDto[]>([]);
   const [status, setStatus] = useState<StatusDto[]>([]);
   const [refresh, setRefresh] = useState<boolean>(false);
   const toggleRefresh = () => setRefresh(!refresh);
 
-  // const fetchModule = async () => {
-  //       const res = await send.get(ModuleEndpoint.GET_BY_GUID(data.guid));
-  //       setModules(res.data.data);
-  //       const newStatuses = res.data.data.map((a: ModuleDto) => ({
-  //             componentId: a.componentId,
-  //             deviceComponentId:a.deviceComponentId,
-  //             status: "",
-  //             tamper: "",
-  //             ac: "",
-  //             batt: ""
-  //       }));
-
-  //       console.log(newStatuses);
-
-  //       setStatus((prev) => [...prev, ...newStatuses]);
-
-  //       // Fetch status for each
-  //       res.data.forEach((a: ModuleDto) => {
-  //             fetchStatus(a.id);
-  //       });
-  // }
-
-  const fetchStatus = async (moduleId: number) => {
-    await send.get(ModuleEndpoint.STATUS(moduleId));
-    //Helper.handlePopup(res, PopUpMsg.GET_MODULE_STATUS, showPopup)
-  };
+  // const fetchStatus = async (moduleId: number) => {
+  //   await send.get(ModuleEndpoint.STATUS(moduleId));
+  //   //Helper.handlePopup(res, PopUpMsg.GET_MODULE_STATUS, showPopup)
+  // };
 
   {
     /* UseEffect */
@@ -68,8 +44,7 @@ export const AeroModuleDetailForm: React.FC<
         console.log("Received realtime update:", status);
         setStatus((prev) =>
           prev.map((a) =>
-            a.deviceGuid == status.deviceGuid &&
-            a.componentId == status.componentId
+            a.guid == status.guid
               ? {
                   ...a,
                   status: status.status,
@@ -117,18 +92,19 @@ export const AeroModuleDetailForm: React.FC<
                   <TableCell className="text-center">Type</TableCell>
                   <TableCell className="text-center">Name</TableCell>
                   <TableCell className="text-center">Model</TableCell>
+                  <TableCell className="text-center">Address</TableCell>
                   <TableCell className="text-center">Firmware</TableCell>
                   <TableCell className="text-center">Serial Number</TableCell>
                   <TableCell className="text-center">Port</TableCell>
-                  <TableCell className="text-center">BATT</TableCell>
+                  <TableCell className="text-center">Batt</TableCell>
                   <TableCell className="text-center">AC</TableCell>
-                  <TableCell className="text-center">TAMPER</TableCell>
+                  <TableCell className="text-center">Tamper</TableCell>
                   <TableCell className="text-center">Status</TableCell>
                   <TableCell className="text-center">Action</TableCell>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {modules.map((m: ModuleDto) => (
+                {data.deviceModules.map((m: DeviceModuleDto) => (
                   <TableRow>
                     <TableCell className="flex justify-center">
                       <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-[var(--app-panel-border)] bg-[var(--app-panel-muted)] text-gray-700 dark:text-gray-200">
@@ -136,17 +112,20 @@ export const AeroModuleDetailForm: React.FC<
                       </div>
                     </TableCell>
                     <TableCell className="text-center">{m.name}</TableCell>
-                    <TableCell className="text-center">{m.model}</TableCell>
-                    <TableCell className="text-center">{m.fw}</TableCell>
+                    <TableCell className="text-center">
+                      {DeviceModuleModel[m.model]}
+                    </TableCell>
+                    <TableCell className="text-center">{m.address}</TableCell>
+                    <TableCell className="text-center">{m.firmware}</TableCell>
                     <TableCell className="text-center">
                       {m.serialNumber}
                     </TableCell>
                     <TableCell className="text-center">
-                      {m.port == 0
+                      {m.port == "0"
                         ? "Internal"
-                        : m.port == 1
+                        : m.port == "1"
                           ? "PORT 1"
-                          : m.port == 2
+                          : m.port == "2"
                             ? "PORT 2"
                             : "NONE"}
                     </TableCell>
@@ -155,22 +134,13 @@ export const AeroModuleDetailForm: React.FC<
                       <Badge
                         size="sm"
                         color={
-                          status.find(
-                            (x) =>
-                              x.componentId == m.componentId &&
-                              x.deviceGuid == m.deviceComponentId,
-                          )?.batt == "Active"
+                          status.find((x) => x.guid == m.guid)?.batt == "Active"
                             ? "success"
                             : "error"
                         }
                       >
-                        {
-                          status.find(
-                            (x) =>
-                              x.componentId == m.componentId &&
-                              x.deviceGuid == m.deviceComponentId,
-                          )?.batt
-                        }
+                        {status.find((x) => x.guid == m.guid)?.batt ??
+                          "Offline"}
                       </Badge>
                     </TableCell>
                     <TableCell className="text-center">
@@ -178,67 +148,53 @@ export const AeroModuleDetailForm: React.FC<
                       <Badge
                         size="sm"
                         color={
-                          status.find(
-                            (x) =>
-                              x.componentId == m.componentId &&
-                              x.deviceGuid == m.deviceComponentId,
-                          )?.ac == "Active"
+                          status.find((x) => x.guid == m.guid)?.ac == "Active"
                             ? "success"
                             : "error"
                         }
                       >
-                        {
-                          status.find(
-                            (x) =>
-                              x.componentId == m.componentId &&
-                              x.deviceGuid == m.deviceComponentId,
-                          )?.ac
-                        }
+                        {status.find((x) => x.guid == m.guid)?.ac ?? "Offline"}
                       </Badge>
                     </TableCell>
                     <TableCell className="text-center">
                       <Badge
                         size="sm"
                         color={
-                          status.find(
-                            (x) =>
-                              x.componentId == m.componentId &&
-                              x.deviceGuid == m.deviceComponentId,
-                          )?.tamper == "Active"
+                          status.find((x) => x.guid == m.guid)?.tamper ==
+                          "Active"
                             ? "success"
                             : "error"
                         }
                       >
-                        {
-                          status.find(
-                            (x) =>
-                              x.componentId == m.componentId &&
-                              x.deviceGuid == m.deviceComponentId,
-                          )?.tamper
-                        }
+                        {status.find((x) => x.guid == m.guid)?.tamper ??
+                          "Offline"}
                       </Badge>
                     </TableCell>
                     <TableCell className="text-center">
                       <Badge
                         size="sm"
                         color={
-                          status.find(
-                            (x) =>
-                              x.componentId == m.componentId &&
-                              x.deviceGuid == m.deviceComponentId,
-                          )?.status == "Online"
+                          status.find((x) => x.guid == m.guid)?.status ==
+                          "Online"
                             ? "success"
                             : "error"
                         }
                       >
-                        {
-                          status.find(
-                            (x) =>
-                              x.componentId == m.componentId &&
-                              x.deviceGuid == m.deviceComponentId,
-                          )?.status
-                        }
+                        {status.find((x) => x.guid == m.guid)?.status ??
+                          "Offline"}
                       </Badge>
+                    </TableCell>
+                    <TableCell className="text-center">
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          // onRemove(data);
+                        }}
+                        className={`inline-flex items-center justify-center rounded-lg p-1 transition-all duration-200 cursor-pointer text-red-600 hover:bg-red-50 hover:text-red-700 active:scale-95`}
+                      >
+                        <TrashBinIcon className="h-5 w-5" />
+                      </button>
                     </TableCell>
                   </TableRow>
                 ))}

@@ -34,10 +34,12 @@ public sealed class DeviceService(
     var deviceModules = dto.DeviceModules.Select(x => new DeviceModule(
         x.Name,
         x.SerialNumber,
+        x.Firmware,
         x.Mac,
         x.Address,
         x.Port,
-        x.Model
+        x.Model,
+        locationId
         )).ToList();
 
 
@@ -47,10 +49,12 @@ public sealed class DeviceService(
        new DeviceModule(
         "Internal",
         dto.SerialNumber,
+        dto.Firmware,
         dto.Mac,
         0,
         dto.Port,
-        dto.Vendor == SharedKernel.Enums.Vendor.aero ? SharedKernel.Enums.DeviceModuleModel.x1100 : SharedKernel.Enums.DeviceModuleModel.amico
+        dto.Vendor == SharedKernel.Enums.Vendor.aero ? SharedKernel.Enums.DeviceModuleModel.x1100 : SharedKernel.Enums.DeviceModuleModel.amico,
+        locationId
         )
     );
 
@@ -72,19 +76,30 @@ public sealed class DeviceService(
 
 
 
-    // Send Command to device
-    if (dto.Vendor.Equals(Vendor.AMICO))
+    // Send Command to device below 
+
+
+    // Handle how device is create on each device
+    switch (dto.Vendor)
     {
-      await repo.AddAsync(d, ct);
-    }
-    else if (dto.Vendor.Equals(Vendor.AERO))
-    {
-      // var id = await com.get
-      // await adapter.GetAdapter(dto.Vendor).Device.InititalDeviceAsync(,d.Ip,d.Mac);
-      // Aero get from mac and set guid
-      var guid = await repo.GetGuidByMacAsync(dto.Mac);
-      d.SetGuid(guid);
-      await repo.UpdateAsync(d, ct);
+      case SharedKernel.Enums.Vendor.amico:
+        await repo.AddAsync(d, ct);
+        break;
+      case SharedKernel.Enums.Vendor.aero:
+        if (!await repo.IsAnyMacAsync(dto.Mac))
+        {
+          await repo.AddAsync(d, ct);
+        }
+        else
+        {
+          var guid = await repo.GetGuidByMacAsync(dto.Mac);
+          d.SetGuid(guid);
+          await repo.UpdateAsync(d, ct);
+        }
+        break;
+      default:
+        throw new BadRequestException("Vendor Type Invalid.");
+
     }
 
 
@@ -187,10 +202,12 @@ public sealed class DeviceService(
       dto.DeviceModules.Select(x => new DeviceModule(
         x.Name,
         x.SerialNumber,
+        x.Firmware,
         x.Mac,
         x.Address,
         x.Port,
-        x.Model
+        x.Model,
+        locationId
         )).ToList()
     );
 

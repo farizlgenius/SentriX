@@ -293,7 +293,7 @@ const Door = () => {
     connection.on("ACR.STATUS", (status: AcrStatus) => {
       setStatus((prev) =>
         prev.map((a) =>
-          a.deviceGuid == status.scpId && a.componentId == status.number
+          a.guid == status.scpId && a.componentId == status.number
             ? {
                 ...a,
                 status: status.status == "" ? a.status : status.status,
@@ -362,29 +362,29 @@ const Door = () => {
         <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
           <>
             <Badge size="sm" color="dark">
-              {statusDto.find((b) => b.deviceGuid == data.scpId)?.tamper}
+              {statusDto.find((b) => b.guid == data.scpId)?.tamper}
             </Badge>
           </>
         </TableCell>
         <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
           <>
-            {statusDto.find((b) => b.deviceGuid == data.scpId)?.status ===
+            {statusDto.find((b) => b.guid == data.scpId)?.status ===
             "Secure" ? (
               <Badge size="sm" color="success">
-                {statusDto.find((b) => b.deviceGuid == data.scpId)?.status}
+                {statusDto.find((b) => b.guid == data.scpId)?.status}
               </Badge>
-            ) : statusDto.find((b) => b.deviceGuid == data.scpId)?.status ===
+            ) : statusDto.find((b) => b.guid == data.scpId)?.status ===
                 "Forced Open" ||
-              statusDto.find((b) => b.deviceGuid == data.scpId)?.status ===
+              statusDto.find((b) => b.guid == data.scpId)?.status ===
                 "Locked" ? (
               <Badge size="sm" color="error">
-                {statusDto.find((b) => b.deviceGuid == data.scpId)?.status}
+                {statusDto.find((b) => b.guid == data.scpId)?.status}
               </Badge>
             ) : (
               <Badge size="sm" color="warning">
-                {statusDto.find((b) => b.deviceGuid == data.scpId)?.status === 0
+                {statusDto.find((b) => b.guid == data.scpId)?.status === 0
                   ? "Error"
-                  : statusDto.find((b) => b.deviceGuid == data.scpId)?.status}
+                  : statusDto.find((b) => b.guid == data.scpId)?.status}
               </Badge>
             )}
           </>

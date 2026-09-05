@@ -34,5 +34,6 @@ public sealed class Device : BaseEntity
     this.vendor = domain.Vendor;
     this.metadata = domain.Metadata;
     location_id = domain.LocationId;
+    device_module = domain.DeviceModules.Select(x => new DeviceModule(x)).ToArray();
   }
 }

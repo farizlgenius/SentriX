@@ -34,7 +34,6 @@ import CardFormat from "./pages/CardFormat/CardFormat";
 import Alert from "./components/ui/alert/Alert";
 import { useEffect, useState } from "react";
 import Holiday from "./pages/Holiday/Holiday";
-import Interval from "./pages/Interval/Interval";
 import { useAlert } from "./context/AlertContext";
 import { useToast } from "./context/ToastContext";
 import { Led } from "./pages/Led/Led";
@@ -67,7 +66,6 @@ import { Company } from "./pages/Company/Company";
 import { Department } from "./pages/Department/Department";
 import { Position } from "./pages/Position/Position";
 import SignalRService from "./services/SignalRService";
-import { IdReport } from "./model/IdReport/IdReport";
 import { useIdReport } from "./context/IdReportContext";
 import { SignalRTopic } from "./constants/signalr-constant";
 import { DeviceEndpoint } from "./endpoint/DeviceEndpoint";
@@ -93,7 +91,7 @@ export default function App() {
   const { showToast, ToastContainer, toggleToast } = useToast();
   const { loading, Loading } = useLoading();
   const { setIdReports } = useIdReport();
-  const { locationGuid: locationId } = useLocation();
+  const { locationGuid } = useLocation();
 
   const [license, setLicense] = useState<boolean>(true);
   const [loginDto, setLoginDto] = useState<LoginDto>({
@@ -146,7 +144,7 @@ export default function App() {
   }, []);
 
   const fetchIdReport = async () => {
-    var res = await send.get(DeviceEndpoint.ID_REPORT);
+    const res = await send.get(DeviceEndpoint.ID_REPORT);
     setIdReports(res.data);
   };
 
@@ -235,7 +233,6 @@ export default function App() {
             <Route path="/cardformat" element={<CardFormat />} />
             <Route path="/led" element={<Led />} />
             <Route path="/holiday" element={<Holiday />} />
-            <Route path="/interval" element={<Interval />} />
             <Route path="/monitorgroup" element={<MonitorGroup />} />
             <Route path="/role" element={<Role />} />
             <Route path="/operator" element={<Operator />} />

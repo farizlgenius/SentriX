@@ -1,4 +1,4 @@
-import { PropsWithChildren, useEffect, useState } from "react";
+import { PropsWithChildren, useState } from "react";
 import Badge from "../../ui/badge/Badge";
 import {
   Table,
@@ -7,13 +7,11 @@ import {
   TableHeader,
   TableRow,
 } from "../../ui/table";
-import SignalRService from "../../../services/SignalRService";
 import { MemoryDto as MemoryDto } from "../../../model/Device/MemoryDto";
 import { send } from "../../../api/api";
 import { DeviceEndpoint } from "../../../endpoint/DeviceEndpoint";
 import { useToast } from "../../../context/ToastContext";
 import { DeviceDto } from "../../../model/Device/DeviceDto";
-import { MemoryAllocateDto } from "../../../model/Device/MemoryAllocateDto";
 import { CreateAeroDeviceDto } from "../../../model/Device/CreateAeroDeviceDto";
 import { FormSection } from "../template/FormTemplate";
 
@@ -28,19 +26,18 @@ export const AeroMemAllocForm: React.FC<
   const [memAllocs, setMemAllocs] = useState<MemoryDto[]>([]);
 
   const fetchData = async () => {
-    const res = await send.post(DeviceEndpoint.VERIFY_MEM(data.mac));
-    // if(Helper.handleToastByResCode(res,ToastMessage.GET_SCP_STRUCTURE,toggleToast)){}
+    await send.post(DeviceEndpoint.VERIFY_MEM(data.mac));
   };
 
-  useEffect(() => {
-    fetchData();
-    var connection = SignalRService.getConnection();
-    connection.on("SCP.MEMORY_ALLOCATE", (status: MemoryAllocateDto) => {
-      console.log(status);
-      setMemAllocs(status.memories);
-    });
-    return () => {};
-  }, []);
+  // useEffect(() => {
+  //   fetchData();
+  //   var connection = SignalRService.getConnection();
+  //   connection.on("SCP.MEMORY_ALLOCATE", (status: MemoryAllocateDto) => {
+  //     console.log(status);
+  //     setMemAllocs(status.memories);
+  //   });
+  //   return () => {};
+  // }, []);
 
   return (
     <FormSection
@@ -54,7 +51,7 @@ export const AeroMemAllocForm: React.FC<
             <TableRow>
               <TableCell className="text-center">Structure Type</TableCell>
               <TableCell className="text-center">HW Record Allocate</TableCell>
-              <TableCell className="text-center">nRecSize</TableCell>
+              <TableCell className="text-center">Record Size</TableCell>
               <TableCell className="text-center">HW Active Record</TableCell>
               <TableCell className="text-center">SW Record Allocate</TableCell>
               <TableCell className="text-center">Status</TableCell>

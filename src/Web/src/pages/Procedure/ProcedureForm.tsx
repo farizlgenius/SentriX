@@ -30,7 +30,7 @@ import { DoorModeForm } from "../../components/form/command/DoorModeForm";
 import { DoorEndpoint } from "../../endpoint/DoorEndpoint";
 import { MomentUnlockForm } from "../../components/form/command/MomentUnlockForm";
 import { TimezoneControlForm } from "../../components/form/command/TimezoneControlForm";
-import { TimeZoneEndPoint } from "../../endpoint/TimeZoneEndpoint";
+import { TimezoneEndPoint } from "../../endpoint/TimeZoneEndpoint";
 import { TimeZoneDto } from "../../model/TimeZone/TimeZoneDto";
 import { MonitorGroupCommandForm } from "../../components/form/command/MonitorGroupCommandForm";
 import { MonitorGroupEndpoint } from "../../endpoint/MonitorGroupEndpoint";
@@ -320,7 +320,7 @@ export const ProcedureForm: React.FC<
   };
 
   const fetchTz = async () => {
-    var res = await api.get(TimeZoneEndPoint.GET);
+    var res = await api.get(TimezoneEndPoint.GET);
     if (res && res.data.data) {
       res.data.data.map((a: TimeZoneDto) => {
         setTz((prev) => [

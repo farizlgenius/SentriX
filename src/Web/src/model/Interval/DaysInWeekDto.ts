@@ -1,6 +1,4 @@
 export interface DaysInWeekDto {
-  id:number;
-  componentId:number;
   sunday: boolean;
   monday: boolean;
   tuesday: boolean;
@@ -8,5 +6,4 @@ export interface DaysInWeekDto {
   thursday: boolean;
   friday: boolean;
   saturday: boolean;
-  locationId:number;
 }

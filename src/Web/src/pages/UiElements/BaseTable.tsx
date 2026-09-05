@@ -21,7 +21,6 @@ export const BaseTable = <
   keys,
   data,
   onEdit,
-  onInfo,
   onRemove,
   setSelect,
   renderOptionalComponent,
@@ -235,6 +234,7 @@ export const BaseTable = <
                         key={i}
                         className="cursor-pointer hover:bg-gray-900 active:bg-gray-800"
                         onClickWithEvent={() => {
+                          console.log(data);
                           onEdit(data);
                         }}
                       >

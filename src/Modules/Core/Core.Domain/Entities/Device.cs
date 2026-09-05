@@ -27,7 +27,7 @@ public sealed class Device : BaseDomain
    string Metadata,
    int LocationId,
    List<DeviceModule> deviceModules
-   )
+   ) : base(Guid.NewGuid())
   {
     ValidationHelper.Name(Name);
     ValidationHelper.NotMinus(LocationId, nameof(LocationId));
@@ -43,7 +43,7 @@ public sealed class Device : BaseDomain
     this.Metadata = Metadata;
     this.Vendor = Vendor;
     this.LocationId = LocationId;
-    this.DeviceModules = DeviceModules;
+    this.DeviceModules = deviceModules;
   }
 
   public Device(
@@ -57,7 +57,7 @@ public sealed class Device : BaseDomain
     Vendor Vendor,
     string Metadata,
     int LocationId,
-    List<DeviceModule> DeviceModules
+    List<DeviceModule> deviceModules
     ) : base(Guid)
   {
     ValidationHelper.Name(Name);
@@ -74,7 +74,7 @@ public sealed class Device : BaseDomain
     this.Vendor = Vendor;
     this.Metadata = Metadata;
     this.LocationId = LocationId;
-    this.DeviceModules = DeviceModules;
+    this.DeviceModules = deviceModules;
   }
 
 
