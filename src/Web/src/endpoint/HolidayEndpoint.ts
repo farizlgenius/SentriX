@@ -1,4 +1,4 @@
-const CONTROLLER = `time/holiday`;
+const CONTROLLER = `holiday`;
 
 export const HolidayEndpoint = {
   GET: (location: number) => `/api/${location}/${CONTROLLER}`,

@@ -88,6 +88,7 @@ const Holiday = () => {
         setRemove(true);
         break;
       case "create":
+        holidatDto.locationGuid = locationGuid;
         setConfirmCreate(() => async () => {
           const res = await send.post(HolidayEndpoint.CREATE, holidatDto);
           if (
@@ -101,6 +102,7 @@ const Holiday = () => {
         setCreate(true);
         break;
       case "update":
+        holidatDto.locationGuid = locationGuid;
         setConfirmUpdate(() => async () => {
           const res = await send.put(HolidayEndpoint.UPDATE, holidatDto);
           if (

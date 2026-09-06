@@ -178,6 +178,7 @@ const acsNavItems: NavItem[] = [
     subItems: [
       { name: "Time Zone", path: "/timezone" },
       { name: "Holiday", path: "/holiday" },
+      { name: "Interval", path: "/interval" },
     ],
   },
   {

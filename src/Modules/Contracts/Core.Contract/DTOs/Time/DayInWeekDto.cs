@@ -1,11 +1,11 @@
 namespace Core.Contract.DTOs.Time;
 
 public sealed record DayInWeekDto(
-  bool Sunday,
-  bool Monday,
-  bool Tuesday,
-  bool Wednesday,
-  bool Thursday,
-  bool Friday,
-  bool Saturday
+  bool Sunday = false,
+  bool Monday = false,
+  bool Tuesday = false,
+  bool Wednesday = false,
+  bool Thursday = false,
+  bool Friday = false,
+  bool Saturday = false
 );

@@ -38,6 +38,27 @@ namespace Core.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "DayInWeeks",
+                schema: "core",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    sunday = table.Column<bool>(type: "boolean", nullable: false),
+                    monday = table.Column<bool>(type: "boolean", nullable: false),
+                    tuesday = table.Column<bool>(type: "boolean", nullable: false),
+                    wednesday = table.Column<bool>(type: "boolean", nullable: false),
+                    thursday = table.Column<bool>(type: "boolean", nullable: false),
+                    friday = table.Column<bool>(type: "boolean", nullable: false),
+                    saturday = table.Column<bool>(type: "boolean", nullable: false),
+                    interval_id = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DayInWeeks", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Faces",
                 schema: "core",
                 columns: table => new
@@ -342,6 +363,71 @@ namespace Core.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Holidays",
+                schema: "core",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    name = table.Column<string>(type: "text", nullable: false),
+                    start = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    end = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    location_id = table.Column<int>(type: "integer", nullable: false),
+                    guid = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    is_active = table.Column<bool>(type: "boolean", nullable: false),
+                    is_default = table.Column<bool>(type: "boolean", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Holidays", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_Holidays_Locations_location_id",
+                        column: x => x.location_id,
+                        principalSchema: "core",
+                        principalTable: "Locations",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Intervals",
+                schema: "core",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    start_time = table.Column<TimeOnly>(type: "time without time zone", nullable: false),
+                    end_time = table.Column<TimeOnly>(type: "time without time zone", nullable: false),
+                    day_id = table.Column<int>(type: "integer", nullable: true),
+                    location_id = table.Column<int>(type: "integer", nullable: false),
+                    guid = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    is_active = table.Column<bool>(type: "boolean", nullable: false),
+                    is_default = table.Column<bool>(type: "boolean", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Intervals", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_Intervals_DayInWeeks_day_id",
+                        column: x => x.day_id,
+                        principalSchema: "core",
+                        principalTable: "DayInWeeks",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Intervals_Locations_location_id",
+                        column: x => x.location_id,
+                        principalSchema: "core",
+                        principalTable: "Locations",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Roles",
                 schema: "core",
                 columns: table => new
@@ -365,6 +451,33 @@ namespace Core.Infrastructure.Migrations
                         principalSchema: "core",
                         principalTable: "Locations",
                         principalColumn: "id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TimeZones",
+                schema: "core",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    name = table.Column<string>(type: "text", nullable: false),
+                    location_id = table.Column<int>(type: "integer", nullable: false),
+                    guid = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    is_active = table.Column<bool>(type: "boolean", nullable: false),
+                    is_default = table.Column<bool>(type: "boolean", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TimeZones", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_TimeZones_Locations_location_id",
+                        column: x => x.location_id,
+                        principalSchema: "core",
+                        principalTable: "Locations",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -396,7 +509,7 @@ namespace Core.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "SubDevices",
+                name: "DeviceModules",
                 schema: "core",
                 columns: table => new
                 {
@@ -419,16 +532,16 @@ namespace Core.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_SubDevices", x => x.id);
+                    table.PrimaryKey("PK_DeviceModules", x => x.id);
                     table.ForeignKey(
-                        name: "FK_SubDevices_Devices_device_id",
+                        name: "FK_DeviceModules_Devices_device_id",
                         column: x => x.device_id,
                         principalSchema: "core",
                         principalTable: "Devices",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_SubDevices_Locations_location_id",
+                        name: "FK_DeviceModules_Locations_location_id",
                         column: x => x.location_id,
                         principalSchema: "core",
                         principalTable: "Locations",
@@ -506,6 +619,35 @@ namespace Core.Infrastructure.Migrations
                         principalTable: "Roles",
                         principalColumn: "id",
                         onDelete: ReferentialAction.SetNull);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TimeZoneIntervals",
+                schema: "core",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    timezone_id = table.Column<int>(type: "integer", nullable: false),
+                    interval_id = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TimeZoneIntervals", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_TimeZoneIntervals_Intervals_interval_id",
+                        column: x => x.interval_id,
+                        principalSchema: "core",
+                        principalTable: "Intervals",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_TimeZoneIntervals_TimeZones_timezone_id",
+                        column: x => x.timezone_id,
+                        principalSchema: "core",
+                        principalTable: "TimeZones",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1199,10 +1341,23 @@ namespace Core.Infrastructure.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Devices_guid",
+                name: "IX_DeviceModules_device_id_mac_guid_location_id",
+                schema: "core",
+                table: "DeviceModules",
+                columns: new[] { "device_id", "mac", "guid", "location_id" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DeviceModules_location_id",
+                schema: "core",
+                table: "DeviceModules",
+                column: "location_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Devices_guid_mac_vendor",
                 schema: "core",
                 table: "Devices",
-                column: "guid",
+                columns: new[] { "guid", "mac", "vendor" },
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -1249,6 +1404,25 @@ namespace Core.Infrastructure.Migrations
                 schema: "core",
                 table: "Features",
                 column: "module_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Holidays_location_id",
+                schema: "core",
+                table: "Holidays",
+                column: "location_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Intervals_day_id",
+                schema: "core",
+                table: "Intervals",
+                column: "day_id",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Intervals_location_id",
+                schema: "core",
+                table: "Intervals",
+                column: "location_id");
 
             migrationBuilder.CreateIndex(
                 name: "IX_License_guid",
@@ -1362,23 +1536,23 @@ namespace Core.Infrastructure.Migrations
                 column: "Locationid");
 
             migrationBuilder.CreateIndex(
-                name: "IX_SubDevices_device_id",
+                name: "IX_TimeZoneIntervals_interval_id",
                 schema: "core",
-                table: "SubDevices",
-                column: "device_id");
+                table: "TimeZoneIntervals",
+                column: "interval_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_SubDevices_guid_location_id",
+                name: "IX_TimeZoneIntervals_timezone_id",
                 schema: "core",
-                table: "SubDevices",
-                columns: new[] { "guid", "location_id" },
+                table: "TimeZoneIntervals",
+                column: "timezone_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TimeZones_location_id_guid_name",
+                schema: "core",
+                table: "TimeZones",
+                columns: new[] { "location_id", "guid", "name" },
                 unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_SubDevices_location_id",
-                schema: "core",
-                table: "SubDevices",
-                column: "location_id");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserAdditionals_guid",
@@ -1496,7 +1670,15 @@ namespace Core.Infrastructure.Migrations
                 schema: "core");
 
             migrationBuilder.DropTable(
+                name: "DeviceModules",
+                schema: "core");
+
+            migrationBuilder.DropTable(
                 name: "FeaturePermissions",
+                schema: "core");
+
+            migrationBuilder.DropTable(
+                name: "Holidays",
                 schema: "core");
 
             migrationBuilder.DropTable(
@@ -1512,7 +1694,7 @@ namespace Core.Infrastructure.Migrations
                 schema: "core");
 
             migrationBuilder.DropTable(
-                name: "SubDevices",
+                name: "TimeZoneIntervals",
                 schema: "core");
 
             migrationBuilder.DropTable(
@@ -1528,6 +1710,10 @@ namespace Core.Infrastructure.Migrations
                 schema: "core");
 
             migrationBuilder.DropTable(
+                name: "Devices",
+                schema: "core");
+
+            migrationBuilder.DropTable(
                 name: "Features",
                 schema: "core");
 
@@ -1540,7 +1726,11 @@ namespace Core.Infrastructure.Migrations
                 schema: "core");
 
             migrationBuilder.DropTable(
-                name: "Devices",
+                name: "Intervals",
+                schema: "core");
+
+            migrationBuilder.DropTable(
+                name: "TimeZones",
                 schema: "core");
 
             migrationBuilder.DropTable(
@@ -1553,6 +1743,10 @@ namespace Core.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "Modules",
+                schema: "core");
+
+            migrationBuilder.DropTable(
+                name: "DayInWeeks",
                 schema: "core");
 
             migrationBuilder.DropTable(

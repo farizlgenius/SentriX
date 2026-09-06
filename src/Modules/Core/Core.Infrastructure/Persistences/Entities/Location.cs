@@ -12,9 +12,12 @@ public sealed class Location : BaseEntity
   public ICollection<Company> companies { get; set; } = default!;
   public ICollection<User> users { get; set; } = default!;
   public ICollection<Role> roles { get; set; } = default!;
+  public ICollection<TimeZone> timezones { get; set; } = default!;
+  public ICollection<Holiday> holidays { get; set; } = default!;
   public ICollection<UserLocation> user_locations { get; set; } = default!;
   public ICollection<OperatorLocation> operator_locations { get; set; } = default!;
   public ICollection<ComponentMapping> component_mapping { get; set; } = default!;
+  public ICollection<Interval> intervals { get; set; } = default!;
   public Location() { }
   public Location(Core.Domain.Entities.Location d) : base(d.Guid)
   {

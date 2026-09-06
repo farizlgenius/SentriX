@@ -82,6 +82,18 @@ public static class CoreDependencyInjection
     services.AddScoped<IDevice, DeviceService>();
     services.AddScoped<IDeviceRepository, DeviceRepository>();
 
+    // Time
+    services.AddScoped<ITime, TimeService>();
+    services.AddScoped<ITimeRepository, TimeRepository>();
+
+    // Holiday
+    services.AddScoped<IHoliday, HolidayService>();
+    services.AddScoped<IHolidayRepository, HolidayRepository>();
+
+    // Interval
+    services.AddScoped<IInterval, IntervalService>();
+    services.AddScoped<IIntervalRepository, IntervalRepository>();
+
 
     // ==========================
     // Database

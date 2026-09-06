@@ -73,6 +73,7 @@ import Scan from "./pages/Scan/Scan";
 import Output from "./pages/Output/Output";
 import CommandStatus from "./pages/Diagnostic/CommandStatus";
 import { Visitor } from "./pages/Visitor/Visitor";
+import Interval from "./pages/Interval/Interval";
 
 export default function App() {
   const navigate = useNavigate();
@@ -243,6 +244,7 @@ export default function App() {
             <Route path="/report" element={<Reports />} />
             <Route path="/command" element={<Command />} />
             <Route path="/status" element={<CommandStatus />} />
+            <Route path="/interval" element={<Interval />} />
 
             {/* VMS */}
             <Route path="/visitor" element={<Visitor />} />

@@ -43,7 +43,6 @@ export const PersonalInformationForm: React.FC<PersonalInformationFormProp> = ({
   dto,
   setDto,
   type,
-  handleClick,
   image,
   setImage,
 }) => {
@@ -412,7 +411,7 @@ export const PersonalInformationForm: React.FC<PersonalInformationFormProp> = ({
                 <FormField>
                   <DatePicker
                     isTime={false}
-                    id="Date"
+                    id="BirthDate"
                     label="Date of birth"
                     placeholder="Select a date"
                     onChange={(date) =>
@@ -519,7 +518,7 @@ export const PersonalInformationForm: React.FC<PersonalInformationFormProp> = ({
                 <FormField>
                   <DatePicker
                     isTime={false}
-                    id="Date"
+                    id="JoinedDate"
                     label="Joined Date"
                     placeholder="Select a date"
                     onChange={(date) =>
@@ -534,7 +533,7 @@ export const PersonalInformationForm: React.FC<PersonalInformationFormProp> = ({
                 <FormField>
                   <DatePicker
                     isTime={false}
-                    id="Date"
+                    id="ExpireDate"
                     label="Expired Date"
                     placeholder="Select a date"
                     onChange={(date) =>

@@ -12,4 +12,7 @@ public static class EntityType
   public const string Operator = "Operator";
   public const string PasswordRule = "PasswordRule";
   public const string WeakPassword = "WeakPassword";
+  public const string TimeZone = "Timezone";
+  public const string Holiday = "Holiday";
+  public const string Interval = "Interval";
 }

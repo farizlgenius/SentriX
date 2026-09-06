@@ -1,4 +1,4 @@
-const CONTROLLER = "time/timezone";
+const CONTROLLER = "time";
 
 export const TimezoneEndPoint = {
   GET: `/api/${CONTROLLER}`,

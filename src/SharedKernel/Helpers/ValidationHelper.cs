@@ -48,6 +48,12 @@ public static partial class ValidationHelper
       throw new ArgumentException($"'{name}' format incorrect.", name);
   }
 
+  public static void Time(TimeOnly start, TimeOnly end)
+  {
+    if (end < start)
+      throw new ArgumentException("Start time must lower than end time.");
+  }
+
   public static void IsNullOrEmpty(string value, string paramter)
   {
     if (string.IsNullOrWhiteSpace(value))
@@ -108,6 +114,9 @@ public static partial class ValidationHelper
 
   public static void ValidateActiveTime(DateTime active, DateTime expire)
   {
+    if (expire < DateTime.UtcNow)
+      throw new ArgumentException("Expire time must after today.");
+
     if (active > expire)
       throw new ArgumentException($"Active time must be lower than expire time.");
 
@@ -117,7 +126,7 @@ public static partial class ValidationHelper
   }
 
   public static void Vendor(string vendor)
-{
+  {
     bool isValid = typeof(SharedKernel.Constants.Vendor)
         .GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)
         .Where(f => f.IsLiteral && !f.IsInitOnly)
@@ -126,9 +135,9 @@ public static partial class ValidationHelper
 
     if (!isValid)
     {
-        throw new ArgumentException($"Invalid vendor: {vendor}");
+      throw new ArgumentException($"Invalid vendor: {vendor}");
     }
-}
+  }
 
   public static string Password(
     string password,

@@ -33,6 +33,11 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
       public DbSet<UserGroup> UserGroups { get; set; }
       public DbSet<Operator> Operators { get; set; }
       public DbSet<OperatorLocation> OperatorLocations { get; set; }
+      public DbSet<Holiday> Holidays { get; set; }
+      public DbSet<Persistences.Entities.TimeZone> TimeZones { get; set; }
+      public DbSet<TimeZoneInterval> TimeZoneIntervals { get; set; }
+      public DbSet<Interval> Intervals { get; set; }
+      public DbSet<DayInWeek> DayInWeeks { get; set; }
       protected override void OnModelCreating(ModelBuilder modelBuilder)
       {
             Console.WriteLine("=== Entities ===");
@@ -263,6 +268,16 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   x => x.guid
             ).IsUnique();
 
+            modelBuilder.Entity<Persistences.Entities.TimeZone>()
+            .HasIndex(
+                  x => new
+                  {
+                        x.location_id,
+                        x.guid,
+                        x.name
+                  }
+            ).IsUnique();
+
             // Configure relationships 
 
             // Location
@@ -271,6 +286,24 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   .HasOne(l => l.country)
                   .WithMany(c => c.locations)
                   .HasForeignKey(l => l.country_id)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Location>()
+                  .HasMany(x => x.timezones)
+                  .WithOne(x => x.location)
+                  .HasForeignKey(x => x.location_id)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Location>()
+                  .HasMany(x => x.holidays)
+                  .WithOne(x => x.location)
+                  .HasForeignKey(x => x.location_id)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Location>()
+                  .HasMany(x => x.intervals)
+                  .WithOne(x => x.location)
+                  .HasForeignKey(x => x.location_id)
                   .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Location>()
@@ -441,6 +474,26 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   .HasForeignKey(x => x.department_id)
                   .OnDelete(DeleteBehavior.Cascade);
 
+
+            // Time 
+
+            modelBuilder.Entity<TimeZoneInterval>()
+                  .HasOne(x => x.timezone)
+                  .WithMany(x => x.timezone_intervals)
+                  .HasForeignKey(x => x.timezone_id)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<TimeZoneInterval>()
+                  .HasOne(x => x.interval)
+                  .WithMany(x => x.timezone_intervals)
+                  .HasForeignKey(x => x.interval_id)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Interval>()
+                  .HasOne(x => x.day)
+                  .WithOne(x => x.interval)
+                  .HasForeignKey<Interval>(x => x.day_id)
+                  .OnDelete(DeleteBehavior.Cascade);
 
 
             // Seed Default data

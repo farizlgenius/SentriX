@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { AddIcon, TimezonIcon } from "../../icons";
+import React, { useState } from "react";
+import { TimezonIcon } from "../../icons";
 import PageBreadcrumb from "../../components/common/PageBreadCrumb";
 import TimeZoneForm from "./TimeZoneForm";
 import Helper from "../../utility/Helper";
@@ -22,7 +22,17 @@ const TIMEZONE_TABLE_HEAD: string[] = ["Name", "Action"];
 const TIMEZONE_KEY: string[] = ["name"];
 
 const TimeZone = () => {
-  const { locationGuid: locationId } = useLocation();
+  const { locationGuid } = useLocation();
+
+  const defaultDto: TimeZoneDto = {
+    isActive: true,
+    name: "",
+    intervalGuids: [],
+    guid: "",
+    isDefault: false,
+    locationGuid,
+  };
+
   const { filterPermission } = useAuth();
   const { setPagination } = usePagination();
   const { toggleToast } = useToast();
@@ -46,20 +56,10 @@ const TimeZone = () => {
   {
     /* Data */
   }
-  const defaultDto: TimeZoneDto = {
-    isActive: true,
-    name: "",
-    intervals: [],
-    guid: "",
-    isDefault: false,
-    locationGuid: "",
-  };
 
   const [timeZoneDto, setTimeZoneDto] = useState<TimeZoneDto>(defaultDto);
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    console.log(e.currentTarget);
-    console.log(e.currentTarget.name);
     switch (e.currentTarget.name) {
       case "add":
         setFormType(FormType.CREATE);
@@ -90,6 +90,7 @@ const TimeZone = () => {
         setRemove(true);
         break;
       case "create":
+        timeZoneDto.locationGuid = locationGuid;
         setConfirmCreate(() => async () => {
           const res = await send.post(TimezoneEndPoint.CREATE, timeZoneDto);
           if (
@@ -107,6 +108,7 @@ const TimeZone = () => {
         setTimeZoneDto(defaultDto);
         break;
       case "update":
+        timeZoneDto.locationGuid = locationGuid;
         setConfirmUpdate(() => async () => {
           const res = await send.put(TimezoneEndPoint.UPDATE, timeZoneDto);
           if (
@@ -221,7 +223,7 @@ const TimeZone = () => {
           setSelect={setSelectedObjects}
           permission={filterPermission(FeatureId.time)}
           fetchData={fetchData}
-          locationGuid={locationId}
+          locationGuid={locationGuid}
           refresh={refresh}
         />
       )}

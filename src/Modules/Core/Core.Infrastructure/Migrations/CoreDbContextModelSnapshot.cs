@@ -2192,6 +2192,43 @@ namespace Core.Infrastructure.Migrations
                         });
                 });
 
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.DayInWeek", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<bool>("friday")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("interval_id")
+                        .HasColumnType("integer");
+
+                    b.Property<bool>("monday")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("saturday")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("sunday")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("thursday")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("tuesday")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("wednesday")
+                        .HasColumnType("boolean");
+
+                    b.HasKey("id");
+
+                    b.ToTable("DayInWeeks", "core");
+                });
+
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Department", b =>
                 {
                     b.Property<int>("id")
@@ -3152,6 +3189,106 @@ namespace Core.Infrastructure.Migrations
                     b.ToTable("Groups", "core");
                 });
 
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Holiday", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<DateTime>("created_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.Property<DateTime>("end")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("guid")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<bool>("is_active")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("is_default")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("location_id")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("start")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("updated_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("location_id");
+
+                    b.ToTable("Holidays", "core");
+                });
+
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Interval", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<DateTime>("created_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.Property<int?>("day_id")
+                        .HasColumnType("integer");
+
+                    b.Property<TimeOnly>("end_time")
+                        .HasColumnType("time without time zone");
+
+                    b.Property<Guid>("guid")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<bool>("is_active")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("is_default")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("location_id")
+                        .HasColumnType("integer");
+
+                    b.Property<TimeOnly>("start_time")
+                        .HasColumnType("time without time zone");
+
+                    b.Property<DateTime>("updated_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("day_id")
+                        .IsUnique();
+
+                    b.HasIndex("location_id");
+
+                    b.ToTable("Intervals", "core");
+                });
+
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.License", b =>
                 {
                     b.Property<int>("id")
@@ -3839,6 +3976,73 @@ namespace Core.Infrastructure.Migrations
                         });
                 });
 
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.TimeZone", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<DateTime>("created_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.Property<Guid>("guid")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<bool>("is_active")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("is_default")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("location_id")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("updated_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("location_id", "guid", "name")
+                        .IsUnique();
+
+                    b.ToTable("TimeZones", "core");
+                });
+
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.TimeZoneInterval", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<int>("interval_id")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("timezone_id")
+                        .HasColumnType("integer");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("interval_id");
+
+                    b.HasIndex("timezone_id");
+
+                    b.ToTable("TimeZoneIntervals", "core");
+                });
+
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.User", b =>
                 {
                     b.Property<int>("id")
@@ -4228,6 +4432,35 @@ namespace Core.Infrastructure.Migrations
                     b.Navigation("module_permission");
                 });
 
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Holiday", b =>
+                {
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.Location", "location")
+                        .WithMany("holidays")
+                        .HasForeignKey("location_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("location");
+                });
+
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Interval", b =>
+                {
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.DayInWeek", "day")
+                        .WithOne("interval")
+                        .HasForeignKey("Core.Infrastructure.Persistences.Entities.Interval", "day_id")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.Location", "location")
+                        .WithMany("intervals")
+                        .HasForeignKey("location_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("day");
+
+                    b.Navigation("location");
+                });
+
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Location", b =>
                 {
                     b.HasOne("Core.Infrastructure.Persistences.Entities.Country", "country")
@@ -4304,6 +4537,36 @@ namespace Core.Infrastructure.Migrations
                     b.HasOne("Core.Infrastructure.Persistences.Entities.Location", null)
                         .WithMany("roles")
                         .HasForeignKey("Locationid");
+                });
+
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.TimeZone", b =>
+                {
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.Location", "location")
+                        .WithMany("timezones")
+                        .HasForeignKey("location_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("location");
+                });
+
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.TimeZoneInterval", b =>
+                {
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.Interval", "interval")
+                        .WithMany("timezone_intervals")
+                        .HasForeignKey("interval_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.TimeZone", "timezone")
+                        .WithMany("timezone_intervals")
+                        .HasForeignKey("timezone_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("interval");
+
+                    b.Navigation("timezone");
                 });
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.User", b =>
@@ -4430,6 +4693,12 @@ namespace Core.Infrastructure.Migrations
                     b.Navigation("locations");
                 });
 
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.DayInWeek", b =>
+                {
+                    b.Navigation("interval")
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Department", b =>
                 {
                     b.Navigation("positions");
@@ -4453,6 +4722,11 @@ namespace Core.Infrastructure.Migrations
                     b.Navigation("feature_permission");
                 });
 
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Interval", b =>
+                {
+                    b.Navigation("timezone_intervals");
+                });
+
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.LicensePlate", b =>
                 {
                     b.Navigation("user")
@@ -4467,11 +4741,17 @@ namespace Core.Infrastructure.Migrations
 
                     b.Navigation("devices");
 
+                    b.Navigation("holidays");
+
+                    b.Navigation("intervals");
+
                     b.Navigation("modules");
 
                     b.Navigation("operator_locations");
 
                     b.Navigation("roles");
+
+                    b.Navigation("timezones");
 
                     b.Navigation("user_locations");
 
@@ -4519,6 +4799,11 @@ namespace Core.Infrastructure.Migrations
                     b.Navigation("operators");
 
                     b.Navigation("users");
+                });
+
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.TimeZone", b =>
+                {
+                    b.Navigation("timezone_intervals");
                 });
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.User", b =>

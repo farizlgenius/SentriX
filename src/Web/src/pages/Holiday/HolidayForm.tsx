@@ -39,32 +39,33 @@ const HolidayForm: React.FC<PropsWithChildren<FormProp<HolidayDto>>> = ({
           </FormField>
           <FormField>
             <DatePicker
-              isTime={true}
-              id="date-picker1"
+              isTime={false}
+              id="startDate"
               label="Start Date"
               placeholder="Select a date"
               value={dto.start.toISOString()}
               onChange={(date) => {
+                console.log(date[0]);
                 setDto((prev) => ({
                   ...prev,
-                  start: new Date(date[0]),
+                  start: date[0],
                 }));
               }}
             />
           </FormField>
           <FormField>
             <DatePicker
-              isTime={true}
-              id="date-picker2"
+              isTime={false}
+              id="endDate"
               label="End Date"
               placeholder="Select a date"
               value={dto.end.toISOString()}
               onChange={(date) => {
+                console.log(date[0]);
                 setDto((prev) => ({
                   ...prev,
-                  end: new Date(date[0]),
+                  end: date[0],
                 }));
-                console.log(date[0]);
               }}
             />
           </FormField>

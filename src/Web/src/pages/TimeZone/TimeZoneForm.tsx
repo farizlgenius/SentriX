@@ -1,12 +1,10 @@
-import React, { PropsWithChildren, useState } from "react";
+import React, { PropsWithChildren, useEffect, useState } from "react";
 import Label from "../../components/form/Label";
 import Input from "../../components/form/input/InputField";
-import Helper from "../../utility/Helper";
 import { IntervalDto } from "../../model/Interval/IntervalDto";
 import { TimeZoneDto } from "../../model/TimeZone/TimeZoneDto";
 import { FormProp, FormType } from "../../model/Form/FormProp";
 import { AddIcon, TimeIcon, TrashBinIcon } from "../../icons";
-import { useToast } from "../../context/ToastContext";
 import {
   FormActions,
   FormField,
@@ -14,18 +12,10 @@ import {
 } from "../../components/form/template/FormTemplate";
 import { DaysInWeekDto } from "../../model/Interval/DaysInWeekDto";
 import Modals from "../UiElements/Modals";
-import Switch from "../../components/form/switch/Switch";
 import Button from "../../components/ui/button/Button";
-
-const daysInWeek = [
-  "sunday",
-  "monday",
-  "tuesday",
-  "wednesday",
-  "thursday",
-  "friday",
-  "saturday",
-];
+import { send } from "../../api/api";
+import { IntervalEndpoint } from "../../endpoint/IntervalEndpoint";
+import { useLocation } from "../../context/LocationContext";
 
 const maxIntervals = 12;
 
@@ -35,27 +25,18 @@ const TimeZoneForm: React.FC<PropsWithChildren<FormProp<TimeZoneDto>>> = ({
   dto,
 }) => {
   const readOnly = type === FormType.INFO;
-  const { toggleToast } = useToast();
+  const { locationGuid } = useLocation();
   const [intervalForm, setIntervalForm] = useState<boolean>(false);
-  const [selectedInterval, setSelectedInterval] = useState<IntervalDto | null>(
+  const [selectedIntervalGuid, setSelectedIntervalGuid] = useState<string | null>(
     null,
   );
-
-  const defaultDto: IntervalDto = {
-    days: {
-      sunday: false,
-      monday: false,
-      tuesday: false,
-      wednesday: false,
-      thursday: false,
-      friday: false,
-      saturday: false,
-    },
-    start: "",
-    end: "",
-    // guid: "00000000-0000-0000-0000-000000000000",
-  };
-  const [intervalDto, setIntervalDto] = useState<IntervalDto>(defaultDto);
+  const [intervalGuidToAdd, setIntervalGuidToAdd] = useState<string | null>(
+    null,
+  );
+  const [availableIntervals, setAvailableIntervals] = useState<IntervalDto[]>(
+    [],
+  );
+  const [isLoadingIntervals, setIsLoadingIntervals] = useState(false);
 
   const dayDescBuilder = (days: DaysInWeekDto) => {
     const res: string[] = [];
@@ -70,147 +51,107 @@ const TimeZoneForm: React.FC<PropsWithChildren<FormProp<TimeZoneDto>>> = ({
     return res.join(" ");
   };
 
-  const intervalCompare = (d1: IntervalDto, d2: IntervalDto) => {
-    if (d1 == null || d2 == null) return false;
-
-    if (
-      d1.days.sunday == d2.days.sunday &&
-      d1.days.monday == d2.days.monday &&
-      d1.days.tuesday == d2.days.tuesday &&
-      d1.days.wednesday == d2.days.wednesday &&
-      d1.days.thursday == d2.days.thursday &&
-      d1.days.friday == d2.days.friday &&
-      d1.days.saturday == d2.days.saturday &&
-      d1.start == d2.start &&
-      d2.end == d2.end
-    )
-      return true;
-
-    return false;
-  };
-
   const addInterval = () => {
     if (
-      dto.intervals.length >= maxIntervals ||
-      dto.intervals.some((item) => intervalCompare(intervalDto, item))
+      intervalGuidToAdd === null ||
+      dto.intervalGuids.length >= maxIntervals ||
+      dto.intervalGuids.includes(intervalGuidToAdd)
     )
       return;
 
     setDto((previous) => ({
       ...previous,
-      intervals: [...previous.intervals, intervalDto],
+      intervalGuids: [...previous.intervalGuids, intervalGuidToAdd],
     }));
-    setIntervalDto(defaultDto);
+    setIntervalGuidToAdd(null);
     setIntervalForm(false);
   };
+
   const removeSelected = () => {
-    if (selectedInterval === null) return;
+    if (selectedIntervalGuid === null) return;
     setDto((previous) => ({
       ...previous,
-      intervals: previous.intervals.filter(
-        (item) => !intervalCompare(item, selectedInterval),
+      intervalGuids: previous.intervalGuids.filter(
+        (guid) => guid !== selectedIntervalGuid,
       ),
     }));
-    setSelectedInterval(null);
+    setSelectedIntervalGuid(null);
   };
+
+  useEffect(() => {
+    const fetchIntervals = async () => {
+      setIsLoadingIntervals(true);
+      const res = await send.get(
+        IntervalEndpoint.PAGINATION(1, 1000, locationGuid || dto.locationGuid),
+      );
+
+      setAvailableIntervals(res?.data?.success ? res.data.data.items ?? [] : []);
+      setIsLoadingIntervals(false);
+    };
+
+    fetchIntervals();
+  }, [locationGuid, dto.locationGuid]);
+
+  const selectedIntervals = availableIntervals.filter((interval) =>
+    dto.intervalGuids.includes(interval.guid),
+  );
 
   return (
     <>
       {intervalForm && (
         <Modals
-          header="Add Time Interval"
+          header="Select Time Interval"
           handleClickWithEvent={(event) =>
             event.currentTarget.name === "close" && setIntervalForm(false)
           }
           body={
             <>
               <p className="mb-5 text-sm text-gray-500 dark:text-gray-400">
-                Enter the interval details manually for the timezone.
+                Choose a saved interval for this timezone.
               </p>
-              <div className="grid gap-4 sm:grid-cols-2">
-                <FormField className="grid grid-cols-3 col-span-2 gap-5">
-                  {daysInWeek.map((d: string, i: number) => (
-                    <div
-                      key={i}
-                      className="flex gap-10 justify-around items-center"
-                    >
-                      <div className="flex-1">
-                        <Switch
-                          label={Helper.toCapitalCase(d)}
-                          defaultChecked={
-                            intervalDto.days[
-                              d as keyof DaysInWeekDto
-                            ] as boolean
-                          }
-                          onChange={(e) => {
-                            setIntervalDto((prev) => ({
-                              ...prev,
-                              days: {
-                                ...prev.days,
-                                [d]: e,
-                              },
-                            }));
-                          }}
-                        />
-                      </div>
-                    </div>
-                  ))}
-                </FormField>
-                <FormField>
-                  <Label>Start Time</Label>
-                  <Input
-                    type="time"
-                    id="tm"
-                    name="start"
-                    onChange={(e) =>
-                      setIntervalDto((prev) => ({
-                        ...prev,
-                        start: e.target.value,
-                      }))
-                    }
-                    defaultValue={"00:00"}
-                    value={intervalDto.start}
-                    min="00:00"
-                    placeholder={intervalDto.start}
-                    disabled={type == FormType.INFO}
-                  />
-                </FormField>
-                <FormField>
-                  <Label>End Time</Label>
-                  <Input
-                    type="time"
-                    id="tm"
-                    name="end"
-                    onChange={(e) =>
-                      setIntervalDto((prev) => ({
-                        ...prev,
-                        end: e.target.value,
-                      }))
-                    }
-                    defaultValue={"00:00"}
-                    value={intervalDto.end}
-                    min="00:00"
-                    placeholder={intervalDto.end}
-                    disabled={type == FormType.INFO}
-                  />
-                </FormField>
-              </div>
+              {isLoadingIntervals ? (
+                <p className="py-8 text-center text-sm text-gray-500 dark:text-gray-400">
+                  Loading intervals...
+                </p>
+              ) : availableIntervals.length === 0 ? (
+                <p className="rounded-xl border border-dashed border-gray-300 p-6 text-center text-sm text-gray-500 dark:border-gray-700 dark:text-gray-400">
+                  No saved intervals are available for this location.
+                </p>
+              ) : (
+                <div className="grid max-h-80 gap-3 overflow-y-auto pr-1 sm:grid-cols-2">
+                  {availableIntervals.map((item) => {
+                    const alreadyAdded = dto.intervalGuids.includes(item.guid);
+                    const selected = intervalGuidToAdd === item.guid;
+                    return (
+                      <button
+                        type="button"
+                        key={item.guid}
+                        disabled={alreadyAdded}
+                        onClick={() => setIntervalGuidToAdd(item.guid)}
+                        className={`rounded-xl border p-4 text-left transition ${selected ? "border-brand-500 bg-brand-50 ring-2 ring-brand-500/15 dark:bg-brand-500/10" : "border-[var(--app-panel-border)] hover:border-brand-200 dark:hover:border-brand-500/50"} ${alreadyAdded ? "cursor-not-allowed opacity-50" : ""}`}
+                      >
+                        <p className="font-semibold text-gray-900 dark:text-white">
+                          {dayDescBuilder(item.days)}
+                        </p>
+                        <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                          {item.start} - {item.end}
+                        </p>
+                        {alreadyAdded && (
+                          <span className="mt-3 inline-block text-xs font-medium text-brand-600 dark:text-brand-300">
+                            Already added
+                          </span>
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
               <FormActions
-                disabled={
-                  intervalDto.end == "" ||
-                  intervalDto.start == "" ||
-                  (intervalDto.days.sunday == false &&
-                    intervalDto.days.monday == false &&
-                    intervalDto.days.tuesday == false &&
-                    intervalDto.days.wednesday == false &&
-                    intervalDto.days.thursday == false &&
-                    intervalDto.days.friday == false &&
-                    intervalDto.days.saturday == false)
-                }
+                disabled={intervalGuidToAdd === null}
                 typeLabel="Create"
                 submitName="add"
                 cancelName="close"
-                submitLabel="Add Interval "
+                submitLabel="Add selected interval"
                 onSubmit={addInterval}
                 onCancel={() => setIntervalForm(false)}
               />
@@ -257,10 +198,10 @@ const TimeZoneForm: React.FC<PropsWithChildren<FormProp<TimeZoneDto>>> = ({
             </div>
             <div className="mt-4 flex items-center justify-between">
               <span className="text-sm font-medium text-brand-700 dark:text-brand-300">
-                {dto.intervals.length} of {maxIntervals} intervals added
+                {dto.intervalGuids.length} of {maxIntervals} intervals added
               </span>
               <Button
-                disabled={readOnly || dto.intervals.length >= maxIntervals}
+                disabled={readOnly || dto.intervalGuids.length >= maxIntervals}
                 size="sm"
                 startIcon={<AddIcon className="h-4 w-4" />}
                 onClick={() => setIntervalForm(true)}
@@ -273,14 +214,14 @@ const TimeZoneForm: React.FC<PropsWithChildren<FormProp<TimeZoneDto>>> = ({
             <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
               <div>
                 <h4 className="font-semibold text-gray-900 dark:text-white">
-                  Card collection
+                  Interval collection
                 </h4>
                 <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-                  Select a card to manage it.
+                  Select an interval to manage it.
                 </p>
               </div>
               <Button
-                disabled={readOnly || selectedInterval === null}
+                disabled={readOnly || selectedIntervalGuid === null}
                 size="sm"
                 variant="outline"
                 startIcon={<TrashBinIcon className="h-4 w-4" />}
@@ -289,30 +230,31 @@ const TimeZoneForm: React.FC<PropsWithChildren<FormProp<TimeZoneDto>>> = ({
                 Remove selected
               </Button>
             </div>
-            {dto.intervals.length === 0 ? (
+            {isLoadingIntervals ? (
+              <p className="py-8 text-center text-sm text-gray-500 dark:text-gray-400">
+                Loading selected intervals...
+              </p>
+            ) : selectedIntervals.length === 0 ? (
               <div className="flex min-h-40 flex-col items-center justify-center rounded-xl border border-dashed border-gray-300 px-4 text-center dark:border-gray-700">
                 <div className="mb-3 flex h-11 w-11 items-center justify-center rounded-full bg-gray-100 text-gray-500 dark:bg-gray-800">
                   <TimeIcon className="h-5 w-5" />
                 </div>
                 <p className="font-medium text-gray-800 dark:text-white">
-                  No intevals yet
+                  No intervals yet
                 </p>
                 <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-                  Add a interval manually.
+                  Select an interval from the saved intervals list.
                 </p>
               </div>
             ) : (
               <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
-                {dto.intervals.map((item, i) => {
-                  const selected = intervalCompare(
-                    selectedInterval as IntervalDto,
-                    item,
-                  );
+                {selectedIntervals.map((item) => {
+                  const selected = selectedIntervalGuid === item.guid;
                   return (
                     <button
                       type="button"
-                      key={i}
-                      onClick={() => setSelectedInterval(item)}
+                      key={item.guid}
+                      onClick={() => setSelectedIntervalGuid(item.guid)}
                       className={`rounded-xl border p-4 text-left transition ${selected ? "border-brand-500 bg-brand-50 ring-2 ring-brand-500/15 dark:bg-brand-500/10" : "border-[var(--app-panel-border)] hover:border-brand-200 dark:hover:border-brand-500/50"}`}
                     >
                       <div className="flex items-start justify-between">

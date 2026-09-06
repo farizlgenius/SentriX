@@ -4,7 +4,7 @@ public sealed record TimeZoneDto(
   Guid Guid,
   string Name,
   List<IntervalDto> Intervals,
-  string LocationGuid,
+  Guid LocationGuid,
   bool IsActive,
   bool IsDefault
 );

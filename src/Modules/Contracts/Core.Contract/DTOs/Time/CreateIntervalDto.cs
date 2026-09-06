@@ -1,10 +1,8 @@
 namespace Core.Contract.DTOs.Time;
 
-public sealed record IntervalDto(
-  Guid Guid,
+public sealed record CreateIntervalDto(
   DayInWeekDto Days,
   TimeOnly Start,
   TimeOnly End,
-  bool IsActive,
-  bool IsDefault
+  Guid LocationGuid
 );
