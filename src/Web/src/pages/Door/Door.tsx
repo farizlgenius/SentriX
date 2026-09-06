@@ -48,14 +48,14 @@ import DoorForm from "./DoorForm";
 import { DoorType } from "../../enum/DoorType";
 
 // ACR Page
-export const DOOR_TABLE_HEADER: string[] = [
+const DOOR_TABLE_HEADER: string[] = [
   "Name",
   "Door Type",
   "Status",
   "",
   "Action",
 ];
-export const DOOR_KEY: string[] = ["name", "doorType"];
+const DOOR_KEY: string[] = ["name", "doorType"];
 
 // Default Value
 
@@ -397,7 +397,7 @@ const Door = () => {
     <>
       <PageBreadcrumb pageTitle="Doors" />
       {form ? (
-        <BaseForm tabContent={content} header={""} desc={""} />
+        <BaseForm type={formType} tabContent={content} header={""} desc={""} />
       ) : (
         <BaseTable<DoorDto>
           headers={DOOR_TABLE_HEADER}

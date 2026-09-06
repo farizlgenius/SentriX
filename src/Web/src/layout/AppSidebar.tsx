@@ -142,10 +142,7 @@ const acsNavItems: NavItem[] = [
     name: "Access Point",
     subItems: [
       { name: "Door", path: "/door" },
-      { name: "Lift", path: "/lift" },
-      { name: "HL", path: "/hl" },
-      { name: "Time Attendance", path: "/ta" },
-      { name: "Guard Tour", path: "/guard" },
+      { name: "Turnstile", path: "/turnstile" },
     ],
   },
   {

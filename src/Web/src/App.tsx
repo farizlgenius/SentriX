@@ -74,6 +74,7 @@ import Output from "./pages/Output/Output";
 import CommandStatus from "./pages/Diagnostic/CommandStatus";
 import { Visitor } from "./pages/Visitor/Visitor";
 import Interval from "./pages/Interval/Interval";
+import Turnstile from "./pages/Turnstile/Turnstile";
 
 export default function App() {
   const navigate = useNavigate();
@@ -227,6 +228,7 @@ export default function App() {
             <Route path="/input" element={<Input />} />
             <Route path="/popup" element={<PopupExample />} />
             <Route path="/door" element={<Door />} />
+            <Route path="/turnstile" element={<Turnstile />} />
             <Route path="/level" element={<Group />} />
             <Route path="/area" element={<Area />} />
             <Route path="/timezone" element={<TimeZone />} />

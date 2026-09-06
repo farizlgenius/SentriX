@@ -48,6 +48,14 @@ enum FormTab {
   Mode,
 }
 
+type DoorFocusComponent =
+  | "readerIn"
+  | "readerOut"
+  | "rex"
+  | "magneticLock"
+  | "buzzer"
+  | "sensor";
+
 const formSteps = [
   {
     tab: FormTab.General,
@@ -177,11 +185,14 @@ var defaultMetadata: AeroDoorMetadata = {
   interiorPushButtonOutRelayNumber: 0,
 };
 
-const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({
+const AeroDoorForm: React.FC<
+  PropsWithChildren<FormProp<DoorDto> & { focusComponent?: DoorFocusComponent }>
+> = ({
   handleClick,
   dto,
   setDto,
   type,
+  focusComponent,
 }) => {
   const { locationGuid: locationId } = useLocation();
   const defaultDoorDto: AeroDoorDto = {
@@ -194,7 +205,7 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({
     doorType: "",
     metadata: defaultMetadata,
     locationId: locationId,
-    type: DeviceType.AERO,
+    type: "",
     isActive: false,
   };
 
@@ -219,6 +230,27 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({
   const [settingFlag, setSettingFlag] = useState<boolean>(false);
 
   const [activeTab, setActiveTab] = useState<number>(FormTab.General);
+
+  useEffect(() => {
+    switch (focusComponent) {
+      case "readerIn":
+        setActiveTab(FormTab.Outside);
+        break;
+      case "readerOut":
+      case "rex":
+        setActiveTab(FormTab.Inside);
+        break;
+      case "magneticLock":
+      case "buzzer":
+        setActiveTab(FormTab.Strike);
+        break;
+      case "sensor":
+        setActiveTab(FormTab.Monitor);
+        break;
+      default:
+        break;
+    }
+  }, [focusComponent]);
   const [osdpBaudRateOption, setOsdpBaudRateOption] = useState<Options[]>([]);
 
   {
