@@ -2,46 +2,41 @@ using SharedKernel.Enums;
 
 namespace Core.Domain.Entities;
 
-public sealed class Reader : BaseDomain
+public sealed class Sensor : BaseDomain
 {
   public int SlotNo { get; private set; }
-  public ReaderMode ReaderMode { get; private set; }
+  public InputMode InputMode { get; private set; }
   public string Metadata { get; private set; } = string.Empty;
   public Vendor Vendor { get; private set; } = Vendor.aero;
-  public ReaderDirection ReaderDirection { get; private set; } = ReaderDirection.In;
   public int DoorId { get; private set; }
-  public Reader(
+  public Sensor(
     int slotNo,
-    ReaderMode readerMode,
+    InputMode inputMode,
     string metadata,
     Vendor vendor,
-    ReaderDirection readerDirection,
     int doorId
   ) : base(Guid.NewGuid())
   {
     SlotNo = slotNo;
-    ReaderMode = readerMode;
+    InputMode = inputMode;
     Metadata = metadata;
     Vendor = vendor;
-    ReaderDirection = readerDirection;
     DoorId = doorId;
   }
 
-  public Reader(
+  public Sensor(
     Guid guid,
     int slotNo,
-    ReaderMode readerMode,
+    InputMode inputMode,
     string metadata,
     Vendor vendor,
-    ReaderDirection readerDirection,
     int doorId
   ) : base(guid)
   {
     SlotNo = slotNo;
-    ReaderMode = readerMode;
+    InputMode = inputMode;
     Metadata = metadata;
     Vendor = vendor;
-    ReaderDirection = readerDirection;
     DoorId = doorId;
   }
 }

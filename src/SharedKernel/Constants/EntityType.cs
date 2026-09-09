@@ -15,4 +15,5 @@ public static class EntityType
   public const string TimeZone = "Timezone";
   public const string Holiday = "Holiday";
   public const string Interval = "Interval";
+  public const string Door = "Door";
 }

@@ -18,6 +18,7 @@ public sealed class Location : BaseEntity
   public ICollection<OperatorLocation> operator_locations { get; set; } = default!;
   public ICollection<ComponentMapping> component_mapping { get; set; } = default!;
   public ICollection<Interval> intervals { get; set; } = default!;
+  public ICollection<Door> doors { get; set; } = default!;
   public Location() { }
   public Location(Core.Domain.Entities.Location d) : base(d.Guid)
   {

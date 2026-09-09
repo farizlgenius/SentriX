@@ -1,6 +1,6 @@
 namespace SharedKernel.Enums;
 
-public enum DoorDirection
+public enum ReaderDirection
 {
       In, Out
 }

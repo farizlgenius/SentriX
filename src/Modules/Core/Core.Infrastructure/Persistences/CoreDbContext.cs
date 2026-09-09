@@ -38,6 +38,12 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
       public DbSet<TimeZoneInterval> TimeZoneIntervals { get; set; }
       public DbSet<Interval> Intervals { get; set; }
       public DbSet<DayInWeek> DayInWeeks { get; set; }
+      public DbSet<Door> Doors { get; set; }
+      public DbSet<Reader> Readers { get; set; }
+      public DbSet<Sensor> Sensors { get; set; }
+      public DbSet<Rex> Rexes { get; set; }
+      public DbSet<Relay> Relays { get; set; }
+      public DbSet<Buzzer> Buzzers { get; set; }
       protected override void OnModelCreating(ModelBuilder modelBuilder)
       {
             Console.WriteLine("=== Entities ===");
@@ -123,6 +129,26 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
 
             modelBuilder.Entity<DeviceModule>()
             .Property(o => o.model)
+            .HasConversion<string>();
+
+            modelBuilder.Entity<Door>()
+            .Property(d => new { d.vendor, d.type })
+            .HasConversion<string>();
+
+            modelBuilder.Entity<Reader>()
+            .Property(x => new { x.reader_direction, x.mode, x.vendor })
+            .HasConversion<string>();
+
+            modelBuilder.Entity<Rex>()
+            .Property(x => new { x.vendor, x.mode })
+            .HasConversion<string>();
+
+            modelBuilder.Entity<Relay>()
+            .Property(x => new { x.vendor, x.mode })
+            .HasConversion<string>();
+
+            modelBuilder.Entity<Sensor>()
+            .Property(x => new { x.vendor, x.mode })
             .HasConversion<string>();
 
             // Indexing and key setting 
@@ -278,6 +304,66 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   }
             ).IsUnique();
 
+            modelBuilder.Entity<Door>()
+                  .HasIndex(
+                        x => new
+                        {
+                              x.guid,
+                              x.id,
+                              x.device_module_id
+                        }
+                  ).IsUnique();
+
+            modelBuilder.Entity<Reader>()
+                  .HasIndex(
+                        x => new
+                        {
+                              x.guid,
+                              x.id,
+                              x.door_id
+                        }
+                  ).IsUnique();
+
+            modelBuilder.Entity<Sensor>()
+                  .HasIndex(
+                        x => new
+                        {
+                              x.guid,
+                              x.id,
+                              x.door_id
+                        }
+                  ).IsUnique();
+
+            modelBuilder.Entity<Relay>()
+                  .HasIndex(
+                        x => new
+                        {
+                              x.guid,
+                              x.id,
+                              x.door_id
+                        }
+                  ).IsUnique();
+
+            modelBuilder.Entity<Buzzer>()
+                  .HasIndex(
+                        x => new
+                        {
+                              x.guid,
+                              x.id,
+                              x.door_id
+                        }
+                  ).IsUnique();
+
+            modelBuilder.Entity<Rex>()
+                  .HasIndex(
+                        x => new
+                        {
+                              x.guid,
+                              x.id,
+                              x.door_id
+                        }
+                  ).IsUnique();
+
             // Configure relationships 
 
             // Location
@@ -330,6 +416,18 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   .HasForeignKey(x => x.user_id)
                   .OnDelete(DeleteBehavior.Cascade);
 
+            modelBuilder.Entity<Location>()
+                  .HasMany(x => x.modules)
+                  .WithOne(x => x.location)
+                  .HasForeignKey(x => x.location_id)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Location>()
+                  .HasMany(x => x.doors)
+                  .WithOne(x => x.location)
+                  .HasForeignKey(x => x.location_id)
+                  .OnDelete(DeleteBehavior.Cascade);
+
             modelBuilder.Entity<UserLocation>()
                         .HasOne(x => x.location)
                         .WithMany(x => x.user_locations)
@@ -356,6 +454,14 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   .WithOne(x => x.device)
                   .HasForeignKey(x => x.device_id)
                   .OnDelete(DeleteBehavior.Cascade);
+
+            // Device Module
+            modelBuilder.Entity<DeviceModule>()
+                  .HasMany(x => x.doors)
+                  .WithOne(x => x.device_module)
+                  .HasForeignKey(x => x.device_module_id)
+                  .OnDelete(DeleteBehavior.Cascade);
+
 
             // User
 
@@ -494,6 +600,38 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   .WithOne(x => x.interval)
                   .HasForeignKey<Interval>(x => x.day_id)
                   .OnDelete(DeleteBehavior.Cascade);
+
+            // Door and component
+
+            modelBuilder.Entity<Door>()
+                  .HasOne(x => x.reader)
+                  .WithOne(x => x.door)
+                  .HasForeignKey<Door>(x => x.reader_id)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Door>()
+                  .HasOne(x => x.sensor)
+                  .WithOne(x => x.door)
+                  .HasForeignKey<Door>(x => x.reader_id)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Door>()
+                  .HasOne(x => x.rex)
+                  .WithOne(x => x.door)
+                  .HasForeignKey<Door>(x => x.reader_id)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Door>()
+                  .HasOne(x => x.relay)
+                  .WithOne(x => x.door)
+                  .HasForeignKey<Door>(x => x.reader_id)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Door>()
+            .HasOne(x => x.buzzer)
+            .WithOne(x => x.door)
+            .HasForeignKey<Door>(x => x.buzzer_id)
+            .OnDelete(DeleteBehavior.Cascade);
 
 
             // Seed Default data
