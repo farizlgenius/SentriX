@@ -7,6 +7,7 @@ using Core.Domain.Entities;
 using SharedKernel.Constants;
 using SharedKernel.Domain;
 using SharedKernel.Exceptions;
+using SharedKernel.Helpers;
 using SharedKernel.Messaging;
 
 namespace Core.Application.Services;
@@ -39,11 +40,16 @@ public sealed class DeviceService(
         x.Address,
         x.Port,
         x.Model,
+        AeroModuleModelHelper.nReaderByModel(x.Model),
+        AeroModuleModelHelper.nOutputByModel(x.Model),
+        AeroModuleModelHelper.nInputByModel(x.Model),
         locationId
         )).ToList();
 
 
     // Add Internal
+
+    var model = dto.Vendor == SharedKernel.Enums.Vendor.aero ? SharedKernel.Enums.DeviceModuleModel.x1100 : SharedKernel.Enums.DeviceModuleModel.amico;
 
     deviceModules.Add(
        new DeviceModule(
@@ -53,7 +59,10 @@ public sealed class DeviceService(
         dto.Mac,
         0,
         dto.Port,
-        dto.Vendor == SharedKernel.Enums.Vendor.aero ? SharedKernel.Enums.DeviceModuleModel.x1100 : SharedKernel.Enums.DeviceModuleModel.amico,
+        model,
+        AeroModuleModelHelper.nReaderByModel(model),
+        AeroModuleModelHelper.nOutputByModel(model),
+        AeroModuleModelHelper.nInputByModel(model),
         locationId
         )
     );
@@ -207,6 +216,9 @@ public sealed class DeviceService(
         x.Address,
         x.Port,
         x.Model,
+         AeroModuleModelHelper.nReaderByModel(x.Model),
+        AeroModuleModelHelper.nOutputByModel(x.Model),
+        AeroModuleModelHelper.nInputByModel(x.Model),
         locationId
         )).ToList()
     );

@@ -21,7 +21,6 @@ public sealed class Relay : BaseEntity
     slot_no = d.SlotNo;
     metadata = d.Metadata;
     vendor = d.Vendor;
-    door_id = d.doorId;
     mode = d.OutputMode;
   }
 }

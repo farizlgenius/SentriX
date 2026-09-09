@@ -131,25 +131,41 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
             .Property(o => o.model)
             .HasConversion<string>();
 
-            modelBuilder.Entity<Door>()
-            .Property(d => new { d.vendor, d.type })
-            .HasConversion<string>();
+                        // Door Enums
+            modelBuilder.Entity<Door>(b =>
+            {
+            b.Property(d => d.vendor).HasConversion<string>();
+            b.Property(d => d.type).HasConversion<string>();
+            });
 
-            modelBuilder.Entity<Reader>()
-            .Property(x => new { x.reader_direction, x.mode, x.vendor })
-            .HasConversion<string>();
+            // Reader Enums
+            modelBuilder.Entity<Reader>(b =>
+            {
+            b.Property(x => x.reader_direction).HasConversion<string>();
+            b.Property(x => x.mode).HasConversion<string>();
+            b.Property(x => x.vendor).HasConversion<string>();
+            });
 
-            modelBuilder.Entity<Rex>()
-            .Property(x => new { x.vendor, x.mode })
-            .HasConversion<string>();
+            // Rex Enums
+            modelBuilder.Entity<Rex>(b =>
+            {
+            b.Property(x => x.vendor).HasConversion<string>();
+            b.Property(x => x.mode).HasConversion<string>();
+            });
 
-            modelBuilder.Entity<Relay>()
-            .Property(x => new { x.vendor, x.mode })
-            .HasConversion<string>();
+            // Relay Enums
+            modelBuilder.Entity<Relay>(b =>
+            {
+            b.Property(x => x.vendor).HasConversion<string>();
+            b.Property(x => x.mode).HasConversion<string>();
+            });
 
-            modelBuilder.Entity<Sensor>()
-            .Property(x => new { x.vendor, x.mode })
-            .HasConversion<string>();
+            // Sensor Enums
+            modelBuilder.Entity<Sensor>(b =>
+            {
+            b.Property(x => x.vendor).HasConversion<string>();
+            b.Property(x => x.mode).HasConversion<string>();
+            });
 
             // Indexing and key setting 
             modelBuilder.Entity<Card>()

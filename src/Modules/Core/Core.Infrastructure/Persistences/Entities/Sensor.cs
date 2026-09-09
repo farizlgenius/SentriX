@@ -22,6 +22,5 @@ public sealed class Sensor : BaseEntity
     mode = d.InputMode;
     metadata = d.Metadata;
     vendor = d.Vendor;
-    door_id = d.DoorId;
   }
 }

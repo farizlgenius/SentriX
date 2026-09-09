@@ -21,7 +21,6 @@ public sealed class Reader : BaseEntity
     mode = d.ReaderMode;
     metadata = d.Metadata;
     vendor = d.Vendor;
-    door_id = d.DoorId;
     reader_direction = d.ReaderDirection;
   }
 }
