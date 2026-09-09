@@ -44,6 +44,8 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
       public DbSet<Rex> Rexes { get; set; }
       public DbSet<Relay> Relays { get; set; }
       public DbSet<Buzzer> Buzzers { get; set; }
+      public DbSet<Lane> Lanes { get; set; }
+      public DbSet<Turnstile> Turnstiles { get; set; }
       protected override void OnModelCreating(ModelBuilder modelBuilder)
       {
             Console.WriteLine("=== Entities ===");
@@ -131,40 +133,40 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
             .Property(o => o.model)
             .HasConversion<string>();
 
-                        // Door Enums
+            // Door Enums
             modelBuilder.Entity<Door>(b =>
             {
-            b.Property(d => d.vendor).HasConversion<string>();
-            b.Property(d => d.type).HasConversion<string>();
+                  b.Property(d => d.vendor).HasConversion<string>();
+                  b.Property(d => d.type).HasConversion<string>();
             });
 
             // Reader Enums
             modelBuilder.Entity<Reader>(b =>
             {
-            b.Property(x => x.reader_direction).HasConversion<string>();
-            b.Property(x => x.mode).HasConversion<string>();
-            b.Property(x => x.vendor).HasConversion<string>();
+                  b.Property(x => x.reader_direction).HasConversion<string>();
+                  b.Property(x => x.mode).HasConversion<string>();
+                  b.Property(x => x.vendor).HasConversion<string>();
             });
 
             // Rex Enums
             modelBuilder.Entity<Rex>(b =>
             {
-            b.Property(x => x.vendor).HasConversion<string>();
-            b.Property(x => x.mode).HasConversion<string>();
+                  b.Property(x => x.vendor).HasConversion<string>();
+                  b.Property(x => x.mode).HasConversion<string>();
             });
 
             // Relay Enums
             modelBuilder.Entity<Relay>(b =>
             {
-            b.Property(x => x.vendor).HasConversion<string>();
-            b.Property(x => x.mode).HasConversion<string>();
+                  b.Property(x => x.vendor).HasConversion<string>();
+                  b.Property(x => x.mode).HasConversion<string>();
             });
 
             // Sensor Enums
             modelBuilder.Entity<Sensor>(b =>
             {
-            b.Property(x => x.vendor).HasConversion<string>();
-            b.Property(x => x.mode).HasConversion<string>();
+                  b.Property(x => x.vendor).HasConversion<string>();
+                  b.Property(x => x.mode).HasConversion<string>();
             });
 
             // Indexing and key setting 

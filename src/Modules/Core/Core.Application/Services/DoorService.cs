@@ -10,7 +10,7 @@ using SharedKernel.Messaging;
 
 namespace Core.Application.Services;
 
-public sealed class DoorService(IDoorRepository repo,IMessageBus bus) : IDoor
+public sealed class DoorService(IDoorRepository repo, IMessageBus bus) : IDoor
 {
   public async Task<Guid> CreateAsync(CreateDoorDto dto, CancellationToken ct = default)
   {
@@ -18,8 +18,8 @@ public sealed class DoorService(IDoorRepository repo,IMessageBus bus) : IDoor
     var locationId = await bus.QueryAsync(new LocationIdByGuidQuery(dto.LocationGuid));
     var deviceModuleId = await bus.QueryAsync(new DeviceModuleIdByGuidQuery(dto.DeviceModuleGuid));
 
-    if(await repo.IsAnyByNameAndLocationIdAsync(dto.Name,locationId))
-      throw new DuplicateException(nameof(dto.Name),dto.Name);
+    if (await repo.IsAnyByNameAndLocationIdAsync(dto.Name, locationId))
+      throw new DuplicateException(nameof(dto.Name), dto.Name);
 
     var d = new Door(
       dto.Name,
@@ -64,18 +64,18 @@ public sealed class DoorService(IDoorRepository repo,IMessageBus bus) : IDoor
 
     // Send command to controller 
 
-    await repo.AddAsync(d,ct);
+    await repo.AddAsync(d, ct);
 
     return d.Guid;
   }
 
   public async Task<bool> DeleteByGuidAsync(Guid guid, CancellationToken ct = default)
   {
-    if(!await repo.IsAnyGuidAsync(guid,ct))
-      throw new NotFoundException(EntityType.Door,guid.ToString());
+    if (!await repo.IsAnyGuidAsync(guid, ct))
+      throw new NotFoundException(EntityType.Door, guid.ToString());
 
     // Check relation here 
-    if(await repo.CheckRelationAsync(guid))
+    if (await repo.CheckRelationAsync(guid))
       throw new FoundRelateException();
 
     await repo.DeleteAsync(guid);
@@ -97,7 +97,7 @@ public sealed class DoorService(IDoorRepository repo,IMessageBus bus) : IDoor
         throw new NotFoundException(EntityType.Door, guid.ToString());
 
       // Check relate object here
-      if(await repo.CheckRelationAsync(guid))
+      if (await repo.CheckRelationAsync(guid))
         throw new FoundRelateException();
     }
 
@@ -132,19 +132,19 @@ public sealed class DoorService(IDoorRepository repo,IMessageBus bus) : IDoor
   public async Task<IEnumerable<DoorDto>> GetByLocationAsync(Guid guid, CancellationToken ct = default)
   {
     var locationId = await bus.QueryAsync(new LocationIdByGuidQuery(guid));
-    return await repo.GetByLocationAsync(locationId,ct);
+    return await repo.GetByLocationAsync(locationId, ct);
   }
 
   public async Task<Pagination<DoorDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
   {
-    return await repo.GetPaginationAsync(param,ct);
+    return await repo.GetPaginationAsync(param, ct);
   }
 
   public async Task<Guid> UpdateAsync(UpdateDoorDto dto, CancellationToken ct = default)
   {
     // Check is any location with guid
     if (!await repo.IsAnyGuidAsync(dto.Guid, ct))
-      throw new NotFoundException(EntityType.Location, dto.Guid.ToString());
+      throw new NotFoundException(EntityType.Door, dto.Guid.ToString());
 
     var locationId = await bus.QueryAsync(new LocationIdByGuidQuery(dto.LocationGuid));
     var deviceModuleId = await bus.QueryAsync(new DeviceModuleIdByGuidQuery(dto.DeviceModuleGuid));
@@ -155,6 +155,7 @@ public sealed class DoorService(IDoorRepository repo,IMessageBus bus) : IDoor
       dto.Type,
       dto.Metadata,
       dto.Readers.Select(x => new Reader(
+        x.Guid,
         x.SlotNo,
         x.Mode,
         x.Metadata,
@@ -162,24 +163,28 @@ public sealed class DoorService(IDoorRepository repo,IMessageBus bus) : IDoor
         x.ReaderDirection
       )).ToList(),
       dto.Sensor == null ? null : new Sensor(
+        dto.Sensor.Guid,
         dto.Sensor.SlotNo,
         dto.Sensor.Mode,
         dto.Sensor.Metadata,
         dto.Sensor.Vendor
         ),
         dto.Relay == null ? null : new Relay(
+          dto.Relay.Guid,
           dto.Relay.SlotNo,
           dto.Relay.Mode,
           dto.Relay.Metadata,
           dto.Relay.Vendor
         ),
         dto.Buzzer == null ? null : new Buzzer(
+          dto.Buzzer.Guid,
           dto.Buzzer.SlotNo,
           dto.Buzzer.Mode,
           dto.Buzzer.Metadata,
           dto.Buzzer.Vendor
         ),
         dto.Rex == null ? null : new Rex(
+          dto.Rex.Guid,
           dto.Rex.SlotNo,
           dto.Rex.Mode,
           dto.Rex.Metadata,

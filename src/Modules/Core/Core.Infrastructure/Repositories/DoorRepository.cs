@@ -331,6 +331,7 @@ public sealed class DoorRepository(CoreDbContext context) : IDoorRepository
     en.device_module_id = entity.DeviceModuleId;
 
     // 1 : N Handler
+
     context.Readers.RemoveRange(en.readers);
     en.readers.Clear();
 

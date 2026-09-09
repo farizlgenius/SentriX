@@ -95,11 +95,15 @@ public static class CoreDependencyInjection
     services.AddScoped<IIntervalRepository, IntervalRepository>();
 
     // ModuelDevice
-    services.AddScoped<IDeviceModuleRepository,DeviceModuleRepository>();
-    
+    services.AddScoped<IDeviceModuleRepository, DeviceModuleRepository>();
+
     // Door
-    services.AddScoped<IDoor,DoorService>();
-    services.AddScoped<IDoorRepository,DoorRepository>();
+    services.AddScoped<IDoor, DoorService>();
+    services.AddScoped<IDoorRepository, DoorRepository>();
+
+    // Turnstile
+    services.AddScoped<ITurnstile, TurnstileService>();
+    services.AddScoped<ITurnstileRepository, TurnstileRepository>();
 
 
     // ==========================

@@ -3,7 +3,7 @@ using Core.Domain.Entities;
 
 namespace Core.Application.Interfaces;
 
-public interface ITurnstileRepository : IBaseRepository<TurnsileDto,Turnstile>
+public interface ITurnstileRepository : IBaseRepository<TurnstileDto, Turnstile>
 {
-      
+
 }
