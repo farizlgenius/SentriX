@@ -6,5 +6,5 @@ namespace Host.Controllers;
 [ApiController]
 public class TurnstileController() : ControllerBase
 {
-
+      
 }

@@ -94,6 +94,13 @@ public static class CoreDependencyInjection
     services.AddScoped<IInterval, IntervalService>();
     services.AddScoped<IIntervalRepository, IntervalRepository>();
 
+    // ModuelDevice
+    services.AddScoped<IDeviceModuleRepository,DeviceModuleRepository>();
+    
+    // Door
+    services.AddScoped<IDoor,DoorService>();
+    services.AddScoped<IDoorRepository,DoorRepository>();
+
 
     // ==========================
     // Database
