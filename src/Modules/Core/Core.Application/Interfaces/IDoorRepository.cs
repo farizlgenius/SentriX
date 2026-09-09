@@ -5,5 +5,5 @@ namespace Core.Application.Interfaces;
 
 public interface IDoorRepository : IBaseRepository<DoorDto, Door>
 {
-
+      Task<bool> CheckRelationAsync(Guid guid,CancellationToken ct = default);
 }

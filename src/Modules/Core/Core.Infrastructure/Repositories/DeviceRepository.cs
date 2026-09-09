@@ -1,5 +1,6 @@
 using Core.Application.Interfaces;
 using Core.Contract.DTOs.Device;
+using Core.Contract.DTOs.DeviceModule;
 using Core.Domain.Entities;
 using Core.Infrastructure.Persistences;
 using Microsoft.EntityFrameworkCore;
@@ -97,7 +98,16 @@ public sealed class DeviceRepository(CoreDbContext context) : IDeviceRepository
                               d.firmware,
                               d.port,
                               d.address,
-                              d.model
+                              d.model,
+                              d.reader_slot,
+                              d.output_slot,
+                              d.input_slot,
+                              d.device.guid,
+                              d.device.name,
+                              d.location.guid,
+                              d.location.name,
+                              d.is_active,
+                              d.is_default
                         )).ToList(),
                         x.location.guid,
                         x.is_active,
@@ -124,19 +134,42 @@ public sealed class DeviceRepository(CoreDbContext context) : IDeviceRepository
                         x.synced_at,
                         x.configuration_status,
                         x.device_module.Select(d => new DeviceModuleDto(
-                              d.guid,
+                             d.guid,
                               d.name,
                               d.serial_number,
                               d.mac,
                               d.firmware,
                               d.port,
                               d.address,
-                              d.model
+                              d.model,
+                              d.reader_slot,
+                              d.output_slot,
+                              d.input_slot,
+                              d.device.guid,
+                              d.device.name,
+                              d.location.guid,
+                              d.location.name,
+                              d.is_active,
+                              d.is_default
                         )).ToList(),
                         x.location.guid,
                         x.is_active,
                         x.is_default
                   )).ToArrayAsync();
+      }
+
+      public async Task<int> GetDeviceModuleIdByGuidAsync(Guid guid, CancellationToken ct = default)
+      {
+            var res = await context.DeviceModules
+                  .AsNoTracking()
+                  .Where(x => x.guid == guid)
+                  .Select(x => x.id)
+                  .FirstOrDefaultAsync();
+
+            if(res == 0)
+                  throw new NotFoundException(EntityType.DeviceModule,guid.ToString());
+
+            return res;
       }
 
       public async Task<Guid> GetGuidByMacAsync(string mac, CancellationToken ct = default)
@@ -234,7 +267,16 @@ public sealed class DeviceRepository(CoreDbContext context) : IDeviceRepository
                               d.firmware,
                               d.port,
                               d.address,
-                              d.model
+                              d.model,
+                              d.reader_slot,
+                              d.output_slot,
+                              d.input_slot,
+                              d.device.guid,
+                              d.device.name,
+                              d.location.guid,
+                              d.location.name,
+                              d.is_active,
+                              d.is_default
                         )).ToList(),
                         x.location.guid,
                         x.is_active,

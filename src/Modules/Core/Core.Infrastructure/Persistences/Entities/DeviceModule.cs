@@ -10,8 +10,8 @@ public sealed class DeviceModule : BaseEntity
   public string serial_number { get; set; } = string.Empty;
   public string firmware { get; set; } = string.Empty;
   public string mac { get; set; } = string.Empty;
-  public short port { get; set; }
-  public short address { get; set; }
+  public int port { get; set; }
+  public int address { get; set; }
   public DeviceModuleModel model { get; set; } = DeviceModuleModel.x100;
   public int reader_slot { get; set; }
   public int output_slot { get; set; }

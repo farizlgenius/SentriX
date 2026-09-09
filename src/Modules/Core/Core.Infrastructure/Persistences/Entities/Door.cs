@@ -9,8 +9,7 @@ public sealed class Door : BaseEntity
   public DoorType type { get; set; } = DoorType.Single;
   public string metadata { get; set; } = string.Empty;
   // Relation
-  public int? reader_id { get; set; }
-  public Reader? reader { get; set; }
+  public ICollection<Reader> readers { get; set; } = default!;
   public int? sensor_id { get; set; }
   public Sensor? sensor { get; set; }
   public int? relay_id { get; set; }
@@ -32,7 +31,7 @@ public sealed class Door : BaseEntity
     vendor = d.Vendor;
     type = d.Type;
     metadata = d.Metadta;
-    reader = d.Reader == null ? null : new Reader(d.Reader);
+    readers = d.Readers.Select(x => new Reader(x)).ToArray();
     sensor = d.Sensor == null ? null : new Sensor(d.Sensor);
     relay = d.Relay == null ? null : new Relay(d.Relay);
     buzzer = d.Buzzer == null ? null : new Buzzer(d.Buzzer);

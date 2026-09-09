@@ -1,3 +1,4 @@
+using Core.Contract.DTOs.DeviceModule;
 using SharedKernel.Enums;
 
 namespace Core.Contract.DTOs.Device;

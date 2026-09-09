@@ -8,20 +8,17 @@ public sealed class Sensor : BaseDomain
   public InputMode InputMode { get; private set; }
   public string Metadata { get; private set; } = string.Empty;
   public Vendor Vendor { get; private set; } = Vendor.aero;
-  public int DoorId { get; private set; }
   public Sensor(
     int slotNo,
     InputMode inputMode,
     string metadata,
-    Vendor vendor,
-    int doorId
+    Vendor vendor
   ) : base(Guid.NewGuid())
   {
     SlotNo = slotNo;
     InputMode = inputMode;
     Metadata = metadata;
     Vendor = vendor;
-    DoorId = doorId;
   }
 
   public Sensor(
@@ -29,14 +26,12 @@ public sealed class Sensor : BaseDomain
     int slotNo,
     InputMode inputMode,
     string metadata,
-    Vendor vendor,
-    int doorId
+    Vendor vendor
   ) : base(guid)
   {
     SlotNo = slotNo;
     InputMode = inputMode;
     Metadata = metadata;
     Vendor = vendor;
-    DoorId = doorId;
   }
 }

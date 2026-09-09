@@ -604,27 +604,27 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
             // Door and component
 
             modelBuilder.Entity<Door>()
-                  .HasOne(x => x.reader)
+                  .HasMany(x => x.readers)
                   .WithOne(x => x.door)
-                  .HasForeignKey<Door>(x => x.reader_id)
+                  .HasForeignKey(x => x.door_id)
                   .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Door>()
                   .HasOne(x => x.sensor)
                   .WithOne(x => x.door)
-                  .HasForeignKey<Door>(x => x.reader_id)
+                  .HasForeignKey<Door>(x => x.sensor_id)
                   .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Door>()
                   .HasOne(x => x.rex)
                   .WithOne(x => x.door)
-                  .HasForeignKey<Door>(x => x.reader_id)
+                  .HasForeignKey<Door>(x => x.rex_id)
                   .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Door>()
                   .HasOne(x => x.relay)
                   .WithOne(x => x.door)
-                  .HasForeignKey<Door>(x => x.reader_id)
+                  .HasForeignKey<Door>(x => x.relay_id)
                   .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Door>()

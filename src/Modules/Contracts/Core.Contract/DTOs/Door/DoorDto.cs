@@ -7,7 +7,7 @@ public sealed record DoorDto(
   List<ReaderDto> Readers,
   BuzzerDto? Buzzer,
   RexDto? RexDto,
-  SensorDto Sensor,
+  SensorDto? Sensor,
   Guid LocationGuid,
   string LocationName,
   bool IsActive,

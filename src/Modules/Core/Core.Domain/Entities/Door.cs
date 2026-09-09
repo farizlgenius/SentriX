@@ -1,4 +1,5 @@
 using SharedKernel.Enums;
+using SharedKernel.Helpers;
 
 namespace Core.Domain.Entities;
 
@@ -8,7 +9,7 @@ public sealed class Door : BaseDomain
   public Vendor Vendor { get; private set; }
   public DoorType Type { get; private set; }
   public string Metadta { get; private set; } = string.Empty;
-  public Reader? Reader { get; private set; } = default!;
+  public List<Reader> Readers { get; private set; } = default!;
   public Sensor? Sensor { get; private set; }
   public Relay? Relay { get; private set; }
   public Buzzer? Buzzer { get; private set; }
@@ -20,7 +21,7 @@ public sealed class Door : BaseDomain
     Vendor vendor,
     DoorType type,
     string metadata,
-    Reader? reader,
+   List<Reader> readers,
     Sensor? sensor,
     Relay? relay,
     Buzzer? buzzer,
@@ -33,7 +34,7 @@ public sealed class Door : BaseDomain
     Vendor = vendor;
     Type = type;
     Metadta = metadata;
-    Reader = reader;
+    Readers = readers;
     Sensor = sensor;
     Relay = relay;
     Buzzer = buzzer;
@@ -47,7 +48,7 @@ public sealed class Door : BaseDomain
     Vendor vendor,
     DoorType type,
     string metadata,
-   Reader? reader,
+  List<Reader> readers,
     Sensor? sensor,
     Relay? relay,
     Buzzer? buzzer,
@@ -56,11 +57,14 @@ public sealed class Door : BaseDomain
     int locationId
   ) : base(guid)
   {
+    ValidationHelper.Name(name);
+    ValidationHelper.Vendor(vendor);
+    ValidationHelper.ReaderNumberPerDoor(readers.Count());
     Name = name;
     Vendor = vendor;
     Type = type;
     Metadta = metadata;
-    Reader = reader;
+    Readers = readers;
     Sensor = sensor;
     Relay = relay;
     Buzzer = buzzer;

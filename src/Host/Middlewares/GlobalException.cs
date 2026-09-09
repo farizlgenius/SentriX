@@ -66,8 +66,8 @@ public sealed class GlobalException : IMiddleware
                         ExceptionHelper.LogException(_logger, context, ex, LogLevel.Warning, "Duplicated", requestBody);
                         break;
 
-                  case FoundRelateException:
-                        await FoundRelateExceptionHandler(context, ex);
+                  case FoundRelateException relateException:
+                        await FoundRelateExceptionHandler(context, relateException);
                         ExceptionHelper.LogException(_logger, context, ex, LogLevel.Warning, "Found related", requestBody);
                         break;
 
@@ -99,7 +99,7 @@ public sealed class GlobalException : IMiddleware
 
       }
 
-      private Task FoundRelateExceptionHandler(HttpContext context, Exception ex)
+      private Task FoundRelateExceptionHandler(HttpContext context, FoundRelateException ex)
       {
 
             // Set the response status code and content
@@ -111,8 +111,9 @@ public sealed class GlobalException : IMiddleware
                   System.Net.HttpStatusCode.NotAcceptable,
                   false,
                   "Found related",
+                  ex.Payload,
                   Errors: new SharedKernel.Model.BaseErrorResponse(
-                        ex.Message
+                        "Found related"
                   ));
 
             return context.Response.WriteAsJsonAsync(response);

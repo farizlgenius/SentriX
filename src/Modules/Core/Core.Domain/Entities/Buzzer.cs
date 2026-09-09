@@ -8,20 +8,17 @@ public sealed class Buzzer : BaseDomain
   public OutputMode OutputMode { get; private set; }
   public string Metadata { get; private set; } = string.Empty;
   public Vendor Vendor { get; private set; } = Vendor.aero;
-  public int doorId { get; private set; }
   public Buzzer(
     int slotNo,
     OutputMode outputMode,
     string metadata,
-    Vendor vendor,
-    int doorId
+    Vendor vendor
   ) : base(Guid.NewGuid())
   {
     SlotNo = slotNo;
     OutputMode = outputMode;
     Metadata = metadata;
     Vendor = vendor;
-    this.doorId = doorId;
   }
 
   public Buzzer(
@@ -29,14 +26,12 @@ public sealed class Buzzer : BaseDomain
     int slotNo,
     OutputMode outputMode,
     string metadata,
-    Vendor vendor,
-    int doorId
+    Vendor vendor
   ) : base(guid)
   {
     SlotNo = slotNo;
     OutputMode = outputMode;
     Metadata = metadata;
     Vendor = vendor;
-    this.doorId = doorId;
   }
 }

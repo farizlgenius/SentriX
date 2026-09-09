@@ -48,6 +48,12 @@ public static partial class ValidationHelper
       throw new ArgumentException($"'{name}' format incorrect.", name);
   }
 
+  public static void ReaderNumberPerDoor(int count)
+  {
+    if(count > 2)
+      throw new ArgumentException($"Number of Reader exceed.");
+  }
+
   public static void Time(TimeOnly start, TimeOnly end)
   {
     if (end < start)
@@ -96,15 +102,7 @@ public static partial class ValidationHelper
     return arr.Contains(LocationId) || LocationId == 0;
   }
 
-  public static void ValidateDeviceType(string Type)
-  {
-    if (string.IsNullOrWhiteSpace(Type))
-      throw new ArgumentException("Device Type is empty");
 
-    bool isMatch = Enum.TryParse<DeviceType>(Type, true, out _);
-    if (!isMatch)
-      throw new ArgumentException("Device Type is invalid");
-  }
 
   public static void ValidateDateTime(string value, DateTime dateTime)
   {
@@ -138,6 +136,19 @@ public static partial class ValidationHelper
       throw new ArgumentException($"Invalid vendor: {vendor}");
     }
   }
+
+  public static void Vendor(Vendor vendor)
+  {
+    switch (vendor)
+    {
+      case Enums.Vendor.aero:
+      case Enums.Vendor.amico:
+      break;
+      default:
+        throw new ArgumentException($"Invalid vendor: {vendor}");
+    }
+  }
+
 
   public static string Password(
     string password,

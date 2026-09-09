@@ -3,6 +3,7 @@ namespace SharedKernel.Constants;
 public static class EntityType
 {
   public const string Device = "Device";
+  public const string DeviceModule = "DeviceModule";
   public const string Location = "Location";
   public const string Company = "Company";
   public const string Department = "Department";
