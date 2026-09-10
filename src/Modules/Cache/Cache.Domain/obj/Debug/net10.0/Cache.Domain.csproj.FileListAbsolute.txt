@@ -22,3 +22,15 @@ D:/aero/SentriX/src/Modules/Cache/Cache.Domain/obj/Debug/net10.0/ref/Cache.Domai
 /Users/far-izlengha/Documents/Project/SentriX/src/Modules/Cache/Cache.Domain/obj/Debug/net10.0/refint/Cache.Domain.dll
 /Users/far-izlengha/Documents/Project/SentriX/src/Modules/Cache/Cache.Domain/obj/Debug/net10.0/Cache.Domain.pdb
 /Users/far-izlengha/Documents/Project/SentriX/src/Modules/Cache/Cache.Domain/obj/Debug/net10.0/ref/Cache.Domain.dll
+/Users/mac/Documents/Aero/SentriX/src/Modules/Cache/Cache.Domain/bin/Debug/net10.0/Cache.Domain.deps.json
+/Users/mac/Documents/Aero/SentriX/src/Modules/Cache/Cache.Domain/bin/Debug/net10.0/Cache.Domain.dll
+/Users/mac/Documents/Aero/SentriX/src/Modules/Cache/Cache.Domain/bin/Debug/net10.0/Cache.Domain.pdb
+/Users/mac/Documents/Aero/SentriX/src/Modules/Cache/Cache.Domain/obj/Debug/net10.0/Cache.Domain.GeneratedMSBuildEditorConfig.editorconfig
+/Users/mac/Documents/Aero/SentriX/src/Modules/Cache/Cache.Domain/obj/Debug/net10.0/Cache.Domain.AssemblyInfoInputs.cache
+/Users/mac/Documents/Aero/SentriX/src/Modules/Cache/Cache.Domain/obj/Debug/net10.0/Cache.Domain.AssemblyInfo.cs
+/Users/mac/Documents/Aero/SentriX/src/Modules/Cache/Cache.Domain/obj/Debug/net10.0/Cache.Domain.csproj.CoreCompileInputs.cache
+/Users/mac/Documents/Aero/SentriX/src/Modules/Cache/Cache.Domain/obj/Debug/net10.0/Cache.Domain.sourcelink.json
+/Users/mac/Documents/Aero/SentriX/src/Modules/Cache/Cache.Domain/obj/Debug/net10.0/Cache.Domain.dll
+/Users/mac/Documents/Aero/SentriX/src/Modules/Cache/Cache.Domain/obj/Debug/net10.0/refint/Cache.Domain.dll
+/Users/mac/Documents/Aero/SentriX/src/Modules/Cache/Cache.Domain/obj/Debug/net10.0/Cache.Domain.pdb
+/Users/mac/Documents/Aero/SentriX/src/Modules/Cache/Cache.Domain/obj/Debug/net10.0/ref/Cache.Domain.dll

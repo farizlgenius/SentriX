@@ -105,6 +105,10 @@ public static class CoreDependencyInjection
     services.AddScoped<ITurnstile, TurnstileService>();
     services.AddScoped<ITurnstileRepository, TurnstileRepository>();
 
+    // Group
+    services.AddScoped<IGroup, GroupService>();
+    services.AddScoped<IGroupRepository, GroupRepository>();
+
 
     // ==========================
     // Database

@@ -11,26 +11,14 @@ import {
   UnlockIcon,
 } from "../../icons";
 import Logger from "../../utility/Logger";
-import AeroDoorForm from "./AeroDoorForm";
 import Helper from "../../utility/Helper";
-import {
-  AeroDoorMetadata,
-  AltrReader,
-  Antipassback,
-  DoorDto,
-  ReaderIn,
-  ReaderOut,
-  Relay,
-  Rex,
-  Sensor,
-} from "../../model/Door/DoorDto";
+import { DoorDto } from "../../model/Door/DoorDto";
 import { StatusDto } from "../../model/StatusDto";
 import { useToast } from "../../context/ToastContext";
 import { DoorEndpoint } from "../../endpoint/DoorEndpoint";
 import { useLocation } from "../../context/LocationContext";
 import { send } from "../../api/api";
 import { BaseTable } from "../UiElements/BaseTable";
-import SignalRService from "../../services/SignalRService";
 import { ActionButton } from "../../model/ActionButton";
 import { useAuth } from "../../context/AuthContext";
 import { FeatureId } from "../../enum/FeatureId";
@@ -42,10 +30,9 @@ import { DoorToast } from "../../model/ToastMessage";
 import { usePagination } from "../../context/PaginationContext";
 import { FormType } from "../../model/Form/FormProp";
 import { usePopup } from "../../context/PopupContext";
-import { AcrStatus as AcrStatus } from "../../model/Door/AcrStatus";
-import { DoorDirection } from "../../enum/DoorDirection";
 import DoorForm from "./DoorForm";
 import { DoorType } from "../../enum/DoorType";
+import { Vendor } from "../../enum/Vendor";
 
 // ACR Page
 const DOOR_TABLE_HEADER: string[] = [
@@ -62,7 +49,7 @@ const DOOR_KEY: string[] = ["name", "doorType"];
 const Door = () => {
   const { filterPermission } = useAuth();
   const { toggleToast } = useToast();
-  const { locationGuid: locationId } = useLocation();
+  const { locationGuid } = useLocation();
   const { setPagination } = usePagination();
   const {
     setRemove,
@@ -74,18 +61,21 @@ const Door = () => {
     setInfo,
     setMessage,
   } = usePopup();
+
   const defaultDoorDto: DoorDto = {
-    id: 0,
-    componentId: -1,
+    guid: "",
     name: "",
-    deviceComponentId: -1,
-    mac: "",
-    doorType: "",
     metadata: "",
-    locationId: locationId,
-    type: "",
+    readers: [],
+    buzzer: null,
+    rex: null,
+    sensor: null,
+    locationGuid: locationGuid,
+    locationName: "",
     isActive: false,
-    secondComponentId: -1,
+    isDefault: false,
+    vendor: Vendor.aero,
+    type: DoorType.Single,
   };
   const [doorDto, setDoorDto] = useState<DoorDto>(defaultDoorDto);
   const [refresh, setRefresh] = useState(false);
@@ -110,11 +100,11 @@ const Door = () => {
           setInfo(true);
         }
         setConfirmRemove(() => async () => {
-          var data: number[] = [];
+          const data: string[] = [];
           selectedObjects.map(async (a: DoorDto) => {
-            data.push(a.id);
+            data.push(a.guid);
           });
-          var res = await send.post(DoorEndpoint.DELETE_RANGE, data);
+          const res = await send.post(DoorEndpoint.DELETE_RANGE, data);
           if (
             Helper.handleToastByResCode(
               res,
@@ -218,53 +208,53 @@ const Door = () => {
     /* Door Data */
   }
   const [doorsDto, setDoorsDto] = useState<DoorDto[]>([]);
-  const [status, setStatus] = useState<StatusDto[]>([]);
   const fetchData = async (
     pageNumber: number,
     pageSize: number,
     search?: string,
     startDate?: string,
     endDate?: string,
+    locationGuid?: string,
   ) => {
     const res = await send.get(
       DoorEndpoint.PAGINATION(
         pageNumber,
         pageSize,
-        locationId,
+        locationGuid,
         search,
         startDate,
         endDate,
       ),
     );
     console.log(res);
-    if (res && res.data) {
-      setDoorsDto(res.data.items);
-      setPagination(res.data);
+    if (res.data) {
+      setDoorsDto(res.data.data.items);
+      setPagination(res.data.data);
 
       // Batch set state
-      const newStatuses = res.data.data.data.map((a: DoorDto) => ({
-        scpId: a.scpId,
-        driverId: a.acrId,
-        status: 0,
-        tamper: a.modeDesc,
-        ac: 0,
-        batt: 0,
-      }));
+      // const newStatuses = res.data.data.data.map((a: DoorDto) => ({
+      //   scpId: a.scpId,
+      //   driverId: a.acrId,
+      //   status: 0,
+      //   tamper: a.modeDesc,
+      //   ac: 0,
+      //   batt: 0,
+      // }));
 
-      console.log(">>>>>>>>>." + JSON.stringify(newStatuses));
+      // console.log(">>>>>>>>>." + JSON.stringify(newStatuses));
 
-      setStatus((prev) => [...prev, ...newStatuses]);
+      // setStatus((prev) => [...prev, ...newStatuses]);
 
-      // Fetch status for each
-      res.data.data.data.forEach((a: DoorDto) => {
-        fetchStatus(a.id);
-      });
+      // // Fetch status for each
+      // res.data.data.data.forEach((a: DoorDto) => {
+      //   fetchStatus(a.id);
+      // });
     }
   };
-  const fetchStatus = async (id: number) => {
-    const res = await send.get(DoorEndpoint.GET_ACR_STATUS(id));
-    Logger.info(res);
-  };
+  // const fetchStatus = async (id: number) => {
+  //   const res = await send.get(DoorEndpoint.GET_ACR_STATUS(id));
+  //   Logger.info(res);
+  // };
 
   const changeDoorMode = async (
     id: number,
@@ -288,25 +278,25 @@ const Door = () => {
   {
     /* UseEffect */
   }
-  useEffect(() => {
-    var connection = SignalRService.getConnection();
-    connection.on("ACR.STATUS", (status: AcrStatus) => {
-      setStatus((prev) =>
-        prev.map((a) =>
-          a.guid == status.scpId && a.componentId == status.number
-            ? {
-                ...a,
-                status: status.status == "" ? a.status : status.status,
-                tamper: status.mode == "" ? a.tamper : status.mode,
-              }
-            : {
-                ...a,
-              },
-        ),
-      );
-      toggleRefresh();
-    });
-  }, []);
+  // useEffect(() => {
+  //   var connection = SignalRService.getConnection();
+  //   connection.on("ACR.STATUS", (status: AcrStatus) => {
+  //     setStatus((prev) =>
+  //       prev.map((a) =>
+  //         a.guid == status.scpId && a.componentId == status.number
+  //           ? {
+  //               ...a,
+  //               status: status.status == "" ? a.status : status.status,
+  //               tamper: status.mode == "" ? a.tamper : status.mode,
+  //             }
+  //           : {
+  //               ...a,
+  //             },
+  //       ),
+  //     );
+  //     toggleRefresh();
+  //   });
+  // }, []);
 
   {
     /* checkBox */
@@ -397,7 +387,13 @@ const Door = () => {
     <>
       <PageBreadcrumb pageTitle="Doors" />
       {form ? (
-        <BaseForm type={formType} tabContent={content} header={""} desc={""} />
+        <BaseForm
+          handleClick={handleClick}
+          type={formType}
+          tabContent={content}
+          header={""}
+          desc={""}
+        />
       ) : (
         <BaseTable<DoorDto>
           headers={DOOR_TABLE_HEADER}
@@ -409,24 +405,24 @@ const Door = () => {
           onEdit={handleEdit}
           onRemove={handleRemove}
           data={doorsDto}
-          status={status}
+          // status={status}
           action={action}
           permission={filterPermission(FeatureId.acr)}
           renderOptionalComponent={filterComponet}
           fetchData={fetchData}
-          locationGuid={locationId}
+          locationGuid={locationGuid}
           refresh={refresh}
           specialDisplay={[
             {
               key: "doorType",
               content: (d) => (
                 <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400">
-                  {d.doorType == DoorType[DoorType.Dual] ? (
+                  {d.type == DoorType.Dual ? (
                     <div className="flex items-center gap-2">
                       <DoorInIcon fontSize={20} />
                       <DoorOutIcon fontSize={20} />
                     </div>
-                  ) : d.doorType == DoorType[DoorType.Single] ? (
+                  ) : d.type == DoorType.Single ? (
                     <div className="flex items-center gap-5">
                       <DoorInIcon fontSize={20} />
                     </div>

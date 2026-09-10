@@ -1,3 +1,5 @@
 export enum DoorType {
-      Single=0,Dual=1,Turnstile=3,Elevator=4
+  Single,
+  Dual,
+  Slave,
 }

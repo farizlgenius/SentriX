@@ -18,4 +18,5 @@ public static class EntityType
   public const string Interval = "Interval";
   public const string Door = "Door";
   public const string Turnstile = "Turnstile";
+  public const string Group = "Group";
 }

@@ -90,6 +90,8 @@ public sealed class DoorRepository(CoreDbContext context) : IDoorRepository
       .Select(x => new DoorDto(
         x.guid,
         x.name,
+        x.vendor,
+        x.type,
         x.metadata,
         x.readers.Select(
           r => new ReaderDto(
@@ -121,6 +123,13 @@ public sealed class DoorRepository(CoreDbContext context) : IDoorRepository
           x.sensor.mode,
           x.sensor.metadata,
           x.sensor.vendor
+        ),
+        x.relay == null ? null : new RelayDto(
+          x.relay.guid,
+          x.relay.slot_no,
+          x.relay.mode,
+          x.relay.metadata,
+          x.relay.vendor
         ),
         x.location.guid,
         x.location.name,
@@ -137,6 +146,8 @@ public sealed class DoorRepository(CoreDbContext context) : IDoorRepository
       .Select(x => new DoorDto(
         x.guid,
         x.name,
+        x.vendor,
+        x.type,
         x.metadata,
         x.readers.Select(
           r => new ReaderDto(
@@ -168,6 +179,13 @@ public sealed class DoorRepository(CoreDbContext context) : IDoorRepository
           x.sensor.mode,
           x.sensor.metadata,
           x.sensor.vendor
+        ),
+        x.relay == null ? null : new RelayDto(
+          x.relay.guid,
+          x.relay.slot_no,
+          x.relay.mode,
+          x.relay.metadata,
+          x.relay.vendor
         ),
         x.location.guid,
         x.location.name,
@@ -244,6 +262,8 @@ public sealed class DoorRepository(CoreDbContext context) : IDoorRepository
          .Select(x => new DoorDto(
                       x.guid,
                       x.name,
+                      x.vendor,
+        x.type,
                       x.metadata,
                       x.readers.Select(
                         r => new ReaderDto(
@@ -275,6 +295,13 @@ public sealed class DoorRepository(CoreDbContext context) : IDoorRepository
                         x.sensor.mode,
                         x.sensor.metadata,
                         x.sensor.vendor
+                      ),
+                      x.relay == null ? null : new RelayDto(
+                        x.relay.guid,
+                        x.relay.slot_no,
+                        x.relay.mode,
+                        x.relay.metadata,
+                        x.relay.vendor
                       ),
                       x.location.guid,
                       x.location.name,

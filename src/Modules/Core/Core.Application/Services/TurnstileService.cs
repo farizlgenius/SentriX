@@ -18,17 +18,69 @@ public sealed class TurnstileService(
   public async Task<Guid> CreateAsync(CreateTurnstileDto dto, CancellationToken ct = default)
   {
     var locationId = await bus.QueryAsync(new LocationIdByGuidQuery(dto.LocationGuid));
+
     if (await repo.IsAnyByNameAndLocationIdAsync(dto.Name, locationId))
       throw new DuplicateException(nameof(dto.Name), dto.Name);
+
+    var deviceModuleGuidIdDictionary = new Dictionary<Guid, int>();
+
+    foreach (var lane in dto.Lanes)
+    {
+      foreach (var door in lane.Doors)
+      {
+        if (!deviceModuleGuidIdDictionary.ContainsKey(door.DeviceModuleGuid))
+        {
+          var deviceModuleId = await bus.QueryAsync(new DeviceModuleIdByGuidQuery(door.DeviceModuleGuid));
+          deviceModuleGuidIdDictionary.Add(door.DeviceModuleGuid, deviceModuleId);
+        }
+      }
+    }
 
     var d = new Turnstile(
       dto.Name,
       dto.Lanes.Select(x => new Lane(
         x.LaneNo,
-        x.Readers.Select(x => new Reader(x.SlotNo, x.Mode, x.Metadata, x.Vendor, x.ReaderDirection)).ToList(),
-        x.Sensor == null ? null : new Sensor(x.Sensor.SlotNo, x.Sensor.Mode, x.Sensor.Metadata, x.Sensor.Vendor),
-        x.Relays.Select(x => new Relay(x.SlotNo, x.Mode, x.Metadata, x.Vendor)).ToList()
+        x.Doors.Select(x => new Door(
+          x.Name,
+          x.Vendor,
+          x.Type,
+          x.Metadata,
+          x.Readers.Select(x => new Reader(
+            x.SlotNo,
+            x.Mode,
+            x.Metadata,
+            x.Vendor,
+            x.ReaderDirection
+          )).ToList(),
+          x.Sensor == null ? null : new Sensor(
+            x.Sensor.SlotNo,
+            x.Sensor.Mode,
+            x.Sensor.Metadata,
+            x.Sensor.Vendor
+          ),
+          x.Relay == null ? null : new Relay(
+            x.Relay.SlotNo,
+            x.Relay.Mode,
+            x.Relay.Metadata,
+            x.Relay.Vendor
+          ),
+          x.Buzzer == null ? null : new Buzzer(
+            x.Buzzer.SlotNo,
+            x.Buzzer.Mode,
+            x.Buzzer.Metadata,
+            x.Buzzer.Vendor
+          ),
+          x.Rex == null ? null : new Rex(
+            x.Rex.SlotNo,
+            x.Rex.Mode,
+            x.Rex.Metadata,
+            x.Rex.Vendor
+          ),
+          deviceModuleGuidIdDictionary[x.DeviceModuleGuid],
+          locationId
         )).ToList()
+      )).ToList(),
+      locationId
     );
 
     await repo.AddAsync(d, ct);
@@ -95,15 +147,65 @@ public sealed class TurnstileService(
 
     var locationId = await bus.QueryAsync(new LocationIdByGuidQuery(dto.LocationGuid));
 
+    var deviceModuleGuidIdDictionary = new Dictionary<Guid, int>();
+
+    foreach (var lane in dto.Lanes)
+    {
+      foreach (var door in lane.Doors)
+      {
+        if (!deviceModuleGuidIdDictionary.ContainsKey(door.DeviceModuleGuid))
+        {
+          var deviceModuleId = await bus.QueryAsync(new DeviceModuleIdByGuidQuery(door.DeviceModuleGuid));
+          deviceModuleGuidIdDictionary.Add(door.DeviceModuleGuid, deviceModuleId);
+        }
+      }
+    }
+
     var d = new Turnstile(
-      dto.Guid,
       dto.Name,
       dto.Lanes.Select(x => new Lane(
         x.LaneNo,
-        x.Readers.Select(x => new Reader(x.SlotNo, x.Mode, x.Metadata, x.Vendor, x.ReaderDirection)).ToList(),
-        x.Sensor == null ? null : new Sensor(x.Sensor.SlotNo, x.Sensor.Mode, x.Sensor.Metadata, x.Sensor.Vendor),
-        x.Relays.Select(x => new Relay(x.SlotNo, x.Mode, x.Metadata, x.Vendor)).ToList()
+        x.Doors.Select(x => new Door(
+          x.Name,
+          x.Vendor,
+          x.Type,
+          x.Metadata,
+          x.Readers.Select(x => new Reader(
+            x.SlotNo,
+            x.Mode,
+            x.Metadata,
+            x.Vendor,
+            x.ReaderDirection
+          )).ToList(),
+          x.Sensor == null ? null : new Sensor(
+            x.Sensor.SlotNo,
+            x.Sensor.Mode,
+            x.Sensor.Metadata,
+            x.Sensor.Vendor
+          ),
+          x.Relay == null ? null : new Relay(
+            x.Relay.SlotNo,
+            x.Relay.Mode,
+            x.Relay.Metadata,
+            x.Relay.Vendor
+          ),
+          x.Buzzer == null ? null : new Buzzer(
+            x.Buzzer.SlotNo,
+            x.Buzzer.Mode,
+            x.Buzzer.Metadata,
+            x.Buzzer.Vendor
+          ),
+          x.Rex == null ? null : new Rex(
+            x.Rex.SlotNo,
+            x.Rex.Mode,
+            x.Rex.Metadata,
+            x.Rex.Vendor
+          ),
+          deviceModuleGuidIdDictionary[x.DeviceModuleGuid],
+          locationId
         )).ToList()
+      )).ToList(),
+      locationId
     );
 
     await repo.UpdateAsync(d, ct);

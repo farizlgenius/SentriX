@@ -54,14 +54,11 @@ type DoorFocusComponent =
   | "rex"
   | "magneticLock"
   | "buzzer"
-  | "sensor";
+  | "sensor"
+  | "exitButton"
+  | "breakGlass";
 
 const formSteps = [
-  {
-    tab: FormTab.General,
-    title: "General",
-    detail: "Basic door configuration",
-  },
   { tab: FormTab.Outside, title: "In", detail: "Inside reader setup" },
   { tab: FormTab.Inside, title: "Out", detail: "Outside reader or REX setup" },
   { tab: FormTab.Monitor, title: "Monitor", detail: "Door sensor input setup" },
@@ -186,13 +183,19 @@ var defaultMetadata: AeroDoorMetadata = {
 };
 
 const AeroDoorForm: React.FC<
-  PropsWithChildren<FormProp<DoorDto> & { focusComponent?: DoorFocusComponent }>
+  PropsWithChildren<
+    FormProp<DoorDto> & {
+      focusComponent?: DoorFocusComponent;
+      hasReaderOut?: boolean;
+    }
+  >
 > = ({
   handleClick,
   dto,
   setDto,
   type,
   focusComponent,
+  hasReaderOut,
 }) => {
   const { locationGuid: locationId } = useLocation();
   const defaultDoorDto: AeroDoorDto = {
@@ -229,7 +232,7 @@ const AeroDoorForm: React.FC<
   const [modeFlag, setModeFlag] = useState<boolean>(false);
   const [settingFlag, setSettingFlag] = useState<boolean>(false);
 
-  const [activeTab, setActiveTab] = useState<number>(FormTab.General);
+  const [activeTab, setActiveTab] = useState<number>(FormTab.Outside);
 
   useEffect(() => {
     switch (focusComponent) {
@@ -247,10 +250,23 @@ const AeroDoorForm: React.FC<
       case "sensor":
         setActiveTab(FormTab.Monitor);
         break;
+      case "exitButton":
+        setActiveTab(FormTab.Inside);
+        break;
+      case "breakGlass":
+        setActiveTab(FormTab.Strike);
+        break;
       default:
         break;
     }
   }, [focusComponent]);
+
+  useEffect(() => {
+    if (hasReaderOut === undefined) return;
+    setReaderInFlag(true);
+    setReaderOutFlag(hasReaderOut);
+    setRequestExitOneFlag(!hasReaderOut);
+  }, [hasReaderOut]);
   const [osdpBaudRateOption, setOsdpBaudRateOption] = useState<Options[]>([]);
 
   {

@@ -1,3 +1,4 @@
-export enum DoorDirection {
-      IN,OUT
+export enum ReaderDirection {
+  In,
+  Out,
 }

@@ -84,27 +84,52 @@ public sealed class TurnstileRepository(CoreDbContext context) : ITurnstileRepos
         x.lanes.Select(l => new LaneDto(
           l.guid,
           l.lane_no,
-          l.readers.Select(r => new ReaderDto(
+          l.doors.Select(r => new DoorDto(
             r.guid,
-            r.slot_no,
-            r.mode,
-            r.metadata,
+            r.name,
             r.vendor,
-            r.reader_direction
-          )).ToList(),
-          l.sensor == null ? null : new SensorDto(
-            l.sensor.guid,
-            l.sensor.slot_no,
-            l.sensor.mode,
-            l.sensor.metadata,
-            l.sensor.vendor
-          ),
-          l.relays.Select(r => new RelayDto(
-            r.guid,
-            r.slot_no,
-            r.mode,
+            r.type,
             r.metadata,
-            r.vendor
+            r.readers.Select(rd => new ReaderDto(
+              rd.guid,
+              rd.slot_no,
+              rd.mode,
+              rd.metadata,
+              rd.vendor,
+              rd.reader_direction
+            )).ToList(),
+            r.buzzer == null ? null : new BuzzerDto(
+              r.buzzer.guid,
+              r.buzzer.slot_no,
+              r.buzzer.mode,
+              r.buzzer.metadata,
+              r.buzzer.vendor
+            ),
+            r.rex == null ? null : new RexDto(
+              r.rex.guid,
+              r.rex.slot_no,
+              r.rex.mode,
+              r.rex.metadata,
+              r.rex.vendor
+            ),
+            r.sensor == null ? null : new SensorDto(
+              r.sensor.guid,
+              r.sensor.slot_no,
+              r.sensor.mode,
+              r.sensor.metadata,
+              r.sensor.vendor
+            ),
+            r.relay == null ? null : new RelayDto(
+              r.relay.guid,
+              r.relay.slot_no,
+              r.relay.mode,
+              r.relay.metadata,
+              r.relay.vendor
+            ),
+            r.location.guid,
+            r.location.name,
+            r.is_active,
+            r.is_default
           )).ToList(),
           x.location.guid,
           x.is_active,
@@ -129,27 +154,52 @@ public sealed class TurnstileRepository(CoreDbContext context) : ITurnstileRepos
         x.lanes.Select(l => new LaneDto(
           l.guid,
           l.lane_no,
-          l.readers.Select(r => new ReaderDto(
+          l.doors.Select(r => new DoorDto(
             r.guid,
-            r.slot_no,
-            r.mode,
-            r.metadata,
+            r.name,
             r.vendor,
-            r.reader_direction
-          )).ToList(),
-          l.sensor == null ? null : new SensorDto(
-            l.sensor.guid,
-            l.sensor.slot_no,
-            l.sensor.mode,
-            l.sensor.metadata,
-            l.sensor.vendor
-          ),
-          l.relays.Select(r => new RelayDto(
-            r.guid,
-            r.slot_no,
-            r.mode,
+            r.type,
             r.metadata,
-            r.vendor
+            r.readers.Select(rd => new ReaderDto(
+              rd.guid,
+              rd.slot_no,
+              rd.mode,
+              rd.metadata,
+              rd.vendor,
+              rd.reader_direction
+            )).ToList(),
+            r.buzzer == null ? null : new BuzzerDto(
+              r.buzzer.guid,
+              r.buzzer.slot_no,
+              r.buzzer.mode,
+              r.buzzer.metadata,
+              r.buzzer.vendor
+            ),
+            r.rex == null ? null : new RexDto(
+              r.rex.guid,
+              r.rex.slot_no,
+              r.rex.mode,
+              r.rex.metadata,
+              r.rex.vendor
+            ),
+            r.sensor == null ? null : new SensorDto(
+              r.sensor.guid,
+              r.sensor.slot_no,
+              r.sensor.mode,
+              r.sensor.metadata,
+              r.sensor.vendor
+            ),
+            r.relay == null ? null : new RelayDto(
+              r.relay.guid,
+              r.relay.slot_no,
+              r.relay.mode,
+              r.relay.metadata,
+              r.relay.vendor
+            ),
+            r.location.guid,
+            r.location.name,
+            r.is_active,
+            r.is_default
           )).ToList(),
           x.location.guid,
           x.is_active,
@@ -234,27 +284,52 @@ public sealed class TurnstileRepository(CoreDbContext context) : ITurnstileRepos
         x.lanes.Select(l => new LaneDto(
           l.guid,
           l.lane_no,
-          l.readers.Select(r => new ReaderDto(
+          l.doors.Select(r => new DoorDto(
             r.guid,
-            r.slot_no,
-            r.mode,
-            r.metadata,
+            r.name,
             r.vendor,
-            r.reader_direction
-          )).ToList(),
-          l.sensor == null ? null : new SensorDto(
-            l.sensor.guid,
-            l.sensor.slot_no,
-            l.sensor.mode,
-            l.sensor.metadata,
-            l.sensor.vendor
-          ),
-          l.relays.Select(r => new RelayDto(
-            r.guid,
-            r.slot_no,
-            r.mode,
+            r.type,
             r.metadata,
-            r.vendor
+            r.readers.Select(rd => new ReaderDto(
+              rd.guid,
+              rd.slot_no,
+              rd.mode,
+              rd.metadata,
+              rd.vendor,
+              rd.reader_direction
+            )).ToList(),
+            r.buzzer == null ? null : new BuzzerDto(
+              r.buzzer.guid,
+              r.buzzer.slot_no,
+              r.buzzer.mode,
+              r.buzzer.metadata,
+              r.buzzer.vendor
+            ),
+            r.rex == null ? null : new RexDto(
+              r.rex.guid,
+              r.rex.slot_no,
+              r.rex.mode,
+              r.rex.metadata,
+              r.rex.vendor
+            ),
+            r.sensor == null ? null : new SensorDto(
+              r.sensor.guid,
+              r.sensor.slot_no,
+              r.sensor.mode,
+              r.sensor.metadata,
+              r.sensor.vendor
+            ),
+            r.relay == null ? null : new RelayDto(
+              r.relay.guid,
+              r.relay.slot_no,
+              r.relay.mode,
+              r.relay.metadata,
+              r.relay.vendor
+            ),
+            r.location.guid,
+            r.location.name,
+            r.is_active,
+            r.is_default
           )).ToList(),
           x.location.guid,
           x.is_active,
@@ -303,7 +378,10 @@ public sealed class TurnstileRepository(CoreDbContext context) : ITurnstileRepos
       .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.Turnstile, entity.Guid.ToString());
 
     en.name = entity.Name;
-    en.lanes = entity.Lanes.Select;
+    context.Lanes.RemoveRange(en.lanes);
+    en.lanes.Clear();
+
+    en.lanes = entity.Lanes.Select(x => new Persistences.Entities.Lane(x)).ToList();
 
     context.Turnstiles.Update(en);
 

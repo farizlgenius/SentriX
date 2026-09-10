@@ -46,6 +46,7 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
       public DbSet<Buzzer> Buzzers { get; set; }
       public DbSet<Lane> Lanes { get; set; }
       public DbSet<Turnstile> Turnstiles { get; set; }
+      public DbSet<GroupComponent> GroupComponents { get; set; }
       protected override void OnModelCreating(ModelBuilder modelBuilder)
       {
             Console.WriteLine("=== Entities ===");
@@ -382,6 +383,26 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                         }
                   ).IsUnique();
 
+            modelBuilder.Entity<GroupComponent>()
+                  .HasIndex(
+                        x => new
+                        {
+                              x.door_id,
+                              x.id,
+                              x.timezone_id,
+                              x.guid
+                        }
+                  ).IsUnique();
+
+            modelBuilder.Entity<Group>()
+                  .HasIndex(
+                        x => new
+                        {
+                              x.guid,
+                              x.id
+                        }
+                  ).IsUnique();
+
             // Configure relationships 
 
             // Location
@@ -442,6 +463,12 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
 
             modelBuilder.Entity<Location>()
                   .HasMany(x => x.doors)
+                  .WithOne(x => x.location)
+                  .HasForeignKey(x => x.location_id)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Location>()
+                  .HasMany(x => x.groups)
                   .WithOne(x => x.location)
                   .HasForeignKey(x => x.location_id)
                   .OnDelete(DeleteBehavior.Cascade);
@@ -537,8 +564,6 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   .WithOne(x => x.feature)
                   .HasForeignKey(x => x.feature_id)
                   .OnDelete(DeleteBehavior.Cascade);
-
-
 
             // Role
 
@@ -650,6 +675,46 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
             .WithOne(x => x.door)
             .HasForeignKey<Door>(x => x.buzzer_id)
             .OnDelete(DeleteBehavior.Cascade);
+
+            // Turnstile
+
+            modelBuilder.Entity<Turnstile>()
+                  .HasMany(x => x.lanes)
+                  .WithOne(x => x.turnstile)
+                  .HasForeignKey(x => x.turnstile_id)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Lane>()
+                  .HasMany(x => x.doors)
+                  .WithOne(x => x.lane)
+                  .HasForeignKey(x => x.lane_id)
+                  .OnDelete(DeleteBehavior.SetNull);
+
+            // Group
+            modelBuilder.Entity<Group>()
+                  .HasMany(x => x.components)
+                  .WithOne(x => x.group)
+                  .HasForeignKey(x => x.group_id)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Group>()
+                  .HasMany(x => x.user_groups)
+                  .WithOne(x => x.group)
+                  .HasForeignKey(x => x.group_id)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<GroupComponent>()
+                  .HasOne(x => x.door)
+                  .WithMany(x => x.group_components)
+                  .HasForeignKey(x => x.door_id)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<GroupComponent>()
+                  .HasOne(x => x.timezone)
+                  .WithMany(x => x.group_components)
+                  .HasForeignKey(x => x.timezone_id)
+                  .OnDelete(DeleteBehavior.Cascade);
+
 
 
             // Seed Default data

@@ -23,6 +23,9 @@ public sealed class Door : BaseEntity
   public DeviceModule device_module { get; set; } = default!;
   public int location_id { get; set; }
   public Location location { get; set; } = default!;
+  public int? lane_id { get; set; }
+  public Lane? lane { get; set; }
+  public ICollection<GroupComponent> group_components { get; set; } = default!;
   public Door() { }
 
   public Door(Domain.Entities.Door d)

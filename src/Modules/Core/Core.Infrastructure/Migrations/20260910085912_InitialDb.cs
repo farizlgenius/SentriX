@@ -1,0 +1,2214 @@
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+
+#nullable disable
+
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
+namespace Core.Infrastructure.Migrations
+{
+    /// <inheritdoc />
+    public partial class InitialDb : Migration
+    {
+        /// <inheritdoc />
+        protected override void Up(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.EnsureSchema(
+                name: "core");
+
+            migrationBuilder.CreateTable(
+                name: "Buzzers",
+                schema: "core",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    slot_no = table.Column<int>(type: "integer", nullable: false),
+                    mode = table.Column<int>(type: "integer", nullable: false),
+                    metadata = table.Column<string>(type: "text", nullable: false),
+                    vendor = table.Column<int>(type: "integer", nullable: false),
+                    door_id = table.Column<int>(type: "integer", nullable: false),
+                    guid = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    is_active = table.Column<bool>(type: "boolean", nullable: false),
+                    is_default = table.Column<bool>(type: "boolean", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Buzzers", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Countries",
+                schema: "core",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    name = table.Column<string>(type: "text", nullable: false),
+                    code = table.Column<string>(type: "text", nullable: false),
+                    guid = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    is_active = table.Column<bool>(type: "boolean", nullable: false),
+                    is_default = table.Column<bool>(type: "boolean", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Countries", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DayInWeeks",
+                schema: "core",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    sunday = table.Column<bool>(type: "boolean", nullable: false),
+                    monday = table.Column<bool>(type: "boolean", nullable: false),
+                    tuesday = table.Column<bool>(type: "boolean", nullable: false),
+                    wednesday = table.Column<bool>(type: "boolean", nullable: false),
+                    thursday = table.Column<bool>(type: "boolean", nullable: false),
+                    friday = table.Column<bool>(type: "boolean", nullable: false),
+                    saturday = table.Column<bool>(type: "boolean", nullable: false),
+                    interval_id = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DayInWeeks", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Faces",
+                schema: "core",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    user_id = table.Column<int>(type: "integer", nullable: true),
+                    guid = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    is_active = table.Column<bool>(type: "boolean", nullable: false),
+                    is_default = table.Column<bool>(type: "boolean", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Faces", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Groups",
+                schema: "core",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    name = table.Column<string>(type: "text", nullable: false),
+                    guid = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    is_active = table.Column<bool>(type: "boolean", nullable: false),
+                    is_default = table.Column<bool>(type: "boolean", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Groups", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "License",
+                schema: "core",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    MyProperty = table.Column<int>(type: "integer", nullable: false),
+                    guid = table.Column<Guid>(type: "uuid", nullable: false),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    is_active = table.Column<bool>(type: "boolean", nullable: false),
+                    is_default = table.Column<bool>(type: "boolean", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_License", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "LicenseKey",
+                schema: "core",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    guid = table.Column<Guid>(type: "uuid", nullable: false),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    is_active = table.Column<bool>(type: "boolean", nullable: false),
+                    is_default = table.Column<bool>(type: "boolean", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_LicenseKey", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "LicensePlates",
+                schema: "core",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    license_plate = table.Column<string>(type: "text", nullable: false),
+                    user_id = table.Column<int>(type: "integer", nullable: true),
+                    guid = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    is_active = table.Column<bool>(type: "boolean", nullable: false),
+                    is_default = table.Column<bool>(type: "boolean", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_LicensePlates", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Modules",
+                schema: "core",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    name = table.Column<string>(type: "text", nullable: false),
+                    guid = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    is_active = table.Column<bool>(type: "boolean", nullable: false),
+                    is_default = table.Column<bool>(type: "boolean", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Modules", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Pins",
+                schema: "core",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    pin = table.Column<string>(type: "text", nullable: false),
+                    user_id = table.Column<int>(type: "integer", nullable: true),
+                    guid = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    is_active = table.Column<bool>(type: "boolean", nullable: false),
+                    is_default = table.Column<bool>(type: "boolean", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Pins", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "QrCodes",
+                schema: "core",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    qr_code = table.Column<string>(type: "text", nullable: false),
+                    user_id = table.Column<int>(type: "integer", nullable: false),
+                    guid = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    is_active = table.Column<bool>(type: "boolean", nullable: false),
+                    is_default = table.Column<bool>(type: "boolean", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_QrCodes", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Rexes",
+                schema: "core",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    slot_no = table.Column<int>(type: "integer", nullable: false),
+                    mode = table.Column<string>(type: "text", nullable: false),
+                    metadata = table.Column<string>(type: "text", nullable: false),
+                    vendor = table.Column<string>(type: "text", nullable: false),
+                    door_id = table.Column<int>(type: "integer", nullable: false),
+                    guid = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    is_active = table.Column<bool>(type: "boolean", nullable: false),
+                    is_default = table.Column<bool>(type: "boolean", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Rexes", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Sensors",
+                schema: "core",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    slot_no = table.Column<int>(type: "integer", nullable: false),
+                    mode = table.Column<string>(type: "text", nullable: false),
+                    metadata = table.Column<string>(type: "text", nullable: false),
+                    vendor = table.Column<string>(type: "text", nullable: false),
+                    door_id = table.Column<int>(type: "integer", nullable: false),
+                    guid = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    is_active = table.Column<bool>(type: "boolean", nullable: false),
+                    is_default = table.Column<bool>(type: "boolean", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Sensors", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Locations",
+                schema: "core",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    name = table.Column<string>(type: "text", nullable: false),
+                    description = table.Column<string>(type: "text", nullable: false),
+                    country_id = table.Column<int>(type: "integer", nullable: false),
+                    guid = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    is_active = table.Column<bool>(type: "boolean", nullable: false),
+                    is_default = table.Column<bool>(type: "boolean", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Locations", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_Locations_Countries_country_id",
+                        column: x => x.country_id,
+                        principalSchema: "core",
+                        principalTable: "Countries",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Features",
+                schema: "core",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    name = table.Column<string>(type: "text", nullable: false),
+                    module_id = table.Column<int>(type: "integer", nullable: false),
+                    guid = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    is_active = table.Column<bool>(type: "boolean", nullable: false),
+                    is_default = table.Column<bool>(type: "boolean", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Features", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_Features_Modules_module_id",
+                        column: x => x.module_id,
+                        principalSchema: "core",
+                        principalTable: "Modules",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Companies",
+                schema: "core",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    name = table.Column<string>(type: "text", nullable: false),
+                    description = table.Column<string>(type: "text", nullable: false),
+                    address = table.Column<string>(type: "text", nullable: false),
+                    Locationid = table.Column<int>(type: "integer", nullable: true),
+                    guid = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    is_active = table.Column<bool>(type: "boolean", nullable: false),
+                    is_default = table.Column<bool>(type: "boolean", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Companies", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_Companies_Locations_Locationid",
+                        column: x => x.Locationid,
+                        principalSchema: "core",
+                        principalTable: "Locations",
+                        principalColumn: "id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ComponentMappings",
+                schema: "core",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    entity = table.Column<string>(type: "text", nullable: false),
+                    internal_id = table.Column<int>(type: "integer", nullable: false),
+                    external_id = table.Column<int>(type: "integer", nullable: false),
+                    mac = table.Column<string>(type: "text", nullable: false),
+                    vendor = table.Column<string>(type: "text", nullable: false),
+                    location_id = table.Column<int>(type: "integer", nullable: false),
+                    guid = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    is_active = table.Column<bool>(type: "boolean", nullable: false),
+                    is_default = table.Column<bool>(type: "boolean", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ComponentMappings", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_ComponentMappings_Locations_location_id",
+                        column: x => x.location_id,
+                        principalSchema: "core",
+                        principalTable: "Locations",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Devices",
+                schema: "core",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    name = table.Column<string>(type: "text", nullable: false),
+                    serial_number = table.Column<string>(type: "text", nullable: false),
+                    mac = table.Column<string>(type: "text", nullable: false),
+                    ip = table.Column<string>(type: "text", nullable: false),
+                    port = table.Column<int>(type: "integer", nullable: false),
+                    firmware = table.Column<string>(type: "text", nullable: false),
+                    vendor = table.Column<string>(type: "text", nullable: false),
+                    configuration_status = table.Column<string>(type: "text", nullable: false),
+                    synced_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    metadata = table.Column<string>(type: "text", nullable: false),
+                    location_id = table.Column<int>(type: "integer", nullable: false),
+                    guid = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    is_active = table.Column<bool>(type: "boolean", nullable: false),
+                    is_default = table.Column<bool>(type: "boolean", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Devices", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_Devices_Locations_location_id",
+                        column: x => x.location_id,
+                        principalSchema: "core",
+                        principalTable: "Locations",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Holidays",
+                schema: "core",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    name = table.Column<string>(type: "text", nullable: false),
+                    start = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    end = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    location_id = table.Column<int>(type: "integer", nullable: false),
+                    guid = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    is_active = table.Column<bool>(type: "boolean", nullable: false),
+                    is_default = table.Column<bool>(type: "boolean", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Holidays", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_Holidays_Locations_location_id",
+                        column: x => x.location_id,
+                        principalSchema: "core",
+                        principalTable: "Locations",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Intervals",
+                schema: "core",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    start_time = table.Column<TimeOnly>(type: "time without time zone", nullable: false),
+                    end_time = table.Column<TimeOnly>(type: "time without time zone", nullable: false),
+                    day_id = table.Column<int>(type: "integer", nullable: false),
+                    location_id = table.Column<int>(type: "integer", nullable: false),
+                    guid = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    is_active = table.Column<bool>(type: "boolean", nullable: false),
+                    is_default = table.Column<bool>(type: "boolean", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Intervals", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_Intervals_DayInWeeks_day_id",
+                        column: x => x.day_id,
+                        principalSchema: "core",
+                        principalTable: "DayInWeeks",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Intervals_Locations_location_id",
+                        column: x => x.location_id,
+                        principalSchema: "core",
+                        principalTable: "Locations",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Roles",
+                schema: "core",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    name = table.Column<string>(type: "text", nullable: false),
+                    Locationid = table.Column<int>(type: "integer", nullable: true),
+                    guid = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    is_active = table.Column<bool>(type: "boolean", nullable: false),
+                    is_default = table.Column<bool>(type: "boolean", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Roles", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_Roles_Locations_Locationid",
+                        column: x => x.Locationid,
+                        principalSchema: "core",
+                        principalTable: "Locations",
+                        principalColumn: "id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TimeZones",
+                schema: "core",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    name = table.Column<string>(type: "text", nullable: false),
+                    location_id = table.Column<int>(type: "integer", nullable: false),
+                    guid = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    is_active = table.Column<bool>(type: "boolean", nullable: false),
+                    is_default = table.Column<bool>(type: "boolean", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TimeZones", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_TimeZones_Locations_location_id",
+                        column: x => x.location_id,
+                        principalSchema: "core",
+                        principalTable: "Locations",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Turnstiles",
+                schema: "core",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    name = table.Column<string>(type: "text", nullable: false),
+                    location_id = table.Column<int>(type: "integer", nullable: false),
+                    locationid = table.Column<int>(type: "integer", nullable: false),
+                    guid = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    is_active = table.Column<bool>(type: "boolean", nullable: false),
+                    is_default = table.Column<bool>(type: "boolean", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Turnstiles", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_Turnstiles_Locations_locationid",
+                        column: x => x.locationid,
+                        principalSchema: "core",
+                        principalTable: "Locations",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Departments",
+                schema: "core",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    name = table.Column<string>(type: "text", nullable: false),
+                    description = table.Column<string>(type: "text", nullable: false),
+                    company_id = table.Column<int>(type: "integer", nullable: false),
+                    guid = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    is_active = table.Column<bool>(type: "boolean", nullable: false),
+                    is_default = table.Column<bool>(type: "boolean", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Departments", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_Departments_Companies_company_id",
+                        column: x => x.company_id,
+                        principalSchema: "core",
+                        principalTable: "Companies",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DeviceModules",
+                schema: "core",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    name = table.Column<string>(type: "text", nullable: false),
+                    serial_number = table.Column<string>(type: "text", nullable: false),
+                    firmware = table.Column<string>(type: "text", nullable: false),
+                    mac = table.Column<string>(type: "text", nullable: false),
+                    port = table.Column<int>(type: "integer", nullable: false),
+                    address = table.Column<int>(type: "integer", nullable: false),
+                    model = table.Column<string>(type: "text", nullable: false),
+                    reader_slot = table.Column<int>(type: "integer", nullable: false),
+                    output_slot = table.Column<int>(type: "integer", nullable: false),
+                    input_slot = table.Column<int>(type: "integer", nullable: false),
+                    device_id = table.Column<int>(type: "integer", nullable: false),
+                    location_id = table.Column<int>(type: "integer", nullable: false),
+                    guid = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    is_active = table.Column<bool>(type: "boolean", nullable: false),
+                    is_default = table.Column<bool>(type: "boolean", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DeviceModules", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_DeviceModules_Devices_device_id",
+                        column: x => x.device_id,
+                        principalSchema: "core",
+                        principalTable: "Devices",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_DeviceModules_Locations_location_id",
+                        column: x => x.location_id,
+                        principalSchema: "core",
+                        principalTable: "Locations",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ModulePermissions",
+                schema: "core",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    module_id = table.Column<int>(type: "integer", nullable: false),
+                    is_enabled = table.Column<bool>(type: "boolean", nullable: false),
+                    role_id = table.Column<int>(type: "integer", nullable: false),
+                    guid = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    is_active = table.Column<bool>(type: "boolean", nullable: false),
+                    is_default = table.Column<bool>(type: "boolean", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ModulePermissions", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_ModulePermissions_Modules_module_id",
+                        column: x => x.module_id,
+                        principalSchema: "core",
+                        principalTable: "Modules",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ModulePermissions_Roles_role_id",
+                        column: x => x.role_id,
+                        principalSchema: "core",
+                        principalTable: "Roles",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Operators",
+                schema: "core",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    username = table.Column<string>(type: "text", nullable: false),
+                    password = table.Column<string>(type: "text", nullable: false),
+                    title = table.Column<string>(type: "text", nullable: false),
+                    firstname = table.Column<string>(type: "text", nullable: false),
+                    middlename = table.Column<string>(type: "text", nullable: false),
+                    lastname = table.Column<string>(type: "text", nullable: false),
+                    gender = table.Column<string>(type: "text", nullable: false),
+                    phone = table.Column<string>(type: "text", nullable: false),
+                    email = table.Column<string>(type: "text", nullable: false),
+                    joined_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    expired_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    role_id = table.Column<int>(type: "integer", nullable: false),
+                    guid = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    is_active = table.Column<bool>(type: "boolean", nullable: false),
+                    is_default = table.Column<bool>(type: "boolean", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Operators", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_Operators_Roles_role_id",
+                        column: x => x.role_id,
+                        principalSchema: "core",
+                        principalTable: "Roles",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.SetNull);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TimeZoneIntervals",
+                schema: "core",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    timezone_id = table.Column<int>(type: "integer", nullable: false),
+                    interval_id = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TimeZoneIntervals", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_TimeZoneIntervals_Intervals_interval_id",
+                        column: x => x.interval_id,
+                        principalSchema: "core",
+                        principalTable: "Intervals",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_TimeZoneIntervals_TimeZones_timezone_id",
+                        column: x => x.timezone_id,
+                        principalSchema: "core",
+                        principalTable: "TimeZones",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Lanes",
+                schema: "core",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    lane_no = table.Column<int>(type: "integer", nullable: false),
+                    sensorid = table.Column<int>(type: "integer", nullable: true),
+                    Turnstileid = table.Column<int>(type: "integer", nullable: true),
+                    guid = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    is_active = table.Column<bool>(type: "boolean", nullable: false),
+                    is_default = table.Column<bool>(type: "boolean", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Lanes", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_Lanes_Sensors_sensorid",
+                        column: x => x.sensorid,
+                        principalSchema: "core",
+                        principalTable: "Sensors",
+                        principalColumn: "id");
+                    table.ForeignKey(
+                        name: "FK_Lanes_Turnstiles_Turnstileid",
+                        column: x => x.Turnstileid,
+                        principalSchema: "core",
+                        principalTable: "Turnstiles",
+                        principalColumn: "id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Positions",
+                schema: "core",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    name = table.Column<string>(type: "text", nullable: false),
+                    description = table.Column<string>(type: "text", nullable: false),
+                    department_id = table.Column<int>(type: "integer", nullable: false),
+                    guid = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    is_active = table.Column<bool>(type: "boolean", nullable: false),
+                    is_default = table.Column<bool>(type: "boolean", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Positions", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_Positions_Departments_department_id",
+                        column: x => x.department_id,
+                        principalSchema: "core",
+                        principalTable: "Departments",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "FeaturePermissions",
+                schema: "core",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    feature_id = table.Column<int>(type: "integer", nullable: false),
+                    module_permission_id = table.Column<int>(type: "integer", nullable: false),
+                    is_enabled = table.Column<bool>(type: "boolean", nullable: false),
+                    is_created = table.Column<bool>(type: "boolean", nullable: false),
+                    is_updated = table.Column<bool>(type: "boolean", nullable: false),
+                    is_deleted = table.Column<bool>(type: "boolean", nullable: false),
+                    guid = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    is_active = table.Column<bool>(type: "boolean", nullable: false),
+                    is_default = table.Column<bool>(type: "boolean", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FeaturePermissions", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_FeaturePermissions_Features_feature_id",
+                        column: x => x.feature_id,
+                        principalSchema: "core",
+                        principalTable: "Features",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_FeaturePermissions_ModulePermissions_module_permission_id",
+                        column: x => x.module_permission_id,
+                        principalSchema: "core",
+                        principalTable: "ModulePermissions",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "OperatorLocations",
+                schema: "core",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    operator_id = table.Column<int>(type: "integer", nullable: false),
+                    location_id = table.Column<int>(type: "integer", nullable: false),
+                    guid = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    is_active = table.Column<bool>(type: "boolean", nullable: false),
+                    is_default = table.Column<bool>(type: "boolean", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OperatorLocations", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_OperatorLocations_Locations_location_id",
+                        column: x => x.location_id,
+                        principalSchema: "core",
+                        principalTable: "Locations",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_OperatorLocations_Operators_operator_id",
+                        column: x => x.operator_id,
+                        principalSchema: "core",
+                        principalTable: "Operators",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Relays",
+                schema: "core",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    slot_no = table.Column<int>(type: "integer", nullable: false),
+                    mode = table.Column<string>(type: "text", nullable: false),
+                    metadata = table.Column<string>(type: "text", nullable: false),
+                    vendor = table.Column<string>(type: "text", nullable: false),
+                    door_id = table.Column<int>(type: "integer", nullable: false),
+                    Laneid = table.Column<int>(type: "integer", nullable: true),
+                    guid = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    is_active = table.Column<bool>(type: "boolean", nullable: false),
+                    is_default = table.Column<bool>(type: "boolean", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Relays", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_Relays_Lanes_Laneid",
+                        column: x => x.Laneid,
+                        principalSchema: "core",
+                        principalTable: "Lanes",
+                        principalColumn: "id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Users",
+                schema: "core",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    username = table.Column<string>(type: "text", nullable: false),
+                    password = table.Column<string>(type: "text", nullable: false),
+                    user_code = table.Column<string>(type: "text", nullable: false),
+                    identification = table.Column<string>(type: "text", nullable: false),
+                    title = table.Column<string>(type: "text", nullable: false),
+                    firstname = table.Column<string>(type: "text", nullable: false),
+                    middlename = table.Column<string>(type: "text", nullable: false),
+                    lastname = table.Column<string>(type: "text", nullable: false),
+                    gender = table.Column<string>(type: "text", nullable: false),
+                    date_of_birth = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    email = table.Column<string>(type: "text", nullable: false),
+                    phone = table.Column<string>(type: "text", nullable: false),
+                    is_operator = table.Column<bool>(type: "boolean", nullable: false),
+                    is_user = table.Column<bool>(type: "boolean", nullable: false),
+                    role_id = table.Column<int>(type: "integer", nullable: true),
+                    company_id = table.Column<int>(type: "integer", nullable: true),
+                    department_id = table.Column<int>(type: "integer", nullable: true),
+                    position_id = table.Column<int>(type: "integer", nullable: true),
+                    address = table.Column<string>(type: "text", nullable: false),
+                    active_time = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    expire_time = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    pin_id = table.Column<int>(type: "integer", nullable: true),
+                    face_id = table.Column<int>(type: "integer", nullable: true),
+                    license_plate_id = table.Column<int>(type: "integer", nullable: true),
+                    qr_code_id = table.Column<int>(type: "integer", nullable: true),
+                    Locationid = table.Column<int>(type: "integer", nullable: true),
+                    guid = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    is_active = table.Column<bool>(type: "boolean", nullable: false),
+                    is_default = table.Column<bool>(type: "boolean", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Users", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_Users_Companies_company_id",
+                        column: x => x.company_id,
+                        principalSchema: "core",
+                        principalTable: "Companies",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Users_Departments_department_id",
+                        column: x => x.department_id,
+                        principalSchema: "core",
+                        principalTable: "Departments",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Users_Faces_face_id",
+                        column: x => x.face_id,
+                        principalSchema: "core",
+                        principalTable: "Faces",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Users_LicensePlates_license_plate_id",
+                        column: x => x.license_plate_id,
+                        principalSchema: "core",
+                        principalTable: "LicensePlates",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Users_Locations_Locationid",
+                        column: x => x.Locationid,
+                        principalSchema: "core",
+                        principalTable: "Locations",
+                        principalColumn: "id");
+                    table.ForeignKey(
+                        name: "FK_Users_Pins_pin_id",
+                        column: x => x.pin_id,
+                        principalSchema: "core",
+                        principalTable: "Pins",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Users_Positions_position_id",
+                        column: x => x.position_id,
+                        principalSchema: "core",
+                        principalTable: "Positions",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Users_QrCodes_qr_code_id",
+                        column: x => x.qr_code_id,
+                        principalSchema: "core",
+                        principalTable: "QrCodes",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Users_Roles_role_id",
+                        column: x => x.role_id,
+                        principalSchema: "core",
+                        principalTable: "Roles",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.SetNull);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Doors",
+                schema: "core",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    name = table.Column<string>(type: "text", nullable: false),
+                    vendor = table.Column<string>(type: "text", nullable: false),
+                    type = table.Column<string>(type: "text", nullable: false),
+                    metadata = table.Column<string>(type: "text", nullable: false),
+                    sensor_id = table.Column<int>(type: "integer", nullable: true),
+                    relay_id = table.Column<int>(type: "integer", nullable: true),
+                    buzzer_id = table.Column<int>(type: "integer", nullable: true),
+                    rex_id = table.Column<int>(type: "integer", nullable: true),
+                    device_module_id = table.Column<int>(type: "integer", nullable: false),
+                    location_id = table.Column<int>(type: "integer", nullable: false),
+                    guid = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    is_active = table.Column<bool>(type: "boolean", nullable: false),
+                    is_default = table.Column<bool>(type: "boolean", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Doors", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_Doors_Buzzers_buzzer_id",
+                        column: x => x.buzzer_id,
+                        principalSchema: "core",
+                        principalTable: "Buzzers",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Doors_DeviceModules_device_module_id",
+                        column: x => x.device_module_id,
+                        principalSchema: "core",
+                        principalTable: "DeviceModules",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Doors_Locations_location_id",
+                        column: x => x.location_id,
+                        principalSchema: "core",
+                        principalTable: "Locations",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Doors_Relays_relay_id",
+                        column: x => x.relay_id,
+                        principalSchema: "core",
+                        principalTable: "Relays",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Doors_Rexes_rex_id",
+                        column: x => x.rex_id,
+                        principalSchema: "core",
+                        principalTable: "Rexes",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Doors_Sensors_sensor_id",
+                        column: x => x.sensor_id,
+                        principalSchema: "core",
+                        principalTable: "Sensors",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Cards",
+                schema: "core",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    bits = table.Column<short>(type: "smallint", nullable: false),
+                    fac = table.Column<int>(type: "integer", nullable: false),
+                    card_number = table.Column<int>(type: "integer", nullable: false),
+                    user_id = table.Column<int>(type: "integer", nullable: true),
+                    guid = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    is_active = table.Column<bool>(type: "boolean", nullable: false),
+                    is_default = table.Column<bool>(type: "boolean", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Cards", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_Cards_Users_user_id",
+                        column: x => x.user_id,
+                        principalSchema: "core",
+                        principalTable: "Users",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserAdditionals",
+                schema: "core",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    additional = table.Column<string>(type: "text", nullable: false),
+                    user_id = table.Column<int>(type: "integer", nullable: false),
+                    guid = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    is_active = table.Column<bool>(type: "boolean", nullable: false),
+                    is_default = table.Column<bool>(type: "boolean", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserAdditionals", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_UserAdditionals_Users_user_id",
+                        column: x => x.user_id,
+                        principalSchema: "core",
+                        principalTable: "Users",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserGroups",
+                schema: "core",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    user_id = table.Column<int>(type: "integer", nullable: false),
+                    userid = table.Column<int>(type: "integer", nullable: false),
+                    group_id = table.Column<int>(type: "integer", nullable: false),
+                    groupid = table.Column<int>(type: "integer", nullable: false),
+                    guid = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    is_active = table.Column<bool>(type: "boolean", nullable: false),
+                    is_default = table.Column<bool>(type: "boolean", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserGroups", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_UserGroups_Groups_groupid",
+                        column: x => x.groupid,
+                        principalSchema: "core",
+                        principalTable: "Groups",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_UserGroups_Users_userid",
+                        column: x => x.userid,
+                        principalSchema: "core",
+                        principalTable: "Users",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserLocations",
+                schema: "core",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    user_id = table.Column<int>(type: "integer", nullable: false),
+                    location_id = table.Column<int>(type: "integer", nullable: false),
+                    guid = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    is_active = table.Column<bool>(type: "boolean", nullable: false),
+                    is_default = table.Column<bool>(type: "boolean", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserLocations", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_UserLocations_Locations_location_id",
+                        column: x => x.location_id,
+                        principalSchema: "core",
+                        principalTable: "Locations",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_UserLocations_Users_user_id",
+                        column: x => x.user_id,
+                        principalSchema: "core",
+                        principalTable: "Users",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Readers",
+                schema: "core",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    slot_no = table.Column<int>(type: "integer", nullable: false),
+                    mode = table.Column<string>(type: "text", nullable: false),
+                    metadata = table.Column<string>(type: "text", nullable: false),
+                    vendor = table.Column<string>(type: "text", nullable: false),
+                    reader_direction = table.Column<string>(type: "text", nullable: false),
+                    door_id = table.Column<int>(type: "integer", nullable: false),
+                    Laneid = table.Column<int>(type: "integer", nullable: true),
+                    guid = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    is_active = table.Column<bool>(type: "boolean", nullable: false),
+                    is_default = table.Column<bool>(type: "boolean", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Readers", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_Readers_Doors_door_id",
+                        column: x => x.door_id,
+                        principalSchema: "core",
+                        principalTable: "Doors",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Readers_Lanes_Laneid",
+                        column: x => x.Laneid,
+                        principalSchema: "core",
+                        principalTable: "Lanes",
+                        principalColumn: "id");
+                });
+
+            migrationBuilder.InsertData(
+                schema: "core",
+                table: "Countries",
+                columns: new[] { "id", "code", "is_active", "is_default", "name" },
+                values: new object[,]
+                {
+                    { 1, "AD", true, false, "Andorra" },
+                    { 2, "AE", true, false, "United Arab Emirates" },
+                    { 3, "AF", true, false, "Afghanistan" },
+                    { 4, "AG", true, false, "Antigua and Barbuda" },
+                    { 5, "AI", true, false, "Anguilla" },
+                    { 6, "AL", true, false, "Albania" },
+                    { 7, "AM", true, false, "Armenia" },
+                    { 8, "AN", true, false, "Netherlands Antilles" },
+                    { 9, "AO", true, false, "Angola" },
+                    { 10, "AQ", true, false, "Antarctica" },
+                    { 11, "AR", true, false, "Argentina" },
+                    { 12, "AS", true, false, "American Samoa" },
+                    { 13, "AT", true, false, "Austria" },
+                    { 14, "AU", true, false, "Australia" },
+                    { 15, "AW", true, false, "Aruba" },
+                    { 16, "AZ", true, false, "Azerbaijan" },
+                    { 17, "BA", true, false, "Bosnia and Herzegovina" },
+                    { 18, "BB", true, false, "Barbados" },
+                    { 19, "BD", true, false, "Bangladesh" },
+                    { 20, "BE", true, false, "Belgium" },
+                    { 21, "BF", true, false, "Burkina Faso" },
+                    { 22, "BG", true, false, "Bulgaria" },
+                    { 23, "BH", true, false, "Bahrain" },
+                    { 24, "BI", true, false, "Burundi" },
+                    { 25, "BJ", true, false, "Benin" },
+                    { 26, "BM", true, false, "Bermuda" },
+                    { 27, "BN", true, false, "Brunei" },
+                    { 28, "BO", true, false, "Bolivia" },
+                    { 29, "BR", true, false, "Brazil" },
+                    { 30, "BS", true, false, "Bahamas" },
+                    { 31, "BT", true, false, "Bhutan" },
+                    { 32, "BV", true, false, "Bouvet Island" },
+                    { 33, "BW", true, false, "Botswana" },
+                    { 34, "BY", true, false, "Belarus" },
+                    { 35, "BZ", true, false, "Belize" },
+                    { 36, "CA", true, false, "Canada" },
+                    { 37, "CC", true, false, "Cocos (Keeling) Islands" },
+                    { 38, "CD", true, false, "Congo (DRC)" },
+                    { 39, "CF", true, false, "Central African Republic" },
+                    { 40, "CG", true, false, "Congo (Republic)" },
+                    { 41, "CH", true, false, "Switzerland" },
+                    { 42, "CI", true, false, "Côte d'Ivoire" },
+                    { 43, "CK", true, false, "Cook Islands" },
+                    { 44, "CL", true, false, "Chile" },
+                    { 45, "CM", true, false, "Cameroon" },
+                    { 46, "CN", true, false, "China" },
+                    { 47, "CO", true, false, "Colombia" },
+                    { 48, "CR", true, false, "Costa Rica" },
+                    { 49, "CU", true, false, "Cuba" },
+                    { 50, "CV", true, false, "Cape Verde" },
+                    { 51, "CX", true, false, "Christmas Island" },
+                    { 52, "CY", true, false, "Cyprus" },
+                    { 53, "CZ", true, false, "Czech Republic" },
+                    { 54, "DE", true, false, "Germany" },
+                    { 55, "DJ", true, false, "Djibouti" },
+                    { 56, "DK", true, false, "Denmark" },
+                    { 57, "DM", true, false, "Dominica" },
+                    { 58, "DO", true, false, "Dominican Republic" },
+                    { 59, "DZ", true, false, "Algeria" },
+                    { 60, "EC", true, false, "Ecuador" },
+                    { 61, "EE", true, false, "Estonia" },
+                    { 62, "EG", true, false, "Egypt" },
+                    { 63, "EH", true, false, "Western Sahara" },
+                    { 64, "ER", true, false, "Eritrea" },
+                    { 65, "ES", true, false, "Spain" },
+                    { 66, "ET", true, false, "Ethiopia" },
+                    { 67, "FI", true, false, "Finland" },
+                    { 68, "FJ", true, false, "Fiji" },
+                    { 69, "FK", true, false, "Falkland Islands" },
+                    { 70, "FM", true, false, "Micronesia" },
+                    { 71, "FO", true, false, "Faroe Islands" },
+                    { 72, "FR", true, false, "France" },
+                    { 73, "GA", true, false, "Gabon" },
+                    { 74, "GB", true, false, "United Kingdom" },
+                    { 75, "GD", true, false, "Grenada" },
+                    { 76, "GE", true, false, "Georgia" },
+                    { 77, "GF", true, false, "French Guiana" },
+                    { 78, "GG", true, false, "Guernsey" },
+                    { 79, "GH", true, false, "Ghana" },
+                    { 80, "GI", true, false, "Gibraltar" },
+                    { 81, "GL", true, false, "Greenland" },
+                    { 82, "GM", true, false, "Gambia" },
+                    { 83, "GN", true, false, "Guinea" },
+                    { 84, "GP", true, false, "Guadeloupe" },
+                    { 85, "GQ", true, false, "Equatorial Guinea" },
+                    { 86, "GR", true, false, "Greece" },
+                    { 87, "GT", true, false, "Guatemala" },
+                    { 88, "GU", true, false, "Guam" },
+                    { 89, "GW", true, false, "Guinea-Bissau" },
+                    { 90, "GY", true, false, "Guyana" },
+                    { 91, "HK", true, false, "Hong Kong" },
+                    { 92, "HN", true, false, "Honduras" },
+                    { 93, "HR", true, false, "Croatia" },
+                    { 94, "HT", true, false, "Haiti" },
+                    { 95, "HU", true, false, "Hungary" },
+                    { 96, "ID", true, false, "Indonesia" },
+                    { 97, "IE", true, false, "Ireland" },
+                    { 98, "IL", true, false, "Israel" },
+                    { 99, "IN", true, false, "India" },
+                    { 100, "IQ", true, false, "Iraq" },
+                    { 101, "IR", true, false, "Iran" },
+                    { 102, "IS", true, false, "Iceland" },
+                    { 103, "IT", true, false, "Italy" },
+                    { 104, "JM", true, false, "Jamaica" },
+                    { 105, "JO", true, false, "Jordan" },
+                    { 106, "JP", true, false, "Japan" },
+                    { 107, "KE", true, false, "Kenya" },
+                    { 108, "KH", true, false, "Cambodia" },
+                    { 109, "KR", true, false, "South Korea" },
+                    { 110, "KW", true, false, "Kuwait" },
+                    { 111, "KZ", true, false, "Kazakhstan" },
+                    { 112, "LA", true, false, "Laos" },
+                    { 113, "LB", true, false, "Lebanon" },
+                    { 114, "LK", true, false, "Sri Lanka" },
+                    { 115, "LR", true, false, "Liberia" },
+                    { 116, "LS", true, false, "Lesotho" },
+                    { 117, "LT", true, false, "Lithuania" },
+                    { 118, "LU", true, false, "Luxembourg" },
+                    { 119, "LV", true, false, "Latvia" },
+                    { 120, "LY", true, false, "Libya" },
+                    { 121, "MA", true, false, "Morocco" },
+                    { 122, "MC", true, false, "Monaco" },
+                    { 123, "MD", true, false, "Moldova" },
+                    { 124, "ME", true, false, "Montenegro" },
+                    { 125, "MG", true, false, "Madagascar" },
+                    { 126, "MV", true, false, "Maldives" },
+                    { 127, "MX", true, false, "Mexico" },
+                    { 128, "MY", true, false, "Malaysia" },
+                    { 129, "MZ", true, false, "Mozambique" },
+                    { 130, "NA", true, false, "Namibia" },
+                    { 131, "NG", true, false, "Nigeria" },
+                    { 132, "NL", true, false, "Netherlands" },
+                    { 133, "NO", true, false, "Norway" },
+                    { 134, "NP", true, false, "Nepal" },
+                    { 135, "NZ", true, false, "New Zealand" },
+                    { 136, "OM", true, false, "Oman" },
+                    { 137, "PA", true, false, "Panama" },
+                    { 138, "PE", true, false, "Peru" },
+                    { 139, "PH", true, false, "Philippines" },
+                    { 140, "PK", true, false, "Pakistan" },
+                    { 141, "PL", true, false, "Poland" },
+                    { 142, "PT", true, false, "Portugal" },
+                    { 143, "QA", true, false, "Qatar" },
+                    { 144, "RO", true, false, "Romania" },
+                    { 145, "RS", true, false, "Serbia" },
+                    { 146, "RU", true, false, "Russia" },
+                    { 147, "RW", true, false, "Rwanda" },
+                    { 148, "SA", true, false, "Saudi Arabia" },
+                    { 149, "SE", true, false, "Sweden" },
+                    { 150, "SG", true, false, "Singapore" },
+                    { 151, "SI", true, false, "Slovenia" },
+                    { 152, "SK", true, false, "Slovakia" },
+                    { 153, "SN", true, false, "Senegal" },
+                    { 154, "SO", true, false, "Somalia" },
+                    { 155, "SR", true, false, "Suriname" },
+                    { 156, "SV", true, false, "El Salvador" },
+                    { 157, "SY", true, false, "Syria" },
+                    { 158, "TH", true, false, "Thailand" },
+                    { 159, "TJ", true, false, "Tajikistan" },
+                    { 160, "TL", true, false, "Timor-Leste" },
+                    { 161, "TM", true, false, "Turkmenistan" },
+                    { 162, "TN", true, false, "Tunisia" },
+                    { 163, "TR", true, false, "Turkey" },
+                    { 164, "TW", true, false, "Taiwan" },
+                    { 165, "TZ", true, false, "Tanzania" },
+                    { 166, "UA", true, false, "Ukraine" },
+                    { 167, "UG", true, false, "Uganda" },
+                    { 168, "US", true, false, "United States" },
+                    { 169, "UY", true, false, "Uruguay" },
+                    { 170, "UZ", true, false, "Uzbekistan" },
+                    { 171, "VA", true, false, "Vatican City" },
+                    { 172, "VE", true, false, "Venezuela" },
+                    { 173, "VN", true, false, "Vietnam" },
+                    { 174, "YE", true, false, "Yemen" },
+                    { 175, "ZA", true, false, "South Africa" },
+                    { 176, "ZM", true, false, "Zambia" },
+                    { 177, "ZW", true, false, "Zimbabwe" },
+                    { 178, "", true, false, "Default" }
+                });
+
+            migrationBuilder.InsertData(
+                schema: "core",
+                table: "Modules",
+                columns: new[] { "id", "is_active", "is_default", "name" },
+                values: new object[,]
+                {
+                    { 1, true, false, "Access" },
+                    { 2, true, false, "Visitor" },
+                    { 3, true, false, "Time Attendance" }
+                });
+
+            migrationBuilder.InsertData(
+                schema: "core",
+                table: "Roles",
+                columns: new[] { "id", "Locationid", "guid", "is_active", "is_default", "name" },
+                values: new object[] { 1, null, new Guid("fe527691-7b13-4294-98b5-cb95181f5453"), true, true, "Administrator" });
+
+            migrationBuilder.InsertData(
+                schema: "core",
+                table: "Features",
+                columns: new[] { "id", "guid", "is_active", "is_default", "module_id", "name" },
+                values: new object[,]
+                {
+                    { 1, new Guid("f1f1f528-1025-44de-8512-be5f269417e8"), true, false, 1, "dashboard" },
+                    { 2, new Guid("62e7ede3-9152-476a-a4df-173cc16a12fe"), true, false, 1, "events" },
+                    { 3, new Guid("c164d952-6649-49bb-95c9-2543695b8af6"), true, false, 1, "location" },
+                    { 4, new Guid("14fa8dca-521d-4e1a-a582-0159df91aea9"), true, false, 1, "alert" },
+                    { 5, new Guid("60239ccd-4cd7-441a-94c4-4a1577c79e38"), true, false, 1, "operator" },
+                    { 6, new Guid("dc76438d-0e0d-4d60-88bc-0559cb81ce4a"), true, false, 1, "device" },
+                    { 7, new Guid("77c0545d-ec94-4037-802f-2240bcc9020e"), true, false, 1, "control" },
+                    { 8, new Guid("2242b3c0-06e7-4e07-be9f-7491584c57c9"), true, false, 1, "monitor" },
+                    { 9, new Guid("8b5c31bb-706b-4fa5-b0f0-dd246f1e9a2b"), true, false, 1, "monitorgroup" },
+                    { 10, new Guid("f2143a86-d2f1-47ad-a481-c74ecbdadc83"), true, false, 1, "acr" },
+                    { 11, new Guid("b753863e-30f4-47aa-81b3-64dda55970da"), true, false, 1, "user" },
+                    { 12, new Guid("5ab363b5-a921-41e5-949e-5129eb416097"), true, false, 1, "group" },
+                    { 13, new Guid("4401f4d8-4145-4439-adab-d89cd3e3b2fb"), true, false, 1, "area" },
+                    { 14, new Guid("f18ef407-cd4d-46e8-a9f5-cbc99b87a0e4"), true, false, 1, "time" },
+                    { 15, new Guid("5699f80a-aa8c-4325-88cf-8ba31b85f976"), true, false, 1, "trigger" },
+                    { 16, new Guid("76d4a40a-3fa8-4a9f-a7b5-2b63f57fd26d"), true, false, 1, "map" },
+                    { 17, new Guid("24ebed55-6686-45a8-95a5-00e4e6516f4f"), true, false, 1, "report" },
+                    { 18, new Guid("713bcbae-1755-4a94-ab82-0180a856c80a"), true, false, 1, "setting" },
+                    { 19, new Guid("d57aac0d-1f61-4135-857b-cc1f51288d72"), true, false, 1, "tools" }
+                });
+
+            migrationBuilder.InsertData(
+                schema: "core",
+                table: "Features",
+                columns: new[] { "id", "is_active", "is_default", "module_id", "name" },
+                values: new object[,]
+                {
+                    { 20, true, false, 2, "register" },
+                    { 21, true, false, 2, "appointment" },
+                    { 22, true, false, 3, "report" }
+                });
+
+            migrationBuilder.InsertData(
+                schema: "core",
+                table: "Locations",
+                columns: new[] { "id", "country_id", "description", "guid", "is_active", "is_default", "name" },
+                values: new object[] { 1, 178, "Main location", new Guid("3a9c9947-d5ca-4bb2-b525-0499a340f1d6"), true, true, "Main Location" });
+
+            migrationBuilder.InsertData(
+                schema: "core",
+                table: "ModulePermissions",
+                columns: new[] { "id", "is_active", "is_default", "is_enabled", "module_id", "role_id" },
+                values: new object[,]
+                {
+                    { 1, true, true, true, 1, 1 },
+                    { 2, true, true, true, 2, 1 },
+                    { 3, true, true, true, 3, 1 }
+                });
+
+            migrationBuilder.InsertData(
+                schema: "core",
+                table: "Operators",
+                columns: new[] { "id", "email", "expired_date", "firstname", "gender", "is_active", "is_default", "joined_date", "lastname", "middlename", "password", "phone", "role_id", "title", "username" },
+                values: new object[] { 1, "support@sentrix.com", null, "Administrator", "Male", true, false, new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "System", "", "100000.lG1/4V/VRPZsbhf/Zqc4xw==.6vYcf+wEMSgqcaNhoZEdM9PaPxx2ZUErZhQbeMxo5OY=", "", 1, "Mr", "admin" });
+
+            migrationBuilder.InsertData(
+                schema: "core",
+                table: "FeaturePermissions",
+                columns: new[] { "id", "feature_id", "is_active", "is_created", "is_default", "is_deleted", "is_enabled", "is_updated", "module_permission_id" },
+                values: new object[,]
+                {
+                    { 1, 1, true, true, false, true, true, true, 1 },
+                    { 2, 2, true, true, false, true, true, true, 1 },
+                    { 3, 3, true, true, false, true, true, true, 1 },
+                    { 4, 4, true, true, false, true, true, true, 1 },
+                    { 5, 5, true, true, false, true, true, true, 1 },
+                    { 6, 6, true, true, false, true, true, true, 1 },
+                    { 7, 7, true, true, false, true, true, true, 1 },
+                    { 8, 8, true, true, false, true, true, true, 1 },
+                    { 9, 9, true, true, false, true, true, true, 1 },
+                    { 10, 10, true, true, false, true, true, true, 1 },
+                    { 11, 11, true, true, false, true, true, true, 1 },
+                    { 12, 12, true, true, false, true, true, true, 1 },
+                    { 13, 13, true, true, false, true, true, true, 1 },
+                    { 14, 14, true, true, false, true, true, true, 1 },
+                    { 15, 15, true, true, false, true, true, true, 1 },
+                    { 16, 16, true, true, false, true, true, true, 1 },
+                    { 17, 17, true, true, false, true, true, true, 1 },
+                    { 18, 18, true, true, false, true, true, true, 1 },
+                    { 19, 19, true, true, false, true, true, true, 1 },
+                    { 20, 20, true, true, false, true, true, true, 2 },
+                    { 21, 21, true, true, false, true, true, true, 2 },
+                    { 22, 22, true, true, false, true, true, true, 3 }
+                });
+
+            migrationBuilder.InsertData(
+                schema: "core",
+                table: "OperatorLocations",
+                columns: new[] { "id", "is_active", "is_default", "location_id", "operator_id" },
+                values: new object[] { 1, true, false, 1, 1 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Buzzers_guid_id_door_id",
+                schema: "core",
+                table: "Buzzers",
+                columns: new[] { "guid", "id", "door_id" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Cards_guid",
+                schema: "core",
+                table: "Cards",
+                column: "guid",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Cards_user_id",
+                schema: "core",
+                table: "Cards",
+                column: "user_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Companies_guid",
+                schema: "core",
+                table: "Companies",
+                column: "guid",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Companies_Locationid",
+                schema: "core",
+                table: "Companies",
+                column: "Locationid");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ComponentMappings_internal_id_external_id",
+                schema: "core",
+                table: "ComponentMappings",
+                columns: new[] { "internal_id", "external_id" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ComponentMappings_location_id",
+                schema: "core",
+                table: "ComponentMappings",
+                column: "location_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Countries_guid",
+                schema: "core",
+                table: "Countries",
+                column: "guid",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Departments_company_id",
+                schema: "core",
+                table: "Departments",
+                column: "company_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Departments_guid",
+                schema: "core",
+                table: "Departments",
+                column: "guid",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DeviceModules_device_id_mac_guid_location_id",
+                schema: "core",
+                table: "DeviceModules",
+                columns: new[] { "device_id", "mac", "guid", "location_id" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DeviceModules_location_id",
+                schema: "core",
+                table: "DeviceModules",
+                column: "location_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Devices_guid_mac_vendor",
+                schema: "core",
+                table: "Devices",
+                columns: new[] { "guid", "mac", "vendor" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Devices_location_id",
+                schema: "core",
+                table: "Devices",
+                column: "location_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Doors_buzzer_id",
+                schema: "core",
+                table: "Doors",
+                column: "buzzer_id",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Doors_device_module_id",
+                schema: "core",
+                table: "Doors",
+                column: "device_module_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Doors_guid_id_device_module_id",
+                schema: "core",
+                table: "Doors",
+                columns: new[] { "guid", "id", "device_module_id" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Doors_location_id",
+                schema: "core",
+                table: "Doors",
+                column: "location_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Doors_relay_id",
+                schema: "core",
+                table: "Doors",
+                column: "relay_id",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Doors_rex_id",
+                schema: "core",
+                table: "Doors",
+                column: "rex_id",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Doors_sensor_id",
+                schema: "core",
+                table: "Doors",
+                column: "sensor_id",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Faces_guid",
+                schema: "core",
+                table: "Faces",
+                column: "guid",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_FeaturePermissions_feature_id",
+                schema: "core",
+                table: "FeaturePermissions",
+                column: "feature_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_FeaturePermissions_guid",
+                schema: "core",
+                table: "FeaturePermissions",
+                column: "guid",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_FeaturePermissions_module_permission_id",
+                schema: "core",
+                table: "FeaturePermissions",
+                column: "module_permission_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Features_guid",
+                schema: "core",
+                table: "Features",
+                column: "guid",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Features_module_id",
+                schema: "core",
+                table: "Features",
+                column: "module_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Holidays_location_id",
+                schema: "core",
+                table: "Holidays",
+                column: "location_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Intervals_day_id",
+                schema: "core",
+                table: "Intervals",
+                column: "day_id",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Intervals_location_id",
+                schema: "core",
+                table: "Intervals",
+                column: "location_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Lanes_sensorid",
+                schema: "core",
+                table: "Lanes",
+                column: "sensorid");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Lanes_Turnstileid",
+                schema: "core",
+                table: "Lanes",
+                column: "Turnstileid");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_License_guid",
+                schema: "core",
+                table: "License",
+                column: "guid",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LicenseKey_guid",
+                schema: "core",
+                table: "LicenseKey",
+                column: "guid",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LicensePlates_guid",
+                schema: "core",
+                table: "LicensePlates",
+                column: "guid",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Locations_country_id",
+                schema: "core",
+                table: "Locations",
+                column: "country_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Locations_guid",
+                schema: "core",
+                table: "Locations",
+                column: "guid",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ModulePermissions_module_id",
+                schema: "core",
+                table: "ModulePermissions",
+                column: "module_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ModulePermissions_role_id",
+                schema: "core",
+                table: "ModulePermissions",
+                column: "role_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OperatorLocations_location_id",
+                schema: "core",
+                table: "OperatorLocations",
+                column: "location_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OperatorLocations_operator_id",
+                schema: "core",
+                table: "OperatorLocations",
+                column: "operator_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Operators_guid_id_username",
+                schema: "core",
+                table: "Operators",
+                columns: new[] { "guid", "id", "username" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Operators_role_id",
+                schema: "core",
+                table: "Operators",
+                column: "role_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Pins_guid",
+                schema: "core",
+                table: "Pins",
+                column: "guid",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Positions_department_id",
+                schema: "core",
+                table: "Positions",
+                column: "department_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Positions_guid",
+                schema: "core",
+                table: "Positions",
+                column: "guid",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_QrCodes_guid",
+                schema: "core",
+                table: "QrCodes",
+                column: "guid",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Readers_door_id",
+                schema: "core",
+                table: "Readers",
+                column: "door_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Readers_guid_id_door_id",
+                schema: "core",
+                table: "Readers",
+                columns: new[] { "guid", "id", "door_id" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Readers_Laneid",
+                schema: "core",
+                table: "Readers",
+                column: "Laneid");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Relays_guid_id_door_id",
+                schema: "core",
+                table: "Relays",
+                columns: new[] { "guid", "id", "door_id" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Relays_Laneid",
+                schema: "core",
+                table: "Relays",
+                column: "Laneid");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Rexes_guid_id_door_id",
+                schema: "core",
+                table: "Rexes",
+                columns: new[] { "guid", "id", "door_id" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Roles_guid",
+                schema: "core",
+                table: "Roles",
+                column: "guid",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Roles_Locationid",
+                schema: "core",
+                table: "Roles",
+                column: "Locationid");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Sensors_guid_id_door_id",
+                schema: "core",
+                table: "Sensors",
+                columns: new[] { "guid", "id", "door_id" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TimeZoneIntervals_interval_id",
+                schema: "core",
+                table: "TimeZoneIntervals",
+                column: "interval_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TimeZoneIntervals_timezone_id",
+                schema: "core",
+                table: "TimeZoneIntervals",
+                column: "timezone_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TimeZones_location_id_guid_name",
+                schema: "core",
+                table: "TimeZones",
+                columns: new[] { "location_id", "guid", "name" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Turnstiles_locationid",
+                schema: "core",
+                table: "Turnstiles",
+                column: "locationid");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserAdditionals_guid",
+                schema: "core",
+                table: "UserAdditionals",
+                column: "guid",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserAdditionals_user_id",
+                schema: "core",
+                table: "UserAdditionals",
+                column: "user_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserGroups_groupid",
+                schema: "core",
+                table: "UserGroups",
+                column: "groupid");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserGroups_userid",
+                schema: "core",
+                table: "UserGroups",
+                column: "userid");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserLocations_location_id",
+                schema: "core",
+                table: "UserLocations",
+                column: "location_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserLocations_user_id_location_id",
+                schema: "core",
+                table: "UserLocations",
+                columns: new[] { "user_id", "location_id" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_company_id",
+                schema: "core",
+                table: "Users",
+                column: "company_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_department_id",
+                schema: "core",
+                table: "Users",
+                column: "department_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_face_id",
+                schema: "core",
+                table: "Users",
+                column: "face_id",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_guid_username_identification_firstname_lastname_is_de~",
+                schema: "core",
+                table: "Users",
+                columns: new[] { "guid", "username", "identification", "firstname", "lastname", "is_default" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_license_plate_id",
+                schema: "core",
+                table: "Users",
+                column: "license_plate_id",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_Locationid",
+                schema: "core",
+                table: "Users",
+                column: "Locationid");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_pin_id",
+                schema: "core",
+                table: "Users",
+                column: "pin_id",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_position_id",
+                schema: "core",
+                table: "Users",
+                column: "position_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_qr_code_id",
+                schema: "core",
+                table: "Users",
+                column: "qr_code_id",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_role_id",
+                schema: "core",
+                table: "Users",
+                column: "role_id");
+        }
+
+        /// <inheritdoc />
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.DropTable(
+                name: "Cards",
+                schema: "core");
+
+            migrationBuilder.DropTable(
+                name: "ComponentMappings",
+                schema: "core");
+
+            migrationBuilder.DropTable(
+                name: "FeaturePermissions",
+                schema: "core");
+
+            migrationBuilder.DropTable(
+                name: "Holidays",
+                schema: "core");
+
+            migrationBuilder.DropTable(
+                name: "License",
+                schema: "core");
+
+            migrationBuilder.DropTable(
+                name: "LicenseKey",
+                schema: "core");
+
+            migrationBuilder.DropTable(
+                name: "OperatorLocations",
+                schema: "core");
+
+            migrationBuilder.DropTable(
+                name: "Readers",
+                schema: "core");
+
+            migrationBuilder.DropTable(
+                name: "TimeZoneIntervals",
+                schema: "core");
+
+            migrationBuilder.DropTable(
+                name: "UserAdditionals",
+                schema: "core");
+
+            migrationBuilder.DropTable(
+                name: "UserGroups",
+                schema: "core");
+
+            migrationBuilder.DropTable(
+                name: "UserLocations",
+                schema: "core");
+
+            migrationBuilder.DropTable(
+                name: "Features",
+                schema: "core");
+
+            migrationBuilder.DropTable(
+                name: "ModulePermissions",
+                schema: "core");
+
+            migrationBuilder.DropTable(
+                name: "Operators",
+                schema: "core");
+
+            migrationBuilder.DropTable(
+                name: "Doors",
+                schema: "core");
+
+            migrationBuilder.DropTable(
+                name: "Intervals",
+                schema: "core");
+
+            migrationBuilder.DropTable(
+                name: "TimeZones",
+                schema: "core");
+
+            migrationBuilder.DropTable(
+                name: "Groups",
+                schema: "core");
+
+            migrationBuilder.DropTable(
+                name: "Users",
+                schema: "core");
+
+            migrationBuilder.DropTable(
+                name: "Modules",
+                schema: "core");
+
+            migrationBuilder.DropTable(
+                name: "Buzzers",
+                schema: "core");
+
+            migrationBuilder.DropTable(
+                name: "DeviceModules",
+                schema: "core");
+
+            migrationBuilder.DropTable(
+                name: "Relays",
+                schema: "core");
+
+            migrationBuilder.DropTable(
+                name: "Rexes",
+                schema: "core");
+
+            migrationBuilder.DropTable(
+                name: "DayInWeeks",
+                schema: "core");
+
+            migrationBuilder.DropTable(
+                name: "Faces",
+                schema: "core");
+
+            migrationBuilder.DropTable(
+                name: "LicensePlates",
+                schema: "core");
+
+            migrationBuilder.DropTable(
+                name: "Pins",
+                schema: "core");
+
+            migrationBuilder.DropTable(
+                name: "Positions",
+                schema: "core");
+
+            migrationBuilder.DropTable(
+                name: "QrCodes",
+                schema: "core");
+
+            migrationBuilder.DropTable(
+                name: "Roles",
+                schema: "core");
+
+            migrationBuilder.DropTable(
+                name: "Devices",
+                schema: "core");
+
+            migrationBuilder.DropTable(
+                name: "Lanes",
+                schema: "core");
+
+            migrationBuilder.DropTable(
+                name: "Departments",
+                schema: "core");
+
+            migrationBuilder.DropTable(
+                name: "Sensors",
+                schema: "core");
+
+            migrationBuilder.DropTable(
+                name: "Turnstiles",
+                schema: "core");
+
+            migrationBuilder.DropTable(
+                name: "Companies",
+                schema: "core");
+
+            migrationBuilder.DropTable(
+                name: "Locations",
+                schema: "core");
+
+            migrationBuilder.DropTable(
+                name: "Countries",
+                schema: "core");
+        }
+    }
+}
