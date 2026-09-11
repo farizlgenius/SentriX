@@ -34,7 +34,10 @@ import { useLocation } from "../../context/LocationContext";
 import { send } from "../../api/api";
 import { FormProp, FormType } from "../../model/Form/FormProp";
 import { DoorType } from "../../enum/DoorType";
-import { FormField } from "../../components/form/template/FormTemplate";
+import {
+  FormField,
+  FormSection,
+} from "../../components/form/template/FormTemplate";
 import StepProgress from "../../components/form/StepProgress";
 
 enum FormTab {
@@ -189,14 +192,7 @@ const AeroDoorForm: React.FC<
       hasReaderOut?: boolean;
     }
   >
-> = ({
-  handleClick,
-  dto,
-  setDto,
-  type,
-  focusComponent,
-  hasReaderOut,
-}) => {
+> = ({ handleClick, dto, setDto, type, focusComponent, hasReaderOut }) => {
   const { locationGuid: locationId } = useLocation();
   const defaultDoorDto: AeroDoorDto = {
     id: 0,
@@ -712,631 +708,698 @@ const AeroDoorForm: React.FC<
   }, []);
 
   return (
-    <div className="flex flex-col gap-5 p-5 border border-gray-200 rounded-2xl dark:border-gray-800 lg:p-6">
-      <StepProgress
-        steps={formSteps.map((step) => ({
-          key: step.tab,
-          title: step.title,
-          detail: step.detail,
-        }))}
-        activeIndex={currentStepIndex}
-        onStepClick={goToStep}
-      />
+    <>
+      <FormSection
+        overall="Door Detail"
+        title={currentStep?.title}
+        description={currentStep?.detail}
+      >
+        {/* General */}
 
-      <div className="rounded-xl border border-gray-200 p-4 dark:border-gray-800 lg:p-6">
-        <div className="mb-4">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-            {currentStep?.title}
-          </h3>
-          <p className="text-sm text-gray-500 dark:text-gray-400">
-            {currentStep?.detail}
-          </p>
-        </div>
-        <div className="flex justify-center">
-          <div
-            className={`w-full ${activeTab === FormTab.Advance ? "" : "lg:w-[60%]"}`}
-          >
-            {activeTab == FormTab.General && (
-              <div className="flex flex-col gap-5">
+        {activeTab == FormTab.General && (
+          <div className="flex flex-col gap-5">
+            <FormField>
+              <Label htmlFor="name">Door Name</Label>
+              <Input
+                disabled={type == FormType.INFO}
+                value={dto.name}
+                name="name"
+                type="text"
+                id="name"
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setDto((prev) => ({ ...prev, name: e.target.value }))
+                }
+                placeholder="Door name"
+              />
+            </FormField>
+            <FormField>
+              <Label htmlFor="scpId">Controller</Label>
+              <Select
+                disabled={type == FormType.INFO}
+                isString={false}
+                id="scpId"
+                name="scpId"
+                options={controllerOption}
+                onChange={(value: string) => {
+                  setDto((prev) => ({
+                    ...prev,
+                    deviceComponentId: Number(value),
+                    mac:
+                      controllerOption.find((x) => x.value === Number(value))
+                        ?.description ?? "not found",
+                  }));
+                  fetchModule(
+                    controllerOption.find((x) => x.value === Number(value))
+                      ?.additionalInfo,
+                  );
+                }}
+                className="dark:bg-dark-900"
+                defaultValue={dto.deviceComponentId}
+              />
+            </FormField>
+            <FormField>
+              <Label htmlFor="accessConfig">Door Type</Label>
+              <Select
+                disabled={type == FormType.INFO}
+                id="accessConfig"
+                name="accessConfig"
+                options={accessReaderConfigOption}
+                onChange={(value: string) => {
+                  setDto((prev) => ({
+                    ...prev,
+                    doorType:
+                      accessReaderConfigOption.find(
+                        (x) => x.value == Number(value),
+                      )?.label ?? "",
+                    metadata: {
+                      ...(prev.metadata as AeroDoorMetadata),
+                      accessConfig: Number(value),
+                    },
+                  }));
+                  handleDoorModeToggle(Number(value));
+                }}
+                className="dark:bg-dark-900"
+                defaultValue={(dto.metadata as AeroDoorMetadata).accessConfig}
+              />
+            </FormField>
+          </div>
+        )}
+        {/* Outside */}
+        {activeTab === FormTab.Outside && (
+          <div className="flex flex-col gap-5">
+            {readerInFlag && (
+              <>
                 <FormField>
-                  <Label htmlFor="name">Door Name</Label>
-                  <Input
-                    disabled={type == FormType.INFO}
-                    value={dto.name}
-                    name="name"
-                    type="text"
-                    id="name"
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                      setDto((prev) => ({ ...prev, name: e.target.value }))
-                    }
-                    placeholder="Door name"
-                  />
-                </FormField>
-                <FormField>
-                  <Label htmlFor="scpId">Controller</Label>
+                  <Label htmlFor="ReaderType">Reader Type</Label>
                   <Select
                     disabled={type == FormType.INFO}
-                    isString={false}
-                    id="scpId"
-                    name="scpId"
-                    options={controllerOption}
+                    name="ReaderType"
+                    options={[
+                      {
+                        label: "Wiegand",
+                        value: ReaderType.Wiegand,
+                        description: "",
+                        isTaken: false,
+                      },
+                      {
+                        label: "OSDP",
+                        value: ReaderType.OSDP,
+                        description: "",
+                        isTaken: false,
+                      },
+                    ]}
+                    placeholder="Select Option"
                     onChange={(value: string) => {
-                      setDto((prev) => ({
-                        ...prev,
-                        deviceComponentId: Number(value),
-                        mac:
-                          controllerOption.find(
-                            (x) => x.value === Number(value),
-                          )?.description ?? "not found",
-                      }));
-                      fetchModule(
-                        controllerOption.find((x) => x.value === Number(value))
-                          ?.additionalInfo,
-                      );
+                      if (value == ReaderType.Wiegand) {
+                        setDto((prev) => ({
+                          ...prev,
+                          metadata: {
+                            ...(prev.metadata as AeroDoorMetadata),
+                            ledMode: 1,
+                            readerIn: {
+                              ...(prev.metadata as AeroDoorMetadata).readerIn,
+                              osdpFlag: false,
+                              osdpAddress: 0x00,
+                              osdpBaudRate: 0x00,
+                              osdpDiscover: 0x00,
+                              osdpSecureChannel: 0x00,
+                              osdpTracing: 0x00,
+                            },
+                          },
+                        }));
+                      } else {
+                        setDto((prev) => ({
+                          ...prev,
+                          metadata: {
+                            ...(prev.metadata as AeroDoorMetadata),
+                            ledMode: 7,
+                            readerIn: {
+                              ...(prev.metadata as AeroDoorMetadata).readerIn,
+                              osdpFlag: true,
+                            },
+                          },
+                        }));
+                      }
+                      setReaderInType(value);
                     }}
                     className="dark:bg-dark-900"
-                    defaultValue={dto.deviceComponentId}
+                    defaultValue={readerInType}
                   />
                 </FormField>
                 <FormField>
-                  <Label htmlFor="accessConfig">Door Type</Label>
+                  <Label htmlFor="readerIn.readerModuleComponentId">
+                    Reader In - Module
+                  </Label>
                   <Select
                     disabled={type == FormType.INFO}
-                    id="accessConfig"
-                    name="accessConfig"
-                    options={accessReaderConfigOption}
+                    name="readerIn.readerModuleComponentId"
+                    options={moduleOption}
+                    placeholder="Select Option"
                     onChange={(value: string) => {
                       setDto((prev) => ({
                         ...prev,
-                        doorType:
-                          accessReaderConfigOption.find(
-                            (x) => x.value == Number(value),
-                          )?.label ?? "",
                         metadata: {
                           ...(prev.metadata as AeroDoorMetadata),
-                          accessConfig: Number(value),
+                          readerIn: {
+                            ...(prev.metadata as AeroDoorMetadata).readerIn,
+                            readerModuleComponentId: Number(value),
+                            readerModuleId: moduleOption.find(
+                              (x) => x.value == Number(value),
+                            )?.additionalInfo,
+                          },
                         },
                       }));
-                      handleDoorModeToggle(Number(value));
+                      fetchReaderIn(
+                        moduleOption.find((x) => x.value == Number(value))
+                          ?.additionalInfo,
+                      );
+                      if (readerInType == ReaderType.OSDP)
+                        fetchOsdpAddress(Number(value));
                     }}
                     className="dark:bg-dark-900"
                     defaultValue={
-                      (dto.metadata as AeroDoorMetadata).accessConfig
+                      (dto.metadata as AeroDoorMetadata).readerIn
+                        ?.readerModuleComponentId ?? ""
                     }
                   />
                 </FormField>
-              </div>
-            )}
-
-            {activeTab === FormTab.Outside && (
-              <div className="flex flex-col gap-5">
-                {readerInFlag && (
-                  <>
-                    <FormField>
-                      <Label htmlFor="ReaderType">Reader Type</Label>
-                      <Select
-                        disabled={type == FormType.INFO}
-                        name="ReaderType"
-                        options={[
-                          {
-                            label: "Wiegand",
-                            value: ReaderType.Wiegand,
-                            description: "",
-                            isTaken: false,
+                <FormField>
+                  <Label htmlFor="readerIn.readerNo">Reader In - No</Label>
+                  <Select
+                    disabled={type == FormType.INFO}
+                    name="readerIn.readerNo"
+                    options={readerInOption}
+                    placeholder="Select Option"
+                    onChange={(value: string) => {
+                      setDto((prev) => ({
+                        ...prev,
+                        metadata: {
+                          ...(prev.metadata as AeroDoorMetadata),
+                          readerIn: {
+                            ...(prev.metadata as AeroDoorMetadata).readerIn,
+                            readerNumber: Number(value),
                           },
-                          {
-                            label: "OSDP",
-                            value: ReaderType.OSDP,
-                            description: "",
-                            isTaken: false,
+                        },
+                      }));
+                      setReaderInOption((prev) =>
+                        Helper.updateOptionByValue(prev, Number(value), true),
+                      );
+                    }}
+                    className="dark:bg-dark-900"
+                    defaultValue={
+                      (dto.metadata as AeroDoorMetadata).readerIn?.readerNumber
+                    }
+                  />
+                </FormField>
+                {readerInType == ReaderType.OSDP && (
+                  <FormField>
+                    <Label htmlFor="readerIn.osdpAddress">Reader Address</Label>
+                    <Select
+                      disabled={type == FormType.INFO}
+                      name="readerIn.osdpAddress"
+                      options={osdpAddress}
+                      placeholder="Select Option"
+                      onChange={(value: string) => {
+                        setDto((prev) => ({
+                          ...prev,
+                          metadata: {
+                            ...(prev.metadata as AeroDoorMetadata),
+                            readerIn: {
+                              ...(prev.metadata as AeroDoorMetadata).readerIn,
+                              osdpAddress: Number(value),
+                            },
                           },
-                        ]}
-                        placeholder="Select Option"
-                        onChange={(value: string) => {
-                          if (value == ReaderType.Wiegand) {
-                            setDto((prev) => ({
-                              ...prev,
-                              metadata: {
-                                ...(prev.metadata as AeroDoorMetadata),
-                                ledMode: 1,
-                                readerIn: {
-                                  ...(prev.metadata as AeroDoorMetadata)
-                                    .readerIn,
-                                  osdpFlag: false,
-                                  osdpAddress: 0x00,
-                                  osdpBaudRate: 0x00,
-                                  osdpDiscover: 0x00,
-                                  osdpSecureChannel: 0x00,
-                                  osdpTracing: 0x00,
-                                },
-                              },
-                            }));
-                          } else {
-                            setDto((prev) => ({
-                              ...prev,
-                              metadata: {
-                                ...(prev.metadata as AeroDoorMetadata),
-                                ledMode: 7,
-                                readerIn: {
-                                  ...(prev.metadata as AeroDoorMetadata)
-                                    .readerIn,
-                                  osdpFlag: true,
-                                },
-                              },
-                            }));
-                          }
-                          setReaderInType(value);
-                        }}
-                        className="dark:bg-dark-900"
-                        defaultValue={readerInType}
-                      />
-                    </FormField>
-                    <FormField>
-                      <Label htmlFor="readerIn.readerModuleComponentId">
-                        Reader In - Module
-                      </Label>
-                      <Select
-                        disabled={type == FormType.INFO}
-                        name="readerIn.readerModuleComponentId"
-                        options={moduleOption}
-                        placeholder="Select Option"
-                        onChange={(value: string) => {
-                          setDto((prev) => ({
-                            ...prev,
-                            metadata: {
-                              ...(prev.metadata as AeroDoorMetadata),
-                              readerIn: {
-                                ...(prev.metadata as AeroDoorMetadata).readerIn,
-                                readerModuleComponentId: Number(value),
-                                readerModuleId: moduleOption.find(
-                                  (x) => x.value == Number(value),
-                                )?.additionalInfo,
-                              },
-                            },
-                          }));
-                          fetchReaderIn(
-                            moduleOption.find((x) => x.value == Number(value))
-                              ?.additionalInfo,
-                          );
-                          if (readerInType == ReaderType.OSDP)
-                            fetchOsdpAddress(Number(value));
-                        }}
-                        className="dark:bg-dark-900"
-                        defaultValue={
-                          (dto.metadata as AeroDoorMetadata).readerIn
-                            ?.readerModuleComponentId ?? ""
-                        }
-                      />
-                    </FormField>
-                    <FormField>
-                      <Label htmlFor="readerIn.readerNo">Reader In - No</Label>
-                      <Select
-                        disabled={type == FormType.INFO}
-                        name="readerIn.readerNo"
-                        options={readerInOption}
-                        placeholder="Select Option"
-                        onChange={(value: string) => {
-                          setDto((prev) => ({
-                            ...prev,
-                            metadata: {
-                              ...(prev.metadata as AeroDoorMetadata),
-                              readerIn: {
-                                ...(prev.metadata as AeroDoorMetadata).readerIn,
-                                readerNumber: Number(value),
-                              },
-                            },
-                          }));
-                          setReaderInOption((prev) =>
-                            Helper.updateOptionByValue(
-                              prev,
-                              Number(value),
-                              true,
-                            ),
-                          );
-                        }}
-                        className="dark:bg-dark-900"
-                        defaultValue={
-                          (dto.metadata as AeroDoorMetadata).readerIn
-                            ?.readerNumber
-                        }
-                      />
-                    </FormField>
-                    {readerInType == ReaderType.OSDP && (
-                      <FormField>
-                        <Label htmlFor="readerIn.osdpAddress">
-                          Reader Address
-                        </Label>
-                        <Select
-                          disabled={type == FormType.INFO}
-                          name="readerIn.osdpAddress"
-                          options={osdpAddress}
-                          placeholder="Select Option"
-                          onChange={(value: string) => {
-                            setDto((prev) => ({
-                              ...prev,
-                              metadata: {
-                                ...(prev.metadata as AeroDoorMetadata),
-                                readerIn: {
-                                  ...(prev.metadata as AeroDoorMetadata)
-                                    .readerIn,
-                                  osdpAddress: Number(value),
-                                },
-                              },
-                            }));
-                            Helper.updateOptionByValue(
-                              osdpAddress,
-                              Number(value),
-                              true,
-                            );
-                          }}
-                          className="dark:bg-dark-900"
-                          defaultValue={
-                            (dto.metadata as AeroDoorMetadata).readerIn
-                              ?.osdpAddress
-                          }
-                        />
-                        <Label htmlFor="readerOut.osdpBaudrate">
-                          Reader Baud Rate
-                        </Label>
-                        <Select
-                          disabled={type == FormType.INFO}
-                          name="readerOut.osdpBaudrate"
-                          options={osdpBaudRateOption}
-                          placeholder="Select Option"
-                          onChange={(value: string) => {
-                            setDto((prev) => ({
-                              ...prev,
-                              metadata: {
-                                ...(prev.metadata as AeroDoorMetadata),
-                                readerIn: {
-                                  ...(prev.metadata as AeroDoorMetadata)
-                                    .readerIn,
-                                  osdpBaudrate: Number(value),
-                                },
-                              },
-                            }));
-                          }}
-                          className="dark:bg-dark-900"
-                          defaultValue={
-                            (dto.metadata as AeroDoorMetadata).readerIn
-                              ?.osdpBaudrate
-                          }
-                        />
-                        <div className="mt-3">
-                          <Switch
-                            disabled={type == FormType.INFO}
-                            label="Auto Discover"
-                            defaultChecked={true}
-                            onChange={(checked: boolean) => {
-                              setDto((prev) => ({
-                                ...prev,
-                                metadata: {
-                                  ...(prev.metadata as AeroDoorMetadata),
-                                  readerIn: {
-                                    ...(prev.metadata as AeroDoorMetadata)
-                                      .readerIn,
-                                    osdpDiscover: checked ? 0x00 : 0x08,
-                                  },
-                                },
-                              }));
-                            }}
-                          />
-                        </div>
-                        <div className="mt-3">
-                          <Switch
-                            disabled={type == FormType.INFO}
-                            label="Tracing"
-                            defaultChecked={false}
-                            onChange={(checked: boolean) => {
-                              setDto((prev) => ({
-                                ...prev,
-                                metadata: {
-                                  ...(prev.metadata as AeroDoorMetadata),
-                                  readerIn: {
-                                    ...(prev.metadata as AeroDoorMetadata)
-                                      .readerIn,
-                                    osdpTracing: checked ? 0x10 : 0x00,
-                                  },
-                                },
-                              }));
-                            }}
-                          />
-                        </div>
-                        <div className="mt-3">
-                          <Switch
-                            disabled={type == FormType.INFO}
-                            label="Secure Channel"
-                            defaultChecked={false}
-                            onChange={(checked: boolean) => {
-                              setDto((prev) => ({
-                                ...prev,
-                                metadata: {
-                                  ...(prev.metadata as AeroDoorMetadata),
-                                  readerIn: {
-                                    ...(prev.metadata as AeroDoorMetadata)
-                                      .readerIn,
-                                    osdpTracing: checked ? 0x80 : 0x00,
-                                  },
-                                },
-                              }));
-                            }}
-                          />
-                        </div>
-                      </FormField>
-                    )}
-                  </>
-                )}
-              </div>
-            )}
-
-            {activeTab === FormTab.Inside && (
-              <div className="flex flex-col gap-5">
-                {readerOutFlag && (
-                  <>
-                    <FormField>
-                      <Label htmlFor="ReaderType">Reader Type</Label>
-                      <Select
-                        disabled={type == FormType.INFO}
-                        name="ReaderType"
-                        options={[
-                          {
-                            label: "Wiegand",
-                            value: ReaderType.Wiegand,
-                            description: "",
-                            isTaken: false,
-                          },
-                          {
-                            label: "OSDP",
-                            value: ReaderType.OSDP,
-                            description: "",
-                            isTaken: false,
-                          },
-                        ]}
-                        placeholder="Select Option"
-                        onChange={(value: string) => {
-                          if (value == ReaderType.Wiegand) {
-                            setDto((prev) => ({
-                              ...prev,
-                              metadata: {
-                                ...(prev.metadata as AeroDoorMetadata),
-                                ledMode: 1,
-                                readerOut: {
-                                  ...(prev.metadata as AeroDoorMetadata)
-                                    .readerOut,
-                                  osdpFlag: false,
-                                  osdpAddress: 0x00,
-                                  osdpBaudRate: 0x00,
-                                  osdpDiscover: 0x00,
-                                  osdpSecureChannel: 0x00,
-                                  osdpTracing: 0x00,
-                                },
-                              },
-                            }));
-                          } else {
-                            setDto((prev) => ({
-                              ...prev,
-                              metadata: {
-                                ...(prev.metadata as AeroDoorMetadata),
-                                ledMode: 7,
-                                readerOut: {
-                                  ...(prev.metadata as AeroDoorMetadata)
-                                    .readerOut,
-                                  osdpFlag: true,
-                                },
-                              },
-                            }));
-                          }
-                          setReaderOutType(value);
-                        }}
-                        className="dark:bg-dark-900"
-                        defaultValue={readerOutType}
-                      />
-                    </FormField>
-                    <FormField>
-                      <Label htmlFor="readerOut.readerModuleComponentId">
-                        Reader Out - Module
-                      </Label>
-                      <Select
-                        disabled={type == FormType.INFO}
-                        name="readerOut.readerModuleComponentId"
-                        options={moduleOption}
-                        placeholder="Select Option"
-                        onChangeWithEvent={(value: string) => {
-                          setDto((prev) => ({
-                            ...prev,
-                            metadata: {
-                              ...(prev.metadata as AeroDoorMetadata),
-                              readerOut: {
-                                ...(prev.metadata as AeroDoorMetadata)
-                                  .readerOut,
-                                readerModuleComponentId: Number(value),
-                                readerModuleId: moduleOption.find(
-                                  (x) => x.value == Number(value),
-                                )?.additionalInfo,
-                              },
-                            },
-                          }));
-                          fetchReaderOut(Number(value));
-                          if (readerOutType == ReaderType.OSDP)
-                            fetchOsdpAddress(Number(value));
-                        }}
-                        className="dark:bg-dark-900"
-                        defaultValue={
-                          (dto.metadata as AeroDoorMetadata).readerOut
-                            ?.readerModuleComponentId
-                        }
-                      />
-                    </FormField>
-                    <FormField>
-                      <Label htmlFor="readerOut.readerNumber">
-                        Reader Out - No
-                      </Label>
-                      <Select
-                        disabled={type == FormType.INFO}
-                        name="readerOut.readerNo"
-                        options={readerOutOption}
-                        placeholder="Select Option"
-                        onChange={(value: string) => {
-                          setDto((prev) => ({
-                            ...prev,
-                            metadata: {
-                              ...(prev.metadata as AeroDoorMetadata),
-                              readerOut: {
-                                ...(prev.metadata as AeroDoorMetadata)
-                                  .readerOut,
-                                readerNumber: Number(value),
-                              },
-                            },
-                          }));
-                        }}
-                        className="dark:bg-dark-900"
-                        defaultValue={
-                          (dto.metadata as AeroDoorMetadata).readerOut
-                            ?.readerNumber
-                        }
-                      />
-                    </FormField>
-
-                    {readerOutType == ReaderType.OSDP && (
-                      <FormField>
-                        <Label htmlFor="readerOut.osdpAddress">
-                          Reader Address
-                        </Label>
-                        <Select
-                          disabled={type == FormType.INFO}
-                          name="readerOut.osdpAddress"
-                          options={osdpAddress}
-                          placeholder="Select Option"
-                          onChange={(value: string) => {
-                            setDto((prev) => ({
-                              ...prev,
-                              metadata: {
-                                ...(prev.metadata as AeroDoorMetadata),
-                                readerOut: {
-                                  ...(prev.metadata as AeroDoorMetadata)
-                                    .readerOut,
-                                  osdpAddress: Number(value),
-                                },
-                              },
-                            }));
-                            Helper.updateOptionByValue(
-                              osdpAddress,
-                              Number(value),
-                              true,
-                            );
-                          }}
-                          className="dark:bg-dark-900"
-                          defaultValue={
-                            (dto.metadata as AeroDoorMetadata).readerOut
-                              ?.osdpAddress
-                          }
-                        />
-                        <Label htmlFor="readerOut.osdpBaudrate">
-                          Reader Baud Rate
-                        </Label>
-                        <Select
-                          disabled={type == FormType.INFO}
-                          name="readerOut.osdpBaudrate"
-                          options={osdpBaudRateOption}
-                          placeholder="Select Option"
-                          onChange={(value: string) => {
-                            setDto((prev) => ({
-                              ...prev,
-                              metadata: {
-                                ...(prev.metadata as AeroDoorMetadata),
-                                readerOut: {
-                                  ...(prev.metadata as AeroDoorMetadata)
-                                    .readerOut,
-                                  osdpBaudrate: Number(value),
-                                },
-                              },
-                            }));
-                          }}
-                          className="dark:bg-dark-900"
-                          defaultValue={
-                            (dto.metadata as AeroDoorMetadata).readerOut
-                              ?.osdpBaudrate
-                          }
-                        />
-                        <div className="mt-3">
-                          <Switch
-                            disabled={type == FormType.INFO}
-                            label="Auto Discover"
-                            defaultChecked={true}
-                            onChange={(checked: boolean) => {
-                              setDto((prev) => ({
-                                ...prev,
-                                metadata: {
-                                  ...(prev.metadata as AeroDoorMetadata),
-                                  readerOut: {
-                                    ...(prev.metadata as AeroDoorMetadata)
-                                      .readerOut,
-                                    osdpDiscover: checked ? 0x00 : 0x08,
-                                  },
-                                },
-                              }));
-                            }}
-                          />
-                        </div>
-                        <div className="mt-3">
-                          <Switch
-                            disabled={type == FormType.INFO}
-                            label="Tracing"
-                            defaultChecked={false}
-                            onChange={(checked: boolean) => {
-                              setDto((prev) => ({
-                                ...prev,
-                                metadata: {
-                                  ...(prev.metadata as AeroDoorMetadata),
-                                  readerOut: {
-                                    ...(prev.metadata as AeroDoorMetadata)
-                                      .readerOut,
-                                    osdpTracing: checked ? 0x10 : 0x00,
-                                  },
-                                },
-                              }));
-                            }}
-                          />
-                        </div>
-                        <div className="mt-3">
-                          <Switch
-                            disabled={type == FormType.INFO}
-                            label="Secure Channel"
-                            defaultChecked={false}
-                            onChange={(checked: boolean) => {
-                              setDto((prev) => ({
-                                ...prev,
-                                metadata: {
-                                  ...(prev.metadata as AeroDoorMetadata),
-                                  readerOut: {
-                                    ...(prev.metadata as AeroDoorMetadata)
-                                      .readerOut,
-                                    osdpTracing: checked ? 0x80 : 0x00,
-                                  },
-                                },
-                              }));
-                            }}
-                          />
-                        </div>
-                      </FormField>
-                    )}
-                  </>
-                )}
-
-                {requestExitOneFlag && (
-                  <div className="flex flex-col gap-1">
-                    <Label htmlFor="rex.rex0ModuleComponentId">
-                      REX - Module
+                        }));
+                        Helper.updateOptionByValue(
+                          osdpAddress,
+                          Number(value),
+                          true,
+                        );
+                      }}
+                      className="dark:bg-dark-900"
+                      defaultValue={
+                        (dto.metadata as AeroDoorMetadata).readerIn?.osdpAddress
+                      }
+                    />
+                    <Label htmlFor="readerOut.osdpBaudrate">
+                      Reader Baud Rate
                     </Label>
                     <Select
                       disabled={type == FormType.INFO}
-                      name="rex.rex0ModuleComponentId"
+                      name="readerOut.osdpBaudrate"
+                      options={osdpBaudRateOption}
+                      placeholder="Select Option"
+                      onChange={(value: string) => {
+                        setDto((prev) => ({
+                          ...prev,
+                          metadata: {
+                            ...(prev.metadata as AeroDoorMetadata),
+                            readerIn: {
+                              ...(prev.metadata as AeroDoorMetadata).readerIn,
+                              osdpBaudrate: Number(value),
+                            },
+                          },
+                        }));
+                      }}
+                      className="dark:bg-dark-900"
+                      defaultValue={
+                        (dto.metadata as AeroDoorMetadata).readerIn
+                          ?.osdpBaudrate
+                      }
+                    />
+                    <div className="mt-3">
+                      <Switch
+                        disabled={type == FormType.INFO}
+                        label="Auto Discover"
+                        defaultChecked={true}
+                        onChange={(checked: boolean) => {
+                          setDto((prev) => ({
+                            ...prev,
+                            metadata: {
+                              ...(prev.metadata as AeroDoorMetadata),
+                              readerIn: {
+                                ...(prev.metadata as AeroDoorMetadata).readerIn,
+                                osdpDiscover: checked ? 0x00 : 0x08,
+                              },
+                            },
+                          }));
+                        }}
+                      />
+                    </div>
+                    <div className="mt-3">
+                      <Switch
+                        disabled={type == FormType.INFO}
+                        label="Tracing"
+                        defaultChecked={false}
+                        onChange={(checked: boolean) => {
+                          setDto((prev) => ({
+                            ...prev,
+                            metadata: {
+                              ...(prev.metadata as AeroDoorMetadata),
+                              readerIn: {
+                                ...(prev.metadata as AeroDoorMetadata).readerIn,
+                                osdpTracing: checked ? 0x10 : 0x00,
+                              },
+                            },
+                          }));
+                        }}
+                      />
+                    </div>
+                    <div className="mt-3">
+                      <Switch
+                        disabled={type == FormType.INFO}
+                        label="Secure Channel"
+                        defaultChecked={false}
+                        onChange={(checked: boolean) => {
+                          setDto((prev) => ({
+                            ...prev,
+                            metadata: {
+                              ...(prev.metadata as AeroDoorMetadata),
+                              readerIn: {
+                                ...(prev.metadata as AeroDoorMetadata).readerIn,
+                                osdpTracing: checked ? 0x80 : 0x00,
+                              },
+                            },
+                          }));
+                        }}
+                      />
+                    </div>
+                  </FormField>
+                )}
+              </>
+            )}
+          </div>
+        )}
+        {/* Inside */}
+        {activeTab === FormTab.Inside && (
+          <div className="flex flex-col gap-5">
+            {readerOutFlag && (
+              <>
+                <FormField>
+                  <Label htmlFor="ReaderType">Reader Type</Label>
+                  <Select
+                    disabled={type == FormType.INFO}
+                    name="ReaderType"
+                    options={[
+                      {
+                        label: "Wiegand",
+                        value: ReaderType.Wiegand,
+                        description: "",
+                        isTaken: false,
+                      },
+                      {
+                        label: "OSDP",
+                        value: ReaderType.OSDP,
+                        description: "",
+                        isTaken: false,
+                      },
+                    ]}
+                    placeholder="Select Option"
+                    onChange={(value: string) => {
+                      if (value == ReaderType.Wiegand) {
+                        setDto((prev) => ({
+                          ...prev,
+                          metadata: {
+                            ...(prev.metadata as AeroDoorMetadata),
+                            ledMode: 1,
+                            readerOut: {
+                              ...(prev.metadata as AeroDoorMetadata).readerOut,
+                              osdpFlag: false,
+                              osdpAddress: 0x00,
+                              osdpBaudRate: 0x00,
+                              osdpDiscover: 0x00,
+                              osdpSecureChannel: 0x00,
+                              osdpTracing: 0x00,
+                            },
+                          },
+                        }));
+                      } else {
+                        setDto((prev) => ({
+                          ...prev,
+                          metadata: {
+                            ...(prev.metadata as AeroDoorMetadata),
+                            ledMode: 7,
+                            readerOut: {
+                              ...(prev.metadata as AeroDoorMetadata).readerOut,
+                              osdpFlag: true,
+                            },
+                          },
+                        }));
+                      }
+                      setReaderOutType(value);
+                    }}
+                    className="dark:bg-dark-900"
+                    defaultValue={readerOutType}
+                  />
+                </FormField>
+                <FormField>
+                  <Label htmlFor="readerOut.readerModuleComponentId">
+                    Reader Out - Module
+                  </Label>
+                  <Select
+                    disabled={type == FormType.INFO}
+                    name="readerOut.readerModuleComponentId"
+                    options={moduleOption}
+                    placeholder="Select Option"
+                    onChangeWithEvent={(value: string) => {
+                      setDto((prev) => ({
+                        ...prev,
+                        metadata: {
+                          ...(prev.metadata as AeroDoorMetadata),
+                          readerOut: {
+                            ...(prev.metadata as AeroDoorMetadata).readerOut,
+                            readerModuleComponentId: Number(value),
+                            readerModuleId: moduleOption.find(
+                              (x) => x.value == Number(value),
+                            )?.additionalInfo,
+                          },
+                        },
+                      }));
+                      fetchReaderOut(Number(value));
+                      if (readerOutType == ReaderType.OSDP)
+                        fetchOsdpAddress(Number(value));
+                    }}
+                    className="dark:bg-dark-900"
+                    defaultValue={
+                      (dto.metadata as AeroDoorMetadata).readerOut
+                        ?.readerModuleComponentId
+                    }
+                  />
+                </FormField>
+                <FormField>
+                  <Label htmlFor="readerOut.readerNumber">
+                    Reader Out - No
+                  </Label>
+                  <Select
+                    disabled={type == FormType.INFO}
+                    name="readerOut.readerNo"
+                    options={readerOutOption}
+                    placeholder="Select Option"
+                    onChange={(value: string) => {
+                      setDto((prev) => ({
+                        ...prev,
+                        metadata: {
+                          ...(prev.metadata as AeroDoorMetadata),
+                          readerOut: {
+                            ...(prev.metadata as AeroDoorMetadata).readerOut,
+                            readerNumber: Number(value),
+                          },
+                        },
+                      }));
+                    }}
+                    className="dark:bg-dark-900"
+                    defaultValue={
+                      (dto.metadata as AeroDoorMetadata).readerOut?.readerNumber
+                    }
+                  />
+                </FormField>
+
+                {readerOutType == ReaderType.OSDP && (
+                  <FormField>
+                    <Label htmlFor="readerOut.osdpAddress">
+                      Reader Address
+                    </Label>
+                    <Select
+                      disabled={type == FormType.INFO}
+                      name="readerOut.osdpAddress"
+                      options={osdpAddress}
+                      placeholder="Select Option"
+                      onChange={(value: string) => {
+                        setDto((prev) => ({
+                          ...prev,
+                          metadata: {
+                            ...(prev.metadata as AeroDoorMetadata),
+                            readerOut: {
+                              ...(prev.metadata as AeroDoorMetadata).readerOut,
+                              osdpAddress: Number(value),
+                            },
+                          },
+                        }));
+                        Helper.updateOptionByValue(
+                          osdpAddress,
+                          Number(value),
+                          true,
+                        );
+                      }}
+                      className="dark:bg-dark-900"
+                      defaultValue={
+                        (dto.metadata as AeroDoorMetadata).readerOut
+                          ?.osdpAddress
+                      }
+                    />
+                    <Label htmlFor="readerOut.osdpBaudrate">
+                      Reader Baud Rate
+                    </Label>
+                    <Select
+                      disabled={type == FormType.INFO}
+                      name="readerOut.osdpBaudrate"
+                      options={osdpBaudRateOption}
+                      placeholder="Select Option"
+                      onChange={(value: string) => {
+                        setDto((prev) => ({
+                          ...prev,
+                          metadata: {
+                            ...(prev.metadata as AeroDoorMetadata),
+                            readerOut: {
+                              ...(prev.metadata as AeroDoorMetadata).readerOut,
+                              osdpBaudrate: Number(value),
+                            },
+                          },
+                        }));
+                      }}
+                      className="dark:bg-dark-900"
+                      defaultValue={
+                        (dto.metadata as AeroDoorMetadata).readerOut
+                          ?.osdpBaudrate
+                      }
+                    />
+                    <div className="mt-3">
+                      <Switch
+                        disabled={type == FormType.INFO}
+                        label="Auto Discover"
+                        defaultChecked={true}
+                        onChange={(checked: boolean) => {
+                          setDto((prev) => ({
+                            ...prev,
+                            metadata: {
+                              ...(prev.metadata as AeroDoorMetadata),
+                              readerOut: {
+                                ...(prev.metadata as AeroDoorMetadata)
+                                  .readerOut,
+                                osdpDiscover: checked ? 0x00 : 0x08,
+                              },
+                            },
+                          }));
+                        }}
+                      />
+                    </div>
+                    <div className="mt-3">
+                      <Switch
+                        disabled={type == FormType.INFO}
+                        label="Tracing"
+                        defaultChecked={false}
+                        onChange={(checked: boolean) => {
+                          setDto((prev) => ({
+                            ...prev,
+                            metadata: {
+                              ...(prev.metadata as AeroDoorMetadata),
+                              readerOut: {
+                                ...(prev.metadata as AeroDoorMetadata)
+                                  .readerOut,
+                                osdpTracing: checked ? 0x10 : 0x00,
+                              },
+                            },
+                          }));
+                        }}
+                      />
+                    </div>
+                    <div className="mt-3">
+                      <Switch
+                        disabled={type == FormType.INFO}
+                        label="Secure Channel"
+                        defaultChecked={false}
+                        onChange={(checked: boolean) => {
+                          setDto((prev) => ({
+                            ...prev,
+                            metadata: {
+                              ...(prev.metadata as AeroDoorMetadata),
+                              readerOut: {
+                                ...(prev.metadata as AeroDoorMetadata)
+                                  .readerOut,
+                                osdpTracing: checked ? 0x80 : 0x00,
+                              },
+                            },
+                          }));
+                        }}
+                      />
+                    </div>
+                  </FormField>
+                )}
+              </>
+            )}
+
+            {requestExitOneFlag && (
+              <div className="flex flex-col gap-1">
+                <Label htmlFor="rex.rex0ModuleComponentId">REX - Module</Label>
+                <Select
+                  disabled={type == FormType.INFO}
+                  name="rex.rex0ModuleComponentId"
+                  options={moduleOption}
+                  onChange={(value: string) => {
+                    if (
+                      (dto.metadata as AeroDoorMetadata).rex
+                        .rex0ModuleComponentId != Number(value) &&
+                      inputOption.length == 0
+                    ) {
+                      fetchInput(
+                        moduleOption.find((x) => x.value == Number(value))
+                          ?.additionalInfo,
+                      );
+                    }
+                    setDto((prev) => ({
+                      ...prev,
+                      metadata: {
+                        ...(prev.metadata as AeroDoorMetadata),
+                        rex: {
+                          ...(prev.metadata as AeroDoorMetadata).rex,
+                          rex0ModuleComponentId: Number(value),
+                          rex0ModuleId: moduleOption.find(
+                            (x) => x.value == Number(value),
+                          )?.additionalInfo,
+                        },
+                      },
+                    }));
+                  }}
+                  className="dark:bg-dark-900"
+                  defaultValue={
+                    (dto.metadata as AeroDoorMetadata).rex
+                      ?.rex0ModuleComponentId ?? ""
+                  }
+                />
+                <Label htmlFor="rex0.inputNo">REX - Input No</Label>
+                <Select
+                  disabled={type == FormType.INFO}
+                  name="rex0.inputNo"
+                  options={inputOption.filter((x) => x.isTaken == false)}
+                  onChange={(value: string) => {
+                    setInputOption((prev) =>
+                      Helper.updateOptionByValue(prev, Number(value), true),
+                    );
+                    setDto((prev) => ({
+                      ...prev,
+                      metadata: {
+                        ...(prev.metadata as AeroDoorMetadata),
+                        rex: {
+                          ...(prev.metadata as AeroDoorMetadata).rex,
+                          rex0Number: Number(value),
+                        },
+                      },
+                    }));
+                  }}
+                  className="dark:bg-dark-900"
+                  defaultValue={
+                    (dto.metadata as AeroDoorMetadata).rex?.rex0Number ?? ""
+                  }
+                />
+                <Label htmlFor="rex0.inputMode">REX - Input Mode</Label>
+                <Select
+                  disabled={type == FormType.INFO}
+                  name="rex0.inputMode"
+                  options={inputModeOption}
+                  onChange={(value: string) => {
+                    setDto((prev) => ({
+                      ...prev,
+                      metadata: {
+                        ...(prev.metadata as AeroDoorMetadata),
+                        rex: {
+                          ...(prev.metadata as AeroDoorMetadata).rex,
+                          rex0SensorMode: Number(value),
+                        },
+                      },
+                    }));
+                  }}
+                  className="dark:bg-dark-900"
+                  defaultValue={
+                    (dto.metadata as AeroDoorMetadata).rex?.rex0SensorMode ?? ""
+                  }
+                />
+                <Label htmlFor="rex0.MaskTimeZone">REX - Mask Time Zone</Label>
+                <Select
+                  disabled={type == FormType.INFO}
+                  name="rex0.MaskTimeZone"
+                  options={timeZoneOption}
+                  onChange={(value: string) => {
+                    setDto((prev) => ({
+                      ...prev,
+                      metadata: {
+                        ...(prev.metadata as AeroDoorMetadata),
+                        rex: {
+                          ...(prev.metadata as AeroDoorMetadata).rex,
+                          disableRex0Timezone: Number(value),
+                        },
+                      },
+                    }));
+                  }}
+                  className="dark:bg-dark-900"
+                  defaultValue={
+                    (dto.metadata as AeroDoorMetadata).rex
+                      ?.disableRex0Timezone ?? ""
+                  }
+                />
+
+                {requestExitTwoFlag && (
+                  <>
+                    <Label htmlFor="rex.rex1ModuleComponentId">
+                      Alter REX - Module
+                    </Label>
+                    <Select
+                      disabled={type == FormType.INFO}
+                      name="rex.rex1ModuleComponentId"
                       options={moduleOption}
                       onChange={(value: string) => {
                         if (
                           (dto.metadata as AeroDoorMetadata).rex
-                            .rex0ModuleComponentId != Number(value) &&
-                          inputOption.length == 0
+                            .rex1ModuleComponentId != Number(value)
                         ) {
                           fetchInput(
                             moduleOption.find((x) => x.value == Number(value))
@@ -1349,8 +1412,8 @@ const AeroDoorForm: React.FC<
                             ...(prev.metadata as AeroDoorMetadata),
                             rex: {
                               ...(prev.metadata as AeroDoorMetadata).rex,
-                              rex0ModuleComponentId: Number(value),
-                              rex0ModuleId: moduleOption.find(
+                              rex1ModuleComponentId: Number(value),
+                              rex1ModuleId: moduleOption.find(
                                 (x) => x.value == Number(value),
                               )?.additionalInfo,
                             },
@@ -1360,14 +1423,16 @@ const AeroDoorForm: React.FC<
                       className="dark:bg-dark-900"
                       defaultValue={
                         (dto.metadata as AeroDoorMetadata).rex
-                          ?.rex0ModuleComponentId ?? ""
+                          .rex1ModuleComponentId
                       }
                     />
-                    <Label htmlFor="rex0.inputNo">REX - Input No</Label>
+                    <Label htmlFor="rex1.rex1Number">
+                      Alter REX - Input No
+                    </Label>
                     <Select
                       disabled={type == FormType.INFO}
-                      name="rex0.inputNo"
-                      options={inputOption.filter((x) => x.isTaken == false)}
+                      name="rex.rex1Number"
+                      options={inputOption}
                       onChange={(value: string) => {
                         setInputOption((prev) =>
                           Helper.updateOptionByValue(prev, Number(value), true),
@@ -1378,20 +1443,22 @@ const AeroDoorForm: React.FC<
                             ...(prev.metadata as AeroDoorMetadata),
                             rex: {
                               ...(prev.metadata as AeroDoorMetadata).rex,
-                              rex0Number: Number(value),
+                              rex1Number: Number(value),
                             },
                           },
                         }));
                       }}
                       className="dark:bg-dark-900"
                       defaultValue={
-                        (dto.metadata as AeroDoorMetadata).rex?.rex0Number ?? ""
+                        (dto.metadata as AeroDoorMetadata).rex?.rex1Number
                       }
                     />
-                    <Label htmlFor="rex0.inputMode">REX - Input Mode</Label>
+                    <Label htmlFor="rex.rex1SensorMode">
+                      Alter REX - Input Mode
+                    </Label>
                     <Select
                       disabled={type == FormType.INFO}
-                      name="rex0.inputMode"
+                      name="rex.rex1SensorMode"
                       options={inputModeOption}
                       onChange={(value: string) => {
                         setDto((prev) => ({
@@ -1400,32 +1467,31 @@ const AeroDoorForm: React.FC<
                             ...(prev.metadata as AeroDoorMetadata),
                             rex: {
                               ...(prev.metadata as AeroDoorMetadata).rex,
-                              rex0SensorMode: Number(value),
+                              rex1SensorMode: Number(value),
                             },
                           },
                         }));
                       }}
                       className="dark:bg-dark-900"
                       defaultValue={
-                        (dto.metadata as AeroDoorMetadata).rex
-                          ?.rex0SensorMode ?? ""
+                        (dto.metadata as AeroDoorMetadata).rex?.rex1SensorMode
                       }
                     />
-                    <Label htmlFor="rex0.MaskTimeZone">
-                      REX - Mask Time Zone
+                    <Label htmlFor="rex.disableRex1Timezone">
+                      Alter REX - Time Zone
                     </Label>
                     <Select
                       disabled={type == FormType.INFO}
-                      name="rex0.MaskTimeZone"
+                      name="rex.disableRex1Timezone"
                       options={timeZoneOption}
-                      onChange={(value: string) => {
+                      onChangeWithEvent={(value: string) => {
                         setDto((prev) => ({
                           ...prev,
                           metadata: {
                             ...(prev.metadata as AeroDoorMetadata),
                             rex: {
                               ...(prev.metadata as AeroDoorMetadata).rex,
-                              disableRex0Timezone: Number(value),
+                              disableRex1Timezone: Number(value),
                             },
                           },
                         }));
@@ -1433,636 +1499,246 @@ const AeroDoorForm: React.FC<
                       className="dark:bg-dark-900"
                       defaultValue={
                         (dto.metadata as AeroDoorMetadata).rex
-                          ?.disableRex0Timezone ?? ""
+                          ?.disableRex1Timezone
                       }
                     />
-
-                    {requestExitTwoFlag && (
-                      <>
-                        <Label htmlFor="rex.rex1ModuleComponentId">
-                          Alter REX - Module
-                        </Label>
-                        <Select
-                          disabled={type == FormType.INFO}
-                          name="rex.rex1ModuleComponentId"
-                          options={moduleOption}
-                          onChange={(value: string) => {
-                            if (
-                              (dto.metadata as AeroDoorMetadata).rex
-                                .rex1ModuleComponentId != Number(value)
-                            ) {
-                              fetchInput(
-                                moduleOption.find(
-                                  (x) => x.value == Number(value),
-                                )?.additionalInfo,
-                              );
-                            }
-                            setDto((prev) => ({
-                              ...prev,
-                              metadata: {
-                                ...(prev.metadata as AeroDoorMetadata),
-                                rex: {
-                                  ...(prev.metadata as AeroDoorMetadata).rex,
-                                  rex1ModuleComponentId: Number(value),
-                                  rex1ModuleId: moduleOption.find(
-                                    (x) => x.value == Number(value),
-                                  )?.additionalInfo,
-                                },
-                              },
-                            }));
-                          }}
-                          className="dark:bg-dark-900"
-                          defaultValue={
-                            (dto.metadata as AeroDoorMetadata).rex
-                              .rex1ModuleComponentId
-                          }
-                        />
-                        <Label htmlFor="rex1.rex1Number">
-                          Alter REX - Input No
-                        </Label>
-                        <Select
-                          disabled={type == FormType.INFO}
-                          name="rex.rex1Number"
-                          options={inputOption}
-                          onChange={(value: string) => {
-                            setInputOption((prev) =>
-                              Helper.updateOptionByValue(
-                                prev,
-                                Number(value),
-                                true,
-                              ),
-                            );
-                            setDto((prev) => ({
-                              ...prev,
-                              metadata: {
-                                ...(prev.metadata as AeroDoorMetadata),
-                                rex: {
-                                  ...(prev.metadata as AeroDoorMetadata).rex,
-                                  rex1Number: Number(value),
-                                },
-                              },
-                            }));
-                          }}
-                          className="dark:bg-dark-900"
-                          defaultValue={
-                            (dto.metadata as AeroDoorMetadata).rex?.rex1Number
-                          }
-                        />
-                        <Label htmlFor="rex.rex1SensorMode">
-                          Alter REX - Input Mode
-                        </Label>
-                        <Select
-                          disabled={type == FormType.INFO}
-                          name="rex.rex1SensorMode"
-                          options={inputModeOption}
-                          onChange={(value: string) => {
-                            setDto((prev) => ({
-                              ...prev,
-                              metadata: {
-                                ...(prev.metadata as AeroDoorMetadata),
-                                rex: {
-                                  ...(prev.metadata as AeroDoorMetadata).rex,
-                                  rex1SensorMode: Number(value),
-                                },
-                              },
-                            }));
-                          }}
-                          className="dark:bg-dark-900"
-                          defaultValue={
-                            (dto.metadata as AeroDoorMetadata).rex
-                              ?.rex1SensorMode
-                          }
-                        />
-                        <Label htmlFor="rex.disableRex1Timezone">
-                          Alter REX - Time Zone
-                        </Label>
-                        <Select
-                          disabled={type == FormType.INFO}
-                          name="rex.disableRex1Timezone"
-                          options={timeZoneOption}
-                          onChangeWithEvent={(value: string) => {
-                            setDto((prev) => ({
-                              ...prev,
-                              metadata: {
-                                ...(prev.metadata as AeroDoorMetadata),
-                                rex: {
-                                  ...(prev.metadata as AeroDoorMetadata).rex,
-                                  disableRex1Timezone: Number(value),
-                                },
-                              },
-                            }));
-                          }}
-                          className="dark:bg-dark-900"
-                          defaultValue={
-                            (dto.metadata as AeroDoorMetadata).rex
-                              ?.disableRex1Timezone
-                          }
-                        />
-                      </>
-                    )}
-                  </div>
+                  </>
                 )}
               </div>
             )}
-
-            {activeTab === FormTab.Strike && relayFlag && (
-              <FormField className="flex flex-col gap-1 max-h-[60vh] overflow-y-auto overflow-y-auto hidden-scroll">
-                <Label htmlFor="relay.relayModuleComponentId">
-                  Relay - Module
-                </Label>
-                <Select
-                  disabled={type == FormType.INFO}
-                  name="relay.relayModuleComponentId"
-                  options={moduleOption}
-                  onChange={(value: string) => {
-                    fetchOutput(
-                      moduleOption.find((x) => x.value == Number(value))
-                        ?.additionalInfo,
-                    );
-                    setDto((prev) => ({
-                      ...prev,
-                      metadata: {
-                        ...(prev.metadata as AeroDoorMetadata),
-                        relay: {
-                          ...(prev.metadata as AeroDoorMetadata).relay,
-                          relayModuleComponentId: Number(value),
-                          relayModuleId: moduleOption.find(
-                            (x) => x.value == Number(value),
-                          )?.additionalInfo,
-                        },
-                      },
-                    }));
-                  }}
-                  className="dark:bg-dark-900"
-                  defaultValue={
-                    (dto.metadata as AeroDoorMetadata).relay
-                      ?.relayModuleComponentId ?? ""
-                  }
-                />
-                <Label htmlFor="strk.outputNo">Relay No</Label>
-                <Select
-                  disabled={type == FormType.INFO}
-                  name="strk.outputNo"
-                  options={outputOption}
-                  onChange={(value: string) => {
-                    setDto((prev) => ({
-                      ...prev,
-                      metadata: {
-                        ...(prev.metadata as AeroDoorMetadata),
-                        relay: {
-                          ...(prev.metadata as AeroDoorMetadata).relay,
-                          relayNumber: Number(value),
-                        },
-                      },
-                    }));
-                  }}
-                  className="dark:bg-dark-900"
-                  defaultValue={
-                    (dto.metadata as AeroDoorMetadata).relay?.relayNumber ?? ""
-                  }
-                />
-                <Label htmlFor="relay.relayMin">
-                  Minimum Strike Active Time
-                </Label>
-                <Input
-                  disabled={type == FormType.INFO}
-                  defaultValue={1}
-                  value={(dto.metadata as AeroDoorMetadata).relay?.relayMin}
-                  name="relayMin"
-                  type="number"
-                  id="strikeMinActiveTime"
-                  onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                    setDto((prev) => ({
-                      ...prev,
-                      metadata: {
-                        ...(prev.metadata as AeroDoorMetadata),
-                        relay: {
-                          ...(prev.metadata as AeroDoorMetadata).relay,
-                          relayMin: Number(e.target.value),
-                        },
-                      },
-                    }));
-                  }}
-                />
-                <Label htmlFor="strkMax">Maximum Strike Active Time</Label>
-                <Input
-                  disabled={type == FormType.INFO}
-                  defaultValue={5}
-                  value={(dto.metadata as AeroDoorMetadata).relay?.relayMax}
-                  name="relayMax"
-                  type="number"
-                  id="strikeMaxActiveTime"
-                  onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                    setDto((prev) => ({
-                      ...prev,
-                      metadata: {
-                        ...(prev.metadata as AeroDoorMetadata),
-                        relay: {
-                          ...(prev.metadata as AeroDoorMetadata).relay,
-                          relayMax: Number(e.target.value),
-                        },
-                      },
-                    }));
-                  }}
-                />
-                <Label htmlFor="relay.relayMode">Drive Mode</Label>
-                <Select
-                  disabled={type == FormType.INFO}
-                  name="strkMode"
-                  options={relayDriveOption}
-                  onChange={(value: string) => {
-                    setDto((prev) => ({
-                      ...prev,
-                      metadata: {
-                        ...(prev.metadata as AeroDoorMetadata),
-                        relay: {
-                          ...(prev.metadata as AeroDoorMetadata).relay,
-                          relayDriveMode: Number(value),
-                        },
-                      },
-                    }));
-                  }}
-                  className="dark:bg-dark-900"
-                  defaultValue={
-                    (dto.metadata as AeroDoorMetadata).relay?.relayDriveMode ??
-                    ""
-                  }
-                />
-                <Label htmlFor="relay.relayMode">Offline Mode</Label>
-                <Select
-                  disabled={type == FormType.INFO}
-                  name="strkMode"
-                  options={relayOfflineOption}
-                  onChange={(value: string) => {
-                    setDto((prev) => ({
-                      ...prev,
-                      metadata: {
-                        ...(prev.metadata as AeroDoorMetadata),
-                        relay: {
-                          ...(prev.metadata as AeroDoorMetadata).relay,
-                          relayOfflineMode: Number(value),
-                        },
-                      },
-                    }));
-                  }}
-                  className="dark:bg-dark-900"
-                  defaultValue={
-                    (dto.metadata as AeroDoorMetadata).relay
-                      ?.relayOfflineMode ?? ""
-                  }
-                />
-              </FormField>
-            )}
-
-            {activeTab == FormTab.Monitor && sensorFlag && (
-              <FormField className="flex flex-col gap-1">
-                <Label htmlFor="sensor.sensorModuleComponentId">
-                  Sensor Module
-                </Label>
-                <Select
-                  disabled={type == FormType.INFO}
-                  name="sensor.sensorModuleComponentId"
-                  options={moduleOption}
-                  onChange={(value: string) => {
-                    if (
-                      (dto.metadata as AeroDoorMetadata).rex
-                        .rex0ModuleComponentId != Number(value)
-                    ) {
-                      fetchInput(
-                        moduleOption.find((x) => x.value == Number(value))
-                          ?.additionalInfo,
-                      );
-                    }
-                    setDto((prev) => ({
-                      ...prev,
-                      metadata: {
-                        ...(prev.metadata as AeroDoorMetadata),
-                        sensor: {
-                          ...(prev.metadata as AeroDoorMetadata).sensor,
-                          sensorModuleComponentId: Number(value),
-                          sensorModuleId: moduleOption.find(
-                            (x) => x.value == Number(value),
-                          )?.additionalInfo,
-                        },
-                      },
-                    }));
-                  }}
-                  className="dark:bg-dark-900"
-                  defaultValue={
-                    (dto.metadata as AeroDoorMetadata).sensor
-                      ?.sensorModuleComponentId ?? ""
-                  }
-                />
-                <Label htmlFor="sensor.sensorNumber">Input No</Label>
-                <Select
-                  disabled={type == FormType.INFO}
-                  name="sensor.sensorNumber"
-                  options={inputOption.filter((x) => x.isTaken == false)}
-                  onChange={(value: string) => {
-                    setDto((prev) => ({
-                      ...prev,
-                      metadata: {
-                        ...(prev.metadata as AeroDoorMetadata),
-                        sensor: {
-                          ...(prev.metadata as AeroDoorMetadata).sensor,
-                          sensorNumber: Number(value),
-                        },
-                      },
-                    }));
-                  }}
-                  className="dark:bg-dark-900"
-                  defaultValue={
-                    (dto.metadata as AeroDoorMetadata).sensor?.sensorNumber ??
-                    ""
-                  }
-                />
-                <Label htmlFor="sensor.sensorMode">Input Mode</Label>
-                <Select
-                  disabled={type == FormType.INFO}
-                  name="sensor.sensorMode"
-                  options={inputModeOption}
-                  onChange={(value: string) => {
-                    setDto((prev) => ({
-                      ...prev,
-                      metadata: {
-                        ...(prev.metadata as AeroDoorMetadata),
-                        sensor: {
-                          ...(prev.metadata as AeroDoorMetadata).sensor,
-                          sensorMode: Number(value),
-                        },
-                      },
-                    }));
-                  }}
-                  className="dark:bg-dark-900"
-                  defaultValue={
-                    (dto.metadata as AeroDoorMetadata).sensor?.sensorMode ?? ""
-                  }
-                />
-              </FormField>
-            )}
-
-            {activeTab == FormTab.Antipassback && apbFlag && (
-              <FormField className="flex flex-col gap-1">
-                <Label htmlFor="antiPassbackMode">Anti-Passback Mode</Label>
-                <Select
-                  disabled={type == FormType.INFO}
-                  name="antiPassbackMode"
-                  options={antipassbackOption}
-                  onChange={(value: string) => {
-                    setDto((prev) => ({
-                      ...prev,
-                      metadata: {
-                        ...(prev.metadata as AeroDoorMetadata),
-                        antipassback: {
-                          ...(prev.metadata as AeroDoorMetadata).antipassback,
-                          antipassbackMode: Number(value),
-                        },
-                      },
-                    }));
-                  }}
-                  className="dark:bg-dark-900"
-                  defaultValue={
-                    (dto.metadata as AeroDoorMetadata).antipassback
-                      ?.antipassbackMode ?? ""
-                  }
-                />
-                <Label htmlFor="antiPassBackIn">Area From</Label>
-                <Select
-                  disabled={type == FormType.INFO}
-                  isString={false}
-                  name="antiPassBackIn"
-                  options={areaOption}
-                  onChange={(value: string) => {
-                    setDto((prev) => ({
-                      ...prev,
-                      metadata: {
-                        ...(prev.metadata as AeroDoorMetadata),
-                        antipassback: {
-                          ...(prev.metadata as AeroDoorMetadata).antipassback,
-                          areaIn: Number(value),
-                        },
-                      },
-                    }));
-                  }}
-                  className="dark:bg-dark-900"
-                  defaultValue={
-                    (dto.metadata as AeroDoorMetadata).antipassback?.areaIn ??
-                    ""
-                  }
-                />
-                <Label htmlFor="antiPassBackOut">Area To</Label>
-                <Select
-                  disabled={type == FormType.INFO}
-                  isString={false}
-                  name="antiPassBackOut"
-                  options={areaOption}
-                  onChange={(value: string) => {
-                    setDto((prev) => ({
-                      ...prev,
-                      metadata: {
-                        ...(prev.metadata as AeroDoorMetadata),
-                        antipassback: {
-                          ...(prev.metadata as AeroDoorMetadata).antipassback,
-                          areaOut: Number(value),
-                        },
-                      },
-                    }));
-                  }}
-                  className="dark:bg-dark-900"
-                  defaultValue={
-                    (dto.metadata as AeroDoorMetadata).antipassback?.areaOut ??
-                    ""
-                  }
-                />
-              </FormField>
-            )}
-            {activeTab == FormTab.Mode && modeFlag && (
-              <FormField className="flex flex-col gap-1">
-                <Label htmlFor="offlineMode">Offline Mode</Label>
-                <Select
-                  disabled={type == FormType.INFO}
-                  isString={false}
-                  name="offlineMode"
-                  options={doorModeOption}
-                  onChange={(value: string) => {
-                    setDto((prev) => ({
-                      ...prev,
-                      metadata: {
-                        ...(prev.metadata as AeroDoorMetadata),
-                        offlineMode: Number(value),
-                      },
-                    }));
-                  }}
-                  className="dark:bg-dark-900"
-                  defaultValue={
-                    (dto.metadata as AeroDoorMetadata).offlineMode ?? ""
-                  }
-                />
-                <Label htmlFor="defaultMode">Default Mode</Label>
-                <Select
-                  disabled={type == FormType.INFO}
-                  isString={false}
-                  name="defaultMode"
-                  options={doorModeOption}
-                  onChange={(value: string) => {
-                    setDto((prev) => ({
-                      ...prev,
-                      metadata: {
-                        ...(prev.metadata as AeroDoorMetadata),
-                        defaultMode: Number(value),
-                      },
-                    }));
-                  }}
-                  className="dark:bg-dark-900"
-                  defaultValue={
-                    (dto.metadata as AeroDoorMetadata).defaultMode ?? ""
-                  }
-                />
-              </FormField>
-            )}
-
-            {activeTab == FormTab.Advance && settingFlag && (
-              <div className="grid grid-cols-2 gap-4">
-                <div className="rounded-2xl border border-gray-200 bg-gray-50/80 p-5 dark:border-gray-800 dark:bg-white/[0.02]">
-                  <h4 className="text-base font-semibold text-gray-900 dark:text-white">
-                    Access Control Flags
-                  </h4>
-                  <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-                    Enable only the behaviors this door should enforce during
-                    normal operation.
-                  </p>
-                  <div className="mt-4 grid grid-cols-1 gap-3">
-                    {accessFlag.map((d, i) => (
-                      <div
-                        key={i}
-                        className="rounded-xl border border-gray-200 bg-white px-4 py-3 dark:border-gray-700 dark:bg-gray-900"
-                      >
-                        <Switch
-                          disabled={type == FormType.INFO}
-                          label={d.label}
-                          defaultChecked={false}
-                          onChange={(checked: boolean) => {
-                            setDto((prev) => ({
-                              ...prev,
-                              metadata: {
-                                ...(prev.metadata as AeroDoorMetadata),
-                                accessControlFlag: checked
-                                  ? (prev.metadata as AeroDoorMetadata)
-                                      .accessControlFlag | Number(d.value)
-                                  : (prev.metadata as AeroDoorMetadata)
-                                      .accessControlFlag & ~Number(d.value),
-                              },
-                            }));
-                          }}
-                        />
-                        {d.description && (
-                          <p className="mt-1 whitespace-pre-line text-xs text-gray-500 dark:text-gray-400">
-                            {formatFlagDescription(d.description)}
-                          </p>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="rounded-2xl border border-gray-200 bg-gray-50/80 p-5 dark:border-gray-800 dark:bg-white/[0.02]">
-                  <h4 className="text-base font-semibold text-gray-900 dark:text-white">
-                    Advanced Flags
-                  </h4>
-                  <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-                    Additional low-level options. Keep these disabled unless
-                    your scenario requires them.
-                  </p>
-                  <div className="mt-4 grid grid-cols-1 gap-3">
-                    {spareFlag.map((d, i) => (
-                      <div
-                        key={i}
-                        className="rounded-xl border border-gray-200 bg-white px-4 py-3 dark:border-gray-700 dark:bg-gray-900"
-                      >
-                        <Switch
-                          disabled={type == FormType.INFO}
-                          label={d.label}
-                          defaultChecked={false}
-                          onChange={(checked: boolean) => {
-                            setDto((prev) => ({
-                              ...prev,
-                              metadata: {
-                                ...(prev.metadata as AeroDoorMetadata),
-                                spare: checked
-                                  ? (prev.metadata as AeroDoorMetadata).spare |
-                                    Number(d.value)
-                                  : (prev.metadata as AeroDoorMetadata).spare &
-                                    ~Number(d.value),
-                              },
-                            }));
-                          }}
-                        />
-                        {d.description && (
-                          <p className="mt-1 whitespace-pre-line text-xs text-gray-500 dark:text-gray-400">
-                            {formatFlagDescription(d.description)}
-                          </p>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            )}
           </div>
-        </div>
-
-        <div className="mt-6 flex w-full items-center justify-between gap-3">
-          <div>
-            {!isFirstStep && (
-              <Button
-                variant="outline"
-                onClick={() => goToStep(currentStepIndex - 1)}
-                className="min-w-[120px]"
-                size="sm"
-              >
-                Back
-              </Button>
-            )}
-          </div>
-          <div className="flex gap-3">
-            <Button
-              variant="danger"
-              onClickWithEvent={handleClick}
-              name="close"
-              className="min-w-[120px]"
-              size="sm"
-            >
-              Cancel
-            </Button>
-            {isLastStep ? (
-              <Button
-                disabled={type == FormType.INFO}
-                onClickWithEvent={(event) => {
-                  // Do something first
-                  setDto(dto);
-
-                  // Then call handleClick
-                  handleClick?.(event);
-                }}
-                name={type == FormType.UPDATE ? "update" : "create"}
-                className="min-w-[120px]"
-                size="sm"
-              >
-                {type == FormType.UPDATE ? "Update" : "Create"}
-              </Button>
-            ) : (
-              <Button
-                onClick={() => goToStep(currentStepIndex + 1)}
-                className="min-w-[120px]"
-                size="sm"
-              >
-                Next
-              </Button>
-            )}
-          </div>
-        </div>
-      </div>
-    </div>
+        )}
+        {/* Relay */}
+        {activeTab === FormTab.Strike && relayFlag && (
+          <FormField className="flex flex-col gap-1 max-h-[60vh] overflow-y-auto overflow-y-auto hidden-scroll">
+            <Label htmlFor="relay.relayModuleComponentId">Relay - Module</Label>
+            <Select
+              disabled={type == FormType.INFO}
+              name="relay.relayModuleComponentId"
+              options={moduleOption}
+              onChange={(value: string) => {
+                fetchOutput(
+                  moduleOption.find((x) => x.value == Number(value))
+                    ?.additionalInfo,
+                );
+                setDto((prev) => ({
+                  ...prev,
+                  metadata: {
+                    ...(prev.metadata as AeroDoorMetadata),
+                    relay: {
+                      ...(prev.metadata as AeroDoorMetadata).relay,
+                      relayModuleComponentId: Number(value),
+                      relayModuleId: moduleOption.find(
+                        (x) => x.value == Number(value),
+                      )?.additionalInfo,
+                    },
+                  },
+                }));
+              }}
+              className="dark:bg-dark-900"
+              defaultValue={
+                (dto.metadata as AeroDoorMetadata).relay
+                  ?.relayModuleComponentId ?? ""
+              }
+            />
+            <Label htmlFor="strk.outputNo">Relay No</Label>
+            <Select
+              disabled={type == FormType.INFO}
+              name="strk.outputNo"
+              options={outputOption}
+              onChange={(value: string) => {
+                setDto((prev) => ({
+                  ...prev,
+                  metadata: {
+                    ...(prev.metadata as AeroDoorMetadata),
+                    relay: {
+                      ...(prev.metadata as AeroDoorMetadata).relay,
+                      relayNumber: Number(value),
+                    },
+                  },
+                }));
+              }}
+              className="dark:bg-dark-900"
+              defaultValue={
+                (dto.metadata as AeroDoorMetadata).relay?.relayNumber ?? ""
+              }
+            />
+            <Label htmlFor="relay.relayMin">Minimum Strike Active Time</Label>
+            <Input
+              disabled={type == FormType.INFO}
+              defaultValue={1}
+              value={(dto.metadata as AeroDoorMetadata).relay?.relayMin}
+              name="relayMin"
+              type="number"
+              id="strikeMinActiveTime"
+              onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                setDto((prev) => ({
+                  ...prev,
+                  metadata: {
+                    ...(prev.metadata as AeroDoorMetadata),
+                    relay: {
+                      ...(prev.metadata as AeroDoorMetadata).relay,
+                      relayMin: Number(e.target.value),
+                    },
+                  },
+                }));
+              }}
+            />
+            <Label htmlFor="strkMax">Maximum Strike Active Time</Label>
+            <Input
+              disabled={type == FormType.INFO}
+              defaultValue={5}
+              value={(dto.metadata as AeroDoorMetadata).relay?.relayMax}
+              name="relayMax"
+              type="number"
+              id="strikeMaxActiveTime"
+              onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                setDto((prev) => ({
+                  ...prev,
+                  metadata: {
+                    ...(prev.metadata as AeroDoorMetadata),
+                    relay: {
+                      ...(prev.metadata as AeroDoorMetadata).relay,
+                      relayMax: Number(e.target.value),
+                    },
+                  },
+                }));
+              }}
+            />
+            <Label htmlFor="relay.relayMode">Drive Mode</Label>
+            <Select
+              disabled={type == FormType.INFO}
+              name="strkMode"
+              options={relayDriveOption}
+              onChange={(value: string) => {
+                setDto((prev) => ({
+                  ...prev,
+                  metadata: {
+                    ...(prev.metadata as AeroDoorMetadata),
+                    relay: {
+                      ...(prev.metadata as AeroDoorMetadata).relay,
+                      relayDriveMode: Number(value),
+                    },
+                  },
+                }));
+              }}
+              className="dark:bg-dark-900"
+              defaultValue={
+                (dto.metadata as AeroDoorMetadata).relay?.relayDriveMode ?? ""
+              }
+            />
+            <Label htmlFor="relay.relayMode">Offline Mode</Label>
+            <Select
+              disabled={type == FormType.INFO}
+              name="strkMode"
+              options={relayOfflineOption}
+              onChange={(value: string) => {
+                setDto((prev) => ({
+                  ...prev,
+                  metadata: {
+                    ...(prev.metadata as AeroDoorMetadata),
+                    relay: {
+                      ...(prev.metadata as AeroDoorMetadata).relay,
+                      relayOfflineMode: Number(value),
+                    },
+                  },
+                }));
+              }}
+              className="dark:bg-dark-900"
+              defaultValue={
+                (dto.metadata as AeroDoorMetadata).relay?.relayOfflineMode ?? ""
+              }
+            />
+          </FormField>
+        )}
+        {/* Sensor */}
+        {activeTab == FormTab.Monitor && sensorFlag && (
+          <FormField className="flex flex-col gap-1">
+            <Label htmlFor="sensor.sensorModuleComponentId">
+              Sensor Module
+            </Label>
+            <Select
+              disabled={type == FormType.INFO}
+              name="sensor.sensorModuleComponentId"
+              options={moduleOption}
+              onChange={(value: string) => {
+                if (
+                  (dto.metadata as AeroDoorMetadata).rex
+                    .rex0ModuleComponentId != Number(value)
+                ) {
+                  fetchInput(
+                    moduleOption.find((x) => x.value == Number(value))
+                      ?.additionalInfo,
+                  );
+                }
+                setDto((prev) => ({
+                  ...prev,
+                  metadata: {
+                    ...(prev.metadata as AeroDoorMetadata),
+                    sensor: {
+                      ...(prev.metadata as AeroDoorMetadata).sensor,
+                      sensorModuleComponentId: Number(value),
+                      sensorModuleId: moduleOption.find(
+                        (x) => x.value == Number(value),
+                      )?.additionalInfo,
+                    },
+                  },
+                }));
+              }}
+              className="dark:bg-dark-900"
+              defaultValue={
+                (dto.metadata as AeroDoorMetadata).sensor
+                  ?.sensorModuleComponentId ?? ""
+              }
+            />
+            <Label htmlFor="sensor.sensorNumber">Input No</Label>
+            <Select
+              disabled={type == FormType.INFO}
+              name="sensor.sensorNumber"
+              options={inputOption.filter((x) => x.isTaken == false)}
+              onChange={(value: string) => {
+                setDto((prev) => ({
+                  ...prev,
+                  metadata: {
+                    ...(prev.metadata as AeroDoorMetadata),
+                    sensor: {
+                      ...(prev.metadata as AeroDoorMetadata).sensor,
+                      sensorNumber: Number(value),
+                    },
+                  },
+                }));
+              }}
+              className="dark:bg-dark-900"
+              defaultValue={
+                (dto.metadata as AeroDoorMetadata).sensor?.sensorNumber ?? ""
+              }
+            />
+            <Label htmlFor="sensor.sensorMode">Input Mode</Label>
+            <Select
+              disabled={type == FormType.INFO}
+              name="sensor.sensorMode"
+              options={inputModeOption}
+              onChange={(value: string) => {
+                setDto((prev) => ({
+                  ...prev,
+                  metadata: {
+                    ...(prev.metadata as AeroDoorMetadata),
+                    sensor: {
+                      ...(prev.metadata as AeroDoorMetadata).sensor,
+                      sensorMode: Number(value),
+                    },
+                  },
+                }));
+              }}
+              className="dark:bg-dark-900"
+              defaultValue={
+                (dto.metadata as AeroDoorMetadata).sensor?.sensorMode ?? ""
+              }
+            />
+          </FormField>
+        )}
+      </FormSection>
+    </>
   );
 };
 

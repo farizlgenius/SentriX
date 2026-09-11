@@ -239,6 +239,11 @@ public sealed class IntervalRepository(CoreDbContext context) : IIntervalReposit
       .AnyAsync(x => x.guid == guid);
   }
 
+  public Task<bool> IsAnyRelatedEntitiesAsync(Guid guid, CancellationToken ct = default)
+  {
+    throw new NotImplementedException();
+  }
+
   public async Task<bool> IsAnySameDataSetAsync(TimeOnly start, TimeOnly end, DayInWeek day, CancellationToken ct = default)
   {
     return await context.Intervals

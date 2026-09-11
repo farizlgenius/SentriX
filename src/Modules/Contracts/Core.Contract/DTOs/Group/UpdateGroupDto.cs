@@ -5,5 +5,6 @@ namespace Core.Contract.DTOs.Group;
 public sealed record UpdateGroupDto(
     Guid Guid,
     string Name,
-    List<GroupComponentDto> Components
+    List<GroupComponentDto> Components,
+    Guid LocationGuid
 );

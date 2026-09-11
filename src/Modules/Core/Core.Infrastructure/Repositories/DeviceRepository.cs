@@ -166,8 +166,8 @@ public sealed class DeviceRepository(CoreDbContext context) : IDeviceRepository
                   .Select(x => x.id)
                   .FirstOrDefaultAsync();
 
-            if(res == 0)
-                  throw new NotFoundException(EntityType.DeviceModule,guid.ToString());
+            if (res == 0)
+                  throw new NotFoundException(EntityType.DeviceModule, guid.ToString());
 
             return res;
       }
@@ -311,6 +311,11 @@ public sealed class DeviceRepository(CoreDbContext context) : IDeviceRepository
             return await context.Devices
                   .AsNoTracking()
                   .AnyAsync(x => x.mac.Equals(mac));
+      }
+
+      public Task<bool> IsAnyRelatedEntitiesAsync(Guid guid, CancellationToken ct = default)
+      {
+            throw new NotImplementedException();
       }
 
       public async Task<bool> IsDefaultAsync(Guid guid, CancellationToken ct = default)

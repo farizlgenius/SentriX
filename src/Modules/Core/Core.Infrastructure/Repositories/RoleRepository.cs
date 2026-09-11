@@ -247,6 +247,11 @@ public sealed class RoleRepository(CoreDbContext context) : IRoleRepository
                   .AnyAsync(x => x.name.Equals(Name));
       }
 
+      public Task<bool> IsAnyRelatedEntitiesAsync(Guid guid, CancellationToken ct = default)
+      {
+            throw new NotImplementedException();
+      }
+
       public async Task<bool> IsAnyUserByGuidAsync(Guid guid, CancellationToken ct = default)
       {
             return await context.Roles

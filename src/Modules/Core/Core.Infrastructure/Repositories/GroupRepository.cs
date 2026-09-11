@@ -210,6 +210,14 @@ public sealed class GroupRepository(CoreDbContext context) : IGroupRepository
                   .AnyAsync(ct);
       }
 
+      public async Task<bool> IsAnyRelatedEntitiesAsync(Guid guid, CancellationToken ct = default)
+      {
+            return await context.Groups
+                  .AsNoTracking()
+                  .Where(x => x.guid == guid)
+                  .AnyAsync(x => x.user_groups.Any() && x.components.Any(), ct);
+      }
+
       public async Task<bool> IsDefaultAsync(Guid guid, CancellationToken ct = default)
       {
             return await context.Groups

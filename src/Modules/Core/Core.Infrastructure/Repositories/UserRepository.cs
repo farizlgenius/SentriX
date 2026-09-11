@@ -846,4 +846,9 @@ public sealed class UserRepository(CoreDbContext context) : IUserRepository
     await context.SaveChangesAsync(ct);
 
   }
+
+  public Task<bool> IsAnyRelatedEntitiesAsync(Guid guid, CancellationToken ct = default)
+  {
+    throw new NotImplementedException();
+  }
 }

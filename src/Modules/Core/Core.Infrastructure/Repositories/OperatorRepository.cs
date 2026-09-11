@@ -318,6 +318,11 @@ public sealed class OperatorRepository(CoreDbContext context) : IOperatorReposit
       .AnyAsync(x => x.guid == guid, ct);
   }
 
+  public Task<bool> IsAnyRelatedEntitiesAsync(Guid guid, CancellationToken ct = default)
+  {
+    throw new NotImplementedException();
+  }
+
   public async Task<bool> IsAnyUsernameAsync(string username, CancellationToken ct = default)
   {
     return await context.Operators

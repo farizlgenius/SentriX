@@ -4,5 +4,6 @@ namespace Core.Contract.DTOs.Group;
 
 public sealed record CreateGroupDto(
     string Name,
-    List<GroupComponentDto> Components
+    List<GroupComponentDto> Components,
+    Guid LocationGuid
 );

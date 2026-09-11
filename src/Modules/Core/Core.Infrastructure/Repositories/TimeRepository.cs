@@ -237,6 +237,14 @@ public sealed class TimeRepository(CoreDbContext context) : ITimeRepository
           );
   }
 
+  public async Task<Dictionary<Guid, int>> GetTimeZoneIdsMapGuidsByGuidsAsync(IEnumerable<Guid> guids, CancellationToken ct = default)
+  {
+    return await context.TimeZones
+      .AsNoTracking()
+      .Where(x => guids.Contains(x.guid))
+      .ToDictionaryAsync(x => x.guid, x => x.id, ct);
+  }
+
   public async Task<bool> IsAnyByNameAndLocationIdAsync(string name, int locationId = 0, CancellationToken ct = default)
   {
     return await context.TimeZones
@@ -249,6 +257,11 @@ public sealed class TimeRepository(CoreDbContext context) : ITimeRepository
     return await context.TimeZones
       .AsNoTracking()
       .AnyAsync(x => x.guid == guid);
+  }
+
+  public Task<bool> IsAnyRelatedEntitiesAsync(Guid guid, CancellationToken ct = default)
+  {
+    throw new NotImplementedException();
   }
 
   public async Task<bool> IsDefaultAsync(Guid guid, CancellationToken ct = default)

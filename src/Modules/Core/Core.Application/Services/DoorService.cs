@@ -75,7 +75,7 @@ public sealed class DoorService(IDoorRepository repo, IMessageBus bus) : IDoor
       throw new NotFoundException(EntityType.Door, guid.ToString());
 
     // Check relation here 
-    if (await repo.CheckRelationAsync(guid))
+    if (await repo.IsAnyRelatedEntitiesAsync(guid))
       throw new FoundRelateException();
 
     await repo.DeleteAsync(guid);
@@ -97,7 +97,7 @@ public sealed class DoorService(IDoorRepository repo, IMessageBus bus) : IDoor
         throw new NotFoundException(EntityType.Door, guid.ToString());
 
       // Check relate object here
-      if (await repo.CheckRelationAsync(guid))
+      if (await repo.IsAnyRelatedEntitiesAsync(guid))
         throw new FoundRelateException();
     }
 

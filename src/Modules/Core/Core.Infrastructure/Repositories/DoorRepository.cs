@@ -194,6 +194,14 @@ public sealed class DoorRepository(CoreDbContext context) : IDoorRepository
       )).ToArrayAsync(ct);
   }
 
+  public async Task<Dictionary<Guid, int>> GetDoorIdsMapGuidsAsync(IEnumerable<Guid> guids, CancellationToken ct = default)
+  {
+    return await context.Doors
+      .AsNoTracking()
+      .Where(x => guids.Contains(x.guid))
+      .ToDictionaryAsync(x => x.guid, x => x.id, ct);
+  }
+
   public async Task<int> GetIdByGuidAsync(Guid guid, CancellationToken ct = default)
   {
     var res = await context.Doors
@@ -331,6 +339,11 @@ public sealed class DoorRepository(CoreDbContext context) : IDoorRepository
     return await context.Doors
       .AsNoTracking()
       .AnyAsync(x => x.guid == guid);
+  }
+
+  public Task<bool> IsAnyRelatedEntitiesAsync(Guid guid, CancellationToken ct = default)
+  {
+    throw new NotImplementedException();
   }
 
   public async Task<bool> IsDefaultAsync(Guid guid, CancellationToken ct = default)

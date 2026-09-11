@@ -279,6 +279,10 @@ public sealed class PositionRepository(CoreDbContext context) : IPositionReposit
         .AnyAsync(x => x.name.Equals(name) && x.department.guid == guid);
       }
 
+      public Task<bool> IsAnyRelatedEntitiesAsync(Guid guid, CancellationToken ct = default)
+      {
+            throw new NotImplementedException();
+      }
 
       public async Task<bool> IsAnyUserAsync(Guid guid, CancellationToken ct = default)
       {

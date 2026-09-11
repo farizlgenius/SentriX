@@ -15,17 +15,17 @@ public sealed class DeviceModuleRepository(CoreDbContext context) : IDeviceModul
       {
             await context.DeviceModules.AddAsync(
                   new Persistences.Entities.DeviceModule(entity)
-                  ,ct);
+                  , ct);
 
             await context.SaveChangesAsync(ct);
       }
 
       public async Task DeleteAsync(Guid guid, CancellationToken ct = default)
       {
-             var entity = await context.DeviceModules
-                  .OrderByDescending(x => x.id)
-                  .Where(x => x.guid == guid)
-                  .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.DeviceModule, guid.ToString());
+            var entity = await context.DeviceModules
+                 .OrderByDescending(x => x.id)
+                 .Where(x => x.guid == guid)
+                 .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.DeviceModule, guid.ToString());
 
             context.DeviceModules.Remove(entity);
 
@@ -45,32 +45,32 @@ public sealed class DeviceModuleRepository(CoreDbContext context) : IDeviceModul
 
       public async Task<bool> DisableAsync(Guid guid, CancellationToken ct = default)
       {
-      var en = await context.DeviceModules
-            .Where(x => x.guid == guid)
-            .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.DeviceModule, guid.ToString());
+            var en = await context.DeviceModules
+                  .Where(x => x.guid == guid)
+                  .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.DeviceModule, guid.ToString());
 
-      en.is_active = false;
+            en.is_active = false;
 
-      context.DeviceModules.Update(en);
+            context.DeviceModules.Update(en);
 
-      await context.SaveChangesAsync(ct);
+            await context.SaveChangesAsync(ct);
 
-      return true;
+            return true;
       }
 
       public async Task<bool> EnableAsync(Guid guid, CancellationToken ct = default)
       {
-      var en = await context.DeviceModules
-            .Where(x => x.guid == guid)
-            .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.DeviceModule, guid.ToString());
+            var en = await context.DeviceModules
+                  .Where(x => x.guid == guid)
+                  .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.DeviceModule, guid.ToString());
 
-      en.is_active = true;
+            en.is_active = true;
 
-      context.DeviceModules.Update(en);
+            context.DeviceModules.Update(en);
 
-      await context.SaveChangesAsync(ct);
+            await context.SaveChangesAsync(ct);
 
-      return true;
+            return true;
       }
 
       public async Task<DeviceModuleDto> GetAsync(Guid guid, CancellationToken ct = default)
@@ -96,7 +96,7 @@ public sealed class DeviceModuleRepository(CoreDbContext context) : IDeviceModul
                         x.location.name,
                         x.is_active,
                         x.is_default
-                  )).FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.DeviceModule,guid.ToString());
+                  )).FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.DeviceModule, guid.ToString());
       }
 
       public async Task<IEnumerable<DeviceModuleDto>> GetByLocationAsync(int locationId, CancellationToken ct = default)
@@ -127,14 +127,14 @@ public sealed class DeviceModuleRepository(CoreDbContext context) : IDeviceModul
 
       public async Task<int> GetDeviceModuleIdByGuidAsync(Guid guid, CancellationToken ct = default)
       {
-           var res = await context.DeviceModules
-            .AsNoTracking()
-            .Where(x => x.guid == guid)
-            .Select(x => x.id)
-            .FirstOrDefaultAsync();
+            var res = await context.DeviceModules
+             .AsNoTracking()
+             .Where(x => x.guid == guid)
+             .Select(x => x.id)
+             .FirstOrDefaultAsync();
 
-            if(res == 0)
-                  throw new NotFoundException(EntityType.DeviceModule,guid.ToString());
+            if (res == 0)
+                  throw new NotFoundException(EntityType.DeviceModule, guid.ToString());
 
             return res;
       }
@@ -172,24 +172,24 @@ public sealed class DeviceModuleRepository(CoreDbContext context) : IDeviceModul
 
                               query = query.Where(x =>
                                   EF.Functions.ILike(x.name, pattern) ||
-                                  EF.Functions.ILike(x.serial_number,pattern) ||
-                                  EF.Functions.ILike(x.firmware,pattern) ||
-                                  EF.Functions.ILike(x.mac,pattern) ||
-                                  EF.Functions.ILike(x.port.ToString(),pattern) ||
-                                  EF.Functions.ILike(x.address.ToString(),pattern) ||
-                                  EF.Functions.ILike(x.model.ToString(),pattern)
+                                  EF.Functions.ILike(x.serial_number, pattern) ||
+                                  EF.Functions.ILike(x.firmware, pattern) ||
+                                  EF.Functions.ILike(x.mac, pattern) ||
+                                  EF.Functions.ILike(x.port.ToString(), pattern) ||
+                                  EF.Functions.ILike(x.address.ToString(), pattern) ||
+                                  EF.Functions.ILike(x.model.ToString(), pattern)
                               );
                         }
                         else // SQL Server
                         {
                               query = query.Where(x =>
-                                  x.name.Contains(search) || 
-                                  x.serial_number.Contains(search) || 
-                                  x.firmware.Contains(search) || 
-                                  x.mac.Contains(search) || 
-                                  x.port.ToString().Contains(search) || 
-                                  x.address.ToString().Contains(search) || 
-                                  x.model.ToString().Contains(search) 
+                                  x.name.Contains(search) ||
+                                  x.serial_number.Contains(search) ||
+                                  x.firmware.Contains(search) ||
+                                  x.mac.Contains(search) ||
+                                  x.port.ToString().Contains(search) ||
+                                  x.address.ToString().Contains(search) ||
+                                  x.model.ToString().Contains(search)
                               );
                         }
 
@@ -247,32 +247,37 @@ public sealed class DeviceModuleRepository(CoreDbContext context) : IDeviceModul
 
       public async Task<bool> IsAnyByNameAndLocationIdAsync(string name, int locationId = 0, CancellationToken ct = default)
       {
-      return await context.DeviceModules
-            .AsNoTracking()
-            .AnyAsync(x => x.name.Equals(name) && x.location_id == locationId);
+            return await context.DeviceModules
+                  .AsNoTracking()
+                  .AnyAsync(x => x.name.Equals(name) && x.location_id == locationId);
 
       }
 
       public async Task<bool> IsAnyGuidAsync(Guid guid, CancellationToken ct = default)
       {
-      return await context.DeviceModules
-            .AsNoTracking()
-            .AnyAsync(x => x.guid == guid);
+            return await context.DeviceModules
+                  .AsNoTracking()
+                  .AnyAsync(x => x.guid == guid);
+      }
+
+      public Task<bool> IsAnyRelatedEntitiesAsync(Guid guid, CancellationToken ct = default)
+      {
+            throw new NotImplementedException();
       }
 
       public async Task<bool> IsDefaultAsync(Guid guid, CancellationToken ct = default)
       {
-      return await context.DeviceModules
-            .AsNoTracking()
-            .AnyAsync(x => x.is_default);
+            return await context.DeviceModules
+                  .AsNoTracking()
+                  .AnyAsync(x => x.is_default);
       }
 
       public async Task UpdateAsync(DeviceModule entity, CancellationToken ct = default)
       {
-           var en = await context.DeviceModules
-                  .AsNoTracking()
-                  .Where(x => x.guid == entity.Guid)
-                  .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.DeviceModule,entity.Guid.ToString());
+            var en = await context.DeviceModules
+                   .AsNoTracking()
+                   .Where(x => x.guid == entity.Guid)
+                   .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.DeviceModule, entity.Guid.ToString());
 
             en.name = entity.Name;
             en.serial_number = entity.SerialNumber;
@@ -286,7 +291,7 @@ public sealed class DeviceModuleRepository(CoreDbContext context) : IDeviceModul
             en.output_slot = entity.OutputSlot;
             en.updated_at = DateTime.UtcNow;
 
-            
+
             context.DeviceModules.Update(en);
 
             await context.SaveChangesAsync(ct);

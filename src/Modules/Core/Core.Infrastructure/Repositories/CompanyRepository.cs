@@ -226,6 +226,11 @@ public sealed class CompanyRepository(CoreDbContext context) : ICompanyRepositor
                   .AnyAsync(x => x.guid == guid);
   }
 
+  public Task<bool> IsAnyRelatedEntitiesAsync(Guid guid, CancellationToken ct = default)
+  {
+    throw new NotImplementedException();
+  }
+
   public async Task<bool> IsAnyUserAsync(Guid guid, CancellationToken ct = default)
   {
     return await context.Companies

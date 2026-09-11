@@ -203,6 +203,11 @@ public sealed class HolidayRepository(CoreDbContext context) : IHolidayRepositor
       .AnyAsync(x => x.guid == guid);
   }
 
+  public Task<bool> IsAnyRelatedEntitiesAsync(Guid guid, CancellationToken ct = default)
+  {
+    throw new NotImplementedException();
+  }
+
   public async Task<bool> IsDefaultAsync(Guid guid, CancellationToken ct = default)
   {
     return await context.Holidays
