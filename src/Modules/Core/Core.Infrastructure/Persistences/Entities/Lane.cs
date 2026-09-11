@@ -5,13 +5,15 @@ public sealed class Lane : BaseEntity
       public int lane_no { get; set; }
       public int turnstile_id { get; set; }
       public Turnstile turnstile { get; set; } = default!;
-      public ICollection<Door> doors
-      { get; set; } = default!;
+      public ICollection<Reader> readers { get; set; } = default!;
+      public int? sensor_id { get; set; }
+      public Sensor? sensor { get; set; }
       public Lane() { }
       public Lane(Domain.Entities.Lane d) : base(d.Guid)
       {
             lane_no = d.LaneNo;
-            doors = d.Doors.Select(x => new Door(x)).ToArray();
+            readers = d.Readers.Select(x => new Reader(x)).ToArray();
+            sensor = d.Sensor == null ? null : new Sensor(d.Sensor);
       }
 
 }

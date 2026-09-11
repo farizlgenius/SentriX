@@ -19,8 +19,8 @@ public sealed class Door : BaseEntity
   public Buzzer? buzzer { get; set; }
   public int? rex_id { get; set; }
   public Rex? rex { get; set; }
-  public int device_module_id { get; set; }
-  public DeviceModule device_module { get; set; } = default!;
+  // public int device_module_id { get; set; }
+  // public DeviceModule device_module { get; set; } = default!;
   public int location_id { get; set; }
   public Location location { get; set; } = default!;
   public int? lane_id { get; set; }
@@ -39,7 +39,6 @@ public sealed class Door : BaseEntity
     relay = d.Relay == null ? null : new Relay(d.Relay);
     buzzer = d.Buzzer == null ? null : new Buzzer(d.Buzzer);
     rex = d.Rex == null ? null : new Rex(d.Rex);
-    device_module_id = d.DeviceModuleId;
     location_id = d.LocationId;
   }
 

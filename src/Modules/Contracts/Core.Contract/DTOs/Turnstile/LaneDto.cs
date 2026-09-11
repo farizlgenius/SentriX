@@ -5,7 +5,8 @@ namespace Core.Contract.DTOs.Turnstile;
 public sealed record LaneDto(
       Guid Guid,
       int LaneNo,
-      List<DoorDto> Doors,
+      List<ReaderDto> Readers,
+      SensorDto? Sensor,
        Guid LocationGuid,
       bool IsActive,
       bool IsDefault

@@ -7,5 +7,6 @@ public sealed record BuzzerDto(
   int SlotNo,
   OutputMode Mode,
   string Metadata,
-  Vendor Vendor
+  Vendor Vendor,
+  Guid DeviceModuleGuid
 );

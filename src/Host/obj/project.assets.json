@@ -1,5 +1,5 @@
 {
-  "version": 4,
+  "version": 3,
   "targets": {
     "net10.0": {
       "Ben.Demystifier/0.4.1": {
@@ -3788,75 +3788,75 @@
     ]
   },
   "packageFolders": {
-    "/Users/mac/.nuget/packages/": {}
+    "/Users/far-izlengha/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/mac/Documents/Aero/SentriX/src/Host/Host.csproj",
+      "projectUniqueName": "/Users/far-izlengha/Documents/Project/SentriX/src/Host/Host.csproj",
       "projectName": "Host",
-      "projectPath": "/Users/mac/Documents/Aero/SentriX/src/Host/Host.csproj",
-      "packagesPath": "/Users/mac/.nuget/packages/",
-      "outputPath": "/Users/mac/Documents/Aero/SentriX/src/Host/obj/",
+      "projectPath": "/Users/far-izlengha/Documents/Project/SentriX/src/Host/Host.csproj",
+      "packagesPath": "/Users/far-izlengha/.nuget/packages/",
+      "outputPath": "/Users/far-izlengha/Documents/Project/SentriX/src/Host/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/Users/mac/.nuget/NuGet/NuGet.Config"
+        "/Users/far-izlengha/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net10.0"
       ],
       "sources": {
+        "/usr/local/share/dotnet/library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "net10.0": {
-          "framework": "net10.0",
           "targetAlias": "net10.0",
           "projectReferences": {
-            "/Users/mac/Documents/Aero/SentriX/src/Modules/Adapters/Adapter.Aero/Adapter.Aero.csproj": {
-              "projectPath": "/Users/mac/Documents/Aero/SentriX/src/Modules/Adapters/Adapter.Aero/Adapter.Aero.csproj"
+            "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Adapters/Adapter.Aero/Adapter.Aero.csproj": {
+              "projectPath": "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Adapters/Adapter.Aero/Adapter.Aero.csproj"
             },
-            "/Users/mac/Documents/Aero/SentriX/src/Modules/Adapters/Adapter.Amico/Adapter.Amico.csproj": {
-              "projectPath": "/Users/mac/Documents/Aero/SentriX/src/Modules/Adapters/Adapter.Amico/Adapter.Amico.csproj"
+            "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Adapters/Adapter.Amico/Adapter.Amico.csproj": {
+              "projectPath": "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Adapters/Adapter.Amico/Adapter.Amico.csproj"
             },
-            "/Users/mac/Documents/Aero/SentriX/src/Modules/Adapters/Adapter.Core/Adapter.Core.csproj": {
-              "projectPath": "/Users/mac/Documents/Aero/SentriX/src/Modules/Adapters/Adapter.Core/Adapter.Core.csproj"
+            "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Adapters/Adapter.Core/Adapter.Core.csproj": {
+              "projectPath": "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Adapters/Adapter.Core/Adapter.Core.csproj"
             },
-            "/Users/mac/Documents/Aero/SentriX/src/Modules/Auth/Auth.Infrastructure/Auth.Infrastructure.csproj": {
-              "projectPath": "/Users/mac/Documents/Aero/SentriX/src/Modules/Auth/Auth.Infrastructure/Auth.Infrastructure.csproj"
+            "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Auth/Auth.Infrastructure/Auth.Infrastructure.csproj": {
+              "projectPath": "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Auth/Auth.Infrastructure/Auth.Infrastructure.csproj"
             },
-            "/Users/mac/Documents/Aero/SentriX/src/Modules/Cache/Cache.Infrastrucure/Cache.Infrastructure.csproj": {
-              "projectPath": "/Users/mac/Documents/Aero/SentriX/src/Modules/Cache/Cache.Infrastrucure/Cache.Infrastructure.csproj"
+            "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Cache/Cache.Infrastrucure/Cache.Infrastructure.csproj": {
+              "projectPath": "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Cache/Cache.Infrastrucure/Cache.Infrastructure.csproj"
             },
-            "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Adapter.Abstraction/Adapter.Abstraction.csproj": {
-              "projectPath": "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Adapter.Abstraction/Adapter.Abstraction.csproj"
+            "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Contracts/Adapter.Abstraction/Adapter.Abstraction.csproj": {
+              "projectPath": "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Contracts/Adapter.Abstraction/Adapter.Abstraction.csproj"
             },
-            "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Auth.Contract/Auth.Contract.csproj": {
-              "projectPath": "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Auth.Contract/Auth.Contract.csproj"
+            "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Contracts/Auth.Contract/Auth.Contract.csproj": {
+              "projectPath": "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Contracts/Auth.Contract/Auth.Contract.csproj"
             },
-            "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Core.Contract/Core.Contract.csproj": {
-              "projectPath": "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Core.Contract/Core.Contract.csproj"
+            "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Contracts/Core.Contract/Core.Contract.csproj": {
+              "projectPath": "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Contracts/Core.Contract/Core.Contract.csproj"
             },
-            "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Setting.Contract/Setting.Contract.csproj": {
-              "projectPath": "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Setting.Contract/Setting.Contract.csproj"
+            "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Contracts/Setting.Contract/Setting.Contract.csproj": {
+              "projectPath": "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Contracts/Setting.Contract/Setting.Contract.csproj"
             },
-            "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Storage.Contract/Storage.Contract.csproj": {
-              "projectPath": "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Storage.Contract/Storage.Contract.csproj"
+            "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Contracts/Storage.Contract/Storage.Contract.csproj": {
+              "projectPath": "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Contracts/Storage.Contract/Storage.Contract.csproj"
             },
-            "/Users/mac/Documents/Aero/SentriX/src/Modules/Core/Core.Infrastructure/Core.Infrastructure.csproj": {
-              "projectPath": "/Users/mac/Documents/Aero/SentriX/src/Modules/Core/Core.Infrastructure/Core.Infrastructure.csproj"
+            "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Core/Core.Infrastructure/Core.Infrastructure.csproj": {
+              "projectPath": "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Core/Core.Infrastructure/Core.Infrastructure.csproj"
             },
-            "/Users/mac/Documents/Aero/SentriX/src/Modules/Notifier/Notifier.Client/Notifier.Client.csproj": {
-              "projectPath": "/Users/mac/Documents/Aero/SentriX/src/Modules/Notifier/Notifier.Client/Notifier.Client.csproj"
+            "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Notifier/Notifier.Client/Notifier.Client.csproj": {
+              "projectPath": "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Notifier/Notifier.Client/Notifier.Client.csproj"
             },
-            "/Users/mac/Documents/Aero/SentriX/src/Modules/Setting/Setting.Infrastructure/Setting.Infrastructure.csproj": {
-              "projectPath": "/Users/mac/Documents/Aero/SentriX/src/Modules/Setting/Setting.Infrastructure/Setting.Infrastructure.csproj"
+            "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Setting/Setting.Infrastructure/Setting.Infrastructure.csproj": {
+              "projectPath": "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Setting/Setting.Infrastructure/Setting.Infrastructure.csproj"
             },
-            "/Users/mac/Documents/Aero/SentriX/src/Modules/Storage/Storage.csproj": {
-              "projectPath": "/Users/mac/Documents/Aero/SentriX/src/Modules/Storage/Storage.csproj"
+            "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Storage/Storage.csproj": {
+              "projectPath": "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Storage/Storage.csproj"
             },
-            "/Users/mac/Documents/Aero/SentriX/src/SharedKernel/SharedKernel.csproj": {
-              "projectPath": "/Users/mac/Documents/Aero/SentriX/src/SharedKernel/SharedKernel.csproj"
+            "/Users/far-izlengha/Documents/Project/SentriX/src/SharedKernel/SharedKernel.csproj": {
+              "projectPath": "/Users/far-izlengha/Documents/Project/SentriX/src/SharedKernel/SharedKernel.csproj"
             }
           }
         }
@@ -3871,11 +3871,10 @@
         "auditLevel": "low",
         "auditMode": "all"
       },
-      "SdkAnalysisLevel": "10.0.300"
+      "SdkAnalysisLevel": "10.0.100"
     },
     "frameworks": {
       "net10.0": {
-        "framework": "net10.0",
         "targetAlias": "net10.0",
         "dependencies": {
           "Microsoft.AspNetCore.Authentication.JwtBearer": {
@@ -3946,7 +3945,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.300/PortableRuntimeIdentifierGraph.json",
+        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.101/PortableRuntimeIdentifierGraph.json",
         "packagesToPrune": {
           "Microsoft.AspNetCore": "(,10.0.32767]",
           "Microsoft.AspNetCore.Antiforgery": "(,10.0.32767]",

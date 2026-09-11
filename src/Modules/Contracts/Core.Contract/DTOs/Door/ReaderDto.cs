@@ -8,5 +8,6 @@ public sealed record ReaderDto(
   ReaderMode Mode,
   string Metadata,
   Vendor Vendor,
-  ReaderDirection ReaderDirection
+  ReaderDirection ReaderDirection,
+  Guid DeviceModuleGuid
 );

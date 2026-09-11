@@ -11,6 +11,8 @@ public sealed class Rex : BaseEntity
   // Relation
   public int door_id { get; set; }
   public Door door { get; set; } = default!;
+  public int device_module_id { get; set; }
+  public DeviceModule device_module { get; set; } = default!;
   public Rex()
   { }
 
@@ -22,5 +24,6 @@ public sealed class Rex : BaseEntity
     mode = d.InputMode;
     metadata = d.Metadata;
     vendor = d.Vendor;
+    device_module_id = d.DeviceModuleId;
   }
 }

@@ -3,24 +3,29 @@ namespace Core.Domain.Entities;
 public sealed class Lane : BaseDomain
 {
   public int LaneNo { get; set; }
-  public List<Door> Doors { get; set; } = default!;
+  public List<Reader> Readers { get; set; } = default!;
+  public Sensor? Sensor { get; set; }
   public Lane(
     int laneNo,
-    List<Door> doors
+    List<Reader> readers,
+    Sensor? sensor
 
   ) : base(Guid.NewGuid())
   {
     LaneNo = laneNo;
-    Doors = doors;
+    Readers = readers;
+    Sensor = sensor;
   }
 
   public Lane(
     Guid guid,
     int laneNo,
-    List<Door> doors
+    List<Reader> readers,
+    Sensor? sensor
   ) : base(guid)
   {
     LaneNo = laneNo;
-    Doors = doors;
+    Readers = readers;
+    Sensor = sensor;
   }
 }

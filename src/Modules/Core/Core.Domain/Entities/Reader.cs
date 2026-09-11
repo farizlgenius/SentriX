@@ -9,12 +9,14 @@ public sealed class Reader : BaseDomain
   public string Metadata { get; private set; } = string.Empty;
   public Vendor Vendor { get; private set; } = Vendor.aero;
   public ReaderDirection ReaderDirection { get; private set; } = ReaderDirection.In;
+  public int DeviceModuleId { get; private set; }
   public Reader(
     int slotNo,
     ReaderMode readerMode,
     string metadata,
     Vendor vendor,
-    ReaderDirection readerDirection
+    ReaderDirection readerDirection,
+    int deviceModuleId
   ) : base(Guid.NewGuid())
   {
     SlotNo = slotNo;
@@ -22,6 +24,7 @@ public sealed class Reader : BaseDomain
     Metadata = metadata;
     Vendor = vendor;
     ReaderDirection = readerDirection;
+    DeviceModuleId = deviceModuleId;
   }
 
   public Reader(
@@ -30,7 +33,8 @@ public sealed class Reader : BaseDomain
     ReaderMode readerMode,
     string metadata,
     Vendor vendor,
-    ReaderDirection readerDirection
+    ReaderDirection readerDirection,
+    int deviceModuleId
   ) : base(guid)
   {
     SlotNo = slotNo;
@@ -38,5 +42,6 @@ public sealed class Reader : BaseDomain
     Metadata = metadata;
     Vendor = vendor;
     ReaderDirection = readerDirection;
+    DeviceModuleId = deviceModuleId;
   }
 }

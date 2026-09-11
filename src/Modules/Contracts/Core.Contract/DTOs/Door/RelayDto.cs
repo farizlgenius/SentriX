@@ -7,5 +7,6 @@ public sealed record RelayDto(
   int SlotNo,
   OutputMode Mode,
   string Metadata,
-  Vendor Vendor
+  Vendor Vendor,
+  Guid DeviceModuleGuid
 );

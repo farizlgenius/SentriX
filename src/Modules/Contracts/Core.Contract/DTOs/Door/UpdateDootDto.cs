@@ -13,6 +13,5 @@ public sealed record UpdateDoorDto(
   RexDto? Rex,
   SensorDto Sensor,
   RelayDto Relay,
-  Guid DeviceModuleGuid,
   Guid LocationGuid
 );

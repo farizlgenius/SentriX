@@ -22,63 +22,28 @@ public sealed class TurnstileService(
     if (await repo.IsAnyByNameAndLocationIdAsync(dto.Name, locationId))
       throw new DuplicateException(nameof(dto.Name), dto.Name);
 
-    var deviceModuleGuidIdDictionary = new Dictionary<Guid, int>();
-
-    foreach (var lane in dto.Lanes)
-    {
-      foreach (var door in lane.Doors)
-      {
-        if (!deviceModuleGuidIdDictionary.ContainsKey(door.DeviceModuleGuid))
-        {
-          var deviceModuleId = await bus.QueryAsync(new DeviceModuleIdByGuidQuery(door.DeviceModuleGuid));
-          deviceModuleGuidIdDictionary.Add(door.DeviceModuleGuid, deviceModuleId);
-        }
-      }
-    }
+    var readerDeviceModuleIdMap = await bus.QueryAsync(new DeviceModuleIdsMapGuidsByGuidsQuery(dto.Lanes.SelectMany(x => x.Readers.Select(r => r.DeviceModuleGuid))));
+    var sensorDeviceModuleIdMap = await bus.QueryAsync(new DeviceModuleIdsMapGuidsByGuidsQuery(dto.Lanes.Where(x => x.Sensor != null).Select(x => x.Sensor.DeviceModuleGuid)));
 
     var d = new Turnstile(
       dto.Name,
       dto.Lanes.Select(x => new Lane(
         x.LaneNo,
-        x.Doors.Select(x => new Door(
-          x.Name,
-          x.Vendor,
-          x.Type,
-          x.Metadata,
-          x.Readers.Select(x => new Reader(
-            x.SlotNo,
-            x.Mode,
-            x.Metadata,
-            x.Vendor,
-            x.ReaderDirection
-          )).ToList(),
-          x.Sensor == null ? null : new Sensor(
-            x.Sensor.SlotNo,
-            x.Sensor.Mode,
-            x.Sensor.Metadata,
-            x.Sensor.Vendor
-          ),
-          x.Relay == null ? null : new Relay(
-            x.Relay.SlotNo,
-            x.Relay.Mode,
-            x.Relay.Metadata,
-            x.Relay.Vendor
-          ),
-          x.Buzzer == null ? null : new Buzzer(
-            x.Buzzer.SlotNo,
-            x.Buzzer.Mode,
-            x.Buzzer.Metadata,
-            x.Buzzer.Vendor
-          ),
-          x.Rex == null ? null : new Rex(
-            x.Rex.SlotNo,
-            x.Rex.Mode,
-            x.Rex.Metadata,
-            x.Rex.Vendor
-          ),
-          deviceModuleGuidIdDictionary[x.DeviceModuleGuid],
-          locationId
-        )).ToList()
+        x.Readers.Select(r => new Reader(
+          r.SlotNo,
+          r.Mode,
+          r.Metadata,
+          r.Vendor,
+          r.ReaderDirection,
+          readerDeviceModuleIdMap[r.DeviceModuleGuid]
+        )).ToList(),
+        x.Sensor == null ? null : new Sensor(
+          x.Sensor.SlotNo,
+          x.Sensor.Mode,
+          x.Sensor.Metadata,
+          x.Sensor.Vendor,
+          sensorDeviceModuleIdMap[x.Sensor.DeviceModuleGuid]
+          )
       )).ToList(),
       locationId
     );
@@ -147,63 +112,35 @@ public sealed class TurnstileService(
 
     var locationId = await bus.QueryAsync(new LocationIdByGuidQuery(dto.LocationGuid));
 
-    var deviceModuleGuidIdDictionary = new Dictionary<Guid, int>();
+    if (await repo.IsAnyByNameAndLocationIdAsync(dto.Name, locationId))
+      throw new DuplicateException(nameof(dto.Name), dto.Name);
 
-    foreach (var lane in dto.Lanes)
-    {
-      foreach (var door in lane.Doors)
-      {
-        if (!deviceModuleGuidIdDictionary.ContainsKey(door.DeviceModuleGuid))
-        {
-          var deviceModuleId = await bus.QueryAsync(new DeviceModuleIdByGuidQuery(door.DeviceModuleGuid));
-          deviceModuleGuidIdDictionary.Add(door.DeviceModuleGuid, deviceModuleId);
-        }
-      }
-    }
+    var readerDeviceModuleIdMap = await bus.QueryAsync(new DeviceModuleIdsMapGuidsByGuidsQuery(dto.Lanes.SelectMany(x => x.Readers.Select(r => r.DeviceModuleGuid))));
+    var sensorDeviceModuleIdMap = await bus.QueryAsync(new DeviceModuleIdsMapGuidsByGuidsQuery(dto.Lanes.Where(x => x.Sensor != null).Select(x => x.Sensor.DeviceModuleGuid)));
 
     var d = new Turnstile(
+      dto.Guid,
       dto.Name,
       dto.Lanes.Select(x => new Lane(
+        x.Guid,
         x.LaneNo,
-        x.Doors.Select(x => new Door(
-          x.Name,
-          x.Vendor,
-          x.Type,
-          x.Metadata,
-          x.Readers.Select(x => new Reader(
-            x.SlotNo,
-            x.Mode,
-            x.Metadata,
-            x.Vendor,
-            x.ReaderDirection
-          )).ToList(),
-          x.Sensor == null ? null : new Sensor(
-            x.Sensor.SlotNo,
-            x.Sensor.Mode,
-            x.Sensor.Metadata,
-            x.Sensor.Vendor
-          ),
-          x.Relay == null ? null : new Relay(
-            x.Relay.SlotNo,
-            x.Relay.Mode,
-            x.Relay.Metadata,
-            x.Relay.Vendor
-          ),
-          x.Buzzer == null ? null : new Buzzer(
-            x.Buzzer.SlotNo,
-            x.Buzzer.Mode,
-            x.Buzzer.Metadata,
-            x.Buzzer.Vendor
-          ),
-          x.Rex == null ? null : new Rex(
-            x.Rex.SlotNo,
-            x.Rex.Mode,
-            x.Rex.Metadata,
-            x.Rex.Vendor
-          ),
-          deviceModuleGuidIdDictionary[x.DeviceModuleGuid],
-          locationId
-        )).ToList()
+        x.Readers.Select(r => new Reader(
+          r.Guid,
+          r.SlotNo,
+          r.Mode,
+          r.Metadata,
+          r.Vendor,
+          r.ReaderDirection,
+          readerDeviceModuleIdMap[r.DeviceModuleGuid]
+        )).ToList(),
+        x.Sensor == null ? null : new Sensor(
+          x.Sensor.Guid,
+          x.Sensor.SlotNo,
+          x.Sensor.Mode,
+          x.Sensor.Metadata,
+          x.Sensor.Vendor,
+          sensorDeviceModuleIdMap[x.Sensor.DeviceModuleGuid]
+          )
       )).ToList(),
       locationId
     );

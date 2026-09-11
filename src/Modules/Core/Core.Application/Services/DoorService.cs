@@ -16,7 +16,14 @@ public sealed class DoorService(IDoorRepository repo, IMessageBus bus) : IDoor
   {
 
     var locationId = await bus.QueryAsync(new LocationIdByGuidQuery(dto.LocationGuid));
-    var deviceModuleId = await bus.QueryAsync(new DeviceModuleIdByGuidQuery(dto.DeviceModuleGuid));
+    // var deviceModuleId = await bus.QueryAsync(new DeviceModuleIdByGuidQuery(dto.DeviceModuleGuid));
+    var readerMapModuleId = await bus.QueryAsync(new DeviceModuleIdsMapGuidsByGuidsQuery(dto.Readers.Select(x => x.DeviceModuleGuid)));
+
+    var sensorMapModuleId = dto.Sensor == null ? 0 : await bus.QueryAsync(new DeviceModuleIdByGuidQuery(dto.Sensor.DeviceModuleGuid));
+
+    var relayMapModuleId = dto.Relay == null ? 0 : await bus.QueryAsync(new DeviceModuleIdByGuidQuery(dto.Relay.DeviceModuleGuid));
+    var buzzerMapModuleId = dto.Buzzer == null ? 0 : await bus.QueryAsync(new DeviceModuleIdByGuidQuery(dto.Buzzer.DeviceModuleGuid));
+    var rexMapModuleId = dto.Rex == null ? 0 : await bus.QueryAsync(new DeviceModuleIdByGuidQuery(dto.Rex.DeviceModuleGuid));
 
     if (await repo.IsAnyByNameAndLocationIdAsync(dto.Name, locationId))
       throw new DuplicateException(nameof(dto.Name), dto.Name);
@@ -31,33 +38,37 @@ public sealed class DoorService(IDoorRepository repo, IMessageBus bus) : IDoor
         x.Mode,
         x.Metadata,
         x.Vendor,
-        x.ReaderDirection
+        x.ReaderDirection,
+        readerMapModuleId[x.DeviceModuleGuid]
       )).ToList(),
       dto.Sensor == null ? null : new Sensor(
         dto.Sensor.SlotNo,
         dto.Sensor.Mode,
         dto.Sensor.Metadata,
-        dto.Sensor.Vendor
+        dto.Sensor.Vendor,
+        sensorMapModuleId
         ),
         dto.Relay == null ? null : new Relay(
           dto.Relay.SlotNo,
           dto.Relay.Mode,
           dto.Relay.Metadata,
-          dto.Relay.Vendor
+          dto.Relay.Vendor,
+          relayMapModuleId
         ),
         dto.Buzzer == null ? null : new Buzzer(
           dto.Buzzer.SlotNo,
           dto.Buzzer.Mode,
           dto.Buzzer.Metadata,
-          dto.Buzzer.Vendor
+          dto.Buzzer.Vendor,
+          buzzerMapModuleId
         ),
         dto.Rex == null ? null : new Rex(
           dto.Rex.SlotNo,
           dto.Rex.Mode,
           dto.Rex.Metadata,
-          dto.Rex.Vendor
+          dto.Rex.Vendor,
+          rexMapModuleId
         ),
-       deviceModuleId,
         locationId
     );
 
@@ -147,7 +158,17 @@ public sealed class DoorService(IDoorRepository repo, IMessageBus bus) : IDoor
       throw new NotFoundException(EntityType.Door, dto.Guid.ToString());
 
     var locationId = await bus.QueryAsync(new LocationIdByGuidQuery(dto.LocationGuid));
-    var deviceModuleId = await bus.QueryAsync(new DeviceModuleIdByGuidQuery(dto.DeviceModuleGuid));
+
+    var readerMapModuleId = await bus.QueryAsync(new DeviceModuleIdsMapGuidsByGuidsQuery(dto.Readers.Select(x => x.DeviceModuleGuid)));
+
+    var sensorMapModuleId = dto.Sensor == null ? 0 : await bus.QueryAsync(new DeviceModuleIdByGuidQuery(dto.Sensor.DeviceModuleGuid));
+
+    var relayMapModuleId = dto.Relay == null ? 0 : await bus.QueryAsync(new DeviceModuleIdByGuidQuery(dto.Relay.DeviceModuleGuid));
+    var buzzerMapModuleId = dto.Buzzer == null ? 0 : await bus.QueryAsync(new DeviceModuleIdByGuidQuery(dto.Buzzer.DeviceModuleGuid));
+    var rexMapModuleId = dto.Rex == null ? 0 : await bus.QueryAsync(new DeviceModuleIdByGuidQuery(dto.Rex.DeviceModuleGuid));
+
+    if (await repo.IsAnyByNameAndLocationIdAsync(dto.Name, locationId))
+      throw new DuplicateException(nameof(dto.Name), dto.Name);
 
     var d = new Door(
       dto.Name,
@@ -155,42 +176,41 @@ public sealed class DoorService(IDoorRepository repo, IMessageBus bus) : IDoor
       dto.Type,
       dto.Metadata,
       dto.Readers.Select(x => new Reader(
-        x.Guid,
         x.SlotNo,
         x.Mode,
         x.Metadata,
         x.Vendor,
-        x.ReaderDirection
+        x.ReaderDirection,
+        readerMapModuleId[x.DeviceModuleGuid]
       )).ToList(),
       dto.Sensor == null ? null : new Sensor(
-        dto.Sensor.Guid,
         dto.Sensor.SlotNo,
         dto.Sensor.Mode,
         dto.Sensor.Metadata,
-        dto.Sensor.Vendor
+        dto.Sensor.Vendor,
+        sensorMapModuleId
         ),
         dto.Relay == null ? null : new Relay(
-          dto.Relay.Guid,
           dto.Relay.SlotNo,
           dto.Relay.Mode,
           dto.Relay.Metadata,
-          dto.Relay.Vendor
+          dto.Relay.Vendor,
+          relayMapModuleId
         ),
         dto.Buzzer == null ? null : new Buzzer(
-          dto.Buzzer.Guid,
           dto.Buzzer.SlotNo,
           dto.Buzzer.Mode,
           dto.Buzzer.Metadata,
-          dto.Buzzer.Vendor
+          dto.Buzzer.Vendor,
+          buzzerMapModuleId
         ),
         dto.Rex == null ? null : new Rex(
-          dto.Rex.Guid,
           dto.Rex.SlotNo,
           dto.Rex.Mode,
           dto.Rex.Metadata,
-          dto.Rex.Vendor
+          dto.Rex.Vendor,
+          rexMapModuleId
         ),
-       deviceModuleId,
         locationId
     );
 

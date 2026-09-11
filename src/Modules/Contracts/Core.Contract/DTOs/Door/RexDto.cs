@@ -7,5 +7,6 @@ public sealed record RexDto(
   int SlotNo,
   InputMode Mode,
   string Metadata,
-  Vendor Vendor
+  Vendor Vendor,
+  Guid DeviceModuleGuid
 );

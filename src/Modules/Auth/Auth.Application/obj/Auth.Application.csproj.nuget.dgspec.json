@@ -1,46 +1,46 @@
 {
   "format": 1,
   "restore": {
-    "/Users/mac/Documents/Aero/SentriX/src/Modules/Auth/Auth.Application/Auth.Application.csproj": {}
+    "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Auth/Auth.Application/Auth.Application.csproj": {}
   },
   "projects": {
-    "/Users/mac/Documents/Aero/SentriX/src/Modules/Auth/Auth.Application/Auth.Application.csproj": {
+    "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Auth/Auth.Application/Auth.Application.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/mac/Documents/Aero/SentriX/src/Modules/Auth/Auth.Application/Auth.Application.csproj",
+        "projectUniqueName": "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Auth/Auth.Application/Auth.Application.csproj",
         "projectName": "Auth.Application",
-        "projectPath": "/Users/mac/Documents/Aero/SentriX/src/Modules/Auth/Auth.Application/Auth.Application.csproj",
-        "packagesPath": "/Users/mac/.nuget/packages/",
-        "outputPath": "/Users/mac/Documents/Aero/SentriX/src/Modules/Auth/Auth.Application/obj/",
+        "projectPath": "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Auth/Auth.Application/Auth.Application.csproj",
+        "packagesPath": "/Users/far-izlengha/.nuget/packages/",
+        "outputPath": "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Auth/Auth.Application/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/mac/.nuget/NuGet/NuGet.Config"
+          "/Users/far-izlengha/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
         ],
         "sources": {
+          "/usr/local/share/dotnet/library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net10.0": {
-            "framework": "net10.0",
             "targetAlias": "net10.0",
             "projectReferences": {
-              "/Users/mac/Documents/Aero/SentriX/src/Modules/Auth/Auth.Domain/Auth.Domain.csproj": {
-                "projectPath": "/Users/mac/Documents/Aero/SentriX/src/Modules/Auth/Auth.Domain/Auth.Domain.csproj"
+              "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Auth/Auth.Domain/Auth.Domain.csproj": {
+                "projectPath": "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Auth/Auth.Domain/Auth.Domain.csproj"
               },
-              "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Auth.Contract/Auth.Contract.csproj": {
-                "projectPath": "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Auth.Contract/Auth.Contract.csproj"
+              "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Contracts/Auth.Contract/Auth.Contract.csproj": {
+                "projectPath": "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Contracts/Auth.Contract/Auth.Contract.csproj"
               },
-              "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Cache.Contract/Cache.Contract.csproj": {
-                "projectPath": "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Cache.Contract/Cache.Contract.csproj"
+              "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Contracts/Cache.Contract/Cache.Contract.csproj": {
+                "projectPath": "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Contracts/Cache.Contract/Cache.Contract.csproj"
               },
-              "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Core.Contract/Core.Contract.csproj": {
-                "projectPath": "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Core.Contract/Core.Contract.csproj"
+              "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Contracts/Core.Contract/Core.Contract.csproj": {
+                "projectPath": "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Contracts/Core.Contract/Core.Contract.csproj"
               },
-              "/Users/mac/Documents/Aero/SentriX/src/SharedKernel/SharedKernel.csproj": {
-                "projectPath": "/Users/mac/Documents/Aero/SentriX/src/SharedKernel/SharedKernel.csproj"
+              "/Users/far-izlengha/Documents/Project/SentriX/src/SharedKernel/SharedKernel.csproj": {
+                "projectPath": "/Users/far-izlengha/Documents/Project/SentriX/src/SharedKernel/SharedKernel.csproj"
               }
             }
           }
@@ -55,11 +55,10 @@
           "auditLevel": "low",
           "auditMode": "all"
         },
-        "SdkAnalysisLevel": "10.0.300"
+        "SdkAnalysisLevel": "10.0.100"
       },
       "frameworks": {
         "net10.0": {
-          "framework": "net10.0",
           "targetAlias": "net10.0",
           "dependencies": {
             "Microsoft.IdentityModel.Tokens": {
@@ -87,7 +86,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.300/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.101/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",
@@ -365,27 +364,27 @@
         }
       }
     },
-    "/Users/mac/Documents/Aero/SentriX/src/Modules/Auth/Auth.Domain/Auth.Domain.csproj": {
+    "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Auth/Auth.Domain/Auth.Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/mac/Documents/Aero/SentriX/src/Modules/Auth/Auth.Domain/Auth.Domain.csproj",
+        "projectUniqueName": "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Auth/Auth.Domain/Auth.Domain.csproj",
         "projectName": "Auth.Domain",
-        "projectPath": "/Users/mac/Documents/Aero/SentriX/src/Modules/Auth/Auth.Domain/Auth.Domain.csproj",
-        "packagesPath": "/Users/mac/.nuget/packages/",
-        "outputPath": "/Users/mac/Documents/Aero/SentriX/src/Modules/Auth/Auth.Domain/obj/",
+        "projectPath": "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Auth/Auth.Domain/Auth.Domain.csproj",
+        "packagesPath": "/Users/far-izlengha/.nuget/packages/",
+        "outputPath": "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Auth/Auth.Domain/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/mac/.nuget/NuGet/NuGet.Config"
+          "/Users/far-izlengha/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
         ],
         "sources": {
+          "/usr/local/share/dotnet/library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net10.0": {
-            "framework": "net10.0",
             "targetAlias": "net10.0",
             "projectReferences": {}
           }
@@ -400,11 +399,10 @@
           "auditLevel": "low",
           "auditMode": "all"
         },
-        "SdkAnalysisLevel": "10.0.300"
+        "SdkAnalysisLevel": "10.0.100"
       },
       "frameworks": {
         "net10.0": {
-          "framework": "net10.0",
           "targetAlias": "net10.0",
           "imports": [
             "net461",
@@ -422,7 +420,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.300/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.101/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",
@@ -700,34 +698,34 @@
         }
       }
     },
-    "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Auth.Contract/Auth.Contract.csproj": {
+    "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Contracts/Auth.Contract/Auth.Contract.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Auth.Contract/Auth.Contract.csproj",
+        "projectUniqueName": "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Contracts/Auth.Contract/Auth.Contract.csproj",
         "projectName": "Auth.Contract",
-        "projectPath": "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Auth.Contract/Auth.Contract.csproj",
-        "packagesPath": "/Users/mac/.nuget/packages/",
-        "outputPath": "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Auth.Contract/obj/",
+        "projectPath": "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Contracts/Auth.Contract/Auth.Contract.csproj",
+        "packagesPath": "/Users/far-izlengha/.nuget/packages/",
+        "outputPath": "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Contracts/Auth.Contract/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/mac/.nuget/NuGet/NuGet.Config"
+          "/Users/far-izlengha/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
         ],
         "sources": {
+          "/usr/local/share/dotnet/library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net10.0": {
-            "framework": "net10.0",
             "targetAlias": "net10.0",
             "projectReferences": {
-              "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Core.Contract/Core.Contract.csproj": {
-                "projectPath": "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Core.Contract/Core.Contract.csproj"
+              "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Contracts/Core.Contract/Core.Contract.csproj": {
+                "projectPath": "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Contracts/Core.Contract/Core.Contract.csproj"
               },
-              "/Users/mac/Documents/Aero/SentriX/src/SharedKernel/SharedKernel.csproj": {
-                "projectPath": "/Users/mac/Documents/Aero/SentriX/src/SharedKernel/SharedKernel.csproj"
+              "/Users/far-izlengha/Documents/Project/SentriX/src/SharedKernel/SharedKernel.csproj": {
+                "projectPath": "/Users/far-izlengha/Documents/Project/SentriX/src/SharedKernel/SharedKernel.csproj"
               }
             }
           }
@@ -742,11 +740,10 @@
           "auditLevel": "low",
           "auditMode": "all"
         },
-        "SdkAnalysisLevel": "10.0.300"
+        "SdkAnalysisLevel": "10.0.100"
       },
       "frameworks": {
         "net10.0": {
-          "framework": "net10.0",
           "targetAlias": "net10.0",
           "imports": [
             "net461",
@@ -764,7 +761,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.300/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.101/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",
@@ -1042,27 +1039,27 @@
         }
       }
     },
-    "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Cache.Contract/Cache.Contract.csproj": {
+    "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Contracts/Cache.Contract/Cache.Contract.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Cache.Contract/Cache.Contract.csproj",
+        "projectUniqueName": "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Contracts/Cache.Contract/Cache.Contract.csproj",
         "projectName": "Cache.Contract",
-        "projectPath": "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Cache.Contract/Cache.Contract.csproj",
-        "packagesPath": "/Users/mac/.nuget/packages/",
-        "outputPath": "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Cache.Contract/obj/",
+        "projectPath": "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Contracts/Cache.Contract/Cache.Contract.csproj",
+        "packagesPath": "/Users/far-izlengha/.nuget/packages/",
+        "outputPath": "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Contracts/Cache.Contract/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/mac/.nuget/NuGet/NuGet.Config"
+          "/Users/far-izlengha/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
         ],
         "sources": {
+          "/usr/local/share/dotnet/library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net10.0": {
-            "framework": "net10.0",
             "targetAlias": "net10.0",
             "projectReferences": {}
           }
@@ -1077,11 +1074,10 @@
           "auditLevel": "low",
           "auditMode": "all"
         },
-        "SdkAnalysisLevel": "10.0.300"
+        "SdkAnalysisLevel": "10.0.100"
       },
       "frameworks": {
         "net10.0": {
-          "framework": "net10.0",
           "targetAlias": "net10.0",
           "imports": [
             "net461",
@@ -1099,7 +1095,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.300/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.101/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",
@@ -1377,31 +1373,31 @@
         }
       }
     },
-    "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Core.Contract/Core.Contract.csproj": {
+    "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Contracts/Core.Contract/Core.Contract.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Core.Contract/Core.Contract.csproj",
+        "projectUniqueName": "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Contracts/Core.Contract/Core.Contract.csproj",
         "projectName": "Core.Contract",
-        "projectPath": "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Core.Contract/Core.Contract.csproj",
-        "packagesPath": "/Users/mac/.nuget/packages/",
-        "outputPath": "/Users/mac/Documents/Aero/SentriX/src/Modules/Contracts/Core.Contract/obj/",
+        "projectPath": "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Contracts/Core.Contract/Core.Contract.csproj",
+        "packagesPath": "/Users/far-izlengha/.nuget/packages/",
+        "outputPath": "/Users/far-izlengha/Documents/Project/SentriX/src/Modules/Contracts/Core.Contract/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/mac/.nuget/NuGet/NuGet.Config"
+          "/Users/far-izlengha/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
         ],
         "sources": {
+          "/usr/local/share/dotnet/library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net10.0": {
-            "framework": "net10.0",
             "targetAlias": "net10.0",
             "projectReferences": {
-              "/Users/mac/Documents/Aero/SentriX/src/SharedKernel/SharedKernel.csproj": {
-                "projectPath": "/Users/mac/Documents/Aero/SentriX/src/SharedKernel/SharedKernel.csproj"
+              "/Users/far-izlengha/Documents/Project/SentriX/src/SharedKernel/SharedKernel.csproj": {
+                "projectPath": "/Users/far-izlengha/Documents/Project/SentriX/src/SharedKernel/SharedKernel.csproj"
               }
             }
           }
@@ -1416,11 +1412,10 @@
           "auditLevel": "low",
           "auditMode": "all"
         },
-        "SdkAnalysisLevel": "10.0.300"
+        "SdkAnalysisLevel": "10.0.100"
       },
       "frameworks": {
         "net10.0": {
-          "framework": "net10.0",
           "targetAlias": "net10.0",
           "imports": [
             "net461",
@@ -1438,7 +1433,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.300/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.101/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",
@@ -1716,27 +1711,27 @@
         }
       }
     },
-    "/Users/mac/Documents/Aero/SentriX/src/SharedKernel/SharedKernel.csproj": {
+    "/Users/far-izlengha/Documents/Project/SentriX/src/SharedKernel/SharedKernel.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/mac/Documents/Aero/SentriX/src/SharedKernel/SharedKernel.csproj",
+        "projectUniqueName": "/Users/far-izlengha/Documents/Project/SentriX/src/SharedKernel/SharedKernel.csproj",
         "projectName": "SharedKernel",
-        "projectPath": "/Users/mac/Documents/Aero/SentriX/src/SharedKernel/SharedKernel.csproj",
-        "packagesPath": "/Users/mac/.nuget/packages/",
-        "outputPath": "/Users/mac/Documents/Aero/SentriX/src/SharedKernel/obj/",
+        "projectPath": "/Users/far-izlengha/Documents/Project/SentriX/src/SharedKernel/SharedKernel.csproj",
+        "packagesPath": "/Users/far-izlengha/.nuget/packages/",
+        "outputPath": "/Users/far-izlengha/Documents/Project/SentriX/src/SharedKernel/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/mac/.nuget/NuGet/NuGet.Config"
+          "/Users/far-izlengha/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
         ],
         "sources": {
+          "/usr/local/share/dotnet/library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net10.0": {
-            "framework": "net10.0",
             "targetAlias": "net10.0",
             "projectReferences": {}
           }
@@ -1751,11 +1746,10 @@
           "auditLevel": "low",
           "auditMode": "all"
         },
-        "SdkAnalysisLevel": "10.0.300"
+        "SdkAnalysisLevel": "10.0.100"
       },
       "frameworks": {
         "net10.0": {
-          "framework": "net10.0",
           "targetAlias": "net10.0",
           "dependencies": {
             "Npgsql.EntityFrameworkCore.PostgreSQL": {
@@ -1795,7 +1789,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.300/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.101/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",

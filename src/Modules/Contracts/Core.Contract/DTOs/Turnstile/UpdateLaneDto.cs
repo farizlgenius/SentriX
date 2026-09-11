@@ -3,7 +3,9 @@ using Core.Contract.DTOs.Door;
 namespace Core.Contract.DTOs.Turnstile;
 
 public sealed record UpdateLaneDto(
+      Guid Guid,
       int LaneNo,
-      List<UpdateDoorDto> Doors,
+      List<ReaderDto> Readers,
+      SensorDto Sensor,
       Guid LocationGuid
 );

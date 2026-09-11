@@ -139,6 +139,14 @@ public sealed class DeviceModuleRepository(CoreDbContext context) : IDeviceModul
             return res;
       }
 
+      public async Task<Dictionary<Guid, int>> GetDeviceModuleIdsMapGuidsByGuidsAsync(IEnumerable<Guid> guids, CancellationToken ct = default)
+      {
+            return await context.DeviceModules
+                  .AsNoTracking()
+                  .Where(x => guids.Contains(x.guid))
+                  .ToDictionaryAsync(x => x.guid, x => x.id, ct);
+      }
+
       public async Task<int> GetIdByGuidAsync(Guid guid, CancellationToken ct = default)
       {
             var res = await context.DeviceModules

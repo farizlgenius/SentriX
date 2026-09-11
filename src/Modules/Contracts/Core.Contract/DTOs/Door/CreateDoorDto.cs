@@ -12,6 +12,5 @@ public sealed record CreateDoorDto(
   RexDto? Rex,
   SensorDto Sensor,
   RelayDto Relay,
-  Guid DeviceModuleGuid,
   Guid LocationGuid
 );

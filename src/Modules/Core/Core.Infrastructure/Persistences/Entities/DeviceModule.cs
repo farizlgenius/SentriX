@@ -25,7 +25,11 @@ public sealed class DeviceModule : BaseEntity
   public int location_id { get; set; } = default!;
   public Location location { get; set; } = default!;
 
-  public ICollection<Door> doors { get; set; } = default!;
+  public ICollection<Reader> readers { get; set; } = default!;
+  public ICollection<Sensor> sensors { get; set; } = default!;
+  public ICollection<Relay> relays { get; set; } = default!;
+  public ICollection<Rex> rexes { get; set; } = default!;
+  public ICollection<Buzzer> buzzers { get; set; } = default!;
 
   public DeviceModule() { }
   public DeviceModule(Core.Domain.Entities.DeviceModule d) : base(d.Guid)

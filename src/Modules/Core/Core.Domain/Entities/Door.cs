@@ -14,7 +14,6 @@ public sealed class Door : BaseDomain
   public Relay? Relay { get; private set; }
   public Buzzer? Buzzer { get; private set; }
   public Rex? Rex { get; private set; }
-  public int DeviceModuleId { get; private set; }
   public int LocationId { get; private set; }
   public Door(
     string name,
@@ -26,7 +25,6 @@ public sealed class Door : BaseDomain
     Relay? relay,
     Buzzer? buzzer,
     Rex? rex,
-    int deviceModuleId,
     int locationId
   ) : base(Guid.NewGuid())
   {
@@ -39,7 +37,6 @@ public sealed class Door : BaseDomain
     Relay = relay;
     Buzzer = buzzer;
     Rex = rex;
-    DeviceModuleId = deviceModuleId;
     LocationId = locationId;
   }
   public Door(
@@ -53,7 +50,6 @@ public sealed class Door : BaseDomain
     Relay? relay,
     Buzzer? buzzer,
     Rex? rex,
-    int deviceModuleId,
     int locationId
   ) : base(guid)
   {
@@ -69,7 +65,6 @@ public sealed class Door : BaseDomain
     Relay = relay;
     Buzzer = buzzer;
     Rex = rex;
-    DeviceModuleId = deviceModuleId;
     LocationId = locationId;
   }
 }

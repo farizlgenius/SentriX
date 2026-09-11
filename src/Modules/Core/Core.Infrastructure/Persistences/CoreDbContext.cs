@@ -329,7 +329,6 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                         {
                               x.guid,
                               x.id,
-                              x.device_module_id
                         }
                   ).IsUnique();
 
@@ -339,7 +338,8 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                         {
                               x.guid,
                               x.id,
-                              x.door_id
+                              x.door_id,
+                              x.device_module_id
                         }
                   ).IsUnique();
 
@@ -349,7 +349,8 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                         {
                               x.guid,
                               x.id,
-                              x.door_id
+                              x.door_id,
+                              x.device_module_id
                         }
                   ).IsUnique();
 
@@ -359,7 +360,8 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                         {
                               x.guid,
                               x.id,
-                              x.door_id
+                              x.door_id,
+                              x.device_module_id
                         }
                   ).IsUnique();
 
@@ -369,7 +371,8 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                         {
                               x.guid,
                               x.id,
-                              x.door_id
+                              x.door_id,
+                              x.device_module_id
                         }
                   ).IsUnique();
 
@@ -379,7 +382,8 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                         {
                               x.guid,
                               x.id,
-                              x.door_id
+                              x.door_id,
+                              x.device_module_id
                         }
                   ).IsUnique();
 
@@ -502,7 +506,31 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
 
             // Device Module
             modelBuilder.Entity<DeviceModule>()
-                  .HasMany(x => x.doors)
+                  .HasMany(x => x.readers)
+                  .WithOne(x => x.device_module)
+                  .HasForeignKey(x => x.device_module_id)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<DeviceModule>()
+                  .HasMany(x => x.sensors)
+                  .WithOne(x => x.device_module)
+                  .HasForeignKey(x => x.device_module_id)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<DeviceModule>()
+                  .HasMany(x => x.relays)
+                  .WithOne(x => x.device_module)
+                  .HasForeignKey(x => x.device_module_id)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<DeviceModule>()
+                  .HasMany(x => x.rexes)
+                  .WithOne(x => x.device_module)
+                  .HasForeignKey(x => x.device_module_id)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<DeviceModule>()
+                  .HasMany(x => x.buzzers)
                   .WithOne(x => x.device_module)
                   .HasForeignKey(x => x.device_module_id)
                   .OnDelete(DeleteBehavior.Cascade);
@@ -685,10 +713,16 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Lane>()
-                  .HasMany(x => x.doors)
+                  .HasMany(x => x.readers)
                   .WithOne(x => x.lane)
                   .HasForeignKey(x => x.lane_id)
-                  .OnDelete(DeleteBehavior.SetNull);
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Lane>()
+                  .HasOne(x => x.sensor)
+                  .WithOne(x => x.lane)
+                  .HasForeignKey<Lane>(x => x.sensor_id)
+                  .OnDelete(DeleteBehavior.Cascade);
 
             // Group
             modelBuilder.Entity<Group>()

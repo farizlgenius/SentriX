@@ -13,6 +13,8 @@ public sealed class Buzzer : BaseEntity
   // Relation
   public int door_id { get; set; }
   public Door door { get; set; } = default!;
+  public int device_module_id { get; set; }
+  public DeviceModule device_module { get; set; } = default!;
   public Buzzer() { }
   public Buzzer(
   Domain.Entities.Buzzer d
@@ -22,5 +24,6 @@ public sealed class Buzzer : BaseEntity
     metadata = d.Metadata;
     vendor = d.Vendor;
     mode = d.OutputMode;
+    device_module_id = d.DeviceModuleId;
   }
 }

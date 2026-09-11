@@ -13,6 +13,8 @@ public sealed class Relay : BaseEntity
   // Relation
   public int door_id { get; set; }
   public Door door { get; set; } = default!;
+  public int device_module_id { get; set; }
+  public DeviceModule device_module { get; set; } = default!;
   public Relay() { }
   public Relay(
   Domain.Entities.Relay d
@@ -22,5 +24,6 @@ public sealed class Relay : BaseEntity
     metadata = d.Metadata;
     vendor = d.Vendor;
     mode = d.OutputMode;
+    device_module_id = d.DeviceModuleId;
   }
 }

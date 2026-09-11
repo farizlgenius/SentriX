@@ -46,16 +46,18 @@ export const BaseForm: React.FC<PropsWithChildren<FormProp>> = ({
         <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">{desc}</p>
       </div>
 
-      <StepProgress
-        steps={tabContent.map((tab) => ({
-          key: tab.label,
-          title: tab.label,
-          detail: tab.label,
-          icon: tab.icon,
-        }))}
-        activeIndex={currentStepIndex}
-        onStepClick={goToStep}
-      />
+      {tabContent.length == 0 && (
+        <StepProgress
+          steps={tabContent.map((tab) => ({
+            key: tab.label,
+            title: tab.label,
+            detail: tab.label,
+            icon: tab.icon,
+          }))}
+          activeIndex={currentStepIndex}
+          onStepClick={goToStep}
+        />
+      )}
 
       <div className="pt-6 dark:border-gray-800">
         {tabContent.map((a: FormContent, i: number) => {
