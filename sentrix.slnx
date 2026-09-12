@@ -27,6 +27,11 @@
 <Folder Name="/src/Modules/">
 <Project Path="src/Modules/Storage/Storage.csproj" />
 </Folder>
+<Folder Name="/src/Modules/Adapters/Aero/">
+<Project Path="src/Modules/Adapters/Aero/Aero.Application/Aero.Application.csproj" />
+<Project Path="src/Modules/Adapters/Aero/Aero.Domain/Aero.Domain.csproj" />
+<Project Path="src/Modules/Adapters/Aero/Aero.Infrastructure/Aero.Infrastructure.csproj" />
+</Folder>
 <Folder Name="/src/Modules/Auth/">
 <Project Path="src/Modules/Auth/Auth.Application/Auth.Application.csproj" />
 
@@ -42,6 +47,7 @@
 <Folder Name="/src/Modules/Contracts/">
 <Project Path="src/Modules/Contracts/Core.Contract/Core.Contract.csproj" />
 <Project Path="src/Modules/Contracts/Notifier.Contract/Notifier.Contract.csproj" />
+<Project Path="src/Modules/Contracts/Adapter.Contract/Adapter.Contract.csproj" />
 <Project Path="src/Modules/Contracts/Auth.Contract/Auth.Contract.csproj" />
 <Project Path="src/Modules/Contracts/Cache.Contract/Cache.Contract.csproj" />
 <Project Path="src/Modules/Contracts/Adapter.Abstraction/Adapter.Abstraction.csproj" />
@@ -58,6 +64,5 @@
 
 <Project Path="src/Modules/Adapters/Adapter.Aero/Adapter.Aero.csproj" />
 <Project Path="src/Modules/Adapters/Adapter.Amico/Adapter.Amico.csproj" />
-<Project Path="src/Modules/Adapters/Adapter.Core/Adapter.Core.csproj" />
 </Folder>
 </Solution>

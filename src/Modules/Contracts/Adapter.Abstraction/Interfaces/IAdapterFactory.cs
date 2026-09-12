@@ -1,8 +1,9 @@
 using System;
+using SharedKernel.Enums;
 
 namespace Adapter.Abstraction.Interfaces;
 
 public interface IAdapterFactory
 {
-      IAdapter GetAdapter(string vendor);
+      IAdapter GetAdapter(Vendor vendor);
 }

@@ -1,12 +1,11 @@
 
 using System.Net;
 using System.Text;
-using Adapter.Abstraction;
+using Adapter.Contract.Interfaces;
 using Adapter.Aero;
 using Adapter.Aero.Interfaces;
 using Adapter.Aero.Listener;
 using Adapter.Amico;
-using Adapter.Core;
 using AeroAdapter.Application.Interfaces;
 using Auth.Infrastructure;
 using Cache.Infrastructure;
@@ -29,6 +28,7 @@ using SharedKernel.Domain;
 using SharedKernel.Helpers;
 using SharedKernel.Model;
 using Storage;
+using Adapter.Contract;
 
 
 namespace Host;
@@ -70,14 +70,17 @@ public class Program
         builder.Services.AddHost(builder.Configuration);
         builder.Services.AddAuth(builder.Configuration);
         builder.Services.AddCache(builder.Configuration);
-        // builder.Services.AddAero(builder.Configuration);
+        builder.Services.AddAero(builder.Configuration);
         // builder.Services.AddAmico(builder.Configuration);
         builder.Services.AddShared(builder.Configuration);
         builder.Services.AddNotifyModule(builder.Configuration);
         builder.Services.AddStorage(builder.Configuration);
         builder.Services.AddSetting(builder.Configuration);
         builder.Services.AddCore(builder.Configuration);
-        builder.Services.AddAdapter(builder.Configuration);
+
+        // Adapter
+        builder.Services.AddScoped<IAdapterFactory,AdaptorFactory>();
+
 
         // Startup Task
         builder.Services.AddHostedService<StartupTask>();
@@ -323,13 +326,13 @@ public class Program
         // });
 
 
-        //         app.Lifetime.ApplicationStopping.Register(async () =>
-        //         {
+                // app.Lifetime.ApplicationStopping.Register(async () =>
+                // {
 
-        //             readDriver.SetShutDownFlag();
-        //             readDriver.TurnOffDebug();
+                //     readDriver.SetShutDownFlag();
+                //     readDriver.TurnOffDebug();
 
-        //         });
+                // });
 
 
 

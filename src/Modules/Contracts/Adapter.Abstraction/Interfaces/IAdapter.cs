@@ -1,10 +1,12 @@
 using System;
+using SharedKernel.Enums;
+
 
 namespace Adapter.Abstraction.Interfaces;
 
 public interface IAdapter
 {
-      string Vendor {get;}
+      Vendor Vendor {get;}
       IDeviceAdapter Device {get;}
       IInputAdapter Monitor {get;}
       IOutputAdapter Control {get;}

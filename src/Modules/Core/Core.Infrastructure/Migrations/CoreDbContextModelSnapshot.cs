@@ -75,7 +75,7 @@ namespace Core.Infrastructure.Migrations
 
                     b.HasIndex("device_module_id");
 
-                    b.HasIndex("guid", "id", "door_id", "device_module_id")
+                    b.HasIndex("guid", "id", "door_id", "device_module_id", "slot_no")
                         .IsUnique();
 
                     b.ToTable("Buzzers", "core");
@@ -232,9 +232,8 @@ namespace Core.Infrastructure.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
 
-                    b.Property<string>("vendor")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<int>("vendor")
+                        .HasColumnType("integer");
 
                     b.HasKey("id");
 
@@ -4043,6 +4042,72 @@ namespace Core.Infrastructure.Migrations
                         });
                 });
 
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Output", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<DateTime>("created_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.Property<int>("device_module_id")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid>("guid")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<bool>("is_active")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("is_default")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("location_id")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("metadata")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("mode")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("slot_no")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("updated_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.Property<string>("vendor")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("device_module_id");
+
+                    b.HasIndex("location_id");
+
+                    b.HasIndex("guid", "id", "device_module_id", "slot_no")
+                        .IsUnique();
+
+                    b.ToTable("Outputs", "core");
+                });
+
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Pin", b =>
                 {
                     b.Property<int>("id")
@@ -4246,7 +4311,7 @@ namespace Core.Infrastructure.Migrations
 
                     b.HasIndex("lane_id");
 
-                    b.HasIndex("guid", "id", "door_id", "device_module_id")
+                    b.HasIndex("guid", "id", "door_id", "device_module_id", "slot_no")
                         .IsUnique();
 
                     b.ToTable("Readers", "core");
@@ -4306,7 +4371,7 @@ namespace Core.Infrastructure.Migrations
 
                     b.HasIndex("device_module_id");
 
-                    b.HasIndex("guid", "id", "door_id", "device_module_id")
+                    b.HasIndex("guid", "id", "door_id", "device_module_id", "slot_no")
                         .IsUnique();
 
                     b.ToTable("Relays", "core");
@@ -4366,7 +4431,7 @@ namespace Core.Infrastructure.Migrations
 
                     b.HasIndex("device_module_id");
 
-                    b.HasIndex("guid", "id", "door_id", "device_module_id")
+                    b.HasIndex("guid", "id", "door_id", "device_module_id", "slot_no")
                         .IsUnique();
 
                     b.ToTable("Rexes", "core");
@@ -4487,7 +4552,7 @@ namespace Core.Infrastructure.Migrations
 
                     b.HasIndex("device_module_id");
 
-                    b.HasIndex("guid", "id", "door_id", "device_module_id")
+                    b.HasIndex("guid", "id", "door_id", "device_module_id", "slot_no")
                         .IsUnique();
 
                     b.ToTable("Sensors", "core");
@@ -4587,9 +4652,6 @@ namespace Core.Infrastructure.Migrations
                     b.Property<int>("location_id")
                         .HasColumnType("integer");
 
-                    b.Property<int>("locationid")
-                        .HasColumnType("integer");
-
                     b.Property<string>("name")
                         .IsRequired()
                         .HasColumnType("text");
@@ -4601,7 +4663,7 @@ namespace Core.Infrastructure.Migrations
 
                     b.HasKey("id");
 
-                    b.HasIndex("locationid");
+                    b.HasIndex("location_id");
 
                     b.ToTable("Turnstiles", "core");
                 });
@@ -5194,6 +5256,25 @@ namespace Core.Infrastructure.Migrations
                     b.Navigation("operator");
                 });
 
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Output", b =>
+                {
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.DeviceModule", "device_module")
+                        .WithMany("outputs")
+                        .HasForeignKey("device_module_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.Location", "location")
+                        .WithMany("outputs")
+                        .HasForeignKey("location_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("device_module");
+
+                    b.Navigation("location");
+                });
+
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Position", b =>
                 {
                     b.HasOne("Core.Infrastructure.Persistences.Entities.Department", "department")
@@ -5303,8 +5384,8 @@ namespace Core.Infrastructure.Migrations
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Turnstile", b =>
                 {
                     b.HasOne("Core.Infrastructure.Persistences.Entities.Location", "location")
-                        .WithMany()
-                        .HasForeignKey("locationid")
+                        .WithMany("turnstiles")
+                        .HasForeignKey("location_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -5463,6 +5544,8 @@ namespace Core.Infrastructure.Migrations
                 {
                     b.Navigation("buzzers");
 
+                    b.Navigation("outputs");
+
                     b.Navigation("readers");
 
                     b.Navigation("relays");
@@ -5533,9 +5616,13 @@ namespace Core.Infrastructure.Migrations
 
                     b.Navigation("operator_locations");
 
+                    b.Navigation("outputs");
+
                     b.Navigation("roles");
 
                     b.Navigation("timezones");
+
+                    b.Navigation("turnstiles");
 
                     b.Navigation("user_locations");
 

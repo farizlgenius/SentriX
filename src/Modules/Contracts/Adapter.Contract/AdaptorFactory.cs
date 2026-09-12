@@ -1,19 +1,16 @@
-using System;
-using Adapter.Abstraction.Interfaces;
+using Adapter.Contract.Interfaces;
+using SharedKernel.Enums;
 
+namespace Adapter.Contract;
 
-namespace Adapter.Core;
-
-public sealed class AdapterFactory : IAdapterFactory
+public sealed class AdaptorFactory : IAdapterFactory
 {
       private readonly IEnumerable<IAdapter> _adapters;
-
-      public AdapterFactory(IEnumerable<IAdapter> adapters)
+      public AdaptorFactory(IEnumerable<IAdapter> adapters)
       {
             _adapters = adapters;
       }
-
-      public IAdapter GetAdapter(string vendor)
+      public IAdapter GetAdapter(Vendor vendor)
       {
             Console.WriteLine($"Requested vendor: '{vendor}'");
 
@@ -23,8 +20,7 @@ public sealed class AdapterFactory : IAdapterFactory
                         $"Adapter: {a.GetType().Name}, Vendor: '{a.Vendor}', Match: {a.Vendor.Equals(vendor)}");
             }
 
-            var adapter = _adapters.FirstOrDefault(a =>
-                  a.Vendor.Equals(vendor, StringComparison.OrdinalIgnoreCase));
+            var adapter = _adapters.FirstOrDefault(a => a.Vendor == vendor);
 
             if (adapter == null)
                   throw new Exception($"Adapter for '{vendor}' not found");
