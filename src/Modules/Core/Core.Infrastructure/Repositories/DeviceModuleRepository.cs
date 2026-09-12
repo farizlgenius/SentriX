@@ -125,6 +125,32 @@ public sealed class DeviceModuleRepository(CoreDbContext context) : IDeviceModul
                   )).ToArrayAsync(ct);
       }
 
+      public async Task<IEnumerable<DeviceModuleDto>> GetByVendorAndLocationAsync(int locationId, SharedKernel.Enums.Vendor vedor, CancellationToken ct = default)
+      {
+            return await context.DeviceModules
+                  .AsNoTracking()
+                  .Where(x => x.device.vendor == vedor && x.location_id == locationId)
+                  .Select(x => new DeviceModuleDto(
+                        x.guid,
+                        x.name,
+                        x.serial_number,
+                        x.firmware,
+                        x.mac,
+                        x.port,
+                        x.address,
+                        x.model,
+                        x.reader_slot,
+                        x.output_slot,
+                        x.input_slot,
+                        x.device.guid,
+                        x.device.name,
+                        x.location.guid,
+                        x.location.name,
+                        x.is_active,
+                        x.is_default
+                  )).ToArrayAsync();
+      }
+
       public async Task<int> GetDeviceModuleIdByGuidAsync(Guid guid, CancellationToken ct = default)
       {
             var res = await context.DeviceModules

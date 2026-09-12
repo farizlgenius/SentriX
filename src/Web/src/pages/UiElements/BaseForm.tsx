@@ -1,8 +1,9 @@
-import React, { PropsWithChildren, useState } from "react";
+import React, { JSX, PropsWithChildren, useState } from "react";
 import { FormContent } from "../../model/Form/FormContent";
 import StepProgress from "../../components/form/StepProgress";
 import Button from "../../components/ui/button/Button";
 import { FormType } from "../../model/Form/FormProp";
+import { FormSection } from "../../components/form/template/FormTemplate";
 
 interface FormProp {
   tabContent: FormContent[];
@@ -10,6 +11,7 @@ interface FormProp {
   desc?: string;
   type: FormType;
   handleClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+  layout?: JSX.Element | undefined;
 }
 
 export const BaseForm: React.FC<PropsWithChildren<FormProp>> = ({
@@ -18,6 +20,7 @@ export const BaseForm: React.FC<PropsWithChildren<FormProp>> = ({
   handleClick,
   header = "",
   desc = "",
+  layout = undefined,
 }) => {
   const [activeTab, setActiveTab] = useState<string>(tabContent[0].label);
   const currentStepIndex = Math.max(
@@ -46,7 +49,7 @@ export const BaseForm: React.FC<PropsWithChildren<FormProp>> = ({
         <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">{desc}</p>
       </div>
 
-      {tabContent.length == 0 && (
+      {tabContent.length != 0 && (
         <StepProgress
           steps={tabContent.map((tab) => ({
             key: tab.label,
@@ -58,67 +61,83 @@ export const BaseForm: React.FC<PropsWithChildren<FormProp>> = ({
           onStepClick={goToStep}
         />
       )}
+      <div className={layout ? "grid grid-cols-5 gap-5" : ""}>
+        {layout && (
+          <FormSection
+            overall="Door layout detail"
+            title="Door Component"
+            description="Diagram for show dooe component selected each component to setting."
+            className="col-span-3"
+          >
+            {layout}
+          </FormSection>
+        )}
 
-      <div className="pt-6 dark:border-gray-800">
         {tabContent.map((a: FormContent, i: number) => {
           return (
-            <div key={i}>
+            <>
               {activeTab == a.label && (
-                <div className="text-sm text-gray-500 dark:text-gray-400">
-                  {/* <h3 className="mb-1 text-xl font-medium text-gray-800 dark:text-white/90">
-                    {a.label}
-                  </h3> */}
-                  {a.content}
-                </div>
+                <FormSection
+                  overall={a.label}
+                  title={a.title}
+                  description={a.description}
+                  key={i}
+                  className="col-span-2 flex flex-col"
+                >
+                  <div className="flex flex-col h-full justify-between">
+                    <div className="text-sm text-gray-500 dark:text-gray-400">
+                      {a.content}
+                    </div>
+                    <div className="mt-6 flex w-full items-center justify-between gap-3">
+                      <div>
+                        {!isFirstStep && (
+                          <Button
+                            variant="outline"
+                            onClick={() => goToStep(currentStepIndex - 1)}
+                            className="min-w-[120px]"
+                            size="sm"
+                          >
+                            Back
+                          </Button>
+                        )}
+                      </div>
+                      <div className="flex gap-3">
+                        <Button
+                          variant="danger"
+                          onClickWithEvent={handleClick}
+                          name="close"
+                          className="min-w-[120px]"
+                          size="sm"
+                        >
+                          Cancel
+                        </Button>
+                        {isLastStep ? (
+                          <Button
+                            disabled={type == FormType.INFO}
+                            onClickWithEvent={handleClick}
+                            name={type == FormType.UPDATE ? "update" : "create"}
+                            className="min-w-[120px]"
+                            size="sm"
+                          >
+                            {type == FormType.UPDATE ? "Update" : "Create"}
+                          </Button>
+                        ) : (
+                          <Button
+                            onClick={() => goToStep(currentStepIndex + 1)}
+                            className="min-w-[120px]"
+                            size="sm"
+                          >
+                            Next
+                          </Button>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </FormSection>
               )}
-            </div>
+            </>
           );
         })}
-
-        <div className="mt-6 flex w-full items-center justify-between gap-3">
-          <div>
-            {!isFirstStep && (
-              <Button
-                variant="outline"
-                onClick={() => goToStep(currentStepIndex - 1)}
-                className="min-w-[120px]"
-                size="sm"
-              >
-                Back
-              </Button>
-            )}
-          </div>
-          <div className="flex gap-3">
-            <Button
-              variant="danger"
-              onClickWithEvent={handleClick}
-              name="close"
-              className="min-w-[120px]"
-              size="sm"
-            >
-              Cancel
-            </Button>
-            {isLastStep ? (
-              <Button
-                disabled={type == FormType.INFO}
-                onClickWithEvent={handleClick}
-                name={type == FormType.UPDATE ? "update" : "create"}
-                className="min-w-[120px]"
-                size="sm"
-              >
-                {type == FormType.UPDATE ? "Update" : "Create"}
-              </Button>
-            ) : (
-              <Button
-                onClick={() => goToStep(currentStepIndex + 1)}
-                className="min-w-[120px]"
-                size="sm"
-              >
-                Next
-              </Button>
-            )}
-          </div>
-        </div>
       </div>
     </div>
   );

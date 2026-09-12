@@ -109,6 +109,10 @@ public static class CoreDependencyInjection
     services.AddScoped<IGroup, GroupService>();
     services.AddScoped<IGroupRepository, GroupRepository>();
 
+    // Module Device
+    services.AddScoped<IDeviceModule, DeviceModuleService>();
+    services.AddScoped<IDeviceModuleRepository, DeviceModuleRepository>();
+
 
     // ==========================
     // Database

@@ -1,4 +1,4 @@
-export enum ReaderType{
-    Wiegand="Wiegand",
-    OSDP="OSDP"
+export enum ReaderType {
+  wiegand,
+  odsp,
 }

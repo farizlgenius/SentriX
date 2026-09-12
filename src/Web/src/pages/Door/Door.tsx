@@ -7,6 +7,7 @@ import {
   DoorInIcon,
   DoorOutIcon,
   LockIcon,
+  ModuleIcon,
   MomentIcon,
   UnlockIcon,
 } from "../../icons";
@@ -30,9 +31,12 @@ import { DoorToast } from "../../model/ToastMessage";
 import { usePagination } from "../../context/PaginationContext";
 import { FormType } from "../../model/Form/FormProp";
 import { usePopup } from "../../context/PopupContext";
-import DoorForm from "./DoorForm";
 import { DoorType } from "../../enum/DoorType";
 import { Vendor } from "../../enum/Vendor";
+import DoorInForm from "./DoorInForm";
+import DoorOutForm from "./DoorOutForm";
+import DoorRexOutForm from "./DoorRexOutForm";
+import DoorGeneralForm from "./DoorGeneratForm";
 
 // ACR Page
 const DOOR_TABLE_HEADER: string[] = [
@@ -331,19 +335,65 @@ const Door = () => {
     },
   ];
 
+  // const content: FormContent[] = [
+  //   {
+  //     label: "Door",
+  //     content: (
+  //       <DoorForm
+  //         handleClick={handleClick}
+  //         dto={doorDto}
+  //         setDto={setDoorDto}
+  //         type={formType}
+  //       />
+  //     ),
+  //     icon: <DoorIcon />,
+  //   },
+  // ];
+
   const content: FormContent[] = [
     {
-      label: "Door",
-      content: (
-        <DoorForm
-          handleClick={handleClick}
-          dto={doorDto}
-          setDto={setDoorDto}
-          type={formType}
-        />
-      ),
+      label: "General",
       icon: <DoorIcon />,
+      content: (
+        <DoorGeneralForm dto={doorDto} setDto={setDoorDto} type={formType} />
+      ),
+      title: "General Information",
+      description: "General door information",
     },
+    {
+      label: "Door In",
+      icon: <DoorIcon />,
+      content: <DoorInForm dto={doorDto} setDto={setDoorDto} type={formType} />,
+    },
+    ...(doorDto.type === DoorType.Dual
+      ? [
+          {
+            label: "Door Out",
+            icon: <DoorIcon />,
+            content: (
+              <DoorOutForm dto={doorDto} setDto={setDoorDto} type={formType} />
+            ),
+          },
+        ]
+      : [
+          {
+            label: "Rex Out",
+            icon: <DoorIcon />,
+            content: (
+              <DoorRexOutForm
+                dto={doorDto}
+                setDto={setDoorDto}
+                type={formType}
+              />
+            ),
+          },
+        ]),
+
+    ...(doorDto.vendor === Vendor.amico
+      ? [
+          /* Add your Amico-specific form object here */
+        ]
+      : []),
   ];
 
   const filterComponet = (data: any, statusDto: StatusDto[]) => {
@@ -383,6 +433,201 @@ const Door = () => {
     ];
   };
 
+  {
+    /* LAY OUT */
+  }
+
+  type DoorComponent =
+    | "readerIn"
+    | "readerOut"
+    | "rex"
+    | "magneticLock"
+    | "buzzer"
+    | "bg"
+    | "sensor";
+
+  // type DoorAccessLayout = "inOut" | "inOnly";
+
+  // const [accessLayout, setAccessLayout] = useState<DoorAccessLayout>(
+  //   doorDto.type === DoorType.Dual ? "inOut" : "inOnly",
+  // );
+
+  // const hasReaderOut = accessLayout === "inOut";
+
+  const [selectedComponent, setSelectedComponent] =
+    useState<DoorComponent>("readerIn");
+
+  const DoorLayout = ({
+    selected,
+    onSelect,
+  }: {
+    selected: DoorComponent;
+    onSelect: (component: DoorComponent) => void;
+  }) => {
+    const device = (
+      id: DoorComponent,
+      x: number,
+      y: number,
+      width: number,
+      height: number,
+    ) => {
+      const active = selected === id;
+      return (
+        <g className="cursor-pointer" onClick={() => onSelect(id)}>
+          <rect
+            x={x}
+            y={y}
+            width={width}
+            height={height}
+            rx="4"
+            fill={active ? "#e0f2fe" : "#72b6dc"}
+            stroke={active ? "#0284c7" : "#4f87a8"}
+            strokeWidth={active ? "2.5" : "1.5"}
+          />
+        </g>
+      );
+    };
+
+    return (
+      <div className="overflow-x-auto rounded-2xl border border-[var(--app-panel-border)] bg-white p-5 dark:bg-gray-100">
+        <svg
+          aria-label="Single ACS door accessory layout"
+          className="mx-auto min-w-[760px]"
+          viewBox="0 0 900 500"
+          role="img"
+        >
+          <text x="28" y="48" fill="#3f3f46" fontSize="20" fontWeight="700">
+            ACS DOOR ACCESSORY
+          </text>
+          <rect
+            x="160"
+            y="150"
+            width="150"
+            height="250"
+            fill="#fff"
+            stroke="#09090b"
+            strokeWidth="2"
+          />
+          <rect
+            x="172"
+            y="162"
+            width="126"
+            height="226"
+            fill="#fff"
+            stroke="#09090b"
+            strokeWidth="1.5"
+          />
+          <circle
+            cx="188"
+            cy="270"
+            r="8"
+            fill="#fff"
+            stroke="#09090b"
+            strokeWidth="1.5"
+          />
+          {device("readerIn", 102, 252, 16, 38)}
+          <text
+            x="110"
+            y="320"
+            textAnchor="middle"
+            fill="#09090b"
+            fontSize="15"
+            fontWeight="600"
+          >
+            Reader
+          </text>
+          <text
+            x="235"
+            y="433"
+            textAnchor="middle"
+            fill="#09090b"
+            fontSize="16"
+            fontWeight="600"
+          >
+            Outside
+          </text>
+
+          <rect
+            x="500"
+            y="150"
+            width="150"
+            height="250"
+            fill="#fff"
+            stroke="#09090b"
+            strokeWidth="2"
+          />
+          <rect
+            x="512"
+            y="162"
+            width="126"
+            height="226"
+            fill="#fff"
+            stroke="#09090b"
+            strokeWidth="1.5"
+          />
+          <circle
+            cx="622"
+            cy="270"
+            r="8"
+            fill="#fff"
+            stroke="#09090b"
+            strokeWidth="1.5"
+          />
+          {device("buzzer", 450, 144, 28, 28)}
+          <text x="445" y="135" fill="#09090b" fontSize="15" fontWeight="600">
+            Buzzer
+          </text>
+          {device("magneticLock", 515, 144, 58, 22)}
+          <text
+            x="544"
+            y="135"
+            textAnchor="middle"
+            fill="#09090b"
+            fontSize="15"
+            fontWeight="600"
+          >
+            Lock
+          </text>
+          {device("sensor", 578, 145, 22, 10)}
+          <text x="590" y="135" fill="#09090b" fontSize="15" fontWeight="600">
+            Sensor
+          </text>
+          {device("bg", 660, 144, 28, 28)}
+          <rect
+            x="665"
+            y="152"
+            width="18"
+            height="10"
+            rx="1"
+            fill="none"
+            stroke={selected === "buzzer" ? "#0284c7" : "#4f87a8"}
+            strokeWidth="1.5"
+          />
+          <text x="700" y="160" fill="#09090b" fontSize="15" fontWeight="600">
+            Break Glass
+          </text>
+
+          {doorDto.type == DoorType.Dual
+            ? device("readerOut", 665, 255, 16, 38)
+            : device("rex", 665, 255, 16, 38)}
+          <text x="700" y="280" fill="#09090b" fontSize="15" fontWeight="600">
+            {doorDto.type == DoorType.Dual ? "Reader" : "REX"}
+          </text>
+          <text
+            x="580"
+            y="433"
+            textAnchor="middle"
+            fill="#09090b"
+            fontSize="16"
+            fontWeight="600"
+          >
+            Inside
+          </text>
+        </svg>
+      </div>
+    );
+  };
+
   return (
     <>
       <PageBreadcrumb pageTitle="Doors" />
@@ -393,6 +638,12 @@ const Door = () => {
           tabContent={content}
           header={""}
           desc={""}
+          layout={
+            <DoorLayout
+              selected={selectedComponent}
+              onSelect={setSelectedComponent}
+            />
+          }
         />
       ) : (
         <BaseTable<DoorDto>
