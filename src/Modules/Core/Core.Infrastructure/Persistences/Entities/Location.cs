@@ -20,7 +20,8 @@ public sealed class Location : BaseEntity
   public ICollection<Interval> intervals { get; set; } = default!;
   public ICollection<Door> doors { get; set; } = default!;
   public ICollection<Group> groups { get; set; } = default!;
-  // public ICollection<Turnstile> turnstiles { get; set; } = default!;
+  public ICollection<Output> outputs { get; set; } = default!;
+  public ICollection<Turnstile> turnstiles { get; set; } = default!;
   public Location() { }
   public Location(Core.Domain.Entities.Location d) : base(d.Guid)
   {

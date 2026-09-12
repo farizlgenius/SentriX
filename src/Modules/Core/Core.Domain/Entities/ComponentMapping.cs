@@ -1,3 +1,5 @@
+using SharedKernel.Enums;
+
 namespace Core.Domain.Entities;
 
 public sealed class ComponentMappping : BaseDomain
@@ -6,7 +8,7 @@ public sealed class ComponentMappping : BaseDomain
   public int InternalId { get; private set; }
   public int ExternalId { get; private set; }
   public string Mac { get; private set; } = string.Empty;
-  public string Vendor {get; private set;} = string.Empty;
+  public Vendor Vendor { get; private set; } = Vendor.aero;
   public int LocationId { get; private set; }
 
   public ComponentMappping(
@@ -14,7 +16,7 @@ public sealed class ComponentMappping : BaseDomain
     int @internal,
     int external,
     string mac,
-    string vendor,
+    Vendor vendor,
     int locationId
   )
   {
@@ -31,7 +33,7 @@ public sealed class ComponentMappping : BaseDomain
     int @internal,
     int external,
     string mac,
-     string vendor,
+     Vendor vendor,
     int locationId
     ) : base(guid)
   {

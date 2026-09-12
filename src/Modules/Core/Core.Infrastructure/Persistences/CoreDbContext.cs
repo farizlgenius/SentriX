@@ -47,6 +47,7 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
       public DbSet<Lane> Lanes { get; set; }
       public DbSet<Turnstile> Turnstiles { get; set; }
       public DbSet<GroupComponent> GroupComponents { get; set; }
+      public DbSet<Output> Outputs { get; set; }
       protected override void OnModelCreating(ModelBuilder modelBuilder)
       {
             Console.WriteLine("=== Entities ===");
@@ -169,6 +170,14 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   b.Property(x => x.vendor).HasConversion<string>();
                   b.Property(x => x.mode).HasConversion<string>();
             });
+
+            // Sensor Enums
+            modelBuilder.Entity<Output>(b =>
+            {
+                  b.Property(x => x.vendor).HasConversion<string>();
+                  b.Property(x => x.mode).HasConversion<string>();
+            });
+
 
             // Indexing and key setting 
             modelBuilder.Entity<Card>()
@@ -339,7 +348,8 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                               x.guid,
                               x.id,
                               x.door_id,
-                              x.device_module_id
+                              x.device_module_id,
+                              x.slot_no
                         }
                   ).IsUnique();
 
@@ -350,7 +360,8 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                               x.guid,
                               x.id,
                               x.door_id,
-                              x.device_module_id
+                              x.device_module_id,
+                              x.slot_no
                         }
                   ).IsUnique();
 
@@ -361,7 +372,8 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                               x.guid,
                               x.id,
                               x.door_id,
-                              x.device_module_id
+                              x.device_module_id,
+                              x.slot_no
                         }
                   ).IsUnique();
 
@@ -372,7 +384,8 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                               x.guid,
                               x.id,
                               x.door_id,
-                              x.device_module_id
+                              x.device_module_id,
+                              x.slot_no
                         }
                   ).IsUnique();
 
@@ -383,7 +396,8 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                               x.guid,
                               x.id,
                               x.door_id,
-                              x.device_module_id
+                              x.device_module_id,
+                              x.slot_no
                         }
                   ).IsUnique();
 
@@ -404,6 +418,17 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                         {
                               x.guid,
                               x.id
+                        }
+                  ).IsUnique();
+
+            modelBuilder.Entity<Output>()
+                  .HasIndex(
+                        x => new
+                        {
+                              x.guid,
+                              x.id,
+                              x.device_module_id,
+                              x.slot_no
                         }
                   ).IsUnique();
 
@@ -477,6 +502,18 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   .HasForeignKey(x => x.location_id)
                   .OnDelete(DeleteBehavior.Cascade);
 
+            modelBuilder.Entity<Location>()
+                  .HasMany(x => x.outputs)
+                  .WithOne(x => x.location)
+                  .HasForeignKey(x => x.location_id)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Location>()
+            .HasMany(x => x.turnstiles)
+            .WithOne(x => x.location)
+            .HasForeignKey(x => x.location_id)
+            .OnDelete(DeleteBehavior.Cascade);
+
             modelBuilder.Entity<UserLocation>()
                         .HasOne(x => x.location)
                         .WithMany(x => x.user_locations)
@@ -531,6 +568,12 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
 
             modelBuilder.Entity<DeviceModule>()
                   .HasMany(x => x.buzzers)
+                  .WithOne(x => x.device_module)
+                  .HasForeignKey(x => x.device_module_id)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<DeviceModule>()
+                  .HasMany(x => x.outputs)
                   .WithOne(x => x.device_module)
                   .HasForeignKey(x => x.device_module_id)
                   .OnDelete(DeleteBehavior.Cascade);

@@ -30,6 +30,7 @@ public sealed class DeviceModule : BaseEntity
   public ICollection<Relay> relays { get; set; } = default!;
   public ICollection<Rex> rexes { get; set; } = default!;
   public ICollection<Buzzer> buzzers { get; set; } = default!;
+  public ICollection<Output> outputs { get; set; } = default!;
 
   public DeviceModule() { }
   public DeviceModule(Core.Domain.Entities.DeviceModule d) : base(d.Guid)
