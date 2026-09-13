@@ -48,6 +48,8 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
       public DbSet<Turnstile> Turnstiles { get; set; }
       public DbSet<GroupComponent> GroupComponents { get; set; }
       public DbSet<Output> Outputs { get; set; }
+      public DbSet<Event> Events { get; set; }
+      public DbSet<AdapterEvent> AdapterEvents { get; set; }
       protected override void OnModelCreating(ModelBuilder modelBuilder)
       {
             Console.WriteLine("=== Entities ===");
@@ -134,6 +136,16 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
             modelBuilder.Entity<DeviceModule>()
             .Property(o => o.model)
             .HasConversion<string>();
+
+            modelBuilder.Entity<Event>()
+            .Property(o => o.vendor)
+            .HasConversion<string>();
+
+            modelBuilder.Entity<AdapterEvent>(b =>
+           {
+                 b.Property(d => d.vendor).HasConversion<string>();
+                 b.Property(d => d.status).HasConversion<string>();
+           });
 
             // Door Enums
             modelBuilder.Entity<Door>(b =>
@@ -432,6 +444,36 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                         }
                   ).IsUnique();
 
+            modelBuilder.Entity<Event>()
+                  .HasIndex(
+                        x => new
+                        {
+                              x.guid,
+                              x.id,
+                              x.location_id,
+                              x.created_at,
+                              x.timestamp,
+                              x.mac,
+                              x.vendor
+                        }
+                  ).IsUnique();
+
+            modelBuilder.Entity<AdapterEvent>()
+                  .HasIndex(
+                        x => new
+                        {
+                              x.guid,
+                              x.id,
+                              x.location_id,
+                              x.created_at,
+                              x.mac,
+                              x.send_at,
+                              x.received_at,
+                              x.tag,
+                              x.vendor
+                        }
+                  ).IsUnique();
+
             // Configure relationships 
 
             // Location
@@ -509,10 +551,16 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Location>()
-            .HasMany(x => x.turnstiles)
-            .WithOne(x => x.location)
-            .HasForeignKey(x => x.location_id)
-            .OnDelete(DeleteBehavior.Cascade);
+                  .HasMany(x => x.events)
+                  .WithOne(x => x.location)
+                  .HasForeignKey(x => x.location_id)
+                  .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<Location>()
+                  .HasMany(x => x.adapter_events)
+                  .WithOne(x => x.location)
+                  .HasForeignKey(x => x.location_id)
+                  .OnDelete(DeleteBehavior.SetNull);
 
             modelBuilder.Entity<UserLocation>()
                         .HasOne(x => x.location)

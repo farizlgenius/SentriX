@@ -1,5 +1,6 @@
 
 
+using SharedKernel.Constants;
 using SharedKernel.Enums;
 
 namespace Core.Infrastructure.Persistences.Entities;
@@ -12,14 +13,14 @@ public sealed class Device : BaseEntity
   public string ip { get; set; } = string.Empty;
   public int port { get; set; }
   public string firmware { get; set; } = string.Empty;
-  public Vendor vendor { get; set; } = Vendor.aero;
-  public string configuration_status { get; set; } = string.Empty;
+  public SharedKernel.Enums.Vendor vendor { get; set; } = SharedKernel.Enums.Vendor.aero;
+  public DeviceConfigurationStatus configuration_status { get; set; } = DeviceConfigurationStatus.pending;
   public DateTime synced_at { get; set; }
   public string metadata { get; set; } = string.Empty;
 
   // Releation
-  public int location_id { get; set; } = default!;
-  public Location location { get; set; } = default!;
+  public int? location_id { get; set; } = default!;
+  public Location? location { get; set; } = default!;
   public ICollection<DeviceModule> device_module { get; set; } = default!;
 
   public Device() { }
@@ -33,7 +34,13 @@ public sealed class Device : BaseEntity
     this.firmware = domain.Firmware;
     this.vendor = domain.Vendor;
     this.metadata = domain.Metadata;
-    location_id = domain.LocationId;
+    if (location_id != 0)
+    {
+      location_id = domain.LocationId;
+    }
     device_module = domain.DeviceModules.Select(x => new DeviceModule(x)).ToArray();
   }
+
+
+
 }

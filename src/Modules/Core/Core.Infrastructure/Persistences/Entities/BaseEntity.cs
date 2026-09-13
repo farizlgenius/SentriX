@@ -13,7 +13,10 @@ public class BaseEntity
   public bool is_default { get; set; } = false;
 
 
-  public BaseEntity() { }
+  public BaseEntity()
+  {
+
+  }
 
   public BaseEntity(Guid guid)
   {

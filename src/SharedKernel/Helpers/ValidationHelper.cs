@@ -50,7 +50,7 @@ public static partial class ValidationHelper
 
   public static void ReaderNumberPerDoor(int count)
   {
-    if(count > 2)
+    if (count > 2)
       throw new ArgumentException($"Number of Reader exceed.");
   }
 
@@ -123,19 +123,7 @@ public static partial class ValidationHelper
 
   }
 
-  public static void Vendor(string vendor)
-  {
-    bool isValid = typeof(SharedKernel.Constants.Vendor)
-        .GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)
-        .Where(f => f.IsLiteral && !f.IsInitOnly)
-        .Select(f => f.GetValue(null) as string)
-        .Contains(vendor);
 
-    if (!isValid)
-    {
-      throw new ArgumentException($"Invalid vendor: {vendor}");
-    }
-  }
 
   public static void Vendor(Vendor vendor)
   {
@@ -143,7 +131,7 @@ public static partial class ValidationHelper
     {
       case Enums.Vendor.aero:
       case Enums.Vendor.amico:
-      break;
+        break;
       default:
         throw new ArgumentException($"Invalid vendor: {vendor}");
     }

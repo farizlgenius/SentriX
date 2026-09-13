@@ -1,5 +1,9 @@
 using System;
 using System.Threading.Channels;
+using Adapter.Contract.Interfaces;
+using Aero.Application.Helpers;
+using Aero.Domain.Entities;
+using Aero.Infrastructure.Helpers;
 using HID.Aero.ScpdNet.Wrapper;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -8,7 +12,7 @@ using SharedKernel.Messaging;
 namespace Adapter.Aero.Listener;
 
 
-public sealed class ReplyMessageListener(ILogger<ReplyMessageListener> logger,Channel<SCPReplyMessageDto> queue,IServiceScopeFactory factory)
+public sealed class ReplyMessageListener(ILogger<ReplyMessageListener> logger, Channel<ReplyMessage> queue, IServiceScopeFactory factory)
 {
       private volatile bool _shutdownFlag;
 
@@ -58,7 +62,7 @@ public sealed class ReplyMessageListener(ILogger<ReplyMessageListener> logger,Ch
                         var gotMessage = await GetTransaction();
 
                         if (!gotMessage)
-                        Thread.Sleep(50); // prevents CPU burn
+                              Thread.Sleep(50); // prevents CPU burn
                   }
                   catch (Exception ex)
                   {
@@ -78,11 +82,11 @@ public sealed class ReplyMessageListener(ILogger<ReplyMessageListener> logger,Ch
                   return false;
 
 
-            await ProcessMessageAsync(mapper.Map<SCPReplyMessageDto>(message));
+            await ProcessMessageAsync(mapper.Map<ReplyMessage>(message));
             return true;
       }
 
-      private async Task ProcessMessageAsync(SCPReplyMessageDto message)
+      private async Task ProcessMessageAsync(ReplyMessage message)
       {
             using var scope = factory.CreateScope();
             switch (message.ReplyType)
@@ -90,27 +94,27 @@ public sealed class ReplyMessageListener(ILogger<ReplyMessageListener> logger,Ch
                   // Occur when command to SCP not success
                   case (int)enSCPReplyType.enSCPReplyNAK:
                         //await queue.Writer.WriteAsync(message);
-                        logger.LogError(ScpReplyMessageBuilder.BuildNakMessage(message));
+                        logger.LogError(ReplyMessageHelper.BuildNakMessage(message));
                         break;
                   case (int)enSCPReplyType.enSCPReplyTransaction:
                         TransactionHandlerHelper.SCPReplyTransactionHandler(message, queue, logger);
                         break;
                   case (int)enSCPReplyType.enSCPReplyCommStatus:
-                  switch (message.comm.status)
+                        switch (message.comm.status)
                         {
                               case 2:
-                                    logger.LogInformation(ScpReplyMessageBuilder.CommStatusMessage(message));
+                                    logger.LogInformation(ReplyMessageHelper.CommStatusMessage(message));
                                     break;
                               default:
-                                    var idReportService = scope.ServiceProvider.GetRequiredService<IIdReportService>();
-                                    idReportService.RemoveIdReportById(message.SCPId);
-                                    logger.LogError(ScpReplyMessageBuilder.CommStatusMessage(message));
+                                    // var idReportService = scope.ServiceProvider.GetRequiredService<IIdReportService>();
+                                    // idReportService.RemoveIdReportById(message.SCPId);
+                                    logger.LogError(ReplyMessageHelper.CommStatusMessage(message));
                                     break;
                         }
                         await queue.Writer.WriteAsync(message);
                         break;
                   case (int)enSCPReplyType.enSCPReplyIDReport:
-                        logger.LogInformation(ScpReplyMessageBuilder.IdReportMessage(message));
+                        logger.LogInformation(ReplyMessageHelper.IdReportMessage(message));
                         await queue.Writer.WriteAsync(message);
                         break;
                   case (int)enSCPReplyType.enSCPReplyTranStatus:
@@ -118,21 +122,21 @@ public sealed class ReplyMessageListener(ILogger<ReplyMessageListener> logger,Ch
                         switch (message.tran_sts.disabled)
                         {
                               case 0:
-                                    logger.LogInformation(ScpReplyMessageBuilder.TranStatusMessage(message));
+                                    logger.LogInformation(ReplyMessageHelper.TranStatusMessage(message));
                                     break;
                               default:
-                                    logger.LogError(ScpReplyMessageBuilder.TranStatusMessage(message));
+                                    logger.LogError(ReplyMessageHelper.TranStatusMessage(message));
                                     break;
                         }
                         break;
                   case (int)enSCPReplyType.enSCPReplySrMsp1Drvr:
-                  switch (message.sts_drvr.mode)
+                        switch (message.sts_drvr.mode)
                         {
                               case 0:
-                                    logger.LogError(ScpReplyMessageBuilder.Msp1DrvrMessage(message));
+                                    logger.LogError(ReplyMessageHelper.Msp1DrvrMessage(message));
                                     break;
                               default:
-                                    logger.LogInformation(ScpReplyMessageBuilder.Msp1DrvrMessage(message));
+                                    logger.LogInformation(ReplyMessageHelper.Msp1DrvrMessage(message));
                                     break;
                         }
                         break;

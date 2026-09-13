@@ -1,13 +1,13 @@
 using System;
-using Adapter.Abstraction.Constants;
 using Adapter.Abstraction.Interfaces;
 using Adapter.Aero.Interfaces;
+using SharedKernel.Enums;
 
 namespace Adapter.Aero;
 
 public sealed class AeroAdapter : IAdapter
 {
-      public string Vendor => Abstraction.Constants.Vendor.AERO;
+      public Vendor Vendor => Vendor.aero;
 
       public IDeviceAdapter Device { get; }
 

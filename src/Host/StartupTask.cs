@@ -1,6 +1,4 @@
-using Adapter.Aero.Interfaces;
 using Adapter.Aero.Listener;
-using AeroAdapter.Application.Interfaces;
 using Host.Helpers;
 using SharedKernel.Helpers;
 using Storage.Contract.Interfaces;
@@ -102,16 +100,16 @@ public sealed class StartupTask : IHostedService
         _logger.LogInformation("🚀 Starting Aero Driver...");
 
         // Start driver here
-        using var scope = _scopeFactory.CreateScope();
-        var aeroRead = scope.ServiceProvider.GetRequiredService<ReplyMessageListener>();
-        var aeroWrite = scope.ServiceProvider.GetRequiredService<IScpCommand>();
-        var aeroDriver = scope.ServiceProvider.GetRequiredService<IDriverCommand>();
+        // using var scope = _scopeFactory.CreateScope();
+        // var aeroRead = scope.ServiceProvider.GetRequiredService<ReplyMessageListener>();
+        // var aeroWrite = scope.ServiceProvider.GetRequiredService<IScpCommand>();
+        // var aeroDriver = scope.ServiceProvider.GetRequiredService<IDriverCommand>();
 
-        aeroRead.TurnOnDebug();
+        // aeroRead.TurnOnDebug();
 
-        aeroDriver.SystemLevelSpecification();
+        // aeroDriver.SystemLevelSpecification();
 
-        aeroWrite.CreateChannel();
+        // aeroWrite.CreateChannel();
 
         await Task.CompletedTask;
     }
@@ -124,12 +122,12 @@ public sealed class StartupTask : IHostedService
     {
         _logger.LogInformation("🛑 Shutting down Aero Driver...");
 
-        // Stop / dispose driver here
-        using var scope = _scopeFactory.CreateScope();
-        var aeroRead = scope.ServiceProvider.GetRequiredService<ReplyMessageListener>();
+        // // Stop / dispose driver here
+        // using var scope = _scopeFactory.CreateScope();
+        // var aeroRead = scope.ServiceProvider.GetRequiredService<ReplyMessageListener>();
 
-        aeroRead.SetShutDownFlag();
-        aeroRead.TurnOffDebug();
+        // aeroRead.SetShutDownFlag();
+        // aeroRead.TurnOffDebug();
 
         await Task.CompletedTask;
     }

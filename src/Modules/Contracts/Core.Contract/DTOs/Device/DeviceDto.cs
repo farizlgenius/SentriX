@@ -1,4 +1,5 @@
 using Core.Contract.DTOs.DeviceModule;
+using SharedKernel.Constants;
 using SharedKernel.Enums;
 
 namespace Core.Contract.DTOs.Device;
@@ -14,7 +15,7 @@ public sealed record DeviceDto(
   Vendor Vendor,
   string Metadata,
   DateTime SyncedAt,
-  string ConfigurationStatus,
+  DeviceConfigurationStatus ConfigurationStatus,
   List<DeviceModuleDto> DeviceModules,
   Guid LocationGuid,
   bool IsActive,

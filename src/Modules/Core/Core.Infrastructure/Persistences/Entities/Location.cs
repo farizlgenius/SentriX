@@ -22,6 +22,8 @@ public sealed class Location : BaseEntity
   public ICollection<Group> groups { get; set; } = default!;
   public ICollection<Output> outputs { get; set; } = default!;
   public ICollection<Turnstile> turnstiles { get; set; } = default!;
+  public ICollection<Event> events { get; set; } = default!;
+  public ICollection<AdapterEvent> adapter_events { get; set; } = default!;
   public Location() { }
   public Location(Core.Domain.Entities.Location d) : base(d.Guid)
   {

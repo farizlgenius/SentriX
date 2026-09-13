@@ -17,7 +17,7 @@ public sealed class SCPReplyMessageDto
     public SCPReplyTranStatusDto tran_sts { get; set; } = default!;
     public SCPReplyTransactionDto tran { get; set; } = default!;
     public SCPReplySrMsp1DrvrDto sts_drvr { get; set; } = default!;
-    public SCPReplySrSioDto sts_sio { get; set; }= default!;
+    public SCPReplySrSioDto sts_sio { get; set; } = default!;
     public SCPReplySrMpDto sts_mp { get; set; } = default!;
     public SCPReplySrCpDto sts_cp { get; set; } = default!;
     public SCPReplySrAcrDto sts_acr { get; set; } = default!;
@@ -64,7 +64,7 @@ public sealed class SCPReplyMessageDto
     public SCPReplyStrStatusDto str_sts { get; set; } = default!;
     public SCPReplySanbxAppListDto sanbx_app_list { get; set; } = default!;
 
-    public class SCPReplyCommStatusDto
+    public sealed class SCPReplyCommStatusDto
     {
         public int status { get; set; }
         public int error_code { get; set; }
@@ -75,7 +75,7 @@ public sealed class SCPReplyMessageDto
         public short previous_alternate_comm { get; set; }
     }
 
-    public class SCPReplyNAKDto
+    public sealed class SCPReplyNAKDto
     {
         public short reason { get; set; }
         public int data { get; set; }
@@ -83,7 +83,7 @@ public sealed class SCPReplyMessageDto
         public int description_code { get; set; }
     }
 
-    public class SCPReplyIDReportDto
+    public sealed class SCPReplyIDReportDto
     {
         public short device_id { get; set; }
         public short device_ver { get; set; }
@@ -118,30 +118,30 @@ public sealed class SCPReplyMessageDto
         public byte hardware_revision { get; set; }
         public int hardware_component_id { get; set; }
 
-        public class HARDWARE_COMP_PHYDto
+        public sealed class HARDWARE_COMP_PHYDto
         {
             public int value__ { get; set; }
         }
 
-        public class HARDWARE_COMP_CRYPTODto
+        public sealed class HARDWARE_COMP_CRYPTODto
         {
             public int value__ { get; set; }
         }
 
-        public class HARDWARE_COMP_TYPEDto
+        public sealed class HARDWARE_COMP_TYPEDto
         {
             public int value__ { get; set; }
         }
     }
 
-    public class SCPReplyUTAGReportDto
+    public sealed class SCPReplyUTAGReportDto
     {
         public short nCount { get; set; }
         public short nFirst { get; set; }
         public int[] list { get; set; } = default!;
     }
 
-    public class SCPReplyTranStatusDto
+    public sealed class SCPReplyTranStatusDto
     {
         public int capacity { get; set; }
         public int oldest { get; set; }
@@ -150,12 +150,12 @@ public sealed class SCPReplyMessageDto
         public short disabled { get; set; }
     }
 
-    public class TypeSysDto
+    public sealed class TypeSysDto
     {
         public short error_code { get; set; }
     }
 
-    public class TypeSysCommDto
+    public sealed class TypeSysCommDto
     {
         public short error_code { get; set; }
         public short current_primary_comm { get; set; }
@@ -164,7 +164,7 @@ public sealed class SCPReplyMessageDto
         public short previous_alternate_comm { get; set; }
     }
 
-    public class TypeSioCommDto
+    public sealed class TypeSioCommDto
     {
         public short comm_sts { get; set; }
         public byte model { get; set; }
@@ -185,19 +185,19 @@ public sealed class SCPReplyMessageDto
         public int nHardwareComponents { get; set; }
     }
 
-    public class TypeCardBinDto
+    public sealed class TypeCardBinDto
     {
         public short bit_count { get; set; }
         public byte[] bit_array { get; set; } = default!;
     }
 
-    public class TypeCardBcdDto
+    public sealed class TypeCardBcdDto
     {
         public short digit_count { get; set; }
         public byte[] bcd_array { get; set; } = default!;
     }
 
-    public class TypeCardFullDto
+    public sealed class TypeCardFullDto
     {
         public short format_number { get; set; }
         public int facility_code { get; set; }
@@ -207,7 +207,7 @@ public sealed class SCPReplyMessageDto
         public byte[] encoded_card { get; set; } = default!;
     }
 
-    public class TypeDblCardFullDto
+    public sealed class TypeDblCardFullDto
     {
         public short format_number { get; set; }
         public int facility_code { get; set; }
@@ -217,7 +217,7 @@ public sealed class SCPReplyMessageDto
         public byte[] encoded_card { get; set; } = default!;
     }
 
-    public class TypeI64CardFullDto
+    public sealed class TypeI64CardFullDto
     {
         public short format_number { get; set; }
         public int facility_code { get; set; }
@@ -227,7 +227,7 @@ public sealed class SCPReplyMessageDto
         public byte[] encoded_card { get; set; } = default!;
     }
 
-    public class TypeI64CardFullIc32Dto
+    public sealed class TypeI64CardFullIc32Dto
     {
         public short format_number { get; set; }
         public int facility_code { get; set; }
@@ -237,7 +237,7 @@ public sealed class SCPReplyMessageDto
         public byte[] encoded_card { get; set; } = default!;
     }
 
-    public class TypeHostCardFullPinDto
+    public sealed class TypeHostCardFullPinDto
     {
         public short format_number { get; set; }
         public int facility_code { get; set; }
@@ -248,7 +248,7 @@ public sealed class SCPReplyMessageDto
         public byte[] encoded_card { get; set; } = default!;
     }
 
-    public class TypeCardIDDto
+    public sealed class TypeCardIDDto
     {
         public short format_number { get; set; }
         public int cardholder_id { get; set; }
@@ -257,7 +257,7 @@ public sealed class SCPReplyMessageDto
         public short elev_cab { get; set; }
     }
 
-    public class TypeDblCardIDDto
+    public sealed class TypeDblCardIDDto
     {
         public short format_number { get; set; }
         public double cardholder_id { get; set; }
@@ -266,7 +266,7 @@ public sealed class SCPReplyMessageDto
         public short elev_cab { get; set; }
     }
 
-    public class TypeI64CardIDDto
+    public sealed class TypeI64CardIDDto
     {
         public short format_number { get; set; }
         public long cardholder_id { get; set; }
@@ -275,18 +275,18 @@ public sealed class SCPReplyMessageDto
         public short elev_cab { get; set; }
     }
 
-    public class TypeCoSDto
+    public sealed class TypeCoSDto
     {
         public byte status { get; set; }
         public byte old_sts { get; set; }
     }
 
-    public class TypeREXDto
+    public sealed class TypeREXDto
     {
         public short rex_number { get; set; }
     }
 
-    public class TypeCoSDoorDto
+    public sealed class TypeCoSDoorDto
     {
         public byte door_status { get; set; }
         public byte ap_status { get; set; }
@@ -294,22 +294,22 @@ public sealed class SCPReplyMessageDto
         public byte door_prior { get; set; }
     }
 
-    public class TypeUserCmndDto
+    public sealed class TypeUserCmndDto
     {
         public short nKeys { get; set; }
         public char[] keys { get; set; } = default!;
     }
 
-    public class TypeActivateDto
+    public sealed class TypeActivateDto
     {
         public object activationCount { get; set; } = default!;
     }
 
-    public class TypeProcedureDto
+    public sealed class TypeProcedureDto
     {
     }
 
-    public class TypeAcrDto
+    public sealed class TypeAcrDto
     {
         public short actl_flags { get; set; }
         public short prior_flags { get; set; }
@@ -320,14 +320,14 @@ public sealed class SCPReplyMessageDto
         public int prior_auth_mod_flags { get; set; }
     }
 
-    public class TypeMPGDto
+    public sealed class TypeMPGDto
     {
         public short mask_count { get; set; }
         public short nActiveMps { get; set; }
         public short[] nMpList { get; set; } = default!;
     }
 
-    public class sIpsCos_CosDto
+    public sealed class sIpsCos_CosDto
     {
         public short nIpsCosSourceType { get; set; }
         public short nIpsCosSourceNumber { get; set; }
@@ -335,7 +335,7 @@ public sealed class SCPReplyMessageDto
         public short nIpsCosSourceStatePrior { get; set; }
     }
 
-    public class sIpsCos_AcrDto
+    public sealed class sIpsCos_AcrDto
     {
         public short nIpsCosAction { get; set; }
         public short nIpsCosActionSrcType { get; set; }
@@ -343,7 +343,7 @@ public sealed class SCPReplyMessageDto
         public long nCardholderId { get; set; }
     }
 
-    public class sIpsPtSetDto
+    public sealed class sIpsPtSetDto
     {
         public short nIpsSourceType { get; set; }
         public short nIpsSourceNumber { get; set; }
@@ -353,7 +353,7 @@ public sealed class SCPReplyMessageDto
         public short nPointModePrior { get; set; }
     }
 
-    public class TypeAreaDto
+    public sealed class TypeAreaDto
     {
         public short status { get; set; }
         public int occupancy { get; set; }
@@ -361,24 +361,24 @@ public sealed class SCPReplyMessageDto
         public short prior_status { get; set; }
     }
 
-    public class TypeUseLimitDto
+    public sealed class TypeUseLimitDto
     {
         public short use_count { get; set; }
         public long cardholder_id { get; set; }
     }
 
-    public class TypeAsciDto
+    public sealed class TypeAsciDto
     {
         public char[] bfr { get; set; } = default!;
     }
 
-    public class TypeSioDiagDto
+    public sealed class TypeSioDiagDto
     {
         public short length { get; set; }
         public byte[] bfr { get; set; } = default!;
     }
 
-    public class TypeAcrExtFeatureStlsDto
+    public sealed class TypeAcrExtFeatureStlsDto
     {
         public short nExtFeatureType { get; set; }
         public short nHardwareType { get; set; }
@@ -386,7 +386,7 @@ public sealed class SCPReplyMessageDto
         public byte[] nExtFeatureStatus { get; set; } = default!;
     }
 
-    public class TypeAcrExtFeatureCoSDto
+    public sealed class TypeAcrExtFeatureCoSDto
     {
         public short nExtFeatureType { get; set; }
         public short nHardwareType { get; set; }
@@ -397,7 +397,7 @@ public sealed class SCPReplyMessageDto
         public byte[] nExtFeatureStatus { get; set; } = default!;
     }
 
-    public class TypeWebActivityDto
+    public sealed class TypeWebActivityDto
     {
         public byte iType { get; set; }
         public byte iCurUserId { get; set; }
@@ -406,30 +406,30 @@ public sealed class SCPReplyMessageDto
         public int ipAddress { get; set; }
     }
 
-    public class TypeOperatingModeDto
+    public sealed class TypeOperatingModeDto
     {
         public byte prev_oper { get; set; }
     }
 
-    public class TypeOALDto
+    public sealed class TypeOALDto
     {
         public byte nReasonCode { get; set; }
         public byte[] nData { get; set; } = default!;
     }
 
-    public class TypeCoSFloorDto
+    public sealed class TypeCoSFloorDto
     {
         public byte prevFloorStatus { get; set; }
         public byte floorNumber { get; set; }
     }
 
-    public class TypeFileDownloadStatusDto
+    public sealed class TypeFileDownloadStatusDto
     {
         public byte fileType { get; set; }
         public char[] fileName { get; set; } = default!;
     }
 
-    public class TypeBatchReportDto
+    public sealed class TypeBatchReportDto
     {
         public object triggerNumber { get; set; } = default!;
         public object activationCount { get; set; } = default!;
@@ -439,14 +439,14 @@ public sealed class SCPReplyMessageDto
         public byte[] tranCodeMap { get; set; } = default!;
     }
 
-    public class TypeCoSElevatorAccessDto
+    public sealed class TypeCoSElevatorAccessDto
     {
         public long cardholder_id { get; set; }
         public byte[] floors { get; set; } = default!;
         public byte nCardFormat { get; set; }
     }
 
-    public class SCPReplyTransactionHeaderDto
+    public sealed class SCPReplyTransactionHeaderDto
     {
         public int ser_num { get; set; }
         public int time { get; set; }
@@ -456,7 +456,7 @@ public sealed class SCPReplyMessageDto
         public short tran_code { get; set; }
     }
 
-    public class SCPReplyTransactionDto
+    public sealed class SCPReplyTransactionDto
     {
         public int ser_num { get; set; }
         public int time { get; set; }
@@ -500,7 +500,7 @@ public sealed class SCPReplyMessageDto
         public TypeBatchReportDto batch_report { get; set; } = default!;
     }
 
-    public class SCPReplyDualPortDto
+    public sealed class SCPReplyDualPortDto
     {
         public short number { get; set; }
         public short stat_this { get; set; }
@@ -508,7 +508,7 @@ public sealed class SCPReplyMessageDto
         public short stat_alternate { get; set; }
     }
 
-    public class SCPReplyBioAddResultDto
+    public sealed class SCPReplyBioAddResultDto
     {
         public short nBioType { get; set; }
         public short nResult { get; set; }
@@ -516,7 +516,7 @@ public sealed class SCPReplyMessageDto
         public int nCommandTag { get; set; }
     }
 
-    public class SCPReplyLoginInfoDto
+    public sealed class SCPReplyLoginInfoDto
     {
         public char[] name { get; set; } = default!;
         public char[] notes { get; set; } = default!;
@@ -525,14 +525,14 @@ public sealed class SCPReplyMessageDto
         public short userId { get; set; }
     }
 
-    public class SCPReplyPkgInfoDto
+    public sealed class SCPReplyPkgInfoDto
     {
         public char[] pkgName { get; set; } = default!;
         public char[] pkgVersion { get; set; } = default!;
         public long installDate { get; set; }
     }
 
-    public class SCPReplyFileInfoDto
+    public sealed class SCPReplyFileInfoDto
     {
         public short file_type { get; set; }
         public short file_index { get; set; }
@@ -540,7 +540,7 @@ public sealed class SCPReplyMessageDto
         public char[] fileName { get; set; } = default!;
     }
 
-    public class SCPReplyCertInfoDto
+    public sealed class SCPReplyCertInfoDto
     {
         public char[] issuedTo { get; set; } = default!;
         public char[] issuedBy { get; set; } = default!;
@@ -548,13 +548,13 @@ public sealed class SCPReplyMessageDto
         public char[] issuedExpire { get; set; } = default!;
     }
 
-    public class SCPReplyElevRelayInfoDto
+    public sealed class SCPReplyElevRelayInfoDto
     {
         public short acr_number { get; set; }
         public byte[] status { get; set; } = default!;
     }
 
-    public class SCPReplyOsdpPassthroughDto
+    public sealed class SCPReplyOsdpPassthroughDto
     {
         public short acr_number { get; set; }
         public int sequence_num { get; set; }
@@ -564,21 +564,21 @@ public sealed class SCPReplyMessageDto
         public byte[] data { get; set; } = default!;
     }
 
-    public class SCPReplySioRelayCountsDto
+    public sealed class SCPReplySioRelayCountsDto
     {
         public short sio_number { get; set; }
         public short num_relays { get; set; }
         public int[] data { get; set; } = default!;
     }
 
-    public class SCPReplySioHidMfgInfoDto
+    public sealed class SCPReplySioHidMfgInfoDto
     {
         public short sio_number { get; set; }
         public byte[] serial_no { get; set; } = default!;
         public byte[] uuid { get; set; } = default!;
     }
 
-    public class SCPReplySrMsp1DrvrDto
+    public sealed class SCPReplySrMsp1DrvrDto
     {
         public short number { get; set; }
         public short port { get; set; }
@@ -587,7 +587,7 @@ public sealed class SCPReplyMessageDto
         public short throughput { get; set; }
     }
 
-    public class SCPReplySrSioDto
+    public sealed class SCPReplySrSioDto
     {
         public short number { get; set; }
         public short com_status { get; set; }
@@ -619,21 +619,21 @@ public sealed class SCPReplyMessageDto
         public short emg_stat { get; set; }
     }
 
-    public class SCPReplySrMpDto
+    public sealed class SCPReplySrMpDto
     {
         public short first { get; set; }
         public short count { get; set; }
         public short[] status { get; set; } = default!;
     }
 
-    public class SCPReplySrCpDto
+    public sealed class SCPReplySrCpDto
     {
         public short first { get; set; }
         public short count { get; set; }
         public short[] status { get; set; } = default!;
     }
 
-    public class SCPReplySrAcrDto
+    public sealed class SCPReplySrAcrDto
     {
         public short number { get; set; }
         public short mode { get; set; }
@@ -653,21 +653,21 @@ public sealed class SCPReplyMessageDto
         public int nAuthModFlags { get; set; }
     }
 
-    public class SCPReplySrTzDto
+    public sealed class SCPReplySrTzDto
     {
         public short first { get; set; }
         public short count { get; set; }
         public short[] status { get; set; } = default!;
     }
 
-    public class SCPReplySrTvDto
+    public sealed class SCPReplySrTvDto
     {
         public short first { get; set; }
         public short count { get; set; }
         public short[] status { get; set; } = default!;
     }
 
-    public class SCPReplySrMpgDto
+    public sealed class SCPReplySrMpgDto
     {
         public short number { get; set; }
         public short mask_count { get; set; }
@@ -675,7 +675,7 @@ public sealed class SCPReplyMessageDto
         public short[] active_mp_list { get; set; } = default!;
     }
 
-    public class SCPReplySrAreaDto
+    public sealed class SCPReplySrAreaDto
     {
         public short number { get; set; }
         public short flags { get; set; }
@@ -683,14 +683,14 @@ public sealed class SCPReplyMessageDto
         public int occ_spc { get; set; }
     }
 
-    public class SCPReplyCmndStatusDto
+    public sealed class SCPReplyCmndStatusDto
     {
         public short status { get; set; }
         public int sequence_number { get; set; }
         public SCPReplyNAKDto nak { get; set; } = default!;
     }
 
-    public class SCPReplyCmndStatusExtDto
+    public sealed class SCPReplyCmndStatusExtDto
     {
         public short status { get; set; }
         public int lSequenceFirst { get; set; }
@@ -698,7 +698,7 @@ public sealed class SCPReplyMessageDto
         public SCPReplyNAKDto nak { get; set; } = default!;
     }
 
-    public class SCPReplyMemReadDto
+    public sealed class SCPReplyMemReadDto
     {
         public short nType { get; set; }
         public int nBase { get; set; }
@@ -706,20 +706,20 @@ public sealed class SCPReplyMessageDto
         public byte[] nData { get; set; } = default!;
     }
 
-    public class SanbxAppDto
+    public sealed class SanbxAppDto
     {
         public int appCode { get; set; }
         public byte[] version { get; set; } = default!;
         public short state { get; set; }
     }
 
-    public class SCPReplySanbxAppListDto
+    public sealed class SCPReplySanbxAppListDto
     {
         public short nApps { get; set; }
         public object[] apps { get; set; } = default!;
     }
 
-    public class StrSpecDto
+    public sealed class StrSpecDto
     {
         public short nStrType { get; set; }
         public int nRecords { get; set; }
@@ -727,7 +727,7 @@ public sealed class SCPReplyMessageDto
         public int nActive { get; set; }
     }
 
-    public class SCPReplyStrStatusDto
+    public sealed class SCPReplyStrStatusDto
     {
         public short nListLength { get; set; }
         public StrSpecDto[] sStrSpec { get; set; } = default!;
@@ -735,7 +735,7 @@ public sealed class SCPReplyMessageDto
 
 
 
-    public class sior_idrDto
+    public sealed class sior_idrDto
     {
         public short nModel { get; set; }
         public short nRevision { get; set; }
@@ -743,32 +743,32 @@ public sealed class SCPReplyMessageDto
         public short nRxbLen { get; set; }
     }
 
-    public class sior_diagDto
+    public sealed class sior_diagDto
     {
         public short sw { get; set; }
         public short nInputs { get; set; }
         public byte[] cA2D { get; set; } = default!;
     }
 
-    public class sior_lsrDto
+    public sealed class sior_lsrDto
     {
         public byte cCtSts { get; set; }
         public byte cPwrSts { get; set; }
     }
 
-    public class sior_isrDto
+    public sealed class sior_isrDto
     {
         public short nInputs { get; set; }
         public byte[] cIpSts { get; set; } = default!;
     }
 
-    public class sior_rtsrDto
+    public sealed class sior_rtsrDto
     {
         public short nReaders { get; set; }
         public byte[] cRdrTmpr { get; set; } = default!;
     }
 
-    public class sior_mr50srDto
+    public sealed class sior_mr50srDto
     {
         public byte cCtSts { get; set; }
         public byte cRdrTmpr { get; set; }
@@ -778,14 +778,14 @@ public sealed class SCPReplyMessageDto
         public byte[] dummy { get; set; } = default!;
     }
 
-    public class sior_cdbDto
+    public sealed class sior_cdbDto
     {
         public short nReader { get; set; }
         public short nBitCount { get; set; }
         public byte[] cData { get; set; } = default!;
     }
 
-    public class sior_cddDto
+    public sealed class sior_cddDto
     {
         public short nReader { get; set; }
         public short nReadDirection { get; set; }
@@ -793,14 +793,14 @@ public sealed class SCPReplyMessageDto
         public byte[] cData { get; set; } = default!;
     }
 
-    public class sior_keyDto
+    public sealed class sior_keyDto
     {
         public short nReader { get; set; }
         public short nKeyCount { get; set; }
         public byte[] cKeys { get; set; } = default!;
     }
 
-    public class sior_idrxDto
+    public sealed class sior_idrxDto
     {
         public byte nHardwareId { get; set; }
         public byte nHardwareRev { get; set; }
@@ -825,13 +825,13 @@ public sealed class SCPReplyMessageDto
         public byte[] mac_addr { get; set; } = default!;
     }
 
-    public class sior_osrDto
+    public sealed class sior_osrDto
     {
         public short nOutputs { get; set; }
         public byte[] cOpSts { get; set; } = default!;
     }
 
-    public class sioc_aperio_actstateDto
+    public sealed class sioc_aperio_actstateDto
     {
         public byte nReader { get; set; }
         public byte door_side { get; set; }
@@ -839,13 +839,13 @@ public sealed class SCPReplyMessageDto
         public byte id { get; set; }
     }
 
-    public class sioc_aperio_doormodeDto
+    public sealed class sioc_aperio_doormodeDto
     {
         public byte nReader { get; set; }
         public byte mode { get; set; }
     }
 
-    public class SCPReplySioReplyDto
+    public sealed class SCPReplySioReplyDto
     {
         public short nSioReply { get; set; }
         public sior_idrDto idr { get; set; } = default!;
@@ -863,89 +863,89 @@ public sealed class SCPReplyMessageDto
         public sioc_aperio_doormodeDto doormode { get; set; } = default!;
     }
 
-    public class SCPReplySioHeaderDto
+    public sealed class SCPReplySioHeaderDto
     {
         public short nSioReply { get; set; }
         public byte[] dummy { get; set; } = default!;
     }
 
-    public class CC_WEB_CONFIG_NETWORKDto 
+    public sealed class CC_WEB_CONFIG_NETWORKDto
     {
-    
-        public short scp_number  { get; set; }
 
-      public short method  {get; set;}
-      public int cIpAddr  {get; set;}
+        public short scp_number { get; set; }
 
-      public int cSubnetMask  {get; set;}
+        public short method { get; set; }
+        public int cIpAddr { get; set; }
 
-      public int cDfltGateway  {get; set;}
+        public int cSubnetMask { get; set; }
 
-      public char[] cHostName {get; set;} = default!;
+        public int cDfltGateway { get; set; }
 
-      public short dnsType  {get; set;}
+        public char[] cHostName { get; set; } = default!;
 
-      public int cDns  {get; set;}
+        public short dnsType { get; set; }
 
-      public char[] cDnsSuffix  {get; set;} = default!;
+        public int cDns { get; set; }
 
-      public short method2 {get; set;}
-      public int cIpAddr2  {get; set;}
+        public char[] cDnsSuffix { get; set; } = default!;
 
-      public int cSubnetMask2 {get; set;}
+        public short method2 { get; set; }
+        public int cIpAddr2 { get; set; }
 
-      public int cDfltGateway2  {get; set;}
+        public int cSubnetMask2 { get; set; }
 
-      public int cDns2  {get; set;}
+        public int cDfltGateway2 { get; set; }
 
-      public short TnlEnable  {get; set;}
+        public int cDns2 { get; set; }
 
-      public int cIpTnl  {get; set;}
+        public short TnlEnable { get; set; }
 
-      public int cPortTnl  {get; set;}
+        public int cIpTnl { get; set; }
+
+        public int cPortTnl { get; set; }
     }
 
-    public class CC_WEB_CONFIG_HOST_COMM_PRIMDto
+    public sealed class CC_WEB_CONFIG_HOST_COMM_PRIMDto
     {
-         public short scp_number { get; set; }
+        public short scp_number { get; set; }
 
-      public short address { get; set; }
+        public short address { get; set; }
 
-      public short dataSecurity { get; set; }
+        public short dataSecurity { get; set; }
 
-      public short cType { get; set; }
+        public short cType { get; set; }
 
-      public HostCommIpServerDto ipserver { get; set; } = new HostCommIpServerDto();
+        public HostCommIpServerDto ipserver { get; set; } = new HostCommIpServerDto();
 
-      public HostCommIpClientDto ipclient { get; set; } = new HostCommIpClientDto();
+        public HostCommIpClientDto ipclient { get; set; } = new HostCommIpClientDto();
     }
 
-    public class HostCommIpServerDto
+    public sealed class HostCommIpServerDto
     {
-        public int cAuthIP1 {get; set;}
+        public int cAuthIP1 { get; set; }
 
-      public int cAuthIP2 {get; set;}
+        public int cAuthIP2 { get; set; }
 
-      public short nPort {get; set;}
+        public short nPort { get; set; }
 
-      public short enableAuthIP {get; set;}
+        public short enableAuthIP { get; set; }
 
-      public short nNicSel {get; set;}
+        public short nNicSel { get; set; }
     }
 
-    public class HostCommIpClientDto
+    public sealed class HostCommIpClientDto
     {
-          public int cHostIP { get; set;}
+        public int cHostIP { get; set; }
 
-      public short nPort  { get; set;}
+        public short nPort { get; set; }
 
-      public short rqIntvl  { get; set;}
+        public short rqIntvl { get; set; }
 
-      public short connMode  { get; set;}
+        public short connMode { get; set; }
 
-      public char[] cHostName  { get; set;} = default!;
+        public char[] cHostName { get; set; } = default!;
 
-      public short nNicSel  { get; set;}
+        public short nNicSel { get; set; }
     }
 }
 

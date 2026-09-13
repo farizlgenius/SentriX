@@ -1,13 +1,13 @@
 using System;
-using Adapter.Abstraction.Constants;
 using Adapter.Abstraction.Interfaces;
 using Adapter.Amico.Interface;
+using SharedKernel.Enums;
 
 namespace Adapter.Amico;
 
 public sealed class AmicoAdapter : IAdapter
 {
-      public string Vendor => Abstraction.Constants.Vendor.AMICO;
+      public Vendor Vendor => Vendor.amico;
 
       public IDeviceAdapter Device { get; }
 

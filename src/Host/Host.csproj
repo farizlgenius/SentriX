@@ -59,9 +59,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="../Modules/Adapters/Aero/Aero.Infrastructure/Aero.Infrastructure.csproj" />
     <ProjectReference Include="../Modules/Contracts/Core.Contract/Core.Contract.csproj" />
     <ProjectReference Include="../Modules/Core/Core.Infrastructure/Core.Infrastructure.csproj" />
-    <ProjectReference Include="..\Modules\Adapters\Adapter.Aero\Adapter.Aero.csproj" />
     <ProjectReference Include="..\Modules\Adapters\Adapter.Amico\Adapter.Amico.csproj" />
     <ProjectReference Include="..\Modules\Auth\Auth.Infrastructure\Auth.Infrastructure.csproj" />
     <ProjectReference Include="..\Modules\Cache\Cache.Infrastrucure\Cache.Infrastructure.csproj" />

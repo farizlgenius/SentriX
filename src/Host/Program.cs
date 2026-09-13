@@ -3,10 +3,8 @@ using System.Net;
 using System.Text;
 using Adapter.Contract.Interfaces;
 using Adapter.Aero;
-using Adapter.Aero.Interfaces;
 using Adapter.Aero.Listener;
 using Adapter.Amico;
-using AeroAdapter.Application.Interfaces;
 using Auth.Infrastructure;
 using Cache.Infrastructure;
 using Core.Infrastructure;
@@ -29,6 +27,7 @@ using SharedKernel.Helpers;
 using SharedKernel.Model;
 using Storage;
 using Adapter.Contract;
+using Aero.Infrastructure;
 
 
 namespace Host;
@@ -79,7 +78,7 @@ public class Program
         builder.Services.AddCore(builder.Configuration);
 
         // Adapter
-        builder.Services.AddScoped<IAdapterFactory,AdaptorFactory>();
+        builder.Services.AddScoped<IAdapterFactory, AdaptorFactory>();
 
 
         // Startup Task
@@ -326,13 +325,13 @@ public class Program
         // });
 
 
-                // app.Lifetime.ApplicationStopping.Register(async () =>
-                // {
+        // app.Lifetime.ApplicationStopping.Register(async () =>
+        // {
 
-                //     readDriver.SetShutDownFlag();
-                //     readDriver.TurnOffDebug();
+        //     readDriver.SetShutDownFlag();
+        //     readDriver.TurnOffDebug();
 
-                // });
+        // });
 
 
 
