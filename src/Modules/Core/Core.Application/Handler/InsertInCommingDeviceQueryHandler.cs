@@ -17,7 +17,8 @@ public sealed class InsertInCommingDeviceQueryHandler(IDeviceRepository repo) : 
       query.device.Port,
       query.device.Firmware,
       query.device.Vendor,
-      query.device.Metadata
+      query.device.Metadata,
+      SharedKernel.Enums.DeviceConfigurationStatus.unknown
     );
     await repo.AddAsync(d, ct);
 

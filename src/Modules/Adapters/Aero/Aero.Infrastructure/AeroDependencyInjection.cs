@@ -25,6 +25,13 @@ public static class AeroDependencyInjection
     services.AddSingleton<IScpDeviceSpecification>(sp =>
         sp.GetRequiredService<IOptions<ScpDeviceSpecification>>().Value);
 
+    services.AddOptions<ScpDeviceSpecification>()
+    .Bind(configuration.GetSection("Aero:CreateChannel"))
+    .ValidateOnStart();
+
+    services.AddSingleton<ICreateChannel>(sp =>
+        sp.GetRequiredService<IOptions<CreateChannel>>().Value);
+
     //       services.AddHttpClient<AeroHttpClient>(c =>
     //   {
     //       c.BaseAddress = new Uri("https://aero-api/");

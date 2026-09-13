@@ -14,9 +14,7 @@ namespace Core.Application.Services;
 
 public sealed class DeviceService(
   IDeviceRepository repo,
-  IAdapterFactory adapter,
-  IMessageBus bus,
-  IComponentMappingRepository com
+  IMessageBus bus
   ) : IDevice
 {
   public async Task<Guid> CreateAsync(CreateDeviceDto dto, CancellationToken ct = default)
@@ -78,6 +76,7 @@ public sealed class DeviceService(
       dto.Firmware,
       dto.Vendor,
       dto.Metadata,
+      SharedKernel.Enums.DeviceConfigurationStatus.pending,
       locationId,
       deviceModules
     );
@@ -207,6 +206,7 @@ public sealed class DeviceService(
       dto.Firmware,
       dto.Vendor,
       dto.Metadata,
+      SharedKernel.Enums.DeviceConfigurationStatus.pending,
       locationId,
       dto.DeviceModules.Select(x => new DeviceModule(
         x.Name,

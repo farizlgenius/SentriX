@@ -1,135 +1,135 @@
-using Adapter.Aero.Constants;
-using Adapter.Aero.Enums;
-using Adapter.Aero.Helpers;
-using Adapter.Aero.Interfaces;
-using HID.Aero.ScpdNet.Wrapper;
-using Microsoft.Extensions.Logging;
-using SharedKernel.Helpers;
-using SharedKernel.Model;
+// using Adapter.Aero.Constants;
+// using Adapter.Aero.Enums;
+// using Adapter.Aero.Helpers;
+// using Adapter.Aero.Interfaces;
+// using HID.Aero.ScpdNet.Wrapper;
+// using Microsoft.Extensions.Logging;
+// using SharedKernel.Helpers;
+// using SharedKernel.Model;
 
-namespace Adapter.Aero.Command;
+// namespace Adapter.Aero.Command;
 
-public sealed class TimeCommand(ILogger<TimeCommand> logger) : BaseCommand,ITimeCommand
-{
-      public CommandResponse ExtendedTimezoneActSpecification(
-            string Mac,
-            short ScpId,
-            short TzNumber,
-            List<IntervalObject> intervals
+// public sealed class TimeCommand(ILogger<TimeCommand> logger) : BaseCommand,ITimeCommand
+// {
+//       public CommandResponse ExtendedTimezoneActSpecification(
+//             string Mac,
+//             short ScpId,
+//             short TzNumber,
+//             List<IntervalObject> intervals
 
-      )
-      {
-            CC_SCP_TZEX_ACT c= new CC_SCP_TZEX_ACT();
-            c.lastModified = 0;
-            c.nScpID = ScpId;
-            c.number = TzNumber;
-            c.mode = 2;
-            c.actTime = 0;
-            c.deactTime = 0;
-            c.intervals = (short)intervals.Count;
-            int i = 0;
-            foreach(var interval in intervals)
-            {
-                  c.i[i].i_days = (short)UtilitiesHelper.ConvertDayToBinary(
-                        interval.Sun,
-                        interval.Mon,
-                        interval.Tue,
-                        interval.Wed,
-                        interval.Thu,
-                        interval.Fri,
-                        interval.Sat);
+//       )
+//       {
+//             CC_SCP_TZEX_ACT c= new CC_SCP_TZEX_ACT();
+//             c.lastModified = 0;
+//             c.nScpID = ScpId;
+//             c.number = TzNumber;
+//             c.mode = 2;
+//             c.actTime = 0;
+//             c.deactTime = 0;
+//             c.intervals = (short)intervals.Count;
+//             int i = 0;
+//             foreach(var interval in intervals)
+//             {
+//                   c.i[i].i_days = (short)UtilitiesHelper.ConvertDayToBinary(
+//                         interval.Sun,
+//                         interval.Mon,
+//                         interval.Tue,
+//                         interval.Wed,
+//                         interval.Thu,
+//                         interval.Fri,
+//                         interval.Sat);
 
-                  c.i[i].i_start = (short)interval.Start;
-                  c.i[i].i_end = (short)interval.End;
-                  i++;
-            }
-            var result = Send((short)enCfgCmnd.enCcScpTimezoneExAct, c);
-            if (result)
-            {
-                  logger.LogInformation(LogMessageHelper.CommandSuccess(CommandConstant.ExtendedTimeZoneActSpecification, ScpId));
+//                   c.i[i].i_start = (short)interval.Start;
+//                   c.i[i].i_end = (short)interval.End;
+//                   i++;
+//             }
+//             var result = Send((short)enCfgCmnd.enCcScpTimezoneExAct, c);
+//             if (result)
+//             {
+//                   logger.LogInformation(LogMessageHelper.CommandSuccess(CommandConstant.ExtendedTimeZoneActSpecification, ScpId));
 
-                  return new CommandResponse(
-                        Mac,
-                        ScpId,
-                        CommandConstant.ExtendedTimeZoneActSpecification,
-                        SCPDLL.scpGetTagLastPosted(ScpId),
-                        DateTime.UtcNow,
-                        DateTime.UtcNow,
-                        ObjectHelper.ToAsciiString(c),
-                        CommandStatus.PENDING.ToString(),
-                        string.Empty,
-                        true
-                        );
+//                   return new CommandResponse(
+//                         Mac,
+//                         ScpId,
+//                         CommandConstant.ExtendedTimeZoneActSpecification,
+//                         SCPDLL.scpGetTagLastPosted(ScpId),
+//                         DateTime.UtcNow,
+//                         DateTime.UtcNow,
+//                         ObjectHelper.ToAsciiString(c),
+//                         CommandStatus.PENDING.ToString(),
+//                         string.Empty,
+//                         true
+//                         );
 
-            }
-            else
-            {
-                  logger.LogError(LogMessageHelper.CommandUnsuccess(CommandConstant.ExtendedTimeZoneActSpecification, ScpId));
-                  return new CommandResponse(
-                        Mac,
-                       ScpId,
-                       CommandConstant.ExtendedTimeZoneActSpecification,
-                       -1,
-                       DateTime.UtcNow,
-                       DateTime.UtcNow,
-                        ObjectHelper.ToAsciiString(c),
-                       CommandStatus.FAILED.ToString(),
-                       string.Empty,
-                       false
-                       );
+//             }
+//             else
+//             {
+//                   logger.LogError(LogMessageHelper.CommandUnsuccess(CommandConstant.ExtendedTimeZoneActSpecification, ScpId));
+//                   return new CommandResponse(
+//                         Mac,
+//                        ScpId,
+//                        CommandConstant.ExtendedTimeZoneActSpecification,
+//                        -1,
+//                        DateTime.UtcNow,
+//                        DateTime.UtcNow,
+//                         ObjectHelper.ToAsciiString(c),
+//                        CommandStatus.FAILED.ToString(),
+//                        string.Empty,
+//                        false
+//                        );
 
 
-            }
+//             }
 
-      }
+//       }
 
-      public CommandResponse HolidayConfiguration(string Mac, short ScpId, short Year, short Month, short Day, short Extend, short TypeMask)
-      {
-            CC_SCP_HOL c = new CC_SCP_HOL();
-            c.lastModified = 0;
-            c.nScpID = ScpId;
-            c.number = -1;
-            c.year = Year;
-            c.month = Month;
-            c.day = Day;
-            c.extend = Extend;
-            c.type_mask = TypeMask;
-            var result = Send((short)enCfgCmnd.enCcScpHoliday, c);
-            if (result)
-            {
-                  logger.LogInformation(LogMessageHelper.CommandSuccess(CommandConstant.HolidayConfiguration, ScpId));
+//       public CommandResponse HolidayConfiguration(string Mac, short ScpId, short Year, short Month, short Day, short Extend, short TypeMask)
+//       {
+//             CC_SCP_HOL c = new CC_SCP_HOL();
+//             c.lastModified = 0;
+//             c.nScpID = ScpId;
+//             c.number = -1;
+//             c.year = Year;
+//             c.month = Month;
+//             c.day = Day;
+//             c.extend = Extend;
+//             c.type_mask = TypeMask;
+//             var result = Send((short)enCfgCmnd.enCcScpHoliday, c);
+//             if (result)
+//             {
+//                   logger.LogInformation(LogMessageHelper.CommandSuccess(CommandConstant.HolidayConfiguration, ScpId));
 
-                  return new CommandResponse(
-                        Mac,
-                        ScpId,
-                        CommandConstant.HolidayConfiguration,
-                        SCPDLL.scpGetTagLastPosted(ScpId),
-                        DateTime.UtcNow,
-                        DateTime.UtcNow,
-                       ObjectHelper.ToAsciiString(c),
-                        CommandStatus.PENDING.ToString(),
-                        string.Empty,
-                        true
-                        );
+//                   return new CommandResponse(
+//                         Mac,
+//                         ScpId,
+//                         CommandConstant.HolidayConfiguration,
+//                         SCPDLL.scpGetTagLastPosted(ScpId),
+//                         DateTime.UtcNow,
+//                         DateTime.UtcNow,
+//                        ObjectHelper.ToAsciiString(c),
+//                         CommandStatus.PENDING.ToString(),
+//                         string.Empty,
+//                         true
+//                         );
 
-            }
-            else
-            {
-                  logger.LogError(LogMessageHelper.CommandUnsuccess(CommandConstant.HolidayConfiguration, ScpId));
-                  return new CommandResponse(
-                        Mac,
-                       ScpId,
-                       CommandConstant.HolidayConfiguration,
-                       -1,
-                       DateTime.UtcNow,
-                       DateTime.UtcNow,
-                      ObjectHelper.ToAsciiString(c),
-                       CommandStatus.FAILED.ToString(),
-                       string.Empty,
-                       false
-                       );
+//             }
+//             else
+//             {
+//                   logger.LogError(LogMessageHelper.CommandUnsuccess(CommandConstant.HolidayConfiguration, ScpId));
+//                   return new CommandResponse(
+//                         Mac,
+//                        ScpId,
+//                        CommandConstant.HolidayConfiguration,
+//                        -1,
+//                        DateTime.UtcNow,
+//                        DateTime.UtcNow,
+//                       ObjectHelper.ToAsciiString(c),
+//                        CommandStatus.FAILED.ToString(),
+//                        string.Empty,
+//                        false
+//                        );
 
-            }
-      }
-      
-}
+//             }
+//       }
+
+// }

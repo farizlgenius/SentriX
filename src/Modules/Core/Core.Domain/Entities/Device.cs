@@ -13,6 +13,7 @@ public sealed class Device : BaseDomain
   public string Firmware { get; set; } = string.Empty;
   public string Metadata { get; private set; } = string.Empty;
   public Vendor Vendor { get; private set; } = Vendor.aero;
+  public DeviceConfigurationStatus DeviceConfigurationStatus { get; private set; } = DeviceConfigurationStatus.pending;
   public int? LocationId { get; private set; }
   public List<DeviceModule> DeviceModules { get; private set; } = default!;
 
@@ -25,6 +26,7 @@ public sealed class Device : BaseDomain
    string Fw,
    Vendor Vendor,
    string Metadata,
+   DeviceConfigurationStatus status,
    int LocationId,
    List<DeviceModule> deviceModules
    ) : base(Guid.NewGuid())
@@ -44,6 +46,7 @@ public sealed class Device : BaseDomain
     this.Vendor = Vendor;
     this.LocationId = LocationId;
     this.DeviceModules = deviceModules;
+    DeviceConfigurationStatus = status;
   }
 
   public Device(
@@ -54,7 +57,8 @@ public sealed class Device : BaseDomain
    int Port,
    string Fw,
    Vendor Vendor,
-   string Metadata
+   string Metadata,
+   DeviceConfigurationStatus status
    ) : base(Guid.NewGuid())
   {
     ValidationHelper.Name(Name);
@@ -69,6 +73,7 @@ public sealed class Device : BaseDomain
     this.Firmware = Fw;
     this.Metadata = Metadata;
     this.Vendor = Vendor;
+    DeviceConfigurationStatus = status;
   }
 
   public Device(
@@ -81,6 +86,7 @@ public sealed class Device : BaseDomain
     string Fw,
     Vendor Vendor,
     string Metadata,
+    DeviceConfigurationStatus status,
     int LocationId,
     List<DeviceModule> deviceModules
     ) : base(Guid)
@@ -100,6 +106,7 @@ public sealed class Device : BaseDomain
     this.Metadata = Metadata;
     this.LocationId = LocationId;
     this.DeviceModules = deviceModules;
+    DeviceConfigurationStatus = status;
   }
 
 

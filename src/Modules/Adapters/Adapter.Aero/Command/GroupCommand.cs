@@ -1,67 +1,67 @@
-using System.Security.Cryptography.X509Certificates;
-using Adapter.Aero.Constants;
-using Adapter.Aero.Enums;
-using Adapter.Aero.Helpers;
-using Adapter.Aero.Interfaces;
-using HID.Aero.ScpdNet.Wrapper;
-using Microsoft.Extensions.Logging;
-using SharedKernel.Helpers;
-using SharedKernel.Model;
+// using System.Security.Cryptography.X509Certificates;
+// using Adapter.Aero.Constants;
+// using Adapter.Aero.Enums;
+// using Adapter.Aero.Helpers;
+// using Adapter.Aero.Interfaces;
+// using HID.Aero.ScpdNet.Wrapper;
+// using Microsoft.Extensions.Logging;
+// using SharedKernel.Helpers;
+// using SharedKernel.Model;
 
-namespace Adapter.Aero.Command;
+// namespace Adapter.Aero.Command;
 
-public sealed class GroupCommand(ILogger<GroupCommand> logger) : BaseCommand, IGroupCommand
-{
-      public CommandResponse AccessLevelConfigurationExtended(string Mac,short ScpId,short ComponentId,List<(short DoorComponentId,short TimeZoneComponentId)> Doors)
-      {
-            CC_ALVL_EX c = new CC_ALVL_EX();
-            c.lastModified = 0;
-            c.scp_number = ScpId;
-            c.alvl_number = ComponentId;
-            c.oper_mode = 1;
-            // for(int i = 0;i < c.tz.Length; i++)
-            // {
-            //       c.tz[i] = Timezone[i];
-            // }
-            foreach(var d in Doors)
-            {
-                  c.tz[d.DoorComponentId] = d.TimeZoneComponentId;
-            }
-            var result = Send((short)enCfgCmnd.enCcAlvlEx, c);
-            if (result)
-            {
-                  logger.LogInformation(LogMessageHelper.CommandSuccess(CommandConstant.AccessControlReaderConfiguration, ScpId));
+// public sealed class GroupCommand(ILogger<GroupCommand> logger) : BaseCommand, IGroupCommand
+// {
+//       public CommandResponse AccessLevelConfigurationExtended(string Mac,short ScpId,short ComponentId,List<(short DoorComponentId,short TimeZoneComponentId)> Doors)
+//       {
+//             CC_ALVL_EX c = new CC_ALVL_EX();
+//             c.lastModified = 0;
+//             c.scp_number = ScpId;
+//             c.alvl_number = ComponentId;
+//             c.oper_mode = 1;
+//             // for(int i = 0;i < c.tz.Length; i++)
+//             // {
+//             //       c.tz[i] = Timezone[i];
+//             // }
+//             foreach(var d in Doors)
+//             {
+//                   c.tz[d.DoorComponentId] = d.TimeZoneComponentId;
+//             }
+//             var result = Send((short)enCfgCmnd.enCcAlvlEx, c);
+//             if (result)
+//             {
+//                   logger.LogInformation(LogMessageHelper.CommandSuccess(CommandConstant.AccessControlReaderConfiguration, ScpId));
 
-                  return new CommandResponse(
-                        Mac,
-                        ScpId,
-                        CommandConstant.AccessControlReaderConfiguration,
-                        SCPDLL.scpGetTagLastPosted(ScpId),
-                        DateTime.UtcNow,
-                        DateTime.UtcNow,
-                         ObjectHelper.ToAsciiString(c),
-                        CommandStatus.PENDING.ToString(),
-                        string.Empty,
-                        true
-                        );
+//                   return new CommandResponse(
+//                         Mac,
+//                         ScpId,
+//                         CommandConstant.AccessControlReaderConfiguration,
+//                         SCPDLL.scpGetTagLastPosted(ScpId),
+//                         DateTime.UtcNow,
+//                         DateTime.UtcNow,
+//                          ObjectHelper.ToAsciiString(c),
+//                         CommandStatus.PENDING.ToString(),
+//                         string.Empty,
+//                         true
+//                         );
 
-            }
-            else
-            {
-                  logger.LogError(LogMessageHelper.CommandUnsuccess(CommandConstant.AccessControlReaderConfiguration, ScpId));
-                  return new CommandResponse(
-                        Mac,
-                       ScpId,
-                       CommandConstant.AccessControlReaderConfiguration,
-                       -1,
-                       DateTime.UtcNow,
-                       DateTime.UtcNow,
-                        ObjectHelper.ToAsciiString(c),
-                       CommandStatus.PENDING.ToString(),
-                       string.Empty,
-                       false
-                       );
+//             }
+//             else
+//             {
+//                   logger.LogError(LogMessageHelper.CommandUnsuccess(CommandConstant.AccessControlReaderConfiguration, ScpId));
+//                   return new CommandResponse(
+//                         Mac,
+//                        ScpId,
+//                        CommandConstant.AccessControlReaderConfiguration,
+//                        -1,
+//                        DateTime.UtcNow,
+//                        DateTime.UtcNow,
+//                         ObjectHelper.ToAsciiString(c),
+//                        CommandStatus.PENDING.ToString(),
+//                        string.Empty,
+//                        false
+//                        );
 
-            }
-      }
-}
+//             }
+//       }
+// }

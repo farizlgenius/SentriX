@@ -1,0 +1,38 @@
+namespace Aero.Application.Constants;
+
+public static class Command
+{
+  public static string ScpDeviceSpecification = "1107 : Scp Device Specification";
+  public static string AccessDatabaseSpecification = "1105 : Access Database Specification";
+  public static string ReadsConfiguration = "900 : Reads Configuration";
+  public static string TimeSet = "302 : Time Set";
+  public static string DriverConfiguration = "108 : Driver Configuration";
+  public static string SioPanelConfiguration = "109 : Sio Panel Configuration";
+  public static string InputPointSpecification = "110 : Input Point Specification";
+  public static string ScpStructureStatusRead = "1853 : Scp Structure Status Read";
+  public static string ElevatorAccessLevelSpecification = "501 : Elevator Access Level Specification";
+  public static string ScpReset = "301 : Scp Reset";
+  public static string SioStatusReq = "404 : Sio Status Req";
+  public static string OutputPointSpecification = "111 : Output Point Specification";
+  public static string ControlPointConfiguration = "114 : Control Point Configuration";
+  public static string ControlPointConfigurationDelete = "Delete : Control Point Configuration";
+  public static string ControlPointCommand = "307 : Control Point Command";
+  public static string AsciiCommandAsync = "ASCII : Command";
+  public static string ScpSetId = "318 : Set SCP Id";
+  public static string HolidayConfiguration = "1104 : Holiday Configuration";
+  public static string ExtendedTimeZoneActSpecification = "3103 : Extended TimeZone Act Specification";
+  public static string MonitorPointConfiguration = "113 : Monitor Point Configuration";
+  public static string MonitorPointMask = "306 : Monitor Point Mask";
+  public static string ConfigureMonitorPointGroup = "120 : Configure Monitor Point Group";
+  public static string AccessControlReaderConfiguration = "115 : Access Control Reader Configuration";
+  public static string ReaderSpecification = "112 : Reader Specification";
+  public static string AccessLevelConfigurationExtended = "2116 : Access Level Configuration Extended";
+  public static string TransactionLogStatus = "402 : Transaction Log Status";
+  public static string SetTransactionIndex = "303 : Set Transaction Index";
+  public static string CardFormatterConfiguration = "1102 : Card Formatter Configuration";
+  public static string CardDelete = "3305 : Card Delete";
+  public static string DetachScpChannel = "208 : Detach Scp from Channel";
+  public static string DeleteScp = "015 : Delete Scp";
+}
+
+

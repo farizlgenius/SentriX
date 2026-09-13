@@ -1,6 +1,8 @@
 using Core.Application.Interfaces;
 using Core.Domain.Entities;
 using Core.Infrastructure.Persistences;
+using Microsoft.EntityFrameworkCore;
+using SharedKernel.Enums;
 
 namespace Core.Infrastructure.Repositories;
 
@@ -15,13 +17,27 @@ public sealed class ComponentMappingRepository(CoreDbContext context) : ICompone
     await context.SaveChangesAsync(ct);
   }
 
-      public Task GetExternalIdByMacAsync(string mac, CancellationToken ct = default)
-      {
-            throw new NotImplementedException();
-      }
+  public Task GetExternalIdByMacAsync(string mac, CancellationToken ct = default)
+  {
+    throw new NotImplementedException();
+  }
 
-      public Task GetFreeIdByMacAsync(string mac, CancellationToken ct = default)
-      {
-            throw new NotImplementedException();
-      }
+  public async Task<IEnumerable<int>> GetExternalIdsByEntityAndVendorAsync(string entity, Vendor vendor, CancellationToken ct = default)
+  {
+    return await context.ComponentMappings
+      .AsNoTracking()
+      .Where(x => x.entity.Equals(entity) && x.vendor == vendor)
+      .Select(x => x.external_id)
+      .ToArrayAsync();
+  }
+
+  public async Task<int> GetFreeIdByMacAndEntityAndVendorAsync(string mac, string entity, Vendor vendor, int max, CancellationToken ct = default)
+  {
+    throw new NotImplementedException();
+  }
+
+  public Task GetFreeIdByMacAsync(string mac, CancellationToken ct = default)
+  {
+    throw new NotImplementedException();
+  }
 }

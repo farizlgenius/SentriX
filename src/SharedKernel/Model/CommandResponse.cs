@@ -1,3 +1,5 @@
+using SharedKernel.Enums;
+
 namespace SharedKernel.Model;
 
 public sealed record CommandResponse(
@@ -6,9 +8,10 @@ public sealed record CommandResponse(
       string Command,
       int Tag,
       DateTime SendAt,
-      DateTime ReceivedAt,
+      DateTime? ReceivedAt,
       string? Body,
-      string Status,
+      CommandStatus Status,
       string Reason,
+      Vendor Vendor,
       bool IsSend
       );

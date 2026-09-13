@@ -6,6 +6,15 @@ namespace Aero.Application.Interfaces;
 public interface IDeviceRepository
 {
       // Below Command need to reset controller if change
+      bool SystemLevelSpecification(
+            short nPorts,
+            short nScps
+      );
+      bool CreateChannel(
+            short nChannelId,
+            short cType,
+            short cPort
+      );
       CommandResponse ScpDeviceSpecification(
             string Mac,
             short ScpId,
@@ -53,9 +62,9 @@ public interface IDeviceRepository
 
       // End
 
-      CommandResponse TimeSet(string Mac,short ScpId);
-      
-      bool CreateChannel();
+      CommandResponse TimeSet(string Mac, short ScpId);
+
+
       CommandResponse DriverConfiguration(
             string Mac,
             short ScpId,
@@ -66,14 +75,14 @@ public interface IDeviceRepository
             short nProtocol,
             short nDialect
       );
-      CommandResponse ReadsConfiguration(string Mac,short ScpId,WebConfigReadType Type);
-     CommandResponse ScpStructureStatusRead(string Mac,short ScpId,List<short> StructureList);
-     CommandResponse ElevatorAccessLevelSpecification(string Mac,short ScpId,short MaxEAlvl,short MaxFloor);
-      CommandResponse ScpReset(string Mac,short ScpId);
-      CommandResponse AsciiCommandAsync(string Mac,short ScpId,string Command);
-      CommandResponse SetScpId(string Mac,short ScpId,short To);
-      CommandResponse TransactionLogStatusAsync(string Mac,short ScpId);
-      CommandResponse SetTransactionLogIndexAsync(string Mac,short ScpId,bool IsEnable);
-      CommandResponse DetachScpFromChannel(string Mac,short ScpId);
-      CommandResponse DeleteScp(string Mac,short ScpId);
+      CommandResponse ReadsConfiguration(string Mac, short ScpId, WebConfigReadType Type);
+      CommandResponse ScpStructureStatusRead(string Mac, short ScpId, List<short> StructureList);
+      CommandResponse ElevatorAccessLevelSpecification(string Mac, short ScpId, short MaxEAlvl, short MaxFloor);
+      CommandResponse ScpReset(string Mac, short ScpId);
+      CommandResponse AsciiCommandAsync(string Mac, short ScpId, string Command);
+      CommandResponse SetScpId(string Mac, short ScpId, short To);
+      CommandResponse TransactionLogStatusAsync(string Mac, short ScpId);
+      CommandResponse SetTransactionLogIndexAsync(string Mac, short ScpId, bool IsEnable);
+      CommandResponse DetachScpFromChannel(string Mac, short ScpId);
+      CommandResponse DeleteScp(string Mac, short ScpId);
 }

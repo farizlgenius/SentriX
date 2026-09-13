@@ -11,7 +11,6 @@ using Adapter.Aero.Repositories;
 using Adapter.Aero.Services;
 using Adapter.Aero.Worker;
 using AeroAdapter.Application.Interfaces;
-using AeroAdapter.Infrastructure.Writer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -50,17 +49,17 @@ public static class AeroDependencyInjection
             )
          );
 
-        services.AddScoped<IScpCommand, ScpCommand>();
-        services.AddScoped<IModuleCommand, ModuleCommand>();
-        services.AddScoped<IInputCommand, InputCommand>();
-        services.AddScoped<IOutputCommand, OutputCommand>();
-        services.AddScoped<IModuleCommand, ModuleCommand>();
-        services.AddScoped<IDriverCommand, DriverCommand>();
-        services.AddScoped<ITimeCommand, TimeCommand>();
-        services.AddScoped<IDoorCommand, DoorCommand>();
-        services.AddScoped<IGroupCommand, GroupCommand>();
-        services.AddScoped<IUserCommand, UserCommand>();
-        services.AddScoped<ISettingCommand, SettingCommand>();
+        // services.AddScoped<IScpCommand, ScpCommand>();
+        // services.AddScoped<IModuleCommand, ModuleCommand>();
+        // services.AddScoped<IInputCommand, InputCommand>();
+        // services.AddScoped<IOutputCommand, OutputCommand>();
+        // services.AddScoped<IModuleCommand, ModuleCommand>();
+        // services.AddScoped<IDriverCommand, DriverCommand>();
+        // services.AddScoped<ITimeCommand, TimeCommand>();
+        // services.AddScoped<IDoorCommand, DoorCommand>();
+        // services.AddScoped<IGroupCommand, GroupCommand>();
+        // services.AddScoped<IUserCommand, UserCommand>();
+        // services.AddScoped<ISettingCommand, SettingCommand>();
 
 
         services.AddScoped<IScpService, ScpService>();

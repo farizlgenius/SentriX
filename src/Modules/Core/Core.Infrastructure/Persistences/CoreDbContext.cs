@@ -50,6 +50,7 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
       public DbSet<Output> Outputs { get; set; }
       public DbSet<Event> Events { get; set; }
       public DbSet<AdapterEvent> AdapterEvents { get; set; }
+      public DbSet<AeroDriverSetting> AeroDriverSettings { get; set; }
       protected override void OnModelCreating(ModelBuilder modelBuilder)
       {
             Console.WriteLine("=== Entities ===");
@@ -1368,6 +1369,45 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                               location_id = 1
                         }
                   );
+
+            modelBuilder.Entity<AeroDriverSetting>()
+            .HasData(
+                  new AeroDriverSetting
+                  {
+                        id = 1,
+                        n_port = 1024,
+                        n_scps = 1024,
+                        c_type = 7,
+                        c_port = 3333,
+                        n_msp1_port = 3,
+                        n_trasaction = 60000,
+                        n_sio = 33,
+                        n_mp = 615,
+                        n_cp = 388,
+                        n_acr = 64,
+                        n_alvl = 32000,
+                        n_trgr = 1024,
+                        n_proc = 1024,
+                        gmt_offset = -25200,
+                        is_daylight_saving = false,
+                        n_tz = 255,
+                        n_hol = 255,
+                        n_mpg = 128,
+                        n_tran_limit = 60000,
+                        n_cards = 200000,
+                        n_alvl_per_card = 8,
+                        pin_duress_mode = 2,
+                        duress_const_digit = 5,
+                        pin_digit = 6,
+                        issue_code_bit = 1,
+                        apb_location = true,
+                        store_act_date = 2,
+                        store_deact_date = 2,
+                        used_limit = true,
+                        escort_timeout = 15,
+                        multi_card_timeout = 15
+                  }
+            );
 
 
 

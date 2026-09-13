@@ -109,7 +109,7 @@ public sealed class DeviceRepository(CoreDbContext context) : IDeviceRepository
                               d.is_active,
                               d.is_default
                         )).ToList(),
-                        x.location.guid,
+                        x.location == null ? Guid.Empty : x.location.guid,
                         x.is_active,
                         x.is_default
                   )).FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.Device, guid.ToString());
@@ -152,7 +152,7 @@ public sealed class DeviceRepository(CoreDbContext context) : IDeviceRepository
                               d.is_active,
                               d.is_default
                         )).ToList(),
-                        x.location.guid,
+                        x.location == null ? Guid.Empty : x.location.guid,
                         x.is_active,
                         x.is_default
                   )).ToArrayAsync();
@@ -191,10 +191,21 @@ public sealed class DeviceRepository(CoreDbContext context) : IDeviceRepository
                   .FirstOrDefaultAsync();
       }
 
+      public async Task<(string, int)> GetNameAndLocationIdByMacAsync(string mac, CancellationToken ct = default)
+      {
+            var res = await context.Devices
+                  .AsNoTracking()
+                  .Where(x => x.mac.Equals(mac))
+                  .Select(x => new { x.name, x.location_id })
+                  .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.Device, mac); ;
+
+            return (res.name, res.location_id ?? 0);
+      }
+
       public async Task<Pagination<DeviceDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
       {
             var query = context.Devices
-                  .Where(x => x.location.guid == param.locationGuid)
+                  .Where(x => x.location != null && x.location.guid == param.locationGuid)
                   .AsNoTracking()
                   .AsQueryable();
 
@@ -278,7 +289,7 @@ public sealed class DeviceRepository(CoreDbContext context) : IDeviceRepository
                               d.is_active,
                               d.is_default
                         )).ToList(),
-                        x.location.guid,
+                        x.location == null ? Guid.Empty : x.location.guid,
                         x.is_active,
                         x.is_default
                   )).ToListAsync();

@@ -2,7 +2,9 @@ using Aero.Application.Helpers;
 using Aero.Application.Interfaces;
 using Aero.Domain.Entities;
 using Core.Contract.DTOs.Device;
+using Core.Contract.Interfaces;
 using Core.Contract.Queries;
+using SharedKernel.Constants;
 using SharedKernel.Enums;
 using SharedKernel.Messaging;
 
@@ -10,12 +12,16 @@ namespace Aero.Application.Services;
 
 public sealed class IdReportService(
   IMessageBus bus,
-  IScpDeviceSpecification scpDevice,
+  ISetting setting,
+  IComponentMapping mapping,
   IDeviceRepository repo
   ) : IIdReportService
 {
   public async Task HandleInCommingDeviceAsync(ReplyMessage.SCPReplyIDReport dto, CancellationToken ct = default)
   {
+    // Get Setting
+    var scpDevice = await setting.GetAeroDriverSettingAsync();
+
     // Send 1107 Command always 
     var res = repo.ScpDeviceSpecification(
       UtilitiesHelper.ByteToHexStr(dto.mac_addr),
@@ -29,18 +35,18 @@ public sealed class IdReportService(
       (short)scpDevice.nAlvl,
       (short)scpDevice.nTrgr,
       (short)scpDevice.nProc,
-      -25200,
-      (short)scpDevice.nDstID,
+      (short)scpDevice.GmtOffset,
+      scpDevice.IsDaylightSaving ? (short)100 : (short)0,
       (short)scpDevice.nTz,
       (short)scpDevice.nHol,
       (short)scpDevice.nMpg,
       (short)scpDevice.nTranLimit,
-      (short)scpDevice.nOperModes,
-      (short)scpDevice.OperType,
+      0,
+      1,
       0
     );
 
-    // await bus.
+    await bus.QueryAsync(new InsertAdapterEventQuery(res), ct);
 
     // Check the already have mac in device table
     if (await bus.QueryAsync(new IsAnyMacQuery(UtilitiesHelper.ByteToHexStr(dto.mac_addr))))
@@ -49,6 +55,17 @@ public sealed class IdReportService(
     }
     else
     {
+      var id = await mapping.GetFreeIdByMacAndEntityAndVendorAsync(EntityType.Device, Vendor.aero, scpDevice.nScps);
+
+      if (id == null)
+        throw new Exception("Device number Exceed.");
+
+      repo.SetScpId(
+        UtilitiesHelper.ByteToHexStr(dto.mac_addr),
+        dto.scp_id,
+        (short)id
+      );
+
       // Save new device to table 
       var d = new CreateDeviceDto(
         $"Aero x1100 {dto.serial_number}",
