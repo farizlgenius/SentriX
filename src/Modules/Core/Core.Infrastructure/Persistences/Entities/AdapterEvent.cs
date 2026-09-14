@@ -11,7 +11,7 @@ public sealed class AdapterEvent : BaseEntity
   public string command { get; set; } = string.Empty;
   public int tag { get; set; }
   public DateTime send_at { get; set; }
-  public DateTime received_at { get; set; }
+  public DateTime? received_at { get; set; }
   public string body { get; set; } = string.Empty;
   public CommandStatus status { get; set; } = CommandStatus.PENDING;
   public string reason { get; set; } = string.Empty;

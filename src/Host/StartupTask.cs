@@ -1,4 +1,6 @@
 using Adapter.Aero.Listener;
+using Aero.Application.Interfaces;
+using Core.Application.Interfaces;
 using Host.Helpers;
 using SharedKernel.Helpers;
 using Storage.Contract.Interfaces;
@@ -100,16 +102,25 @@ public sealed class StartupTask : IHostedService
         _logger.LogInformation("🚀 Starting Aero Driver...");
 
         // Start driver here
-        // using var scope = _scopeFactory.CreateScope();
-        // var aeroRead = scope.ServiceProvider.GetRequiredService<ReplyMessageListener>();
-        // var aeroWrite = scope.ServiceProvider.GetRequiredService<IScpCommand>();
-        // var aeroDriver = scope.ServiceProvider.GetRequiredService<IDriverCommand>();
+        using var scope = _scopeFactory.CreateScope();
+        var setting = scope.ServiceProvider.GetRequiredService<ISettingRepository>();
+        var aeroRead = scope.ServiceProvider.GetRequiredService<ReplyMessageListener>();
+        var aero = scope.ServiceProvider.GetRequiredService<Aero.Application.Interfaces.IDeviceRepository>();
 
-        // aeroRead.TurnOnDebug();
+        var aeroSetting = await setting.GetAeroDriverSettingAsync();
 
-        // aeroDriver.SystemLevelSpecification();
+        aeroRead.TurnOnDebug();
 
-        // aeroWrite.CreateChannel();
+        aero.SystemLevelSpecification(
+            (short)aeroSetting.nPorts,
+            (short) aeroSetting.nScps
+        );
+
+        aero.CreateChannel(
+             1,
+              (short)aeroSetting.cType,
+              (short)aeroSetting.cPort
+        );
 
         await Task.CompletedTask;
     }
@@ -123,11 +134,11 @@ public sealed class StartupTask : IHostedService
         _logger.LogInformation("🛑 Shutting down Aero Driver...");
 
         // // Stop / dispose driver here
-        // using var scope = _scopeFactory.CreateScope();
-        // var aeroRead = scope.ServiceProvider.GetRequiredService<ReplyMessageListener>();
+        using var scope = _scopeFactory.CreateScope();
+        var aeroRead = scope.ServiceProvider.GetRequiredService<ReplyMessageListener>();
 
-        // aeroRead.SetShutDownFlag();
-        // aeroRead.TurnOffDebug();
+        aeroRead.SetShutDownFlag();
+        aeroRead.TurnOffDebug();
 
         await Task.CompletedTask;
     }

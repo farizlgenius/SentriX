@@ -563,6 +563,7 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   .HasForeignKey(x => x.location_id)
                   .OnDelete(DeleteBehavior.SetNull);
 
+
             modelBuilder.Entity<UserLocation>()
                         .HasOne(x => x.location)
                         .WithMany(x => x.user_locations)

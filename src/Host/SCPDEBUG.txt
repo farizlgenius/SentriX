@@ -1,0 +1,8 @@
+Debug file SCPDEBUG.txt <SCPDEBUGc.txt> <SCPDEBUG.TXT> opened Mon Sep 14 12:14:39 2026
+Begin - SCP Driver DLL (64-bit) version 4.7.1.43
+62879.912 WSAStartup ok
+62879.914 RNG_X931A24 Initialized
+62879.914 1, enCcSystem: 011 1024 1024 0 0 1
+62879.941 1, enCcCreateChannel: 0012 1 7 3333 0 3000 0 "" 0
+62888.917 Shutting down debug Thread...
+File closed Mon Sep 14 12:14:48 2026

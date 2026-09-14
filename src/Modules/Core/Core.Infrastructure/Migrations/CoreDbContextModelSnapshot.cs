@@ -23,6 +23,265 @@ namespace Core.Infrastructure.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.AdapterEvent", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<string>("body")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("command")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("component_id")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("created_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.Property<Guid>("guid")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<bool>("is_active")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("is_default")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("location_id")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("mac")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("reason")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("received_at")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("response")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("send_at")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("status")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("tag")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("updated_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.Property<string>("vendor")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("location_id");
+
+                    b.HasIndex("guid", "id", "location_id", "created_at", "mac", "send_at", "received_at", "tag", "vendor")
+                        .IsUnique();
+
+                    b.ToTable("AdapterEvents", "core");
+                });
+
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.AeroDriverSetting", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<bool>("apb_location")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("c_port")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("c_type")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("card_id_size")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("created_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.Property<int>("duress_const_digit")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("escort_timeout")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("gmt_offset")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid>("guid")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<bool>("is_active")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("is_daylight_saving")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("is_default")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("issue_code_bit")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("multi_card_timeout")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("n_acr")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("n_alvl")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("n_alvl_per_card")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("n_cards")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("n_cp")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("n_hol")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("n_mp")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("n_mpg")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("n_msp1_port")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("n_port")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("n_proc")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("n_scps")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("n_sio")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("n_tran_limit")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("n_trasaction")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("n_trgr")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("n_tz")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("pin_digit")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("pin_duress_mode")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("store_act_date")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("store_deact_date")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("updated_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.Property<bool>("used_limit")
+                        .HasColumnType("boolean");
+
+                    b.HasKey("id");
+
+                    b.ToTable("AeroDriverSettings", "core");
+
+                    b.HasData(
+                        new
+                        {
+                            id = 1,
+                            apb_location = true,
+                            c_port = 3333,
+                            c_type = 7,
+                            card_id_size = 0,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            duress_const_digit = 5,
+                            escort_timeout = 15,
+                            gmt_offset = -25200,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_daylight_saving = false,
+                            is_default = false,
+                            issue_code_bit = 1,
+                            multi_card_timeout = 15,
+                            n_acr = 64,
+                            n_alvl = 32000,
+                            n_alvl_per_card = 8,
+                            n_cards = 200000,
+                            n_cp = 388,
+                            n_hol = 255,
+                            n_mp = 615,
+                            n_mpg = 128,
+                            n_msp1_port = 3,
+                            n_port = 1024,
+                            n_proc = 1024,
+                            n_scps = 1024,
+                            n_sio = 33,
+                            n_tran_limit = 60000,
+                            n_trasaction = 60000,
+                            n_trgr = 1024,
+                            n_tz = 255,
+                            pin_digit = 6,
+                            pin_duress_mode = 2,
+                            store_act_date = 2,
+                            store_deact_date = 2,
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            used_limit = true
+                        });
+                });
+
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Buzzer", b =>
                 {
                     b.Property<int>("id")
@@ -2344,9 +2603,8 @@ namespace Core.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
 
-                    b.Property<string>("configuration_status")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<int>("configuration_status")
+                        .HasColumnType("integer");
 
                     b.Property<DateTime>("created_at")
                         .ValueGeneratedOnAdd()
@@ -2372,7 +2630,7 @@ namespace Core.Infrastructure.Migrations
                     b.Property<bool>("is_default")
                         .HasColumnType("boolean");
 
-                    b.Property<int>("location_id")
+                    b.Property<int?>("location_id")
                         .HasColumnType("integer");
 
                     b.Property<string>("mac")
@@ -2584,6 +2842,91 @@ namespace Core.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("Doors", "core");
+                });
+
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Event", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<string>("actor")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("capture_image_name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("component_name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("created_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.Property<string>("event_code")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("event_type")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("guid")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<string>("image_name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("is_active")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("is_default")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("location_id")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("mac")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("module")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("remarks")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("timestamp")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("updated_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.Property<string>("vendor")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("location_id");
+
+                    b.HasIndex("guid", "id", "location_id", "created_at", "timestamp", "mac", "vendor")
+                        .IsUnique();
+
+                    b.ToTable("Events", "core");
                 });
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Face", b =>
@@ -4652,6 +4995,9 @@ namespace Core.Infrastructure.Migrations
                     b.Property<int>("location_id")
                         .HasColumnType("integer");
 
+                    b.Property<int>("locationid")
+                        .HasColumnType("integer");
+
                     b.Property<string>("name")
                         .IsRequired()
                         .HasColumnType("text");
@@ -4663,7 +5009,7 @@ namespace Core.Infrastructure.Migrations
 
                     b.HasKey("id");
 
-                    b.HasIndex("location_id");
+                    b.HasIndex("locationid");
 
                     b.ToTable("Turnstiles", "core");
                 });
@@ -4955,6 +5301,17 @@ namespace Core.Infrastructure.Migrations
                     b.ToTable("UserLocations", "core");
                 });
 
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.AdapterEvent", b =>
+                {
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.Location", "location")
+                        .WithMany("adapter_events")
+                        .HasForeignKey("location_id")
+                        .OnDelete(DeleteBehavior.SetNull)
+                        .IsRequired();
+
+                    b.Navigation("location");
+                });
+
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Buzzer", b =>
                 {
                     b.HasOne("Core.Infrastructure.Persistences.Entities.DeviceModule", "device_module")
@@ -5010,8 +5367,7 @@ namespace Core.Infrastructure.Migrations
                     b.HasOne("Core.Infrastructure.Persistences.Entities.Location", "location")
                         .WithMany("devices")
                         .HasForeignKey("location_id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("location");
                 });
@@ -5078,6 +5434,17 @@ namespace Core.Infrastructure.Migrations
                     b.Navigation("rex");
 
                     b.Navigation("sensor");
+                });
+
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Event", b =>
+                {
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.Location", "location")
+                        .WithMany("events")
+                        .HasForeignKey("location_id")
+                        .OnDelete(DeleteBehavior.SetNull)
+                        .IsRequired();
+
+                    b.Navigation("location");
                 });
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Feature", b =>
@@ -5385,7 +5752,7 @@ namespace Core.Infrastructure.Migrations
                 {
                     b.HasOne("Core.Infrastructure.Persistences.Entities.Location", "location")
                         .WithMany("turnstiles")
-                        .HasForeignKey("location_id")
+                        .HasForeignKey("locationid")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -5598,6 +5965,8 @@ namespace Core.Infrastructure.Migrations
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Location", b =>
                 {
+                    b.Navigation("adapter_events");
+
                     b.Navigation("companies");
 
                     b.Navigation("component_mapping");
@@ -5605,6 +5974,8 @@ namespace Core.Infrastructure.Migrations
                     b.Navigation("devices");
 
                     b.Navigation("doors");
+
+                    b.Navigation("events");
 
                     b.Navigation("groups");
 

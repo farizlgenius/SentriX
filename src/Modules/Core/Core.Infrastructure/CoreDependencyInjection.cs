@@ -4,6 +4,7 @@ using Core.Application.Services;
 using Core.Application.ValueObjects;
 using Core.Contract.Interfaces;
 using Core.Infrastructure.Persistences;
+using Core.Infrastructure.Persistences.Entities;
 using Core.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -112,6 +113,20 @@ public static class CoreDependencyInjection
     // Module Device
     services.AddScoped<IDeviceModule, DeviceModuleService>();
     services.AddScoped<IDeviceModuleRepository, DeviceModuleRepository>();
+
+    // Temp Device
+    services.AddSingleton<ITempDevice, TempDeviceService>();
+
+    // Event
+    services.AddScoped<IEvent,EventService>();
+    services.AddScoped<IEventRepository,EventRepostory>();
+
+    // Adapter Event
+    services.AddScoped<IAdapterEvent,AdapterEventService>();
+    services.AddScoped<IAdapterEventRepository,AdapterEventRepository>();
+
+    // SEtting
+    services.AddScoped<ISettingRepository,SettingRepository>();
 
 
     // ==========================

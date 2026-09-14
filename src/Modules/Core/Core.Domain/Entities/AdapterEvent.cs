@@ -10,7 +10,7 @@ public sealed class AdapterEvent : BaseDomain
   public string Command { get; private set; } = string.Empty;
   public int Tag { get; private set; }
   public DateTime SendAt { get; private set; }
-  public DateTime ReceivedAt { get; private set; }
+  public DateTime? ReceivedAt { get; private set; }
   public string Body { get; private set; } = string.Empty;
   public CommandStatus Status { get; private set; } = CommandStatus.PENDING;
   public string Reason { get; private set; } = string.Empty;
@@ -26,7 +26,7 @@ public sealed class AdapterEvent : BaseDomain
         string command,
         int tag,
         DateTime send_at,
-        DateTime received_at,
+        DateTime? received_at,
         string body,
         CommandStatus status,
         string reason,
@@ -58,7 +58,7 @@ public sealed class AdapterEvent : BaseDomain
         string command,
         int tag,
         DateTime send_at,
-        DateTime received_at,
+        DateTime? received_at,
         string body,
         CommandStatus status,
         string reason,

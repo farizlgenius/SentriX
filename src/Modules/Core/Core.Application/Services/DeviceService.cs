@@ -14,7 +14,8 @@ namespace Core.Application.Services;
 
 public sealed class DeviceService(
   IDeviceRepository repo,
-  IMessageBus bus
+  IMessageBus bus,
+  ITempDevice temp
   ) : IDevice
 {
   public async Task<Guid> CreateAsync(CreateDeviceDto dto, CancellationToken ct = default)
@@ -180,6 +181,11 @@ public sealed class DeviceService(
   public async Task<Pagination<DeviceDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
   {
     return await repo.GetPaginationAsync(param, ct);
+  }
+
+  public async Task<IEnumerable<TempDeviceDto>> GetScanDeviceAsync()
+  {
+    return temp.GetAll().ToArray();
   }
 
   public async Task<Guid> UpdateAsync(UpdateDeviceDto dto, CancellationToken ct = default)

@@ -16,6 +16,13 @@ namespace Host.Controllers
       return Ok(res);
     }
 
+    [HttpGet("scan")]
+    public async Task<IActionResult> GetScanDeviceAsync()
+    {
+      var res = await device.GetScanDeviceAsync();
+      return Ok(res);
+    }
+
     [HttpGet("{guid}")]
     public async Task<IActionResult> GetByGuidAsync(Guid guid)
     {

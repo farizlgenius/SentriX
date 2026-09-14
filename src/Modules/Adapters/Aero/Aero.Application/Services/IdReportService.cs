@@ -4,6 +4,7 @@ using Aero.Domain.Entities;
 using Core.Contract.DTOs.Device;
 using Core.Contract.Interfaces;
 using Core.Contract.Queries;
+using Microsoft.Extensions.Logging;
 using SharedKernel.Constants;
 using SharedKernel.Enums;
 using SharedKernel.Messaging;
@@ -14,7 +15,9 @@ public sealed class IdReportService(
   IMessageBus bus,
   ISetting setting,
   IComponentMapping mapping,
-  IDeviceRepository repo
+  IDeviceRepository repo,
+  ITempDevice temp,
+  ILogger<IdReportService> logger
   ) : IIdReportService
 {
   public async Task HandleInCommingDeviceAsync(ReplyMessage.SCPReplyIDReport dto, CancellationToken ct = default)
@@ -48,40 +51,75 @@ public sealed class IdReportService(
 
     await bus.QueryAsync(new InsertAdapterEventQuery(res), ct);
 
-    // Check the already have mac in device table
+    // New 
+    if (temp.Contains(UtilitiesHelper.ByteToHexStr(dto.mac_addr)))
+    {
+      return;
+    }
+
     if (await bus.QueryAsync(new IsAnyMacQuery(UtilitiesHelper.ByteToHexStr(dto.mac_addr))))
     {
-
+      // Start initial Device here
+      return;
     }
-    else
-    {
-      var id = await mapping.GetFreeIdByMacAndEntityAndVendorAsync(EntityType.Device, Vendor.aero, scpDevice.nScps);
 
-      if (id == null)
-        throw new Exception("Device number Exceed.");
-
-      repo.SetScpId(
+    var added = temp.TryAdd(
+      new TempDeviceDto(
+        Guid.NewGuid(),
+        dto.serial_number,
         UtilitiesHelper.ByteToHexStr(dto.mac_addr),
-        dto.scp_id,
-        (short)id
-      );
-
-      // Save new device to table 
-      var d = new CreateDeviceDto(
-        $"Aero x1100 {dto.serial_number}",
-        dto.serial_number.ToString(),
-        UtilitiesHelper.ByteToHexStr(dto.mac_addr),
-        string.Empty,
-        0,
-        $"{dto.sft_rev_major}.{dto.sft_rev_minor}",
         Vendor.aero,
-        string.Empty,
-        Guid.Empty,
-        new List<Core.Contract.DTOs.DeviceModule.DeviceModuleDto>()
-      );
+        DeviceModuleModel.x1100
+      )
+    );
 
-      await bus.QueryAsync(new InsertInCommingDeviceQuery(d));
+    if (!added)
+    {
+      return;
     }
+
+    logger.LogInformation(
+        "New unknown device discovered: {MacAddress}",
+        UtilitiesHelper.ByteToHexStr(dto.mac_addr));
+
+
+
+    // Check the already have mac in device table
+
+
+    // if (await bus.QueryAsync(new IsAnyMacQuery(UtilitiesHelper.ByteToHexStr(dto.mac_addr))))
+    // {
+
+    // }
+    // else
+    // {
+    //   var id = await mapping.GetFreeIdByMacAndEntityAndVendorAsync(EntityType.Device, Vendor.aero, scpDevice.nScps);
+
+    //   if (id == null)
+    //     throw new Exception("Device number Exceed.");
+
+    //   repo.SetScpId(
+    //     UtilitiesHelper.ByteToHexStr(dto.mac_addr),
+    //     dto.scp_id,
+    //     (short)id
+    //   );
+
+    //   // Save new device to table 
+    //   var d = new CreateDeviceDto(
+    //     $"Aero x1100 {dto.serial_number}",
+    //     dto.serial_number.ToString(),
+    //     UtilitiesHelper.ByteToHexStr(dto.mac_addr),
+    //     string.Empty,
+    //     0,
+    //     $"{dto.sft_rev_major}.{dto.sft_rev_minor}",
+    //     Vendor.aero,
+    //     string.Empty,
+    //     Guid.Empty,
+    //     new List<Core.Contract.DTOs.DeviceModule.DeviceModuleDto>()
+    //   );
+
+    //   await bus.QueryAsync(new InsertInCommingDeviceQuery(d));
+    // }
 
   }
 }

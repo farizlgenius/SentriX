@@ -3,7 +3,10 @@ using Adapter.Aero.Listener;
 using Adapter.Contract.Interfaces;
 using Aero.Application.Interfaces;
 using Aero.Application.Mapper;
+using Aero.Application.Services;
 using Aero.Application.ValueObjects;
+using Aero.Domain.Entities;
+using Aero.Infrastructure.Repositories;
 using Aero.Infrastructure.Workers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -42,13 +45,16 @@ public static class AeroDependencyInjection
     services.AddSingleton<ReplyMessageListener>();
     services.AddScoped<IObjectMapper, ReplyMapper>();
 
+    services.AddScoped<IBaseRepository,BaseRepository>();
+    services.AddScoped<IDeviceRepository,DeviceRepostory>();
+    services.AddScoped<IDeviceAdapter,DeviceService>();
 
 
     // ==========================
     // Worker
     // ==========================
     services.AddSingleton(
-        Channel.CreateBounded<ReplyMapper>(
+        Channel.CreateBounded<ReplyMessage>(
          new BoundedChannelOptions(10_000)
          {
            FullMode = BoundedChannelFullMode.DropOldest,
