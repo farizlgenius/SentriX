@@ -246,7 +246,9 @@ public sealed class ReplyWorker(Channel<ReplyMessage> queue, ILogger<ReplyWorker
               break;
             case (int)enSCPReplyType.enSCPReplyIDReport:
               // Handle it here
+              Console.WriteLine("Here >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>.");
               var scp = scope.ServiceProvider.GetRequiredService<IIdReportService>();
+              Console.WriteLine("Here >>>> " + message.id);
               await scp.HandleInCommingDeviceAsync(message.id, ct);
               break;
             case (int)enSCPReplyType.enSCPReplyCommStatus:

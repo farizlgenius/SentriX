@@ -46,6 +46,10 @@ public static class AeroDependencyInjection
     services.AddScoped<IObjectMapper, ReplyMapper>();
 
     services.AddScoped<IBaseRepository,BaseRepository>();
+
+    // IdReport
+    services.AddScoped<IIdReportService,IdReportService>();
+
     services.AddScoped<IDeviceRepository,DeviceRepostory>();
     services.AddScoped<IDeviceAdapter,DeviceService>();
 

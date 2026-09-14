@@ -102,25 +102,25 @@ public sealed class StartupTask : IHostedService
         _logger.LogInformation("🚀 Starting Aero Driver...");
 
         // Start driver here
-        using var scope = _scopeFactory.CreateScope();
-        var setting = scope.ServiceProvider.GetRequiredService<ISettingRepository>();
-        var aeroRead = scope.ServiceProvider.GetRequiredService<ReplyMessageListener>();
-        var aero = scope.ServiceProvider.GetRequiredService<Aero.Application.Interfaces.IDeviceRepository>();
+        // using var scope = _scopeFactory.CreateScope();
+        // var setting = scope.ServiceProvider.GetRequiredService<ISettingRepository>();
+        // var aeroRead = scope.ServiceProvider.GetRequiredService<ReplyMessageListener>();
+        // var aero = scope.ServiceProvider.GetRequiredService<Aero.Application.Interfaces.IDeviceRepository>();
 
-        var aeroSetting = await setting.GetAeroDriverSettingAsync();
+        // var aeroSetting = await setting.GetAeroDriverSettingAsync();
 
-        aeroRead.TurnOnDebug();
+        // aeroRead.TurnOnDebug();
 
-        aero.SystemLevelSpecification(
-            (short)aeroSetting.nPorts,
-            (short) aeroSetting.nScps
-        );
+        // aero.SystemLevelSpecification(
+        //     (short)aeroSetting.nPorts,
+        //     (short) aeroSetting.nScps
+        // );
 
-        aero.CreateChannel(
-             1,
-              (short)aeroSetting.cType,
-              (short)aeroSetting.cPort
-        );
+        // aero.CreateChannel(
+        //      1,
+        //       (short)aeroSetting.cType,
+        //       (short)aeroSetting.cPort
+        // );
 
         await Task.CompletedTask;
     }
@@ -134,11 +134,11 @@ public sealed class StartupTask : IHostedService
         _logger.LogInformation("🛑 Shutting down Aero Driver...");
 
         // // Stop / dispose driver here
-        using var scope = _scopeFactory.CreateScope();
-        var aeroRead = scope.ServiceProvider.GetRequiredService<ReplyMessageListener>();
+        // using var scope = _scopeFactory.CreateScope();
+        // var aeroRead = scope.ServiceProvider.GetRequiredService<ReplyMessageListener>();
 
-        aeroRead.SetShutDownFlag();
-        aeroRead.TurnOffDebug();
+        // aeroRead.SetShutDownFlag();
+        // aeroRead.TurnOffDebug();
 
         await Task.CompletedTask;
     }

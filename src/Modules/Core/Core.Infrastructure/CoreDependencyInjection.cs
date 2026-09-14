@@ -127,6 +127,7 @@ public static class CoreDependencyInjection
 
     // SEtting
     services.AddScoped<ISettingRepository,SettingRepository>();
+    services.AddScoped<ISetting,SettingService>();
 
 
     // ==========================

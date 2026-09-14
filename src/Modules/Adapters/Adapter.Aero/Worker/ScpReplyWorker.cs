@@ -23,7 +23,7 @@ public sealed class ScpReplyWorker(Channel<SCPReplyMessageDto> queue, ILogger<Sc
     protected async override Task ExecuteAsync(CancellationToken ct)
     {
 
-        Console.WriteLine("Background worker started.");
+
         while (!ct.IsCancellationRequested)
         {
 
