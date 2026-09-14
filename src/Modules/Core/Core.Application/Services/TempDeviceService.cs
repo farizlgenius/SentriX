@@ -55,4 +55,48 @@ public sealed class TempDeviceService : ITempDevice
                 .Trim()
                 .ToUpperInvariant();
       }
+
+      public void TryUpdateIp(int Id,string Ip)
+      {
+            var arr = _devices.Values.ToArray();
+
+            var device = arr.Where(x => x.Id == Id).FirstOrDefault();
+
+            ArgumentNullException.ThrowIfNull(device);
+
+            var mac = NormalizeMac(device.Mac);
+
+            _devices.AddOrUpdate(
+                mac,
+                device,
+                (_, existing) =>
+                {
+                      existing.Ip = Ip;
+
+                      return existing;
+                });
+      }
+
+      public void TryUpdatePort(int Id,int Port)
+      {
+            var arr = _devices.Values.ToArray();
+
+            var device = arr.Where(x => x.Id == Id).FirstOrDefault();
+            
+            ArgumentNullException.ThrowIfNull(device);
+
+            var mac = NormalizeMac(device.Mac);
+
+            _devices.AddOrUpdate(
+                mac,
+                device,
+                (_, existing) =>
+                {
+                      existing.Port = Port;
+
+                      return existing;
+                });
+      }
+
+
 }

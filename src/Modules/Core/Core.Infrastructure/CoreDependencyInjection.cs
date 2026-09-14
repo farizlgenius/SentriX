@@ -125,9 +125,7 @@ public static class CoreDependencyInjection
     services.AddScoped<IAdapterEvent,AdapterEventService>();
     services.AddScoped<IAdapterEventRepository,AdapterEventRepository>();
 
-    // SEtting
-    services.AddScoped<ISettingRepository,SettingRepository>();
-    services.AddScoped<ISetting,SettingService>();
+    
 
 
     // ==========================

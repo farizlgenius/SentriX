@@ -1,4 +1,4 @@
-namespace Core.Domain.Entities;
+namespace Setting.Domain.Entities;
 
 public sealed class AeroDriverSetting : BaseDomain
 {

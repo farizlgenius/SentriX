@@ -1,8 +1,11 @@
+import { Vendor } from "../../enum/Vendor";
+
 export interface IdReport {
-  scpId: number;
+  guid: string;
   serialNumber: string;
   mac: string;
-  fw:string;
-  ip: string;
-  port:string;
+  vendor:Vendor;
+  ip:string;
+  port:number;
+  firmware:string;
 }

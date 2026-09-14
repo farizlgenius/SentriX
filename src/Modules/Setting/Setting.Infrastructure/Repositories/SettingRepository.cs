@@ -1,12 +1,12 @@
-using Core.Application.Interfaces;
-using Core.Contract.DTOs.Setting;
-using Core.Infrastructure.Persistences;
+using Setting.Application.Interfaces;
+using Setting.Contract.DTOs.Setting;
+using Setting.Infrastructure.Persistences;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel.Exceptions;
 
-namespace Core.Infrastructure.Repositories;
+namespace Setting.Infrastructure.Repositories;
 
-public sealed class SettingRepository(CoreDbContext context) : ISettingRepository
+public sealed class SettingRepository(SettingDbContext context) : ISettingRepository
 {
   public async Task<AeroDriverSettingDto> GetAeroDriverSettingAsync()
   {

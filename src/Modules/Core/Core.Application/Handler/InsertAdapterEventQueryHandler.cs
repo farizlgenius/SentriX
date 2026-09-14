@@ -15,6 +15,7 @@ public sealed class InsertAdapterEventQueryHandler(
   {
 
     var data = await dev.GetNameAndLocationIdByMacAsync(query.res.Mac, ct);
+    
     var d = new AdapterEvent(
       data.Item1,
       query.res.Mac,

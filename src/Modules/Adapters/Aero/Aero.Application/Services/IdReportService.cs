@@ -1,3 +1,4 @@
+using Aero.Application.Enums;
 using Aero.Application.Helpers;
 using Aero.Application.Interfaces;
 using Aero.Domain.Entities;
@@ -5,6 +6,7 @@ using Core.Contract.DTOs.Device;
 using Core.Contract.Interfaces;
 using Core.Contract.Queries;
 using Microsoft.Extensions.Logging;
+using Setting.Contract.Interfaces;
 using SharedKernel.Constants;
 using SharedKernel.Enums;
 using SharedKernel.Messaging;
@@ -16,6 +18,7 @@ public sealed class IdReportService(
   ISetting setting,
   IComponentMapping mapping,
   IDeviceRepository repo,
+  IDeviceModuleRepository module,
   ITempDevice temp,
   ILogger<IdReportService> logger
   ) : IIdReportService
@@ -50,7 +53,9 @@ public sealed class IdReportService(
       0
     );
 
-    await bus.QueryAsync(new InsertAdapterEventQuery(res), ct);
+    
+
+    // await bus.QueryAsync(new InsertAdapterEventQuery(res), ct);
 
     // New 
     if (temp.Contains(UtilitiesHelper.ByteToHexStr(dto.mac_addr)))
@@ -60,17 +65,73 @@ public sealed class IdReportService(
 
     if (await bus.QueryAsync(new IsAnyMacQuery(UtilitiesHelper.ByteToHexStr(dto.mac_addr))))
     {
+      // Get Scp Id and Set it 
+
+
       // Start initial Device here
+      repo.AccessDatabaseSpecification(
+        UtilitiesHelper.ByteToHexStr(dto.mac_addr),
+        dto.scp_id,
+        scpDevice.nCards,
+        scpDevice.nAlvl,
+        scpDevice.,
+        scpDevice.IssueCodeBit,
+        scpDevice.ApbLocation,
+        2,
+        2,
+        ,
+        ,
+        ,
+        scpDevice.UsedLimit,
+        ,
+        scpDevice.nTz,
+        ,
+        ,
+        ,
+        scpDevice.EscortTimeout,
+        scpDevice.MultiCardTimeout
+      );
+
+      repo.TimeSet(
+        UtilitiesHelper.ByteToHexStr(dto.mac_addr),
+        dto.scp_id);
+
+      repo.DriverConfiguration(
+        ,
+      );
+      module.SioPanelConfiguration();
+      
+      // And Other Device
+
       return;
     }
+
+    // Send Command to get Ip
+    res = repo.ReadsConfiguration(
+       UtilitiesHelper.ByteToHexStr(dto.mac_addr),
+       dto.scp_id,
+       WebConfigReadType.NetworkSettingss
+      );
+
+      // Port
+     res = repo.ReadsConfiguration(
+       UtilitiesHelper.ByteToHexStr(dto.mac_addr),
+       dto.scp_id,
+       WebConfigReadType.HostCommunicationPrimarySettings
+      );
+
+    // Send Command to get Port
 
     var added = temp.TryAdd(
       new TempDeviceDto(
         Guid.NewGuid(),
+        dto.scp_id,
         dto.serial_number,
         UtilitiesHelper.ByteToHexStr(dto.mac_addr),
         Vendor.aero,
-        DeviceModuleModel.x1100
+        $"{dto.sft_rev_major}.{dto.sft_rev_minor}",
+        string.Empty,
+        0
       )
     );
 

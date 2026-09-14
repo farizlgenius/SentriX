@@ -143,7 +143,53 @@ public sealed class DeviceRepostory(
 
       public CommandResponse DriverConfiguration(string Mac, short ScpId, short Msp1Number, short PortNumber, short Baudrate, short ReplyTime, short nProtocol, short nDialect)
       {
-            throw new NotImplementedException();
+            CC_MSP1 c = new CC_MSP1();
+            c.lastModified = 0;
+            c.scp_number = ScpId;
+            c.msp1_number = Msp1Number;
+            c.port_number = PortNumber;
+            c.baud_rate = Baudrate;
+            c.reply_time = ReplyTime;
+            c.nProtocol = nProtocol;
+            c.nDialect = nDialect;
+            var result = repo.Send((short)enCfgCmnd.enCcMsp1, c);
+            if (result)
+            {
+                  logger.LogInformation(LogMessageHelper.CommandSuccess(Command.DriverConfiguration, ScpId));
+
+                  return new CommandResponse(
+                        Mac,
+                        ScpId,
+                        Command.DriverConfiguration,
+                        SCPDLL.scpGetTagLastPosted(ScpId),
+                        DateTime.UtcNow,
+                       null,
+                      ObjectHelper.ToAsciiString(c),
+                        CommandStatus.PENDING,
+                        string.Empty,
+                        Vendor.aero,
+                        true
+                        );
+
+            }
+            else
+            {
+                  logger.LogError(LogMessageHelper.CommandUnsuccess(Command.DriverConfiguration, ScpId));
+                  return new CommandResponse(
+                        Mac,
+                       ScpId,
+                       Command.DriverConfiguration,
+                       -1,
+                       DateTime.UtcNow,
+                       DateTime.UtcNow,
+                      ObjectHelper.ToAsciiString(c),
+                       CommandStatus.FAILED,
+                       string.Empty,
+                       Vendor.aero,
+                       false
+                       );
+
+            }
       }
 
       public CommandResponse ElevatorAccessLevelSpecification(string Mac, short ScpId, short MaxEAlvl, short MaxFloor)
@@ -153,7 +199,47 @@ public sealed class DeviceRepostory(
 
       public CommandResponse ReadsConfiguration(string Mac, short ScpId, WebConfigReadType Type)
       {
-            throw new NotImplementedException();
+            CC_WEB_CONFIG_READ c = new CC_WEB_CONFIG_READ();
+            c.scp_number = ScpId;
+            c.read_type = (short)Type;
+            var result = repo.Send((short)enCfgCmnd.enCcWebConfigRead, c);
+            if (result)
+            {
+                  logger.LogInformation(LogMessageHelper.CommandSuccess(Command.ReadsConfiguration, ScpId));
+
+                  return new CommandResponse(
+                        Mac,
+                        ScpId,
+                        Command.ReadsConfiguration,
+                        SCPDLL.scpGetTagLastPosted(ScpId),
+                        DateTime.UtcNow,
+                        null,
+                       ObjectHelper.ToAsciiString(c),
+                        CommandStatus.PENDING,
+                        string.Empty,
+                        Vendor.aero,
+                        true
+                        );
+
+            }
+            else
+            {
+                  logger.LogError(LogMessageHelper.CommandUnsuccess(Command.ReadsConfiguration, ScpId));
+                  return new CommandResponse(
+                        Mac,
+                       ScpId,
+                       Command.ReadsConfiguration,
+                       -1,
+                       DateTime.UtcNow,
+                       DateTime.UtcNow,
+                      ObjectHelper.ToAsciiString(c),
+                       CommandStatus.FAILED,
+                       string.Empty,
+                       Vendor.aero,
+                       false
+                       );
+
+            }
       }
 
       public CommandResponse ScpDeviceSpecification(string Mac, short ScpId, short nMsp1Port, int nTransaction, short nSio, short nMp, short nCp, short nAcr, short nAlvl, short nTrgr, short nProc, short gmtOffet, short nDstId, short nTz, short nHol, short nMpg, int nTranLimit, short nOperMode, short operType, short nLanguage)
@@ -242,12 +328,92 @@ public sealed class DeviceRepostory(
 
       public CommandResponse SetTransactionLogIndexAsync(string Mac, short ScpId, bool IsEnable)
       {
-            throw new NotImplementedException();
+            CC_TRANINDEX c = new CC_TRANINDEX();
+            c.scp_number = ScpId;
+            c.tran_index = IsEnable ? -2 : -1;
+            var result = repo.Send((short)enCfgCmnd.enCcTranIndex, c);
+            if (result)
+            {
+                  logger.LogInformation(LogMessageHelper.CommandSuccess(Command.SetTransactionIndex, ScpId));
+
+                  return new CommandResponse(
+                        Mac,
+                        ScpId,
+                        Command.SetTransactionIndex,
+                        SCPDLL.scpGetTagLastPosted(ScpId),
+                        DateTime.UtcNow,
+                        null,
+                        ObjectHelper.ToAsciiString(c),
+                        CommandStatus.PENDING,
+                        string.Empty,
+                        Vendor.aero,
+                        true
+                        );
+
+            }
+            else
+            {
+                  logger.LogError(LogMessageHelper.CommandUnsuccess(Command.SetTransactionIndex, ScpId));
+                  return new CommandResponse(
+                        Mac,
+                       ScpId,
+                       Command.SetTransactionIndex,
+                       -1,
+                       DateTime.UtcNow,
+                       DateTime.UtcNow,
+                       ObjectHelper.ToAsciiString(c),
+                       CommandStatus.FAILED,
+                       string.Empty,
+                       Vendor.aero,
+                       false
+                       );
+
+            }
       }
 
       public CommandResponse TimeSet(string Mac, short ScpId)
       {
-            throw new NotImplementedException();
+            CC_TIME c = new CC_TIME();
+            c.scp_number = ScpId;
+            c.custom_time = 0;
+            var result = repo.Send((short)enCfgCmnd.enCcTime, c);
+            if (result)
+            {
+                  logger.LogInformation(LogMessageHelper.CommandSuccess(Command.TimeSet, ScpId));
+
+                  return new CommandResponse(
+                        Mac,
+                        ScpId,
+                        Command.TimeSet,
+                        SCPDLL.scpGetTagLastPosted(ScpId),
+                        DateTime.UtcNow,
+                        null,
+                       ObjectHelper.ToAsciiString(c),
+                        CommandStatus.PENDING,
+                        string.Empty,
+                        Vendor.aero,
+                        true
+                        );
+
+            }
+            else
+            {
+                  logger.LogError(LogMessageHelper.CommandUnsuccess(Command.TimeSet, ScpId));
+                  return new CommandResponse(
+                        Mac,
+                       ScpId,
+                       Command.TimeSet,
+                       -1,
+                       DateTime.UtcNow,
+                       DateTime.UtcNow,
+                       ObjectHelper.ToAsciiString(c),
+                       CommandStatus.FAILED,
+                       string.Empty,
+                       Vendor.aero,
+                       false
+                       );
+
+            }
       }
 
       public CommandResponse TransactionLogStatusAsync(string Mac, short ScpId)

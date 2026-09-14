@@ -40,7 +40,7 @@ const Modals: React.FC<PropsWithChildren<ModalContent>> = ({
                 <button
                 name="close"
                     onClick={handleClickWithEvent}
-                    className="absolute top-4 right-4 flex h-10 w-10 items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700"
+                    className="z-50 absolute top-4 right-4 flex h-10 w-10 items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700"
                 >
                     ✕
                 </button>

@@ -1,4 +1,4 @@
-namespace Core.Infrastructure.Persistences.Entities;
+namespace Setting.Infrastructure.Persistences.Entities;
 
 public sealed class AeroDriverSetting : BaseEntity
 {

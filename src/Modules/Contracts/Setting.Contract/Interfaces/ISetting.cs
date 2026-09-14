@@ -1,6 +1,6 @@
-using Core.Contract.DTOs.Setting;
+using Setting.Contract.DTOs.Setting;
 
-namespace Core.Contract.Interfaces;
+namespace Setting.Contract.Interfaces;
 
 public interface ISetting
 {

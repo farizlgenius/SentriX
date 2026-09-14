@@ -1,6 +1,6 @@
-using Core.Contract.DTOs.Setting;
+using Setting.Contract.DTOs.Setting;
 
-namespace Core.Application.Interfaces;
+namespace Setting.Application.Interfaces;
 
 public interface ISettingRepository
 {

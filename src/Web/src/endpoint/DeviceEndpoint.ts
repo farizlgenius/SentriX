@@ -27,7 +27,7 @@ export const DeviceEndpoint = {
   VERIFY_MEM: (mac: string) => `/api/${CONTROLLER}/verify/mem/${mac}`,
   VERIFY_COM: (mac: string) => `/api/${CONTROLLER}/verify/com/${mac}`,
   GET_EVENT_STATUS: (guid: string) => `/api/${CONTROLLER}/event/${guid}`,
-  ID_REPORT: `/api/${CONTROLLER}/report`,
+  GET_SCAN: `/api/${CONTROLLER}/scan`,
   SET_TRAN: `/api/${CONTROLLER}/event`,
   TRAN_RANGE: `/api/${CONTROLLER}/tran/range`,
   GET_READER: (moduleId: number) =>

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import PageBreadcrumb from "../../components/common/PageBreadCrumb";
 import {
+  AddIcon,
   AmicoIcon,
   CancelCircleIcon,
   CheckCircleIcon,
@@ -28,7 +29,7 @@ import { FormContent } from "../../model/Form/FormContent";
 import { useToast } from "../../context/ToastContext";
 import { HardwareToast } from "../../model/ToastMessage";
 import Badge from "../../components/ui/badge/Badge";
-import { TableCell } from "../../components/ui/table";
+import { Table, TableBody, TableCell, TableHeader, TableRow } from "../../components/ui/table";
 import { EventStatusDto } from "../../model/Device/TranStatusDto";
 import { FormType } from "../../model/Form/FormProp";
 import { usePopup } from "../../context/PopupContext";
@@ -46,6 +47,9 @@ import AmicoDeviceForm from "../../components/form/device/AmicoDeviceForm";
 import { AeroModuleDetailForm } from "../../components/form/device/AeroModuleDetailForm";
 import { AeroComponentForm } from "../../components/form/device/AeroComponentForm";
 import { AeroMemAllocForm } from "../../components/form/device/AeroMemAllocForm";
+import Modals from "../UiElements/Modals";
+import React from "react";
+import Button from "../../components/ui/button/Button";
 
 const HEADER = [
   "Type",
@@ -89,6 +93,7 @@ const Device = () => {
   const [status, setStatus] = useState<StatusDto[]>([]);
   const [tranStatus, setTranStatus] = useState<EventStatusDto[]>([]);
   const [select, setSelect] = useState<DeviceDto[]>([]);
+  const [scan, setScan] = useState<boolean>(false);
 
   const aeroMetadata: AeroMetadata = {
     portOne: false,
@@ -191,9 +196,9 @@ const Device = () => {
         prev.map((item) =>
           item.deviceGuid === res.data.data.guid
             ? {
-                ...item,
-                status: res.data.data.status,
-              }
+              ...item,
+              status: res.data.data.status,
+            }
             : item,
         ),
       );
@@ -207,9 +212,9 @@ const Device = () => {
         prev.map((item) =>
           item.guid === res.data.data.guid
             ? {
-                ...item,
-                status: res.data.data.status,
-              }
+              ...item,
+              status: res.data.data.status,
+            }
             : item,
         ),
       );
@@ -268,6 +273,16 @@ const Device = () => {
     setForm(true);
   };
 
+  const modalHandleClickWithEvent = (e: React.MouseEvent<HTMLButtonElement>) => {
+    switch (e.currentTarget.name) {
+      case "close":
+        setScan(false);
+        break;
+      default:
+        break;
+    }
+  }
+
   const handleClickWithEvent = (e: React.MouseEvent<HTMLButtonElement>) => {
     switch (e.currentTarget.name) {
       case "add":
@@ -283,7 +298,7 @@ const Device = () => {
           select.forEach((item: DeviceDto) =>
             fetchSetTran({
               deviceGuid: item.guid,
-              type: item.type,
+              type: item.vendor,
               isEnable: true,
             }),
           );
@@ -357,6 +372,9 @@ const Device = () => {
           setInfo(true);
         }
         break;
+      case "scan":
+        setScan(true);
+        break;
       case "upload":
         if (select.length !== 0) {
           select.forEach((item: DeviceDto) => uploadConfig(item.guid));
@@ -387,9 +405,9 @@ const Device = () => {
           prev.map((item) =>
             item.deviceGuid === status.deviceGuid
               ? {
-                  ...item,
-                  isEnable: status.isEnable,
-                }
+                ...item,
+                isEnable: status.isEnable,
+              }
               : item,
           ),
         );
@@ -407,8 +425,9 @@ const Device = () => {
         console.error("Subscribe error:", err);
       }
 
-      const res = await send.get(DeviceEndpoint.ID_REPORT);
-      setIdReports(res.data);
+      const res = await send.get(DeviceEndpoint.GET_SCAN);
+      console.log(res)
+      setIdReports(res.data.data);
     };
 
     initSignalR();
@@ -440,6 +459,10 @@ const Device = () => {
       lable: "report",
       icon: <ToggleTranIcon />,
     },
+
+  ];
+
+  const altrBtn: ActionButton[] = [
     {
       buttonName: "Scan",
       lable: "scan",
@@ -447,7 +470,7 @@ const Device = () => {
         <ScanIcon className={idReports.length !== 0 ? "animate-ping" : ""} />
       ),
     },
-  ];
+  ]
 
   const renderOptional = (
     item: DeviceDto,
@@ -567,7 +590,101 @@ const Device = () => {
   return (
     <>
       <PageBreadcrumb pageTitle="Device" />
+      {
+        scan &&
+        <Modals isWide={true} handleClickWithEvent={modalHandleClickWithEvent} body={
+          idReports.map((a: IdReport) =>
+            <Table>
+              <TableHeader className="border-b border-gray-100 dark:border-white/[0.05] bg-white dark:bg-gray-900 sticky top-0 z-10">
+                <TableRow>
+                  <TableCell
+                    isHeader
+                    className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400">
+                    Mac
+                  </TableCell>
+                  <TableCell
+                    isHeader
+                    className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400">
+                    Serial Number
+                  </TableCell>
+                  <TableCell
+                    isHeader
+                    className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400">
+                    Vendor
+                  </TableCell>
+                  <TableCell
+                    isHeader
+                    className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400">
+                    Ip
+                  </TableCell>
+                  <TableCell
+                    isHeader
+                    className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400">
+                    Port
+                  </TableCell>
+                  <TableCell
+                    isHeader
+                    className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400">
+                    Action
+                  </TableCell>
+                </TableRow>
+              </TableHeader>
+              <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
+                {
+                  idReports.map((a: IdReport, i: number) => (
+                    <React.Fragment key={i}>
+                      <TableRow>
+                        {/* <TableCell
+                          className="px-4 py-8 text-center text-gray-500 text-theme-sm dark:text-gray-400" >
+                          {a.guid}
+                        </TableCell> */}
+                        <TableCell
+                          className="px-4 py-8 text-start text-gray-500 text-theme-sm dark:text-gray-400" >
+                          {a.mac.replace(/_/g, ":")}
+                        </TableCell>
+                        <TableCell
+                          className="px-4 py-8 text-start text-gray-500 text-theme-sm dark:text-gray-400" >
+                          {a.serialNumber}
+                        </TableCell>
+                         <TableCell
+                          className="px-4 py-8 text-start text-gray-500 text-theme-sm dark:text-gray-400" >
+                          {Vendor[a.vendor]}
+                        </TableCell>
+                        <TableCell
+                          className="px-4 py-8 text-start text-gray-500 text-theme-sm dark:text-gray-400" >
+                          {a.ip}
+                        </TableCell>
+                        <TableCell
+                          className="px-4 py-8 text-start text-gray-500 text-theme-sm dark:text-gray-400" >
+                         {a.port}
+                        </TableCell>
+                        <TableCell
+                          className="px-4 py-8 text-start text-gray-500 text-theme-sm dark:text-gray-400" >
+                          <Button onClick={() => {
+                            setDeviceDto(prev => ({...prev,
+                            mac:a.mac,
+                            serialNumber:a.serialNumber,
+                            vendor:a.vendor,
+                            guid:a.guid,
+                            ip:a.ip,
+                            port:a.port,
+                            firmware:a.firmware
+                          }));
+                          setScan(false)
+                          setForm(true)
+                          }} size="sm" startIcon={<AddIcon/>}>Add</Button>
+                        </TableCell>
+                      </TableRow>
+                    </React.Fragment>
+                  ))
+                }
+
+              </TableBody>
+            </Table>)
+        } />
+      }
       <div className="flex flex-col gap-5">
+
         {form && formType !== FormType.INFO && (
           <FormSection
             overall="Device setup"
@@ -585,18 +702,16 @@ const Device = () => {
                     type="button"
                     aria-pressed={isSelected}
                     onClick={() => handleDeviceTypeSelect(deviceType.vendor)}
-                    className={`group relative flex min-h-36 items-center gap-4 rounded-2xl border p-5 text-left transition-all duration-200 focus:outline-hidden focus:ring-4 focus:ring-brand-500/15 ${
-                      isSelected
-                        ? "border-brand-500 bg-brand-50 shadow-theme-xs dark:border-brand-400 dark:bg-brand-500/10"
-                        : "border-[var(--app-panel-border)] bg-[var(--app-panel-bg)] hover:-translate-y-0.5 hover:border-brand-300 hover:shadow-theme-xs dark:hover:border-brand-700"
-                    }`}
+                    className={`group relative flex min-h-36 items-center gap-4 rounded-2xl border p-5 text-left transition-all duration-200 focus:outline-hidden focus:ring-4 focus:ring-brand-500/15 ${isSelected
+                      ? "border-brand-500 bg-brand-50 shadow-theme-xs dark:border-brand-400 dark:bg-brand-500/10"
+                      : "border-[var(--app-panel-border)] bg-[var(--app-panel-bg)] hover:-translate-y-0.5 hover:border-brand-300 hover:shadow-theme-xs dark:hover:border-brand-700"
+                      }`}
                   >
                     <span
-                      className={`flex size-14 shrink-0 items-center justify-center rounded-2xl transition-colors ${
-                        isSelected
-                          ? "bg-brand-500 text-white"
-                          : "bg-brand-50 text-brand-500 dark:bg-brand-500/10 dark:text-brand-300"
-                      }`}
+                      className={`flex size-14 shrink-0 items-center justify-center rounded-2xl transition-colors ${isSelected
+                        ? "bg-brand-500 text-white"
+                        : "bg-brand-50 text-brand-500 dark:bg-brand-500/10 dark:text-brand-300"
+                        }`}
                     >
                       <Icon className="size-7" />
                     </span>
@@ -609,11 +724,10 @@ const Device = () => {
                       </span>
                     </span>
                     <span
-                      className={`absolute right-4 top-4 flex size-5 items-center justify-center rounded-full border transition-colors ${
-                        isSelected
-                          ? "border-brand-500 bg-brand-500 text-white"
-                          : "border-gray-300 bg-transparent dark:border-gray-600"
-                      }`}
+                      className={`absolute right-4 top-4 flex size-5 items-center justify-center rounded-full border transition-colors ${isSelected
+                        ? "border-brand-500 bg-brand-500 text-white"
+                        : "border-gray-300 bg-transparent dark:border-gray-600"
+                        }`}
                     >
                       {isSelected && <CheckCircleIcon className="size-3.5" />}
                     </span>
@@ -647,6 +761,7 @@ const Device = () => {
             setSelect={setSelect}
             permission={filterPermission(FeatureId.device)}
             action={actionBtn}
+            altrAction={altrBtn}
             renderOptionalComponent={renderOptional}
             status={status}
             locationGuid={locationGuid}

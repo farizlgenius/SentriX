@@ -21,6 +21,10 @@ public static class SettingDependencyInjection
     services.AddScoped<IPasswordRule, PasswordRuleService>();
     services.AddScoped<IPasswordRuleRepository, PasswordRuleRepository>();
 
+    // SEtting
+    services.AddScoped<ISettingRepository,SettingRepository>();
+    services.AddScoped<ISetting,SettingService>();
+
 
     // ==========================
     // Database

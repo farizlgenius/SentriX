@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Setting.Infrastructure.Persistences;
@@ -11,9 +12,11 @@ using Setting.Infrastructure.Persistences;
 namespace Setting.Infrastructure.Migrations
 {
     [DbContext(typeof(SettingDbContext))]
-    partial class SettingDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260914130306_AddAeroDriverSetting")]
+    partial class AddAeroDriverSetting
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

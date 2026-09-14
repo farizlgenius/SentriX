@@ -1,8 +1,8 @@
-using Core.Application.Interfaces;
-using Core.Contract.DTOs.Setting;
-using Core.Contract.Interfaces;
+using Setting.Application.Interfaces;
+using Setting.Contract.DTOs.Setting;
+using Setting.Contract.Interfaces;
 
-namespace Core.Application.Services;
+namespace Setting.Application.Services;
 
 public sealed class SettingService(ISettingRepository repo) : ISetting
 {

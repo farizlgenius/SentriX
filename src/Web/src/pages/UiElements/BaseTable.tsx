@@ -33,6 +33,7 @@ export const BaseTable = <
   subTable,
   fetchData,
   refresh,
+  altrAction,
   locationGuid,
 }: TableProp<T>) => {
   const { search, startDate, endDate, pageSize, pagination, setPageSize } =
@@ -157,6 +158,7 @@ export const BaseTable = <
           <Search
             locationGuid={locationGuid}
             action={action}
+            altrAction={altrAction}
             onClick={handleClick}
             permission={permission}
           />

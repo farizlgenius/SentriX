@@ -10,6 +10,7 @@ public class SettingDbContext(DbContextOptions<SettingDbContext> options) : DbCo
       // public DbSet<CardFormat> CardFormats { get; set; }
       public DbSet<WeakPassword> WeakPasswords { get; set; }
       public DbSet<PasswordRule> PasswordRules { get; set; }
+      public DbSet<AeroDriverSetting> AeroDriverSettings { get; set; }
 
       protected override void OnModelCreating(ModelBuilder modelBuilder)
       {
@@ -85,6 +86,45 @@ public class SettingDbContext(DbContextOptions<SettingDbContext> options) : DbCo
                 new WeakPassword { id = 3, guid = new Guid("b3124c81-3c54-46b3-bafd-a945854fc946"), pattern = "admin", password_rule_guid = new Guid("ae243161-6067-47d0-8bcc-1990388bb6e6") },
                 new WeakPassword { id = 4, guid = new Guid("df75695c-6821-49ad-a857-60e1b0763329"), pattern = "123456", password_rule_guid = new Guid("ae243161-6067-47d0-8bcc-1990388bb6e6") }
                 );
+
+            modelBuilder.Entity<AeroDriverSetting>()
+            .HasData(
+                  new AeroDriverSetting
+                  {
+                        id = 1,
+                        n_port = 1024,
+                        n_scps = 1024,
+                        c_type = 7,
+                        c_port = 3333,
+                        n_msp1_port = 3,
+                        n_trasaction = 60000,
+                        n_sio = 33,
+                        n_mp = 615,
+                        n_cp = 388,
+                        n_acr = 64,
+                        n_alvl = 32000,
+                        n_trgr = 1024,
+                        n_proc = 1024,
+                        gmt_offset = -25200,
+                        is_daylight_saving = false,
+                        n_tz = 255,
+                        n_hol = 255,
+                        n_mpg = 128,
+                        n_tran_limit = 60000,
+                        n_cards = 200000,
+                        n_alvl_per_card = 8,
+                        pin_duress_mode = 2,
+                        duress_const_digit = 5,
+                        pin_digit = 6,
+                        issue_code_bit = 1,
+                        apb_location = true,
+                        store_act_date = 2,
+                        store_deact_date = 2,
+                        used_limit = true,
+                        escort_timeout = 15,
+                        multi_card_timeout = 15
+                  }
+            );
 
 
 

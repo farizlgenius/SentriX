@@ -1162,7 +1162,8 @@
         "dependencies": {
           "Adapter.Contract": "1.0.0",
           "Aero.Domain": "1.0.0",
-          "Core.Contract": "1.0.0"
+          "Core.Contract": "1.0.0",
+          "Setting.Contract": "1.0.0"
         },
         "compile": {
           "bin/placeholder/Aero.Application.dll": {}
@@ -2648,7 +2649,8 @@
         "dependencies": {
           "Adapter.Contract": "1.0.0",
           "Aero.Domain": "1.0.0",
-          "Core.Contract": "1.0.0"
+          "Core.Contract": "1.0.0",
+          "Setting.Contract": "1.0.0"
         },
         "compile": {
           "bin/placeholder/Aero.Application.dll": {}

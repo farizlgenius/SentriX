@@ -12,10 +12,11 @@ public interface ITempDevice
 
     bool TryAdd(TempDeviceDto device);
 
-
     bool TryRemove(string macAddress);
 
     IReadOnlyCollection<TempDeviceDto> GetAll();
+    void TryUpdatePort(int Id,int Port);
+    void TryUpdateIp(int Id,string Ip);
 
     int Count { get; }
 }

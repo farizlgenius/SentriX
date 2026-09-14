@@ -4,11 +4,13 @@ import { ActionButton } from "../../../model/ActionButton";
 import { usePagination } from "../../../context/PaginationContext";
 import { createPortal } from "react-dom";
 import { FeaturePermissionDto } from "../../../model/Role/FeaturePermissionDto";
+import Button from "../button/Button";
 
 interface SearchProp {
   onClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
   permission?: FeaturePermissionDto;
   action?: ActionButton[];
+  altrAction?:ActionButton[];
   locationGuid?: string;
 }
 
@@ -17,6 +19,7 @@ const Search: React.FC<PropsWithChildren<SearchProp>> = ({
   permission,
   action,
   locationGuid,
+  altrAction
 }) => {
   const { setSearch } = usePagination();
   const [isMoreOpen, setIsMoreOpen] = useState(false);
@@ -99,6 +102,20 @@ const Search: React.FC<PropsWithChildren<SearchProp>> = ({
               Delete
             </button>
           )}
+
+          {
+            altrAction?.map(x => (
+              <button
+              onClick={onClick}
+              name={x.lable}
+              type="button"
+              className="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-3.5 py-2.5 text-sm font-medium text-gray-700 shadow-theme-xs transition hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-white/[0.03]"
+            >
+              {x.icon}
+              {x.buttonName}
+            </button>
+            ))
+          }
 
           {hasMoreActions && (
             <div className="relative inline-block">

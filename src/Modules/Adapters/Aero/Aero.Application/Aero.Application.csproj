@@ -9,6 +9,7 @@
   <ItemGroup>
     <ProjectReference Include="../../../Contracts/Core.Contract/Core.Contract.csproj" />
     <ProjectReference Include="..\..\..\Contracts\Adapter.Contract\Adapter.Contract.csproj" />
+    <ProjectReference Include="..\..\..\Contracts\Setting.Contract\Setting.Contract.csproj" />
     <ProjectReference Include="..\Aero.Domain\Aero.Domain.csproj" />
   </ItemGroup>
 

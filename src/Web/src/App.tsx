@@ -146,7 +146,7 @@ export default function App() {
   }, []);
 
   const fetchIdReport = async () => {
-    const res = await send.get(DeviceEndpoint.ID_REPORT);
+    const res = await send.get(DeviceEndpoint.GET_SCAN);
     setIdReports(res.data);
   };
 

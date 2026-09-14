@@ -1,8 +1,10 @@
 using System.Threading.Channels;
 using Adapter.Contract.Interfaces;
+using Aero.Application.Helpers;
 using Aero.Application.Interfaces;
 using Aero.Domain.Entities;
 using Aero.Infrastructure.Helpers;
+using Core.Contract.Interfaces;
 using HID.Aero.ScpdNet.Wrapper;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -33,6 +35,7 @@ public sealed class ReplyWorker(Channel<ReplyMessage> queue, ILogger<ReplyWorker
           {
 
             case (int)enSCPReplyType.enSCPReplyNAK:
+              Console.WriteLine(message.nak.description_code);
               break;
             case (int)enSCPReplyType.enSCPReplyTransaction:
               //     // define mac , name , actor , image
@@ -246,9 +249,7 @@ public sealed class ReplyWorker(Channel<ReplyMessage> queue, ILogger<ReplyWorker
               break;
             case (int)enSCPReplyType.enSCPReplyIDReport:
               // Handle it here
-              Console.WriteLine("Here >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>.");
               var scp = scope.ServiceProvider.GetRequiredService<IIdReportService>();
-              Console.WriteLine("Here >>>> " + message.id);
               await scp.HandleInCommingDeviceAsync(message.id, ct);
               break;
             case (int)enSCPReplyType.enSCPReplyCommStatus:
@@ -349,6 +350,8 @@ public sealed class ReplyWorker(Channel<ReplyMessage> queue, ILogger<ReplyWorker
             case (int)enSCPReplyType.enSCPReplyWebConfigNetwork:
               //     bus = scope.ServiceProvider.GetRequiredService<IMessageBus>();
               //     await bus.PublishAsync(new AssignIpEvent(message.SCPId, UtilitiesHelper.IntegerToIp(message.web_network.cIpAddr)), ct);
+              var temp = scope.ServiceProvider.GetRequiredService<ITempDevice>();
+                  temp.TryUpdateIp(message.SCPId,UtilitiesHelper.IntegerToIp(message.web_network.cIpAddr));
               break;
             case (int)enSCPReplyType.enSCPReplyWebConfigNotes:
               break;
@@ -365,8 +368,9 @@ public sealed class ReplyWorker(Channel<ReplyMessage> queue, ILogger<ReplyWorker
             case (int)enSCPReplyType.enSCPReplyWebConfigDiagnostics:
               break;
             case (int)enSCPReplyType.enSCPReplyWebConfigHostCommPrim:
-              //     bus = scope.ServiceProvider.GetRequiredService<IMessageBus>();
-              //     await bus.PublishAsync(new AssignPortEvent(message.SCPId, message.web_host_comm_prim.ipclient.nPort), ct);
+                  temp = scope.ServiceProvider.GetRequiredService<ITempDevice>();
+                  temp.TryUpdatePort(message.SCPId,message.web_host_comm_prim.ipclient.nPort);
+                  // await temp.PublishAsync(new AssignPortEvent(message.SCPId, message.web_host_comm_prim.ipclient.nPort), ct);
               break;
             default:
               break;
