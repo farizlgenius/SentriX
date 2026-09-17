@@ -44,4 +44,17 @@ public class AeroModuleModelHelper
                   _ => 0
             };
       }
+
+      public static short ModelNumber(DeviceModuleModel model)
+      {
+            return model switch
+            {
+                  DeviceModuleModel.x1100 => 196,
+                  DeviceModuleModel.x100 => 193,
+                  DeviceModuleModel.x200 => 194,
+                  DeviceModuleModel.x300 => 195,
+                   DeviceModuleModel.amico => 1,
+                  _ => 0
+            };
+      }
 }

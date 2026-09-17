@@ -17,7 +17,16 @@ public sealed class ComponentMappingRepository(CoreDbContext context) : ICompone
     await context.SaveChangesAsync(ct);
   }
 
-  public Task GetExternalIdByMacAsync(string mac, CancellationToken ct = default)
+      public async Task<int> GetExternalIdByMacAndEntityAsync(string mac, string entity, CancellationToken ct = default)
+      {
+            return await context.ComponentMappings
+              .AsNoTracking()
+              .Where(x => x.mac.Equals(mac) && x.entity.Equals(entity))
+              .Select(x => x.external_id)
+              .FirstOrDefaultAsync();
+      }
+
+      public Task GetExternalIdByMacAsync(string mac, CancellationToken ct = default)
   {
     throw new NotImplementedException();
   }

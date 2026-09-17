@@ -8,7 +8,7 @@ namespace Setting.Infrastructure.Repositories;
 
 public sealed class SettingRepository(SettingDbContext context) : ISettingRepository
 {
-  public async Task<AeroDriverSettingDto> GetAeroDriverSettingAsync()
+  public async Task<AeroDriverSettingDto> GetAeroDriverSettingAsync(CancellationToken ct = default)
   {
     return await context.AeroDriverSettings
       .AsNoTracking()
@@ -47,6 +47,6 @@ public sealed class SettingRepository(SettingDbContext context) : ISettingReposi
         x.escort_timeout,
         x.multi_card_timeout
       ))
-      .FirstOrDefaultAsync() ?? throw new NotFoundException($"Aero Driver Setting.");
+      .FirstOrDefaultAsync(ct) ?? throw new NotFoundException($"Aero Driver Setting.");
   }
 }

@@ -145,55 +145,55 @@ public sealed class UtilitiesHelper
   }
 
 
-  public static short[] GetSCPComponent(short model)
-  {
-    short nInput, nOutput, nReaders;
-    switch (model)
-    {
-      case 196:
-        nInput = 7;
-        nOutput = 4;
-        nReaders = 4;
-        break;
-      case 193:
-        nInput = 7;
-        nOutput = 4;
-        nReaders = 4;
-        break;
-      case 194:
-        nInput = 19;
-        nOutput = 2;
-        nReaders = 0;
-        break;
-      case 195:
-        nInput = 5;
-        nOutput = 12;
-        nReaders = 0;
-        break;
-      case 190:
-        nInput = 7;
-        nOutput = 4;
-        nReaders = 2;
-        break;
-      case 191:
-        nInput = 19;
-        nOutput = 2;
-        nReaders = 0;
-        break;
-      case 192:
-        nInput = 5;
-        nOutput = 12;
-        nReaders = 0;
-        break;
-      default:
-        nInput = 0;
-        nOutput = 0;
-        nReaders = 0;
-        break;
-    }
+  // public static short[] GetSCPComponent(short model)
+  // {
+  //   short nInput, nOutput, nReaders;
+  //   switch (model)
+  //   {
+  //     case 196:
+  //       nInput = 7;
+  //       nOutput = 4;
+  //       nReaders = 4;
+  //       break;
+  //     case 193:
+  //       nInput = 7;
+  //       nOutput = 4;
+  //       nReaders = 4;
+  //       break;
+  //     case 194:
+  //       nInput = 19;
+  //       nOutput = 2;
+  //       nReaders = 0;
+  //       break;
+  //     case 195:
+  //       nInput = 5;
+  //       nOutput = 12;
+  //       nReaders = 0;
+  //       break;
+  //     case 190:
+  //       nInput = 7;
+  //       nOutput = 4;
+  //       nReaders = 2;
+  //       break;
+  //     case 191:
+  //       nInput = 19;
+  //       nOutput = 2;
+  //       nReaders = 0;
+  //       break;
+  //     case 192:
+  //       nInput = 5;
+  //       nOutput = 12;
+  //       nReaders = 0;
+  //       break;
+  //     default:
+  //       nInput = 0;
+  //       nOutput = 0;
+  //       nReaders = 0;
+  //       break;
+  //   }
 
-    return [nInput, nOutput, nReaders];
-  }
+  //   return [nInput, nOutput, nReaders];
+  // }
 
 
   public static string IntegerToIp(int ip)
@@ -250,6 +250,16 @@ public sealed class UtilitiesHelper
         CultureInfo.InvariantCulture,
         DateTimeStyles.RoundtripKind
     ).UtcDateTime;
+  }
+
+  public static int CalculatePinDigitValue(
+    int DuressMode,
+    int DuressDigitConst,
+    int CardIdSize,
+    int PinDigit
+  )
+  {
+    return (DuressMode * 4096) + (DuressDigitConst * 256) + (CardIdSize * 16) + PinDigit;
   }
 
 }

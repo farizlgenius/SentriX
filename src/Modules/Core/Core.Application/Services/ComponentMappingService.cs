@@ -1,6 +1,8 @@
 using Core.Application.Interfaces;
 using Core.Contract.Interfaces;
+using SharedKernel.Constants;
 using SharedKernel.Enums;
+using SharedKernel.Exceptions;
 
 namespace Core.Application.Services;
 
@@ -27,4 +29,16 @@ public sealed class ComponentMappingService(IComponentMappingRepository repo) : 
 
             return null;
       }
+
+      public async Task<int>  GetExternalIdByMacAndEntityAsync(string mac, string entityType, CancellationToken ct = default)
+      {
+            var res = await repo.GetExternalIdByMacAndEntityAsync(mac,entityType);
+
+            if(res == 0)
+                  throw new NotFoundException(EntityType.ComponentMapping,$"Mac:{mac},Entity:{entityType}");
+
+            return res;
+      }
+
+      
 }

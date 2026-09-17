@@ -29,9 +29,11 @@ public sealed class IdReportService(
     // Get Setting
     var scpDevice = await setting.GetAeroDriverSettingAsync();
 
+    var mac = UtilitiesHelper.ByteToHexStr(dto.mac_addr);
+
     // Send 1107 Command always 
     var res = repo.ScpDeviceSpecification(
-      UtilitiesHelper.ByteToHexStr(dto.mac_addr),
+      mac,
       dto.scp_id,
       (short)scpDevice.nMsp1Port,
       scpDevice.nTransaction,
@@ -58,49 +60,24 @@ public sealed class IdReportService(
     // await bus.QueryAsync(new InsertAdapterEventQuery(res), ct);
 
     // New 
-    if (temp.Contains(UtilitiesHelper.ByteToHexStr(dto.mac_addr)))
+    if (temp.Contains(mac))
     {
       return;
     }
 
-    if (await bus.QueryAsync(new IsAnyMacQuery(UtilitiesHelper.ByteToHexStr(dto.mac_addr))))
+    if (await bus.QueryAsync(new IsAnyMacQuery(mac)))
     {
       // Get Scp Id and Set it 
+      var externalId = await mapping.GetExternalIdByMacAndEntityAsync(
+        mac,
+        EntityType.Device,
+        ct);
+
+      repo.SetScpId(mac,dto.scp_id,(short)externalId);
 
 
       // Start initial Device here
-      repo.AccessDatabaseSpecification(
-        UtilitiesHelper.ByteToHexStr(dto.mac_addr),
-        dto.scp_id,
-        scpDevice.nCards,
-        scpDevice.nAlvl,
-        scpDevice.,
-        scpDevice.IssueCodeBit,
-        scpDevice.ApbLocation,
-        2,
-        2,
-        ,
-        ,
-        ,
-        scpDevice.UsedLimit,
-        ,
-        scpDevice.nTz,
-        ,
-        ,
-        ,
-        scpDevice.EscortTimeout,
-        scpDevice.MultiCardTimeout
-      );
-
-      repo.TimeSet(
-        UtilitiesHelper.ByteToHexStr(dto.mac_addr),
-        dto.scp_id);
-
-      repo.DriverConfiguration(
-        ,
-      );
-      module.SioPanelConfiguration();
-      
+     
       // And Other Device
 
       return;

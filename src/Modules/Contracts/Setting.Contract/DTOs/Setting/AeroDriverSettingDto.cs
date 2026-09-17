@@ -28,10 +28,12 @@ public sealed record AeroDriverSettingDto(
   int CardIdSize,
   int PinDigit,
   int IssueCodeBit,
-  bool ApbLocation,
+  bool AreaBaseApb,
   int StoreActDate,
   int StoreDeactDate,
   bool UsedLimit,
+  bool TimeBaseApb,
+  int HostResponseTimeout,
   int EscortTimeout,
   int MultiCardTimeout
 );

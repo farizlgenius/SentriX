@@ -4,5 +4,5 @@ namespace Setting.Application.Interfaces;
 
 public interface ISettingRepository
 {
-  Task<AeroDriverSettingDto> GetAeroDriverSettingAsync();
+  Task<AeroDriverSettingDto> GetAeroDriverSettingAsync(CancellationToken ct= default);
 }
