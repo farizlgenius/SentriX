@@ -20,4 +20,6 @@ public static class EntityType
   public const string Turnstile = "Turnstile";
   public const string Group = "Group";
   public const string ComponentMapping = "ComponentMapping";
+  public const string Event = "Event";
+  public const string AdapterEvent = "AdapterEvent";
 }

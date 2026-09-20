@@ -19,8 +19,8 @@ public sealed class AdapterEvent : BaseEntity
 
 
   // Relation
-  public int location_id { get; set; }
-  public Location location { get; set; } = default!;
+  public int? location_id { get; set; }
+  public Location? location { get; set; }
 
   public AdapterEvent() { }
 
@@ -40,7 +40,8 @@ public sealed class AdapterEvent : BaseEntity
     reason = d.Reason;
     response = d.Response;
     vendor = d.Vendor;
-    location_id = d.LocationId;
+    if(d.LocationId != 0)
+      location_id = d.LocationId;
   }
 
   public AdapterEvent(
@@ -71,6 +72,36 @@ public sealed class AdapterEvent : BaseEntity
     this.reason = reason;
     this.response = response;
     this.vendor = vendor;
-    location_id = locationId;
+    if(locationId != 0)
+      location_id = locationId;
+  }
+
+  public AdapterEvent(
+    Guid guid,
+        string name,
+        string mac,
+        short component_id,
+        string command,
+        int tag,
+        DateTime send_at,
+        DateTime received_at,
+        string body,
+        CommandStatus status,
+        string reason,
+        string response,
+        SharedKernel.Enums.Vendor vendor) : base(guid)
+  {
+    this.name = name;
+    this.mac = mac;
+    this.component_id = component_id;
+    this.command = command;
+    this.tag = tag;
+    this.send_at = send_at;
+    this.received_at = received_at;
+    this.body = body;
+    this.status = status;
+    this.reason = reason;
+    this.response = response;
+    this.vendor = vendor;
   }
 }

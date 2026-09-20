@@ -21,5 +21,5 @@ public interface IDeviceModuleRepository
            short nSioNextOut,
            short nSioNextRdr 
       );
-      CommandResponse SioStatusRequest(string Mac,short ScpId,int First,int Count);
+      CommandResponse SioStatusRequest(string Mac,short ScpId, int First,int Count);
 }

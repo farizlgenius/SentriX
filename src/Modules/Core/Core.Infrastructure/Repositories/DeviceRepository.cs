@@ -250,9 +250,9 @@ public sealed class DeviceRepository(CoreDbContext context) : IDeviceRepository
                   .AsNoTracking()
                   .Where(x => x.mac.Equals(mac))
                   .Select(x => new { x.name, x.location_id })
-                  .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.Device, mac); ;
+                  .FirstOrDefaultAsync();
 
-            return (res.name, res.location_id ?? 0);
+            return res == null ? (string.Empty,0) : (res.name,res.location_id ?? 0);
       }
 
       public async Task<Pagination<DeviceDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)

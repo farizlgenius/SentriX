@@ -9,7 +9,7 @@ public sealed record CommandResponse(
       int Tag,
       DateTime SendAt,
       DateTime? ReceivedAt,
-      string? Body,
+      string Body,
       CommandStatus Status,
       string Reason,
       Vendor Vendor,

@@ -26,12 +26,14 @@ public sealed class ComponentMappingRepository(CoreDbContext context) : ICompone
       .Where(x => x.mac.Equals(mac) && x.entity.Equals(entity))
       .Select(x => x.external_id)
       .DefaultIfEmpty(-1)
-      .FirstAsync();
+      .FirstOrDefaultAsync();
 
-    if (res == -1)
-      throw new NotFoundException(EntityType.ComponentMapping, $"Mac:${mac}, Entity:${entity}");
+      if(res == -1)
+        throw new NotFoundException(EntityType.ComponentMapping, $"Mac:${mac}, Entity:${entity}");
 
-    return res;
+      return res;
+
+
   }
 
   public Task GetExternalIdByMacAsync(string mac, CancellationToken ct = default)
@@ -63,13 +65,9 @@ public sealed class ComponentMappingRepository(CoreDbContext context) : ICompone
            var res = await context.ComponentMappings
             .AsNoTracking()
             .Where(x => x.external_id == externalId && x.entity.Equals(entity) && x.vendor == vendor)
-            .Select(x => x.internal_id)
-            .DefaultIfEmpty(-1)
-            .FirstAsync(ct);
-
-            if(res == -1)
-              throw new NotFoundException(EntityType.ComponentMapping,$"external id : {externalId}, entity: {entity}, vendor: {vendor}");
-
+            .Select(x => (int?)x.internal_id)
+            .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.ComponentMapping,$"external id : {externalId}, entity: {entity}, vendor: {vendor}");
+              
             return res;
       }
 }

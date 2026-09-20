@@ -350,15 +350,16 @@ public sealed class ReplyWorker(Channel<ReplyMessage> queue, ILogger<ReplyWorker
               await noti.SendToTopic(DeviceNotifierTopic.CONFIG, data, ct);
               break;
             case (int)enSCPReplyType.enSCPReplyCmndStatus:
-              //     var eve = scope.ServiceProvider.GetRequiredService<Events.Contract.Interfaces.IEvent>();
-              //     await eve.UpdateCommandEvent(
-              //         message.SCPId,
-              //         message.cmnd_sts.sequence_number,
-              //         message.cmnd_sts.status,
-              //         message.cmnd_sts.nak != null ? DescriptionHelper.GetNakReasonDescription(message.cmnd_sts.nak.reason) : string.Empty
-              //     );
-              //     // var cstatus = new CmndStatus(await qhw.GetMacFromComponentAsync((short)message.ScpId), message.cmnd_sts.sequence_number);
-              //     // await publisher.CmndNotifyStatus(cstatus);
+                  var eve = scope.ServiceProvider.GetRequiredService<Core.Contract.Interfaces.IEvent>();
+                  Console.WriteLine(message.cmnd_sts.status);
+                  // await eve.UpdateAdapterEventStatusAsync(
+                  //     message.SCPId,
+                  //     message.cmnd_sts.sequence_number,
+                  //     message.cmnd_sts.status == 1 ? CommandStatus.SUCCESSED : CommandStatus.FAILED,
+                  //     message.cmnd_sts.nak != null ? DescriptionHelper.GetNakReasonDescription(message.cmnd_sts.nak.reason) : string.Empty
+                  // );
+                  // var cstatus = new CmndStatus(await qhw.GetMacFromComponentAsync((short)message.ScpId), message.cmnd_sts.sequence_number);
+                  // await publisher.CmndNotifyStatus(cstatus);
               break;
             case (int)enSCPReplyType.enSCPReplyWebConfigNetwork:
               //     bus = scope.ServiceProvider.GetRequiredService<IMessageBus>();

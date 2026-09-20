@@ -6,6 +6,7 @@ using Core.Contract.Interfaces;
 using HID.Aero.ScpdNet.Wrapper;
 using Microsoft.Extensions.Logging;
 using SharedKernel.Enums;
+using SharedKernel.Messaging;
 using SharedKernel.Model;
 
 namespace Aero.Infrastructure.Repositories;
@@ -102,6 +103,10 @@ public sealed class DeviceRepostory(
                         Vendor.aero,
                         true
                         );
+
+                  
+
+
 
             }
             else
@@ -366,7 +371,6 @@ public sealed class DeviceRepostory(
             {
                   c.nStructId[i] = StructureList.ElementAt(i);
             }
-            var command = ObjectHelper.ToAsciiString(c);
             var result = repo.Send((short)enCfgCmnd.enCcStrSRq, c);
             if (result)
             {
@@ -412,7 +416,7 @@ public sealed class DeviceRepostory(
             throw new NotImplementedException();
       }
 
-      public CommandResponse SetTransactionLogIndexAsync(string Mac, short ScpId, bool IsEnable)
+      public CommandResponse SetTransactionLogIndex(string Mac, short ScpId, bool IsEnable)
       {
             CC_TRANINDEX c = new CC_TRANINDEX();
             c.scp_number = ScpId;

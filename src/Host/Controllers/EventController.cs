@@ -20,12 +20,12 @@ namespace Host.Controllers
 
     }
 
-    // [HttpGet("command/pagination")]
-    // public async Task<IActionResult> GetCommandPaginationAsync([FromQuery] PaginationParams param)
-    // {
-    //   var res = await @event.GetCommandPaginationAsync(param);
-    //   return Ok(res);
-    // }
+    [HttpGet("adapter/pagination")]
+    public async Task<IActionResult> GetAdapterPaginationAsync([FromQuery] PaginationParams param)
+    {
+      var res = await @event.GetAdapterPaginationAsync(param);
+      return Ok(res);
+    }
 
     // [HttpPost("notifications/dao")]
     // public async Task<IActionResult> DaoAsync([FromBody] JsonElement body)

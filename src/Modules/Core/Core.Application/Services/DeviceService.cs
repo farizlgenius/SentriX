@@ -84,11 +84,8 @@ public sealed class DeviceService(
       deviceModules
     );
 
-
-
-
     // Send Command to device below 
-
+     await adapter.GetAdapter(d.Vendor).Device.InititalDeviceAsync(d.Mac,d.Ip);
 
     // Handle how device is create on each device
     switch (dto.Vendor)

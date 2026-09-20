@@ -81,6 +81,8 @@ public sealed class AdapterEvent : BaseDomain
     Vendor = vendor;
     LocationId = locationId;
   }
+
+  
 }
 
 

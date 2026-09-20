@@ -2,6 +2,7 @@ using Aero.Application.Enums;
 using Aero.Application.Helpers;
 using Aero.Application.Interfaces;
 using Aero.Domain.Entities;
+using Core.Contract.Commands.Events;
 using Core.Contract.DTOs.Device;
 using Core.Contract.Interfaces;
 using Core.Contract.Queries;
@@ -18,7 +19,6 @@ public sealed class IdReportService(
   ISetting setting,
   IComponentMapping mapping,
   IDeviceRepository repo,
-  IDeviceModuleRepository module,
   ITempDevice temp,
   ILogger<IdReportService> logger
   ) : IIdReportService
@@ -56,8 +56,7 @@ public sealed class IdReportService(
     );
 
     
-
-    // await bus.QueryAsync(new InsertAdapterEventQuery(res), ct);
+    await bus.SendAsync(new AdapterEventCommand(res), ct);
 
     // New 
     if (temp.Contains(mac))
@@ -73,10 +72,13 @@ public sealed class IdReportService(
         EntityType.Device,
         ct);
 
-      repo.SetScpId(mac,dto.scp_id,(short)externalId);
+       res = repo.SetScpId(mac,dto.scp_id,(short)externalId);
+
+       await bus.SendAsync(new AdapterEventCommand(res), ct);
 
 
       // Start initial Device here
+      
      
       // And Other Device
 
@@ -90,6 +92,8 @@ public sealed class IdReportService(
        WebConfigReadType.NetworkSettingss
       );
 
+      await bus.SendAsync(new AdapterEventCommand(res), ct);
+
       // Port
      res = repo.ReadsConfiguration(
        UtilitiesHelper.ByteToHexStr(dto.mac_addr),
@@ -97,7 +101,10 @@ public sealed class IdReportService(
        WebConfigReadType.HostCommunicationPrimarySettings
       );
 
-    // Send Command to get Port
+      await bus.SendAsync(new AdapterEventCommand(res), ct);
+
+     // Get Free Slot 
+     await 
 
     var added = temp.TryAdd(
       new TempDeviceDto(

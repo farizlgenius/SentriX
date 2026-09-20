@@ -1,7 +1,9 @@
 using Core.Application.Interfaces;
+using Core.Contract.DTOs.AdapterEvent;
 using Core.Contract.DTOs.Event;
 using Core.Contract.Interfaces;
 using SharedKernel.Domain;
+using SharedKernel.Enums;
 
 namespace Core.Application.Services;
 
@@ -32,6 +34,11 @@ public sealed class EventService(IEventRepository repo) : IEvent
     throw new NotImplementedException();
   }
 
+  public async Task<Pagination<AdapterEventDto>> GetAdapterPaginationAsync(PaginationParams param, CancellationToken ct = default)
+  {
+    return await repo.GetAdapterPaginationAsync(param, ct);
+  }
+
   public async Task<EventDto> GetByGuidAsync(Guid guid, CancellationToken ct = default)
   {
     throw new NotImplementedException();
@@ -47,7 +54,17 @@ public sealed class EventService(IEventRepository repo) : IEvent
     return await repo.GetPaginationAsync(param, ct);
   }
 
+  public async Task UpdateAdapterEventStatusAsync(int componentId, int tag, CommandStatus status, string reason, CancellationToken ct = default)
+  {
+    await repo.UpdateAdapterEventStatusAsync(componentId, tag, status, reason, ct);
+  }
+
   public async Task<Guid> UpdateAsync(UpdateEventDto dto, CancellationToken ct = default)
+  {
+    throw new NotImplementedException();
+  }
+
+  Task<Pagination<AdapterEventDto>> IEvent.GetAdapterPaginationAsync(PaginationParams param, CancellationToken ct)
   {
     throw new NotImplementedException();
   }

@@ -5,6 +5,7 @@ using Aero.Application.Helpers;
 using Aero.Application.Interfaces;
 using Aero.Application.Metadata;
 using Aero.Application.Metadata.Device;
+using Core.Contract.Commands.Events;
 using Core.Contract.Interfaces;
 using Core.Contract.Queries;
 using Core.Contract.Queries.ComponentMapping;
@@ -19,16 +20,17 @@ namespace Aero.Application.Services;
 
 public sealed class DeviceService(
       IDeviceRepository repo,
-      IComponentMapping mapping,
       IDeviceModuleRepository module,
       IMessageBus bus
       ) : IDeviceAdapter
 {
+
+
       public async Task GetConfigurationAsync(string mac, string ip, CancellationToken ct = default)
       {
             var externalId = await bus.QueryAsync(new ExternalIdByMacAndEntityQuery(mac,EntityType.Device));
 
-            repo.ScpStructureStatusRead(
+            var res = repo.ScpStructureStatusRead(
                   mac,
                   (short)externalId,
                   [
@@ -57,7 +59,9 @@ public sealed class DeviceService(
                         (short)SCPStructure.SCPSID_LOGIN_STANDARD,
                         (short)SCPStructure.SCPSID_FILE_SYSTEM,
                   ]
-                  );
+            );
+
+            await bus.SendAsync(new AdapterEventCommand(res));
       }
 
       public async Task<Status> GetStatusAsync(string mac, string ip, CancellationToken ct = default)
@@ -77,7 +81,7 @@ public sealed class DeviceService(
 
             var externalId = await bus.QueryAsync(new ExternalIdByMacAndEntityQuery(mac,EntityType.Device));
 
-            repo.AccessDatabaseSpecification(
+            var res = repo.AccessDatabaseSpecification(
              mac,
             (short)externalId,
             scpDevice.nCards,
@@ -105,11 +109,24 @@ public sealed class DeviceService(
              (short)scpDevice.MultiCardTimeout
             );
 
-            repo.TimeSet(
+            await bus.SendAsync(new AdapterEventCommand(res));
+
+            res = repo.TimeSet(
               mac,
               (short)externalId);
 
-            repo.DriverConfiguration(
+            await bus.SendAsync(new AdapterEventCommand(res));
+
+            // Transaction index 
+            res = repo.SetTransactionLogIndex(
+                  mac,
+                  (short)externalId,
+                  true
+                  );
+
+            await bus.SendAsync(new AdapterEventCommand(res));
+
+            res = repo.DriverConfiguration(
                   mac,
                   (short)externalId,
                   0,
@@ -120,7 +137,9 @@ public sealed class DeviceService(
                   0
             );
 
-            module.SioPanelConfiguration(
+            await bus.SendAsync(new AdapterEventCommand(res));
+
+            res = module.SioPanelConfiguration(
                   mac,
                   (short)externalId,
                   0,
@@ -137,6 +156,43 @@ public sealed class DeviceService(
                  -1,
                  -1
             );
+
+            await bus.SendAsync(new AdapterEventCommand(res));
+
+            // Call memory allocate to check
+
+            res = repo.ScpStructureStatusRead(
+                  mac,
+                  (short)externalId,
+                  [
+                        (short)SCPStructure.SCPSID_TRAN,
+                        (short)SCPStructure.SCPSID_TZ,
+                        (short)SCPStructure.SCPSID_HOL,
+                        (short)SCPStructure.SCPSID_MSP1,
+                        (short)SCPStructure.SCPSID_SIO,
+                        (short)SCPStructure.SCPSID_MP,
+                        (short)SCPStructure.SCPSID_CP,
+                        (short)SCPStructure.SCPSID_ACR,
+                        (short)SCPStructure.SCPSID_ALVL,
+                        (short)SCPStructure.SCPSID_TRIG,
+                        (short)SCPStructure.SCPSID_PROC,
+                        (short)SCPStructure.SCPSID_MPG,
+                        (short)SCPStructure.SCPSID_AREA,
+                        (short)SCPStructure.SCPSID_EAL,
+                        (short)SCPStructure.SCPSID_CRDB,
+                        (short)SCPStructure.SCPSID_FLASH,
+                        (short)SCPStructure.SCPSID_BSQN,
+                        (short)SCPStructure.SCPSID_SAVE_STAT,
+                        (short)SCPStructure.SCPSID_MAB1_FREE,
+                        (short)SCPStructure.SCPSID_MAB2_FREE,
+                        (short)SCPStructure.SCPSID_ARQ_BUFFER,
+                        (short)SCPStructure.SCPSID_PART_FREE_CNT,
+                        (short)SCPStructure.SCPSID_LOGIN_STANDARD,
+                        (short)SCPStructure.SCPSID_FILE_SYSTEM,
+                  ]
+            );
+
+            await bus.SendAsync(new AdapterEventCommand(res));
 
             
 
@@ -159,7 +215,7 @@ public sealed class DeviceService(
             // 4.Send command driver configuration
             if (deviceMetadata.PortOne)
             {
-                  repo.DriverConfiguration(
+                  var res = repo.DriverConfiguration(
                         device.Mac,
                         (short)componentId,
                         1,
@@ -169,11 +225,13 @@ public sealed class DeviceService(
                         deviceMetadata.ProtocolOne,
                         0
                   );
+
+                  await bus.SendAsync(new AdapterEventCommand(res));
             }
 
             if (deviceMetadata.PortTwo)
             {
-                  repo.DriverConfiguration(
+                  var res = repo.DriverConfiguration(
                         device.Mac,
                         (short)componentId,
                         2,
@@ -183,7 +241,11 @@ public sealed class DeviceService(
                         deviceMetadata.ProtocolTwo,
                         0
                   );
+
+                  await bus.SendAsync(new AdapterEventCommand(res));
             }
+
+            // Finish
             
             
       }
