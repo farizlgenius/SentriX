@@ -1675,6 +1675,9 @@
             "projectReferences": {
               "D:\\aero\\SentriX\\src\\Modules\\Adapters\\Aero\\Aero.Application\\Aero.Application.csproj": {
                 "projectPath": "D:\\aero\\SentriX\\src\\Modules\\Adapters\\Aero\\Aero.Application\\Aero.Application.csproj"
+              },
+              "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Notifier.Contract\\Notifier.Contract.csproj": {
+                "projectPath": "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Notifier.Contract\\Notifier.Contract.csproj"
               }
             }
           }
@@ -6854,8 +6857,8 @@
             "framework": "net10.0",
             "targetAlias": "net10.0",
             "projectReferences": {
-              "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Adapter.Abstraction\\Adapter.Abstraction.csproj": {
-                "projectPath": "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Adapter.Abstraction\\Adapter.Abstraction.csproj"
+              "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Adapter.Contract\\Adapter.Contract.csproj": {
+                "projectPath": "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Adapter.Contract\\Adapter.Contract.csproj"
               },
               "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Core.Contract\\Core.Contract.csproj": {
                 "projectPath": "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Core.Contract\\Core.Contract.csproj"

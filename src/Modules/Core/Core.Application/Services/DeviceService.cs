@@ -1,4 +1,4 @@
-using Adapter.Abstraction.Interfaces;
+using Adapter.Contract.Interfaces;
 using Core.Application.Interfaces;
 using Core.Contract.DTOs.Device;
 using Core.Contract.Interfaces;
@@ -6,6 +6,7 @@ using Core.Contract.Queries;
 using Core.Domain.Entities;
 using SharedKernel.Constants;
 using SharedKernel.Domain;
+using SharedKernel.Enums;
 using SharedKernel.Exceptions;
 using SharedKernel.Helpers;
 using SharedKernel.Messaging;
@@ -15,7 +16,8 @@ namespace Core.Application.Services;
 public sealed class DeviceService(
   IDeviceRepository repo,
   IMessageBus bus,
-  ITempDevice temp
+  ITempDevice temp,
+  IAdapterFactory adapter
   ) : IDevice
 {
   public async Task<Guid> CreateAsync(CreateDeviceDto dto, CancellationToken ct = default)
@@ -178,17 +180,44 @@ public sealed class DeviceService(
     return await repo.GetByLocationAsync(locationId, ct);
   }
 
+  public async Task<object> GetConfigurationAsync(Guid guid,CancellationToken ct = default)
+  {
+    var device = await repo.GetAsync(guid,ct);
+    return adapter.GetAdapter(device.Vendor).Device.GetConfigurationAsync(device.Mac,device.Ip,ct);
+  }
+
   public async Task<Pagination<DeviceDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
   {
     return await repo.GetPaginationAsync(param, ct);
   }
 
-  public async Task<IEnumerable<TempDeviceDto>> GetScanDeviceAsync()
+  public async Task<IEnumerable<TempDeviceDto>> GetScanDeviceAsync(CancellationToken ct= default)
   {
     return temp.GetAll().ToArray();
   }
 
-  public async Task<Guid> UpdateAsync(UpdateDeviceDto dto, CancellationToken ct = default)
+      public async Task<StatusDto> GetStatusAsync(Guid guid, CancellationToken ct = default)
+      {
+        var device = await repo.GetAsync(guid,ct);
+        return new StatusDto(
+          device.Guid,
+          await adapter.GetAdapter(device.Vendor).Device.GetStatusAsync(device.Mac,device.Ip)
+        );
+      }
+
+      public Task<IEnumerable<StatusDto>> GetStatusesAsync(IEnumerable<Guid> guids, CancellationToken ct = default)
+      {
+            throw new NotImplementedException();
+      }
+
+      public async Task<bool> ResetAsync(Guid guid, CancellationToken ct = default)
+      {
+        var device = await repo.GetAsync(guid,ct);
+        await adapter.GetAdapter(device.Vendor).Device.ResetAsync(device.Mac,device.Ip);
+        return true;
+      }
+
+      public async Task<Guid> UpdateAsync(UpdateDeviceDto dto, CancellationToken ct = default)
   {
     if (!await repo.IsAnyGuidAsync(dto.Guid, ct))
       throw new NotFoundException(EntityType.Device, dto.Guid.ToString());

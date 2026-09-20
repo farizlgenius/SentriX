@@ -212,7 +212,12 @@ public sealed class DoorRepository(CoreDbContext context) : IDoorRepository
       .ToDictionaryAsync(x => x.guid, x => x.id, ct);
   }
 
-  public async Task<int> GetIdByGuidAsync(Guid guid, CancellationToken ct = default)
+      public Task<Guid> GetGuidByIdAsync(int id, CancellationToken ct = default)
+      {
+            throw new NotImplementedException();
+      }
+
+      public async Task<int> GetIdByGuidAsync(Guid guid, CancellationToken ct = default)
   {
     var res = await context.Doors
       .AsNoTracking()

@@ -6,7 +6,7 @@ using SharedKernel.Domain;
 
 namespace Core.Infrastructure.Repositories;
 
-public sealed class OutputRepository(CoreDbContext context) : IBaseRepository<OutputDto, Output>
+public sealed class OutputRepository(CoreDbContext context) : IOutputRepository
 {
   public async Task AddAsync(Output entity, CancellationToken ct = default)
   {
@@ -43,7 +43,12 @@ public sealed class OutputRepository(CoreDbContext context) : IBaseRepository<Ou
     throw new NotImplementedException();
   }
 
-  public async Task<int> GetIdByGuidAsync(Guid guid, CancellationToken ct = default)
+      public Task<Guid> GetGuidByIdAsync(int id, CancellationToken ct = default)
+      {
+            throw new NotImplementedException();
+      }
+
+      public async Task<int> GetIdByGuidAsync(Guid guid, CancellationToken ct = default)
   {
     throw new NotImplementedException();
   }

@@ -1,4 +1,3 @@
-using Adapter.Abstraction.Constants;
 using SharedKernel.Enums;
 
 namespace Core.Infrastructure.Persistences.Entities;

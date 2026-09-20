@@ -121,6 +121,8 @@ public class SettingDbContext(DbContextOptions<SettingDbContext> options) : DbCo
                         store_act_date = 2,
                         store_deact_date = 2,
                         used_limit = true,
+                        apb_time=true,
+                        host_timeout=5,
                         escort_timeout = 15,
                         multi_card_timeout = 15
                   }

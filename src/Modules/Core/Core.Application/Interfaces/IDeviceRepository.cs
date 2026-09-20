@@ -9,4 +9,6 @@ public interface IDeviceRepository : IBaseRepository<DeviceDto, Device>
       Task<bool> IsAnyMacAsync(string mac, CancellationToken ct = default);
       Task<int> GetDeviceModuleIdByGuidAsync(Guid guid, CancellationToken ct = default);
       Task<(string, int)> GetNameAndLocationIdByMacAsync(string mac, CancellationToken ct = default);
+      Task<DeviceDto> GetByMacAsync(string mac,CancellationToken ct = default);
+     
 }

@@ -12,4 +12,5 @@ public interface IComponentMappingRepository
   Task<int> GetFreeIdByMacAndEntityAndVendorAsync(string mac, string entity, Vendor vendor, int max, CancellationToken ct = default);
   Task<IEnumerable<int>> GetExternalIdsByEntityAndVendorAsync(string entity, Vendor vendor, CancellationToken ct = default);
   Task<int> GetExternalIdByMacAndEntityAsync(string mac,string entity,CancellationToken ct = default);
+  Task<int> GetInternalIdByExternalIdAndEntityAndVendorAsync(short externalId,string entity,Vendor vendor,CancellationToken ct = default);
 }

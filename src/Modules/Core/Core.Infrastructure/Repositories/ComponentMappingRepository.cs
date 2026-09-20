@@ -2,7 +2,9 @@ using Core.Application.Interfaces;
 using Core.Domain.Entities;
 using Core.Infrastructure.Persistences;
 using Microsoft.EntityFrameworkCore;
+using SharedKernel.Constants;
 using SharedKernel.Enums;
+using SharedKernel.Exceptions;
 
 namespace Core.Infrastructure.Repositories;
 
@@ -17,16 +19,22 @@ public sealed class ComponentMappingRepository(CoreDbContext context) : ICompone
     await context.SaveChangesAsync(ct);
   }
 
-      public async Task<int> GetExternalIdByMacAndEntityAsync(string mac, string entity, CancellationToken ct = default)
-      {
-            return await context.ComponentMappings
-              .AsNoTracking()
-              .Where(x => x.mac.Equals(mac) && x.entity.Equals(entity))
-              .Select(x => x.external_id)
-              .FirstOrDefaultAsync();
-      }
+  public async Task<int> GetExternalIdByMacAndEntityAsync(string mac, string entity, CancellationToken ct = default)
+  {
+    var res = await context.ComponentMappings
+      .AsNoTracking()
+      .Where(x => x.mac.Equals(mac) && x.entity.Equals(entity))
+      .Select(x => x.external_id)
+      .DefaultIfEmpty(-1)
+      .FirstAsync();
 
-      public Task GetExternalIdByMacAsync(string mac, CancellationToken ct = default)
+    if (res == -1)
+      throw new NotFoundException(EntityType.ComponentMapping, $"Mac:${mac}, Entity:${entity}");
+
+    return res;
+  }
+
+  public Task GetExternalIdByMacAsync(string mac, CancellationToken ct = default)
   {
     throw new NotImplementedException();
   }
@@ -49,4 +57,19 @@ public sealed class ComponentMappingRepository(CoreDbContext context) : ICompone
   {
     throw new NotImplementedException();
   }
+
+      public async Task<int> GetInternalIdByExternalIdAndEntityAndVendorAsync(short externalId, string entity, Vendor vendor, CancellationToken ct = default)
+      {
+           var res = await context.ComponentMappings
+            .AsNoTracking()
+            .Where(x => x.external_id == externalId && x.entity.Equals(entity) && x.vendor == vendor)
+            .Select(x => x.internal_id)
+            .DefaultIfEmpty(-1)
+            .FirstAsync(ct);
+
+            if(res == -1)
+              throw new NotFoundException(EntityType.ComponentMapping,$"external id : {externalId}, entity: {entity}, vendor: {vendor}");
+
+            return res;
+      }
 }

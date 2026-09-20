@@ -1186,7 +1186,8 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v10.0",
         "dependencies": {
-          "Aero.Application": "1.0.0"
+          "Aero.Application": "1.0.0",
+          "Notifier.Contract": "1.0.0"
         },
         "compile": {
           "bin/placeholder/Aero.Infrastructure.dll": {}
@@ -1306,7 +1307,7 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v10.0",
         "dependencies": {
-          "Adapter.Abstraction": "1.0.0",
+          "Adapter.Contract": "1.0.0",
           "Core.Contract": "1.0.0",
           "Core.Domain": "1.0.0",
           "Setting.Contract": "1.0.0",
@@ -2673,7 +2674,8 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v10.0",
         "dependencies": {
-          "Aero.Application": "1.0.0"
+          "Aero.Application": "1.0.0",
+          "Notifier.Contract": "1.0.0"
         },
         "compile": {
           "bin/placeholder/Aero.Infrastructure.dll": {}
@@ -2793,7 +2795,7 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v10.0",
         "dependencies": {
-          "Adapter.Abstraction": "1.0.0",
+          "Adapter.Contract": "1.0.0",
           "Core.Contract": "1.0.0",
           "Core.Domain": "1.0.0",
           "Setting.Contract": "1.0.0",
@@ -5891,5 +5893,13 @@
         "#import": []
       }
     }
-  }
+  },
+  "logs": [
+    {
+      "code": "NU1900",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Error occurred while getting package vulnerability data: Unable to load the service index for source https://api.nuget.org/v3/index.json."
+    }
+  ]
 }

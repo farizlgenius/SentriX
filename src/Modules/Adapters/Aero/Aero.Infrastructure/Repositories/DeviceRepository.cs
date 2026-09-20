@@ -311,14 +311,100 @@ public sealed class DeviceRepostory(
             }
       }
 
-      public CommandResponse ScpReset(string Mac, short ScpId)
+      public CommandResponse ScpReset(string mac, short scpId)
       {
-            throw new NotImplementedException();
+            CC_RESET c = new CC_RESET();
+            c.scp_number = scpId;
+            var command = ObjectHelper.ToAsciiString(c);
+            var result = repo.Send((short)enCfgCmnd.enCcReset, c);
+            if (result)
+            {
+                  logger.LogInformation(LogMessageHelper.CommandSuccess(Command.ScpReset, scpId));
+
+                  return new CommandResponse(
+                        mac,
+                        scpId,
+                        Command.ScpReset,
+                        SCPDLL.scpGetTagLastPosted(scpId),
+                        DateTime.UtcNow,
+                        null,
+                        ObjectHelper.ToAsciiString(c),
+                        CommandStatus.PENDING,
+                        string.Empty,
+                        Vendor.aero,
+                        true
+                        );
+
+            }
+            else
+            {
+                  logger.LogError(LogMessageHelper.CommandUnsuccess(Command.ScpReset, scpId));
+                  return new CommandResponse(
+                        mac,
+                       scpId,
+                       Command.ScpReset,
+                       -1,
+                       DateTime.UtcNow,
+                       DateTime.UtcNow,
+                       ObjectHelper.ToAsciiString(c),
+                       CommandStatus.FAILED,
+                       string.Empty,
+                       Vendor.aero,
+                       false
+                       );
+
+            }
       }
 
       public CommandResponse ScpStructureStatusRead(string Mac, short ScpId, List<short> StructureList)
       {
-            throw new NotImplementedException();
+            CC_STRSRQ c = new CC_STRSRQ();
+            c.nScpID = ScpId;
+            c.nListLength = (short)StructureList.Count();
+
+            for (int i = 0; i < (short)StructureList.Count(); i++)
+            {
+                  c.nStructId[i] = StructureList.ElementAt(i);
+            }
+            var command = ObjectHelper.ToAsciiString(c);
+            var result = repo.Send((short)enCfgCmnd.enCcStrSRq, c);
+            if (result)
+            {
+                  logger.LogInformation(LogMessageHelper.CommandSuccess(Command.ScpStructureStatusRead, ScpId));
+
+                  return new CommandResponse(
+                        Mac,
+                        ScpId,
+                        Command.ScpStructureStatusRead,
+                        SCPDLL.scpGetTagLastPosted(ScpId),
+                        DateTime.UtcNow,
+                        null,
+                        ObjectHelper.ToAsciiString(c),
+                        CommandStatus.PENDING,
+                        string.Empty,
+                        Vendor.aero,
+                        true
+                        );
+
+            }
+            else
+            {
+                  logger.LogError(LogMessageHelper.CommandUnsuccess(Command.ScpStructureStatusRead, ScpId));
+                  return new CommandResponse(
+                        Mac,
+                       ScpId,
+                       Command.ScpStructureStatusRead,
+                       -1,
+                       DateTime.UtcNow,
+                       DateTime.UtcNow,
+                       ObjectHelper.ToAsciiString(c),
+                       CommandStatus.FAILED,
+                       string.Empty,
+                       Vendor.aero,
+                       false
+                       );
+
+            }
       }
 
       public CommandResponse SetScpId(string Mac, short ScpId, short To)
@@ -419,5 +505,10 @@ public sealed class DeviceRepostory(
       public CommandResponse TransactionLogStatusAsync(string Mac, short ScpId)
       {
             throw new NotImplementedException();
+      }
+
+      public Status GetStatus(short ScpId)
+      {
+            return SCPDLL.scpCheckOnline(ScpId) == 1 ? Status.Online : Status.Offline;
       }
 }

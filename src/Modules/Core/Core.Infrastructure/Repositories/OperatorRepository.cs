@@ -137,7 +137,12 @@ public sealed class OperatorRepository(CoreDbContext context) : IOperatorReposit
       .ToArrayAsync(ct);
   }
 
-  public async Task<int> GetIdByGuidAsync(Guid guid, CancellationToken ct = default)
+      public Task<Guid> GetGuidByIdAsync(int id, CancellationToken ct = default)
+      {
+            throw new NotImplementedException();
+      }
+
+      public async Task<int> GetIdByGuidAsync(Guid guid, CancellationToken ct = default)
   {
     var entity = await context.Operators
       .Where(x => x.guid == guid)

@@ -1,6 +1,7 @@
 using Core.Application.Interfaces;
 using Core.Contract.DTOs.Device;
 using Core.Contract.DTOs.DeviceModule;
+using Core.Contract.DTOs.Role;
 using Core.Domain.Entities;
 using Core.Infrastructure.Persistences;
 using Microsoft.EntityFrameworkCore;
@@ -158,6 +159,48 @@ public sealed class DeviceRepository(CoreDbContext context) : IDeviceRepository
                   )).ToArrayAsync();
       }
 
+      public async Task<DeviceDto> GetByMacAsync(string mac, CancellationToken ct = default)
+      {
+            return await context.Devices
+                  .AsNoTracking()
+                  .Where(x => x.mac.Equals(mac))
+                  .Select(x => new DeviceDto(
+                        x.guid,
+                        x.name,
+                        x.serial_number,
+                        x.mac,
+                        x.ip,
+                        x.port,
+                        x.firmware,
+                        x.vendor,
+                        x.metadata,
+                        x.synced_at,
+                        x.configuration_status,
+                        x.device_module.Select(m => new DeviceModuleDto(
+                              m.guid,
+                              m.name,
+                              m.serial_number,
+                              m.firmware,
+                              m.mac,
+                              m.port,
+                              m.address,
+                              m.model,
+                              m.reader_slot,
+                              m.output_slot,
+                              m.input_slot,
+                              m.device.guid,
+                              m.device.name,
+                              m.location.guid,
+                              m.location.name,
+                              m.is_active,
+                              m.is_default
+                              )).ToList(),
+                        x.location == null ? Guid.Empty : x.location.guid,
+                        x.is_active,
+                        x.is_default
+                  )).FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.Device,mac);
+      }
+
       public async Task<int> GetDeviceModuleIdByGuidAsync(Guid guid, CancellationToken ct = default)
       {
             var res = await context.DeviceModules
@@ -170,6 +213,16 @@ public sealed class DeviceRepository(CoreDbContext context) : IDeviceRepository
                   throw new NotFoundException(EntityType.DeviceModule, guid.ToString());
 
             return res;
+      }
+
+      public async Task<Guid> GetGuidByIdAsync(int id, CancellationToken ct = default)
+      {
+            return await context.Devices
+                  .AsNoTracking()
+                  .Where(x => x.id == id)
+                  .Select(x => x.guid)
+                  .DefaultIfEmpty(Guid.Empty)
+                  .FirstOrDefaultAsync();
       }
 
       public async Task<Guid> GetGuidByMacAsync(string mac, CancellationToken ct = default)

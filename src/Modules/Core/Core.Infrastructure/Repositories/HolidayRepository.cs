@@ -108,7 +108,12 @@ public sealed class HolidayRepository(CoreDbContext context) : IHolidayRepositor
       ).ToArrayAsync();
   }
 
-  public async Task<int> GetIdByGuidAsync(Guid guid, CancellationToken ct = default)
+      public Task<Guid> GetGuidByIdAsync(int id, CancellationToken ct = default)
+      {
+            throw new NotImplementedException();
+      }
+
+      public async Task<int> GetIdByGuidAsync(Guid guid, CancellationToken ct = default)
   {
     return await context.Holidays
       .AsNoTracking()

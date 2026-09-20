@@ -1,4 +1,5 @@
 using Aero.Application.Enums;
+using SharedKernel.Enums;
 using SharedKernel.Model;
 
 namespace Aero.Application.Interfaces;
@@ -14,6 +15,9 @@ public interface IDeviceRepository
             short nChannelId,
             short cType,
             short cPort
+      );
+      Status GetStatus(
+            short ScpId
       );
       CommandResponse ScpDeviceSpecification(
             string Mac,

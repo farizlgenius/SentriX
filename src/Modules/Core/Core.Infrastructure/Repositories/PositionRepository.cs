@@ -96,6 +96,11 @@ public sealed class PositionRepository(CoreDbContext context) : IPositionReposit
             throw new NotImplementedException();
       }
 
+      public Task<Guid> GetGuidByIdAsync(int id, CancellationToken ct = default)
+      {
+            throw new NotImplementedException();
+      }
+
       public async Task<int> GetIdByGuidAsync(Guid guid, CancellationToken ct = default)
       {
             return await context.Positions

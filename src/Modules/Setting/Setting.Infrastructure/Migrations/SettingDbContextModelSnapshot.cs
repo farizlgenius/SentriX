@@ -34,6 +34,9 @@ namespace Setting.Infrastructure.Migrations
                     b.Property<bool>("apb_location")
                         .HasColumnType("boolean");
 
+                    b.Property<bool>("apb_time")
+                        .HasColumnType("boolean");
+
                     b.Property<int>("c_port")
                         .HasColumnType("integer");
 
@@ -61,6 +64,9 @@ namespace Setting.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
                         .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<int>("host_timeout")
+                        .HasColumnType("integer");
 
                     b.Property<bool>("is_daylight_saving")
                         .HasColumnType("boolean");
@@ -151,6 +157,7 @@ namespace Setting.Infrastructure.Migrations
                         {
                             id = 1,
                             apb_location = true,
+                            apb_time = true,
                             c_port = 3333,
                             c_type = 7,
                             card_id_size = 0,
@@ -159,6 +166,7 @@ namespace Setting.Infrastructure.Migrations
                             escort_timeout = 15,
                             gmt_offset = -25200,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            host_timeout = 5,
                             is_daylight_saving = false,
                             issue_code_bit = 1,
                             multi_card_timeout = 15,

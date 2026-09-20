@@ -44,6 +44,8 @@ public sealed class SettingRepository(SettingDbContext context) : ISettingReposi
         x.store_act_date,
         x.store_deact_date,
         x.used_limit,
+        x.apb_time,
+        x.host_timeout,
         x.escort_timeout,
         x.multi_card_timeout
       ))

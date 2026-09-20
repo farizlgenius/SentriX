@@ -295,43 +295,43 @@ public class Program
         /// ==========================
         /// Driver
         /// ==========================
-                var readDriver = app.Services.GetRequiredService<ReplyMessageListener>();
-                // var writer = app.Services.GetRequiredService<ICommandWriter>();
-                readDriver.TurnOnDebug();
+        //         var readDriver = app.Services.GetRequiredService<ReplyMessageListener>();
+        //         // var writer = app.Services.GetRequiredService<ICommandWriter>();
+        //         readDriver.TurnOnDebug();
 
 
-                using (var scope = app.Services.CreateScope())
-                {
-                    var w = scope.ServiceProvider.GetRequiredService<IDeviceRepository>();
+        //         using (var scope = app.Services.CreateScope())
+        //         {
+        //             var w = scope.ServiceProvider.GetRequiredService<IDeviceRepository>();
 
-                    // Now you can safely use sys here
-                    if (!w.SystemLevelSpecification(1,1024))
-                    {
-                        Console.WriteLine("Initial driver failed. Shutting down app...");
-                        app.Lifetime.StopApplication(); // graceful shutdown
-                    }
+        //             // Now you can safely use sys here
+        //             if (!w.SystemLevelSpecification(1,1024))
+        //             {
+        //                 Console.WriteLine("Initial driver failed. Shutting down app...");
+        //                 app.Lifetime.StopApplication(); // graceful shutdown
+        //             }
 
-                    // Now you can safely use sys here
-                    if (!w.CreateChannel(1,7,3333))
-                    {
-                        Console.WriteLine("Initial driver failed. Shutting down app...");
-                        app.Lifetime.StopApplication(); // graceful shutdown
-                    }
-                }
+        //             // Now you can safely use sys here
+        //             if (!w.CreateChannel(1,7,3333))
+        //             {
+        //                 Console.WriteLine("Initial driver failed. Shutting down app...");
+        //                 app.Lifetime.StopApplication(); // graceful shutdown
+        //             }
+        //         }
 
-                app.Lifetime.ApplicationStarted.Register(() =>
-        {
-            _ = Task.Run(() => readDriver.GetTransactionUntilShutDownAsync());
-        });
+        //         app.Lifetime.ApplicationStarted.Register(() =>
+        // {
+        //     _ = Task.Run(() => readDriver.GetTransactionUntilShutDownAsync());
+        // });
 
 
-        app.Lifetime.ApplicationStopping.Register(async () =>
-        {
+        // app.Lifetime.ApplicationStopping.Register(async () =>
+        // {
 
-            readDriver.SetShutDownFlag();
-            readDriver.TurnOffDebug();
+        //     readDriver.SetShutDownFlag();
+        //     readDriver.TurnOffDebug();
 
-        });
+        // });
 
 
 

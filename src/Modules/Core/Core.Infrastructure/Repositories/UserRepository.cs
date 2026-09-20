@@ -851,4 +851,9 @@ public sealed class UserRepository(CoreDbContext context) : IUserRepository
   {
     throw new NotImplementedException();
   }
+
+      public Task<Guid> GetGuidByIdAsync(int id, CancellationToken ct = default)
+      {
+            throw new NotImplementedException();
+      }
 }

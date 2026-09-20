@@ -2,13 +2,22 @@ using System.Threading.Channels;
 using Adapter.Contract.Interfaces;
 using Aero.Application.Helpers;
 using Aero.Application.Interfaces;
+using Aero.Application.Metadata.Device;
 using Aero.Domain.Entities;
 using Aero.Infrastructure.Helpers;
 using Core.Contract.Interfaces;
+using Core.Contract.Queries.ComponentMapping;
+using Core.Contract.Queries.Device;
 using HID.Aero.ScpdNet.Wrapper;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Notifier.Contract.Interfaces;
+using Notifier.Contract.Topics;
+using SharedKernel.Constants;
+using SharedKernel.Domain;
+using SharedKernel.Enums;
+using SharedKernel.Messaging;
 
 namespace Aero.Infrastructure.Workers;
 
@@ -267,6 +276,16 @@ public sealed class ReplyWorker(Channel<ReplyMessage> queue, ILogger<ReplyWorker
               //     DescriptionHelper.GetCommStatusDesc(message.comm.status),
               //     l
               // );
+              // Status Query
+              var noti = scope.ServiceProvider.GetRequiredService<INotifier>();
+              var bus = scope.ServiceProvider.GetRequiredService<IMessageBus>();
+              var id = await bus.QueryAsync(new InternalIdByExternalIdAndEntityAndVendorQuery((short)message.SCPId,EntityType.Device,Vendor.aero));
+              var guid = await bus.QueryAsync(new DeviceGuidByIdQuery(id));
+              var status = new StatusDto(
+                guid,
+                message.comm.current_primary_comm == 3 ? Status.Online : Status.Offline
+              );
+              await noti.SendToTopic(DeviceNotifierTopic.STATUS,status);
               break;
             case (int)enSCPReplyType.enSCPReplyTranStatus:
               //     notifier = scope.ServiceProvider.GetRequiredService<INotifier>();
@@ -326,15 +345,9 @@ public sealed class ReplyWorker(Channel<ReplyMessage> queue, ILogger<ReplyWorker
             case (int)enSCPReplyType.enSCPReplySioRelayCounts:
               break;
             case (int)enSCPReplyType.enSCPReplyStrStatus:
-              //     scp = scope.ServiceProvider.GetRequiredService<IScpService>();
-              //     var devicee = scope.ServiceProvider.GetRequiredService<IDevice>();
-              //     var d = await devicee.GetDeviceByComponentIdAsync(message.SCPId);
-              //     if (await scp.VerifySCPStructureMemoryAllocate(message.SCPId, message.str_sts))
-              //     {
-              //         await scp.InitialScpConfigurationAsync((short)message.SCPId);
-              //         await scp.VerifyScpComponentAsync(message.SCPId);
-              //         await devicee.UploadDeviceAsync(d.Guid);
-              //     }
+              noti = scope.ServiceProvider.GetRequiredService<INotifier>();
+              var data = ReplyMessageHelper.BuildStructureStatus(message.str_sts);
+              await noti.SendToTopic(DeviceNotifierTopic.CONFIG, data, ct);
               break;
             case (int)enSCPReplyType.enSCPReplyCmndStatus:
               //     var eve = scope.ServiceProvider.GetRequiredService<Events.Contract.Interfaces.IEvent>();
@@ -351,7 +364,7 @@ public sealed class ReplyWorker(Channel<ReplyMessage> queue, ILogger<ReplyWorker
               //     bus = scope.ServiceProvider.GetRequiredService<IMessageBus>();
               //     await bus.PublishAsync(new AssignIpEvent(message.SCPId, UtilitiesHelper.IntegerToIp(message.web_network.cIpAddr)), ct);
               var temp = scope.ServiceProvider.GetRequiredService<ITempDevice>();
-                  temp.TryUpdateIp(message.SCPId,UtilitiesHelper.IntegerToIp(message.web_network.cIpAddr));
+              temp.TryUpdateIp(message.SCPId, UtilitiesHelper.IntegerToIp(message.web_network.cIpAddr));
               break;
             case (int)enSCPReplyType.enSCPReplyWebConfigNotes:
               break;
@@ -368,9 +381,9 @@ public sealed class ReplyWorker(Channel<ReplyMessage> queue, ILogger<ReplyWorker
             case (int)enSCPReplyType.enSCPReplyWebConfigDiagnostics:
               break;
             case (int)enSCPReplyType.enSCPReplyWebConfigHostCommPrim:
-                  temp = scope.ServiceProvider.GetRequiredService<ITempDevice>();
-                  temp.TryUpdatePort(message.SCPId,message.web_host_comm_prim.ipclient.nPort);
-                  // await temp.PublishAsync(new AssignPortEvent(message.SCPId, message.web_host_comm_prim.ipclient.nPort), ct);
+              temp = scope.ServiceProvider.GetRequiredService<ITempDevice>();
+              temp.TryUpdatePort(message.SCPId, message.web_host_comm_prim.ipclient.nPort);
+              // await temp.PublishAsync(new AssignPortEvent(message.SCPId, message.web_host_comm_prim.ipclient.nPort), ct);
               break;
             default:
               break;

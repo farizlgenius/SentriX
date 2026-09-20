@@ -38,6 +38,8 @@ public sealed class AeroDriverSetting : BaseEntity
   public int store_act_date { get; set; }
   public int store_deact_date { get; set; }
   public bool used_limit { get; set; }
+  public bool apb_time {get; set;}
+  public int host_timeout {get; set;}
   public int escort_timeout { get; set; }
   public int multi_card_timeout { get; set; }
 
