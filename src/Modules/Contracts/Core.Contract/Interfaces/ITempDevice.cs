@@ -19,4 +19,6 @@ public interface ITempDevice
     void TryUpdateIp(int Id,string Ip);
 
     int Count { get; }
+
+    IEnumerable<int> TryGetUnavailableId();
 }

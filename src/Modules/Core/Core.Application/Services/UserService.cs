@@ -154,10 +154,11 @@ public sealed class UserService(
     return await repo.GetByLocationAsync(locationId, ct);
   }
 
-  public async Task<Stream> GetImageByGuidAsync(Guid guid, CancellationToken ct = default)
+  public async Task<Stream?> GetImageByGuidAsync(Guid guid, CancellationToken ct = default)
   {
     if (!await repo.IsAnyGuidAsync(guid))
-      throw new NotFoundException(EntityType.User, guid.ToString());
+      return null;
+      //throw new NotFoundException(EntityType.User, guid.ToString());
 
     return await file.ReadUserAsync(guid.ToString());
   }

@@ -98,5 +98,10 @@ public sealed class TempDeviceService : ITempDevice
                 });
       }
 
+      public IEnumerable<int> TryGetUnavailableId()
+      {
+            var arr = _devices.Values.ToArray();
 
+            return arr.Select(x => x.Id).ToArray();
+      }
 }

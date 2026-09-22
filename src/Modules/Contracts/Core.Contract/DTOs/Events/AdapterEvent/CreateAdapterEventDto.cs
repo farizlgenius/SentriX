@@ -1,6 +1,6 @@
 using SharedKernel.Enums;
 
-namespace Core.Contract.DTOs.AdapterEvent;
+namespace Core.Contract.DTOs.Events.AdapterEvent;
 
 public sealed record CreateAdapterEventDto(
 string Name,

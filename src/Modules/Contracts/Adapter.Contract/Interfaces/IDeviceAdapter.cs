@@ -37,6 +37,14 @@ public interface IDeviceAdapter
             CancellationToken ct = default
       );
 
+      Task SetExternalIdAsync(
+            string mac,
+            string ip,
+            int from,
+            int to,
+            CancellationToken ct = default
+      );
+
 
 
 

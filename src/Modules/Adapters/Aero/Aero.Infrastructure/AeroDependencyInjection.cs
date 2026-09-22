@@ -6,6 +6,7 @@ using Aero.Application.Mapper;
 using Aero.Application.Services;
 using Aero.Application.ValueObjects;
 using Aero.Domain.Entities;
+using Aero.Infrastructure.Adapter;
 using Aero.Infrastructure.Repositories;
 using Aero.Infrastructure.Workers;
 using Microsoft.Extensions.Configuration;
@@ -46,6 +47,8 @@ public static class AeroDependencyInjection
     services.AddScoped<IObjectMapper, ReplyMapper>();
 
     services.AddScoped<IBaseRepository,BaseRepository>();
+
+    services.AddScoped<IAdapter, AeroAdapter>();
 
     // IdReport
     services.AddScoped<IIdReportService,IdReportService>();

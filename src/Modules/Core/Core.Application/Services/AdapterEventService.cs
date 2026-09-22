@@ -1,5 +1,5 @@
 using Core.Application.Interfaces;
-using Core.Contract.DTOs.AdapterEvent;
+using Core.Contract.DTOs.Events.AdapterEvent;
 using Core.Contract.Interfaces;
 using SharedKernel.Domain;
 

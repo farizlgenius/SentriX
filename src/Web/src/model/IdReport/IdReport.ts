@@ -6,6 +6,6 @@ export interface IdReport {
   mac: string;
   vendor:Vendor;
   ip:string;
-  port:number;
+  port:string;
   firmware:string;
 }

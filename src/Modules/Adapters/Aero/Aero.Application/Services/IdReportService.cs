@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using Setting.Contract.Interfaces;
 using SharedKernel.Constants;
 using SharedKernel.Enums;
+using SharedKernel.Exceptions;
 using SharedKernel.Messaging;
 
 namespace Aero.Application.Services;
@@ -55,7 +56,7 @@ public sealed class IdReportService(
       0
     );
 
-    
+
     await bus.SendAsync(new AdapterEventCommand(res), ct);
 
     // New 
@@ -72,14 +73,33 @@ public sealed class IdReportService(
         EntityType.Device,
         ct);
 
-       res = repo.SetScpId(mac,dto.scp_id,(short)externalId);
+      res = repo.SetScpId(mac, dto.scp_id, (short)externalId);
 
-       await bus.SendAsync(new AdapterEventCommand(res), ct);
+      await bus.SendAsync(new AdapterEventCommand(res), ct);
+
+      // Update data 
+      // Send Command to get Ip
+    res = repo.ReadsConfiguration(
+       UtilitiesHelper.ByteToHexStr(dto.mac_addr),
+       dto.scp_id,
+       WebConfigReadType.NetworkSettingss
+      );
+
+    await bus.SendAsync(new AdapterEventCommand(res), ct);
+
+    // Port
+    res = repo.ReadsConfiguration(
+      UtilitiesHelper.ByteToHexStr(dto.mac_addr),
+      dto.scp_id,
+      WebConfigReadType.HostCommunicationPrimarySettings
+     );
+
+    await bus.SendAsync(new AdapterEventCommand(res), ct);
 
 
       // Start initial Device here
-      
-     
+
+
       // And Other Device
 
       return;
@@ -92,19 +112,28 @@ public sealed class IdReportService(
        WebConfigReadType.NetworkSettingss
       );
 
-      await bus.SendAsync(new AdapterEventCommand(res), ct);
+    await bus.SendAsync(new AdapterEventCommand(res), ct);
 
-      // Port
-     res = repo.ReadsConfiguration(
-       UtilitiesHelper.ByteToHexStr(dto.mac_addr),
-       dto.scp_id,
-       WebConfigReadType.HostCommunicationPrimarySettings
-      );
+    // Port
+    res = repo.ReadsConfiguration(
+      UtilitiesHelper.ByteToHexStr(dto.mac_addr),
+      dto.scp_id,
+      WebConfigReadType.HostCommunicationPrimarySettings
+     );
 
-      await bus.SendAsync(new AdapterEventCommand(res), ct);
+    await bus.SendAsync(new AdapterEventCommand(res), ct);
 
-     // Get Free Slot 
-     await 
+    // var existsIds = temp.TryGetUnavailableId();
+
+    // Get Free Slot 
+    // var id = await mapping.GetFreeIdByMacAndEntityAndVendorAsync(EntityType.Device, Vendor.aero, scpDevice.nScps, existsIds, ct);
+
+    // if (id == null)
+    //   throw new ExceedException(EntityType.Device, "");
+
+    // res = repo.SetScpId(UtilitiesHelper.ByteToHexStr(dto.mac_addr),dto.scp_id,(short)dto);
+
+    await bus.SendAsync(new AdapterEventCommand(res), ct);
 
     var added = temp.TryAdd(
       new TempDeviceDto(
@@ -127,7 +156,6 @@ public sealed class IdReportService(
     logger.LogInformation(
         "New unknown device discovered: {MacAddress}",
         UtilitiesHelper.ByteToHexStr(dto.mac_addr));
-
 
 
     // Check the already have mac in device table

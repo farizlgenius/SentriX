@@ -1,6 +1,6 @@
 using Core.Application.Interfaces;
 using Core.Contract.Commands.Events;
-using Core.Contract.DTOs.AdapterEvent;
+
 using Core.Domain.Entities;
 using SharedKernel.Messaging;
 

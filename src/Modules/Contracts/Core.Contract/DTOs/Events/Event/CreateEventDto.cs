@@ -1,6 +1,6 @@
 using SharedKernel.Enums;
 
-namespace Core.Contract.DTOs.Event;
+namespace Core.Contract.DTOs.Events.Event;
 
 public sealed record CreateEventDto(
   DateTime Timestamp,

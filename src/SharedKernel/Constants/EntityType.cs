@@ -3,6 +3,7 @@ namespace SharedKernel.Constants;
 public static class EntityType
 {
   public const string Device = "Device";
+  public const string TempDevice = "TempDevice";
   public const string DeviceModule = "DeviceModule";
   public const string Location = "Location";
   public const string Company = "Company";
@@ -22,4 +23,11 @@ public static class EntityType
   public const string ComponentMapping = "ComponentMapping";
   public const string Event = "Event";
   public const string AdapterEvent = "AdapterEvent";
+  public const string Input = "Input";
+  public const string Output = "Output";
+  public const string Procedure = "Procedure";
+  public const string Trigger = "Trigger";
+  public const string MonitorGroup = "Monitor Group";
+  public const string Area = "Area";
+  public const string Web = "Web";
 }

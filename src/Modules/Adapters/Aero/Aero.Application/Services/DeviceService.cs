@@ -81,6 +81,7 @@ public sealed class DeviceService(
 
             var externalId = await bus.QueryAsync(new ExternalIdByMacAndEntityQuery(mac,EntityType.Device));
 
+
             var res = repo.AccessDatabaseSpecification(
              mac,
             (short)externalId,
@@ -199,6 +200,13 @@ public sealed class DeviceService(
       }
 
       public Task ResetAsync(string mac, string ip, CancellationToken ct = default)
+      {
+            throw new NotImplementedException();
+      }
+
+
+
+      public async Task SetExternalIdAsync(string mac, string ip,int from, int to, CancellationToken ct = default)
       {
             throw new NotImplementedException();
       }

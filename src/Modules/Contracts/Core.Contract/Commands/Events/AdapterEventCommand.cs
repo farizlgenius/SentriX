@@ -1,5 +1,4 @@
-using Core.Contract.DTOs.AdapterEvent;
-using Core.Contract.DTOs.Event;
+
 using SharedKernel.Messaging;
 using SharedKernel.Model;
 

@@ -15,6 +15,7 @@ namespace Core.Application.Services;
 
 public sealed class DeviceService(
   IDeviceRepository repo,
+  IComponentMapping mapping,
   IMessageBus bus,
   ITempDevice temp,
   IAdapterFactory adapter
@@ -54,7 +55,7 @@ public sealed class DeviceService(
 
     deviceModules.Add(
        new DeviceModule(
-        "Internal",
+        $"{dto.Name} - Internal",
         dto.SerialNumber,
         dto.Firmware,
         dto.Mac,
@@ -84,9 +85,6 @@ public sealed class DeviceService(
       deviceModules
     );
 
-    // Send Command to device below 
-     await adapter.GetAdapter(d.Vendor).Device.InititalDeviceAsync(d.Mac,d.Ip);
-
     // Handle how device is create on each device
     switch (dto.Vendor)
     {
@@ -94,21 +92,51 @@ public sealed class DeviceService(
         await repo.AddAsync(d, ct);
         break;
       case SharedKernel.Enums.Vendor.aero:
-        if (!await repo.IsAnyMacAsync(dto.Mac))
-        {
-          await repo.AddAsync(d, ct);
-        }
-        else
-        {
-          var guid = await repo.GetGuidByMacAsync(dto.Mac);
-          d.SetGuid(guid);
-          await repo.UpdateAsync(d, ct);
-        }
+        await repo.AddAsync(d, ct);
         break;
       default:
         throw new BadRequestException("Vendor Type Invalid.");
 
     }
+
+    // Send Command to device below 
+    var exceptionId = temp.TryGetUnavailableId();
+
+    var externalId = await mapping.GetFreeIdByMacAndEntityAndVendorAsync(
+      EntityType.Device,
+      Vendor.aero,
+      100, // Limit by License
+      exceptionId, ct);
+
+    if (externalId == null)
+      throw new ExceedException(EntityType.Device, "");
+
+
+    await mapping.InsertComponentMappingAsync(
+          EntityType.Device,
+          await repo.GetIdByGuidAsync(d.Guid),
+          (short)externalId,
+          d.Mac,
+          d.Vendor,
+          locationId,
+          ct
+        );
+
+    if (d.Vendor == Vendor.aero)
+    {
+
+      if (temp.TryGet(d.Mac, out var tempD))
+      {
+        await adapter.GetAdapter(d.Vendor).Device.SetExternalIdAsync(d.Mac, d.Ip, tempD.Id, (int)externalId);
+      }
+      else
+      {
+        throw new NotFoundException(EntityType.TempDevice, d.Mac);
+      }
+
+    }
+
+    await adapter.GetAdapter(d.Vendor).Device.InititalDeviceAsync(d.Mac, d.Ip, ct);
 
 
     return d.Guid;
@@ -177,10 +205,15 @@ public sealed class DeviceService(
     return await repo.GetByLocationAsync(locationId, ct);
   }
 
-  public async Task<object> GetConfigurationAsync(Guid guid,CancellationToken ct = default)
+  public async Task<DeviceDto> GetByMacAsync(string mac, CancellationToken ct = default)
   {
-    var device = await repo.GetAsync(guid,ct);
-    return adapter.GetAdapter(device.Vendor).Device.GetConfigurationAsync(device.Mac,device.Ip,ct);
+    return await repo.GetByMacAsync(mac, ct);
+  }
+
+  public async Task<object> GetConfigurationAsync(Guid guid, CancellationToken ct = default)
+  {
+    var device = await repo.GetAsync(guid, ct);
+    return adapter.GetAdapter(device.Vendor).Device.GetConfigurationAsync(device.Mac, device.Ip, ct);
   }
 
   public async Task<Pagination<DeviceDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
@@ -188,33 +221,33 @@ public sealed class DeviceService(
     return await repo.GetPaginationAsync(param, ct);
   }
 
-  public async Task<IEnumerable<TempDeviceDto>> GetScanDeviceAsync(CancellationToken ct= default)
+  public async Task<IEnumerable<TempDeviceDto>> GetScanDeviceAsync(CancellationToken ct = default)
   {
     return temp.GetAll().ToArray();
   }
 
-      public async Task<StatusDto> GetStatusAsync(Guid guid, CancellationToken ct = default)
-      {
-        var device = await repo.GetAsync(guid,ct);
-        return new StatusDto(
-          device.Guid,
-          await adapter.GetAdapter(device.Vendor).Device.GetStatusAsync(device.Mac,device.Ip)
-        );
-      }
+  public async Task<StatusDto> GetStatusAsync(Guid guid, CancellationToken ct = default)
+  {
+    var device = await repo.GetAsync(guid, ct);
+    return new StatusDto(
+      device.Guid,
+      await adapter.GetAdapter(device.Vendor).Device.GetStatusAsync(device.Mac, device.Ip)
+    );
+  }
 
-      public Task<IEnumerable<StatusDto>> GetStatusesAsync(IEnumerable<Guid> guids, CancellationToken ct = default)
-      {
-            throw new NotImplementedException();
-      }
+  public Task<IEnumerable<StatusDto>> GetStatusesAsync(IEnumerable<Guid> guids, CancellationToken ct = default)
+  {
+    throw new NotImplementedException();
+  }
 
-      public async Task<bool> ResetAsync(Guid guid, CancellationToken ct = default)
-      {
-        var device = await repo.GetAsync(guid,ct);
-        await adapter.GetAdapter(device.Vendor).Device.ResetAsync(device.Mac,device.Ip);
-        return true;
-      }
+  public async Task<bool> ResetAsync(Guid guid, CancellationToken ct = default)
+  {
+    var device = await repo.GetAsync(guid, ct);
+    await adapter.GetAdapter(device.Vendor).Device.ResetAsync(device.Mac, device.Ip);
+    return true;
+  }
 
-      public async Task<Guid> UpdateAsync(UpdateDeviceDto dto, CancellationToken ct = default)
+  public async Task<Guid> UpdateAsync(UpdateDeviceDto dto, CancellationToken ct = default)
   {
     if (!await repo.IsAnyGuidAsync(dto.Guid, ct))
       throw new NotFoundException(EntityType.Device, dto.Guid.ToString());

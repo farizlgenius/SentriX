@@ -1,6 +1,6 @@
 using Core.Application.Interfaces;
-using Core.Contract.DTOs.AdapterEvent;
-using Core.Contract.DTOs.Event;
+using Core.Contract.DTOs.Events.AdapterEvent;
+using Core.Contract.DTOs.Events.Event;
 using Core.Contract.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel.Constants;
@@ -26,6 +26,21 @@ new AdapterEvent(@event)
     await context.Events.AddAsync(
       new Event(entity)
       , ct);
+
+    await context.SaveChangesAsync(ct);
+  }
+
+  public async Task AddExceptionAsync(string path, string exception, string innerException, string stackTrace, CancellationToken ct = default)
+  {
+    await context.ExceptionEvent.AddAsync(
+      new Persistences.Entities.ExceptionEvent(
+        path,
+        exception,
+        innerException,
+        stackTrace
+      ),
+      ct
+    );
 
     await context.SaveChangesAsync(ct);
   }
@@ -131,7 +146,7 @@ new AdapterEvent(@event)
           x.reason,
           x.response,
           x.vendor,
-          x.location == null ? Guid.Empty : x.location.guid ,
+          x.location == null ? Guid.Empty : x.location.guid,
           x.is_active,
           x.is_default
       )).ToListAsync();
@@ -297,19 +312,19 @@ new AdapterEvent(@event)
     throw new NotImplementedException();
   }
 
-      public async Task UpdateAdapterEventStatusAsync(int componentId, int tag, CommandStatus status, string reason, CancellationToken ct = default)
-      {
-            var entity = await context.AdapterEvents
-              .Where(x => x.component_id == componentId && x.tag == tag)
-              .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.AdapterEvent,$"Tag: {tag}");
+  public async Task UpdateAdapterEventStatusAsync(int componentId, int tag, CommandStatus status, string reason, CancellationToken ct = default)
+  {
+    var entity = await context.AdapterEvents
+      .Where(x => x.component_id == componentId && x.tag == tag)
+      .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.AdapterEvent, $"Tag: {tag}");
 
-            entity.reason = reason;
-            entity.status = status;
-            entity.received_at = DateTime.UtcNow;
-            
-      }
+    entity.reason = reason;
+    entity.status = status;
+    entity.received_at = DateTime.UtcNow;
 
-      public async Task UpdateAsync(Domain.Entities.Event entity, CancellationToken ct = default)
+  }
+
+  public async Task UpdateAsync(Domain.Entities.Event entity, CancellationToken ct = default)
   {
     throw new NotImplementedException();
   }

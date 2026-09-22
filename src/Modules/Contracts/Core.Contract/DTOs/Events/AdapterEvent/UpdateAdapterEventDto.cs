@@ -1,22 +1,20 @@
 using SharedKernel.Enums;
 
-namespace Core.Contract.DTOs.AdapterEvent;
+namespace Core.Contract.DTOs.Events.AdapterEvent;
 
-public sealed record AdapterEventDto(
-Guid Guid,
+public sealed record UpdateAdapterEventDto(
+  Guid Guid,
 string Name,
 string Mac,
 int ComponentId,
 string Command,
 int Tag,
 DateTime SendAt,
-DateTime? ReceivedAt,
+DateTime ReceivedAt,
 string Body,
 CommandStatus Status,
 string Reason,
 string Response,
 Vendor Vendor,
-Guid LocationGuid,
-bool IsActive,
-bool IsDefault
+Guid LocationGuid
 );

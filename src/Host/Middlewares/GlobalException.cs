@@ -1,5 +1,6 @@
 using System;
 using System.Net;
+using Core.Contract.Interfaces;
 using Host.Helpers;
 using SharedKernel.Domain;
 using SharedKernel.Exceptions;
@@ -9,9 +10,11 @@ namespace Host.Middlewares;
 public sealed class GlobalException : IMiddleware
 {
       private readonly ILogger<GlobalException> _logger;
+      private readonly IEvent _event;
 
-      public GlobalException(ILogger<GlobalException> logger)
+      public GlobalException(ILogger<GlobalException> logger,IEvent @event)
       {
+            _event = @event;
             _logger = logger;
       }
       public async Task InvokeAsync(HttpContext context, RequestDelegate next)
@@ -80,7 +83,7 @@ public sealed class GlobalException : IMiddleware
 
       private Task BadRequestExceptionHandler(HttpContext context, Exception ex)
       {
-
+           
             // Set the response status code and content
             context.Response.StatusCode = StatusCodes.Status400BadRequest;
             context.Response.ContentType = "application/json";
@@ -197,8 +200,15 @@ public sealed class GlobalException : IMiddleware
             return context.Response.WriteAsJsonAsync(response);
       }
 
-      private Task HandleException(HttpContext context, Exception ex)
+      private async Task<Task> HandleException(HttpContext context, Exception ex)
       {
+            await _event.InsertExceptionEventAsync(
+                  context.Request.Path,
+                  ex.Message,
+                  ex.InnerException is null ? string.Empty : ex.InnerException.ToString(),
+                  ex.StackTrace is null ? string.Empty : ex.StackTrace
+            );
+
             // Set the response status code and content
             context.Response.StatusCode = StatusCodes.Status500InternalServerError;
             context.Response.ContentType = "application/json";

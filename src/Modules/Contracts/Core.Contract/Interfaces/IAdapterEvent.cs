@@ -1,4 +1,6 @@
-using Core.Contract.DTOs.AdapterEvent;
+
+
+using Core.Contract.DTOs.Events.AdapterEvent;
 
 namespace Core.Contract.Interfaces;
 

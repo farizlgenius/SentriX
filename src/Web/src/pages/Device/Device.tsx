@@ -344,6 +344,8 @@ const Device = () => {
         setConfirmCreate(() => async () => {
           const req: CreateDeviceStrMetadataDto = {
             ...deviceDto,
+            serialNumber:deviceDto.serialNumber.toString(),
+            port:deviceDto.port.toString(),
             metadata: JSON.stringify(deviceDto.metadata),
           };
           const res = await send.post(DeviceEndpoint.CREATE, req);
@@ -593,8 +595,7 @@ const Device = () => {
       {
         scan &&
         <Modals isWide={true} handleClickWithEvent={modalHandleClickWithEvent} body={
-          idReports.map((a: IdReport) =>
-            <Table>
+          <Table>
               <TableHeader className="border-b border-gray-100 dark:border-white/[0.05] bg-white dark:bg-gray-900 sticky top-0 z-10">
                 <TableRow>
                   <TableCell
@@ -631,6 +632,7 @@ const Device = () => {
               </TableHeader>
               <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
                 {
+                  idReports.length > 0 ? 
                   idReports.map((a: IdReport, i: number) => (
                     <React.Fragment key={i}>
                       <TableRow>
@@ -677,10 +679,16 @@ const Device = () => {
                       </TableRow>
                     </React.Fragment>
                   ))
+                  :
+                  <TableRow>
+                    <TableCell className="flex justify-center px-4 py-8 text-start text-gray-500 text-theme-sm dark:text-gray-400" colspan={5}>
+                      {undefined}
+                    </TableCell>
+                  </TableRow>
                 }
 
               </TableBody>
-            </Table>)
+            </Table>
         } />
       }
       <div className="flex flex-col gap-5">

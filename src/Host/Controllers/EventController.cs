@@ -27,6 +27,13 @@ namespace Host.Controllers
       return Ok(res);
     }
 
+    [HttpGet("exception/pagination")]
+    public async Task<IActionResult> GetExceptionPaginationAsync([FromQuery] PaginationParams param)
+    {
+      var res = await @event.GetExceptionPaginationAsync(param);
+      return Ok(res);
+    }
+
     // [HttpPost("notifications/dao")]
     // public async Task<IActionResult> DaoAsync([FromBody] JsonElement body)
     // {

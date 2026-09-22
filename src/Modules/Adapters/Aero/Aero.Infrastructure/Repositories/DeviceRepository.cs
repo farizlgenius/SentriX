@@ -413,7 +413,47 @@ public sealed class DeviceRepostory(
 
       public CommandResponse SetScpId(string Mac, short ScpId, short To)
       {
-            throw new NotImplementedException();
+                        CC_SCPID c = new CC_SCPID();
+            c.scp_number = ScpId;
+            c.scp_id = To;
+            var result = repo.Send((short)enCfgCmnd.enCcScpID, c);
+            if (result)
+            {
+                  logger.LogInformation(LogMessageHelper.CommandSuccess(Command.ScpSetId, ScpId));
+
+                  return new CommandResponse(
+                        Mac,
+                        ScpId,
+                        Command.ScpSetId,
+                        SCPDLL.scpGetTagLastPosted(ScpId),
+                        DateTime.UtcNow,
+                        null,
+                        ObjectHelper.ToAsciiString(c),
+                        CommandStatus.PENDING,
+                        string.Empty,
+                        Vendor.aero,
+                        true
+                        );
+
+            }
+            else
+            {
+                  logger.LogError(LogMessageHelper.CommandUnsuccess(Command.ScpSetId, ScpId));
+                  return new CommandResponse(
+                        Mac,
+                       ScpId,
+                       Command.ScpSetId,
+                       -1,
+                       DateTime.UtcNow,
+                       DateTime.UtcNow,
+                       ObjectHelper.ToAsciiString(c),
+                       CommandStatus.FAILED,
+                       string.Empty,
+                       Vendor.aero,
+                       false
+                       );
+
+            }
       }
 
       public CommandResponse SetTransactionLogIndex(string Mac, short ScpId, bool IsEnable)

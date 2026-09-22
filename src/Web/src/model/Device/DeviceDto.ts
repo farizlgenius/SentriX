@@ -9,7 +9,7 @@ export interface DeviceDto {
   serialNumber: string;
   mac: string;
   ip: string;
-  port: number;
+  port: string;
   firmware: string;
   vendor: Vendor;
   metadata: AeroMetadata | AmicoMetadata | string;

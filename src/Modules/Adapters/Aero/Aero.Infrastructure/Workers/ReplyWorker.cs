@@ -5,6 +5,7 @@ using Aero.Application.Interfaces;
 using Aero.Application.Metadata.Device;
 using Aero.Domain.Entities;
 using Aero.Infrastructure.Helpers;
+using Core.Contract.DTOs.Events.Event;
 using Core.Contract.Interfaces;
 using Core.Contract.Queries.ComponentMapping;
 using Core.Contract.Queries.Device;
@@ -12,11 +13,13 @@ using HID.Aero.ScpdNet.Wrapper;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Notifier.Contract.Constants;
 using Notifier.Contract.Interfaces;
 using Notifier.Contract.Topics;
 using SharedKernel.Constants;
 using SharedKernel.Domain;
 using SharedKernel.Enums;
+using SharedKernel.Helpers;
 using SharedKernel.Messaging;
 
 namespace Aero.Infrastructure.Workers;
@@ -47,214 +50,216 @@ public sealed class ReplyWorker(Channel<ReplyMessage> queue, ILogger<ReplyWorker
               Console.WriteLine(message.nak.description_code);
               break;
             case (int)enSCPReplyType.enSCPReplyTransaction:
-              //     // define mac , name , actor , image
-              //     var h = scope.ServiceProvider.GetRequiredService<IDevice>();
-              //     var repo = scope.ServiceProvider.GetRequiredService<IAeroRepository>();
-              //     var guid = await repo.GetScpGuidBySlotAsync(message.SCPId);
-              //     var hw = await h.GetDeviceByGuidAsync(guid);
-              //     var mac = hw.Mac;
-              //     var name = string.Empty;
-              //     var actor = string.Empty;
-              //     var image = string.Empty;
-              //     var locationId = hw.LocationId;
-              //     switch (message.tran.tran_type)
-              //     {
+                  // define mac , name , actor , image
+                  var idevice = scope.ServiceProvider.GetRequiredService<IDevice>();
+                  var imap = scope.ServiceProvider.GetRequiredService<IComponentMapping>();
+                  var mac = await imap.GetMacByExternalIdAndEntityAndVendorAsync(message.SCPId,EntityType.Device,Vendor.aero,ct);
+                  var hw = await idevice.GetByMacAsync(mac,ct);
+                  var name = string.Empty;
+                  var actor = string.Empty;
+                  var locationGuid = hw.LocationGuid;
+                  var image = string.Empty;
+                  switch (message.tran.tran_type)
+                  {
 
-              //         case (short)tranType.tranTypeSioComm:
-              //             break;
-              //         case (short)tranType.tranTypeCardFull:
-              //             // if (isWaitingCardScan && ScanScpId == message.ScpId && ScanAcrNo == message.tran.source_number)
-              //             // {
-              //             //     var status = new CardScanStatus
-              //             //     {
-              //             //         Mac = await qhw.GetMacFromComponentAsync((short)message.ScpId),
-              //             //         FormatNumber = message.tran.c_full.format_number,
-              //             //         Fac = message.tran.c_full.facility_code,
-              //             //         CardId = message.tran.c_full.cardholder_id,
-              //             //         Issue = message.tran.c_full.issue_code,
-              //             //         Floor = message.tran.c_full.floor_number
-              //             //     };
-              //             //     await publisher.CardScanNotifyStatus(status);
-              //             //     isWaitingCardScan = false;
-              //             //     ScanAcrNo = -1;
-              //             //     ScanScpId = -1;
-              //             // }
-              //             var door = scope.ServiceProvider.GetRequiredService<IDoor>();
-              //             name = await door.GetNameByMacAndComponentIdAsync(mac,message.tran.source_number);
-              //             break;
-              //         case (short)tranType.tranTypeDblCardFull:
-              //             // if (isWaitingCardScan && ScanScpId == message.ScpId && ScanAcrNo == message.tran.source_number)
-              //             // {
-              //             //     var status = new CardScanStatus
-              //             //     {
-              //             //         Mac = await qhw.GetMacFromComponentAsync((short)message.ScpId),
-              //             //         FormatNumber = message.tran.c_fulldbl.format_number,
-              //             //         Fac = message.tran.c_fulldbl.facility_code,
-              //             //         CardId = message.tran.c_fulldbl.cardholder_id,
-              //             //         Issue = message.tran.c_fulldbl.issue_code,
-              //             //         Floor = message.tran.c_fulldbl.floor_number
-              //             //     };
-              //             //     await publisher.CardScanNotifyStatus(status);
-              //             //     isWaitingCardScan = false;
-              //             //     ScanAcrNo = -1;
-              //             //     ScanScpId = -1;
-              //             // }
-              //             door = scope.ServiceProvider.GetRequiredService<IDoor>();
-              //             name = await door.GetNameByMacAndComponentIdAsync(mac,message.tran.source_number);
-              //             break;
-              //         case (short)tranType.tranTypeI64CardFull:
-              //             // if (isWaitingCardScan && ScanScpId == message.ScpId && ScanAcrNo == message.tran.source_number)
-              //             // {
-              //             //     var status = new CardScanStatus
-              //             //     {
-              //             //         Mac = await qhw.GetMacFromComponentAsync((short)message.ScpId),
-              //             //         FormatNumber = message.tran.c_fulli64.format_number,
-              //             //         Fac = message.tran.c_fulli64.facility_code,
-              //             //         CardId = message.tran.c_fulli64.cardholder_id,
-              //             //         Issue = message.tran.c_fulli64.issue_code,
-              //             //         Floor = message.tran.c_fulli64.floor_number
-              //             //     };
-              //             //     await publisher.CardScanNotifyStatus(status);
-              //             //     isWaitingCardScan = false;
-              //             //     ScanAcrNo = -1;
-              //             //     ScanScpId = -1;
-              //             // }
-              //             door = scope.ServiceProvider.GetRequiredService<IDoor>();
-              //             name = await door.GetNameByMacAndComponentIdAsync(mac,message.tran.source_number);
-              //             break;
-              //         case (short)tranType.tranTypeI64CardFullIc32:
-              //             // if (isWaitingCardScan && ScanScpId == message.ScpId && ScanAcrNo == message.tran.source_number)
-              //             // {
-              //             //     var status = new CardScanStatus
-              //             //     {
-              //             //         Mac = await qhw.GetMacFromComponentAsync((short)message.ScpId),
-              //             //         FormatNumber = message.tran.c_fulli64i32.format_number,
-              //             //         Fac = message.tran.c_fulli64i32.facility_code,
-              //             //         CardId = message.tran.c_fulli64i32.cardholder_id,
-              //             //         Issue = message.tran.c_fulli64i32.issue_code,
-              //             //         Floor = message.tran.c_fulli64i32.floor_number
-              //             //     };
-              //             //     await publisher.CardScanNotifyStatus(status);
-              //             //     isWaitingCardScan = false;
-              //             //     ScanAcrNo = -1;
-              //             //     ScanScpId = -1;
-              //             // }
-              //             door = scope.ServiceProvider.GetRequiredService<IDoor>();
-              //             name = await door.GetNameByMacAndComponentIdAsync(mac,message.tran.source_number);
-              //             break;
-              //         case (short)tranType.tranTypeCardID:
-              //             door = scope.ServiceProvider.GetRequiredService<IDoor>();
-              //             name = await door.GetNameByMacAndComponentIdAsync(mac,message.tran.source_number);
-              //             break;
-              //         case (short)tranType.tranTypeDblCardID:
-              //             door = scope.ServiceProvider.GetRequiredService<IDoor>();
-              //             name = await door.GetNameByMacAndComponentIdAsync(mac,message.tran.source_number);
-              //             break;
-              //         case (short)tranType.tranTypeI64CardID:
-              //             door = scope.ServiceProvider.GetRequiredService<IDoor>();
-              //             name = await door.GetNameByMacAndComponentIdAsync(mac,message.tran.source_number);
-              //             break;
-              //         case (short)tranType.tranTypeCoS:
-              //             switch (message.tran.source_type)
-              //             {
-              //                 case (short)tranSrc.tranSrcSioCom:
-              //                     // moduleService.TriggerDeviceStatus(message.SCPId, message.tran.source_number, DecodeHelper.TypeSioCommStatusDecode(message.tran.cos.status), null, null, null);
-              //                     // publisher
-              //                     var device = scope.ServiceProvider.GetRequiredService<IDevice>();
-              //                     name = await device.GetModuleNameByMacAndComponentIdAsync(mac,message.tran.source_number);
-              //                     break;
-              //                 case (short)tranSrc.tranSrcMP:
-              //                     // var mp = new MpStatus(message.ScpId, message.tran.source_number, DecodeHelper.TypeCosStatusDecode(message.tran.cos.status));
-              //                     // await publisher.MpNotifyStatus(mp);
+                      case (short)tranType.tranTypeSioComm:
+                          break;
+                      case (short)tranType.tranTypeCardFull:
+                          // if (isWaitingCardScan && ScanScpId == message.ScpId && ScanAcrNo == message.tran.source_number)
+                          // {
+                          //     var status = new CardScanStatus
+                          //     {
+                          //         Mac = await qhw.GetMacFromComponentAsync((short)message.ScpId),
+                          //         FormatNumber = message.tran.c_full.format_number,
+                          //         Fac = message.tran.c_full.facility_code,
+                          //         CardId = message.tran.c_full.cardholder_id,
+                          //         Issue = message.tran.c_full.issue_code,
+                          //         Floor = message.tran.c_full.floor_number
+                          //     };
+                          //     await publisher.CardScanNotifyStatus(status);
+                          //     isWaitingCardScan = false;
+                          //     ScanAcrNo = -1;
+                          //     ScanScpId = -1;
+                          // }
+                          // var door = scope.ServiceProvider.GetRequiredService<IDoor>();
+                          // name = await door.GetNameByMacAndComponentIdAsync(mac,message.tran.source_number);
+                          break;
+                      case (short)tranType.tranTypeDblCardFull:
+                          // if (isWaitingCardScan && ScanScpId == message.ScpId && ScanAcrNo == message.tran.source_number)
+                          // {
+                          //     var status = new CardScanStatus
+                          //     {
+                          //         Mac = await qhw.GetMacFromComponentAsync((short)message.ScpId),
+                          //         FormatNumber = message.tran.c_fulldbl.format_number,
+                          //         Fac = message.tran.c_fulldbl.facility_code,
+                          //         CardId = message.tran.c_fulldbl.cardholder_id,
+                          //         Issue = message.tran.c_fulldbl.issue_code,
+                          //         Floor = message.tran.c_fulldbl.floor_number
+                          //     };
+                          //     await publisher.CardScanNotifyStatus(status);
+                          //     isWaitingCardScan = false;
+                          //     ScanAcrNo = -1;
+                          //     ScanScpId = -1;
+                          // }
+                          // door = scope.ServiceProvider.GetRequiredService<IDoor>();
+                          // name = await door.GetNameByMacAndComponentIdAsync(mac,message.tran.source_number);
+                          break;
+                      case (short)tranType.tranTypeI64CardFull:
+                          // if (isWaitingCardScan && ScanScpId == message.ScpId && ScanAcrNo == message.tran.source_number)
+                          // {
+                          //     var status = new CardScanStatus
+                          //     {
+                          //         Mac = await qhw.GetMacFromComponentAsync((short)message.ScpId),
+                          //         FormatNumber = message.tran.c_fulli64.format_number,
+                          //         Fac = message.tran.c_fulli64.facility_code,
+                          //         CardId = message.tran.c_fulli64.cardholder_id,
+                          //         Issue = message.tran.c_fulli64.issue_code,
+                          //         Floor = message.tran.c_fulli64.floor_number
+                          //     };
+                          //     await publisher.CardScanNotifyStatus(status);
+                          //     isWaitingCardScan = false;
+                          //     ScanAcrNo = -1;
+                          //     ScanScpId = -1;
+                          // }
+                          // door = scope.ServiceProvider.GetRequiredService<IDoor>();
+                          // name = await door.GetNameByMacAndComponentIdAsync(mac,message.tran.source_number);
+                          break;
+                      case (short)tranType.tranTypeI64CardFullIc32:
+                          // if (isWaitingCardScan && ScanScpId == message.ScpId && ScanAcrNo == message.tran.source_number)
+                          // {
+                          //     var status = new CardScanStatus
+                          //     {
+                          //         Mac = await qhw.GetMacFromComponentAsync((short)message.ScpId),
+                          //         FormatNumber = message.tran.c_fulli64i32.format_number,
+                          //         Fac = message.tran.c_fulli64i32.facility_code,
+                          //         CardId = message.tran.c_fulli64i32.cardholder_id,
+                          //         Issue = message.tran.c_fulli64i32.issue_code,
+                          //         Floor = message.tran.c_fulli64i32.floor_number
+                          //     };
+                          //     await publisher.CardScanNotifyStatus(status);
+                          //     isWaitingCardScan = false;
+                          //     ScanAcrNo = -1;
+                          //     ScanScpId = -1;
+                          // }
+                          // door = scope.ServiceProvider.GetRequiredService<IDoor>();
+                          // name = await door.GetNameByMacAndComponentIdAsync(mac,message.tran.source_number);
+                          break;
+                      case (short)tranType.tranTypeCardID:
+                          // door = scope.ServiceProvider.GetRequiredService<IDoor>();
+                          // name = await door.GetNameByMacAndComponentIdAsync(mac,message.tran.source_number);
+                          break;
+                      case (short)tranType.tranTypeDblCardID:
+                          // door = scope.ServiceProvider.GetRequiredService<IDoor>();
+                          // name = await door.GetNameByMacAndComponentIdAsync(mac,message.tran.source_number);
+                          break;
+                      case (short)tranType.tranTypeI64CardID:
+                          // door = scope.ServiceProvider.GetRequiredService<IDoor>();
+                          // name = await door.GetNameByMacAndComponentIdAsync(mac,message.tran.source_number);
+                          break;
+                      case (short)tranType.tranTypeCoS:
+                          switch (message.tran.source_type)
+                          {
+                              case (short)tranSrc.tranSrcSioCom:
+                                  // moduleService.TriggerDeviceStatus(message.SCPId, message.tran.source_number, DecodeHelper.TypeSioCommStatusDecode(message.tran.cos.status), null, null, null);
+                                  // publisher
+                                  // var module = scope.ServiceProvider.GetRequiredService<IDeviceModule>();
+                                  // name = await module.GetModuleNameByMacAndComponentIdAsync(mac,message.tran.source_number);
+                                  break;
+                              case (short)tranSrc.tranSrcMP:
+                                  // var mp = new MpStatus(message.ScpId, message.tran.source_number, DecodeHelper.TypeCosStatusDecode(message.tran.cos.status));
+                                  // await publisher.MpNotifyStatus(mp);
 
-              //                     break;
-              //                 case (short)tranSrc.tranSrcCP:
-              //                     // var cp = new CpStatus(message.ScpId, message.tran.source_number, DecodeHelper.TypeCosStatusDecode(message.tran.cos.status));
-              //                     // await publisher.CpNotifyStatus(cp);
-              //                     break;
-              //                 default:
-              //                     break;
-              //             }
-              //             break;
-              //         case (short)tranType.tranTypeREX:
-              //             door = scope.ServiceProvider.GetRequiredService<IDoor>();
-              //             name = await door.GetNameByMacAndComponentIdAsync(mac,message.tran.source_number);
-              //             break;
-              //         case (short)tranType.tranTypeCoSDoor:
-              //             // var doorstatus = new AcrStatus((short)message.ScpId, message.tran.source_number, "", DescriptionHelper.GetAccessPointStatusFlagResult(message.tran.door.ap_status));
-              //             // await publisher.AcrNotifyStatus(doorstatus);
-              //             door = scope.ServiceProvider.GetRequiredService<IDoor>();
-              //             name = await door.GetNameByMacAndComponentIdAsync(mac,message.tran.source_number);
-              //             break;
-              //         case (short)tranType.tranTypeProcedure:
+                                  break;
+                              case (short)tranSrc.tranSrcCP:
+                                  // var cp = new CpStatus(message.ScpId, message.tran.source_number, DecodeHelper.TypeCosStatusDecode(message.tran.cos.status));
+                                  // await publisher.CpNotifyStatus(cp);
+                                  break;
+                              default:
+                                  break;
+                          }
+                          break;
+                      case (short)tranType.tranTypeREX:
+                          // door = scope.ServiceProvider.GetRequiredService<IDoor>();
+                          // name = await door.GetNameByMacAndComponentIdAsync(mac,message.tran.source_number);
+                          break;
+                      case (short)tranType.tranTypeCoSDoor:
+                          // var doorstatus = new AcrStatus((short)message.ScpId, message.tran.source_number, "", DescriptionHelper.GetAccessPointStatusFlagResult(message.tran.door.ap_status));
+                          // await publisher.AcrNotifyStatus(doorstatus);
+                          // door = scope.ServiceProvider.GetRequiredService<IDoor>();
+                          // name = await door.GetNameByMacAndComponentIdAsync(mac,message.tran.source_number);
+                          break;
+                      case (short)tranType.tranTypeProcedure:
 
-              //             break;
-              //         case (short)tranType.tranTypeUserCmnd:
+                          break;
+                      case (short)tranType.tranTypeUserCmnd:
 
-              //             break;
-              //         case (short)tranType.tranTypeActivate:
+                          break;
+                      case (short)tranType.tranTypeActivate:
 
-              //             break;
-              //         case (short)tranType.tranTypeAcr:
-              //             // var modestatus = new AcrStatus((short)message.ScpId, message.tran.source_number, DescriptionHelper.GetAcrModeForStatus(message.tran.tran_code), "");
-              //             // await publisher.AcrNotifyStatus(modestatus);
-              //             door = scope.ServiceProvider.GetRequiredService<IDoor>();
-              //             name = await door.GetNameByMacAndComponentIdAsync(mac,message.tran.source_number);
-              //             break;
-              //         case (short)tranType.tranTypeMpg:
+                          break;
+                      case (short)tranType.tranTypeAcr:
+                          // var modestatus = new AcrStatus((short)message.ScpId, message.tran.source_number, DescriptionHelper.GetAcrModeForStatus(message.tran.tran_code), "");
+                          // await publisher.AcrNotifyStatus(modestatus);
+                          // door = scope.ServiceProvider.GetRequiredService<IDoor>();
+                          // name = await door.GetNameByMacAndComponentIdAsync(mac,message.tran.source_number);
+                          break;
+                      case (short)tranType.tranTypeMpg:
 
-              //             break;
-              //         case (short)tranType.tranTypeArea:
+                          break;
+                      case (short)tranType.tranTypeArea:
 
-              //             break;
-              //         case (short)tranType.tranTypeUseLimit:
+                          break;
+                      case (short)tranType.tranTypeUseLimit:
 
-              //             break;
-              //         case (short)tranType.tranTypeWebActivity:
+                          break;
+                      case (short)tranType.tranTypeWebActivity:
 
-              //             break;
-              //         case (short)tranType.tranTypeOperatingMode:
+                          break;
+                      case (short)tranType.tranTypeOperatingMode:
 
-              //             break;
-              //         case (short)tranType.tranTypeCoSElevator:
+                          break;
+                      case (short)tranType.tranTypeCoSElevator:
 
-              //             break;
-              //         case (short)tranType.tranTypeFileDownloadStatus:
+                          break;
+                      case (short)tranType.tranTypeFileDownloadStatus:
 
-              //             break;
-              //         case (short)tranType.tranTypeCoSElevatorAccess:
+                          break;
+                      case (short)tranType.tranTypeCoSElevatorAccess:
 
-              //             break;
-              //         case (short)tranType.tranTypeAcrExtFeatureStls:
+                          break;
+                      case (short)tranType.tranTypeAcrExtFeatureStls:
 
-              //             break;
-              //         case (short)tranType.tranTypeAcrExtFeatureCoS:
+                          break;
+                      case (short)tranType.tranTypeAcrExtFeatureCoS:
 
-              //             break;
-              //         case (short)tranType.tranTypeAsci:
+                          break;
+                      case (short)tranType.tranTypeAsci:
 
-              //             break;
-              //         case (short)tranType.tranTypeSioDiag:
+                          break;
+                      case (short)tranType.tranTypeSioDiag:
 
-              //             break;
-              //         default:
-              //             break;
-              //     }
-              //     var e = scope.ServiceProvider.GetRequiredService<Events.Contract.Interfaces.IEvent>();
-              //     await e.AddEventAsync(
-              //                 DateTimeHelper.IntToDateTimeUTC(message.tran.time),
-              //                 actor,
-              //                 TranHelper.GetEventModuleFromTranType((tranSrc)message.tran.source_type),
-              //                 DescriptionHelper.GetTranTypeDesc(message.tran.tran_type),
-              //                 image,
-              //                 mac,
-              //                 name,
-              //                 TranHelper.GetCode((tranSrc)message.tran.source_type,(tranType)message.tran.tran_type,message.tran.tran_code),
-              //                 TranHelper.GetRemark(message),
-              //                 locationId
-              //             );
-              //     var notifier = scope.ServiceProvider.GetRequiredService<INotifier>();
-              //     await notifier.TriggerToTopic(NotifierTopic.EVENT);
+                          break;
+                      default:
+                          break;
+                  }
+              var @event = scope.ServiceProvider.GetRequiredService<Core.Contract.Interfaces.IEvent>();
+              var eve = new CreateEventDto(
+                DateTimeHelper.IntToDateTimeUTC(message.tran.time),
+                actor,
+                TranEventHelper.GetEventModuleFromTranType((tranSrc)message.tran.source_type),
+                DescriptionHelper.GetTranTypeDesc(message.tran.tran_type),
+                image,
+                mac,
+                name,
+                TranEventHelper.GetCode((tranSrc)message.tran.source_type, (tranType)message.tran.tran_type, message.tran.tran_code),
+                TranEventHelper.GetRemark(message),
+                string.Empty,
+                Vendor.aero,
+                locationGuid
+              );
+
+              var notifier = scope.ServiceProvider.GetRequiredService<INotifier>();
+              await notifier.TriggerToTopic(NotifierTopic.EVENT,ct);
               break;
             case (int)enSCPReplyType.enSCPReplyIDReport:
               // Handle it here
@@ -350,16 +355,18 @@ public sealed class ReplyWorker(Channel<ReplyMessage> queue, ILogger<ReplyWorker
               await noti.SendToTopic(DeviceNotifierTopic.CONFIG, data, ct);
               break;
             case (int)enSCPReplyType.enSCPReplyCmndStatus:
-                  var eve = scope.ServiceProvider.GetRequiredService<Core.Contract.Interfaces.IEvent>();
+                  @event = scope.ServiceProvider.GetRequiredService<Core.Contract.Interfaces.IEvent>();
                   Console.WriteLine(message.cmnd_sts.status);
-                  // await eve.UpdateAdapterEventStatusAsync(
-                  //     message.SCPId,
-                  //     message.cmnd_sts.sequence_number,
-                  //     message.cmnd_sts.status == 1 ? CommandStatus.SUCCESSED : CommandStatus.FAILED,
-                  //     message.cmnd_sts.nak != null ? DescriptionHelper.GetNakReasonDescription(message.cmnd_sts.nak.reason) : string.Empty
-                  // );
+                  await @event.UpdateAdapterEventStatusAsync(
+                      message.SCPId,
+                      message.cmnd_sts.sequence_number,
+                      message.cmnd_sts.status == 1 ? CommandStatus.SUCCESSED : CommandStatus.FAILED,
+                      message.cmnd_sts.nak != null ? DescriptionHelper.GetNakReasonDescription(message.cmnd_sts.nak.reason) : string.Empty
+                  );
                   // var cstatus = new CmndStatus(await qhw.GetMacFromComponentAsync((short)message.ScpId), message.cmnd_sts.sequence_number);
                   // await publisher.CmndNotifyStatus(cstatus);
+                  notifier = scope.ServiceProvider.GetRequiredService<INotifier>();
+              await notifier.TriggerToTopic(NotifierTopic.ADAPTER_EVENT,ct);
               break;
             case (int)enSCPReplyType.enSCPReplyWebConfigNetwork:
               //     bus = scope.ServiceProvider.GetRequiredService<IMessageBus>();
@@ -393,6 +400,13 @@ public sealed class ReplyWorker(Channel<ReplyMessage> queue, ILogger<ReplyWorker
         catch (Exception ex)
         {
           ///
+          var @event = scope.ServiceProvider.GetRequiredService<Core.Contract.Interfaces.IEvent>();
+          await @event.InsertExceptionEventAsync(
+            "Aero Background Work",
+            ex.Message,
+            ex.InnerException is null ? string.Empty : ex.InnerException.ToString(),
+            ex.StackTrace is null ? string.Empty : ex.StackTrace
+          );
           logger.LogError(ex.Message);
         }
 

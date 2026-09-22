@@ -65,6 +65,9 @@ public class UserController(IUser user) : ControllerBase
   public async Task<IActionResult> GetImageAsync(Guid guid)
   {
     var stream = await user.GetImageByGuidAsync(guid);
+    if(stream == null)
+      return Ok(null);
+      
     return File(stream, "image/png");
   }
 

@@ -12,4 +12,5 @@ public interface IDevice : IBase<DeviceDto, CreateDeviceDto, UpdateDeviceDto>
       Task<bool> ResetAsync(Guid guid,CancellationToken ct = default);
       Task<StatusDto> GetStatusAsync(Guid guid,CancellationToken ct= default);
       Task<IEnumerable<StatusDto>> GetStatusesAsync(IEnumerable<Guid> guids,CancellationToken ct = default);
+      Task<DeviceDto> GetByMacAsync(string mac,CancellationToken ct= default);
 }

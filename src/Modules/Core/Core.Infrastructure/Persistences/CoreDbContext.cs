@@ -50,6 +50,7 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
       public DbSet<Output> Outputs { get; set; }
       public DbSet<Event> Events { get; set; }
       public DbSet<AdapterEvent> AdapterEvents { get; set; }
+      public DbSet<ExceptionEvent> ExceptionEvent {get ;set;}
       
       protected override void OnModelCreating(ModelBuilder modelBuilder)
       {
@@ -110,6 +111,8 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                               .Property(nameof(BaseEntity.guid))
                               .HasDefaultValueSql(guidSql)
                               .ValueGeneratedOnAdd();
+
+
                   }
 
             }
