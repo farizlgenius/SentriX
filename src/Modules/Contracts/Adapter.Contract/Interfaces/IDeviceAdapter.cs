@@ -45,6 +45,13 @@ public interface IDeviceAdapter
             CancellationToken ct = default
       );
 
+      Task RemoveDeviceAsync(
+            string mac,
+            string ip,
+            CancellationToken ct = default
+      );
+
+
 
 
 

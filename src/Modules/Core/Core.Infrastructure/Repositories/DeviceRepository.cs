@@ -7,6 +7,7 @@ using Core.Infrastructure.Persistences;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel.Constants;
 using SharedKernel.Domain;
+using SharedKernel.Enums;
 using SharedKernel.Exceptions;
 
 namespace Core.Infrastructure.Repositories;
@@ -407,6 +408,23 @@ public sealed class DeviceRepository(CoreDbContext context) : IDeviceRepository
 
             context.Devices.Update(en);
 
+            await context.SaveChangesAsync(ct);
+      }
+
+      public async Task UpdateConfigurationStatusByMacAsync(string mac, bool isSync, CancellationToken ct = default)
+      {
+            var entity = await context.Devices
+                  .Where(x => x.mac == mac)
+                  .OrderByDescending(x => x.id)
+                  .FirstOrDefaultAsync();
+
+            if(entity == null)
+                  throw new NotFoundException(EntityType.Device,mac);
+
+            entity.configuration_status = isSync ? DeviceConfigurationStatus.sync : DeviceConfigurationStatus.reset;
+            entity.updated_at = DateTime.UtcNow;
+
+            context.Devices.Update(entity);
             await context.SaveChangesAsync(ct);
       }
 }

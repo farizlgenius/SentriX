@@ -1,10 +1,14 @@
 using Aero.Application.Constants;
 using Aero.Application.Enums;
 using Aero.Application.Interfaces;
+using Aero.Domain.Entities;
 using Aero.Infrastructure.Helpers;
+using Core.Contract.Commands.Device;
 using Core.Contract.Interfaces;
 using HID.Aero.ScpdNet.Wrapper;
 using Microsoft.Extensions.Logging;
+using Setting.Contract.DTOs.Setting;
+using Setting.Contract.Queries;
 using SharedKernel.Enums;
 using SharedKernel.Messaging;
 using SharedKernel.Model;
@@ -13,6 +17,7 @@ namespace Aero.Infrastructure.Repositories;
 
 public sealed class DeviceRepostory(
       IBaseRepository repo,
+      IMessageBus bus,
       ILogger<DeviceRepostory> logger) : IDeviceRepository
 {
       public bool SystemLevelSpecification(
@@ -104,7 +109,7 @@ public sealed class DeviceRepostory(
                         true
                         );
 
-                  
+
 
 
 
@@ -413,7 +418,7 @@ public sealed class DeviceRepostory(
 
       public CommandResponse SetScpId(string Mac, short ScpId, short To)
       {
-                        CC_SCPID c = new CC_SCPID();
+            CC_SCPID c = new CC_SCPID();
             c.scp_number = ScpId;
             c.scp_id = To;
             var result = repo.Send((short)enCfgCmnd.enCcScpID, c);
@@ -554,5 +559,115 @@ public sealed class DeviceRepostory(
       public Status GetStatus(short ScpId)
       {
             return SCPDLL.scpCheckOnline(ScpId) == 1 ? Status.Online : Status.Offline;
+      }
+
+      public async Task VerifyMemoryAllocateAsync(string Mac,AeroDriverSettingDto spec, ReplyMessage.SCPReplyStrStatus status,CancellationToken ct= default)
+      {
+            //
+            bool isVerify = true;
+
+            // Switch
+            foreach (var str in status.sStrSpec)
+            {
+                  switch (str.nStrType)
+                  {
+                        case (short)SCPStructure.SCPSID_TRAN: // 1 Transactions
+                              isVerify = spec.nTransaction > str.nRecords;
+                              break;
+
+                        case (short)SCPStructure.SCPSID_TZ: // 2 Time zones
+                              isVerify = spec.nTz + 1 == str.nRecords;
+                              break;
+
+                        case (short)SCPStructure.SCPSID_HOL: // 3 Holidays
+                              isVerify = spec.nHol == str.nRecords;
+                              break;
+
+                        case (short)SCPStructure.SCPSID_MSP1: // 4 Msp1 ports (SIO drivers)
+                              // isVerify = spec.n_msp1_port == str.nRecords;
+                              break;
+
+                        case (short)SCPStructure.SCPSID_SIO: // 5 SIOs
+                              isVerify = spec.nSio == str.nRecords;
+                              break;
+
+                        case (short)SCPStructure.SCPSID_MP: // 6 Monitor points
+                              isVerify = spec.nMp == str.nRecords;
+                              break;
+
+                        case (short)SCPStructure.SCPSID_CP: // 7 Control points
+                              isVerify = spec.nCp == str.nRecords;
+
+                              break;
+
+                        case (short)SCPStructure.SCPSID_ACR: // 8 Access control readers
+                              isVerify = spec.nAcr == str.nRecords;
+                              break;
+
+                        case (short)SCPStructure.SCPSID_ALVL: // 9 Access levels
+                              isVerify = spec.nAlvl == str.nRecords;
+                              break;
+
+                        case (short)SCPStructure.SCPSID_TRIG: // 10 Triggers
+                              isVerify = spec.nTrgr == str.nRecords;
+                              break;
+
+                        case (short)SCPStructure.SCPSID_PROC: // 11 Procedures
+                              isVerify = spec.nProc == str.nRecords;
+                              break;
+
+                        case (short)SCPStructure.SCPSID_MPG: // 12 Monitor point groups
+                              isVerify = spec.nMpg == str.nRecords;
+                              break;
+
+                        case (short)SCPStructure.SCPSID_AREA: // 13 Access areas
+                              // isVerify = spec.n_area == str.nRecords;
+                              break;
+
+                        case (short)SCPStructure.SCPSID_EAL: // 14 Elevator access levels
+                              // isVerify = elev.MaxElalvl == str.nRecords;
+                              break;
+
+                        case (short)SCPStructure.SCPSID_CRDB: // 15 Cardholder database
+                              // isVerify = db.nCards == str.nRecords;
+                              break;
+
+                        case (short)SCPStructure.SCPSID_FLASH: // 20 FLASH specs
+                              break;
+
+                        case (short)SCPStructure.SCPSID_BSQN: // 21 Build sequence number
+                              break;
+
+                        case (short)SCPStructure.SCPSID_SAVE_STAT: // 22 Flash save status
+                              break;
+
+                        case (short)SCPStructure.SCPSID_MAB1_FREE: // 23 Memory alloc block 1 free
+                              break;
+
+                        case (short)SCPStructure.SCPSID_MAB2_FREE: // 24 Memory alloc block 2 free
+                              break;
+
+                        case (short)SCPStructure.SCPSID_ARQ_BUFFER: // 26 Access request buffers
+                              break;
+
+                        case (short)SCPStructure.SCPSID_PART_FREE_CNT: // 27 Partition memory free info
+                              break;
+                        
+                        case (short)SCPStructure.SCPSID_LOGIN_STANDARD: // 27 Partition memory free info
+                              break;
+
+                        case (short)SCPStructure.SCPSID_FILE_SYSTEM: // 27 Partition memory free info
+                              break;
+
+                        default:
+                              break;
+                  }
+
+                  if (!isVerify)
+                        break;
+            }
+
+            await bus.SendAsync(new ConfigurationStatusCommand(Mac,isVerify));
+
       }
 }

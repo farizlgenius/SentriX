@@ -8,19 +8,20 @@ import {
   TableRow,
 } from "../../ui/table";
 import { TableSpecialDisplay } from "../../../model/TableSpecialDisplay";
-import { CommandEventDto } from "../../../model/Event/CommandEventDto";
+import { AdapterEventDto } from "../../../model/Event/AdapterEventDto";
 import { EventCommandStatus } from "../../../enum/CommandStatus";
+import { Vendor } from "../../../enum/Vendor";
 
 type SortDirection = "asc" | "desc";
 
 interface TableContents {
   tableHeaders: string[];
-  tableDatas: CommandEventDto[];
+  tableDatas: AdapterEventDto[];
   tableKeys: string[];
-  specialDisplay?: TableSpecialDisplay<CommandEventDto>[];
+  specialDisplay?: TableSpecialDisplay<AdapterEventDto>[];
 }
 
-const CommandStatusTable: React.FC<PropsWithChildren<TableContents>> = ({
+const AdapterEventTable: React.FC<PropsWithChildren<TableContents>> = ({
   tableHeaders,
   tableDatas,
   tableKeys,
@@ -38,8 +39,8 @@ const CommandStatusTable: React.FC<PropsWithChildren<TableContents>> = ({
 
     const data = [...tableDatas];
     data.sort((a, b) => {
-      const aValue = normalizedValue(a[sortKey as keyof CommandEventDto]);
-      const bValue = normalizedValue(b[sortKey as keyof CommandEventDto]);
+      const aValue = normalizedValue(a[sortKey as keyof AdapterEventDto]);
+      const bValue = normalizedValue(b[sortKey as keyof AdapterEventDto]);
 
       if (aValue < bValue) return sortDirection === "asc" ? -1 : 1;
       if (aValue > bValue) return sortDirection === "asc" ? 1 : -1;
@@ -64,7 +65,7 @@ const CommandStatusTable: React.FC<PropsWithChildren<TableContents>> = ({
     remarks: "w-[50%]",
   };
 
-  const getRowStatusClass = (status: string) => {
+  const getRowStatusClass = (status: EventCommandStatus) => {
     switch (status) {
       case EventCommandStatus.SUCCESSED:
         return `
@@ -149,7 +150,7 @@ const CommandStatusTable: React.FC<PropsWithChildren<TableContents>> = ({
               </TableRow>
             )}
             {sortedDatas &&
-              sortedDatas.map((data: CommandEventDto, i: number) => (
+              sortedDatas.map((data: AdapterEventDto, i: number) => (
                 <TableRow
                   key={i}
                   className={`transition-colors hover:bg-gray-50 dark:hover:bg-white/[0.02] ${getRowStatusClass(data.status)}`}
@@ -174,4 +175,4 @@ const CommandStatusTable: React.FC<PropsWithChildren<TableContents>> = ({
     </>
   );
 };
-export default CommandStatusTable;
+export default AdapterEventTable;

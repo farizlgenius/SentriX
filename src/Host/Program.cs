@@ -81,6 +81,8 @@ public class Program
         // Adapter
         builder.Services.AddScoped<IAdapterFactory, AdaptorFactory>();
 
+        builder.Services.AddScoped<AeroCommandDecoder>();
+
 
         // Startup Task
         builder.Services.AddHostedService<StartupTask>();

@@ -212,7 +212,8 @@ const acsNavItems: NavItem[] = [
       { name: "Reader LED", path: "/led" },
       { name: "Password Rule", path: "/pass" },
       { name: "Send Command", path: "/command" },
-      { name: "Status", path: "/status" },
+      { name: "Adapter Logs", path: "/adapter" },
+      { name: "Error Logs", path: "/exception" },
     ],
   },
 ];

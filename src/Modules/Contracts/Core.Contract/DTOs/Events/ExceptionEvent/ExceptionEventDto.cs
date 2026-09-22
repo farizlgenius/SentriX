@@ -4,7 +4,7 @@ namespace Core.Contract.DTOs.Events.ExceptionEvent;
 
 public sealed record ExceptionEventDto(
       DateTime Timestamp,
-      string Entity,
+      string Path,
       string Exception,
       string InnerException,
       string StackTrace

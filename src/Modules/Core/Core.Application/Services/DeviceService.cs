@@ -138,6 +138,8 @@ public sealed class DeviceService(
 
     await adapter.GetAdapter(d.Vendor).Device.InititalDeviceAsync(d.Mac, d.Ip, ct);
 
+    temp.TryRemove(d.Mac);
+
 
     return d.Guid;
   }
@@ -147,7 +149,13 @@ public sealed class DeviceService(
     if (!await repo.IsAnyGuidAsync(guid, ct))
       throw new NotFoundException(EntityType.Device, guid.ToString());
 
-    // Check reference before 
+    // Check reference before
+
+    // Send Comand
+
+    var device = await repo.GetAsync(guid,ct);
+
+    await adapter.GetAdapter(device.Vendor).Device.RemoveDeviceAsync(device.Mac,device.Ip,ct);
 
     await repo.DeleteAsync(guid, ct);
 
@@ -243,7 +251,7 @@ public sealed class DeviceService(
   public async Task<bool> ResetAsync(Guid guid, CancellationToken ct = default)
   {
     var device = await repo.GetAsync(guid, ct);
-    await adapter.GetAdapter(device.Vendor).Device.ResetAsync(device.Mac, device.Ip);
+    await adapter.GetAdapter(device.Vendor).Device.ResetAsync(device.Mac, device.Ip,ct);
     return true;
   }
 

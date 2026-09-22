@@ -1,3 +1,4 @@
+import { DeviceConfigurationStatus } from "../../enum/DeviceConfigurationStatus";
 import { Vendor } from "../../enum/Vendor";
 import { AeroMetadata } from "./AeroMetadata";
 import { AmicoMetadata } from "./AmicoMetadata";
@@ -14,7 +15,7 @@ export interface DeviceDto {
   vendor: Vendor;
   metadata: AeroMetadata | AmicoMetadata | string;
   syncedAt: Date;
-  configurationStatus: string;
+  configurationStatus: DeviceConfigurationStatus;
   deviceModules: DeviceModuleDto[];
   locationGuid: string;
   isDefault: boolean;

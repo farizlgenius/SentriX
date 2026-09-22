@@ -52,7 +52,7 @@ public sealed class EventService(IEventRepository repo) : IEvent
 
   public async Task<Pagination<ExceptionEventDto>> GetExceptionPaginationAsync(PaginationParams param, CancellationToken ct = default)
   {
-    throw new NotImplementedException();
+    return await repo.GetExceptionPaginationAsync(param,ct);
   }
 
   public async Task<Pagination<EventDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
@@ -65,9 +65,9 @@ public sealed class EventService(IEventRepository repo) : IEvent
     await repo.AddExceptionAsync(path,exception,innerException,stackTrace,ct);
   }
 
-  public async Task UpdateAdapterEventStatusAsync(int componentId, int tag, CommandStatus status, string reason, CancellationToken ct = default)
+  public async Task UpdateAdapterEventStatusAsync(string mac,int componentId, int tag, CommandStatus status, string reason, CancellationToken ct = default)
   {
-    await repo.UpdateAdapterEventStatusAsync(componentId, tag, status, reason, ct);
+    await repo.UpdateAdapterEventStatusAsync(mac,componentId, tag, status, reason, ct);
   }
 
   public async Task<Guid> UpdateAsync(UpdateEventDto dto, CancellationToken ct = default)

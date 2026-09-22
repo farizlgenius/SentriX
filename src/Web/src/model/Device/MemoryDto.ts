@@ -1,10 +1,7 @@
 export interface MemoryDto{
-    nStrType:number;
-    strType:string;
-    nRecord:number;
-    nRecSize:number;
-    nActive:number;
-    nSwAlloc:number;
-    nSwRecord:number;
-    isSync:boolean;
+    type:string;
+    driverRecord:number;
+    record:number;
+    recordSize:number;
+    active:number;
 }

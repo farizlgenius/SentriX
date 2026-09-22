@@ -8,6 +8,8 @@ public interface ITempDevice
 {
     bool TryGet(string macAddress, out TempDeviceDto? device);
 
+    string TryGetMacById(int id);
+
     bool Contains(string macAddress);
 
     bool TryAdd(TempDeviceDto device);

@@ -199,16 +199,35 @@ public sealed class DeviceService(
 
       }
 
-      public Task ResetAsync(string mac, string ip, CancellationToken ct = default)
+      public async Task RemoveDeviceAsync(string mac, string ip, CancellationToken ct = default)
       {
-            throw new NotImplementedException();
+            var externalId = await bus.QueryAsync(new ExternalIdByMacAndEntityQuery(mac,EntityType.Device));
+            
+            var res = repo.DetachScpFromChannel(mac,(short)externalId);
+
+            await bus.SendAsync(new AdapterEventCommand(res));
+      }
+
+      public async Task ResetAsync(string mac, string ip, CancellationToken ct = default)
+      {
+            var externalId = await bus.QueryAsync(new ExternalIdByMacAndEntityQuery(mac,EntityType.Device));
+
+            var res = repo.ScpReset(mac,(short)externalId);
+
+             await bus.SendAsync(new AdapterEventCommand(res));
       }
 
 
 
       public async Task SetExternalIdAsync(string mac, string ip,int from, int to, CancellationToken ct = default)
       {
-            throw new NotImplementedException();
+            var res = repo.SetScpId(
+                  mac,
+                  (short)from,
+                  (short)to
+                  );
+
+            await bus.SendAsync(new AdapterEventCommand(res));
       }
 
       public async Task UploadAllConfigurationAsync(string mac, string ip, CancellationToken ct = default)
@@ -257,4 +276,6 @@ public sealed class DeviceService(
             
             
       }
+
+
 }

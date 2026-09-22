@@ -1,3 +1,4 @@
+using System.Diagnostics.Contracts;
 using System.Threading.Channels;
 using Adapter.Contract.Interfaces;
 using Aero.Application.Helpers;
@@ -16,6 +17,7 @@ using Microsoft.Extensions.Logging;
 using Notifier.Contract.Constants;
 using Notifier.Contract.Interfaces;
 using Notifier.Contract.Topics;
+using Setting.Contract.Queries;
 using SharedKernel.Constants;
 using SharedKernel.Domain;
 using SharedKernel.Enums;
@@ -51,6 +53,7 @@ public sealed class ReplyWorker(Channel<ReplyMessage> queue, ILogger<ReplyWorker
               break;
             case (int)enSCPReplyType.enSCPReplyTransaction:
                   // define mac , name , actor , image
+                 
                   var idevice = scope.ServiceProvider.GetRequiredService<IDevice>();
                   var imap = scope.ServiceProvider.GetRequiredService<IComponentMapping>();
                   var mac = await imap.GetMacByExternalIdAndEntityAndVendorAsync(message.SCPId,EntityType.Device,Vendor.aero,ct);
@@ -351,17 +354,32 @@ public sealed class ReplyWorker(Channel<ReplyMessage> queue, ILogger<ReplyWorker
               break;
             case (int)enSCPReplyType.enSCPReplyStrStatus:
               noti = scope.ServiceProvider.GetRequiredService<INotifier>();
-              var data = ReplyMessageHelper.BuildStructureStatus(message.str_sts);
+              var mapping = scope.ServiceProvider.GetRequiredService<IComponentMapping>();
+              var repo = scope.ServiceProvider.GetRequiredService<IDeviceRepository>();
+              bus = scope.ServiceProvider.GetRequiredService<IMessageBus>();
+              mac = await mapping.GetMacByExternalIdAndEntityAndVendorAsync(message.SCPId,EntityType.Device,Vendor.aero,ct);
+              var spec = await bus.QueryAsync(new AeroDriverSettingQuery(),ct);
+              var data = ReplyMessageHelper.BuildStructureStatus(message.str_sts,spec);
               await noti.SendToTopic(DeviceNotifierTopic.CONFIG, data, ct);
+              await repo.VerifyMemoryAllocateAsync(mac,spec,message.str_sts,ct);
               break;
             case (int)enSCPReplyType.enSCPReplyCmndStatus:
                   @event = scope.ServiceProvider.GetRequiredService<Core.Contract.Interfaces.IEvent>();
+                  mapping = scope.ServiceProvider.GetRequiredService<Core.Contract.Interfaces.IComponentMapping>();
+                  var temp = scope.ServiceProvider.GetRequiredService<Core.Contract.Interfaces.ITempDevice>();
+                  Console.WriteLine("Tag >> " + message.cmnd_sts.sequence_number);
                   Console.WriteLine(message.cmnd_sts.status);
+                  Console.WriteLine(message.cmnd_sts.nak.reason);
+                  mac = await mapping.GetMacByExternalIdAndEntityAndVendorAsync(message.SCPId,EntityType.Device,Vendor.aero,ct);
+                  if(string.IsNullOrEmpty(mac))
+                    mac = temp.TryGetMacById(message.SCPId);
+
                   await @event.UpdateAdapterEventStatusAsync(
+                    mac,
                       message.SCPId,
                       message.cmnd_sts.sequence_number,
                       message.cmnd_sts.status == 1 ? CommandStatus.SUCCESSED : CommandStatus.FAILED,
-                      message.cmnd_sts.nak != null ? DescriptionHelper.GetNakReasonDescription(message.cmnd_sts.nak.reason) : string.Empty
+                      message.cmnd_sts.nak != null && message.cmnd_sts.status != 1 ? DescriptionHelper.GetNakReasonDescription(message.cmnd_sts.nak.reason) : string.Empty
                   );
                   // var cstatus = new CmndStatus(await qhw.GetMacFromComponentAsync((short)message.ScpId), message.cmnd_sts.sequence_number);
                   // await publisher.CmndNotifyStatus(cstatus);
@@ -371,7 +389,7 @@ public sealed class ReplyWorker(Channel<ReplyMessage> queue, ILogger<ReplyWorker
             case (int)enSCPReplyType.enSCPReplyWebConfigNetwork:
               //     bus = scope.ServiceProvider.GetRequiredService<IMessageBus>();
               //     await bus.PublishAsync(new AssignIpEvent(message.SCPId, UtilitiesHelper.IntegerToIp(message.web_network.cIpAddr)), ct);
-              var temp = scope.ServiceProvider.GetRequiredService<ITempDevice>();
+              temp = scope.ServiceProvider.GetRequiredService<ITempDevice>();
               temp.TryUpdateIp(message.SCPId, UtilitiesHelper.IntegerToIp(message.web_network.cIpAddr));
               break;
             case (int)enSCPReplyType.enSCPReplyWebConfigNotes:

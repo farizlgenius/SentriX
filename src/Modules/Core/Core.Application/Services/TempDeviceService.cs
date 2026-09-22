@@ -104,4 +104,11 @@ public sealed class TempDeviceService : ITempDevice
 
             return arr.Select(x => x.Id).ToArray();
       }
+
+      public string TryGetMacById(int id)
+      {
+            var arr = _devices.Values.ToArray();
+
+            return arr.Where(x => x.Id == id).Select(x => x.Mac).FirstOrDefault() ?? string.Empty;
+      }
 }

@@ -24,7 +24,7 @@ export const DeviceEndpoint = {
   UPLOAD: (guid: string) => `/api/${CONTROLLER}/upload/${guid}`,
   CREATE: `/api/${CONTROLLER}`,
   UPDATE: `/api/${CONTROLLER}`,
-  VERIFY_MEM: (mac: string) => `/api/${CONTROLLER}/verify/mem/${mac}`,
+  VERIFY_MEM: (guid: string) => `/api/${CONTROLLER}/config/${guid}`,
   VERIFY_COM: (mac: string) => `/api/${CONTROLLER}/verify/com/${mac}`,
   GET_EVENT_STATUS: (guid: string) => `/api/${CONTROLLER}/event/${guid}`,
   GET_SCAN: `/api/${CONTROLLER}/scan`,

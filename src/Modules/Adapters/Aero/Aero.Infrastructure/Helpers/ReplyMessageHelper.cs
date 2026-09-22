@@ -2,6 +2,7 @@ using Aero.Application.Enums;
 using Aero.Application.Helpers;
 using Aero.Application.Metadata.Device;
 using Aero.Domain.Entities;
+using Setting.Contract.DTOs.Setting;
 
 namespace Aero.Infrastructure.Helpers;
 
@@ -43,8 +44,9 @@ public static class ReplyMessageHelper
 
   // }
 
-  public static List<StructureStatusMetadata> BuildStructureStatus(ReplyMessage.SCPReplyStrStatus status)
+  public static List<StructureStatusMetadata> BuildStructureStatus(ReplyMessage.SCPReplyStrStatus status,AeroDriverSettingDto driver)
   {
+
     var data = new List<StructureStatusMetadata>();
     foreach (var str in status.sStrSpec)
     {
@@ -54,6 +56,7 @@ public static class ReplyMessageHelper
           data.Add(
             new StructureStatusMetadata(
               "TRAN",
+              driver.nTransaction,
               str.nRecords,
               str.nRecSize,
               str.nActive
@@ -64,6 +67,7 @@ public static class ReplyMessageHelper
           data.Add(
             new StructureStatusMetadata(
               "TZ",
+              driver.nTz,
               str.nRecords,
               str.nRecSize,
               str.nActive
@@ -74,6 +78,7 @@ public static class ReplyMessageHelper
           data.Add(
             new StructureStatusMetadata(
               "HOL",
+              driver.nHol,
               str.nRecords,
               str.nRecSize,
               str.nActive
@@ -84,6 +89,7 @@ public static class ReplyMessageHelper
           data.Add(
             new StructureStatusMetadata(
               "MSP1",
+              driver.nMsp1Port,
               str.nRecords,
               str.nRecSize,
               str.nActive
@@ -94,6 +100,7 @@ public static class ReplyMessageHelper
           data.Add(
             new StructureStatusMetadata(
               "SIO",
+              driver.nSio,
               str.nRecords,
               str.nRecSize,
               str.nActive
@@ -104,6 +111,7 @@ public static class ReplyMessageHelper
           data.Add(
             new StructureStatusMetadata(
               "MP",
+              driver.nMp,
               str.nRecords,
               str.nRecSize,
               str.nActive
@@ -114,6 +122,7 @@ public static class ReplyMessageHelper
           data.Add(
             new StructureStatusMetadata(
               "CP",
+              driver.nCp,
               str.nRecords,
               str.nRecSize,
               str.nActive
@@ -124,6 +133,7 @@ public static class ReplyMessageHelper
           data.Add(
             new StructureStatusMetadata(
               "ACR",
+              driver.nAcr,
               str.nRecords,
               str.nRecSize,
               str.nActive
@@ -134,6 +144,7 @@ public static class ReplyMessageHelper
           data.Add(
             new StructureStatusMetadata(
               "ALVL",
+              driver.nAlvl,
               str.nRecords,
               str.nRecSize,
               str.nActive
@@ -144,6 +155,7 @@ public static class ReplyMessageHelper
           data.Add(
             new StructureStatusMetadata(
               "TRIG",
+              driver.nTrgr,
               str.nRecords,
               str.nRecSize,
               str.nActive
@@ -154,6 +166,7 @@ public static class ReplyMessageHelper
           data.Add(
             new StructureStatusMetadata(
               "PROC",
+              driver.nProc,
               str.nRecords,
               str.nRecSize,
               str.nActive
@@ -164,6 +177,7 @@ public static class ReplyMessageHelper
           data.Add(
             new StructureStatusMetadata(
               "MPG",
+              driver.nMpg,
               str.nRecords,
               str.nRecSize,
               str.nActive
@@ -174,6 +188,7 @@ public static class ReplyMessageHelper
           data.Add(
             new StructureStatusMetadata(
               "AREA",
+              0,
               str.nRecords,
               str.nRecSize,
               str.nActive
@@ -184,6 +199,7 @@ public static class ReplyMessageHelper
           data.Add(
             new StructureStatusMetadata(
               "EAL",
+              0,
               str.nRecords,
               str.nRecSize,
               str.nActive
@@ -194,6 +210,7 @@ public static class ReplyMessageHelper
           data.Add(
             new StructureStatusMetadata(
               "CRDB",
+              driver.nCards,
               str.nRecords,
               str.nRecSize,
               str.nActive
@@ -203,7 +220,8 @@ public static class ReplyMessageHelper
         case (short)SCPStructure.SCPSID_FLASH:
           data.Add(
             new StructureStatusMetadata(
-              "TRIG",
+              "FLASH",
+              0,
               str.nRecords,
               str.nRecSize,
               str.nActive
@@ -214,6 +232,7 @@ public static class ReplyMessageHelper
           data.Add(
             new StructureStatusMetadata(
               "BSQN",
+              0,
               str.nRecords,
               str.nRecSize,
               str.nActive
@@ -224,6 +243,7 @@ public static class ReplyMessageHelper
           data.Add(
             new StructureStatusMetadata(
               "SAVE_STAT",
+              0,
               str.nRecords,
               str.nRecSize,
               str.nActive
@@ -234,6 +254,7 @@ public static class ReplyMessageHelper
           data.Add(
             new StructureStatusMetadata(
               "HOST_CON_MEM",
+              0,
               str.nRecords,
               str.nRecSize,
               str.nActive
@@ -244,6 +265,7 @@ public static class ReplyMessageHelper
           data.Add(
             new StructureStatusMetadata(
               "CARD_MEM",
+              0,
               str.nRecords,
               str.nRecSize,
               str.nActive
@@ -254,6 +276,7 @@ public static class ReplyMessageHelper
           data.Add(
             new StructureStatusMetadata(
               "ARQ_BUFFER",
+              0,
               str.nRecords,
               str.nRecSize,
               str.nActive
@@ -264,6 +287,7 @@ public static class ReplyMessageHelper
           data.Add(
             new StructureStatusMetadata(
               "PART_FREE_CNT",
+              0,
               str.nRecords,
               str.nRecSize,
               str.nActive
@@ -274,6 +298,7 @@ public static class ReplyMessageHelper
           data.Add(
             new StructureStatusMetadata(
               "LOGIN",
+              0,
               str.nRecords,
               str.nRecSize,
               str.nActive
@@ -284,6 +309,7 @@ public static class ReplyMessageHelper
           data.Add(
             new StructureStatusMetadata(
               "FILE",
+              0,
               str.nRecords,
               str.nRecSize,
               str.nActive

@@ -75,6 +75,11 @@ public sealed class ComponentMappingRepository(CoreDbContext context) : ICompone
         Vendor vendor, 
         CancellationToken ct = default)
       {
-            throw new NotImplementedException();
+            return await context.ComponentMappings
+              .AsNoTracking()
+              .Where(x => x.external_id == externalId && x.entity == entity && x.vendor == vendor)
+              .OrderByDescending(x => x.id)
+              .Select(x => x.mac)
+              .FirstOrDefaultAsync() ?? string.Empty;
       }
 }

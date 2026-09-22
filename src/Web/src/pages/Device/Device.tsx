@@ -50,6 +50,7 @@ import { AeroMemAllocForm } from "../../components/form/device/AeroMemAllocForm"
 import Modals from "../UiElements/Modals";
 import React from "react";
 import Button from "../../components/ui/button/Button";
+import { DeviceConfigurationStatus } from "../../enum/DeviceConfigurationStatus";
 
 const HEADER = [
   "Type",
@@ -64,7 +65,7 @@ const HEADER = [
   "Enable",
   "Action",
 ];
-const KEY = ["type", "name", "mac", "firmware", "ip", "port", "tranStatus"];
+const KEY = ["type", "name", "mac", "firmware", "ip", "port", "tranStatus","configurationStatus"];
 
 const Device = () => {
   const { idReports, setIdReports } = useIdReport();
@@ -123,7 +124,7 @@ const Device = () => {
     metadata: aeroMetadata,
     isDefault: false,
     isActive: false,
-    configurationStatus: "",
+    configurationStatus: 0,
     deviceModules: [],
   };
 
@@ -298,7 +299,7 @@ const Device = () => {
           select.forEach((item: DeviceDto) =>
             fetchSetTran({
               deviceGuid: item.guid,
-              type: item.vendor,
+              v: item.vendor,
               isEnable: true,
             }),
           );
@@ -346,6 +347,7 @@ const Device = () => {
             ...deviceDto,
             serialNumber:deviceDto.serialNumber.toString(),
             port:deviceDto.port.toString(),
+            locationGuid:locationGuid,
             metadata: JSON.stringify(deviceDto.metadata),
           };
           const res = await send.post(DeviceEndpoint.CREATE, req);
@@ -480,28 +482,6 @@ const Device = () => {
     index: number,
   ) => {
     return [
-      <TableCell
-        key={index}
-        className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400"
-      >
-        <Badge
-          variant="solid"
-          size="sm"
-          color={
-            item.configurationStatus == "RESET"
-              ? "error"
-              : item.configurationStatus == "UPLOAD"
-                ? "warning"
-                : "success"
-          }
-        >
-          {item.configurationStatus === "RESET"
-            ? "Reset"
-            : item.configurationStatus === "UPLOAD"
-              ? "Upload"
-              : "Synced"}
-        </Badge>
-      </TableCell>,
       <TableCell
         key={index + 1}
         className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400"
@@ -789,6 +769,33 @@ const Device = () => {
                     ) : (
                       <CancelCircleIcon className="text-2xl" />
                     )}
+                  </TableCell>
+                ),
+              },
+              {
+                key: "configurationStatus",
+                content: (item, index) => (
+                  <TableCell
+                    key={index}
+                    className="px-4 py-3 text-gray-500 text-center text-theme-sm dark:text-gray-400"
+                  >
+                    <Badge
+                      variant="solid"
+                      size="sm"
+                      color={
+                        item.configurationStatus == DeviceConfigurationStatus.reset
+                          ? "error"
+                          : item.configurationStatus == DeviceConfigurationStatus.pending
+                            ? "warning"
+                            : "success"
+                      }
+                    >
+                      {item.configurationStatus ==  DeviceConfigurationStatus.reset
+                        ? "Reset"
+                        : item.configurationStatus == DeviceConfigurationStatus.pending
+                          ? "Upload"
+                          : "Synced"}
+                    </Badge>
                   </TableCell>
                 ),
               },

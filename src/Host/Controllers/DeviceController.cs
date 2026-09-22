@@ -82,7 +82,7 @@ namespace Host.Controllers
       return Ok(res);
     }
 
-    [HttpPost("reset")]
+    [HttpPost("reset/{guid}")]
     public async Task<IActionResult> ResetAsync(Guid guid)
     {
       var res = await device.ResetAsync(guid);

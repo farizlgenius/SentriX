@@ -29,9 +29,10 @@ import {
   UserIcon,
 } from "../../icons";
 import { useTheme } from "../../context/ThemeContext";
-import CommandStatusTable from "../../components/tables/Tables/CommandStatusTable";
-import { CommandEventDto } from "../../model/Event/CommandEventDto";
+import AdapterEventTable from "../../components/tables/Tables/AdapterEventTable";
+import { AdapterEventDto } from "../../model/Event/AdapterEventDto";
 import { EventCommandStatus } from "../../enum/CommandStatus";
+import { Vendor } from "../../enum/Vendor";
 
 // Define header Table
 const headers: string[] = [
@@ -55,11 +56,11 @@ const keys: string[] = [
   "status",
 ];
 
-const CommandStatus = () => {
+const AdapterEvent = () => {
   {
     /* Pagination */
   }
-  const { locationGuid: locationId } = useLocation();
+  const { locationGuid } = useLocation();
   const { accentColor } = useTheme();
   const { token } = useAuth();
   const [search, setSearch] = useState<string | undefined>();
@@ -92,12 +93,12 @@ const CommandStatus = () => {
     setPageSize(Number(data));
   };
 
-  const switchModuleIcon = (mod: string) =>
+  const switchModuleIcon = (mod: Vendor) =>
     ({
-      [DeviceType.AERO.toString()]: (
+      [Vendor.aero]: (
         <ModuleIcon className="w-6 h-6" style={{ color: accentColor }} />
       ),
-      [DeviceType.AMICO.toString()]: (
+      [Vendor.amico]: (
         <AmicoIcon className="w-6 h-6" style={{ color: accentColor }} />
       ),
     })[mod] ?? (
@@ -107,7 +108,7 @@ const CommandStatus = () => {
   {
     /* Event Data */
   }
-  const [tableDatas, setTablesData] = useState<CommandEventDto[]>([]);
+  const [tableDatas, setTablesData] = useState<AdapterEventDto[]>([]);
   async function fetchData(
     pageNumber: number,
     pageSize: number,
@@ -116,18 +117,19 @@ const CommandStatus = () => {
     endDate?: string,
   ) {
     const res = await send.get(
-      EventEndpoint.GET_COMMAND_PAGINATION(
+      EventEndpoint.GET_ADAPTER_PAGINATION(
         pageNumber,
         pageSize,
-        locationId,
+        locationGuid,
         search,
         startDate,
         endDate,
       ),
     );
-    if (res && res.data) {
-      setTablesData(res.data.items);
-      setPagination(res.data);
+    console.log(res);
+    if (res.data) {
+      setTablesData(res.data.data.items);
+      setPagination(res.data.data);
     }
   }
 
@@ -159,7 +161,7 @@ const CommandStatus = () => {
       const connection = SignalRService.getConnection();
       connection?.off(SignalRTopic.EVENT);
     };
-  }, [locationId]);
+  }, [locationGuid]);
 
   useEffect(() => {
     fetchData(1, pageSize, search, startDate, endDate);
@@ -291,7 +293,7 @@ const CommandStatus = () => {
                 </button>
               </div>
             </div>
-            <CommandStatusTable
+            <AdapterEventTable
               tableHeaders={headers}
               tableDatas={tableDatas}
               tableKeys={keys}
@@ -304,7 +306,7 @@ const CommandStatus = () => {
                       className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400"
                     >
                       <span className="flex gap-2">
-                        {switchModuleIcon(data.type)}
+                        {switchModuleIcon(data.vendor)}
                         {/* {<HardwareIcon/>} */}
                         {data.name}
                       </span>
@@ -325,10 +327,11 @@ const CommandStatus = () => {
                             style={{ color: accentColor }}
                           />
                         }
-                        {new Intl.DateTimeFormat("en-GB").format(
-                          new Date(data.send),
+                        {<>{data.sendAt}</>}
+                        {/* {new Intl.DateTimeFormat("en-GB").format(
+                          new Date(data.sendAt),
                         )}{" "}
-                        {new Date(data.send).toTimeString().split(" ")[0]}
+                        {new Date(data.sendAt).toTimeString().split(" ")[0]} */}
                       </span>
                     </TableCell>
                   ),
@@ -347,10 +350,11 @@ const CommandStatus = () => {
                             style={{ color: accentColor }}
                           />
                         }
-                        {new Intl.DateTimeFormat("en-GB").format(
-                          new Date(data.received),
+                        {data.receivedAt == null ? <></> : <>{data.receivedAt}</>}
+                        {/* {new Intl.DateTimeFormat("en-GB").format(
+                          new Date(data.receivedAt),
                         )}{" "}
-                        {new Date(data.received).toTimeString().split(" ")[0]}
+                        {new Date(data.receivedAt).toTimeString().split(" ")[0]} */}
                       </span>
                     </TableCell>
                   ),
@@ -403,4 +407,4 @@ const CommandStatus = () => {
   );
 };
 
-export default CommandStatus;
+export default AdapterEvent;

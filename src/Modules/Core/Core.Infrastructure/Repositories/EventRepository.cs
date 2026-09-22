@@ -1,6 +1,7 @@
 using Core.Application.Interfaces;
 using Core.Contract.DTOs.Events.AdapterEvent;
 using Core.Contract.DTOs.Events.Event;
+using Core.Contract.DTOs.Events.ExceptionEvent;
 using Core.Contract.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel.Constants;
@@ -189,7 +190,80 @@ new AdapterEvent(@event)
       )).ToArrayAsync();
   }
 
-  public Task<Guid> GetGuidByIdAsync(int id, CancellationToken ct = default)
+      public async Task<Pagination<ExceptionEventDto>> GetExceptionPaginationAsync(PaginationParams param, CancellationToken ct = default)
+      {
+            var query = context.ExceptionEvent
+                  .AsNoTracking()
+                  .AsQueryable();
+
+    if (!string.IsNullOrWhiteSpace(param.search))
+    {
+      if (!string.IsNullOrWhiteSpace(param.search))
+      {
+        var search = param.search.Trim();
+
+        if (context.Database.IsNpgsql())
+        {
+          var pattern = $"%{search}%";
+
+          query = query.Where(x =>
+              EF.Functions.ILike(x.path, pattern) ||
+              EF.Functions.ILike(x.exception, pattern) ||
+              EF.Functions.ILike(x.inner_exception, pattern) ||
+              EF.Functions.ILike(x.stack_trace, pattern) 
+          );
+        }
+        else // SQL Server
+        {
+          query = query.Where(x =>
+              x.path.ToString().Contains(search) ||
+              x.exception.Contains(search) ||
+              x.inner_exception.Contains(search) ||
+              x.stack_trace.Contains(search) 
+          );
+        }
+
+      }
+    }
+
+
+    if (param.startDate != null)
+    {
+      var startUtc = DateTime.SpecifyKind(param.startDate.Value, DateTimeKind.Utc);
+      query = query.Where(x => x.timestampe >= startUtc);
+    }
+
+    if (param.endDate != null)
+    {
+      var endUtc = DateTime.SpecifyKind(param.endDate.Value, DateTimeKind.Utc);
+      query = query.Where(x => x.timestampe <= endUtc);
+    }
+
+    var count = await query.CountAsync();
+
+    var res = await query
+          .AsNoTracking()
+          .OrderByDescending(e => e.timestampe)
+          .Skip((param.pageNumber - 1) * param.pageSize)
+          .Take(param.pageSize)
+         .Select(x => new ExceptionEventDto(
+          x.timestampe,
+          x.path,
+          x.exception,
+          x.inner_exception,
+          x.stack_trace
+      )).ToListAsync();
+
+    return new Pagination<ExceptionEventDto>(
+          param.pageNumber,
+          param.pageSize,
+          count,
+          (int)Math.Ceiling(count / (double)param.pageSize),
+          res
+          );
+      }
+
+      public Task<Guid> GetGuidByIdAsync(int id, CancellationToken ct = default)
   {
     throw new NotImplementedException();
   }
@@ -312,15 +386,20 @@ new AdapterEvent(@event)
     throw new NotImplementedException();
   }
 
-  public async Task UpdateAdapterEventStatusAsync(int componentId, int tag, CommandStatus status, string reason, CancellationToken ct = default)
+  public async Task UpdateAdapterEventStatusAsync(string mac,int componentId, int tag, CommandStatus status, string reason, CancellationToken ct = default)
   {
     var entity = await context.AdapterEvents
-      .Where(x => x.component_id == componentId && x.tag == tag)
+      .Where(x => x.mac == mac && x.component_id == componentId && x.tag == tag && x.created_at <= x.updated_at)
+      .OrderByDescending(x => x.created_at)
       .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.AdapterEvent, $"Tag: {tag}");
 
     entity.reason = reason;
     entity.status = status;
     entity.received_at = DateTime.UtcNow;
+
+    context.AdapterEvents.Update(entity);
+
+    await context.SaveChangesAsync(ct);
 
   }
 

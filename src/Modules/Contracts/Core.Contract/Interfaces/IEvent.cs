@@ -11,7 +11,7 @@ public interface IEvent : IBase<EventDto, CreateEventDto, UpdateEventDto>
 {
 
       Task<Pagination<AdapterEventDto>> GetAdapterPaginationAsync(PaginationParams param,CancellationToken ct = default);
-      Task UpdateAdapterEventStatusAsync(int componentId,int tag,CommandStatus status,string reason,CancellationToken ct= default);
+      Task UpdateAdapterEventStatusAsync(string mac,int componentId,int tag,CommandStatus status,string reason,CancellationToken ct= default);
       Task<Pagination<ExceptionEventDto>> GetExceptionPaginationAsync(PaginationParams param,CancellationToken ct = default);
       Task InsertExceptionEventAsync(
             string path,

@@ -1,4 +1,4 @@
-import { PropsWithChildren, useState } from "react";
+import { PropsWithChildren, useEffect, useState } from "react";
 import Badge from "../../ui/badge/Badge";
 import {
   Table,
@@ -14,19 +14,24 @@ import { useToast } from "../../../context/ToastContext";
 import { DeviceDto } from "../../../model/Device/DeviceDto";
 import { CreateAeroDeviceDto } from "../../../model/Device/CreateAeroDeviceDto";
 import { FormSection } from "../template/FormTemplate";
+import SignalRService from "../../../services/SignalRService";
+import { SignalRTopic } from "../../../constants/signalr-constant";
+import { useAuth } from "../../../context/AuthContext";
 
 interface HardwareMemAllocFormInterface {
-  data: DeviceDto | CreateAeroDeviceDto;
+  data: DeviceDto;
 }
+
+
 
 export const AeroMemAllocForm: React.FC<
   PropsWithChildren<HardwareMemAllocFormInterface>
 > = ({ data }) => {
-  const { toggleToast } = useToast();
+  const { token } = useAuth();
   const [memAllocs, setMemAllocs] = useState<MemoryDto[]>([]);
 
   const fetchData = async () => {
-    await send.post(DeviceEndpoint.VERIFY_MEM(data.mac));
+    await send.get(DeviceEndpoint.VERIFY_MEM(data.guid));
   };
 
   // useEffect(() => {
@@ -39,6 +44,37 @@ export const AeroMemAllocForm: React.FC<
   //   return () => {};
   // }, []);
 
+   useEffect(() => {
+      const initSignalR = async () => {
+        if (!token) return;
+  
+        await SignalRService.startConnection();
+        const connection = SignalRService.getConnection();
+        if (!connection) return;
+  
+        connection.on(SignalRTopic.CONFIG, (reports: MemoryDto[]) => {
+          setMemAllocs(reports);
+        });
+  
+       
+        try {
+          await SignalRService.joinGroup(SignalRTopic.CONFIG);
+        } catch (err) {
+          console.error("Subscribe error:", err);
+        }
+  
+  
+        fetchData();
+      };
+  
+      initSignalR();
+  
+      return () => {
+        const connection = SignalRService.getConnection();
+        connection?.off(SignalRTopic.CONFIG);
+      };
+    }, []);
+
   return (
     <FormSection
       overall="Components Detail"
@@ -49,24 +85,24 @@ export const AeroMemAllocForm: React.FC<
         <Table className="border-separate border-spacing-y-4 overflow-hidden rounded-2xl border border-[var(--app-panel-border)] ">
           <TableHeader className="h-10 items-center gap-3 bg-[var(--app-panel-muted)] px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.12em] text-gray-400">
             <TableRow>
-              <TableCell className="text-center">Structure Type</TableCell>
-              <TableCell className="text-center">HW Record Allocate</TableCell>
+              <TableCell className="text-center">Type</TableCell>
+              <TableCell className="text-center">Device Allocate</TableCell>
               <TableCell className="text-center">Record Size</TableCell>
-              <TableCell className="text-center">HW Active Record</TableCell>
-              <TableCell className="text-center">SW Record Allocate</TableCell>
+              <TableCell className="text-center">Active Record</TableCell>
+              <TableCell className="text-center">Driver Allocate</TableCell>
               <TableCell className="text-center">Status</TableCell>
             </TableRow>
           </TableHeader>
           <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
             {memAllocs.map((a: MemoryDto, i: number) => (
               <TableRow key={i}>
-                <TableCell className="text-center">{a.strType}</TableCell>
-                <TableCell className="text-center">{a.nRecord}</TableCell>
-                <TableCell className="text-center">{a.nRecSize}</TableCell>
-                <TableCell className="text-center">{a.nActive}</TableCell>
-                <TableCell className="text-center">{a.nSwAlloc}</TableCell>
+                <TableCell className="text-center">{a.type}</TableCell>
+                <TableCell className="text-center">{a.record}</TableCell>
+                <TableCell className="text-center">{a.recordSize}</TableCell>
+                <TableCell className="text-center">{a.active}</TableCell>
+                <TableCell className="text-center">{a.driverRecord}</TableCell>
                 <TableCell className="text-center">
-                  {a.isSync ? (
+                  {a.record == a.driverRecord ? (
                     <Badge color="success">Sync</Badge>
                   ) : (
                     <Badge color="error">Not Sync</Badge>

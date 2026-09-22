@@ -121,12 +121,6 @@ public static class CoreDependencyInjection
     services.AddScoped<IEvent,EventService>();
     services.AddScoped<IEventRepository,EventRepostory>();
 
-    // Adapter Event
-    services.AddScoped<IAdapterEvent,AdapterEventService>();
-    services.AddScoped<IAdapterEventRepository,AdapterEventRepository>();
-
-    
-
 
     // ==========================
     // Database

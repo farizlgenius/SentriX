@@ -71,10 +71,11 @@ import { SignalRTopic } from "./constants/signalr-constant";
 import { DeviceEndpoint } from "./endpoint/DeviceEndpoint";
 import Scan from "./pages/Scan/Scan";
 import Output from "./pages/Output/Output";
-import CommandStatus from "./pages/Diagnostic/CommandStatus";
+import AdapterEvent from "./pages/Diagnostic/AdapterEvent";
 import { Visitor } from "./pages/Visitor/Visitor";
 import Interval from "./pages/Interval/Interval";
 import Turnstile from "./pages/Turnstile/Turnstile";
+import ExceptionEvent from "./pages/Diagnostic/ExceptionEvent";
 
 export default function App() {
   const navigate = useNavigate();
@@ -245,7 +246,8 @@ export default function App() {
             <Route path="/map" element={<Map />} />
             <Route path="/report" element={<Reports />} />
             <Route path="/command" element={<Command />} />
-            <Route path="/status" element={<CommandStatus />} />
+            <Route path="/adapter" element={<AdapterEvent />} />
+            <Route path="/exception" element={<ExceptionEvent />} />
             <Route path="/interval" element={<Interval />} />
 
             {/* VMS */}
