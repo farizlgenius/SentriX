@@ -16168,4 +16168,11 @@ WebConfigNetwork: SCP-1, Method2 = 0, IP Address2: 0.0.0.0, Subnet Mask2: 0.0.0.
 96284.654 Chnl-1, SCP-1.0 (32/0), (10) tx: 6B 00 10 00 01 02 01 00 04 00
 96284.654 > FE FF FF FF
 96284.654 Command Status: Scp-1.0, (tag-9-ok)
-96284.706 Chnl-1, SCP-1.0 (32/0
+96284.706 Chnl-1, SCP-1.0 (32/0Debug file SCPDEBUG.txt <SCPDEBUGc.txt> <SCPDEBUG.TXT> opened Wed Sep 23 11:25:11 2026
+Begin - SCP Driver DLL (64-bit) version 4.7.1.43
+37511.955 WSAStartup ok
+37511.960 RNG_X931A24 Initialized
+37511.960 1, enCcSystem: 011 1 1024 0 0 1
+37512.049 1, enCcCreateChannel: 0012 1 7 3333 0 3000 0 "" 0
+37512.190 listen(lsock) created socket=3380 on port 3333
+37512.190 Listen Successful, port: 3333

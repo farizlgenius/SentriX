@@ -8,6 +8,7 @@ public sealed class AeroAdapter : IAdapter
       public Vendor Vendor => Vendor.aero;
 
       public IDeviceAdapter Device { get; }
+      public IUtilityAdapter Utility {get;}
 
       // public IInputAdapter Monitor { get; }
 
@@ -21,7 +22,8 @@ public sealed class AeroAdapter : IAdapter
       // public ISettingAdapter Setting { get; }
 
       public AeroAdapter(
-            IDeviceAdapter devices
+            IDeviceAdapter devices,
+            IUtilityAdapter utility
             // IAeroOutputAdapter controls,
             // IAeroInputAdapter monitor,
             // IAeroTimeAdapter time,
@@ -32,6 +34,7 @@ public sealed class AeroAdapter : IAdapter
       )
       {
             Device = devices;
+            Utility = utility;
             // Control = controls;
             // Monitor = monitor;
             // Time = time;

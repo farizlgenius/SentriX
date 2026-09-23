@@ -1,6 +1,7 @@
 using System.Threading.Channels;
 using Adapter.Aero.Listener;
 using Adapter.Contract.Interfaces;
+using Aero.Application.Helpers;
 using Aero.Application.Interfaces;
 using Aero.Application.Mapper;
 using Aero.Application.Services;
@@ -58,6 +59,10 @@ public static class AeroDependencyInjection
     services.AddScoped<IDeviceAdapter,DeviceService>();
 
     services.AddScoped<IDeviceModuleRepository,DeviceModuleRepository>();
+
+    // Utility
+    services.AddScoped<IUtilityAdapter,UtilityService>();
+    services.AddScoped<CommandDecoder>();
     // services.AddScoped<IDeviceAdapter,DeviceService>();
 
 

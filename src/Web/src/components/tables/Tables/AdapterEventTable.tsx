@@ -19,6 +19,7 @@ interface TableContents {
   tableDatas: AdapterEventDto[];
   tableKeys: string[];
   specialDisplay?: TableSpecialDisplay<AdapterEventDto>[];
+   onClick:(data:AdapterEventDto) => void;
 }
 
 const AdapterEventTable: React.FC<PropsWithChildren<TableContents>> = ({
@@ -26,6 +27,7 @@ const AdapterEventTable: React.FC<PropsWithChildren<TableContents>> = ({
   tableDatas,
   tableKeys,
   specialDisplay,
+  onClick
 }) => {
   const [sortKey, setSortKey] = useState<string>("dateTime");
   const [sortDirection, setSortDirection] = useState<SortDirection>("desc");
@@ -152,6 +154,10 @@ const AdapterEventTable: React.FC<PropsWithChildren<TableContents>> = ({
             {sortedDatas &&
               sortedDatas.map((data: AdapterEventDto, i: number) => (
                 <TableRow
+                onClickWithEvent={() => {
+                  console.log(data)
+                  onClick(data)
+                }}
                   key={i}
                   className={`transition-colors hover:bg-gray-50 dark:hover:bg-white/[0.02] ${getRowStatusClass(data.status)}`}
                 >

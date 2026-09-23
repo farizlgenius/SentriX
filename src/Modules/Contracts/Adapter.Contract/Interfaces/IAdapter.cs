@@ -8,6 +8,7 @@ public interface IAdapter
 {
       Vendor Vendor {get;}
       IDeviceAdapter Device {get;}
+      IUtilityAdapter Utility {get;}
       // IInputAdapter Monitor {get;}
       // IOutputAdapter Control {get;}
       // ITimeAdapter Time {get;}

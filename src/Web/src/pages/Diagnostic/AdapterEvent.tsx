@@ -33,6 +33,12 @@ import AdapterEventTable from "../../components/tables/Tables/AdapterEventTable"
 import { AdapterEventDto } from "../../model/Event/AdapterEventDto";
 import { EventCommandStatus } from "../../enum/CommandStatus";
 import { Vendor } from "../../enum/Vendor";
+import Modals from "../UiElements/Modals";
+import { FormField, FormSection } from "../../components/form/template/FormTemplate";
+import Label from "../../components/form/Label";
+import TextArea from "../../components/form/input/TextArea";
+import { UtilityEndpoint } from "../../endpoint/UitlityEndpoint";
+import { CommandLine } from "../../model/Uitlity/AeroCommandDecode";
 
 // Define header Table
 const headers: string[] = [
@@ -66,7 +72,9 @@ const AdapterEvent = () => {
   const [search, setSearch] = useState<string | undefined>();
   const [startDate, setStartDate] = useState<string | undefined>();
   const [endDate, setEndDate] = useState<string | undefined>();
+  const [popup,setPopup] = useState<boolean>(false);
   const [pageSize, setPageSize] = useState<number>(10);
+  const [decode,setDecode] = useState<CommandLine[]>([]);
   const [pagination, setPagination] = useState<PageProp>({
     page: 0,
     pageSize: 0,
@@ -92,6 +100,25 @@ const AdapterEvent = () => {
   const handlePageSizeSelect = (data: string) => {
     setPageSize(Number(data));
   };
+
+  const modalHandleClickWithEvent = (e: React.MouseEvent<HTMLButtonElement>) => {
+        switch (e.currentTarget.name) {
+          case "close":
+            setPopup(false);
+            break;
+          default:
+            break;
+        }
+      }
+
+      const handleClick = (item: AdapterEventDto) => {
+            // const metadata = JSON.parse(item.metadata as string) as AeroMetadata;
+            // item.metadata = metadata;
+            // setFormType(FormType.UPDATE);
+            // setDeviceDto(item);
+            fetchCommandDetail(item.body);
+            setPopup(true);
+          };
 
   const switchModuleIcon = (mod: Vendor) =>
     ({
@@ -133,6 +160,14 @@ const AdapterEvent = () => {
     }
   }
 
+  const fetchCommandDetail = async (command:string) => {
+    const res = await send.post(UtilityEndpoint.DECODE_AERO,{
+      command:command
+    });
+    console.log(res);
+    setDecode(res.data.data);
+  }
+
   useEffect(() => {
     console.log(accentColor);
     const initSignalR = async () => {
@@ -170,6 +205,22 @@ const AdapterEvent = () => {
   return (
     <>
       <PageBreadcrumb pageTitle="Events" />
+      {
+        popup && (
+          <Modals header="Command Detail" handleClickWithEvent={modalHandleClickWithEvent} isWide={false} body={
+            <FormSection>
+              <FormField>
+                <div className="h-full w-full" style={{ overflowY: 'auto',  padding: '8px' }}>
+                  {decode.map((item, index) => (
+                    <div key={index} className={`px-4  text-start text-theme-sm  whitespace-pre-wrap ${item.color.name.toLocaleLowerCase() == "red" ? "dark:text-red-400 text-red-500" : item.color.name.toLocaleLowerCase() == "green" ? "dark:text-green-400 text-green-500" :  "dark:text-gray-400 text-gray-500"}`} >
+                      {item.text}
+                    </div>
+                  ))}
+                </div>
+              </FormField>
+            </FormSection>} />
+        )
+      }
       <div className="space-y-6">
         <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
           <div className="max-w-full overflow-x-auto">
@@ -297,6 +348,7 @@ const AdapterEvent = () => {
               tableHeaders={headers}
               tableDatas={tableDatas}
               tableKeys={keys}
+              onClick={handleClick}
               specialDisplay={[
                 {
                   key: "name",
