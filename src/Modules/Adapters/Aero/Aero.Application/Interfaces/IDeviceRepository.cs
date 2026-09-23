@@ -1,4 +1,5 @@
 using Aero.Application.Enums;
+using Aero.Application.Metadata.Device;
 using Aero.Domain.Entities;
 using Setting.Contract.DTOs.Setting;
 using SharedKernel.Enums;
@@ -91,5 +92,5 @@ public interface IDeviceRepository
       CommandResponse SetTransactionLogIndex(string Mac, short ScpId, bool IsEnable);
       CommandResponse DetachScpFromChannel(string Mac, short ScpId);
       CommandResponse DeleteScp(string Mac, short ScpId);
-      Task VerifyMemoryAllocateAsync(string Mac,AeroDriverSettingDto spec, ReplyMessage.SCPReplyStrStatus status,CancellationToken ct= default);
+      Task VerifyMemoryAllocateAsync(string mac,List<StructureStatusMetadata> data,CancellationToken ct= default);
 }

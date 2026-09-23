@@ -276,7 +276,7 @@ new AdapterEvent(@event)
   public async Task<Pagination<EventDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
   {
     var query = context.Events
-                  .Where(x => x.location.guid == param.locationGuid)
+                  .Where(x => x.location == null || x.location.guid == param.locationGuid)
                   .AsNoTracking()
                   .AsQueryable();
 

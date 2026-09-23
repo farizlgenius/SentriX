@@ -6,5 +6,7 @@ public enum DeviceConfigurationStatus
   pending,
   reset,
   unknown,
+  info,
+  unsync
 
 }

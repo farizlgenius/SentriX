@@ -33,6 +33,7 @@ public static class Command
   public static string CardDelete = "3305 : Card Delete";
   public static string DetachScpChannel = "208 : Detach Scp from Channel";
   public static string DeleteScp = "015 : Delete Scp";
+
 }
 
 

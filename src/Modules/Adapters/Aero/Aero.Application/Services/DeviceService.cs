@@ -86,7 +86,7 @@ public sealed class DeviceService(
              mac,
             (short)externalId,
             scpDevice.nCards,
-            (short)scpDevice.nAlvl,
+            (short)scpDevice.nAlvlPerCard,
             (short)UtilitiesHelper.CalculatePinDigitValue(
                   scpDevice.PinDuressMode,
                   scpDevice.DuressConstDigit,
@@ -102,7 +102,7 @@ public sealed class DeviceService(
             0,
             (short)(scpDevice.UsedLimit ? 1 : 0),
              (short)(scpDevice.TimeBaseApb ? 1 : 0),
-             (short)scpDevice.nTz,
+             (short)scpDevice.nAcr,
             0,
              (short)scpDevice.HostResponseTimeout,
             0,
@@ -112,26 +112,28 @@ public sealed class DeviceService(
 
             await bus.SendAsync(new AdapterEventCommand(res));
 
+            res = repo.ElevatorAccessLevelSpecification(
+                  mac,
+                  (short)externalId,
+                  (short)scpDevice.MaxElAlvl,
+                  (short)scpDevice.MaxFloorPerAcr
+                  );
+
+      await bus.SendAsync(new AdapterEventCommand(res));
+
             res = repo.TimeSet(
               mac,
               (short)externalId);
 
             await bus.SendAsync(new AdapterEventCommand(res));
 
-            // Transaction index 
-            res = repo.SetTransactionLogIndex(
-                  mac,
-                  (short)externalId,
-                  true
-                  );
-
-            await bus.SendAsync(new AdapterEventCommand(res));
+            
 
             res = repo.DriverConfiguration(
                   mac,
                   (short)externalId,
                   0,
-                  0,
+                  3,
                   -1,
                   0,
                   0,
@@ -157,6 +159,15 @@ public sealed class DeviceService(
                  -1,
                  -1
             );
+
+            await bus.SendAsync(new AdapterEventCommand(res));
+
+            // Transaction index 
+            res = repo.SetTransactionLogIndex(
+                  mac,
+                  (short)externalId,
+                  true
+                  );
 
             await bus.SendAsync(new AdapterEventCommand(res));
 

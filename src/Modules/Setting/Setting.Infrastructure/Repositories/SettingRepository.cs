@@ -47,7 +47,9 @@ public sealed class SettingRepository(SettingDbContext context) : ISettingReposi
         x.apb_time,
         x.host_timeout,
         x.escort_timeout,
-        x.multi_card_timeout
+        x.multi_card_timeout,
+        x.max_elalvl,
+        x.max_floor_per_acr
       ))
       .FirstOrDefaultAsync(ct) ?? throw new NotFoundException($"Aero Driver Setting.");
   }

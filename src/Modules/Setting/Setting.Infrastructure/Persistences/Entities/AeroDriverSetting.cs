@@ -43,6 +43,10 @@ public sealed class AeroDriverSetting : BaseEntity
   public int escort_timeout { get; set; }
   public int multi_card_timeout { get; set; }
 
+  // Elevator 
+  public int max_elalvl {get; set;}
+  public int max_floor_per_acr {get ;set;}
+
   public AeroDriverSetting() { }
 
 }

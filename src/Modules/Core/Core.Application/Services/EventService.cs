@@ -3,16 +3,39 @@ using Core.Contract.DTOs.Events.AdapterEvent;
 using Core.Contract.DTOs.Events.Event;
 using Core.Contract.DTOs.Events.ExceptionEvent;
 using Core.Contract.Interfaces;
+using Core.Domain.Entities;
 using SharedKernel.Domain;
 using SharedKernel.Enums;
+using SharedKernel.Messaging;
 
 namespace Core.Application.Services;
 
-public sealed class EventService(IEventRepository repo) : IEvent
+public sealed class EventService(
+  IEventRepository repo,
+  ILocationRepository loc
+  ) : Core.Contract.Interfaces.IEvent
 {
   public async Task<Guid> CreateAsync(CreateEventDto dto, CancellationToken ct = default)
   {
-    throw new NotImplementedException();
+    var locationId = dto.LocationGuid == Guid.Empty ? 0 : await loc.GetIdByGuidAsync(dto.LocationGuid,ct);
+
+    var d = new Event(
+      dto.Timestamp,
+      dto.Actor,
+      dto.Module,
+      dto.EventType,
+      dto.ImageName,
+      dto.Mac,
+      dto.ComponentName,
+      dto.EventCode,
+      dto.Remarks,
+      dto.CaptureImageName,
+      locationId
+    );
+
+    await repo.AddAsync(d,ct);
+
+    return d.Guid;
   }
 
   public async Task<bool> DeleteByGuidAsync(Guid guid, CancellationToken ct = default)

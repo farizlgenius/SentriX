@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Setting.Infrastructure.Persistences;
@@ -11,9 +12,11 @@ using Setting.Infrastructure.Persistences;
 namespace Setting.Infrastructure.Migrations
 {
     [DbContext(typeof(SettingDbContext))]
-    partial class SettingDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260923133905_AddElvlAeroSettingValue")]
+    partial class AddElvlAeroSettingValue
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -166,7 +169,7 @@ namespace Setting.Infrastructure.Migrations
                             apb_time = true,
                             c_port = 3333,
                             c_type = 7,
-                            card_id_size = 4,
+                            card_id_size = 0,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             duress_const_digit = 5,
                             escort_timeout = 15,

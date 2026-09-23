@@ -17,8 +17,8 @@ public sealed class Event : BaseEntity
   public SharedKernel.Enums.Vendor vendor { get; set; } = SharedKernel.Enums.Vendor.aero;
 
   // releation
-  public int location_id { get; set; }
-  public Location location { get; set; } = default!;
+  public int? location_id { get; set; }
+  public Location? location { get; set; } = default!;
 
   public Event() { }
 
@@ -33,9 +33,11 @@ public sealed class Event : BaseEntity
     component_name = d.ComponentName;
     event_code = d.EventCode;
     remarks = d.Remarks;
-    location_id = d.LocationId;
+    
     capture_image_name = d.CaptureImageName;
     vendor = d.Vendor;
+    if(d.LocationId != 0)
+      location_id = d.LocationId;
   }
 
   public Event(

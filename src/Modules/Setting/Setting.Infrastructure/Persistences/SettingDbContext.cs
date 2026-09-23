@@ -116,6 +116,7 @@ public class SettingDbContext(DbContextOptions<SettingDbContext> options) : DbCo
                         pin_duress_mode = 2,
                         duress_const_digit = 5,
                         pin_digit = 6,
+                        card_id_size=4,
                         issue_code_bit = 1,
                         apb_location = true,
                         store_act_date = 2,
@@ -124,7 +125,9 @@ public class SettingDbContext(DbContextOptions<SettingDbContext> options) : DbCo
                         apb_time=true,
                         host_timeout=5,
                         escort_timeout = 15,
-                        multi_card_timeout = 15
+                        multi_card_timeout = 15,
+                        max_elalvl = 256,
+                        max_floor_per_acr=128
                   }
             );
 

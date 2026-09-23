@@ -35,5 +35,7 @@ public sealed record AeroDriverSettingDto(
   bool TimeBaseApb,
   int HostResponseTimeout,
   int EscortTimeout,
-  int MultiCardTimeout
+  int MultiCardTimeout,
+  int MaxElAlvl,
+  int MaxFloorPerAcr
 );

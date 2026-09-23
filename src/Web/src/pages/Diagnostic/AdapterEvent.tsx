@@ -39,6 +39,7 @@ import Label from "../../components/form/Label";
 import TextArea from "../../components/form/input/TextArea";
 import { UtilityEndpoint } from "../../endpoint/UitlityEndpoint";
 import { CommandLine } from "../../model/Uitlity/AeroCommandDecode";
+import Input from "../../components/form/input/InputField";
 
 // Define header Table
 const headers: string[] = [
@@ -75,6 +76,7 @@ const AdapterEvent = () => {
   const [popup,setPopup] = useState<boolean>(false);
   const [pageSize, setPageSize] = useState<number>(10);
   const [decode,setDecode] = useState<CommandLine[]>([]);
+  const [body,setBody] = useState<string>("");
   const [pagination, setPagination] = useState<PageProp>({
     page: 0,
     pageSize: 0,
@@ -117,6 +119,7 @@ const AdapterEvent = () => {
             // setFormType(FormType.UPDATE);
             // setDeviceDto(item);
             fetchCommandDetail(item.body);
+            setBody(item.body);
             setPopup(true);
           };
 
@@ -208,8 +211,16 @@ const AdapterEvent = () => {
       {
         popup && (
           <Modals header="Command Detail" handleClickWithEvent={modalHandleClickWithEvent} isWide={false} body={
-            <FormSection>
+            <FormSection className="flex flex-col gap-5">
+               <FormField>
+              <Label>Row</Label>
+              <div className={`px-4  text-start text-theme-sm  whitespace-pre-wrap  dark:text-gray-400 text-gray-500`} >
+                {body}
+              </div>
+               </FormField>
               <FormField>
+                
+              <Label>Detail</Label>
                 <div className="h-full w-full" style={{ overflowY: 'auto',  padding: '8px' }}>
                   {decode.map((item, index) => (
                     <div key={index} className={`px-4  text-start text-theme-sm  whitespace-pre-wrap ${item.color.name.toLocaleLowerCase() == "red" ? "dark:text-red-400 text-red-500" : item.color.name.toLocaleLowerCase() == "green" ? "dark:text-green-400 text-green-500" :  "dark:text-gray-400 text-gray-500"}`} >

@@ -2,5 +2,7 @@ export enum DeviceConfigurationStatus{
       sync,
       pending,
       reset,
-      unknown
+      unknown,
+      info,
+      unsync
 }

@@ -3,6 +3,7 @@ using Aero.Application.Helpers;
 using Aero.Application.Metadata.Device;
 using Aero.Domain.Entities;
 using Setting.Contract.DTOs.Setting;
+using SharedKernel.Enums;
 
 namespace Aero.Infrastructure.Helpers;
 
@@ -55,264 +56,288 @@ public static class ReplyMessageHelper
         case (short)SCPStructure.SCPSID_TRAN:
           data.Add(
             new StructureStatusMetadata(
-              "TRAN",
+              1,
               driver.nTransaction,
               str.nRecords,
               str.nRecSize,
-              str.nActive
+              str.nActive,
+              driver.nTransaction == str.nRecords ? DeviceConfigurationStatus.sync :DeviceConfigurationStatus.unsync
             )
           );
           break;
         case (short)SCPStructure.SCPSID_TZ:
           data.Add(
             new StructureStatusMetadata(
-              "TZ",
+              2,
               driver.nTz,
               str.nRecords,
               str.nRecSize,
-              str.nActive
+              str.nActive,
+              driver.nTz + 1 == str.nRecords ? DeviceConfigurationStatus.sync :DeviceConfigurationStatus.unsync
             )
           );
           break;
         case (short)SCPStructure.SCPSID_HOL:
           data.Add(
             new StructureStatusMetadata(
-              "HOL",
+             3,
               driver.nHol,
               str.nRecords,
               str.nRecSize,
-              str.nActive
+              str.nActive,
+              driver.nHol == str.nRecords ? DeviceConfigurationStatus.sync :DeviceConfigurationStatus.unsync
             )
           );
           break;
         case (short)SCPStructure.SCPSID_MSP1:
           data.Add(
             new StructureStatusMetadata(
-              "MSP1",
+              4,
               driver.nMsp1Port,
               str.nRecords,
               str.nRecSize,
-              str.nActive
+              str.nActive,
+              DeviceConfigurationStatus.info
             )
           );
           break;
         case (short)SCPStructure.SCPSID_SIO:
           data.Add(
             new StructureStatusMetadata(
-              "SIO",
+             5,
               driver.nSio,
               str.nRecords,
               str.nRecSize,
-              str.nActive
+              str.nActive,
+              driver.nSio == str.nRecords ? DeviceConfigurationStatus.sync :DeviceConfigurationStatus.unsync
             )
           );
           break;
         case (short)SCPStructure.SCPSID_MP:
           data.Add(
             new StructureStatusMetadata(
-              "MP",
+              6,
               driver.nMp,
               str.nRecords,
               str.nRecSize,
-              str.nActive
+              str.nActive,
+               driver.nMp == str.nRecords ? DeviceConfigurationStatus.sync :DeviceConfigurationStatus.unsync
             )
           );
           break;
         case (short)SCPStructure.SCPSID_CP:
           data.Add(
             new StructureStatusMetadata(
-              "CP",
+              7,
               driver.nCp,
               str.nRecords,
               str.nRecSize,
-              str.nActive
+              str.nActive,
+               driver.nCp == str.nRecords ? DeviceConfigurationStatus.sync :DeviceConfigurationStatus.unsync
             )
           );
           break;
         case (short)SCPStructure.SCPSID_ACR:
           data.Add(
             new StructureStatusMetadata(
-              "ACR",
+              8,
               driver.nAcr,
               str.nRecords,
               str.nRecSize,
-              str.nActive
+              str.nActive,
+              driver.nAcr == str.nRecords ? DeviceConfigurationStatus.sync :DeviceConfigurationStatus.unsync
             )
           );
           break;
         case (short)SCPStructure.SCPSID_ALVL:
           data.Add(
             new StructureStatusMetadata(
-              "ALVL",
+             9,
               driver.nAlvl,
               str.nRecords,
               str.nRecSize,
-              str.nActive
+              str.nActive,
+              driver.nAlvl == str.nRecords ? DeviceConfigurationStatus.sync :DeviceConfigurationStatus.unsync
             )
           );
           break;
         case (short)SCPStructure.SCPSID_TRIG:
           data.Add(
             new StructureStatusMetadata(
-              "TRIG",
+             10,
               driver.nTrgr,
               str.nRecords,
               str.nRecSize,
-              str.nActive
+              str.nActive,
+              driver.nTrgr == str.nRecords ? DeviceConfigurationStatus.sync :DeviceConfigurationStatus.unsync
             )
           );
           break;
         case (short)SCPStructure.SCPSID_PROC:
           data.Add(
             new StructureStatusMetadata(
-              "PROC",
+              11,
               driver.nProc,
               str.nRecords,
               str.nRecSize,
-              str.nActive
+              str.nActive,
+              driver.nProc == str.nRecords ? DeviceConfigurationStatus.sync :DeviceConfigurationStatus.unsync
             )
           );
           break;
         case (short)SCPStructure.SCPSID_MPG:
           data.Add(
             new StructureStatusMetadata(
-              "MPG",
+              12,
               driver.nMpg,
               str.nRecords,
               str.nRecSize,
-              str.nActive
+              str.nActive,
+              driver.nMpg == str.nRecords ? DeviceConfigurationStatus.sync :DeviceConfigurationStatus.unsync
             )
           );
           break;
         case (short)SCPStructure.SCPSID_AREA:
           data.Add(
             new StructureStatusMetadata(
-              "AREA",
-              0,
+              13,
+              128,
               str.nRecords,
               str.nRecSize,
-              str.nActive
+              str.nActive,
+              DeviceConfigurationStatus.info
             )
           );
           break;
         case (short)SCPStructure.SCPSID_EAL:
           data.Add(
             new StructureStatusMetadata(
-              "EAL",
-              0,
+              14,
+              driver.MaxElAlvl,
               str.nRecords,
               str.nRecSize,
-              str.nActive
+              str.nActive,
+              driver.MaxElAlvl == str.nRecords ? DeviceConfigurationStatus.sync :DeviceConfigurationStatus.unsync
             )
           );
           break;
         case (short)SCPStructure.SCPSID_CRDB:
           data.Add(
             new StructureStatusMetadata(
-              "CRDB",
+              15,
               driver.nCards,
               str.nRecords,
               str.nRecSize,
-              str.nActive
+              str.nActive,
+              DeviceConfigurationStatus.info
             )
           );
           break;
         case (short)SCPStructure.SCPSID_FLASH:
           data.Add(
             new StructureStatusMetadata(
-              "FLASH",
+              20,
               0,
               str.nRecords,
               str.nRecSize,
-              str.nActive
+              str.nActive,
+              DeviceConfigurationStatus.info
             )
           );
           break;
         case (short)SCPStructure.SCPSID_BSQN:
           data.Add(
             new StructureStatusMetadata(
-              "BSQN",
+              21,
               0,
               str.nRecords,
               str.nRecSize,
-              str.nActive
+              str.nActive,
+              DeviceConfigurationStatus.info
             )
           );
           break;
         case (short)SCPStructure.SCPSID_SAVE_STAT:
           data.Add(
             new StructureStatusMetadata(
-              "SAVE_STAT",
+             22,
               0,
               str.nRecords,
               str.nRecSize,
-              str.nActive
+              str.nActive,
+              DeviceConfigurationStatus.info
             )
           );
           break;
         case (short)SCPStructure.SCPSID_MAB1_FREE:
           data.Add(
             new StructureStatusMetadata(
-              "HOST_CON_MEM",
+              23,
               0,
               str.nRecords,
               str.nRecSize,
-              str.nActive
+              str.nActive,
+              DeviceConfigurationStatus.info
             )
           );
           break;
         case (short)SCPStructure.SCPSID_MAB2_FREE:
           data.Add(
             new StructureStatusMetadata(
-              "CARD_MEM",
+              24,
               0,
               str.nRecords,
               str.nRecSize,
-              str.nActive
+              str.nActive,
+              DeviceConfigurationStatus.info
             )
           );
           break;
         case (short)SCPStructure.SCPSID_ARQ_BUFFER:
           data.Add(
             new StructureStatusMetadata(
-              "ARQ_BUFFER",
+             26,
               0,
               str.nRecords,
               str.nRecSize,
-              str.nActive
+              str.nActive,
+              DeviceConfigurationStatus.info
             )
           );
           break;
         case (short)SCPStructure.SCPSID_PART_FREE_CNT:
           data.Add(
             new StructureStatusMetadata(
-              "PART_FREE_CNT",
+              27,
               0,
               str.nRecords,
               str.nRecSize,
-              str.nActive
+              str.nActive,
+              DeviceConfigurationStatus.info
             )
           );
           break;
         case (short)SCPStructure.SCPSID_LOGIN_STANDARD:
           data.Add(
             new StructureStatusMetadata(
-              "LOGIN",
+             33,
               0,
               str.nRecords,
               str.nRecSize,
-              str.nActive
+              str.nActive,
+              DeviceConfigurationStatus.info
             )
           );
           break;
         case (short)SCPStructure.SCPSID_FILE_SYSTEM:
           data.Add(
             new StructureStatusMetadata(
-              "FILE",
+             35,
               0,
               str.nRecords,
               str.nRecSize,
-              str.nActive
+              str.nActive,
+              DeviceConfigurationStatus.info
             )
           );
           break;

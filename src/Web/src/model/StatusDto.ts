@@ -1,7 +1,9 @@
+import { Status } from "../enum/Status";
+
 export interface StatusDto {
   guid: string;
-  status: number | string;
-  tamper: number | string;
-  ac: number | string;
-  batt: number | string;
+  status: Status; 
+  tamper: Status;
+  ac: Status;
+  batt: Status;
 }

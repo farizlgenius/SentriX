@@ -27,7 +27,8 @@ public sealed class Event : BaseDomain
     string componentName,
     string eventCode,
     string remarks,
-    string captureImageName
+    string captureImageName,
+    int locationId=0
   ) : base(Guid.NewGuid())
   {
     Timestampe = timeStamp;
@@ -40,5 +41,7 @@ public sealed class Event : BaseDomain
     EventCode = eventCode;
     Remarks = remarks;
     CaptureImageName = captureImageName;
+    if(locationId != 0)
+      LocationId = locationId;
   }
 }

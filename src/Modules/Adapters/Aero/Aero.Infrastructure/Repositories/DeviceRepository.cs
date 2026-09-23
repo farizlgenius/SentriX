@@ -1,6 +1,7 @@
 using Aero.Application.Constants;
 using Aero.Application.Enums;
 using Aero.Application.Interfaces;
+using Aero.Application.Metadata.Device;
 using Aero.Domain.Entities;
 using Aero.Infrastructure.Helpers;
 using Core.Contract.Commands.Device;
@@ -204,7 +205,69 @@ public sealed class DeviceRepostory(
 
       public CommandResponse ElevatorAccessLevelSpecification(string Mac, short ScpId, short MaxEAlvl, short MaxFloor)
       {
-            throw new NotImplementedException();
+            // CC_ELALVLSPC c = new CC_ELALVLSPC();
+            // c.scp_number = ScpId;
+            // c.max_elalvl = MaxEAlvl;
+            // c.max_floors = MaxFloor;
+            // var result = repo.Send((short)enCfgCmnd.enCcE, c);
+
+            // CC_ELALVLSPC c = new CC_ELALVLSPC();
+            // c.scp_number = ScpId;
+            // c.read_type = (short)Type;
+            // string comm = $"501 {spec.scp_id} {spec.max_ealvl} {spec.max_floors}";
+            // var result = SendASCIICommandAsync(comm);
+            // if (result)
+            // {
+            //       logger.LogInformation(MessageHelper.CommandSuccess(CommandType.ElevatorAccessLevelSpecification, ScpId));
+            //       await writer.AddWriterAuditAsync(ScpId, Mac, CommandType.ElevatorAccessLevelSpecification, SCPDLL.scpGetTagLastPosted(ScpId), comm);
+            //       return true;
+
+            // }
+            // else
+            // {
+            //       logger.LogError(MessageHelper.CommandUnsuccess(CommandType.ElevatorAccessLevelSpecification, ScpId));
+            //       return false;
+
+            // }
+            var result = SCPDLL.scpConfigCommand($"501 0 {ScpId} {MaxEAlvl} {MaxFloor}");
+            if (result)
+            {
+                  logger.LogInformation(LogMessageHelper.CommandSuccess(Command.ElevatorAccessLevelSpecification, ScpId));
+
+                  return new CommandResponse(
+                        Mac,
+                        ScpId,
+                        Command.ReadsConfiguration,
+                        SCPDLL.scpGetTagLastPosted(ScpId),
+                        DateTime.UtcNow,
+                        null,
+                       $"501 0 {ScpId} {MaxEAlvl} {MaxFloor}",
+                        CommandStatus.PENDING,
+                        string.Empty,
+                        Vendor.aero,
+                        true
+                        );
+
+            }
+            else
+            {
+                  logger.LogError(LogMessageHelper.CommandUnsuccess(Command.ElevatorAccessLevelSpecification, ScpId));
+                  return new CommandResponse(
+                        Mac,
+                       ScpId,
+                       Command.ReadsConfiguration,
+                       -1,
+                       DateTime.UtcNow,
+                       DateTime.UtcNow,
+                      $"501 0 {ScpId} {MaxEAlvl} {MaxFloor}",
+                       CommandStatus.FAILED,
+                       string.Empty,
+                       Vendor.aero,
+                       false
+                       );
+
+            }
+
       }
 
       public CommandResponse ReadsConfiguration(string Mac, short ScpId, WebConfigReadType Type)
@@ -561,113 +624,115 @@ public sealed class DeviceRepostory(
             return SCPDLL.scpCheckOnline(ScpId) == 1 ? Status.Online : Status.Offline;
       }
 
-      public async Task VerifyMemoryAllocateAsync(string Mac,AeroDriverSettingDto spec, ReplyMessage.SCPReplyStrStatus status,CancellationToken ct= default)
+      public async Task VerifyMemoryAllocateAsync(string mac,List<StructureStatusMetadata> data,CancellationToken ct= default)
       {
             //
             bool isVerify = true;
 
-            // Switch
-            foreach (var str in status.sStrSpec)
-            {
-                  switch (str.nStrType)
-                  {
-                        case (short)SCPStructure.SCPSID_TRAN: // 1 Transactions
-                              isVerify = spec.nTransaction > str.nRecords;
-                              break;
+            // // Switch
+            // foreach (var str in status.sStrSpec)
+            // {
+            //       switch (str.nStrType)
+            //       {
+            //             case (short)SCPStructure.SCPSID_TRAN: // 1 Transactions
+            //                   isVerify = spec.nTransaction == str.nRecords;
+            //                   break;
 
-                        case (short)SCPStructure.SCPSID_TZ: // 2 Time zones
-                              isVerify = spec.nTz + 1 == str.nRecords;
-                              break;
+            //             case (short)SCPStructure.SCPSID_TZ: // 2 Time zones
+            //                   isVerify = spec.nTz + 1 == str.nRecords;
+            //                   break;
 
-                        case (short)SCPStructure.SCPSID_HOL: // 3 Holidays
-                              isVerify = spec.nHol == str.nRecords;
-                              break;
+            //             case (short)SCPStructure.SCPSID_HOL: // 3 Holidays
+            //                   isVerify = spec.nHol == str.nRecords;
+            //                   break;
 
-                        case (short)SCPStructure.SCPSID_MSP1: // 4 Msp1 ports (SIO drivers)
-                              // isVerify = spec.n_msp1_port == str.nRecords;
-                              break;
+            //             case (short)SCPStructure.SCPSID_MSP1: // 4 Msp1 ports (SIO drivers)
+            //                   // isVerify = spec.n_msp1_port == str.nRecords;
+            //                   break;
 
-                        case (short)SCPStructure.SCPSID_SIO: // 5 SIOs
-                              isVerify = spec.nSio == str.nRecords;
-                              break;
+            //             case (short)SCPStructure.SCPSID_SIO: // 5 SIOs
+            //                   isVerify = spec.nSio == str.nRecords;
+            //                   break;
 
-                        case (short)SCPStructure.SCPSID_MP: // 6 Monitor points
-                              isVerify = spec.nMp == str.nRecords;
-                              break;
+            //             case (short)SCPStructure.SCPSID_MP: // 6 Monitor points
+            //                   isVerify = spec.nMp == str.nRecords;
+            //                   break;
 
-                        case (short)SCPStructure.SCPSID_CP: // 7 Control points
-                              isVerify = spec.nCp == str.nRecords;
+            //             case (short)SCPStructure.SCPSID_CP: // 7 Control points
+            //                   isVerify = spec.nCp == str.nRecords;
 
-                              break;
+            //                   break;
 
-                        case (short)SCPStructure.SCPSID_ACR: // 8 Access control readers
-                              isVerify = spec.nAcr == str.nRecords;
-                              break;
+            //             case (short)SCPStructure.SCPSID_ACR: // 8 Access control readers
+            //                   isVerify = spec.nAcr == str.nRecords;
+            //                   break;
 
-                        case (short)SCPStructure.SCPSID_ALVL: // 9 Access levels
-                              isVerify = spec.nAlvl == str.nRecords;
-                              break;
+            //             case (short)SCPStructure.SCPSID_ALVL: // 9 Access levels
+            //                   isVerify = spec.nAlvl == str.nRecords;
+            //                   break;
 
-                        case (short)SCPStructure.SCPSID_TRIG: // 10 Triggers
-                              isVerify = spec.nTrgr == str.nRecords;
-                              break;
+            //             case (short)SCPStructure.SCPSID_TRIG: // 10 Triggers
+            //                   isVerify = spec.nTrgr == str.nRecords;
+            //                   break;
 
-                        case (short)SCPStructure.SCPSID_PROC: // 11 Procedures
-                              isVerify = spec.nProc == str.nRecords;
-                              break;
+            //             case (short)SCPStructure.SCPSID_PROC: // 11 Procedures
+            //                   isVerify = spec.nProc == str.nRecords;
+            //                   break;
 
-                        case (short)SCPStructure.SCPSID_MPG: // 12 Monitor point groups
-                              isVerify = spec.nMpg == str.nRecords;
-                              break;
+            //             case (short)SCPStructure.SCPSID_MPG: // 12 Monitor point groups
+            //                   isVerify = spec.nMpg == str.nRecords;
+            //                   break;
 
-                        case (short)SCPStructure.SCPSID_AREA: // 13 Access areas
-                              // isVerify = spec.n_area == str.nRecords;
-                              break;
+            //             case (short)SCPStructure.SCPSID_AREA: // 13 Access areas
+            //                   //isVerify = spec.AreaBaseApb == str.nRecords;
+            //                   break;
 
-                        case (short)SCPStructure.SCPSID_EAL: // 14 Elevator access levels
-                              // isVerify = elev.MaxElalvl == str.nRecords;
-                              break;
+            //             case (short)SCPStructure.SCPSID_EAL: // 14 Elevator access levels
+            //                   isVerify = spec.MaxElAlvl == str.nRecords;
+            //                   break;
 
-                        case (short)SCPStructure.SCPSID_CRDB: // 15 Cardholder database
-                              // isVerify = db.nCards == str.nRecords;
-                              break;
+            //             case (short)SCPStructure.SCPSID_CRDB: // 15 Cardholder database
+            //                   // isVerify = db.nCards == str.nRecords;
+            //                   break;
 
-                        case (short)SCPStructure.SCPSID_FLASH: // 20 FLASH specs
-                              break;
+            //             case (short)SCPStructure.SCPSID_FLASH: // 20 FLASH specs
+            //                   break;
 
-                        case (short)SCPStructure.SCPSID_BSQN: // 21 Build sequence number
-                              break;
+            //             case (short)SCPStructure.SCPSID_BSQN: // 21 Build sequence number
+            //                   break;
 
-                        case (short)SCPStructure.SCPSID_SAVE_STAT: // 22 Flash save status
-                              break;
+            //             case (short)SCPStructure.SCPSID_SAVE_STAT: // 22 Flash save status
+            //                   break;
 
-                        case (short)SCPStructure.SCPSID_MAB1_FREE: // 23 Memory alloc block 1 free
-                              break;
+            //             case (short)SCPStructure.SCPSID_MAB1_FREE: // 23 Memory alloc block 1 free
+            //                   break;
 
-                        case (short)SCPStructure.SCPSID_MAB2_FREE: // 24 Memory alloc block 2 free
-                              break;
+            //             case (short)SCPStructure.SCPSID_MAB2_FREE: // 24 Memory alloc block 2 free
+            //                   break;
 
-                        case (short)SCPStructure.SCPSID_ARQ_BUFFER: // 26 Access request buffers
-                              break;
+            //             case (short)SCPStructure.SCPSID_ARQ_BUFFER: // 26 Access request buffers
+            //                   break;
 
-                        case (short)SCPStructure.SCPSID_PART_FREE_CNT: // 27 Partition memory free info
-                              break;
+            //             case (short)SCPStructure.SCPSID_PART_FREE_CNT: // 27 Partition memory free info
+            //                   break;
                         
-                        case (short)SCPStructure.SCPSID_LOGIN_STANDARD: // 27 Partition memory free info
-                              break;
+            //             case (short)SCPStructure.SCPSID_LOGIN_STANDARD: // 27 Partition memory free info
+            //                   break;
 
-                        case (short)SCPStructure.SCPSID_FILE_SYSTEM: // 27 Partition memory free info
-                              break;
+            //             case (short)SCPStructure.SCPSID_FILE_SYSTEM: // 27 Partition memory free info
+            //                   break;
 
-                        default:
-                              break;
-                  }
+            //             default:
+            //                   break;
+            //       }
 
-                  if (!isVerify)
-                        break;
-            }
+            //       if (!isVerify)
+            //             break;
+            // }
 
-            await bus.SendAsync(new ConfigurationStatusCommand(Mac,isVerify));
+            isVerify = !data.Any(x => x.Status == DeviceConfigurationStatus.unsync);
+
+            await bus.SendAsync(new ConfigurationStatusCommand(mac,isVerify));
 
       }
 }

@@ -138,6 +138,17 @@ public sealed class IdReportService(
       );
 
       await bus.SendAsync(new AdapterEventCommand(res));
+      
+
+      res = repo.ElevatorAccessLevelSpecification(
+        mac,
+        (short)externalId,
+        (short)scpDevice.MaxElAlvl,
+        (short)scpDevice.MaxFloorPerAcr
+      );
+
+      await bus.SendAsync(new AdapterEventCommand(res));
+
 
       res = repo.TimeSet(
         mac,
@@ -145,14 +156,7 @@ public sealed class IdReportService(
 
       await bus.SendAsync(new AdapterEventCommand(res));
 
-      // Transaction index 
-      res = repo.SetTransactionLogIndex(
-            mac,
-            (short)externalId,
-            true
-            );
-
-      await bus.SendAsync(new AdapterEventCommand(res));
+      
 
       res = repo.DriverConfiguration(
             mac,
@@ -188,6 +192,15 @@ public sealed class IdReportService(
       await bus.SendAsync(new AdapterEventCommand(res));
 
       // Call memory allocate to check
+
+      // Transaction index 
+      res = repo.SetTransactionLogIndex(
+            mac,
+            (short)externalId,
+            true
+            );
+
+      await bus.SendAsync(new AdapterEventCommand(res));
 
       res = repo.ScpStructureStatusRead(
             mac,

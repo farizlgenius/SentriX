@@ -51,6 +51,7 @@ import Modals from "../UiElements/Modals";
 import React from "react";
 import Button from "../../components/ui/button/Button";
 import { DeviceConfigurationStatus } from "../../enum/DeviceConfigurationStatus";
+import { Status } from "../../enum/Status";
 
 const HEADER = [
   "Type",
@@ -154,11 +155,10 @@ const Device = () => {
 
       const newStatuses = res.data.data.items.map((item: DeviceDto) => ({
         guid: item.guid,
-        mac: item.mac,
-        status: false,
-        tamper: -1,
-        ac: -1,
-        batt: -1,
+        status: Status.Unknown,
+        tamper: Status.Unknown,
+        ac: Status.Unknown,
+        batt: Status.Unknown,
       }));
 
       const newTranStatuses = res.data.data.items.map((item: DeviceDto) => ({
@@ -404,13 +404,13 @@ const Device = () => {
         setIdReports(reports);
       });
 
-      connection.on(SignalRTopic.EVENT_STATUS, (status: EventStatusDto) => {
-        setTranStatus((prev) =>
+      connection.on(SignalRTopic.DEVICE_STATUS, (status: StatusDto) => {
+        setStatus((prev) =>
           prev.map((item) =>
-            item.deviceGuid === status.deviceGuid
+            item.guid === status.guid
               ? {
                 ...item,
-                isEnable: status.isEnable,
+                status: status.status,
               }
               : item,
           ),
@@ -424,7 +424,7 @@ const Device = () => {
       }
 
       try {
-        await SignalRService.joinGroup(SignalRTopic.EVENT_STATUS);
+        await SignalRService.joinGroup(SignalRTopic.DEVICE_STATUS);
       } catch (err) {
         console.error("Subscribe error:", err);
       }
@@ -490,12 +490,12 @@ const Device = () => {
           size="sm"
           color={
             statusDto.find((statusItem) => statusItem.guid === item.guid)
-              ?.status
+              ?.status == Status.Online
               ? "success"
               : "error"
           }
         >
-          {statusDto.find((statusItem) => statusItem.guid === item.guid)?.status
+          {statusDto.find((statusItem) => statusItem.guid === item.guid)?.status == Status.Online
             ? "Online"
             : "Offline"}
         </Badge>

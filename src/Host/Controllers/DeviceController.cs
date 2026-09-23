@@ -38,12 +38,21 @@ namespace Host.Controllers
       return Ok(res);
     }
 
+    [HttpGet("event/{guid}")]
+    public async Task<IActionResult> GetEventStatusByGuidAsync(Guid guid)
+    {
+      var res = await device.GetEventStatusByGuidAsync(guid);
+      return Ok(res);
+    }
+
     [HttpPost("status")]
     public async Task<IActionResult> GetStatusesAsync([FromBody] IEnumerable<Guid> guids)
     {
       var res = await device.GetStatusesAsync(guids);
       return Ok(res);
     }
+
+    
 
 
     [HttpPost]

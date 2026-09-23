@@ -260,7 +260,7 @@ public sealed class ReplyWorker(Channel<ReplyMessage> queue, ILogger<ReplyWorker
                 Vendor.aero,
                 locationGuid
               );
-
+              await @event.CreateAsync(eve,ct);
               var notifier = scope.ServiceProvider.GetRequiredService<INotifier>();
               await notifier.TriggerToTopic(NotifierTopic.EVENT,ct);
               break;
@@ -361,7 +361,7 @@ public sealed class ReplyWorker(Channel<ReplyMessage> queue, ILogger<ReplyWorker
               var spec = await bus.QueryAsync(new AeroDriverSettingQuery(),ct);
               var data = ReplyMessageHelper.BuildStructureStatus(message.str_sts,spec);
               await noti.SendToTopic(DeviceNotifierTopic.CONFIG, data, ct);
-              await repo.VerifyMemoryAllocateAsync(mac,spec,message.str_sts,ct);
+              await repo.VerifyMemoryAllocateAsync(mac,data,ct);
               break;
             case (int)enSCPReplyType.enSCPReplyCmndStatus:
                   @event = scope.ServiceProvider.GetRequiredService<Core.Contract.Interfaces.IEvent>();

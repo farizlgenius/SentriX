@@ -79,14 +79,7 @@ export const AeroModuleDetailForm: React.FC<
 
   return (
     <>
-      <FormSection
-        overall="Modules Detail"
-        title="Modules Information"
-        description="Module detail and information that connected to device."
-      >
-        <>
-          <div className="rounded-2xl border border-[var(--app-panel-border)] bg-[var(--app-panel-bg)]">
-            <Table className="border-separate border-spacing-y-4 overflow-hidden rounded-2xl border border-[var(--app-panel-border)] ">
+     <Table className="border-separate border-spacing-y-4 overflow-hidden rounded-2xl border border-[var(--app-panel-border)] bg-[var(--app-panel-bg)] ">
               <TableHeader className="h-10 items-center gap-3 bg-[var(--app-panel-muted)] px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.12em] text-gray-400">
                 <TableRow>
                   <TableCell className="text-center">Type</TableCell>
@@ -200,9 +193,6 @@ export const AeroModuleDetailForm: React.FC<
                 ))}
               </TableBody>
             </Table>
-          </div>
-        </>
-      </FormSection>
     </>
   );
 };

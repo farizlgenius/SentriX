@@ -1,7 +1,7 @@
-import { VerifyHardwareDeviceConfigDto } from "./VerifyHardwareDeviceConfigDto";
+import { DeviceComponentConfigurationDto } from "./DeviceComponentConfigurationDto";
 
 export interface ScpConfiguration{
       mac:string;
       locationId:number;
-      configurations:VerifyHardwareDeviceConfigDto[];
+      configurations:DeviceComponentConfigurationDto[];
 }

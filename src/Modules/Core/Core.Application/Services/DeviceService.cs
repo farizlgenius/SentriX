@@ -224,7 +224,12 @@ public sealed class DeviceService(
     return adapter.GetAdapter(device.Vendor).Device.GetConfigurationAsync(device.Mac, device.Ip, ct);
   }
 
-  public async Task<Pagination<DeviceDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
+      public Task<bool> GetEventStatusByGuidAsync(Guid guid, CancellationToken ct = default)
+      {
+            throw new NotImplementedException();
+      }
+
+      public async Task<Pagination<DeviceDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
   {
     return await repo.GetPaginationAsync(param, ct);
   }
@@ -243,7 +248,7 @@ public sealed class DeviceService(
     );
   }
 
-  public Task<IEnumerable<StatusDto>> GetStatusesAsync(IEnumerable<Guid> guids, CancellationToken ct = default)
+  public async Task<IEnumerable<StatusDto>> GetStatusesAsync(IEnumerable<Guid> guids, CancellationToken ct = default)
   {
     throw new NotImplementedException();
   }

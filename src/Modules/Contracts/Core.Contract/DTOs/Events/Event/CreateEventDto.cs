@@ -14,5 +14,5 @@ public sealed record CreateEventDto(
   string Remarks,
   string CaptureImageName,
   Vendor Vendor,
-  Guid? LocationGuid
+  Guid LocationGuid
 );
