@@ -31,7 +31,7 @@ public sealed class ReplyWorker(Channel<ReplyMessage> queue, ILogger<ReplyWorker
   protected async override Task ExecuteAsync(CancellationToken ct)
   {
 
-    Console.WriteLine("Background worker started.");
+    Console.WriteLine("Aero Background worker started.");
     while (!ct.IsCancellationRequested)
     {
 
@@ -420,7 +420,8 @@ public sealed class ReplyWorker(Channel<ReplyMessage> queue, ILogger<ReplyWorker
           ///
           var @event = scope.ServiceProvider.GetRequiredService<Core.Contract.Interfaces.IEvent>();
           await @event.InsertExceptionEventAsync(
-            "Aero Background Work",
+            string.Empty,
+            "Background Work",
             ex.Message,
             ex.InnerException is null ? string.Empty : ex.InnerException.ToString(),
             ex.StackTrace is null ? string.Empty : ex.StackTrace

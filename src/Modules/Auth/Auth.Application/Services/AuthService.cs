@@ -1,10 +1,13 @@
 using System;
+using System.Threading.Channels;
 using Auth.Application.Interfaces;
 using Auth.Contract.DTOs;
 using Auth.Contract.Interfaces;
 using Auth.Domain.Enums;
 using Cache.Contract.Interfaces;
+using Core.Contract.DTOs.Events.Audit;
 using Core.Contract.Queries;
+using SharedKernel.Constants;
 using SharedKernel.Domain;
 using SharedKernel.Exceptions;
 using SharedKernel.Helpers;
@@ -12,7 +15,7 @@ using SharedKernel.Messaging;
 
 namespace Auth.Application.Behaviors;
 
-public sealed class AuthService(IJwt jwt, ICache redis, IRefreshTokenAuditRepository repo, IMessageBus bus) : IAuth
+public sealed class AuthService(IJwt jwt, ICache redis,Channel<AuditTrailInsert> channel,IRefreshTokenAuditRepository repo, IMessageBus bus) : IAuth
 {
   public async Task<MeDto> GetMeByUsernameAndRoleGuidAsync(string username, Guid roleGuid)
   {
@@ -22,7 +25,7 @@ public sealed class AuthService(IJwt jwt, ICache redis, IRefreshTokenAuditReposi
     return new MeDto(oper.Guid, oper.Username, locations, permissions);
   }
 
-  public async Task<AccessTokenDto> LoginAsync(LoginDto login)
+  public async Task<AccessTokenDto> LoginAsync(LoginDto login,string ip)
   {
     //Check username is empty
     if (string.IsNullOrEmpty(login.Username))
@@ -49,6 +52,18 @@ public sealed class AuthService(IJwt jwt, ICache redis, IRefreshTokenAuditReposi
     // Generate token (for demonstration, using a simple string)
     var token = await jwt.GenerateTokenAsync(oper);
 
+    var audit = new AuditTrailInsert(
+      EntityType.Auth,
+      SharedKernel.Enums.AuditAction.Login,
+      login.Username,
+      ip,
+      null,
+      null,
+      null,
+      0
+    );
+    await channel.Writer.WriteAsync(audit);
+
     return new AccessTokenDto(
       token.AccessToken,
       token.RefreshToken,
@@ -57,7 +72,7 @@ public sealed class AuthService(IJwt jwt, ICache redis, IRefreshTokenAuditReposi
       );
   }
 
-  public async Task<string> LogoutAsync(string refreshToken)
+  public async Task<string> LogoutAsync(string refreshToken,string username,string ip)
   {
     var hashed = TokenHasher.Hash(refreshToken);
     var refresh = await jwt.GetRefreshTokenAsync(hashed);
@@ -73,6 +88,18 @@ public sealed class AuthService(IJwt jwt, ICache redis, IRefreshTokenAuditReposi
       throw new BadRequestException(MessageHelper.Auth.RefreshTokenInvalid);
 
     await jwt.RevokeTokenAsync(refreshToken);
+
+    var audit = new AuditTrailInsert(
+      EntityType.Auth,
+      SharedKernel.Enums.AuditAction.Logout,
+      username,
+      ip,
+      null,
+      null,
+      null,
+      0
+    );
+    await channel.Writer.WriteAsync(audit);
 
     return "Logout success";
 

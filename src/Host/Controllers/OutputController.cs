@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Core.Contract.DTOs.Output;
 using Core.Contract.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -33,6 +34,8 @@ namespace Host.Controllers
     [HttpPost]
     public async Task<IActionResult> CreateAsync([FromBody] CreateOutputDto dto)
     {
+      
+
       var res = await output.CreateAsync(dto);
       return Ok(res);
     }
@@ -41,6 +44,8 @@ namespace Host.Controllers
     [HttpPut]
     public async Task<IActionResult> UpdateAsync([FromBody] UpdateOutputDto dto)
     {
+      
+
       var res = await output.UpdateAsync(dto);
       return Ok(res);
     }
@@ -48,6 +53,8 @@ namespace Host.Controllers
     [HttpDelete("{guid}")]
     public async Task<IActionResult> DeleteByGuidAsync(Guid guid)
     {
+      
+
       var res = await output.DeleteByGuidAsync(guid);
       return Ok(res);
     }
@@ -55,6 +62,8 @@ namespace Host.Controllers
     [HttpDelete("list")]
     public async Task<IActionResult> DeleteRangeAsync([FromBody] IEnumerable<Guid> guids)
     {
+      
+
       var res = await output.DeleteListAsync(guids);
       return Ok(res);
     }
@@ -62,6 +71,8 @@ namespace Host.Controllers
     [HttpPatch("enable/{guid}")]
     public async Task<IActionResult> EnabledByGuidAsync(Guid guid)
     {
+      
+
       var res = await output.EnabledAsync(guid);
       return Ok(res);
     }
@@ -69,6 +80,8 @@ namespace Host.Controllers
     [HttpPatch("disable/{guid}")]
     public async Task<IActionResult> DisabledByGuidAsync(Guid guid)
     {
+      
+
       var res = await output.DisabledAsync(guid);
       return Ok(res);
     }

@@ -51,6 +51,7 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
       public DbSet<Event> Events { get; set; }
       public DbSet<AdapterEvent> AdapterEvents { get; set; }
       public DbSet<ExceptionEvent> ExceptionEvent {get ;set;}
+      public DbSet<AuditTrail> AuditTrails {get; set;}
       
       protected override void OnModelCreating(ModelBuilder modelBuilder)
       {
@@ -143,6 +144,10 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
 
             modelBuilder.Entity<Event>()
             .Property(o => o.vendor)
+            .HasConversion<string>();
+
+            modelBuilder.Entity<AuditTrail>()
+            .Property(o => o.action)
             .HasConversion<string>();
 
             modelBuilder.Entity<AdapterEvent>(b =>
@@ -478,6 +483,20 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                         }
                   ).IsUnique();
 
+            modelBuilder.Entity<AuditTrail>()
+                  .HasIndex(
+                        x => new
+                        {
+                              x.guid,
+                              x.id,
+                              x.created_at,
+                              x.location_id,
+                              x.action,
+                              x.username,
+                              x.entity
+                        }
+                  ).IsUnique();
+
             // Configure relationships 
 
             // Location
@@ -565,6 +584,7 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   .WithOne(x => x.location)
                   .HasForeignKey(x => x.location_id)
                   .OnDelete(DeleteBehavior.SetNull);
+
 
 
             modelBuilder.Entity<UserLocation>()
@@ -844,6 +864,14 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   .WithMany(x => x.group_components)
                   .HasForeignKey(x => x.timezone_id)
                   .OnDelete(DeleteBehavior.Cascade);
+
+            // Audit
+            modelBuilder.Entity<AuditTrail>()
+                  .HasOne(x => x.location)
+                  .WithMany(x => x.audit_trails)
+                  .IsRequired(false)
+                  .HasForeignKey(x => x.location_id)
+                  .OnDelete(DeleteBehavior.SetNull);
 
 
 

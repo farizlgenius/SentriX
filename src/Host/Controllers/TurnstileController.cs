@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Core.Contract.DTOs.Turnstile;
 using Core.Contract.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -33,6 +34,8 @@ public class TurnstileController(ITurnstile turnstile) : ControllerBase
   [HttpPost]
   public async Task<IActionResult> CreateAsync([FromBody] CreateTurnstileDto dto)
   {
+    
+        
     var res = await turnstile.CreateAsync(dto);
     return Ok(res);
   }
@@ -40,6 +43,8 @@ public class TurnstileController(ITurnstile turnstile) : ControllerBase
   [HttpDelete("{guid}")]
   public async Task<IActionResult> DeleteByGuidAsync(Guid guid)
   {
+    
+
     var res = await turnstile.DeleteByGuidAsync(guid);
     return Ok(res);
   }
@@ -47,6 +52,8 @@ public class TurnstileController(ITurnstile turnstile) : ControllerBase
   [HttpDelete("list")]
   public async Task<IActionResult> DeleteListAsync([FromBody] IEnumerable<Guid> guids)
   {
+    
+
     var res = await turnstile.DeleteListAsync(guids);
     return Ok(res);
   }
@@ -54,6 +61,8 @@ public class TurnstileController(ITurnstile turnstile) : ControllerBase
   [HttpPut]
   public async Task<IActionResult> UpdateAsync([FromBody] UpdateTurnstileDto dto)
   {
+    
+
     var res = await turnstile.UpdateAsync(dto);
     return Ok(res);
   }
@@ -61,6 +70,8 @@ public class TurnstileController(ITurnstile turnstile) : ControllerBase
   [HttpPatch("enable/{guid}")]
   public async Task<IActionResult> EnabledAsync(Guid guid)
   {
+    
+
     var res = await turnstile.EnabledAsync(guid);
     return Ok(res);
   }
@@ -68,6 +79,8 @@ public class TurnstileController(ITurnstile turnstile) : ControllerBase
   [HttpPatch("disable/{guid}")]
   public async Task<IActionResult> DisabledAsync(Guid guid)
   {
+    
+
     var res = await turnstile.DisabledAsync(guid);
     return Ok(res);
   }

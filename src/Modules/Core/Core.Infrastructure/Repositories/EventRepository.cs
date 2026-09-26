@@ -1,5 +1,6 @@
 using Core.Application.Interfaces;
 using Core.Contract.DTOs.Events.AdapterEvent;
+using Core.Contract.DTOs.Events.Audit;
 using Core.Contract.DTOs.Events.Event;
 using Core.Contract.DTOs.Events.ExceptionEvent;
 using Core.Contract.Interfaces;
@@ -31,10 +32,22 @@ new AdapterEvent(@event)
     await context.SaveChangesAsync(ct);
   }
 
-  public async Task AddExceptionAsync(string path, string exception, string innerException, string stackTrace, CancellationToken ct = default)
+      public async Task AddAuditAsync(Domain.Entities.AuditTrail audit, CancellationToken ct = default)
+      {
+        
+            await context.AuditTrails.AddAsync(
+              new AuditTrail(audit),
+              ct
+            );
+
+            await context.SaveChangesAsync(ct);
+      }
+
+      public async Task AddExceptionAsync(string method,string path, string exception, string innerException, string stackTrace, CancellationToken ct = default)
   {
     await context.ExceptionEvent.AddAsync(
       new Persistences.Entities.ExceptionEvent(
+        method,
         path,
         exception,
         innerException,
@@ -166,7 +179,84 @@ new AdapterEvent(@event)
     throw new NotImplementedException();
   }
 
-  public async Task<IEnumerable<EventDto>> GetByLocationAsync(int locationId, CancellationToken ct = default)
+      public async Task<Pagination<AuditTrailDto>> GetAuditPaginationAsync(PaginationParams param, CancellationToken ct = default)
+      {
+            var query = context.AuditTrails
+                  .AsNoTracking()
+                  .Where(x => x.location == null || x.location.guid == param.locationGuid)
+                  .AsQueryable();
+
+    if (!string.IsNullOrWhiteSpace(param.search))
+    {
+      if (!string.IsNullOrWhiteSpace(param.search))
+      {
+        var search = param.search.Trim();
+
+        if (context.Database.IsNpgsql())
+        {
+          var pattern = $"%{search}%";
+
+          query = query.Where(x =>
+              EF.Functions.ILike(x.entity, pattern) ||
+              EF.Functions.ILike(x.action.ToString(), pattern) ||
+              EF.Functions.ILike(x.username, pattern) ||
+              EF.Functions.ILike(x.ip, pattern) 
+          );
+        }
+        else // SQL Server
+        {
+          query = query.Where(x =>
+              x.entity.Contains(search) ||
+              x.action.ToString().Contains(search) ||
+              x.username.Contains(search) ||
+              x.ip.Contains(search) 
+          );
+        }
+
+      }
+    }
+
+
+    if (param.startDate != null)
+    {
+      var startUtc = DateTime.SpecifyKind(param.startDate.Value, DateTimeKind.Utc);
+      query = query.Where(x => x.created_at >= startUtc);
+    }
+
+    if (param.endDate != null)
+    {
+      var endUtc = DateTime.SpecifyKind(param.endDate.Value, DateTimeKind.Utc);
+      query = query.Where(x => x.created_at <= endUtc);
+    }
+
+    var count = await query.CountAsync();
+
+    var res = await query
+          .AsNoTracking()
+          .OrderByDescending(e => e.created_at)
+          .Skip((param.pageNumber - 1) * param.pageSize)
+          .Take(param.pageSize)
+         .Select(x => new AuditTrailDto(
+          x.entity,
+          x.action,
+          x.username,
+          x.ip,
+          x.object_guid,
+          x.object_name,
+          x.detail,
+          x.location == null ? Guid.Empty : x.location.guid
+      )).ToListAsync();
+
+    return new Pagination<AuditTrailDto>(
+          param.pageNumber,
+          param.pageSize,
+          count,
+          (int)Math.Ceiling(count / (double)param.pageSize),
+          res
+          );
+      }
+
+      public async Task<IEnumerable<EventDto>> GetByLocationAsync(int locationId, CancellationToken ct = default)
   {
     return await context.Events
       .AsNoTracking()

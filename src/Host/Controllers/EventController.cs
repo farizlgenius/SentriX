@@ -34,6 +34,13 @@ namespace Host.Controllers
       return Ok(res);
     }
 
+    [HttpGet("audit/pagination")]
+    public async Task<IActionResult> GetAuditPaginationAsync([FromQuery] PaginationParams param)
+    {
+      var res = await @event.GeAuditPaginationAsync(param);
+      return Ok(res);
+    }
+
     // [HttpPost("notifications/dao")]
     // public async Task<IActionResult> DaoAsync([FromBody] JsonElement body)
     // {

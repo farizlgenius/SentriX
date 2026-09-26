@@ -119,12 +119,12 @@ public sealed class CompanyRepository(CoreDbContext context) : ICompanyRepositor
       .ToArrayAsync();
   }
 
-      public Task<Guid> GetGuidByIdAsync(int id, CancellationToken ct = default)
-      {
-            throw new NotImplementedException();
-      }
+  public Task<Guid> GetGuidByIdAsync(int id, CancellationToken ct = default)
+  {
+    throw new NotImplementedException();
+  }
 
-      public async Task<int> GetIdByGuidAsync(Guid guid, CancellationToken ct = default)
+  public async Task<int> GetIdByGuidAsync(Guid guid, CancellationToken ct = default)
   {
     var res = await context.Companies.AsNoTracking()
       .Where(x => x.guid == guid)
@@ -263,5 +263,7 @@ public sealed class CompanyRepository(CoreDbContext context) : ICompanyRepositor
     context.Companies.Update(en);
 
     await context.SaveChangesAsync(ct);
+
+
   }
 }

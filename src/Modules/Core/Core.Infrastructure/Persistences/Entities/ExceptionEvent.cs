@@ -7,6 +7,7 @@ public sealed class ExceptionEvent
       [Key]
       public int id { get; set; }
        public DateTime timestampe {get; set;}
+       public string method {get; set;} = string.Empty;
       public string path {get; set; } = string.Empty;
       public string exception {get; set;} = string.Empty;
       public string inner_exception {get; set; }= string.Empty;
@@ -14,6 +15,7 @@ public sealed class ExceptionEvent
 
       public ExceptionEvent(){}
       public ExceptionEvent(
+            string method,
             string path,
             string exception,
             string innerException,
@@ -21,6 +23,7 @@ public sealed class ExceptionEvent
       )
       {
             timestampe = DateTime.UtcNow;
+            this.method = method;
             this.path = path;
             this.exception = exception;
             this.inner_exception = innerException;

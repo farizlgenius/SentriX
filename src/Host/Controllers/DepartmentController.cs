@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Core.Contract.DTOs.Department;
 using Core.Contract.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -40,6 +41,8 @@ public class DepartmentController(IDepartment dep) : ControllerBase
       [HttpPost]
       public async Task<IActionResult> CreateAsync([FromBody] CreateDepartmentDto dto)
       {
+            
+
             var res = await dep.CreateAsync(dto);
             return Ok(res);
       }
@@ -47,6 +50,8 @@ public class DepartmentController(IDepartment dep) : ControllerBase
       [HttpPut]
       public async Task<IActionResult> UpdateAsync([FromBody] UpdateDepartmentDto dto)
       {
+            
+
             var res = await dep.UpdateAsync(dto);
             return Ok(res);
       }
@@ -54,6 +59,8 @@ public class DepartmentController(IDepartment dep) : ControllerBase
       [HttpDelete("{guid}")]
       public async Task<IActionResult> DeleteAsync(Guid guid)
       {
+            
+
             var res = await dep.DeleteByGuidAsync(guid);
             return Ok(res);
       }
@@ -61,6 +68,8 @@ public class DepartmentController(IDepartment dep) : ControllerBase
       [HttpDelete("range")]
       public async Task<IActionResult> DeleteRangeAsync([FromBody] IEnumerable<Guid> guids)
       {
+            
+
             var res = await dep.DeleteListAsync(guids);
             return Ok(res);
       }
@@ -68,6 +77,8 @@ public class DepartmentController(IDepartment dep) : ControllerBase
       [HttpPatch("enable/{guid}")]
       public async Task<IActionResult> EnableAsync(Guid guid)
       {
+            
+
             var res = await dep.EnabledAsync(guid);
             return Ok(res);
       }
@@ -75,6 +86,8 @@ public class DepartmentController(IDepartment dep) : ControllerBase
       [HttpPatch("disable/{guid}")]
       public async Task<IActionResult> DisableAsync(Guid guid)
       {
+            
+
             var res = await dep.DisabledAsync(guid);
             return Ok(res);
       }

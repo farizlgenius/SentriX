@@ -1,4 +1,8 @@
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using System.Threading.Channels;
 using Core.Application.Interfaces;
+using Core.Contract.DTOs.Events.Audit;
 using Core.Contract.DTOs.Location;
 using Core.Contract.Interfaces;
 using SharedKernel.Constants;
@@ -28,6 +32,7 @@ public sealed class LocationService(
     return d.Guid;
   }
 
+
   public async Task<bool> DeleteByGuidAsync(Guid guid, CancellationToken ct = default)
   {
     // Check is any location with guid
@@ -42,8 +47,11 @@ public sealed class LocationService(
 
     await repo.DeleteAsync(guid, ct);
 
+    
+
     return true;
   }
+
 
   public async Task<IEnumerable<Guid>> DeleteListAsync(IEnumerable<Guid> guids, CancellationToken ct = default)
   {
@@ -127,4 +135,5 @@ public sealed class LocationService(
 
 
   }
+
 }

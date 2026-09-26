@@ -259,21 +259,27 @@ public class Program
     };
 });
 
-        app.UseMiddleware<GlobalException>();
+       
 
-        app.UseCors("CorsPolicy");
+        // 1. GlobalException MUST be first to catch unhandled errors from everything below it
+app.UseMiddleware<GlobalException>();
 
-        app.UseHttpsRedirection();
+// 2. Security & Redirections
+app.UseHttpsRedirection();
+app.UseCors("CorsPolicy");
 
-        app.UseAuthentication();
+// 3. Routing (Identifies which controller/action matches the endpoint)
+app.UseRouting();
 
-        app.UseAuthorization();
+// 4. Identity & Claims (Populates context.User from JWT)
+app.UseAuthentication();
+app.UseAuthorization();
 
-        app.MapControllers();
 
-        app.MapHub<NotifierHub>("/notiHubs");
-
-        app.MapOpenApi();
+// 6. Terminal Endpoint Mappings (MUST be at the very bottom)
+app.MapControllers();
+app.MapHub<NotifierHub>("/notiHubs");
+app.MapOpenApi();
 
 
         // Configure the HTTP request pipeline.
@@ -326,9 +332,6 @@ public class Program
             _ = Task.Run(() => readDriver.GetTransactionUntilShutDownAsync());
         });
 
-
-        app.Run();
-
         app.Lifetime.ApplicationStopping.Register(async () =>
         {
 
@@ -336,5 +339,10 @@ public class Program
             readDriver.TurnOffDebug();
 
         });
+
+
+        app.Run();
+
+        
     }
 }

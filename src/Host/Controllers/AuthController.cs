@@ -1,20 +1,28 @@
 using System.Security.Claims;
+using System.Threading.Channels;
 using Auth.Contract.DTOs;
 using Auth.Contract.Interfaces;
+using Core.Contract.DTOs.Events.Audit;
+using Core.Contract.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using SharedKernel.Constants;
 
 namespace Host.Controllers
 {
   [Route("api/[controller]")]
   [ApiController]
-  public class AuthController(IAuth auth) : ControllerBase
+  public class AuthController(
+    IAuth auth
+    ) : ControllerBase
   {
     [HttpPost("login")]
     public async Task<IActionResult> LoginAsync([FromForm] LoginDto login)
     {
-      var res = await auth.LoginAsync(login);
+      var clientIp = HttpContext.Connection.RemoteIpAddress?.ToString();
+
+      var res = await auth.LoginAsync(login,clientIp ?? string.Empty);
 
       Response.Cookies.Append("refresh_token", res.RefreshToken, new CookieOptions
       {
@@ -66,12 +74,15 @@ namespace Host.Controllers
     [HttpPost("logout")]
     public async Task<IActionResult> Logout([FromBody] RefreshDto dto)
     {
+      var username = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "";
+
+      var clientIp = HttpContext.Connection.RemoteIpAddress?.ToString();
 
       if (string.IsNullOrWhiteSpace(dto.Refresh))
       {
         string? refreshToken;
         Request.Cookies.TryGetValue("refresh_token", out refreshToken);
-        await auth.LogoutAsync(refreshToken ?? "");
+        await auth.LogoutAsync(refreshToken ?? "",username,clientIp ?? string.Empty);
         Response.Cookies.Delete("refresh_token", new CookieOptions
         {
           HttpOnly = true,
@@ -83,7 +94,7 @@ namespace Host.Controllers
       }
       else
       {
-        await auth.LogoutAsync(dto.Refresh);
+        await auth.LogoutAsync(dto.Refresh,username,clientIp ?? string.Empty);
         Response.Cookies.Delete("refresh_token", new CookieOptions
         {
           HttpOnly = true,
@@ -101,6 +112,8 @@ namespace Host.Controllers
     {
       var username = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "";
       var roleGuid = User.FindFirst("role_guid")?.Value ?? "";
+
+      
 
       var result = await auth.GetMeByUsernameAndRoleGuidAsync(username, new Guid(roleGuid));
       return Ok(result);

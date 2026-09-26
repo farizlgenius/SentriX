@@ -76,6 +76,7 @@ import { Visitor } from "./pages/Visitor/Visitor";
 import Interval from "./pages/Interval/Interval";
 import Turnstile from "./pages/Turnstile/Turnstile";
 import ExceptionEvent from "./pages/Diagnostic/ExceptionEvent";
+import { AuditTrail } from "./pages/Report/AuditTrail";
 
 export default function App() {
   const navigate = useNavigate();
@@ -249,6 +250,7 @@ export default function App() {
             <Route path="/adapter" element={<AdapterEvent />} />
             <Route path="/exception" element={<ExceptionEvent />} />
             <Route path="/interval" element={<Interval />} />
+            <Route path="/audit" element={<AuditTrail/>} />
 
             {/* VMS */}
             <Route path="/visitor" element={<Visitor />} />

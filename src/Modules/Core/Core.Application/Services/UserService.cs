@@ -148,7 +148,7 @@ public sealed class UserService(
     return await repo.GetAsync(guid, ct);
   }
 
-  public async Task<IEnumerable<UserDto>> GetByLocationAsync(Guid guid, CancellationToken ct = default)
+      public async Task<IEnumerable<UserDto>> GetByLocationAsync(Guid guid, CancellationToken ct = default)
   {
     var locationId = await bus.QueryAsync(new LocationIdByGuidQuery(guid));
     return await repo.GetByLocationAsync(locationId, ct);

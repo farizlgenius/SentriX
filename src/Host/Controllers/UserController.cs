@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Core.Contract.DTOs.User;
 using Core.Contract.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -42,13 +43,26 @@ public class UserController(IUser user) : ControllerBase
   [HttpPost]
   public async Task<IActionResult> CreateUserAsync([FromBody] CreateUserDto dto)
   {
+    
+    
     var res = await user.CreateAsync(dto);
     return Ok(res);
   }
 
+   [HttpDelete("list")]
+    public async Task<IActionResult> DeleteListAsync([FromBody] List<Guid> guids)
+    {
+        
+
+        var res = await user.DeleteListAsync(guids);
+        return Ok(res);
+    }
+
   [HttpPut]
   public async Task<IActionResult> UpdateUserAsync([FromBody] UpdateUserDto dto)
   {
+    
+
     var res = await user.UpdateAsync(dto);
     return Ok(res);
   }
@@ -56,7 +70,27 @@ public class UserController(IUser user) : ControllerBase
   [HttpDelete("{guid}")]
   public async Task<IActionResult> DeleteUserAsync(Guid guid)
   {
+    
+
     var res = await user.DeleteByGuidAsync(guid);
+    return Ok(res);
+  }
+
+  [HttpPatch("enable/{guid}")]
+  public async Task<IActionResult> EnabledAsync(Guid guid)
+  {
+    
+
+    var res = await user.EnabledAsync(guid);
+    return Ok(res);
+  }
+
+  [HttpPatch("disable/{guid}")]
+  public async Task<IActionResult> DisabledAsync(Guid guid)
+  {
+    
+
+    var res = await user.DisabledAsync(guid);
     return Ok(res);
   }
 

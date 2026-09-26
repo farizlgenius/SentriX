@@ -12,7 +12,7 @@ public sealed class GlobalException : IMiddleware
       private readonly ILogger<GlobalException> _logger;
       private readonly IEvent _event;
 
-      public GlobalException(ILogger<GlobalException> logger,IEvent @event)
+      public GlobalException(ILogger<GlobalException> logger, IEvent @event)
       {
             _event = @event;
             _logger = logger;
@@ -83,7 +83,7 @@ public sealed class GlobalException : IMiddleware
 
       private Task BadRequestExceptionHandler(HttpContext context, Exception ex)
       {
-           
+
             // Set the response status code and content
             context.Response.StatusCode = StatusCodes.Status400BadRequest;
             context.Response.ContentType = "application/json";
@@ -200,47 +200,44 @@ public sealed class GlobalException : IMiddleware
             return context.Response.WriteAsJsonAsync(response);
       }
 
-      private async Task<Task> HandleException(HttpContext context, Exception ex)
+      private async Task HandleException(HttpContext context, Exception ex)
       {
             await _event.InsertExceptionEventAsync(
-                  context.Request.Path,
-                  ex.Message,
-                  ex.InnerException is null ? string.Empty : ex.InnerException.ToString(),
-                  ex.StackTrace is null ? string.Empty : ex.StackTrace
+                context.Request.Method,
+                context.Request.Path,
+                ex.Message,
+                ex.InnerException?.ToString() ?? string.Empty,
+                ex.StackTrace ?? string.Empty
             );
 
-            // Set the response status code and content
+            // Check if the response stream has already started
+            if (context.Response.HasStarted)
+            {
+                  _logger.LogWarning(ex, "Response has already started. Cannot write exception response to client.");
+                  return; // Exits cleanly
+            }
+
+            // Set the response status code and content type
             context.Response.StatusCode = StatusCodes.Status500InternalServerError;
             context.Response.ContentType = "application/json";
 
-            if (ex.InnerException is null)
-            {
-                  return context.Response.WriteAsJsonAsync(
-                         new BaseResponse<object>(
-                              DateTime.UtcNow,
-                              System.Net.HttpStatusCode.InternalServerError,
-                              false,
-                              "Internal server error",
-                              Errors: new SharedKernel.Model.BaseErrorResponse(
-                                    ex.Message
-                              ))
+            var errorDetails = ex.InnerException is null
+                ? new SharedKernel.Model.BaseErrorResponse(ex.Message)
+                : new SharedKernel.Model.BaseErrorResponse(
+                    ex.Message,
+                    ex.InnerException.ToString(),
+                    ex.StackTrace
                   );
-            }
-            else
-            {
-                  return context.Response.WriteAsJsonAsync(
-                        new BaseResponse<object>(
-                             DateTime.UtcNow,
-                             System.Net.HttpStatusCode.InternalServerError,
-                             false,
-                             "Internal server error",
-                             Errors: new SharedKernel.Model.BaseErrorResponse(
-                                   ex.Message,
-                                   ex.InnerException.ToString(),
-                                   ex.StackTrace
-                             ))
-                 );
-            }
 
+            var responsePayload = new BaseResponse<object>(
+                DateTime.UtcNow,
+                System.Net.HttpStatusCode.InternalServerError,
+                false,
+                "Internal server error",
+                Errors: errorDetails
+            );
+
+            // Properly await writing to the HTTP response stream
+            await context.Response.WriteAsJsonAsync(responsePayload);
       }
 }

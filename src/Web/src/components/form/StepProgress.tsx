@@ -54,7 +54,7 @@ const StepProgress: React.FC<StepProgressProps> = ({
 
             return (
               <button
-                key={step.key}
+                key={index}
                 type="button"
                 onClick={() => onStepClick(index)}
                 className="group flex min-h-[74px] flex-col items-center gap-2 text-center outline-none"

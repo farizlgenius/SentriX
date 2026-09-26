@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Core.Contract.DTOs.Time;
 using Core.Contract.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -20,15 +21,19 @@ public class IntervalController(IInterval interval) : ControllerBase
 
 
   [HttpPost]
-  public async Task<IActionResult> CreateTimezoneAsync([FromBody] CreateIntervalDto dto)
+  public async Task<IActionResult> CreateAsync([FromBody] CreateIntervalDto dto)
   {
+    
+
     var res = await interval.CreateAsync(dto);
     return Ok(res);
   }
 
   [HttpPut]
-  public async Task<IActionResult> UpdateTimezoneAsync([FromBody] UpdateIntervalDto dto)
+  public async Task<IActionResult> UpdateAsync([FromBody] UpdateIntervalDto dto)
   {
+    
+
     var res = await interval.UpdateAsync(dto);
     return Ok(res);
   }
@@ -36,9 +41,38 @@ public class IntervalController(IInterval interval) : ControllerBase
   [HttpDelete("{guid}")]
   public async Task<IActionResult> DeleteAsync(Guid guid)
   {
+    
+
     var res = await interval.DeleteByGuidAsync(guid);
     return Ok(res);
   }
+
+  [HttpDelete("list")]
+    public async Task<IActionResult> DeleteListAsync([FromBody] List<Guid> guids)
+    {
+        
+
+        var res = await interval.DeleteListAsync(guids);
+        return Ok(res);
+    }
+
+    [HttpPut("enable/{guid}")]
+    public async Task<IActionResult> EnableAsync(Guid guid)
+    {
+        
+
+        var res = await interval.EnabledAsync(guid);
+        return Ok(res);
+    }
+
+    [HttpPut("disable/{guid}")]
+    public async Task<IActionResult> DisableAsync(Guid guid)
+    {
+        
+
+        var res = await interval.DisabledAsync(guid);
+        return Ok(res);
+    }
 
 
 

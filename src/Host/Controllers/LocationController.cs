@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Core.Contract.DTOs.Location;
 using Core.Contract.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -44,6 +45,8 @@ namespace Host.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateAsync([FromBody] CreateLocationDto dto)
         {
+            
+
             var res = await loc.CreateAsync(dto);
             return Ok(res);
         }
@@ -51,6 +54,8 @@ namespace Host.Controllers
         [HttpDelete("{guid}")]
         public async Task<IActionResult> DeleteByGuidAsync(Guid guid)
         {
+            
+
             var res = await loc.DeleteByGuidAsync(guid);
             return Ok(res);
         }
@@ -59,6 +64,8 @@ namespace Host.Controllers
         [HttpPut]
         public async Task<IActionResult> UpdateAsync([FromBody] UpdateLocationDto dto)
         {
+            
+
             var res = await loc.UpdateAsync(dto);
             return Ok(res);
         }
@@ -66,7 +73,27 @@ namespace Host.Controllers
         [HttpDelete("list")]
         public async Task<IActionResult> DeleteListAsync([FromBody] IEnumerable<Guid> guids)
         {
+            
+
             var res = await loc.DeleteListAsync(guids);
+            return Ok(res);
+        }
+
+        [HttpPut("enable/{guid}")]
+        public async Task<IActionResult> EnableAsync(Guid guid)
+        {
+            
+
+            var res = await loc.EnabledAsync(guid);
+            return Ok(res);
+        }
+
+        [HttpPut("disable/{guid}")]
+        public async Task<IActionResult> DisableAsync(Guid guid)
+        {
+            
+
+            var res = await loc.DisabledAsync(guid);
             return Ok(res);
         }
     }

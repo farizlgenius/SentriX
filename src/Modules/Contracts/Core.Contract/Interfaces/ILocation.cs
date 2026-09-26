@@ -8,4 +8,5 @@ public interface ILocation : IBase<LocationDto, CreateLocationDto, UpdateLocatio
   Task<IEnumerable<CountryDto>> GetCountriesAsync(CancellationToken ct = default);
   Task<IEnumerable<LocationDto>> GetListAsync(IEnumerable<Guid> guids, CancellationToken ct = default);
 
+
 }

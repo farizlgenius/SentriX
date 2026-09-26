@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Core.Contract.DTOs.Role;
 using Core.Contract.Interfaces;
 using Microsoft.AspNetCore.Http;
@@ -36,6 +37,8 @@ namespace Host.Controllers
             [HttpPost]
             public async Task<IActionResult> CreateAsync([FromBody] CreateRoleDto dto)
             {
+                  
+
                   var res = await role.CreateAsync(dto);
                   return Ok(res);
             }
@@ -43,6 +46,8 @@ namespace Host.Controllers
             [HttpPut]
             public async Task<IActionResult> UpdateAsync([FromBody] UpdateRoleDto dto)
             {
+                  
+
                   var res = await role.UpdateAsync(dto);
                   return Ok(res);
             }
@@ -50,6 +55,8 @@ namespace Host.Controllers
             [HttpDelete("{guid}")]
             public async Task<IActionResult> DeleteAsync(Guid guid)
             {
+                  
+
                   var res = await role.DeleteByGuidAsync(guid);
                   return Ok(res);
             }
@@ -57,6 +64,8 @@ namespace Host.Controllers
             [HttpDelete("list")]
             public async Task<IActionResult> DeleteRangeAsync([FromBody] IEnumerable<Guid> guids)
             {
+                  
+
                   var res = await role.DeleteListAsync(guids);
                   return Ok(res);
             }
@@ -64,6 +73,8 @@ namespace Host.Controllers
             [HttpPatch("enable/{guid}")]
             public async Task<IActionResult> EnableAsync(Guid guid)
             {
+                  
+
                   var res = await role.EnabledAsync(guid);
                   return Ok(res);
             }
@@ -71,6 +82,8 @@ namespace Host.Controllers
             [HttpPatch("disable/{guid}")]
             public async Task<IActionResult> DisableAsync(Guid guid)
             {
+                  
+
                   var res = await role.DisabledAsync(guid);
                   return Ok(res);
             }

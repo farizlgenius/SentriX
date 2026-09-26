@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Core.Contract.DTOs.Company;
 using Core.Contract.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -41,6 +42,8 @@ public class CompanyController(ICompany com) : ControllerBase
   [HttpPost]
   public async Task<IActionResult> CreateAsync([FromBody] CreateCompanyDto dto)
   {
+    
+            
     var res = await com.CreateAsync(dto);
     return Ok(res);
   }
@@ -48,6 +51,8 @@ public class CompanyController(ICompany com) : ControllerBase
   [HttpPut]
   public async Task<IActionResult> UpdateAsync([FromBody] UpdateCompanyDto dto)
   {
+    
+
     var res = await com.UpdateAsync(dto);
     return Ok(res);
   }
@@ -55,6 +60,8 @@ public class CompanyController(ICompany com) : ControllerBase
   [HttpDelete("{guid}")]
   public async Task<IActionResult> DeleteAsync(Guid guid)
   {
+    
+
     var res = await com.DeleteByGuidAsync(guid);
     return Ok(res);
   }
@@ -62,6 +69,8 @@ public class CompanyController(ICompany com) : ControllerBase
   [HttpDelete("range")]
   public async Task<IActionResult> DeleteRangeAsync([FromBody] IEnumerable<Guid> guids)
   {
+    
+
     var res = await com.DeleteListAsync(guids);
     return Ok(res);
   }
@@ -69,6 +78,8 @@ public class CompanyController(ICompany com) : ControllerBase
   [HttpPatch("enable/{guid}")]
   public async Task<IActionResult> EnableAsync(Guid guid)
   {
+    
+
     var res = await com.EnabledAsync(guid);
     return Ok(res);
   }
@@ -76,6 +87,8 @@ public class CompanyController(ICompany com) : ControllerBase
   [HttpPatch("disable/{guid}")]
   public async Task<IActionResult> DisableAsync(Guid guid)
   {
+    
+
     var res = await com.DisabledAsync(guid);
     return Ok(res);
   }

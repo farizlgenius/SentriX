@@ -1,11 +1,16 @@
 using System;
+using System.Threading.Channels;
 using Core.Application.Interfaces;
 using Core.Application.Services;
 using Core.Application.ValueObjects;
+using Core.Contract.DTOs.Events.Audit;
+using Core.Contract.DTOs.Events.Event;
 using Core.Contract.Interfaces;
+using Core.Infrastructure.Interceptors;
 using Core.Infrastructure.Persistences;
 using Core.Infrastructure.Persistences.Entities;
 using Core.Infrastructure.Repositories;
+using Core.Infrastructure.Workers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -124,15 +129,52 @@ public static class CoreDependencyInjection
     // Utility
     services.AddScoped<IUtility,UtilityService>();
 
+    // ==========================
+    // Worker
+    // ==========================
+    services.AddHostedService<AuditTrailWorker>();
+    services.AddHostedService<EventWorker>();
+    services.AddSingleton(
+        Channel.CreateBounded<AuditTrailInsert>(
+         new BoundedChannelOptions(10_000)
+         {
+           FullMode = BoundedChannelFullMode.DropOldest,
+           SingleReader = true,
+           SingleWriter = false
+         }
+        )
+     );
+
+     services.AddSingleton(
+        Channel.CreateBounded<CreateEventDto>(
+         new BoundedChannelOptions(10_000)
+         {
+           FullMode = BoundedChannelFullMode.DropOldest,
+           SingleReader = true,
+           SingleWriter = false
+         }
+        )
+     );
+
+     // 2. Register Interceptor & HttpContextAccessor
+    services.AddHttpContextAccessor();
+    services.AddScoped<AuditSaveChangesInterceptor>();
+
+    
+
 
     // ==========================
     // Database
     // ==========================
-    services.AddDbContext<CoreDbContext>(options =>
-        options.UseNpgsql(
+    services.AddDbContext<CoreDbContext>((sp,options) =>
+    {
+      var interceptor = sp.GetRequiredService<AuditSaveChangesInterceptor>();
+
+      options.UseNpgsql(
         configuration.GetConnectionString("PostgresConnection"),
         npgsqlOptions => npgsqlOptions.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)
-        ));
+        ).AddInterceptors(interceptor);
+    });
 
     return services;
   }

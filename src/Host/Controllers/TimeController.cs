@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Core.Contract.DTOs.Time;
 using Core.Contract.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -22,6 +23,9 @@ public class TimeController(ITime time) : ControllerBase
   [HttpPost]
   public async Task<IActionResult> CreateTimezoneAsync([FromBody] CreateTimeZoneDto dto)
   {
+    var username = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "";
+    var clientIp = HttpContext.Connection.RemoteIpAddress?.ToString();
+    
     var res = await time.CreateAsync(dto);
     return Ok(res);
   }
@@ -29,6 +33,9 @@ public class TimeController(ITime time) : ControllerBase
   [HttpPut]
   public async Task<IActionResult> UpdateTimezoneAsync([FromBody] UpdateTimeZoneDto dto)
   {
+    var username = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "";
+    var clientIp = HttpContext.Connection.RemoteIpAddress?.ToString();
+
     var res = await time.UpdateAsync(dto);
     return Ok(res);
   }
@@ -36,9 +43,39 @@ public class TimeController(ITime time) : ControllerBase
   [HttpDelete("{guid}")]
   public async Task<IActionResult> DeleteTimezoneAsync(Guid guid)
   {
+    var username = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "";
+    var clientIp = HttpContext.Connection.RemoteIpAddress?.ToString();
+
     var res = await time.DeleteByGuidAsync(guid);
     return Ok(res);
   }
+
+  [HttpDelete("list")]
+    public async Task<IActionResult> DeleteListAsync([FromBody] List<Guid> guids)
+    {
+        
+
+        var res = await time.DeleteListAsync(guids);
+        return Ok(res);
+    }
+
+    [HttpPut("enable/{guid}")]
+    public async Task<IActionResult> EnableAsync(Guid guid)
+    {
+        
+
+        var res = await time.EnabledAsync(guid);
+        return Ok(res);
+    }
+
+    [HttpPut("disable/{guid}")]
+    public async Task<IActionResult> DisableAsync(Guid guid)
+    {
+        
+
+        var res = await time.DisabledAsync(guid);
+        return Ok(res);
+    }
 
 
 

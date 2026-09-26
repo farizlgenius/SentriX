@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Core.Contract.DTOs.Device;
 using Core.Contract.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -58,6 +59,8 @@ namespace Host.Controllers
     [HttpPost]
     public async Task<IActionResult> CreateAsync([FromBody] CreateDeviceDto dto)
     {
+      
+            
       var res = await device.CreateAsync(dto);
       return Ok(res);
     }
@@ -65,6 +68,8 @@ namespace Host.Controllers
     [HttpDelete("{guid}")]
     public async Task<IActionResult> DeleteByGuidAsync(Guid guid)
     {
+      
+
       var res = await device.DeleteByGuidAsync(guid);
       return Ok(res);
     }
@@ -73,6 +78,8 @@ namespace Host.Controllers
     [HttpPut]
     public async Task<IActionResult> UpdateAsync([FromBody] UpdateDeviceDto dto)
     {
+      
+
       var res = await device.UpdateAsync(dto);
       return Ok(res);
     }
@@ -80,6 +87,8 @@ namespace Host.Controllers
     [HttpDelete("range")]
     public async Task<IActionResult> DeleteRangeAsync([FromBody] IEnumerable<Guid> guids)
     {
+      
+
       var res = await device.DeleteListAsync(guids);
       return Ok(res);
     }

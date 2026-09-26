@@ -109,6 +109,73 @@ namespace Core.Infrastructure.Migrations
                     b.ToTable("AdapterEvents", "core");
                 });
 
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.AuditTrail", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<string>("action")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("created_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.Property<string>("detail")
+                        .HasColumnType("text");
+
+                    b.Property<string>("entity")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("guid")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<string>("ip")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("is_active")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("is_default")
+                        .HasColumnType("boolean");
+
+                    b.Property<int?>("location_id")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid?>("object_guid")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("object_name")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("updated_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.Property<string>("username")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("location_id");
+
+                    b.HasIndex("guid", "id", "created_at", "location_id", "action", "username", "entity")
+                        .IsUnique();
+
+                    b.ToTable("AuditTrails", "core");
+                });
+
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Buzzer", b =>
                 {
                     b.Property<int>("id")
@@ -2772,6 +2839,10 @@ namespace Core.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("method")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("path")
                         .IsRequired()
                         .HasColumnType("text");
@@ -5170,6 +5241,16 @@ namespace Core.Infrastructure.Migrations
                     b.Navigation("location");
                 });
 
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.AuditTrail", b =>
+                {
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.Location", "location")
+                        .WithMany("audit_trails")
+                        .HasForeignKey("location_id")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("location");
+                });
+
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Buzzer", b =>
                 {
                     b.HasOne("Core.Infrastructure.Persistences.Entities.DeviceModule", "device_module")
@@ -5823,6 +5904,8 @@ namespace Core.Infrastructure.Migrations
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Location", b =>
                 {
                     b.Navigation("adapter_events");
+
+                    b.Navigation("audit_trails");
 
                     b.Navigation("companies");
 

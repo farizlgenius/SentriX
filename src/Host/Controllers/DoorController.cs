@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Core.Contract.DTOs.Door;
 using Core.Contract.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -33,6 +34,8 @@ public class DoorController(IDoor door) : ControllerBase
   [HttpPost]
   public async Task<IActionResult> CreateAsync([FromBody] CreateDoorDto dto)
   {
+    
+      
     var res = await door.CreateAsync(dto);
     return Ok(res);
   }
@@ -40,6 +43,8 @@ public class DoorController(IDoor door) : ControllerBase
   [HttpPut]
   public async Task<IActionResult> UpdateAsync([FromBody] UpdateDoorDto dto)
   {
+    
+
     var res = await door.UpdateAsync(dto);
     return Ok(res);
   }
@@ -47,6 +52,8 @@ public class DoorController(IDoor door) : ControllerBase
   [HttpDelete("{guid}")]
   public async Task<IActionResult> DeleteAsync(Guid guid)
   {
+    
+
     var res = await door.DeleteByGuidAsync(guid);
     return Ok(res);
   }
@@ -54,6 +61,8 @@ public class DoorController(IDoor door) : ControllerBase
   [HttpDelete("list")]
   public async Task<IActionResult> DeleteListAsync([FromBody] IEnumerable<Guid> guids)
   {
+    
+
     var res = await door.DeleteListAsync(guids);
     return Ok(res);
   }
@@ -61,6 +70,8 @@ public class DoorController(IDoor door) : ControllerBase
   [HttpPatch("enable/{guid}")]
   public async Task<IActionResult> EnabledAsync([FromQuery] Guid guid)
   {
+    
+
     var res = await door.EnabledAsync(guid);
     return Ok(res);
   }
@@ -68,6 +79,8 @@ public class DoorController(IDoor door) : ControllerBase
   [HttpPatch("diable/{guid}")]
   public async Task<IActionResult> DisabledAsync([FromQuery] Guid guid)
   {
+    
+
     var res = await door.EnabledAsync(guid);
     return Ok(res);
   }

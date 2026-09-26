@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Core.Contract.DTOs.Group;
 using Core.Contract.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -33,6 +34,8 @@ public class GroupController(IGroup group) : ControllerBase
     [HttpPost]
     public async Task<IActionResult> CreateAsync([FromBody] CreateGroupDto dto)
     {
+        
+    
         var res = await group.CreateAsync(dto);
         return Ok(res);
     }
@@ -40,6 +43,8 @@ public class GroupController(IGroup group) : ControllerBase
     [HttpPut]
     public async Task<IActionResult> UpdateAsync([FromBody] UpdateGroupDto dto)
     {
+        
+
         var res = await group.UpdateAsync(dto);
         return Ok(res);
     }
@@ -47,20 +52,26 @@ public class GroupController(IGroup group) : ControllerBase
     [HttpDelete("{guid}")]
     public async Task<IActionResult> DeleteAsync(Guid guid)
     {
-        await group.DeleteByGuidAsync(guid);
-        return Ok();
+        
+
+        var res = await group.DeleteByGuidAsync(guid);
+        return Ok(res);
     }
 
     [HttpDelete("list")]
     public async Task<IActionResult> DeleteListAsync([FromBody] List<Guid> guids)
     {
-        await group.DeleteListAsync(guids);
-        return Ok();
+        
+
+        var res = await group.DeleteListAsync(guids);
+        return Ok(res);
     }
 
     [HttpPut("enable/{guid}")]
     public async Task<IActionResult> EnableAsync(Guid guid)
     {
+        
+
         var res = await group.EnabledAsync(guid);
         return Ok(res);
     }
@@ -68,6 +79,8 @@ public class GroupController(IGroup group) : ControllerBase
     [HttpPut("disable/{guid}")]
     public async Task<IActionResult> DisableAsync(Guid guid)
     {
+        
+
         var res = await group.DisabledAsync(guid);
         return Ok(res);
     }

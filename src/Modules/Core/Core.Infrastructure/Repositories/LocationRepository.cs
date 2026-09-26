@@ -23,7 +23,10 @@ public sealed class LocationRepository(CoreDbContext context) : ILocationReposit
                   {
                         new OperatorLocation(1,0)
                   };
-                  var data = await context.Locations.AddAsync(location, ct);
+
+
+                  var change = AuditHelper.GetEntityChanges(await context.Locations.AddAsync(location, ct));
+
 
 
                   await context.SaveChangesAsync(ct);
@@ -44,7 +47,10 @@ public sealed class LocationRepository(CoreDbContext context) : ILocationReposit
                   .Where(x => x.guid == guid)
                   .FirstOrDefaultAsync(ct);
 
-            context.Locations.Remove(entity ?? throw new NotFoundException(EntityType.Location, guid.ToString()));
+            ;
+
+            var change = AuditHelper.GetEntityChanges(context.Locations.Remove(entity ?? throw new NotFoundException(EntityType.Location, guid.ToString())));
+
 
             await context.SaveChangesAsync(ct);
       }
@@ -296,7 +302,8 @@ public sealed class LocationRepository(CoreDbContext context) : ILocationReposit
             en.description = entity.Description;
             en.country_id = entity.CountryId;
 
-            context.Locations.Update(en);
+            var change = AuditHelper.GetEntityChanges(context.Locations.Update(en));
+
 
             await context.SaveChangesAsync(ct);
       }

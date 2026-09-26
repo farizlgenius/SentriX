@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Core.Contract.DTOs.Operator;
 using Core.Contract.DTOs.User;
 using Core.Contract.Interfaces;
@@ -24,6 +25,8 @@ public class OperatorController(IOperator oper) : ControllerBase
       [HttpPost]
       public async Task<IActionResult> CreateAsync([FromBody] CreateOperatorDto dto)
       {
+            
+
             var res = await oper.CreateAsync(dto);
             return Ok(res);
       }
@@ -31,6 +34,8 @@ public class OperatorController(IOperator oper) : ControllerBase
       [HttpPut]
       public async Task<IActionResult> UpdateAsync([FromBody] UpdateOperatorDto dto)
       {
+            
+
             var res = await oper.UpdateAsync(dto);
             return Ok(res);
       }
@@ -38,7 +43,36 @@ public class OperatorController(IOperator oper) : ControllerBase
       [HttpDelete("{guid}")]
       public async Task<IActionResult> DeleteByGuidAsync(Guid guid)
       {
+            
+
             var res = await oper.DeleteByGuidAsync(guid);
+            return Ok(res);
+      }
+
+      [HttpDelete("list")]
+      public async Task<IActionResult> DeleteListAsync([FromBody] List<Guid> guids)
+      {
+            
+
+            var res = await oper.DeleteListAsync(guids);
+            return Ok(res);
+      }
+
+      [HttpPut("enable/{guid}")]
+      public async Task<IActionResult> EnableAsync(Guid guid)
+      {
+            
+
+            var res = await oper.EnabledAsync(guid);
+            return Ok(res);
+      }
+
+      [HttpPut("disable/{guid}")]
+      public async Task<IActionResult> DisableAsync(Guid guid)
+      {
+            
+
+            var res = await oper.DisabledAsync(guid);
             return Ok(res);
       }
 

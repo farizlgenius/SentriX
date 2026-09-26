@@ -4,7 +4,6 @@
     <Project Path="src/Host/Host.csproj" />
  </Folder>
 <Folder Name="/src/Modules/Door/" />
-<Folder Name="/src/Modules/Events/" />
 <Folder Name="/src/Modules/Group/" />
 <Folder Name="/src/Modules/Input/" />
 <Folder Name="/src/Modules/Location/" />

@@ -15,6 +15,7 @@ type PropsType = {
   label?: string;
   placeholder?: string;
   isTime?:boolean
+  className?:string;
 };
 
 export default function DatePicker({
@@ -25,7 +26,8 @@ export default function DatePicker({
   label,
   defaultDate,
   placeholder,
-  isTime = true
+  isTime = true,
+  className
 }: PropsType) {
   useEffect(() => {
     // const flatPickr = flatpickr(`#${id}`, {
@@ -64,7 +66,7 @@ export default function DatePicker({
     <div>
       {label && <Label htmlFor={id}>{label}</Label>}
 
-      <div className="relative">
+      <div className={`relative ${className}`}>
         <input
         name="date"
         onChange={()=>onChange}

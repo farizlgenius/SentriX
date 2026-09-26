@@ -11,4 +11,6 @@ export interface DeviceModuleDto {
   model: DeviceModuleModel;
   deviceModules: DeviceModuleDto[];
   locationGuid: string;
+  isDefault:boolean;
+  isActive:boolean;
 }

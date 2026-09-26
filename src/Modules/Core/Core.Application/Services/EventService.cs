@@ -1,9 +1,11 @@
 using Core.Application.Interfaces;
 using Core.Contract.DTOs.Events.AdapterEvent;
+using Core.Contract.DTOs.Events.Audit;
 using Core.Contract.DTOs.Events.Event;
 using Core.Contract.DTOs.Events.ExceptionEvent;
 using Core.Contract.Interfaces;
 using Core.Domain.Entities;
+using Microsoft.Extensions.Logging;
 using SharedKernel.Domain;
 using SharedKernel.Enums;
 using SharedKernel.Messaging;
@@ -12,7 +14,8 @@ namespace Core.Application.Services;
 
 public sealed class EventService(
   IEventRepository repo,
-  ILocationRepository loc
+  ILocationRepository loc,
+  ILogger<EventService> logger
   ) : Core.Contract.Interfaces.IEvent
 {
   public async Task<Guid> CreateAsync(CreateEventDto dto, CancellationToken ct = default)
@@ -58,7 +61,12 @@ public sealed class EventService(
     throw new NotImplementedException();
   }
 
-  public async Task<Pagination<AdapterEventDto>> GetAdapterPaginationAsync(PaginationParams param, CancellationToken ct = default)
+      public async Task<Pagination<AuditTrailDto>> GeAuditPaginationAsync(PaginationParams param, CancellationToken ct = default)
+      {
+            return await repo.GetAuditPaginationAsync(param,ct);
+      }
+
+      public async Task<Pagination<AdapterEventDto>> GetAdapterPaginationAsync(PaginationParams param, CancellationToken ct = default)
   {
     return await repo.GetAdapterPaginationAsync(param, ct);
   }
@@ -83,9 +91,34 @@ public sealed class EventService(
     return await repo.GetPaginationAsync(param, ct);
   }
 
-  public async Task InsertExceptionEventAsync(string path, string exception, string innerException, string stackTrace, CancellationToken ct = default)
+  public async Task InsertAuditAsync(
+    string entity,
+    AuditAction action,
+    string username,
+    string ip,
+    Guid? objectGuid,
+    string? name,
+    string? detail,
+    int locationId,
+    CancellationToken ct = default)
   {
-    await repo.AddExceptionAsync(path,exception,innerException,stackTrace,ct);
+
+    var d = new AuditTrail(
+      entity,
+      action,
+      username,
+      ip,
+      objectGuid,
+      name,
+      detail,
+      locationId
+    );
+    await repo.AddAuditAsync(d, ct);
+  }
+
+  public async Task InsertExceptionEventAsync(string method,string path, string exception, string innerException, string stackTrace, CancellationToken ct = default)
+  {
+    await repo.AddExceptionAsync(method,path,exception,innerException,stackTrace,ct);
   }
 
   public async Task UpdateAdapterEventStatusAsync(string mac,int componentId, int tag, CommandStatus status, string reason, CancellationToken ct = default)
