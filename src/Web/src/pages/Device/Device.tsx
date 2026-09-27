@@ -30,7 +30,7 @@ import { useToast } from "../../context/ToastContext";
 import { HardwareToast } from "../../model/ToastMessage";
 import Badge from "../../components/ui/badge/Badge";
 import { Table, TableBody, TableCell, TableHeader, TableRow } from "../../components/ui/table";
-import { EventStatusDto } from "../../model/Device/TranStatusDto";
+import { EventStatusDto } from "../../model/Device/EventStatusDto";
 import { FormType } from "../../model/Form/FormProp";
 import { usePopup } from "../../context/PopupContext";
 import { SetTranDto } from "../../model/Device/SetTranDto";
@@ -161,23 +161,28 @@ const Device = () => {
         batt: Status.Unknown,
       }));
 
-      const newTranStatuses = res.data.data.items.map((item: DeviceDto) => ({
-        deviceGuid: item.guid,
-        capacity: 0,
-        oldest: 0,
-        lastReport: 0,
-        lastLog: 0,
-        disabled: 0,
-        status: "",
-      }));
+      const newTranStatuses = res.data.data.items.map((item: DeviceDto) => {
+        const existing = tranStatus.find((t) => t.guid === item.guid);
+        return {
+          guid: item.guid,
+          isEnabled: existing ? existing.isEnabled : false,
+        };
+      });
+
+      console.log(newTranStatuses)
 
       setStatus(newStatuses);
       setTranStatus(newTranStatuses);
 
+      console.log(tranStatus)
+
       res.data.data.items.forEach((item: DeviceDto) => {
         fetchStatus(item.guid);
         fetchTranStatus(item.guid);
+        
       });
+
+      
     }
   };
 
@@ -191,19 +196,7 @@ const Device = () => {
   };
 
   const fetchTranStatus = async (guid: string) => {
-    const res = await send.get(DeviceEndpoint.GET_EVENT_STATUS(guid));
-    if (res.data.success) {
-      setTranStatus((prev) =>
-        prev.map((item) =>
-          item.deviceGuid === res.data.data.guid
-            ? {
-              ...item,
-              status: res.data.data.status,
-            }
-            : item,
-        ),
-      );
-    }
+    await send.get(DeviceEndpoint.GET_EVENT_STATUS(guid));
   };
 
   const fetchStatus = async (guid: string) => {
@@ -299,7 +292,7 @@ const Device = () => {
           select.forEach((item: DeviceDto) =>
             fetchSetTran({
               deviceGuid: item.guid,
-              v: item.vendor,
+              vendor: item.vendor,
               isEnable: true,
             }),
           );
@@ -343,7 +336,7 @@ const Device = () => {
         break;
       case "create":
         setConfirmCreate(() => async () => {
-          const req: CreateDeviceStrMetadataDto = {
+          const req = {
             ...deviceDto,
             serialNumber:deviceDto.serialNumber.toString(),
             port:deviceDto.port.toString(),
@@ -417,17 +410,28 @@ const Device = () => {
         );
       });
 
-      try {
-        await SignalRService.joinGroup(SignalRTopic.IDREPORT);
-      } catch (err) {
-        console.error("Subscribe error:", err);
-      }
+     // Handle SignalR event directly using state functional update
+    connection.on(SignalRTopic.DEVICE_EVENT_STATUS, (status: EventStatusDto) => {
+      setTranStatus((prev) => {
+        const exists = prev.some((item) => item.guid === status.guid);
+        if (exists) {
+          return prev.map((item) =>
+            item.guid === status.guid
+              ? { ...item, isEnabled: status.isEnabled }
+              : item
+          );
+        }
+        return [...prev, { guid: status.guid, isEnabled: status.isEnabled }];
+      });
+    });
 
       try {
-        await SignalRService.joinGroup(SignalRTopic.DEVICE_STATUS);
-      } catch (err) {
-        console.error("Subscribe error:", err);
-      }
+      await SignalRService.joinGroup(SignalRTopic.IDREPORT);
+      await SignalRService.joinGroup(SignalRTopic.DEVICE_STATUS);
+      await SignalRService.joinGroup(SignalRTopic.DEVICE_EVENT_STATUS);
+    } catch (err) {
+      console.error("Subscribe error:", err);
+    }
 
       const res = await send.get(DeviceEndpoint.GET_SCAN);
       console.log(res)
@@ -439,6 +443,8 @@ const Device = () => {
     return () => {
       const connection = SignalRService.getConnection();
       connection?.off(SignalRTopic.IDREPORT);
+      connection?.off(SignalRTopic.DEVICE_STATUS);
+      connection?.off(SignalRTopic.DEVICE_EVENT_STATUS);
     };
   }, [refresh, locationGuid, token, setIdReports]);
 
@@ -762,13 +768,15 @@ const Device = () => {
                     key={index}
                     className="px-4 py-3 text-gray-500 text-center text-theme-sm dark:text-gray-400"
                   >
-                    {tranStatus.find(
-                      (tranItem) => tranItem.deviceGuid === item.guid,
-                    )?.isEnable ? (
+                    {
+                    tranStatus.find((tranItem) => tranItem.guid === item.guid)?.isEnabled ? (
                       <CheckCircleIcon className="text-2xl" />
                     ) : (
                       <CancelCircleIcon className="text-2xl" />
-                    )}
+
+                      
+                    )
+                    }
                   </TableCell>
                 ),
               },

@@ -53,9 +53,7 @@ namespace Host.Controllers
       return Ok(res);
     }
 
-    
-
-
+  
     [HttpPost]
     public async Task<IActionResult> CreateAsync([FromBody] CreateDeviceDto dto)
     {
@@ -78,8 +76,7 @@ namespace Host.Controllers
     [HttpPut]
     public async Task<IActionResult> UpdateAsync([FromBody] UpdateDeviceDto dto)
     {
-      
-
+    
       var res = await device.UpdateAsync(dto);
       return Ok(res);
     }

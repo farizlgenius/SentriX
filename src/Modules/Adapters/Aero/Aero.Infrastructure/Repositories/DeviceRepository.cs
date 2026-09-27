@@ -614,9 +614,48 @@ public sealed class DeviceRepostory(
             }
       }
 
-      public CommandResponse TransactionLogStatusAsync(string Mac, short ScpId)
+      public CommandResponse GetTransactionStatus(string Mac, short ScpId)
       {
-            throw new NotImplementedException();
+                       CC_TRANSRQ c = new CC_TRANSRQ();
+            c.scp_number = ScpId;
+            var result = repo.Send((short)enCfgCmnd.enCcTranSrq, c);
+            if (result)
+            {
+                  logger.LogInformation(LogMessageHelper.CommandSuccess(Command.TransactionLogStatus, ScpId));
+
+                  return new CommandResponse(
+                        Mac,
+                        ScpId,
+                        Command.TransactionLogStatus,
+                        SCPDLL.scpGetTagLastPosted(ScpId),
+                        DateTime.UtcNow,
+                        null,
+                        ObjectHelper.ToAsciiString(c),
+                        CommandStatus.PENDING, 
+                        string.Empty,
+                        Vendor.aero,
+                        true
+                        );
+
+            }
+            else
+            {
+                  logger.LogError(LogMessageHelper.CommandUnsuccess(Command.TransactionLogStatus, ScpId));
+                  return new CommandResponse(
+                        Mac,
+                       ScpId,
+                       Command.TransactionLogStatus,
+                       -1,
+                       DateTime.UtcNow,
+                       DateTime.UtcNow,
+                       ObjectHelper.ToAsciiString(c),
+                       CommandStatus.FAILED,
+                       string.Empty,
+                       Vendor.aero,
+                       false
+                       );
+
+            }
       }
 
       public Status GetStatus(short ScpId)

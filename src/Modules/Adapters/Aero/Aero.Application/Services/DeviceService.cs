@@ -71,6 +71,14 @@ public sealed class DeviceService(
             return repo.GetStatus((short)externalId);
       }
 
+      public async Task GetTransactionStatusAsync(string mac, string ip, CancellationToken ct = default)
+      {
+            var externalId = await bus.QueryAsync(new ExternalIdByMacAndEntityQuery(mac,EntityType.Device));
+            var res = repo.GetTransactionStatus(mac,(short)externalId);
+
+            await bus.SendAsync(new AdapterEventCommand(res));
+      }
+
       public async Task InititalDeviceAsync(string mac,string Ip = "",CancellationToken ct = default)
       {
             // var scpDevice = await setting.GetAeroDriverSettingAsync();

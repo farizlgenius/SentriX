@@ -51,7 +51,11 @@ public interface IDeviceAdapter
             CancellationToken ct = default
       );
 
-
+      Task GetTransactionStatusAsync(
+            string mac,
+            string ip,
+            CancellationToken ct = default
+      );
 
 
 

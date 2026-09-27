@@ -224,9 +224,11 @@ public sealed class DeviceService(
     return adapter.GetAdapter(device.Vendor).Device.GetConfigurationAsync(device.Mac, device.Ip, ct);
   }
 
-      public Task<bool> GetEventStatusByGuidAsync(Guid guid, CancellationToken ct = default)
+      public async Task<bool> GetEventStatusByGuidAsync(Guid guid, CancellationToken ct = default)
       {
-            throw new NotImplementedException();
+           var device = await repo.GetAsync(guid, ct);
+           await adapter.GetAdapter(device.Vendor).Device.GetTransactionStatusAsync(device.Mac,device.Ip,ct);
+           return true;
       }
 
       public async Task<Pagination<DeviceDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)

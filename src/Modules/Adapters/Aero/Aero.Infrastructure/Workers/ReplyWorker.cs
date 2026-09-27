@@ -270,21 +270,6 @@ public sealed class ReplyWorker(Channel<ReplyMessage> queue, ILogger<ReplyWorker
               await scp.HandleInCommingDeviceAsync(message.id, ct);
               break;
             case (int)enSCPReplyType.enSCPReplyCommStatus:
-              // var @event = scope.ServiceProvider.GetRequiredService<Events.Contract.Interfaces.IEvent>();
-              // var repo = scope.ServiceProvider.GetRequiredService<IScpRepository>();
-              // var data = await repo.GetMacAndLocationIdByScpIdAsync(message.SCPId);
-              // await @event.AddEventAsync(
-              //     DateTime.UtcNow,
-              //     string.Empty,
-              //     EventModule.DEVICE,
-              //     DescriptionHelper.GetMessageTypeDesc(message.ReplyType),
-              //     string.Empty,
-              //     m,
-              //     string.Empty,
-              //     DescriptionHelper.GetCommStatusDesc(message.comm.status),
-              //     l
-              // );
-              // Status Query
               var noti = scope.ServiceProvider.GetRequiredService<INotifier>();
               var bus = scope.ServiceProvider.GetRequiredService<IMessageBus>();
               var id = await bus.QueryAsync(new InternalIdByExternalIdAndEntityAndVendorQuery((short)message.SCPId,EntityType.Device,Vendor.aero));
@@ -294,26 +279,57 @@ public sealed class ReplyWorker(Channel<ReplyMessage> queue, ILogger<ReplyWorker
                 message.comm.current_primary_comm == 3 ? Status.Online : Status.Offline
               );
               await noti.SendToTopic(DeviceNotifierTopic.STATUS,status);
+              //  @event = scope.ServiceProvider.GetRequiredService<Core.Contract.Interfaces.IEvent>();
+              // var noti = scope.ServiceProvider.GetRequiredService<INotifier>();
+              // var bus = scope.ServiceProvider.GetRequiredService<IMessageBus>();
+              // idevice = scope.ServiceProvider.GetRequiredService<IDevice>();
+              // imap = scope.ServiceProvider.GetRequiredService<IComponentMapping>();
+              // mac = await imap.GetMacByExternalIdAndEntityAndVendorAsync(message.SCPId, EntityType.Device, Vendor.aero, ct);
+              // hw = await idevice.GetByMacAsync(mac, ct);
+              // var status = new StatusDto(
+              //   hw.Guid,
+              //   message.comm.current_primary_comm == 3 ? Status.Online : Status.Offline
+              // );
+              // await noti.SendToTopic(DeviceNotifierTopic.STATUS, status);
+              // eve = new CreateEventDto(
+              //   DateTimeHelper.IntToDateTimeUTC(message.tran.time),
+              //   string.Empty,
+              //   TranEventHelper.GetEventModuleFromTranType((tranSrc)message.tran.source_type),
+              //   DescriptionHelper.GetTranTypeDesc(message.tran.tran_type),
+              //   string.Empty,
+              //   mac,
+              //   hw.Name,
+              //   TranEventHelper.GetCode((tranSrc)message.tran.source_type, (tranType)message.tran.tran_type, message.tran.tran_code),
+              //   TranEventHelper.GetRemark(message),
+              //   string.Empty,
+              //   Vendor.aero,
+              //   hw.LocationGuid
+              // );
+              // await @event.CreateAsync(eve, ct);
+              // await noti.TriggerToTopic(NotifierTopic.EVENT, ct);
+              
               break;
             case (int)enSCPReplyType.enSCPReplyTranStatus:
-              //     notifier = scope.ServiceProvider.GetRequiredService<INotifier>();
-              //     var bus = scope.ServiceProvider.GetRequiredService<IMessageBus>();
-              //     // TranStatus t = new TranStatus(
-              //     //     message.SCPId,
-              //     //     message.tran_sts.capacity,
-              //     //     message.tran_sts.oldest,
-              //     //      message.tran_sts.last_loggd,
-              //     //      message.tran_sts.last_rprtd,
-              //     //      message.tran_sts.disabled,
-              //     //      message.tran_sts.disabled == 0 ? "Enable" : "Disable"
-              //     //     );
-              //     await notifier.SendToTopic(
-              //         NotifierTopic.EVENT_STATUS,
-              //         new EventStatusDto(
-              //             await bus.QueryAsync(new IdByComponentIdQuery(message.SCPId)),
-              //             message.tran_sts.disabled == 0 ? true : false
-              //             )
-              //         );
+                idevice = scope.ServiceProvider.GetRequiredService<IDevice>();
+                noti = scope.ServiceProvider.GetRequiredService<INotifier>();
+                imap = scope.ServiceProvider.GetRequiredService<IComponentMapping>();
+                mac = await imap.GetMacByExternalIdAndEntityAndVendorAsync(message.SCPId,EntityType.Device,Vendor.aero,ct);
+                hw = await idevice.GetByMacAsync(mac,ct);
+                Console.WriteLine(message.tran_sts.disabled == 0 ? true : false);
+                await noti.SendToTopic(DeviceNotifierTopic.DEVICE_EVENT_STATUS,new
+                {
+                  guid=hw.Guid,
+                  isEnabled=message.tran_sts.disabled == 0 ? true : false
+                });
+                  // TranStatus t = new TranStatus(
+                  //     message.SCPId,
+                  //     message.tran_sts.capacity,
+                  //     message.tran_sts.oldest,
+                  //      message.tran_sts.last_loggd,
+                  //      message.tran_sts.last_rprtd,
+                  //      message.tran_sts.disabled,
+                  //      message.tran_sts.disabled == 0 ? "Enable" : "Disable"
+                  //     );
               break;
             case (int)enSCPReplyType.enSCPReplySrSio:
               //     // var siostatus = new SioStatus(message.ScpId, message.sts_sio.number, DecodeHelper.TypeSioCommTranCodeDecode(message.sts_sio.com_status), DecodeHelper.TypeCosStatusDecode(Convert.ToByte(message.sts_sio.ip_stat[4])), DecodeHelper.TypeCosStatusDecode(Convert.ToByte(message.sts_sio.ip_stat[5])), DecodeHelper.TypeCosStatusDecode(Convert.ToByte(message.sts_sio.ip_stat[6])));
