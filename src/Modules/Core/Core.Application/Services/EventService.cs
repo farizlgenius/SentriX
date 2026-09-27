@@ -99,7 +99,6 @@ public sealed class EventService(
     Guid? objectGuid,
     string? name,
     string? detail,
-    int locationId,
     CancellationToken ct = default)
   {
 
@@ -110,8 +109,7 @@ public sealed class EventService(
       ip,
       objectGuid,
       name,
-      detail,
-      locationId
+      detail
     );
     await repo.AddAuditAsync(d, ct);
   }

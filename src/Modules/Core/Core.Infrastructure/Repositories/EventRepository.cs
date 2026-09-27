@@ -183,7 +183,6 @@ new AdapterEvent(@event)
       {
             var query = context.AuditTrails
                   .AsNoTracking()
-                  .Where(x => x.location == null || x.location.guid == param.locationGuid)
                   .AsQueryable();
 
     if (!string.IsNullOrWhiteSpace(param.search))
@@ -237,14 +236,14 @@ new AdapterEvent(@event)
           .Skip((param.pageNumber - 1) * param.pageSize)
           .Take(param.pageSize)
          .Select(x => new AuditTrailDto(
+          x.created_at,
           x.entity,
           x.action,
           x.username,
           x.ip,
           x.object_guid,
           x.object_name,
-          x.detail,
-          x.location == null ? Guid.Empty : x.location.guid
+          x.detail
       )).ToListAsync();
 
     return new Pagination<AuditTrailDto>(

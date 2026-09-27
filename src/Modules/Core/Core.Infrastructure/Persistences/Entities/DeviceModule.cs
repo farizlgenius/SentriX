@@ -1,10 +1,11 @@
 
 
 using SharedKernel.Enums;
+using SharedKernel.Interfaces;
 
 namespace Core.Infrastructure.Persistences.Entities;
 
-public sealed class DeviceModule : BaseEntity
+public sealed class DeviceModule : BaseEntity,IAuditableEntity
 {
   public string name { get; set; } = string.Empty;
   public string serial_number { get; set; } = string.Empty;

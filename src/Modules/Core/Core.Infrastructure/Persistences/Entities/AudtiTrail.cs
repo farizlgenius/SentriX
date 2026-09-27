@@ -14,9 +14,6 @@ public sealed class AuditTrail : BaseEntity
 
     public string? detail { get; set; }                        // JSON delta/changes only
 
-    public int? location_id {get; set;}
-    public Location? location {get; set;}
-
     public AuditTrail() { }
      public AuditTrail(Core.Domain.Entities.AuditTrail d) : base(d.Guid)
     {
@@ -25,9 +22,7 @@ public sealed class AuditTrail : BaseEntity
         username = d.Username;
         ip = d.Ip;
         detail = d.Detail;
-        if(d.LocationId != 0)
-        {
-            location_id = d.LocationId;
-        }    
+        object_name = d.ObjectName;
+        object_guid = d.ObjectGuid;    
     }
 }

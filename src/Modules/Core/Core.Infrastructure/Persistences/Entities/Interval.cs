@@ -1,8 +1,9 @@
 using System.ComponentModel.DataAnnotations;
+using SharedKernel.Interfaces;
 
 namespace Core.Infrastructure.Persistences.Entities;
 
-public sealed class Interval : BaseEntity
+public sealed class Interval : BaseEntity,IAuditableEntity
 {
   public TimeOnly start_time { get; set; }
   public TimeOnly end_time { get; set; }

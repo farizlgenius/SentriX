@@ -1,8 +1,9 @@
 using SharedKernel.Enums;
+using SharedKernel.Interfaces;
 
 namespace Core.Infrastructure.Persistences.Entities;
 
-public sealed class Door : BaseEntity
+public sealed class Door : BaseEntity,IAuditableEntity
 {
   public string name { get; set; } = string.Empty;
   public Vendor vendor { get; set; } = Vendor.aero;

@@ -59,8 +59,7 @@ public sealed class AuthService(IJwt jwt, ICache redis,Channel<AuditTrailInsert>
       ip,
       null,
       null,
-      null,
-      0
+      null
     );
     await channel.Writer.WriteAsync(audit);
 
@@ -96,8 +95,7 @@ public sealed class AuthService(IJwt jwt, ICache redis,Channel<AuditTrailInsert>
       ip,
       null,
       null,
-      null,
-      0
+      null
     );
     await channel.Writer.WriteAsync(audit);
 

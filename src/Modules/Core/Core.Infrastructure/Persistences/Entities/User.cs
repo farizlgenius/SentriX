@@ -1,8 +1,9 @@
 using SharedKernel.Enums;
+using SharedKernel.Interfaces;
 
 namespace Core.Infrastructure.Persistences.Entities;
 
-public sealed class User : BaseEntity
+public sealed class User : BaseEntity,IAuditableEntity
 {
       public string username { get; set; } = string.Empty;
       public string password { get; set; } = string.Empty;

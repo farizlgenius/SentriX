@@ -1,6 +1,8 @@
+using SharedKernel.Interfaces;
+
 namespace Core.Infrastructure.Persistences.Entities;
 
-public sealed class TimeZone : BaseEntity
+public sealed class TimeZone : BaseEntity,IAuditableEntity
 {
   public string name { get; set; } = string.Empty;
   public ICollection<TimeZoneInterval> timezone_intervals { get; set; } = default!;

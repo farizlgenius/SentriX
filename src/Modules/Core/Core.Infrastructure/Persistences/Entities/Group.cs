@@ -1,6 +1,8 @@
+using SharedKernel.Interfaces;
+
 namespace Core.Infrastructure.Persistences.Entities;
 
-public sealed class Group : BaseEntity
+public sealed class Group : BaseEntity,IAuditableEntity
 {
   public string name { get; set; } = string.Empty;
   public ICollection<GroupComponent> components { get; set; } = default!;

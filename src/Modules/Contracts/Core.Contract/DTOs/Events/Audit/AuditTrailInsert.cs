@@ -9,6 +9,5 @@ public sealed record AuditTrailInsert(
       string Ip,
       Guid? ObjectGuid,
       string? ObjectName,
-      string? Detail,
-      int LocationId
+      string? Detail
 );

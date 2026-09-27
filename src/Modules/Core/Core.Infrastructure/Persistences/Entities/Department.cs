@@ -1,6 +1,8 @@
+using SharedKernel.Interfaces;
+
 namespace Core.Infrastructure.Persistences.Entities;
 
-public sealed class Department : BaseEntity
+public sealed class Department : BaseEntity,IAuditableEntity
 {
       public string name { get; set; } = string.Empty;
       public string description { get; set; } = string.Empty;

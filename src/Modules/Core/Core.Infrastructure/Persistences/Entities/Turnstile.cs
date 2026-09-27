@@ -1,6 +1,8 @@
+using SharedKernel.Interfaces;
+
 namespace Core.Infrastructure.Persistences.Entities;
 
-public sealed class Turnstile : BaseEntity
+public sealed class Turnstile : BaseEntity,IAuditableEntity
 {
       public string name { get; set; } = string.Empty;
       public ICollection<Lane> lanes { get; set; } = default!;

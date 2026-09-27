@@ -1,8 +1,9 @@
 using SharedKernel.Enums;
+using SharedKernel.Interfaces;
 
 namespace Core.Infrastructure.Persistences.Entities;
 
-public sealed class Output : BaseEntity
+public sealed class Output : BaseEntity,IAuditableEntity
 {
   public string name { get; set; } = string.Empty;
   public int slot_no { get; set; }

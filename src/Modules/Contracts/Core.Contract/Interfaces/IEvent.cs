@@ -27,6 +27,5 @@ public interface IEvent : IBase<EventDto, CreateEventDto, UpdateEventDto>
         Guid? objectGuid,
         string? objectName,
         string? diff,
-        int locationId,
         CancellationToken ct = default);
 }

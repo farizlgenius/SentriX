@@ -31,7 +31,6 @@ public sealed class AuditTrailWorker(Channel<AuditTrailInsert> queue, ILogger<Au
                                     message.ObjectGuid,
                                     message.ObjectName,
                                     message.Detail,
-                                    message.LocationId,
                                     ct
                               );
 

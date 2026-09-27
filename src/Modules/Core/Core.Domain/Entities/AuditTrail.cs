@@ -14,8 +14,6 @@ public sealed class AuditTrail : BaseDomain
 
       public string? Detail { get; set; }                        // JSON delta/changes only
 
-      public int? LocationId {get; set;}
-
       public AuditTrail(
             string entity,
             AuditAction action,
@@ -23,8 +21,7 @@ public sealed class AuditTrail : BaseDomain
             string ip,
             Guid? objectGuid,
             string? name,
-            string? detail,
-            int? locationId
+            string? detail
       ) : base(Guid.NewGuid())
       {
             Entity = entity;
@@ -34,6 +31,5 @@ public sealed class AuditTrail : BaseDomain
             ObjectGuid = objectGuid;
             ObjectName = name;
             Detail = detail;
-            LocationId = locationId;
       }
 }

@@ -2,10 +2,11 @@
 
 using SharedKernel.Constants;
 using SharedKernel.Enums;
+using SharedKernel.Interfaces;
 
 namespace Core.Infrastructure.Persistences.Entities;
 
-public sealed class Device : BaseEntity
+public sealed class Device : BaseEntity,IAuditableEntity
 {
   public string name { get; set; } = string.Empty;
   public string serial_number { get; set; } = string.Empty;

@@ -284,8 +284,7 @@ export const BaseTable = <
                         {/* Action */}
                         <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
                           <div className="flex gap-2">
-                            {
-                              <button
+                             <button
                                 type="button"
                                 onClick={(e) => {
                                   e.stopPropagation();
@@ -310,7 +309,6 @@ export const BaseTable = <
                               >
                                 <TrashBinIcon className="h-5 w-5" />
                               </button>
-                            }
                           </div>
                         </TableCell>
                       </TableRow>

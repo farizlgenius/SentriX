@@ -490,7 +490,6 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                               x.guid,
                               x.id,
                               x.created_at,
-                              x.location_id,
                               x.action,
                               x.username,
                               x.entity
@@ -865,13 +864,6 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   .HasForeignKey(x => x.timezone_id)
                   .OnDelete(DeleteBehavior.Cascade);
 
-            // Audit
-            modelBuilder.Entity<AuditTrail>()
-                  .HasOne(x => x.location)
-                  .WithMany(x => x.audit_trails)
-                  .IsRequired(false)
-                  .HasForeignKey(x => x.location_id)
-                  .OnDelete(DeleteBehavior.SetNull);
 
 
 

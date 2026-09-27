@@ -1,7 +1,8 @@
 using System.ComponentModel.DataAnnotations;
+using SharedKernel.Interfaces;
 namespace Core.Infrastructure.Persistences.Entities;
 
-public sealed class Location : BaseEntity
+public sealed class Location : BaseEntity,IAuditableEntity
 {
   public string name { get; set; } = string.Empty;
   public string description { get; set; } = string.Empty;

@@ -1,6 +1,8 @@
+using SharedKernel.Interfaces;
+
 namespace Core.Infrastructure.Persistences.Entities;
 
-public sealed class Holiday : BaseEntity
+public sealed class Holiday : BaseEntity,IAuditableEntity
 {
   public string name { get; set; } = string.Empty;
   public DateTime start { get; set; }

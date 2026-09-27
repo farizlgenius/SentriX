@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using SharedKernel.Enums;
+using SharedKernel.Interfaces;
 
 namespace Core.Infrastructure.Interceptors;
 
@@ -24,7 +25,7 @@ public sealed class AuditSaveChangesInterceptor(Channel<AuditTrailInsert> channe
             // 1. Identify modified/added/deleted entities (Exclude AuditTrail itself to avoid loops)
             var entries = dbContext.ChangeTracker.Entries()
                 .Where(e => e.State is EntityState.Added or EntityState.Modified or EntityState.Deleted)
-                .Where(e => e.Entity.GetType().Name != "AuditTrail")
+                .Where(e => e.Entity is IAuditableEntity)
                 .ToList();
 
             if (!entries.Any()) return base.SavingChangesAsync(eventData, result, cancellationToken);
@@ -36,7 +37,7 @@ public sealed class AuditSaveChangesInterceptor(Channel<AuditTrailInsert> channe
                            ?? context?.User.FindFirstValue("sub")
                            ?? "System";
 
-            string method = context?.Request.Method ?? "SYSTEM";
+            string method = context?.Request.Method ?? "System";
             string path = context?.Request.Path ?? "N/A";
             string? tenantStr = context?.Items["tenants"] as string;
 
@@ -52,23 +53,10 @@ public sealed class AuditSaveChangesInterceptor(Channel<AuditTrailInsert> channe
                         .FirstOrDefault(p => p.Metadata.Name == "guid")?.CurrentValue as Guid? 
                         ?? Guid.Empty;
 
-                  int loc = entry.Properties
-                        .FirstOrDefault(p => p.Metadata.Name == "location_id")?.CurrentValue as int? ?? 0;
 
                   string entityName = entry.Properties
                         .FirstOrDefault(p => p.Metadata.Name == "name")?.CurrentValue?.ToString() ?? "";
 
-                  // var auditMessage = new AuditLogMessage
-                  // {
-                  //       Entity = entry.Entity.GetType().Name,
-                  //       EntityId = entityId,
-                  //       Action = MapEntityState(entry.State),W
-                  //       Diff = diffJson,
-                  //       Method = method,
-                  //       Path = path,
-                  //       Username = username,
-                  //       LocationId = locationId
-                  // };
 
                   var auditMessage = new AuditTrailInsert(
                         entry.Entity.GetType().Name,
@@ -77,8 +65,7 @@ public sealed class AuditSaveChangesInterceptor(Channel<AuditTrailInsert> channe
                         clientIp,
                         entityGuid, 
                         entityName,
-                        diffJson,
-                        loc
+                        diffJson
                   );
 
                   // 4. Non-blocking write to in-memory channel (< 1ms execution time)
