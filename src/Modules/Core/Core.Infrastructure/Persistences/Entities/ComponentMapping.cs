@@ -7,10 +7,9 @@ namespace Core.Infrastructure.Persistences.Entities;
 public sealed class ComponentMapping : BaseEntity
 {
   public string entity { get; set; } = string.Empty;
-  public int internal_id { get; set; }
-  public int external_id { get; set; }
-  public string mac { get; set; } = string.Empty;
-  public SharedKernel.Enums.Vendor vendor { get; set; } = SharedKernel.Enums.Vendor.aero;
+  public int? external_id { get; set; }
+  public string? mac { get; set; } 
+  public SharedKernel.Enums.Vendor? vendor { get; set; } = SharedKernel.Enums.Vendor.aero;
 
   // Relation
   public int location_id { get; set; }
@@ -19,9 +18,11 @@ public sealed class ComponentMapping : BaseEntity
   public ComponentMapping(Core.Domain.Entities.ComponentMappping d) : base(d.Guid)
   {
     entity = d.Entity;
-    internal_id = d.InternalId;
-    external_id = d.ExternalId;
-    mac = d.Mac;
+    if(d.ExternalId != 0)
+      external_id = d.ExternalId;
+    if(!string.IsNullOrWhiteSpace(d.Mac))
+      mac = d.Mac;
+    if(d.Vendor == null)
     vendor = d.Vendor;
     location_id = d.LocationId;
   }

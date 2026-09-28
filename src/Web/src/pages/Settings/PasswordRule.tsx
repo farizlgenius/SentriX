@@ -36,8 +36,9 @@ export const PasswordRule = () => {
 
     const getPasswordRule = async () => {
         const res = await send.get(SettingEndpoint.GET_PASSWORD);
+        console.log(res);
         if (res && res.data) {
-            setDto(res.data)
+            setDto(res.data.data)
         }
     }
 

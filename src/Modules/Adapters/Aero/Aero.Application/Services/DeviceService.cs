@@ -5,10 +5,12 @@ using Aero.Application.Helpers;
 using Aero.Application.Interfaces;
 using Aero.Application.Metadata;
 using Aero.Application.Metadata.Device;
+using Core.Contract.Commands.Device;
 using Core.Contract.Commands.Events;
 using Core.Contract.Interfaces;
 using Core.Contract.Queries;
 using Core.Contract.Queries.ComponentMapping;
+using Core.Contract.Queries.Time;
 using Setting.Contract.Interfaces;
 using Setting.Contract.Queries;
 using SharedKernel.Constants;
@@ -20,6 +22,7 @@ namespace Aero.Application.Services;
 
 public sealed class DeviceService(
       IDeviceRepository repo,
+      ITimeRepository tRepo,
       IDeviceModuleRepository module,
       IMessageBus bus
       ) : IDeviceAdapter
@@ -28,7 +31,7 @@ public sealed class DeviceService(
 
       public async Task GetConfigurationAsync(string mac, string ip, CancellationToken ct = default)
       {
-            var externalId = await bus.QueryAsync(new ExternalIdByMacAndEntityQuery(mac,EntityType.Device));
+            var externalId = await bus.QueryAsync(new ExternalIdByMacAndEntityQuery(mac, EntityType.Device));
 
             var res = repo.ScpStructureStatusRead(
                   mac,
@@ -66,20 +69,20 @@ public sealed class DeviceService(
 
       public async Task<Status> GetStatusAsync(string mac, string ip, CancellationToken ct = default)
       {
-            var externalId = await bus.QueryAsync(new ExternalIdByMacAndEntityQuery(mac,EntityType.Device));
-            
+            var externalId = await bus.QueryAsync(new ExternalIdByMacAndEntityQuery(mac, EntityType.Device));
+
             return repo.GetStatus((short)externalId);
       }
 
       public async Task GetTransactionStatusAsync(string mac, string ip, CancellationToken ct = default)
       {
-            var externalId = await bus.QueryAsync(new ExternalIdByMacAndEntityQuery(mac,EntityType.Device));
-            var res = repo.GetTransactionStatus(mac,(short)externalId);
+            var externalId = await bus.QueryAsync(new ExternalIdByMacAndEntityQuery(mac, EntityType.Device));
+            var res = repo.GetTransactionStatus(mac, (short)externalId);
 
             await bus.SendAsync(new AdapterEventCommand(res));
       }
 
-      public async Task InititalDeviceAsync(string mac,string Ip = "",CancellationToken ct = default)
+      public async Task InititalDeviceAsync(string mac, string Ip = "", CancellationToken ct = default)
       {
             // var scpDevice = await setting.GetAeroDriverSettingAsync();
 
@@ -87,7 +90,7 @@ public sealed class DeviceService(
 
             // var externalId = await mapping.GetExternalIdByMacAndEntityAsync(mac,EntityType.Device);
 
-            var externalId = await bus.QueryAsync(new ExternalIdByMacAndEntityQuery(mac,EntityType.Device));
+            var externalId = await bus.QueryAsync(new ExternalIdByMacAndEntityQuery(mac, EntityType.Device));
 
 
             var res = repo.AccessDatabaseSpecification(
@@ -127,7 +130,7 @@ public sealed class DeviceService(
                   (short)scpDevice.MaxFloorPerAcr
                   );
 
-      await bus.SendAsync(new AdapterEventCommand(res));
+            await bus.SendAsync(new AdapterEventCommand(res));
 
             res = repo.TimeSet(
               mac,
@@ -135,7 +138,7 @@ public sealed class DeviceService(
 
             await bus.SendAsync(new AdapterEventCommand(res));
 
-            
+
 
             res = repo.DriverConfiguration(
                   mac,
@@ -214,31 +217,31 @@ public sealed class DeviceService(
 
             await bus.SendAsync(new AdapterEventCommand(res));
 
-            
+
 
       }
 
       public async Task RemoveDeviceAsync(string mac, string ip, CancellationToken ct = default)
       {
-            var externalId = await bus.QueryAsync(new ExternalIdByMacAndEntityQuery(mac,EntityType.Device));
-            
-            var res = repo.DetachScpFromChannel(mac,(short)externalId);
+            var externalId = await bus.QueryAsync(new ExternalIdByMacAndEntityQuery(mac, EntityType.Device));
+
+            var res = repo.DetachScpFromChannel(mac, (short)externalId);
 
             await bus.SendAsync(new AdapterEventCommand(res));
       }
 
       public async Task ResetAsync(string mac, string ip, CancellationToken ct = default)
       {
-            var externalId = await bus.QueryAsync(new ExternalIdByMacAndEntityQuery(mac,EntityType.Device));
+            var externalId = await bus.QueryAsync(new ExternalIdByMacAndEntityQuery(mac, EntityType.Device));
 
-            var res = repo.ScpReset(mac,(short)externalId);
+            var res = repo.ScpReset(mac, (short)externalId);
 
-             await bus.SendAsync(new AdapterEventCommand(res));
+            await bus.SendAsync(new AdapterEventCommand(res));
       }
 
 
 
-      public async Task SetExternalIdAsync(string mac, string ip,int from, int to, CancellationToken ct = default)
+      public async Task SetExternalIdAsync(string mac, string ip, int from, int to, CancellationToken ct = default)
       {
             var res = repo.SetScpId(
                   mac,
@@ -249,13 +252,62 @@ public sealed class DeviceService(
             await bus.SendAsync(new AdapterEventCommand(res));
       }
 
+      public async Task UploadAsync(
+            string mac,
+            string ip,
+            CancellationToken ct = default
+      )
+      {
+            // Start with Upload Scp Driver 
+            // 1. Get Device Setting
+            var device = await bus.QueryAsync(new DeviceByMacQuery(mac));
+            // 2. Get ComponentId
+            var componentId = await bus.QueryAsync(new ExternalIdByMacAndEntityQuery(mac, EntityType.Device));
+            // 3.Json Serialize with Metadata Class 
+            var deviceMetadata = JsonHelper.Deserialize<DeviceMetadata>(device.Metadata);
+            // 4.Send command driver configuration
+            if (deviceMetadata.PortOne)
+            {
+                  var res = repo.DriverConfiguration(
+                        device.Mac,
+                        (short)componentId,
+                        1,
+                        1,
+                        deviceMetadata.BaudRateOne,
+                        0,
+                        deviceMetadata.ProtocolOne,
+                        0
+                  );
+
+                  await bus.SendAsync(new AdapterEventCommand(res));
+            }
+
+            if (deviceMetadata.PortTwo)
+            {
+                  var res = repo.DriverConfiguration(
+                        device.Mac,
+                        (short)componentId,
+                        2,
+                        2,
+                        deviceMetadata.BaudRateTwo,
+                        0,
+                        deviceMetadata.ProtocolTwo,
+                        0
+                  );
+
+                  await bus.SendAsync(new AdapterEventCommand(res));
+            }
+      }
+
+
+
       public async Task UploadAllConfigurationAsync(string mac, string ip, CancellationToken ct = default)
       {
             // Start with Upload Scp Driver 
             // 1. Get Device Setting
             var device = await bus.QueryAsync(new DeviceByMacQuery(mac));
             // 2. Get ComponentId
-            var componentId = await bus.QueryAsync(new ExternalIdByMacAndEntityQuery(mac,EntityType.Device));
+            var componentId = await bus.QueryAsync(new ExternalIdByMacAndEntityQuery(mac, EntityType.Device));
             // 3.Json Serialize with Metadata Class 
             var deviceMetadata = JsonHelper.Deserialize<DeviceMetadata>(device.Metadata);
             // 4.Send command driver configuration
@@ -291,10 +343,46 @@ public sealed class DeviceService(
                   await bus.SendAsync(new AdapterEventCommand(res));
             }
 
-            // Finish
-            
-            
+            // Time 
+
+            var tzs = await bus.QueryAsync(new TimeZoneByLocationQuery(device.LocationGuid));
+
+            foreach (var tz in tzs)
+            {
+                  var tzId = await bus.QueryAsync(new ExternalIdByGuidAndEntityQuery(tz.Guid, EntityType.TimeZone));
+
+                  var res = tRepo.ExtendedTimeZoneActSpecification(
+                        device.Mac,
+                        (short)componentId,
+                        (short)tzId,
+                        tz.Name.Equals("Always") ? (short)1 : tz.Name.Equals("Never") ? (short)0 : (short)2,
+                        tz.Intervals.Select(x =>
+                  (
+                        (short)UtilitiesHelper.ConvertDayToBinary(
+                              x.Days.Sunday,
+                              x.Days.Monday,
+                              x.Days.Tuesday,
+                              x.Days.Wednesday,
+                              x.Days.Thursday,
+                              x.Days.Friday,
+                              x.Days.Saturday
+                              ),
+                        (short)UtilitiesHelper.TimeOnlyToInt(x.Start),
+                        (short)UtilitiesHelper.TimeOnlyToInt(x.End)
+                        )).ToList()
+                  );
+
+                  await bus.SendAsync(new AdapterEventCommand(res));
+            }
+
+
+            // finally
+
+            await bus.SendAsync(new ConfigurationStatusCommand(mac,true,true));
+
       }
+
+
 
 
 }

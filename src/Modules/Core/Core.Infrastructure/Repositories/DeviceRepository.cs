@@ -118,11 +118,11 @@ public sealed class DeviceRepository(CoreDbContext context) : IDeviceRepository
       }
 
 
-      public async Task<IEnumerable<DeviceDto>> GetByLocationAsync(int locationId, CancellationToken ct = default)
+      public async Task<IEnumerable<DeviceDto>> GetByLocationAsync(Guid locationGuid, CancellationToken ct = default)
       {
             return await context.Devices
                   .AsNoTracking()
-                  .Where(x => x.location_id == locationId)
+                  .Where(x => x.location.guid == locationGuid)
                   .Select(x => new DeviceDto(
                         x.guid,
                         x.name,
@@ -257,7 +257,7 @@ public sealed class DeviceRepository(CoreDbContext context) : IDeviceRepository
                   .Select(x => new { x.name, x.location_id })
                   .FirstOrDefaultAsync();
 
-            return res == null ? (string.Empty,0) : (res.name,res.location_id ?? 0);
+            return res == null ? (string.Empty,0) : (res.name,res.location_id);
       }
 
       public async Task<Pagination<DeviceDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
@@ -415,7 +415,7 @@ public sealed class DeviceRepository(CoreDbContext context) : IDeviceRepository
             await context.SaveChangesAsync(ct);
       }
 
-      public async Task UpdateConfigurationStatusByMacAsync(string mac, bool isSync, CancellationToken ct = default)
+      public async Task UpdateConfigurationStatusByMacAsync(string mac, bool isSync,bool isUploaded, CancellationToken ct = default)
       {
             var entity = await context.Devices
                   .Where(x => x.mac == mac)
@@ -425,8 +425,10 @@ public sealed class DeviceRepository(CoreDbContext context) : IDeviceRepository
             if(entity == null)
                   throw new NotFoundException(EntityType.Device,mac);
 
-            entity.configuration_status = isSync ? DeviceConfigurationStatus.sync : DeviceConfigurationStatus.reset;
+            entity.configuration_status = isSync ? isUploaded ? DeviceConfigurationStatus.sync : DeviceConfigurationStatus.pending : DeviceConfigurationStatus.reset;
             entity.updated_at = DateTime.UtcNow;
+            if(isUploaded)
+                  entity.synced_at = DateTime.UtcNow;
 
             context.Devices.Update(entity);
             await context.SaveChangesAsync(ct);

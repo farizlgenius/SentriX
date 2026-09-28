@@ -91,7 +91,7 @@ public sealed class PositionRepository(CoreDbContext context) : IPositionReposit
       }
 
 
-      public Task<IEnumerable<PositionDto>> GetByLocationAsync(int locationId, CancellationToken ct = default)
+      public Task<IEnumerable<PositionDto>> GetByLocationAsync(Guid locationGuid, CancellationToken ct = default)
       {
             throw new NotImplementedException();
       }

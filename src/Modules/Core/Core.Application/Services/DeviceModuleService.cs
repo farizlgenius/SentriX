@@ -66,4 +66,9 @@ public sealed class DeviceModuleService(IDeviceModuleRepository repo, IMessageBu
   {
     throw new NotImplementedException();
   }
+
+      public Task UploadAsync(CancellationToken ct = default)
+      {
+            throw new NotImplementedException();
+      }
 }

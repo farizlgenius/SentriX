@@ -82,11 +82,11 @@ public sealed class GroupRepository(CoreDbContext context) : IGroupRepository
                   .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.Group, guid.ToString());
       }
 
-      public async Task<IEnumerable<GroupDto>> GetByLocationAsync(int locationId, CancellationToken ct = default)
+      public async Task<IEnumerable<GroupDto>> GetByLocationAsync(Guid locationGuid, CancellationToken ct = default)
       {
             return await context.Groups
                   .AsNoTracking()
-                  .Where(x => x.location_id == locationId)
+                  .Where(x => x.location.guid == locationGuid || x.is_default)
                   .Select(x => new GroupDto(
                         x.guid,
                         x.name,

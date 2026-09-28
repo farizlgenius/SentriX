@@ -99,8 +99,7 @@ public sealed class IntervalService(IIntervalRepository repo, IMessageBus bus) :
 
   public async Task<IEnumerable<IntervalDto>> GetByLocationAsync(Guid guid, CancellationToken ct = default)
   {
-    var locationId = await bus.QueryAsync(new LocationIdByGuidQuery(guid));
-    return await repo.GetByLocationAsync(locationId, ct);
+    return await repo.GetByLocationAsync(guid, ct);
   }
 
   public async Task<Pagination<IntervalDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)

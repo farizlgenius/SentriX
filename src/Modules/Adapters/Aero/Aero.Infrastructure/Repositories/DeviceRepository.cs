@@ -102,17 +102,13 @@ public sealed class DeviceRepostory(
                         Command.AccessDatabaseSpecification,
                         SCPDLL.scpGetTagLastPosted(ScpId),
                         DateTime.UtcNow,
-                        null,
+                        DateTime.UtcNow,
                         ObjectHelper.ToAsciiString(c),
-                        CommandStatus.PENDING,
+                        CommandStatus.SUCCESSED,
                         string.Empty,
                         Vendor.aero,
                         true
                         );
-
-
-
-
 
             }
             else
@@ -149,7 +145,46 @@ public sealed class DeviceRepostory(
 
       public CommandResponse DetachScpFromChannel(string Mac, short ScpId)
       {
-            throw new NotImplementedException();
+            CC_ATTACHSCP c = new CC_ATTACHSCP();
+            c.nSCPId = ScpId;
+            var result = repo.Send((short)enCfgCmnd.enCcDetachScp, c);
+            if (result)
+            {
+                  logger.LogInformation(LogMessageHelper.CommandSuccess(Command.DetachScpChannel, ScpId));
+
+                  return new CommandResponse(
+                        Mac,
+                        ScpId,
+                        Command.DetachScpChannel,
+                        SCPDLL.scpGetTagLastPosted(ScpId),
+                        DateTime.UtcNow,
+                        null,
+                        ObjectHelper.ToAsciiString(c),
+                        CommandStatus.PENDING,
+                        string.Empty,
+                        Vendor.aero,
+                        true
+                        );
+
+            }
+            else
+            {
+                  logger.LogError(LogMessageHelper.CommandUnsuccess(Command.DetachScpChannel, ScpId));
+                  return new CommandResponse(
+                        Mac,
+                       ScpId,
+                       Command.DetachScpChannel,
+                       -1,
+                       DateTime.UtcNow,
+                       DateTime.UtcNow,
+                       ObjectHelper.ToAsciiString(c),
+                       CommandStatus.FAILED,
+                       string.Empty,
+                       Vendor.aero,
+                       false
+                       );
+
+            }
       }
 
       public CommandResponse DriverConfiguration(string Mac, short ScpId, short Msp1Number, short PortNumber, short Baudrate, short ReplyTime, short nProtocol, short nDialect)
@@ -663,7 +698,7 @@ public sealed class DeviceRepostory(
             return SCPDLL.scpCheckOnline(ScpId) == 1 ? Status.Online : Status.Offline;
       }
 
-      public async Task VerifyMemoryAllocateAsync(string mac,List<StructureStatusMetadata> data,CancellationToken ct= default)
+      public async Task<bool> VerifyMemoryAllocateAsync(string mac,List<StructureStatusMetadata> data,CancellationToken ct= default)
       {
             //
             bool isVerify = true;
@@ -771,7 +806,9 @@ public sealed class DeviceRepostory(
 
             isVerify = !data.Any(x => x.Status == DeviceConfigurationStatus.unsync);
 
-            await bus.SendAsync(new ConfigurationStatusCommand(mac,isVerify));
+            await bus.SendAsync(new ConfigurationStatusCommand(mac,isVerify,false));
+
+            return isVerify;
 
       }
 }

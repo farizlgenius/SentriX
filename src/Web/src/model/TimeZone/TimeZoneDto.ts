@@ -1,7 +1,7 @@
 export interface TimeZoneDto {
   guid: string;
   name: string;
-  intervalGuids: string[];
+  intervals: string[];
   locationGuid: string;
   isActive: boolean;
   isDefault: boolean;

@@ -2,6 +2,7 @@ using Core.Application.Interfaces;
 using Core.Contract.DTOs.Group;
 using Core.Contract.Interfaces;
 using Core.Contract.Queries;
+using Core.Contract.Queries.Time;
 using SharedKernel.Constants;
 using SharedKernel.Domain;
 using SharedKernel.Exceptions;
@@ -9,8 +10,7 @@ using SharedKernel.Messaging;
 
 namespace Core.Application.Services;
 
-public sealed class GroupService(IGroupRepository repo,
-IMessageBus bus) : IGroup
+public sealed class GroupService(IGroupRepository repo,IMessageBus bus) : IGroup
 {
     public async Task<Guid> CreateAsync(CreateGroupDto dto, CancellationToken ct = default)
     {
@@ -102,8 +102,7 @@ IMessageBus bus) : IGroup
 
     public async Task<IEnumerable<GroupDto>> GetByLocationAsync(Guid guid, CancellationToken ct = default)
     {
-        var locationId = await bus.QueryAsync(new LocationIdByGuidQuery(guid));
-        return await repo.GetByLocationAsync(locationId, ct);
+        return await repo.GetByLocationAsync(guid, ct);
     }
 
     public async Task<Pagination<GroupDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
@@ -140,4 +139,9 @@ IMessageBus bus) : IGroup
 
 
     }
+
+      public Task UploadAsync(CancellationToken ct = default)
+      {
+            throw new NotImplementedException();
+      }
 }

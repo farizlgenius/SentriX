@@ -113,11 +113,11 @@ public sealed class LocationRepository(CoreDbContext context) : ILocationReposit
       }
 
 
-      public async Task<IEnumerable<LocationDto>> GetByLocationAsync(int locationId, CancellationToken ct = default)
+      public async Task<IEnumerable<LocationDto>> GetByLocationAsync(Guid locationGuid, CancellationToken ct = default)
       {
             return await context.Locations
                    .AsNoTracking()
-                   .Where(x => x.id == locationId)
+                   .Where(x => x.guid == locationGuid)
                    .Select(x => new LocationDto(
                          x.guid,
                          x.name,

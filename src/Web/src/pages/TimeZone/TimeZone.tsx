@@ -18,7 +18,7 @@ import { FormType } from "../../model/Form/FormProp";
 import { usePagination } from "../../context/PaginationContext";
 import { TimezoneEndPoint } from "../../endpoint/TimezoneEndpoint";
 
-const TIMEZONE_TABLE_HEAD: string[] = ["Name", "Action"];
+const TIMEZONE_TABLE_HEAD: string[] = ["Name","Enable", "Action"];
 const TIMEZONE_KEY: string[] = ["name"];
 
 const TimeZone = () => {
@@ -27,7 +27,7 @@ const TimeZone = () => {
   const defaultDto: TimeZoneDto = {
     isActive: true,
     name: "",
-    intervalGuids: [],
+    intervals: [],
     guid: "",
     isDefault: false,
     locationGuid,
@@ -129,7 +129,7 @@ const TimeZone = () => {
     /* handle Table Action */
   }
   const handleEdit = (data: TimeZoneDto) => {
-    setFormType(FormType.UPDATE);
+    setFormType(data.isDefault ? FormType.INFO : FormType.UPDATE);
     setTimeZoneDto(data);
     setForm(true);
   };

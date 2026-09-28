@@ -4,5 +4,5 @@ namespace Core.Contract.Interfaces;
 
 public interface IGroup : IBase<GroupDto, CreateGroupDto, UpdateGroupDto>
 {
-
+      Task UploadAsync(CancellationToken ct = default);
 }

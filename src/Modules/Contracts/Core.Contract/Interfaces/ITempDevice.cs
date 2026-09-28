@@ -22,5 +22,5 @@ public interface ITempDevice
 
     int Count { get; }
 
-    IEnumerable<int> TryGetUnavailableId();
+    IEnumerable<int> TryGetUnavailableId(string mac);
 }

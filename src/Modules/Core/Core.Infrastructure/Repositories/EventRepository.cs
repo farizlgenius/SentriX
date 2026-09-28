@@ -255,11 +255,11 @@ new AdapterEvent(@event)
           );
       }
 
-      public async Task<IEnumerable<EventDto>> GetByLocationAsync(int locationId, CancellationToken ct = default)
+      public async Task<IEnumerable<EventDto>> GetByLocationAsync(Guid locationGuid, CancellationToken ct = default)
   {
     return await context.Events
       .AsNoTracking()
-      .Where(x => x.location_id == locationId)
+      .Where(x => x.location == null || x.location.guid == locationGuid)
       .Select(x => new EventDto(
         x.guid,
         x.timestamp,
@@ -475,18 +475,21 @@ new AdapterEvent(@event)
     throw new NotImplementedException();
   }
 
-  public async Task UpdateAdapterEventStatusAsync(string mac,int componentId, int tag, CommandStatus status, string reason, CancellationToken ct = default)
+  public async Task UpdateAdapterEventStatusAsync(string mac, int componentId, int tag, CommandStatus status, string reason, CancellationToken ct = default)
   {
-    var entity = await context.AdapterEvents
+    var entities = await context.AdapterEvents
       .Where(x => x.mac == mac && x.component_id == componentId && x.tag == tag && x.created_at <= x.updated_at)
       .OrderByDescending(x => x.created_at)
-      .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.AdapterEvent, $"Tag: {tag}");
+      .ToArrayAsync();
 
-    entity.reason = reason;
-    entity.status = status;
-    entity.received_at = DateTime.UtcNow;
+    foreach (var entity in entities)
+    {
+      entity.reason = reason;
+      entity.status = status;
+      entity.received_at = DateTime.UtcNow;
+    }
 
-    context.AdapterEvents.Update(entity);
+    context.AdapterEvents.UpdateRange(entities);
 
     await context.SaveChangesAsync(ct);
 

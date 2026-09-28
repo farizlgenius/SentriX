@@ -49,7 +49,7 @@ export const BaseForm: React.FC<PropsWithChildren<FormProp>> = ({
         <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">{desc}</p>
       </div>
 
-      {tabContent.length != 0 && (
+      {tabContent.length > 1  && (
         <StepProgress
           steps={tabContent.map((tab) => ({
             key: tab.label,

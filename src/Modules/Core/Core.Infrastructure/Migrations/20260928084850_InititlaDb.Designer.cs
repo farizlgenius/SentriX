@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Core.Infrastructure.Migrations
 {
     [DbContext(typeof(CoreDbContext))]
-    [Migration("20260920161014_AdapterEventOptionalLoc")]
-    partial class AdapterEventOptionalLoc
+    [Migration("20260928084850_InititlaDb")]
+    partial class InititlaDb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -110,6 +110,73 @@ namespace Core.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("AdapterEvents", "core");
+                });
+
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.AuditTrail", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<int?>("Locationid")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("action")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("created_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.Property<string>("detail")
+                        .HasColumnType("text");
+
+                    b.Property<string>("entity")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("guid")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<string>("ip")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("is_active")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("is_default")
+                        .HasColumnType("boolean");
+
+                    b.Property<Guid?>("object_guid")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("object_name")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("updated_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.Property<string>("username")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("Locationid");
+
+                    b.HasIndex("guid", "id", "created_at", "action", "username", "entity")
+                        .IsUnique();
+
+                    b.ToTable("AuditTrails", "core");
                 });
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Buzzer", b =>
@@ -292,16 +359,13 @@ namespace Core.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("external_id")
+                    b.Property<int?>("external_id")
                         .HasColumnType("integer");
 
                     b.Property<Guid>("guid")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
                         .HasDefaultValueSql("gen_random_uuid()");
-
-                    b.Property<int>("internal_id")
-                        .HasColumnType("integer");
 
                     b.Property<bool>("is_active")
                         .HasColumnType("boolean");
@@ -313,7 +377,6 @@ namespace Core.Infrastructure.Migrations
                         .HasColumnType("integer");
 
                     b.Property<string>("mac")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime>("updated_at")
@@ -321,16 +384,42 @@ namespace Core.Infrastructure.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
 
-                    b.Property<int>("vendor")
+                    b.Property<int?>("vendor")
                         .HasColumnType("integer");
 
                     b.HasKey("id");
 
                     b.HasIndex("location_id");
 
-                    b.HasIndex("internal_id", "external_id");
+                    b.HasIndex("guid", "external_id", "mac", "vendor");
 
                     b.ToTable("ComponentMappings", "core");
+
+                    b.HasData(
+                        new
+                        {
+                            id = 1,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            entity = "Timezone",
+                            external_id = 1,
+                            guid = new Guid("cff24195-43f8-42ec-a03f-e84857cc958f"),
+                            is_active = true,
+                            is_default = true,
+                            location_id = 1,
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            id = 2,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            entity = "Timezone",
+                            external_id = 2,
+                            guid = new Guid("614a766c-1241-4fdc-9d0d-7788291cac2d"),
+                            is_active = true,
+                            is_default = true,
+                            location_id = 1,
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        });
                 });
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Country", b =>
@@ -2460,7 +2549,7 @@ namespace Core.Infrastructure.Migrations
                     b.Property<bool>("is_default")
                         .HasColumnType("boolean");
 
-                    b.Property<int?>("location_id")
+                    b.Property<int>("location_id")
                         .HasColumnType("integer");
 
                     b.Property<string>("mac")
@@ -2722,7 +2811,7 @@ namespace Core.Infrastructure.Migrations
                     b.Property<bool>("is_default")
                         .HasColumnType("boolean");
 
-                    b.Property<int>("location_id")
+                    b.Property<int?>("location_id")
                         .HasColumnType("integer");
 
                     b.Property<string>("mac")
@@ -2757,6 +2846,42 @@ namespace Core.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("Events", "core");
+                });
+
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.ExceptionEvent", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<string>("exception")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("inner_exception")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("method")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("path")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("stack_trace")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("timestampe")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("id");
+
+                    b.ToTable("ExceptionEvent", "core");
                 });
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Face", b =>
@@ -4773,6 +4898,30 @@ namespace Core.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("TimeZones", "core");
+
+                    b.HasData(
+                        new
+                        {
+                            id = 1,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = true,
+                            location_id = 1,
+                            name = "Always",
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            id = 2,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = true,
+                            location_id = 1,
+                            name = "Never",
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        });
                 });
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.TimeZoneInterval", b =>
@@ -5141,6 +5290,13 @@ namespace Core.Infrastructure.Migrations
                     b.Navigation("location");
                 });
 
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.AuditTrail", b =>
+                {
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.Location", null)
+                        .WithMany("audit_trails")
+                        .HasForeignKey("Locationid");
+                });
+
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Buzzer", b =>
                 {
                     b.HasOne("Core.Infrastructure.Persistences.Entities.DeviceModule", "device_module")
@@ -5196,7 +5352,8 @@ namespace Core.Infrastructure.Migrations
                     b.HasOne("Core.Infrastructure.Persistences.Entities.Location", "location")
                         .WithMany("devices")
                         .HasForeignKey("location_id")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("location");
                 });
@@ -5270,8 +5427,7 @@ namespace Core.Infrastructure.Migrations
                     b.HasOne("Core.Infrastructure.Persistences.Entities.Location", "location")
                         .WithMany("events")
                         .HasForeignKey("location_id")
-                        .OnDelete(DeleteBehavior.SetNull)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("location");
                 });
@@ -5795,6 +5951,8 @@ namespace Core.Infrastructure.Migrations
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Location", b =>
                 {
                     b.Navigation("adapter_events");
+
+                    b.Navigation("audit_trails");
 
                     b.Navigation("companies");
 

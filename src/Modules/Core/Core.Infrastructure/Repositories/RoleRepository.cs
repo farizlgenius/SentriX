@@ -112,9 +112,29 @@ public sealed class RoleRepository(CoreDbContext context) : IRoleRepository
       }
 
 
-      public Task<IEnumerable<RoleDto>> GetByLocationAsync(int locationId, CancellationToken ct = default)
+      public async Task<IEnumerable<RoleDto>> GetByLocationAsync(Guid locationGuid, CancellationToken ct = default)
       {
-            throw new NotImplementedException();
+            return await context.Roles
+                  .AsNoTracking()
+                  .Select(e => new RoleDto(
+                        e.guid,
+                        e.name,
+                        e.module_permission.Select(x => new ModulePermissionDto(
+                              x.module_id,
+                              x.module.name,
+                              x.is_enabled,
+                              x.feature_permissions.Select(f => new FeaturePermissionDto(
+                                    f.feature_id,
+                                    f.feature.name,
+                                    f.is_enabled,
+                                    f.is_created,
+                                    f.is_updated,
+                                    f.is_deleted
+                                    )).ToList()
+                        )).ToList(),
+                        e.is_active,
+                        e.is_default
+                  )).ToArrayAsync();
       }
 
       public Task<Guid> GetGuidByIdAsync(int id, CancellationToken ct = default)

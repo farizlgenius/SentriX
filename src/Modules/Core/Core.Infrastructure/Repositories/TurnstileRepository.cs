@@ -114,11 +114,11 @@ public sealed class TurnstileRepository(CoreDbContext context) : ITurnstileRepos
       .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.Turnstile, guid.ToString());
   }
 
-  public async Task<IEnumerable<TurnstileDto>> GetByLocationAsync(int locationId, CancellationToken ct = default)
+  public async Task<IEnumerable<TurnstileDto>> GetByLocationAsync(Guid locationGuid, CancellationToken ct = default)
   {
     return await context.Turnstiles
       .AsNoTracking()
-      .Where(x => x.location_id == locationId)
+      .Where(x => x.location.guid == locationGuid)
       .Select(x => new TurnstileDto(
         x.guid,
         x.name,

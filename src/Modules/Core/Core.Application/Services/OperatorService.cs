@@ -115,8 +115,7 @@ public sealed class OperatorService(
 
       public async Task<IEnumerable<OperatorDto>> GetByLocationAsync(Guid guid, CancellationToken ct = default)
       {
-            var locationId = await bus.QueryAsync(new LocationIdByGuidQuery(guid));
-            return await repo.GetByLocationAsync(locationId, ct);
+            return await repo.GetByLocationAsync(guid, ct);
       }
 
       public async Task<string> GetHashedPasswordByUsernameAsync(string username, CancellationToken ct = default)

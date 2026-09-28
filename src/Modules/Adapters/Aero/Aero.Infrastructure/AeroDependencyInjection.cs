@@ -58,6 +58,10 @@ public static class AeroDependencyInjection
     services.AddScoped<IDeviceRepository,DeviceRepostory>();
     services.AddScoped<IDeviceAdapter,DeviceService>();
 
+    // Time
+    services.AddScoped<ITimeRepository,TimeRepository>();
+    services.AddScoped<ITimeAdapter,TimeService>();
+
     services.AddScoped<IDeviceModuleRepository,DeviceModuleRepository>();
 
     // Utility

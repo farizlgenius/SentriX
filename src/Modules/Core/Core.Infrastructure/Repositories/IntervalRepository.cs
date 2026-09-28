@@ -99,11 +99,39 @@ public sealed class IntervalRepository(CoreDbContext context) : IIntervalReposit
       ).FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.Interval, guid.ToString());
   }
 
-  public async Task<IEnumerable<IntervalDto>> GetByLocationAsync(int locationId, CancellationToken ct = default)
+  public async Task<IEnumerable<IntervalDto>> GetByGuidsAsync(IEnumerable<Guid> guids, CancellationToken ct = default)
+  {
+    return await context.Intervals
+     .AsNoTracking()
+     .OrderByDescending(x => x.id)
+     .Where(x => guids.Contains(x.guid))
+     .Select(
+ x => new IntervalDto(
+   x.guid,
+   x.day == null ?
+     new DayInWeekDto() :
+     new DayInWeekDto(
+       x.day.sunday,
+       x.day.monday,
+       x.day.tuesday,
+       x.day.wednesday,
+       x.day.thursday,
+       x.day.friday,
+       x.day.saturday
+     ),
+   x.start_time,
+   x.end_time,
+   x.is_active,
+   x.is_default
+ )
+).ToArrayAsync();
+  }
+
+  public async Task<IEnumerable<IntervalDto>> GetByLocationAsync(Guid locationGuid, CancellationToken ct = default)
   {
     return await context.Intervals
       .AsNoTracking()
-      .Where(x => x.location_id == locationId)
+      .Where(x => x.location.guid == locationGuid)
       .Select(
         x => new IntervalDto(
           x.guid,

@@ -92,5 +92,5 @@ public interface IDeviceRepository
       CommandResponse SetTransactionLogIndex(string Mac, short ScpId, bool IsEnable);
       CommandResponse DetachScpFromChannel(string Mac, short ScpId);
       CommandResponse DeleteScp(string Mac, short ScpId);
-      Task VerifyMemoryAllocateAsync(string mac,List<StructureStatusMetadata> data,CancellationToken ct= default);
+      Task<bool> VerifyMemoryAllocateAsync(string mac,List<StructureStatusMetadata> data,CancellationToken ct= default);
 }

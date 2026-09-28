@@ -54,14 +54,14 @@ const TimeZoneForm: React.FC<PropsWithChildren<FormProp<TimeZoneDto>>> = ({
   const addInterval = () => {
     if (
       intervalGuidToAdd === null ||
-      dto.intervalGuids.length >= maxIntervals ||
-      dto.intervalGuids.includes(intervalGuidToAdd)
+      dto.intervals.length >= maxIntervals ||
+      dto.intervals.includes(intervalGuidToAdd)
     )
       return;
 
     setDto((previous) => ({
       ...previous,
-      intervalGuids: [...previous.intervalGuids, intervalGuidToAdd],
+      intervals: [...previous.intervals, intervalGuidToAdd],
     }));
     setIntervalGuidToAdd(null);
     setIntervalForm(false);
@@ -71,7 +71,7 @@ const TimeZoneForm: React.FC<PropsWithChildren<FormProp<TimeZoneDto>>> = ({
     if (selectedIntervalGuid === null) return;
     setDto((previous) => ({
       ...previous,
-      intervalGuids: previous.intervalGuids.filter(
+      intervals: previous.intervals.filter(
         (guid) => guid !== selectedIntervalGuid,
       ),
     }));
@@ -93,7 +93,7 @@ const TimeZoneForm: React.FC<PropsWithChildren<FormProp<TimeZoneDto>>> = ({
   }, [locationGuid, dto.locationGuid]);
 
   const selectedIntervals = availableIntervals.filter((interval) =>
-    dto.intervalGuids.includes(interval.guid),
+    dto.intervals.includes(interval.guid),
   );
 
   return (
@@ -120,7 +120,7 @@ const TimeZoneForm: React.FC<PropsWithChildren<FormProp<TimeZoneDto>>> = ({
               ) : (
                 <div className="grid max-h-80 gap-3 overflow-y-auto pr-1 sm:grid-cols-2">
                   {availableIntervals.map((item) => {
-                    const alreadyAdded = dto.intervalGuids.includes(item.guid);
+                    const alreadyAdded = dto.intervals.includes(item.guid);
                     const selected = intervalGuidToAdd === item.guid;
                     return (
                       <button
@@ -198,10 +198,10 @@ const TimeZoneForm: React.FC<PropsWithChildren<FormProp<TimeZoneDto>>> = ({
             </div>
             <div className="mt-4 flex items-center justify-between">
               <span className="text-sm font-medium text-brand-700 dark:text-brand-300">
-                {dto.intervalGuids.length} of {maxIntervals} intervals added
+                {dto.intervals.length} of {maxIntervals} intervals added
               </span>
               <Button
-                disabled={readOnly || dto.intervalGuids.length >= maxIntervals}
+                disabled={readOnly || dto.intervals.length >= maxIntervals}
                 size="sm"
                 startIcon={<AddIcon className="h-4 w-4" />}
                 onClick={() => setIntervalForm(true)}

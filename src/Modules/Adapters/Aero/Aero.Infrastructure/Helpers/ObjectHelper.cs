@@ -21,7 +21,8 @@ public static class ObjectHelper
 
         AppendObject(values, obj);
 
-        return string.Join(" ", values.Where(v => !string.IsNullOrWhiteSpace(v)));
+        // Filter out empty spaces and any stray null strings
+        return string.Join(" ", values.Where(v => !string.IsNullOrWhiteSpace(v) && v != "\0"));
     }
 
     private static void AppendObject(List<string> values, object? obj)
@@ -46,11 +47,19 @@ public static class ObjectHelper
         switch (value)
         {
             case string s:
-                values.Add(s);
+                // Clean embedded null characters from C-style strings
+                var cleanStr = s.Replace("\0", string.Empty);
+                if (!string.IsNullOrWhiteSpace(cleanStr))
+                    values.Add(cleanStr);
                 return;
 
             case char[] chars:
-                values.AddRange(chars.Select(c => c.ToString()));
+                // Filter out null characters from fixed-length buffers
+                values.AddRange(chars.Where(c => c != '\0').Select(c => c.ToString()));
+                return;
+                
+            case char c when c == '\0':
+                // Ignore individual null characters
                 return;
 
             case Array array:

@@ -38,7 +38,7 @@ public sealed class OutputRepository(CoreDbContext context) : IOutputRepository
     throw new NotImplementedException();
   }
 
-  public async Task<IEnumerable<OutputDto>> GetByLocationAsync(int locationId, CancellationToken ct = default)
+  public async Task<IEnumerable<OutputDto>> GetByLocationAsync(Guid locationGuid, CancellationToken ct = default)
   {
     throw new NotImplementedException();
   }

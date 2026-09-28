@@ -4475,6 +4475,9 @@
             "framework": "net10.0",
             "targetAlias": "net10.0",
             "projectReferences": {
+              "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Core.Contract\\Core.Contract.csproj": {
+                "projectPath": "D:\\aero\\SentriX\\src\\Modules\\Contracts\\Core.Contract\\Core.Contract.csproj"
+              },
               "D:\\aero\\SentriX\\src\\SharedKernel\\SharedKernel.csproj": {
                 "projectPath": "D:\\aero\\SentriX\\src\\SharedKernel\\SharedKernel.csproj"
               }

@@ -98,11 +98,11 @@ public sealed class TempDeviceService : ITempDevice
                 });
       }
 
-      public IEnumerable<int> TryGetUnavailableId()
+      public IEnumerable<int> TryGetUnavailableId(string mac)
       {
             var arr = _devices.Values.ToArray();
 
-            return arr.Select(x => x.Id).ToArray();
+            return arr.Where(x => x.Mac != mac).Select(x => x.Id).ToArray();
       }
 
       public string TryGetMacById(int id)

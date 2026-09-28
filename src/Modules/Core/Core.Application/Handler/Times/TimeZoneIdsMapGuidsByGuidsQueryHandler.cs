@@ -1,10 +1,11 @@
 using Core.Application.Interfaces;
 using Core.Contract.Queries;
+using Core.Contract.Queries.Time;
 using SharedKernel.Constants;
 using SharedKernel.Exceptions;
 using SharedKernel.Messaging;
 
-namespace Core.Application.Handler;
+namespace Core.Application.Handler.Times;
 
 public sealed class TimeZoneIdsMapGuidsByGuidsQueryHandler(ITimeRepository repo) : IQueryHandler<TimeZoneIdsMapGuidsByGuidsQuery, Dictionary<Guid, int>>
 {

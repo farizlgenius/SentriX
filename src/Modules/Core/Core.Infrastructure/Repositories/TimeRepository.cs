@@ -106,11 +106,11 @@ public sealed class TimeRepository(CoreDbContext context) : ITimeRepository
       )).FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.TimeZone, guid.ToString());
   }
 
-  public async Task<IEnumerable<TimeZoneDto>> GetByLocationAsync(int locationId, CancellationToken ct = default)
+  public async Task<IEnumerable<TimeZoneDto>> GetByLocationAsync(Guid locationGuid, CancellationToken ct = default)
   {
     return await context.TimeZones
       .AsNoTracking()
-      .Where(x => x.location_id == locationId)
+      .Where(x => x.location.guid == locationGuid || x.is_default)
       .Select(x => new TimeZoneDto(
         x.guid,
         x.name,
@@ -157,7 +157,7 @@ public sealed class TimeRepository(CoreDbContext context) : ITimeRepository
   public async Task<Pagination<TimeZoneDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
   {
     var query = context.TimeZones
-                  .Where(x => x.location.guid == param.locationGuid)
+                  .Where(x => x.is_default || x.location.guid == param.locationGuid)
                   .AsNoTracking()
                   .AsQueryable();
 

@@ -1,6 +1,7 @@
 using System.Security.Cryptography.X509Certificates;
 using Core.Infrastructure.Persistences.Entities;
 using Microsoft.EntityFrameworkCore;
+using SharedKernel.Constants;
 using SharedKernel.Enums;
 
 namespace Core.Infrastructure.Persistences;
@@ -225,8 +226,10 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
             modelBuilder.Entity<ComponentMapping>()
             .HasIndex(x => new
             {
-                  x.internal_id,
-                  x.external_id
+                  x.guid,
+                  x.external_id,
+                  x.mac,
+                  x.vendor
             });
 
             modelBuilder.Entity<Country>()
@@ -1328,41 +1331,6 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   }
             );
 
-            //       modelBuilder.Entity<User>().HasData(
-            //            new User
-            //            {
-            //                  id = 1,
-            //                  guid = new Guid("ed2b5887-9dcb-43bd-a6f8-988330df5181"),
-            //                  identification = "admin",
-            //                  username = "admin",
-            //                  password = "100000.lG1/4V/VRPZsbhf/Zqc4xw==.6vYcf+wEMSgqcaNhoZEdM9PaPxx2ZUErZhQbeMxo5OY=",
-            //                  user_code = "admin01",
-            //                  title = Title.Mr,
-            //                  firstname = "admin",
-            //                  lastname = "system",
-            //                  gender = Gender.Male,
-            //                  date_of_birth = new DateTime(1970, 01, 01, 0, 0, 0, DateTimeKind.Utc),
-            //                  email = "support@sentrix.com",
-            //                  is_operator = true,
-            //                  is_user = false,
-            //                  role_id = 1,
-            //                  active_time = new DateTime(1970, 01, 01, 0, 0, 0, DateTimeKind.Utc),
-            //                  expire_time = new DateTime(9999, 01, 01, 0, 0, 0, DateTimeKind.Utc),
-            //                  is_default = true,
-            //                  is_active = true,
-
-            //            }
-            //      );
-
-            //       modelBuilder.Entity<UserLocation>()
-            //             .HasData(
-            //                   new UserLocation
-            //                   {
-            //                         id = 1,
-            //                         user_id = 1,
-            //                         location_id = 1
-            //                   }
-            //             );
 
             modelBuilder.Entity<Operator>()
             .HasData(
@@ -1394,7 +1362,99 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                         }
                   );
 
-            
+            // Interval 
+
+            // modelBuilder.Entity<Interval>()
+            //       .HasData(
+            //             new Interval
+            //             {
+            //                   id=1,
+            //                   start_time=new TimeOnly(0,0),
+            //                   end_time=new TimeOnly(23,59),
+            //                   location_id=1,
+            //                   is_default=true,
+            //                   day = new DayInWeek
+            //                   {
+            //                         id=1,
+            //                         sunday=true,
+            //                         monday=true,
+            //                         tuesday=true,
+            //                         wednesday=true,
+            //                         thursday=true,
+            //                         friday=true,
+            //                         saturday=true,
+            //                   }
+            //             },
+            //             new Interval
+            //             {
+            //                   id=1,
+            //                   start_time=new TimeOnly(0,0),
+            //                   end_time=new TimeOnly(0,0),
+            //                   location_id=1,
+            //                   is_default=true,
+            //                   day = new DayInWeek
+            //                   {
+            //                         id=2,
+            //                         sunday=false,
+            //                         monday=false,
+            //                         tuesday=false,
+            //                         wednesday=false,
+            //                         thursday=false,
+            //                         friday=false,
+            //                         saturday=false,
+            //                   }
+            //             }
+            //       );
+
+            // Time Zone
+            modelBuilder.Entity<Core.Infrastructure.Persistences.Entities.TimeZone>()
+                  .HasData(
+                        new Core.Infrastructure.Persistences.Entities.TimeZone
+                        {
+                              id=1,
+                              guid = new Guid("cff24195-43f8-42ec-a03f-e84857cc958f"),
+                              name = "Always",
+                              location_id=1,
+                              is_default=true,
+                        },
+                        new Core.Infrastructure.Persistences.Entities.TimeZone
+                        {
+                              id=2,
+                              guid = new Guid("614a766c-1241-4fdc-9d0d-7788291cac2d"),
+                              name = "Never",
+                              location_id=1,
+                              is_default=true
+                        }
+                  );
+
+            // Map Timezone
+
+            modelBuilder.Entity<Core.Infrastructure.Persistences.Entities.ComponentMapping>()
+                  .HasData(
+                        new Core.Infrastructure.Persistences.Entities.ComponentMapping
+                        {
+                              id=1,
+                              guid = new Guid("cff24195-43f8-42ec-a03f-e84857cc958f"),
+                              entity = EntityType.TimeZone,
+                              external_id=1,
+                              mac=null,
+                              vendor=null,
+                              is_default=true,
+                              location_id=1
+                        },
+                        new Core.Infrastructure.Persistences.Entities.ComponentMapping
+                        {
+                              id=2,
+                              guid = new Guid("614a766c-1241-4fdc-9d0d-7788291cac2d"),
+                              entity = EntityType.TimeZone,
+                              external_id=2,
+                              mac=null,
+                              vendor=null,
+                              is_default=true,
+                              location_id=1
+                        }
+                  );
+
 
 
 

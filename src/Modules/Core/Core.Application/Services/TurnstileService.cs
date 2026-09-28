@@ -95,8 +95,7 @@ public sealed class TurnstileService(
 
   public async Task<IEnumerable<TurnstileDto>> GetByLocationAsync(Guid guid, CancellationToken ct = default)
   {
-    var locationId = await bus.QueryAsync(new LocationIdByGuidQuery(guid));
-    return await repo.GetByLocationAsync(locationId, ct);
+    return await repo.GetByLocationAsync(guid, ct);
   }
 
   public async Task<Pagination<TurnstileDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
@@ -150,4 +149,9 @@ public sealed class TurnstileService(
     return d.Guid;
 
   }
+
+      public Task UploadAsync(CancellationToken ct = default)
+      {
+            throw new NotImplementedException();
+      }
 }

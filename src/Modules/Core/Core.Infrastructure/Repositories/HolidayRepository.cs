@@ -90,11 +90,11 @@ public sealed class HolidayRepository(CoreDbContext context) : IHolidayRepositor
       ).FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.Holiday, guid.ToString());
   }
 
-  public async Task<IEnumerable<HolidayDto>> GetByLocationAsync(int locationId, CancellationToken ct = default)
+  public async Task<IEnumerable<HolidayDto>> GetByLocationAsync(Guid locationGuid, CancellationToken ct = default)
   {
     return await context.Holidays
       .AsNoTracking()
-      .Where(x => x.location_id == locationId)
+      .Where(x => x.location.guid == locationGuid)
       .Select(
         x => new HolidayDto(
           x.guid,

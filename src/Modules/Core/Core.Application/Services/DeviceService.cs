@@ -15,7 +15,7 @@ namespace Core.Application.Services;
 
 public sealed class DeviceService(
   IDeviceRepository repo,
-  IComponentMapping mapping,
+  IComponentMapping comm,
   IMessageBus bus,
   ITempDevice temp,
   IAdapterFactory adapter
@@ -99,35 +99,31 @@ public sealed class DeviceService(
 
     }
 
-    // Send Command to device below 
-    var exceptionId = temp.TryGetUnavailableId();
+    // // Send Command to device below 
+    // var exceptionId = temp.TryGetUnavailableId(dto.Mac);
 
-    var externalId = await mapping.GetFreeIdByMacAndEntityAndVendorAsync(
-      EntityType.Device,
-      Vendor.aero,
-      100, // Limit by License
-      exceptionId, ct);
+    // var externalId = await comm.GetFreeIdByEntityAndVendorAsync(
+    //   EntityType.Device,
+    //   Vendor.aero,
+    //   100, // Limit by License
+    //   exceptionId, ct);
 
-    if (externalId == null)
-      throw new ExceedException(EntityType.Device, "");
-
-
-    await mapping.InsertComponentMappingAsync(
-          EntityType.Device,
-          await repo.GetIdByGuidAsync(d.Guid),
-          (short)externalId,
-          d.Mac,
-          d.Vendor,
-          locationId,
-          ct
-        );
 
     if (d.Vendor == Vendor.aero)
     {
 
       if (temp.TryGet(d.Mac, out var tempD))
       {
-        await adapter.GetAdapter(d.Vendor).Device.SetExternalIdAsync(d.Mac, d.Ip, tempD.Id, (int)externalId);
+        //await adapter.GetAdapter(d.Vendor).Device.SetExternalIdAsync(d.Mac, d.Ip, tempD.Id, (int)externalId);
+        await comm.InsertComponentMappingAsync(
+          d.Guid,
+          EntityType.Device,
+          (short)tempD.Id,
+          d.Mac,
+          d.Vendor,
+          locationId,
+          ct
+        );
       }
       else
       {
@@ -135,6 +131,8 @@ public sealed class DeviceService(
       }
 
     }
+
+
 
     await adapter.GetAdapter(d.Vendor).Device.InititalDeviceAsync(d.Mac, d.Ip, ct);
 
@@ -153,11 +151,13 @@ public sealed class DeviceService(
 
     // Send Comand
 
-    var device = await repo.GetAsync(guid,ct);
+    var device = await repo.GetAsync(guid, ct);
 
-    await adapter.GetAdapter(device.Vendor).Device.RemoveDeviceAsync(device.Mac,device.Ip,ct);
+    await adapter.GetAdapter(device.Vendor).Device.RemoveDeviceAsync(device.Mac, device.Ip, ct);
 
     await repo.DeleteAsync(guid, ct);
+
+    await comm.DeleteComponentMappingAsync(guid, ct);
 
     return true;
   }
@@ -209,8 +209,7 @@ public sealed class DeviceService(
 
   public async Task<IEnumerable<DeviceDto>> GetByLocationAsync(Guid guid, CancellationToken ct = default)
   {
-    var locationId = await bus.QueryAsync(new LocationIdByGuidQuery(guid), ct);
-    return await repo.GetByLocationAsync(locationId, ct);
+    return await repo.GetByLocationAsync(guid, ct);
   }
 
   public async Task<DeviceDto> GetByMacAsync(string mac, CancellationToken ct = default)
@@ -224,14 +223,14 @@ public sealed class DeviceService(
     return adapter.GetAdapter(device.Vendor).Device.GetConfigurationAsync(device.Mac, device.Ip, ct);
   }
 
-      public async Task<bool> GetEventStatusByGuidAsync(Guid guid, CancellationToken ct = default)
-      {
-           var device = await repo.GetAsync(guid, ct);
-           await adapter.GetAdapter(device.Vendor).Device.GetTransactionStatusAsync(device.Mac,device.Ip,ct);
-           return true;
-      }
+  public async Task<bool> GetEventStatusByGuidAsync(Guid guid, CancellationToken ct = default)
+  {
+    var device = await repo.GetAsync(guid, ct);
+    await adapter.GetAdapter(device.Vendor).Device.GetTransactionStatusAsync(device.Mac, device.Ip, ct);
+    return true;
+  }
 
-      public async Task<Pagination<DeviceDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
+  public async Task<Pagination<DeviceDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
   {
     return await repo.GetPaginationAsync(param, ct);
   }
@@ -258,7 +257,7 @@ public sealed class DeviceService(
   public async Task<bool> ResetAsync(Guid guid, CancellationToken ct = default)
   {
     var device = await repo.GetAsync(guid, ct);
-    await adapter.GetAdapter(device.Vendor).Device.ResetAsync(device.Mac, device.Ip,ct);
+    await adapter.GetAdapter(device.Vendor).Device.ResetAsync(device.Mac, device.Ip, ct);
     return true;
   }
 
@@ -307,5 +306,12 @@ public sealed class DeviceService(
 
     return d.Guid;
 
+  }
+
+  public async Task UploadAsync(Guid guid, CancellationToken ct = default)
+  {
+    var d = await repo.GetAsync(guid, ct);
+
+    await adapter.GetAdapter(d.Vendor).Device.UploadAsync(d.Mac, d.Ip, ct);
   }
 }

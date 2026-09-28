@@ -19,6 +19,12 @@ public interface IDeviceAdapter
             CancellationToken ct = default
       );
 
+      Task UploadAsync(
+            string mac,
+            string ip,
+            CancellationToken ct = default
+      );
+
       Task GetConfigurationAsync(
             string mac,
             string ip,
@@ -56,6 +62,8 @@ public interface IDeviceAdapter
             string ip,
             CancellationToken ct = default
       );
+
+      
 
 
 

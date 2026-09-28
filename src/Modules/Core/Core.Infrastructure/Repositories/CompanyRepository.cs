@@ -104,7 +104,7 @@ public sealed class CompanyRepository(CoreDbContext context) : ICompanyRepositor
   }
 
 
-  public async Task<IEnumerable<CompanyDto>> GetByLocationAsync(int locationId, CancellationToken ct = default)
+  public async Task<IEnumerable<CompanyDto>> GetByLocationAsync(Guid locationGuid, CancellationToken ct = default)
   {
     return await context.Companies
       .AsNoTracking()

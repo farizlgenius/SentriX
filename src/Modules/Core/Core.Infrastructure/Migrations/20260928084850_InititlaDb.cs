@@ -9,63 +9,13 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Core.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class initialDb : Migration
+    public partial class InititlaDb : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.EnsureSchema(
                 name: "core");
-
-            migrationBuilder.CreateTable(
-                name: "AeroDriverSettings",
-                schema: "core",
-                columns: table => new
-                {
-                    id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    n_port = table.Column<int>(type: "integer", nullable: false),
-                    n_scps = table.Column<int>(type: "integer", nullable: false),
-                    c_type = table.Column<int>(type: "integer", nullable: false),
-                    c_port = table.Column<int>(type: "integer", nullable: false),
-                    n_msp1_port = table.Column<int>(type: "integer", nullable: false),
-                    n_trasaction = table.Column<int>(type: "integer", nullable: false),
-                    n_sio = table.Column<int>(type: "integer", nullable: false),
-                    n_mp = table.Column<int>(type: "integer", nullable: false),
-                    n_cp = table.Column<int>(type: "integer", nullable: false),
-                    n_acr = table.Column<int>(type: "integer", nullable: false),
-                    n_alvl = table.Column<int>(type: "integer", nullable: false),
-                    n_trgr = table.Column<int>(type: "integer", nullable: false),
-                    n_proc = table.Column<int>(type: "integer", nullable: false),
-                    gmt_offset = table.Column<int>(type: "integer", nullable: false),
-                    is_daylight_saving = table.Column<bool>(type: "boolean", nullable: false),
-                    n_tz = table.Column<int>(type: "integer", nullable: false),
-                    n_hol = table.Column<int>(type: "integer", nullable: false),
-                    n_mpg = table.Column<int>(type: "integer", nullable: false),
-                    n_tran_limit = table.Column<int>(type: "integer", nullable: false),
-                    n_cards = table.Column<int>(type: "integer", nullable: false),
-                    n_alvl_per_card = table.Column<int>(type: "integer", nullable: false),
-                    pin_duress_mode = table.Column<int>(type: "integer", nullable: false),
-                    duress_const_digit = table.Column<int>(type: "integer", nullable: false),
-                    card_id_size = table.Column<int>(type: "integer", nullable: false),
-                    pin_digit = table.Column<int>(type: "integer", nullable: false),
-                    issue_code_bit = table.Column<int>(type: "integer", nullable: false),
-                    apb_location = table.Column<bool>(type: "boolean", nullable: false),
-                    store_act_date = table.Column<int>(type: "integer", nullable: false),
-                    store_deact_date = table.Column<int>(type: "integer", nullable: false),
-                    used_limit = table.Column<bool>(type: "boolean", nullable: false),
-                    escort_timeout = table.Column<int>(type: "integer", nullable: false),
-                    multi_card_timeout = table.Column<int>(type: "integer", nullable: false),
-                    guid = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
-                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
-                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
-                    is_active = table.Column<bool>(type: "boolean", nullable: false),
-                    is_default = table.Column<bool>(type: "boolean", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AeroDriverSettings", x => x.id);
-                });
 
             migrationBuilder.CreateTable(
                 name: "Countries",
@@ -106,6 +56,25 @@ namespace Core.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_DayInWeeks", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ExceptionEvent",
+                schema: "core",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    timestampe = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    method = table.Column<string>(type: "text", nullable: false),
+                    path = table.Column<string>(type: "text", nullable: false),
+                    exception = table.Column<string>(type: "text", nullable: false),
+                    inner_exception = table.Column<string>(type: "text", nullable: false),
+                    stack_trace = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ExceptionEvent", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
@@ -317,7 +286,7 @@ namespace Core.Infrastructure.Migrations
                     reason = table.Column<string>(type: "text", nullable: false),
                     response = table.Column<string>(type: "text", nullable: false),
                     vendor = table.Column<string>(type: "text", nullable: false),
-                    location_id = table.Column<int>(type: "integer", nullable: false),
+                    location_id = table.Column<int>(type: "integer", nullable: true),
                     guid = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
                     created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
                     updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
@@ -334,6 +303,38 @@ namespace Core.Infrastructure.Migrations
                         principalTable: "Locations",
                         principalColumn: "id",
                         onDelete: ReferentialAction.SetNull);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AuditTrails",
+                schema: "core",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    entity = table.Column<string>(type: "text", nullable: false),
+                    action = table.Column<string>(type: "text", nullable: false),
+                    username = table.Column<string>(type: "text", nullable: false),
+                    ip = table.Column<string>(type: "text", nullable: false),
+                    object_guid = table.Column<Guid>(type: "uuid", nullable: true),
+                    object_name = table.Column<string>(type: "text", nullable: true),
+                    detail = table.Column<string>(type: "text", nullable: true),
+                    Locationid = table.Column<int>(type: "integer", nullable: true),
+                    guid = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    is_active = table.Column<bool>(type: "boolean", nullable: false),
+                    is_default = table.Column<bool>(type: "boolean", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AuditTrails", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_AuditTrails_Locations_Locationid",
+                        column: x => x.Locationid,
+                        principalSchema: "core",
+                        principalTable: "Locations",
+                        principalColumn: "id");
                 });
 
             migrationBuilder.CreateTable(
@@ -372,10 +373,9 @@ namespace Core.Infrastructure.Migrations
                     id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     entity = table.Column<string>(type: "text", nullable: false),
-                    internal_id = table.Column<int>(type: "integer", nullable: false),
-                    external_id = table.Column<int>(type: "integer", nullable: false),
-                    mac = table.Column<string>(type: "text", nullable: false),
-                    vendor = table.Column<int>(type: "integer", nullable: false),
+                    external_id = table.Column<int>(type: "integer", nullable: true),
+                    mac = table.Column<string>(type: "text", nullable: true),
+                    vendor = table.Column<int>(type: "integer", nullable: true),
                     location_id = table.Column<int>(type: "integer", nullable: false),
                     guid = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
                     created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
@@ -412,7 +412,7 @@ namespace Core.Infrastructure.Migrations
                     configuration_status = table.Column<int>(type: "integer", nullable: false),
                     synced_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     metadata = table.Column<string>(type: "text", nullable: false),
-                    location_id = table.Column<int>(type: "integer", nullable: true),
+                    location_id = table.Column<int>(type: "integer", nullable: false),
                     guid = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
                     created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
                     updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
@@ -449,7 +449,7 @@ namespace Core.Infrastructure.Migrations
                     remarks = table.Column<string>(type: "text", nullable: false),
                     capture_image_name = table.Column<string>(type: "text", nullable: false),
                     vendor = table.Column<string>(type: "text", nullable: false),
-                    location_id = table.Column<int>(type: "integer", nullable: false),
+                    location_id = table.Column<int>(type: "integer", nullable: true),
                     guid = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
                     created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
                     updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
@@ -1505,12 +1505,6 @@ namespace Core.Infrastructure.Migrations
 
             migrationBuilder.InsertData(
                 schema: "core",
-                table: "AeroDriverSettings",
-                columns: new[] { "id", "apb_location", "c_port", "c_type", "card_id_size", "duress_const_digit", "escort_timeout", "gmt_offset", "is_active", "is_daylight_saving", "is_default", "issue_code_bit", "multi_card_timeout", "n_acr", "n_alvl", "n_alvl_per_card", "n_cards", "n_cp", "n_hol", "n_mp", "n_mpg", "n_msp1_port", "n_port", "n_proc", "n_scps", "n_sio", "n_tran_limit", "n_trasaction", "n_trgr", "n_tz", "pin_digit", "pin_duress_mode", "store_act_date", "store_deact_date", "used_limit" },
-                values: new object[] { 1, true, 3333, 7, 0, 5, 15, -25200, true, false, false, 1, 15, 64, 32000, 8, 200000, 388, 255, 615, 128, 3, 1024, 1024, 1024, 33, 60000, 60000, 1024, 255, 6, 2, 2, 2, true });
-
-            migrationBuilder.InsertData(
-                schema: "core",
                 table: "Countries",
                 columns: new[] { "id", "code", "is_active", "is_default", "name" },
                 values: new object[,]
@@ -1775,6 +1769,16 @@ namespace Core.Infrastructure.Migrations
 
             migrationBuilder.InsertData(
                 schema: "core",
+                table: "ComponentMappings",
+                columns: new[] { "id", "entity", "external_id", "guid", "is_active", "is_default", "location_id", "mac", "vendor" },
+                values: new object[,]
+                {
+                    { 1, "Timezone", 1, new Guid("cff24195-43f8-42ec-a03f-e84857cc958f"), true, true, 1, null, null },
+                    { 2, "Timezone", 2, new Guid("614a766c-1241-4fdc-9d0d-7788291cac2d"), true, true, 1, null, null }
+                });
+
+            migrationBuilder.InsertData(
+                schema: "core",
                 table: "FeaturePermissions",
                 columns: new[] { "id", "feature_id", "is_active", "is_created", "is_default", "is_deleted", "is_enabled", "is_updated", "module_permission_id" },
                 values: new object[,]
@@ -1809,6 +1813,16 @@ namespace Core.Infrastructure.Migrations
                 columns: new[] { "id", "is_active", "is_default", "location_id", "operator_id" },
                 values: new object[] { 1, true, false, 1, 1 });
 
+            migrationBuilder.InsertData(
+                schema: "core",
+                table: "TimeZones",
+                columns: new[] { "id", "is_active", "is_default", "location_id", "name" },
+                values: new object[,]
+                {
+                    { 1, true, true, 1, "Always" },
+                    { 2, true, true, 1, "Never" }
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AdapterEvents_guid_id_location_id_created_at_mac_send_at_re~",
                 schema: "core",
@@ -1821,6 +1835,19 @@ namespace Core.Infrastructure.Migrations
                 schema: "core",
                 table: "AdapterEvents",
                 column: "location_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AuditTrails_guid_id_created_at_action_username_entity",
+                schema: "core",
+                table: "AuditTrails",
+                columns: new[] { "guid", "id", "created_at", "action", "username", "entity" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AuditTrails_Locationid",
+                schema: "core",
+                table: "AuditTrails",
+                column: "Locationid");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Buzzers_device_module_id",
@@ -1862,10 +1889,10 @@ namespace Core.Infrastructure.Migrations
                 column: "Locationid");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ComponentMappings_internal_id_external_id",
+                name: "IX_ComponentMappings_guid_external_id_mac_vendor",
                 schema: "core",
                 table: "ComponentMappings",
-                columns: new[] { "internal_id", "external_id" });
+                columns: new[] { "guid", "external_id", "mac", "vendor" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_ComponentMappings_location_id",
@@ -2413,7 +2440,7 @@ namespace Core.Infrastructure.Migrations
                 schema: "core");
 
             migrationBuilder.DropTable(
-                name: "AeroDriverSettings",
+                name: "AuditTrails",
                 schema: "core");
 
             migrationBuilder.DropTable(
@@ -2426,6 +2453,10 @@ namespace Core.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "Events",
+                schema: "core");
+
+            migrationBuilder.DropTable(
+                name: "ExceptionEvent",
                 schema: "core");
 
             migrationBuilder.DropTable(

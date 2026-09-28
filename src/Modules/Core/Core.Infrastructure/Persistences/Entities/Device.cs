@@ -20,8 +20,8 @@ public sealed class Device : BaseEntity,IAuditableEntity
   public string metadata { get; set; } = string.Empty;
 
   // Releation
-  public int? location_id { get; set; } = default!;
-  public Location? location { get; set; } = default!;
+  public int location_id { get; set; } = default!;
+  public Location location { get; set; } = default!;
   public ICollection<DeviceModule> device_module { get; set; } = default!;
 
   public Device() { }
@@ -35,10 +35,7 @@ public sealed class Device : BaseEntity,IAuditableEntity
     this.firmware = domain.Firmware;
     this.vendor = domain.Vendor;
     this.metadata = domain.Metadata;
-    if (location_id != 0)
-    {
-      location_id = domain.LocationId;
-    }
+    location_id = domain.LocationId;
     device_module = domain.DeviceModules.Select(x => new DeviceModule(x)).ToArray();
   }
 

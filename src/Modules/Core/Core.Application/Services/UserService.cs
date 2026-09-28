@@ -150,8 +150,7 @@ public sealed class UserService(
 
       public async Task<IEnumerable<UserDto>> GetByLocationAsync(Guid guid, CancellationToken ct = default)
   {
-    var locationId = await bus.QueryAsync(new LocationIdByGuidQuery(guid));
-    return await repo.GetByLocationAsync(locationId, ct);
+    return await repo.GetByLocationAsync(guid, ct);
   }
 
   public async Task<Stream?> GetImageByGuidAsync(Guid guid, CancellationToken ct = default)
@@ -234,7 +233,12 @@ public sealed class UserService(
 
   }
 
-  public async Task<bool> UploadImageAsync(Guid guid, Stream stream, CancellationToken ct = default)
+      public Task UploadAsync(CancellationToken ct = default)
+      {
+            throw new NotImplementedException();
+      }
+
+      public async Task<bool> UploadImageAsync(Guid guid, Stream stream, CancellationToken ct = default)
   {
     if (!await repo.IsAnyGuidAsync(guid))
       throw new NotFoundException(EntityType.User, guid.ToString());

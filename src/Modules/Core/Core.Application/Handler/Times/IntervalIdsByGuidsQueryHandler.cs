@@ -1,8 +1,9 @@
 using Core.Application.Interfaces;
 using Core.Contract.Queries;
+using Core.Contract.Queries.Time;
 using SharedKernel.Messaging;
 
-namespace Core.Application.Handler;
+namespace Core.Application.Handler.Times;
 
 public sealed class IntervalIdsByGuidsQueryHandler(IIntervalRepository repo) : IQueryHandler<IntervalIdsByGuidsQuery, IEnumerable<int>>
 {

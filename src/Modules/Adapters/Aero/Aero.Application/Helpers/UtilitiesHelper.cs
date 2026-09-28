@@ -262,4 +262,9 @@ public sealed class UtilitiesHelper
     return (DuressMode * 4096) + (DuressDigitConst * 256) + (CardIdSize * 16) + PinDigit;
   }
 
+  public static int TimeOnlyToInt(TimeOnly time)
+  {
+    return (time.Hour * 60) + time.Minute;
+  }
+
 }

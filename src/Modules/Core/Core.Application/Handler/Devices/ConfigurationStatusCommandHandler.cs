@@ -8,6 +8,6 @@ public sealed class ConfigurationStatusCommandHandler(IDeviceRepository repo) : 
 {
       public async Task HandleAsync(ConfigurationStatusCommand command, CancellationToken ct)
       {
-            await repo.UpdateConfigurationStatusByMacAsync(command.mac,command.isSync,ct);
+            await repo.UpdateConfigurationStatusByMacAsync(command.mac,command.isSync,command.isUploaded,ct);
       }
 }

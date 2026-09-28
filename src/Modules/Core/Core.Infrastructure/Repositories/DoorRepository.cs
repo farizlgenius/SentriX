@@ -143,11 +143,11 @@ public sealed class DoorRepository(CoreDbContext context) : IDoorRepository
       )).FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.Door, guid.ToString());
   }
 
-  public async Task<IEnumerable<DoorDto>> GetByLocationAsync(int locationId, CancellationToken ct = default)
+  public async Task<IEnumerable<DoorDto>> GetByLocationAsync(Guid locationGuid, CancellationToken ct = default)
   {
     return await context.Doors
       .AsNoTracking()
-      .Where(x => x.location_id == locationId)
+      .Where(x => x.location.guid == locationGuid)
       .Select(x => new DoorDto(
         x.guid,
         x.name,

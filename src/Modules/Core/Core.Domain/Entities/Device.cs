@@ -14,7 +14,7 @@ public sealed class Device : BaseDomain
   public string Metadata { get; private set; } = string.Empty;
   public Vendor Vendor { get; private set; } = Vendor.aero;
   public DeviceConfigurationStatus DeviceConfigurationStatus { get; private set; } = DeviceConfigurationStatus.pending;
-  public int? LocationId { get; private set; }
+  public int LocationId { get; private set; }
   public List<DeviceModule> DeviceModules { get; private set; } = default!;
 
   public Device(

@@ -665,11 +665,11 @@ public sealed class UserRepository(CoreDbContext context) : IUserRepository
       .FirstOrDefaultAsync(ct);
   }
 
-  public async Task<IEnumerable<UserDto>> GetByLocationAsync(int locationId, CancellationToken ct = default)
+  public async Task<IEnumerable<UserDto>> GetByLocationAsync(Guid locationGuid, CancellationToken ct = default)
   {
     return await context.Users
       .AsNoTracking()
-      .Where(x => x.user_locations.Any(x => x.location_id == locationId))
+      .Where(x => x.user_locations.Any(x => x.location.guid == locationGuid))
       .Select(e => new UserDto(
             e.guid,
             e.user_code,

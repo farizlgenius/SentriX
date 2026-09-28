@@ -110,12 +110,12 @@ public sealed class OperatorRepository(CoreDbContext context) : IOperatorReposit
 
   }
 
-  public async Task<IEnumerable<OperatorDto>> GetByLocationAsync(int locationId, CancellationToken ct = default)
+  public async Task<IEnumerable<OperatorDto>> GetByLocationAsync(Guid locationGuid, CancellationToken ct = default)
   {
     return await context.Operators
     .AsNoTracking()
     .OrderByDescending(x => x.id)
-      .Where(x => x.operator_locations.Any(x => x.location_id == locationId))
+      .Where(x => x.operator_locations.Any(x => x.location.guid == locationGuid))
       .Select(x => new OperatorDto(
         x.guid,
         x.username,

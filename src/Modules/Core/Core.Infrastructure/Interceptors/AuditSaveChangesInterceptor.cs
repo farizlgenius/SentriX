@@ -37,11 +37,6 @@ public sealed class AuditSaveChangesInterceptor(Channel<AuditTrailInsert> channe
                            ?? context?.User.FindFirstValue("sub")
                            ?? "System";
 
-            string method = context?.Request.Method ?? "System";
-            string path = context?.Request.Path ?? "N/A";
-            string? tenantStr = context?.Items["tenants"] as string;
-
-            Guid? locationGuid = Guid.TryParse(tenantStr, out var parsedGuid) ? parsedGuid : null;
             string clientIp = context?.Connection.RemoteIpAddress?.ToString() ?? "";
 
             foreach (var entry in entries)

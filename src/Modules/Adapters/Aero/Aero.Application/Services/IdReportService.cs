@@ -2,6 +2,7 @@ using Aero.Application.Enums;
 using Aero.Application.Helpers;
 using Aero.Application.Interfaces;
 using Aero.Domain.Entities;
+using Core.Contract.Commands.ComponentMapping;
 using Core.Contract.Commands.Events;
 using Core.Contract.DTOs.Device;
 using Core.Contract.Interfaces;
@@ -71,15 +72,8 @@ public sealed class IdReportService(
 
     if (await bus.QueryAsync(new IsAnyMacQuery(mac)))
     {
-      // Get Scp Id and Set it 
-      var externalId = await mapping.GetExternalIdByMacAndEntityAsync(
-        mac,
-        EntityType.Device,
-        ct);
 
-      res = repo.SetScpId(mac, dto.scp_id, (short)externalId);
-
-      await bus.SendAsync(new AdapterEventCommand(res), ct);
+      await bus.SendAsync(new UpdateExternalIdByMacCommand(mac,dto.scp_id,ct));
 
       // Update data 
       // Send Command to get Ip
@@ -106,7 +100,7 @@ public sealed class IdReportService(
 
       // var externalId = await mapping.GetExternalIdByMacAndEntityAsync(mac,EntityType.Device);
 
-      externalId = await bus.QueryAsync(new ExternalIdByMacAndEntityQuery(mac, EntityType.Device));
+      var externalId = await bus.QueryAsync(new ExternalIdByMacAndEntityQuery(mac, EntityType.Device));
 
 
       res = repo.AccessDatabaseSpecification(
@@ -162,7 +156,7 @@ public sealed class IdReportService(
             mac,
             (short)externalId,
             0,
-            0,
+            3,
             -1,
             0,
             0,
@@ -294,42 +288,6 @@ public sealed class IdReportService(
         UtilitiesHelper.ByteToHexStr(dto.mac_addr));
 
 
-    // Check the already have mac in device table
-
-
-    // if (await bus.QueryAsync(new IsAnyMacQuery(UtilitiesHelper.ByteToHexStr(dto.mac_addr))))
-    // {
-
-    // }
-    // else
-    // {
-    //   var id = await mapping.GetFreeIdByMacAndEntityAndVendorAsync(EntityType.Device, Vendor.aero, scpDevice.nScps);
-
-    //   if (id == null)
-    //     throw new Exception("Device number Exceed.");
-
-    //   repo.SetScpId(
-    //     UtilitiesHelper.ByteToHexStr(dto.mac_addr),
-    //     dto.scp_id,
-    //     (short)id
-    //   );
-
-    //   // Save new device to table 
-    //   var d = new CreateDeviceDto(
-    //     $"Aero x1100 {dto.serial_number}",
-    //     dto.serial_number.ToString(),
-    //     UtilitiesHelper.ByteToHexStr(dto.mac_addr),
-    //     string.Empty,
-    //     0,
-    //     $"{dto.sft_rev_major}.{dto.sft_rev_minor}",
-    //     Vendor.aero,
-    //     string.Empty,
-    //     Guid.Empty,
-    //     new List<Core.Contract.DTOs.DeviceModule.DeviceModuleDto>()
-    //   );
-
-    //   await bus.QueryAsync(new InsertInCommingDeviceQuery(d));
-    // }
 
   }
 }

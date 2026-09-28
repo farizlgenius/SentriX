@@ -111,8 +111,7 @@ public sealed class CompanyService(
 
   public async Task<IEnumerable<CompanyDto>> GetByLocationAsync(Guid guid, CancellationToken ct = default)
   {
-    var locationId = await bus.QueryAsync(new LocationIdByGuidQuery(guid), ct);
-    return await repo.GetByLocationAsync(locationId, ct);
+    return await repo.GetByLocationAsync(guid, ct);
   }
 
   public async Task<Pagination<CompanyDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)

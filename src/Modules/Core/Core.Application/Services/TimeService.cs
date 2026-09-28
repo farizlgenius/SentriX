@@ -1,10 +1,13 @@
+using Adapter.Contract.Interfaces;
 using Core.Application.Interfaces;
 using Core.Contract.DTOs.Time;
 using Core.Contract.Interfaces;
 using Core.Contract.Queries;
+using Core.Contract.Queries.Time;
 using Core.Domain.Entities;
 using SharedKernel.Constants;
 using SharedKernel.Domain;
+using SharedKernel.Enums;
 using SharedKernel.Exceptions;
 using SharedKernel.Messaging;
 
@@ -12,6 +15,9 @@ namespace Core.Application.Services;
 
 public sealed class TimeService(
   ITimeRepository repo,
+  IAdapterFactory adapter,
+  IDevice device,
+  IComponentMapping com,
   IMessageBus bus) : ITime
 {
   public async Task<Guid> CreateAsync(CreateTimeZoneDto dto, CancellationToken ct = default)
@@ -23,13 +29,28 @@ public sealed class TimeService(
 
     var intervalIds = await bus.QueryAsync(new IntervalIdsByGuidsQuery(dto.IntervalGuids));
 
+    var intervalDtos = await bus.QueryAsync(new IntervalByGuidsQuery(dto.IntervalGuids));
+
     var d = new Domain.Entities.TimeZone(
       dto.Name,
       intervalIds.ToList(),
       locationId
     );
 
-    // Send command to controller
+    // Send command to all controller and device
+    var devices = await device.GetByLocationAsync(dto.LocationGuid);
+    foreach (var device in devices)
+    {
+      var externalId = await com.GetExternalIdByMacAndEntityAsync(device.Mac, EntityType.Device, ct);
+      var tzExternalId = await com.GetFreeIdByEntityAsync(EntityType.TimeZone, 100, null, ct);
+      await adapter.GetAdapter(device.Vendor).Time.TimeZone(
+        device.Mac,
+        device.Ip,
+        (short)externalId,
+        (short)tzExternalId,
+        intervalDtos.ToList(),
+        ct);
+    }
 
     await repo.AddAsync(d, ct);
 
@@ -94,8 +115,7 @@ public sealed class TimeService(
 
   public async Task<IEnumerable<TimeZoneDto>> GetByLocationAsync(Guid guid, CancellationToken ct = default)
   {
-    var locationId = await bus.QueryAsync(new LocationIdByGuidQuery(guid));
-    return await repo.GetByLocationAsync(locationId, ct);
+    return await repo.GetByLocationAsync(guid, ct);
   }
 
   public async Task<Pagination<TimeZoneDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
@@ -128,5 +148,27 @@ public sealed class TimeService(
     await repo.UpdateAsync(d, ct);
 
     return d.Guid;
+  }
+
+  public async Task UploadAsync(Guid guid,CancellationToken ct = default)
+  {
+    var d = await device.GetByGuidAsync(guid,ct);
+    var tzs = await repo.GetByLocationAsync(d.LocationGuid);
+
+    var deviceExternalId = await com.GetExternalIdByMacAndEntityAsync(d.Mac,EntityType.Device,ct);
+
+    foreach(var tz in tzs)
+    {
+      var tzExternalId = await com.GetExternalIdByGuidAndEntityAsync(tz.Guid,EntityType.TimeZone);
+
+      await adapter.GetAdapter(d.Vendor).Time.TimeZone(
+        d.Mac,
+        d.Ip,
+        (short)deviceExternalId,
+        (short)tzExternalId,
+        tz.Intervals,
+        ct
+      );
+    }
   }
 }

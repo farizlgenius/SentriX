@@ -99,11 +99,11 @@ public sealed class DeviceModuleRepository(CoreDbContext context) : IDeviceModul
                   )).FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.DeviceModule, guid.ToString());
       }
 
-      public async Task<IEnumerable<DeviceModuleDto>> GetByLocationAsync(int locationId, CancellationToken ct = default)
+      public async Task<IEnumerable<DeviceModuleDto>> GetByLocationAsync(Guid locationGuid, CancellationToken ct = default)
       {
             return await context.DeviceModules
                   .AsNoTracking()
-                  .Where(x => x.location_id == locationId)
+                  .Where(x => x.location.guid == locationGuid)
                   .Select(x => new DeviceModuleDto(
                         x.guid,
                         x.name,

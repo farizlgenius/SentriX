@@ -356,16 +356,13 @@ namespace Core.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("external_id")
+                    b.Property<int?>("external_id")
                         .HasColumnType("integer");
 
                     b.Property<Guid>("guid")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
                         .HasDefaultValueSql("gen_random_uuid()");
-
-                    b.Property<int>("internal_id")
-                        .HasColumnType("integer");
 
                     b.Property<bool>("is_active")
                         .HasColumnType("boolean");
@@ -377,7 +374,6 @@ namespace Core.Infrastructure.Migrations
                         .HasColumnType("integer");
 
                     b.Property<string>("mac")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime>("updated_at")
@@ -385,16 +381,42 @@ namespace Core.Infrastructure.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
 
-                    b.Property<int>("vendor")
+                    b.Property<int?>("vendor")
                         .HasColumnType("integer");
 
                     b.HasKey("id");
 
                     b.HasIndex("location_id");
 
-                    b.HasIndex("internal_id", "external_id");
+                    b.HasIndex("guid", "external_id", "mac", "vendor");
 
                     b.ToTable("ComponentMappings", "core");
+
+                    b.HasData(
+                        new
+                        {
+                            id = 1,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            entity = "Timezone",
+                            external_id = 1,
+                            guid = new Guid("cff24195-43f8-42ec-a03f-e84857cc958f"),
+                            is_active = true,
+                            is_default = true,
+                            location_id = 1,
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            id = 2,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            entity = "Timezone",
+                            external_id = 2,
+                            guid = new Guid("614a766c-1241-4fdc-9d0d-7788291cac2d"),
+                            is_active = true,
+                            is_default = true,
+                            location_id = 1,
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        });
                 });
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Country", b =>
@@ -2524,7 +2546,7 @@ namespace Core.Infrastructure.Migrations
                     b.Property<bool>("is_default")
                         .HasColumnType("boolean");
 
-                    b.Property<int?>("location_id")
+                    b.Property<int>("location_id")
                         .HasColumnType("integer");
 
                     b.Property<string>("mac")
@@ -4873,6 +4895,30 @@ namespace Core.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("TimeZones", "core");
+
+                    b.HasData(
+                        new
+                        {
+                            id = 1,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = true,
+                            location_id = 1,
+                            name = "Always",
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            id = 2,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = true,
+                            location_id = 1,
+                            name = "Never",
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        });
                 });
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.TimeZoneInterval", b =>
@@ -5303,7 +5349,8 @@ namespace Core.Infrastructure.Migrations
                     b.HasOne("Core.Infrastructure.Persistences.Entities.Location", "location")
                         .WithMany("devices")
                         .HasForeignKey("location_id")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("location");
                 });

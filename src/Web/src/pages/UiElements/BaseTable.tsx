@@ -272,34 +272,32 @@ export const BaseTable = <
 
                         {/* Status */}
                         <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                          <Switch
-                            label={""}
-                            defaultChecked={data.isActive}
-                            onChange={(checked) => {
-                              console.log(checked);
-                            }}
-                          />
+                          {
+                            !data.isDefault &&
+                            <Switch
+                              label={""}
+                              defaultChecked={data.isActive}
+                              onChange={(checked) => {
+                                console.log(checked);
+                              }}
+                            />
+                          }
+
                         </TableCell>
 
                         {/* Action */}
                         <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                          <div className="flex gap-2">
-                             <button
+                          {
+                            !data.isDefault &&
+
+                            <div className="flex gap-2">
+                              <button
                                 type="button"
                                 onClick={(e) => {
                                   e.stopPropagation();
                                   onRemove(data);
                                 }}
-                                // disabled={!permission?.isDeleted || data.isDefault}
-                                // className={`
-                                //         inline-flex items-center justify-center
-                                //         rounded-lg p-1
-                                //         transition-all duration-200
-                                //         ${permission?.isDeleted || !data.isDefault
-                                //         ?
-                                //         "cursor-not-allowed bg-gray-100 text-gray-400 opacity-60" :
-                                //         "cursor-pointer text-red-600 hover:bg-red-50 hover:text-red-700 active:scale-95"
-                                //     }
+
                                 className={`
                                                                     inline-flex items-center justify-center
                                                                     rounded-lg p-1
@@ -309,7 +307,10 @@ export const BaseTable = <
                               >
                                 <TrashBinIcon className="h-5 w-5" />
                               </button>
-                          </div>
+                            </div>
+
+                          }
+
                         </TableCell>
                       </TableRow>
                       {/* {show == i && subTable && subTable(i + 1)} */}

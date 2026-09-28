@@ -53,7 +53,7 @@ public sealed class ReplyWorker(Channel<ReplyMessage> queue, ILogger<ReplyWorker
               break;
             case (int)enSCPReplyType.enSCPReplyTransaction:
                   // define mac , name , actor , image
-                 
+                  var bus = scope.ServiceProvider.GetRequiredService<IMessageBus>(); 
                   var idevice = scope.ServiceProvider.GetRequiredService<IDevice>();
                   var imap = scope.ServiceProvider.GetRequiredService<IComponentMapping>();
                   var mac = await imap.GetMacByExternalIdAndEntityAndVendorAsync(message.SCPId,EntityType.Device,Vendor.aero,ct);
@@ -271,9 +271,8 @@ public sealed class ReplyWorker(Channel<ReplyMessage> queue, ILogger<ReplyWorker
               break;
             case (int)enSCPReplyType.enSCPReplyCommStatus:
               var noti = scope.ServiceProvider.GetRequiredService<INotifier>();
-              var bus = scope.ServiceProvider.GetRequiredService<IMessageBus>();
-              var id = await bus.QueryAsync(new InternalIdByExternalIdAndEntityAndVendorQuery((short)message.SCPId,EntityType.Device,Vendor.aero));
-              var guid = await bus.QueryAsync(new DeviceGuidByIdQuery(id));
+              bus = scope.ServiceProvider.GetRequiredService<IMessageBus>();
+              var guid = await bus.QueryAsync(new GuidByExternalIdAndEntityAndVendorQuery((short)message.SCPId,EntityType.Device,Vendor.aero));
               var status = new StatusDto(
                 guid,
                 message.comm.current_primary_comm == 3 ? Status.Online : Status.Offline
@@ -371,22 +370,24 @@ public sealed class ReplyWorker(Channel<ReplyMessage> queue, ILogger<ReplyWorker
             case (int)enSCPReplyType.enSCPReplyStrStatus:
               noti = scope.ServiceProvider.GetRequiredService<INotifier>();
               var mapping = scope.ServiceProvider.GetRequiredService<IComponentMapping>();
+              var device = scope.ServiceProvider.GetRequiredService<IDeviceAdapter>();
               var repo = scope.ServiceProvider.GetRequiredService<IDeviceRepository>();
               bus = scope.ServiceProvider.GetRequiredService<IMessageBus>();
               mac = await mapping.GetMacByExternalIdAndEntityAndVendorAsync(message.SCPId,EntityType.Device,Vendor.aero,ct);
               var spec = await bus.QueryAsync(new AeroDriverSettingQuery(),ct);
               var data = ReplyMessageHelper.BuildStructureStatus(message.str_sts,spec);
               await noti.SendToTopic(DeviceNotifierTopic.CONFIG, data, ct);
-              await repo.VerifyMemoryAllocateAsync(mac,data,ct);
+              if(await repo.VerifyMemoryAllocateAsync(mac,data,ct))
+                await device.UploadAllConfigurationAsync(mac,string.Empty,ct);
               break;
             case (int)enSCPReplyType.enSCPReplyCmndStatus:
                   @event = scope.ServiceProvider.GetRequiredService<Core.Contract.Interfaces.IEvent>();
-                  mapping = scope.ServiceProvider.GetRequiredService<Core.Contract.Interfaces.IComponentMapping>();
+                  bus = scope.ServiceProvider.GetRequiredService<IMessageBus>();
                   var temp = scope.ServiceProvider.GetRequiredService<Core.Contract.Interfaces.ITempDevice>();
                   Console.WriteLine("Tag >> " + message.cmnd_sts.sequence_number);
                   Console.WriteLine(message.cmnd_sts.status);
                   Console.WriteLine(message.cmnd_sts.nak.reason);
-                  mac = await mapping.GetMacByExternalIdAndEntityAndVendorAsync(message.SCPId,EntityType.Device,Vendor.aero,ct);
+                  mac = await bus.QueryAsync(new MacByExternalIdAndEntityAndVendorQuery((short)message.SCPId,EntityType.Device,Vendor.aero,ct));
                   if(string.IsNullOrEmpty(mac))
                     mac = temp.TryGetMacById(message.SCPId);
 
