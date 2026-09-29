@@ -11,6 +11,13 @@ namespace Host.Controllers
   [ApiController]
   public class DeviceController(IDevice device) : ControllerBase
   {
+    // Options
+    [HttpGet("options/{vendor}/location/{guid}")]
+    public async Task<IActionResult> GetOptionByVendorAndLocationAsync(Vendor vendor,Guid guid)
+    {
+      var res = await device.GetOptionByVendorAndLocationAsync(vendor,guid);
+      return Ok(res);
+    }
     [HttpGet("pagination")]
     public async Task<IActionResult> GetPaginationAsync([FromQuery] PaginationParams param)
     {
@@ -46,12 +53,28 @@ namespace Host.Controllers
       return Ok(res);
     }
 
+    [HttpGet("component/{guid}")]
+    public async Task<IActionResult> GetComponentAsync(Guid guid)
+    {
+      var res = await device.GetComponentAsync(guid);
+      return Ok(res);
+    }
+
+    [HttpGet("location/{guid}")]
+    public async Task<IActionResult> GetOptionByLocationAsync(Guid guid)
+    {
+      var res = await device.GetByLocationAsync(guid);
+      return Ok(res);
+    }
+
     [HttpPost("status")]
     public async Task<IActionResult> GetStatusesAsync([FromBody] IEnumerable<Guid> guids)
     {
       var res = await device.GetStatusesAsync(guids);
       return Ok(res);
     }
+
+
 
   
     [HttpPost]

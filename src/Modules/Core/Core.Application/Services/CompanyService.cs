@@ -4,6 +4,7 @@ using Core.Contract.Interfaces;
 using Core.Contract.Queries;
 using SharedKernel.Constants;
 using SharedKernel.Domain;
+using SharedKernel.Enums;
 using SharedKernel.Exceptions;
 using SharedKernel.Messaging;
 
@@ -25,7 +26,7 @@ public sealed class CompanyService(
 
     // Check name is duplicate 
     if (await repo.IsAnyByNameAndLocationIdAsync(dto.Name))
-      throw new DuplicateException(EntityType.Company, dto.Name);
+      throw new DuplicateException(EntityType.Company.ToString(), dto.Name);
 
     await repo.AddAsync(d, ct);
 
@@ -37,18 +38,18 @@ public sealed class CompanyService(
   {
     // Check is any location with guid
     if (!await repo.IsAnyGuidAsync(guid, ct))
-      throw new NotFoundException(EntityType.Company, guid.ToString());
+      throw new NotFoundException(EntityType.Company.ToString(), guid.ToString());
 
     // Check is default location
     if (await repo.IsDefaultAsync(guid, ct))
-      throw new DefaultRecordException(MethodType.Delete, EntityType.Company, guid.ToString());
+      throw new DefaultRecordException(MethodType.Delete, EntityType.Company.ToString(), guid.ToString());
 
     // Check relate object here
     if (await repo.IsAnyDepartmentAsync(guid, ct))
-      throw new FoundRelateException(EntityType.Company, guid.ToString(), EntityType.Department);
+      throw new FoundRelateException(EntityType.Company.ToString(), guid.ToString(), EntityType.Department.ToString());
 
     if (await repo.IsAnyUserAsync(guid, ct))
-      throw new FoundRelateException(EntityType.Company, guid.ToString(), EntityType.User);
+      throw new FoundRelateException(EntityType.Company.ToString(), guid.ToString(), EntityType.User.ToString());
 
 
     await repo.DeleteAsync(guid, ct);
@@ -60,20 +61,20 @@ public sealed class CompanyService(
   {
     // Check if guids is empty 
     if (guids.Count() == 0)
-      throw new NotFoundException(EntityType.Company);
+      throw new NotFoundException(EntityType.Company.ToString());
 
     foreach (var guid in guids)
     {
       // Check is any location with guid
       if (!await repo.IsAnyGuidAsync(guid, ct))
-        throw new NotFoundException(EntityType.Company, guid.ToString());
+        throw new NotFoundException(EntityType.Company.ToString(), guid.ToString());
 
       // Check relate object here
       if (await repo.IsAnyDepartmentAsync(guid, ct))
-        throw new FoundRelateException(EntityType.Company, guid.ToString(), EntityType.Department);
+        throw new FoundRelateException(EntityType.Company.ToString(), guid.ToString(), EntityType.Department.ToString());
 
       if (await repo.IsAnyUserAsync(guid, ct))
-        throw new FoundRelateException(EntityType.Company, guid.ToString(), EntityType.User);
+        throw new FoundRelateException(EntityType.Company.ToString(), guid.ToString(), EntityType.User.ToString());
     }
 
     await repo.DeleteRangeAsync(guids);
@@ -85,7 +86,7 @@ public sealed class CompanyService(
   {
     // Check is any location with guid
     if (!await repo.IsAnyGuidAsync(guid, ct))
-      throw new NotFoundException(EntityType.Company, guid.ToString());
+      throw new NotFoundException(EntityType.Company.ToString(), guid.ToString());
 
     return await repo.DisableAsync(guid, ct);
   }
@@ -94,7 +95,7 @@ public sealed class CompanyService(
   {
     // Check is any location with guid
     if (!await repo.IsAnyGuidAsync(guid, ct))
-      throw new NotFoundException(EntityType.Company, guid.ToString());
+      throw new NotFoundException(EntityType.Company.ToString(), guid.ToString());
 
     return await repo.EnableAsync(guid, ct);
   }
@@ -123,7 +124,7 @@ public sealed class CompanyService(
   {
     // Check is any Company with guid
     if (!await repo.IsAnyGuidAsync(dto.Guid, ct))
-      throw new NotFoundException(EntityType.Company, dto.Guid.ToString());
+      throw new NotFoundException(EntityType.Company.ToString(), dto.Guid.ToString());
 
     var d = new Core.Domain.Entities.Company(
       dto.Guid,

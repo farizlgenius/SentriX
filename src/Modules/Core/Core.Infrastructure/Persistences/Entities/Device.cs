@@ -22,7 +22,8 @@ public sealed class Device : BaseEntity,IAuditableEntity
   // Releation
   public int location_id { get; set; } = default!;
   public Location location { get; set; } = default!;
-  public ICollection<DeviceModule> device_module { get; set; } = default!;
+  public ICollection<DeviceModule> device_modules { get; set; } = default!;
+  public ICollection<Door> doors {get; set;} = default!;
 
   public Device() { }
   public Device(Core.Domain.Entities.Device domain) : base(domain.Guid)
@@ -36,7 +37,7 @@ public sealed class Device : BaseEntity,IAuditableEntity
     this.vendor = domain.Vendor;
     this.metadata = domain.Metadata;
     location_id = domain.LocationId;
-    device_module = domain.DeviceModules.Select(x => new DeviceModule(x)).ToArray();
+    device_modules = domain.DeviceModules.Select(x => new DeviceModule(x)).ToArray();
   }
 
 

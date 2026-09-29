@@ -5,6 +5,7 @@ using Core.Infrastructure.Persistences;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel.Constants;
 using SharedKernel.Domain;
+using SharedKernel.Enums;
 using SharedKernel.Exceptions;
 
 namespace Core.Infrastructure.Repositories;
@@ -26,7 +27,7 @@ public sealed class PositionRepository(CoreDbContext context) : IPositionReposit
               .Where(x => x.guid == guid)
               .FirstOrDefaultAsync(ct);
 
-            context.Positions.Remove(entity ?? throw new NotFoundException(EntityType.Position, guid.ToString()));
+            context.Positions.Remove(entity ?? throw new NotFoundException(EntityType.Position.ToString(), guid.ToString()));
 
             await context.SaveChangesAsync(ct);
       }
@@ -46,7 +47,7 @@ public sealed class PositionRepository(CoreDbContext context) : IPositionReposit
       {
             var en = await context.Positions
               .Where(x => x.guid == guid)
-              .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.Location, guid.ToString());
+              .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.Location.ToString(), guid.ToString());
 
             en.is_active = false;
 
@@ -61,7 +62,7 @@ public sealed class PositionRepository(CoreDbContext context) : IPositionReposit
       {
             var en = await context.Positions
               .Where(x => x.guid == guid)
-              .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.Location, guid.ToString());
+              .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.Location.ToString(), guid.ToString());
 
             en.is_active = true;
 
@@ -307,7 +308,7 @@ public sealed class PositionRepository(CoreDbContext context) : IPositionReposit
       {
             var en = await context.Positions
                           .Where(x => x.guid == entity.Guid)
-                          .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.Location, entity.Guid.ToString());
+                          .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.Location.ToString(), entity.Guid.ToString());
 
             en.name = entity.Name;
             en.description = entity.Description;

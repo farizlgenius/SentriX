@@ -42,6 +42,7 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
       public DbSet<Door> Doors { get; set; }
       public DbSet<Reader> Readers { get; set; }
       public DbSet<Sensor> Sensors { get; set; }
+      public DbSet<BreakGlass> BreakGlasses {get; set;}
       public DbSet<Rex> Rexes { get; set; }
       public DbSet<Relay> Relays { get; set; }
       public DbSet<Buzzer> Buzzers { get; set; }
@@ -49,6 +50,7 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
       public DbSet<Turnstile> Turnstiles { get; set; }
       public DbSet<GroupComponent> GroupComponents { get; set; }
       public DbSet<Output> Outputs { get; set; }
+      public DbSet<Output> Inputs { get; set; }
       public DbSet<Event> Events { get; set; }
       public DbSet<AdapterEvent> AdapterEvents { get; set; }
       public DbSet<ExceptionEvent> ExceptionEvent {get ;set;}
@@ -151,6 +153,14 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
             .Property(o => o.action)
             .HasConversion<string>();
 
+            modelBuilder.Entity<ComponentMapping>()
+            .Property(o => o.entity)
+            .HasConversion<string>();
+
+            modelBuilder.Entity<AuditTrail>()
+            .Property(o => o.entity)
+            .HasConversion<string>();
+
             modelBuilder.Entity<AdapterEvent>(b =>
            {
                  b.Property(d => d.vendor).HasConversion<string>();
@@ -193,8 +203,19 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   b.Property(x => x.mode).HasConversion<string>();
             });
 
+             modelBuilder.Entity<BreakGlass>(b =>
+            {
+                  b.Property(x => x.vendor).HasConversion<string>();
+            });
+
             // Sensor Enums
             modelBuilder.Entity<Output>(b =>
+            {
+                  b.Property(x => x.vendor).HasConversion<string>();
+                  b.Property(x => x.mode).HasConversion<string>();
+            });
+
+            modelBuilder.Entity<Input>(b =>
             {
                   b.Property(x => x.vendor).HasConversion<string>();
                   b.Property(x => x.mode).HasConversion<string>();
@@ -362,6 +383,7 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                         {
                               x.guid,
                               x.id,
+                              x.device_id
                         }
                   ).IsUnique();
 
@@ -378,6 +400,18 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   ).IsUnique();
 
             modelBuilder.Entity<Sensor>()
+                  .HasIndex(
+                        x => new
+                        {
+                              x.guid,
+                              x.id,
+                              x.door_id,
+                              x.device_module_id,
+                              x.slot_no
+                        }
+                  ).IsUnique();
+
+            modelBuilder.Entity<BreakGlass>()
                   .HasIndex(
                         x => new
                         {
@@ -446,6 +480,17 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   ).IsUnique();
 
             modelBuilder.Entity<Output>()
+                  .HasIndex(
+                        x => new
+                        {
+                              x.guid,
+                              x.id,
+                              x.device_module_id,
+                              x.slot_no
+                        }
+                  ).IsUnique();
+
+            modelBuilder.Entity<Input>()
                   .HasIndex(
                         x => new
                         {
@@ -576,6 +621,12 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Location>()
+                  .HasMany(x => x.inputs)
+                  .WithOne(x => x.location)
+                  .HasForeignKey(x => x.location_id)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Location>()
                   .HasMany(x => x.events)
                   .WithOne(x => x.location)
                   .HasForeignKey(x => x.location_id)
@@ -611,7 +662,13 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
             // Device 
 
             modelBuilder.Entity<Device>()
-                  .HasMany(x => x.device_module)
+                  .HasMany(x => x.device_modules)
+                  .WithOne(x => x.device)
+                  .HasForeignKey(x => x.device_id)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Device>()
+                  .HasMany(x => x.doors)
                   .WithOne(x => x.device)
                   .HasForeignKey(x => x.device_id)
                   .OnDelete(DeleteBehavior.Cascade);
@@ -625,6 +682,12 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
 
             modelBuilder.Entity<DeviceModule>()
                   .HasMany(x => x.sensors)
+                  .WithOne(x => x.device_module)
+                  .HasForeignKey(x => x.device_module_id)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<DeviceModule>()
+                  .HasMany(x => x.break_glasses)
                   .WithOne(x => x.device_module)
                   .HasForeignKey(x => x.device_module_id)
                   .OnDelete(DeleteBehavior.Cascade);
@@ -649,6 +712,12 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
 
             modelBuilder.Entity<DeviceModule>()
                   .HasMany(x => x.outputs)
+                  .WithOne(x => x.device_module)
+                  .HasForeignKey(x => x.device_module_id)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<DeviceModule>()
+                  .HasMany(x => x.inputs)
                   .WithOne(x => x.device_module)
                   .HasForeignKey(x => x.device_module_id)
                   .OnDelete(DeleteBehavior.Cascade);
@@ -802,6 +871,12 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   .HasOne(x => x.sensor)
                   .WithOne(x => x.door)
                   .HasForeignKey<Door>(x => x.sensor_id)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Door>()
+                  .HasOne(x => x.bg)
+                  .WithOne(x => x.door)
+                  .HasForeignKey<Door>(x => x.bg_id)
                   .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Door>()

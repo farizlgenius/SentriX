@@ -16,40 +16,24 @@ import { useLocation } from "../../context/LocationContext";
 import { ReaderMode } from "../../enum/ReaderMode";
 import { ReaderDirection } from "../../enum/DoorDirection";
 
-const DoorInForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({
+type ExtraProps = {
+  setModuleOption: React.Dispatch<React.SetStateAction<Options[]>>;
+  moduleOption:Options[]
+};
+
+const DoorInForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps>> = ({
   dto,
   setDto,
   type,
+  moduleOption,setModuleOption
 }) => {
   const { locationGuid } = useLocation();
   const [readerType, setReaderType] = useState<ReaderType>(ReaderType.odsp);
-  const [moduleOption, setModuleOption] = useState<Options[]>([]);
-
-  const fetchDeviceModule = async (vendor: Vendor) => {
-    const res = await send.get(
-      ModuleEndpoint.GET_BY_VENDOR(locationGuid, vendor),
-    );
-    if (res) {
-      res.data.data.map((a: DeviceModuleDto) => {
-        setModuleOption((prev) =>
-          prev.some((x) => x.value == a.guid)
-            ? prev
-            : [
-                ...prev,
-                {
-                  label: a.name,
-                  value: a.guid,
-                  isTaken: false,
-                },
-              ],
-        );
-      });
-    }
-  };
-
-  useEffect(() => {
-    fetchDeviceModule(dto.vendor);
-  }, []);
+  const [readerOption,setReaderOption] = useState<Options[]>([]);
+  const fetchReader = async (guid:string) => {
+    var res = await send.get(ModuleEndpoint.GET_READER_SLOT(guid))
+    setReaderOption(res.data.data);
+  }
 
   return (
     <div className="grid grid-cols-2 gap-5">
@@ -120,6 +104,9 @@ const DoorInForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({
                       ),
                     ],
             }));
+            // Fetch Reader Slot
+            fetchReader(value)
+
           }}
           className="dark:bg-dark-900"
           defaultValue={
@@ -130,9 +117,10 @@ const DoorInForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({
       <FormField>
         <Label htmlFor="readerIn.readerNo">Slot No</Label>
         <Select
+        isString={false}
           disabled={type == FormType.INFO}
           name="readerIn.readerNo"
-          options={[]}
+          options={readerOption}
           placeholder="Select Option"
           // onChange={(value: string) => {
           //   setDto((prev) => ({

@@ -3,6 +3,7 @@ using Aero.Application.Helpers;
 using Aero.Domain.Entities;
 using HID.Aero.ScpdNet.Wrapper;
 using SharedKernel.Constants;
+using SharedKernel.Enums;
 
 namespace Aero.Infrastructure.Helpers;
 
@@ -12,29 +13,29 @@ public static class TranEventHelper
       {
             return src switch
             {
-                  tranSrc.tranSrcScpDiag => EntityType.Device,
-                  tranSrc.tranSrcScpCom => EntityType.Device,
-                  tranSrc.tranSrcScpLcl => EntityType.Device,
-                  tranSrc.tranSrcSioDiag => EntityType.DeviceModule,
-                  tranSrc.tranSrcSioCom => EntityType.DeviceModule,
-                  tranSrc.tranSrcSioTmpr => EntityType.DeviceModule,
-                  tranSrc.tranSrcSioPwr => EntityType.DeviceModule,
-                  tranSrc.tranSrcMP => EntityType.Input,
-                  tranSrc.tranSrcCP => EntityType.Output,
-                  tranSrc.tranSrcACR => EntityType.Door,
-                  tranSrc.tranSrcAcrTmpr => EntityType.Door,
-                  tranSrc.tranSrcAcrDoor => EntityType.Door,
-                  tranSrc.tranSrcAcrRex0 => EntityType.Door,
-                  tranSrc.tranSrcAcrRex1 => EntityType.Door,
-                  tranSrc.tranSrcTimeZone => EntityType.TimeZone,
-                  tranSrc.tranSrcProcedure => EntityType.Procedure,
-                  tranSrc.tranSrcTrigger => EntityType.Trigger,
-                  tranSrc.tranSrcTrigVar => EntityType.Trigger,
-                  tranSrc.tranSrcMPG => EntityType.MonitorGroup,
-                  tranSrc.tranSrcArea => EntityType.Area,
-                  tranSrc.tranSrcAcrTmprAlt => EntityType.Door,
-                  tranSrc.tranSrcSioEmg => EntityType.DeviceModule,
-                  tranSrc.tranSrcLoginService => EntityType.Web,
+                  tranSrc.tranSrcScpDiag => EntityType.Device.ToString(),
+                  tranSrc.tranSrcScpCom => EntityType.Device.ToString(),
+                  tranSrc.tranSrcScpLcl => EntityType.Device.ToString(),
+                  tranSrc.tranSrcSioDiag => EntityType.DeviceModule.ToString(),
+                  tranSrc.tranSrcSioCom => EntityType.DeviceModule.ToString(),
+                  tranSrc.tranSrcSioTmpr => EntityType.DeviceModule.ToString(),
+                  tranSrc.tranSrcSioPwr => EntityType.DeviceModule.ToString(),
+                  tranSrc.tranSrcMP => EntityType.Input.ToString(),
+                  tranSrc.tranSrcCP => EntityType.Output.ToString(),
+                  tranSrc.tranSrcACR => EntityType.Door.ToString(),
+                  tranSrc.tranSrcAcrTmpr => EntityType.Door.ToString(),
+                  tranSrc.tranSrcAcrDoor => EntityType.Door.ToString(),
+                  tranSrc.tranSrcAcrRex0 => EntityType.Door.ToString(),
+                  tranSrc.tranSrcAcrRex1 => EntityType.Door.ToString(),
+                  tranSrc.tranSrcTimeZone => EntityType.TimeZone.ToString(),
+                  tranSrc.tranSrcProcedure => EntityType.Procedure.ToString(),
+                  tranSrc.tranSrcTrigger => EntityType.Trigger.ToString(),
+                  tranSrc.tranSrcTrigVar => EntityType.Trigger.ToString(),
+                  tranSrc.tranSrcMPG => EntityType.MonitorGroup.ToString(),
+                  tranSrc.tranSrcArea => EntityType.Area.ToString(),
+                  tranSrc.tranSrcAcrTmprAlt => EntityType.Door.ToString(),
+                  tranSrc.tranSrcSioEmg => EntityType.DeviceModule.ToString(),
+                  tranSrc.tranSrcLoginService => EntityType.Web.ToString(),
                   _ => string.Empty
             };
       }

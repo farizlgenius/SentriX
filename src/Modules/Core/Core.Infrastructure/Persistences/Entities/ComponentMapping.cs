@@ -6,7 +6,7 @@ namespace Core.Infrastructure.Persistences.Entities;
 
 public sealed class ComponentMapping : BaseEntity
 {
-  public string entity { get; set; } = string.Empty;
+  public EntityType entity { get; set; } 
   public int? external_id { get; set; }
   public string? mac { get; set; } 
   public SharedKernel.Enums.Vendor? vendor { get; set; } = SharedKernel.Enums.Vendor.aero;

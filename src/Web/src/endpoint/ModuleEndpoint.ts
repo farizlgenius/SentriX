@@ -5,7 +5,7 @@ const CONTROLLER = `devicemodule`;
 export const ModuleEndpoint = {
   GET_BY_VENDOR: (guid: string, vendor: Vendor) =>
     `/api/${CONTROLLER}/location/${guid}/vendor/${vendor}`,
-  GET_BY_GUID: (deviceId: number) => `/api/${CONTROLLER}/${deviceId}`,
+  GET_BY_GUID: (guid: string) => `/api/${CONTROLLER}/device/${guid}`,
   PAGINATION: (
     pageNumber: number,
     pageSize: number,
@@ -22,4 +22,7 @@ export const ModuleEndpoint = {
   STATUS: (moduleId: number) => `/api/${CONTROLLER}/status/${moduleId}`,
   BAUDRATE: `/api/${CONTROLLER}/baudrate`,
   PROTOCOL: `/api/${CONTROLLER}/protocol`,
+  GET_READER_SLOT:(guid:string) => `/api/${CONTROLLER}/reader/${guid}`,
+  GET_INPUT_SLOT:(guid:string) => `/api/${CONTROLLER}/input/${guid}` ,
+  GET_OUtPUT_SLOT:(guid:string) => `/api/${CONTROLLER}/output/${guid}` 
 } as const;

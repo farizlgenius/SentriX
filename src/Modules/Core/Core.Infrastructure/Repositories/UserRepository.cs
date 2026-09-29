@@ -5,6 +5,7 @@ using Core.Infrastructure.Persistences;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel.Constants;
 using SharedKernel.Domain;
+using SharedKernel.Enums;
 using SharedKernel.Exceptions;
 
 namespace Core.Infrastructure.Repositories;
@@ -24,7 +25,7 @@ public sealed class UserRepository(CoreDbContext context) : IUserRepository
   {
     var entity = await context.Users
       .Where(x => x.username.Equals(username))
-      .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.User, username);
+      .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.User.ToString(), username);
 
     entity.password = hashed;
     entity.updated_at = DateTime.UtcNow;
@@ -40,7 +41,7 @@ public sealed class UserRepository(CoreDbContext context) : IUserRepository
       .Where(x => x.guid == guid)
       .FirstOrDefaultAsync(ct);
 
-    context.Users.Remove(entity ?? throw new NotFoundException(EntityType.User, guid.ToString()));
+    context.Users.Remove(entity ?? throw new NotFoundException(EntityType.User.ToString(), guid.ToString()));
 
     await context.SaveChangesAsync(ct);
   }
@@ -60,7 +61,7 @@ public sealed class UserRepository(CoreDbContext context) : IUserRepository
   {
     var en = await context.Users
           .Where(x => x.guid == guid)
-          .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.User, guid.ToString());
+          .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.User.ToString(), guid.ToString());
 
     en.is_active = false;
     en.updated_at = DateTime.UtcNow;
@@ -76,7 +77,7 @@ public sealed class UserRepository(CoreDbContext context) : IUserRepository
   {
     var en = await context.Users
            .Where(x => x.guid == guid)
-           .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.User, guid.ToString());
+           .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.User.ToString(), guid.ToString());
 
     en.is_active = true;
     en.updated_at = DateTime.UtcNow;
@@ -126,7 +127,7 @@ public sealed class UserRepository(CoreDbContext context) : IUserRepository
         new PinDto(x.pin == null ? string.Empty : x.pin.pin),
         new QrCodeDto(x.qr_code == null ? string.Empty : x.qr_code.qr_code),
         x.user_locations.Select(x => x.location.name).ToList()
-      )).FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.User, guid.ToString());
+      )).FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.User.ToString(), guid.ToString());
   }
 
   public async Task<UserDto> GetByUsernameAsync(string username, CancellationToken ct = default)
@@ -168,7 +169,7 @@ public sealed class UserRepository(CoreDbContext context) : IUserRepository
         new PinDto(x.pin == null ? string.Empty : x.pin.pin),
         new QrCodeDto(x.qr_code == null ? string.Empty : x.qr_code.qr_code),
         x.user_locations.Select(x => x.location.name).ToList()
-      )).FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.User, username);
+      )).FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.User.ToString(), username);
   }
 
   public async Task<Guid> GetDefaultLocationGuidAsync()
@@ -182,7 +183,7 @@ public sealed class UserRepository(CoreDbContext context) : IUserRepository
       .AsNoTracking()
       .Where(x => x.username.Equals(username))
       .Select(x => x.password)
-      .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.Operator, username);
+      .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.Operator.ToString(), username);
   }
 
   public async Task<int> GetIdByGuidAsync(Guid guid, CancellationToken ct = default)
@@ -481,7 +482,7 @@ public sealed class UserRepository(CoreDbContext context) : IUserRepository
 
       var entity = await context.Users
       .Where(x => x.guid == user.Guid)
-      .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.User, user.Guid.ToString());
+      .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.User.ToString(), user.Guid.ToString());
 
 
       // Mapping the properties from the domain entity to the persistence entity
@@ -838,7 +839,7 @@ public sealed class UserRepository(CoreDbContext context) : IUserRepository
   {
     var entity = await context.Users
       .Where(x => x.guid == guid)
-      .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.User, guid.ToString());
+      .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.User.ToString(), guid.ToString());
 
     entity.face = new Persistences.Entities.Face(guid);
 

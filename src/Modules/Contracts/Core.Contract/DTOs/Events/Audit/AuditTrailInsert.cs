@@ -3,7 +3,7 @@ using SharedKernel.Enums;
 namespace Core.Contract.DTOs.Events.Audit;
 
 public sealed record AuditTrailInsert(
-      string Entity,
+      EntityType Entity,
       AuditAction Action,
       string Username,
       string Ip,

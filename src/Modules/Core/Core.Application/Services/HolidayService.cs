@@ -4,6 +4,7 @@ using Core.Contract.Interfaces;
 using Core.Contract.Queries;
 using SharedKernel.Constants;
 using SharedKernel.Domain;
+using SharedKernel.Enums;
 using SharedKernel.Exceptions;
 using SharedKernel.Messaging;
 
@@ -19,7 +20,7 @@ public sealed class HolidayService(
     var locationId = await bus.QueryAsync(new LocationIdByGuidQuery(dto.LocationGuid));
 
     if (await repo.IsAnyByNameAndLocationIdAsync(dto.Name, locationId))
-      throw new DuplicateException(EntityType.TimeZone, dto.Name);
+      throw new DuplicateException(EntityType.TimeZone.ToString(), dto.Name);
 
     var d = new Domain.Entities.Holiday(
       dto.Name,
@@ -38,7 +39,7 @@ public sealed class HolidayService(
   public async Task<bool> DeleteByGuidAsync(Guid guid, CancellationToken ct = default)
   {
     if (!await repo.IsAnyGuidAsync(guid))
-      throw new NotFoundException(EntityType.TimeZone, guid.ToString());
+      throw new NotFoundException(EntityType.TimeZone.ToString(), guid.ToString());
 
     // Check relation
 
@@ -53,13 +54,13 @@ public sealed class HolidayService(
   {
     // Check if guids is empty 
     if (guids.Count() == 0)
-      throw new NotFoundException(EntityType.Role);
+      throw new NotFoundException(EntityType.Role.ToString());
 
     foreach (var guid in guids)
     {
       // Check is any location with guid
       if (!await repo.IsAnyGuidAsync(guid, ct))
-        throw new NotFoundException(EntityType.Role, guid.ToString());
+        throw new NotFoundException(EntityType.Role.ToString(), guid.ToString());
 
       // Check relate object here
 
@@ -73,7 +74,7 @@ public sealed class HolidayService(
   public async Task<bool> DisabledAsync(Guid guid, CancellationToken ct = default)
   {
     if (!await repo.IsAnyGuidAsync(guid, ct))
-      throw new NotFoundException(EntityType.Role, guid.ToString());
+      throw new NotFoundException(EntityType.Role.ToString(), guid.ToString());
 
     return await repo.DisableAsync(guid, ct);
   }
@@ -81,7 +82,7 @@ public sealed class HolidayService(
   public async Task<bool> EnabledAsync(Guid guid, CancellationToken ct = default)
   {
     if (!await repo.IsAnyGuidAsync(guid, ct))
-      throw new NotFoundException(EntityType.Role, guid.ToString());
+      throw new NotFoundException(EntityType.Role.ToString(), guid.ToString());
 
     return await repo.EnableAsync(guid, ct);
   }
@@ -105,12 +106,12 @@ public sealed class HolidayService(
   {
     // Check is any location with guid
     if (!await repo.IsAnyGuidAsync(dto.Guid, ct))
-      throw new NotFoundException(EntityType.TimeZone, dto.Guid.ToString());
+      throw new NotFoundException(EntityType.TimeZone.ToString(), dto.Guid.ToString());
 
     var locationId = await bus.QueryAsync(new LocationIdByGuidQuery(dto.LocationGuid));
 
     if (await repo.IsAnyByNameAndLocationIdAsync(dto.Name, locationId))
-      throw new DuplicateException(EntityType.TimeZone, dto.Name);
+      throw new DuplicateException(EntityType.TimeZone.ToString(), dto.Name);
 
     var d = new Domain.Entities.Holiday(
       dto.Guid,

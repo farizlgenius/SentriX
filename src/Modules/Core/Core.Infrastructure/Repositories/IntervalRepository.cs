@@ -5,6 +5,7 @@ using Core.Infrastructure.Persistences;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel.Constants;
 using SharedKernel.Domain;
+using SharedKernel.Enums;
 using SharedKernel.Exceptions;
 
 namespace Core.Infrastructure.Repositories;
@@ -26,7 +27,7 @@ public sealed class IntervalRepository(CoreDbContext context) : IIntervalReposit
     var entity = await context.Intervals
       .Where(x => x.guid == guid)
       .OrderByDescending(x => x.id)
-      .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.Interval, guid.ToString());
+      .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.Interval.ToString(), guid.ToString());
 
     context.Intervals.Remove(entity);
 
@@ -48,7 +49,7 @@ public sealed class IntervalRepository(CoreDbContext context) : IIntervalReposit
   {
     var entity = await context.Intervals
       .OrderByDescending(x => x.id)
-      .FirstOrDefaultAsync(x => x.guid == guid) ?? throw new NotFoundException(EntityType.TimeZone, guid.ToString());
+      .FirstOrDefaultAsync(x => x.guid == guid) ?? throw new NotFoundException(EntityType.TimeZone.ToString(), guid.ToString());
 
     entity.is_active = false;
 
@@ -62,7 +63,7 @@ public sealed class IntervalRepository(CoreDbContext context) : IIntervalReposit
   {
     var entity = await context.Intervals
       .OrderByDescending(x => x.id)
-      .FirstOrDefaultAsync(x => x.guid == guid) ?? throw new NotFoundException(EntityType.TimeZone, guid.ToString());
+      .FirstOrDefaultAsync(x => x.guid == guid) ?? throw new NotFoundException(EntityType.TimeZone.ToString(), guid.ToString());
 
     entity.is_active = true;
 
@@ -96,7 +97,7 @@ public sealed class IntervalRepository(CoreDbContext context) : IIntervalReposit
           x.is_active,
           x.is_default
         )
-      ).FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.Interval, guid.ToString());
+      ).FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.Interval.ToString(), guid.ToString());
   }
 
   public async Task<IEnumerable<IntervalDto>> GetByGuidsAsync(IEnumerable<Guid> guids, CancellationToken ct = default)
@@ -308,7 +309,7 @@ public sealed class IntervalRepository(CoreDbContext context) : IIntervalReposit
       .Include(x => x.day)
       .Where(x => x.guid == entity.Guid)
       .OrderByDescending(x => x.id)
-      .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.Interval, entity.Guid.ToString());
+      .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.Interval.ToString(), entity.Guid.ToString());
 
     if (en.day is not null)
     {

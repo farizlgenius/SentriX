@@ -26,7 +26,7 @@ public sealed class DeviceRepository(CoreDbContext context) : IDeviceRepository
       {
             var entity = await context.Devices
                   .Where(x => x.guid == guid)
-                  .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.Device, guid.ToString());
+                  .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.Device.ToString(), guid.ToString());
 
             context.Devices.Remove(entity);
 
@@ -49,7 +49,7 @@ public sealed class DeviceRepository(CoreDbContext context) : IDeviceRepository
       {
             var entity = await context.Devices
                   .Where(x => x.guid == guid)
-                  .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.Device, guid.ToString());
+                  .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.Device.ToString(), guid.ToString());
 
             entity.is_active = false;
 
@@ -64,7 +64,7 @@ public sealed class DeviceRepository(CoreDbContext context) : IDeviceRepository
       {
             var entity = await context.Devices
                   .Where(x => x.guid == guid)
-                  .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.Device, guid.ToString());
+                  .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.Device.ToString(), guid.ToString());
 
             entity.is_active = true;
 
@@ -92,7 +92,7 @@ public sealed class DeviceRepository(CoreDbContext context) : IDeviceRepository
                         x.metadata,
                         x.synced_at,
                         x.configuration_status,
-                        x.device_module.Select(d => new DeviceModuleDto(
+                        x.device_modules.Select(d => new DeviceModuleDto(
                               d.guid,
                               d.name,
                               d.serial_number,
@@ -114,7 +114,7 @@ public sealed class DeviceRepository(CoreDbContext context) : IDeviceRepository
                         x.location == null ? Guid.Empty : x.location.guid,
                         x.is_active,
                         x.is_default
-                  )).FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.Device, guid.ToString());
+                  )).FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.Device.ToString(), guid.ToString());
       }
 
 
@@ -135,7 +135,7 @@ public sealed class DeviceRepository(CoreDbContext context) : IDeviceRepository
                         x.metadata,
                         x.synced_at,
                         x.configuration_status,
-                        x.device_module.Select(d => new DeviceModuleDto(
+                        x.device_modules.Select(d => new DeviceModuleDto(
                              d.guid,
                               d.name,
                               d.serial_number,
@@ -177,7 +177,7 @@ public sealed class DeviceRepository(CoreDbContext context) : IDeviceRepository
                         x.metadata,
                         x.synced_at,
                         x.configuration_status,
-                        x.device_module.Select(m => new DeviceModuleDto(
+                        x.device_modules.Select(m => new DeviceModuleDto(
                               m.guid,
                               m.name,
                               m.serial_number,
@@ -199,7 +199,7 @@ public sealed class DeviceRepository(CoreDbContext context) : IDeviceRepository
                         x.location == null ? Guid.Empty : x.location.guid,
                         x.is_active,
                         x.is_default
-                  )).FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.Device,mac);
+                  )).FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.Device.ToString(),mac);
       }
 
       public async Task<int> GetDeviceModuleIdByGuidAsync(Guid guid, CancellationToken ct = default)
@@ -211,7 +211,7 @@ public sealed class DeviceRepository(CoreDbContext context) : IDeviceRepository
                   .FirstOrDefaultAsync();
 
             if (res == 0)
-                  throw new NotFoundException(EntityType.DeviceModule, guid.ToString());
+                  throw new NotFoundException(EntityType.DeviceModule.ToString(), guid.ToString());
 
             return res;
       }
@@ -225,7 +225,7 @@ public sealed class DeviceRepository(CoreDbContext context) : IDeviceRepository
                   .FirstOrDefaultAsync(ct);
 
             if(res == Guid.Empty)
-                  throw new NotFoundException(EntityType.Device,id.ToString());
+                  throw new NotFoundException(EntityType.Device.ToString(),id.ToString());
 
             return res;
       }
@@ -258,6 +258,21 @@ public sealed class DeviceRepository(CoreDbContext context) : IDeviceRepository
                   .FirstOrDefaultAsync();
 
             return res == null ? (string.Empty,0) : (res.name,res.location_id);
+      }
+
+      public async Task<IEnumerable<OptionDto>> GetOptionByVendorAndLocationAsync(Vendor vendor, Guid guid, CancellationToken ct = default)
+      {
+            return await context.Devices
+                  .AsNoTracking()
+                  .Where(x => x.vendor == vendor && x.location.guid == guid)
+                  .OrderByDescending(x => x.id)
+                  .Select(x => new OptionDto(
+                        x.name,
+                        x.guid,
+                        x.mac,
+                        null,
+                        false
+                  )).ToArrayAsync(ct);
       }
 
       public async Task<Pagination<DeviceDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
@@ -328,7 +343,7 @@ public sealed class DeviceRepository(CoreDbContext context) : IDeviceRepository
                         x.metadata,
                         x.synced_at,
                         x.configuration_status,
-                        x.device_module.Select(d => new DeviceModuleDto(
+                        x.device_modules.Select(d => new DeviceModuleDto(
                               d.guid,
                               d.name,
                               d.serial_number,
@@ -398,7 +413,7 @@ public sealed class DeviceRepository(CoreDbContext context) : IDeviceRepository
       {
             var en = await context.Devices
                   .Where(x => x.guid == entity.Guid)
-                  .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.Device, entity.Guid.ToString());
+                  .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.Device.ToString(), entity.Guid.ToString());
 
             en.name = entity.Name;
             en.serial_number = entity.SerialNumber;
@@ -423,7 +438,7 @@ public sealed class DeviceRepository(CoreDbContext context) : IDeviceRepository
                   .FirstOrDefaultAsync();
 
             if(entity == null)
-                  throw new NotFoundException(EntityType.Device,mac);
+                  throw new NotFoundException(EntityType.Device.ToString(),mac);
 
             entity.configuration_status = isSync ? isUploaded ? DeviceConfigurationStatus.sync : DeviceConfigurationStatus.pending : DeviceConfigurationStatus.reset;
             entity.updated_at = DateTime.UtcNow;

@@ -196,7 +196,7 @@ new AdapterEvent(@event)
           var pattern = $"%{search}%";
 
           query = query.Where(x =>
-              EF.Functions.ILike(x.entity, pattern) ||
+              EF.Functions.ILike(x.entity.ToString(), pattern) ||
               EF.Functions.ILike(x.action.ToString(), pattern) ||
               EF.Functions.ILike(x.username, pattern) ||
               EF.Functions.ILike(x.ip, pattern) 
@@ -205,7 +205,7 @@ new AdapterEvent(@event)
         else // SQL Server
         {
           query = query.Where(x =>
-              x.entity.Contains(search) ||
+              x.entity.ToString().Contains(search) ||
               x.action.ToString().Contains(search) ||
               x.username.Contains(search) ||
               x.ip.Contains(search) 

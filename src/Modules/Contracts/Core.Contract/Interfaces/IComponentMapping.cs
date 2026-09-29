@@ -1,4 +1,5 @@
 using Core.Contract.DTOs.Company;
+using Core.Contract.DTOs.Device;
 using SharedKernel.Constants;
 using SharedKernel.Enums;
 
@@ -6,15 +7,15 @@ namespace Core.Contract.Interfaces;
 
 public interface IComponentMapping
 {
-      Task<string> GetMacByExternalIdAndEntityAndVendorAsync(int externalId,string entity,Vendor vendor,CancellationToken ct = default);
-      Task<int> GetFreeIdByEntityAsync(string entity, int Max,IEnumerable<int>? Exceptions = default,CancellationToken ct = default);
-      Task<int> GetFreeIdByMacAndEntityAndVendorAsync(string mac,string entity,Vendor vendor, int Max,IEnumerable<int>? Exceptions = default,CancellationToken ct = default);
-      Task<int> GetFreeIdByEntityAndVendorAsync(string entity,Vendor vendor, int Max,IEnumerable<int>? Exceptions = default,CancellationToken ct = default);
-      Task<int> GetExternalIdByMacAndEntityAsync(string mac,string entityType,CancellationToken ct= default); 
-      Task<int> GetExternalIdByGuidAndEntityAsync(Guid guid,string entity, CancellationToken ct = default);
+      Task<string> GetMacByExternalIdAndEntityAndVendorAsync(int externalId,EntityType entity,Vendor vendor,CancellationToken ct = default);
+      Task<int> GetFreeIdByEntityAsync(EntityType entity, int Max,IEnumerable<int>? Exceptions = default,CancellationToken ct = default);
+      Task<int> GetFreeIdByMacAndEntityAndVendorAsync(string mac,EntityType entity,Vendor vendor, int Max,IEnumerable<int>? Exceptions = default,CancellationToken ct = default);
+      Task<int> GetFreeIdByEntityAndVendorAsync(EntityType entity,Vendor vendor, int Max,IEnumerable<int>? Exceptions = default,CancellationToken ct = default);
+      Task<int> GetExternalIdByMacAndEntityAsync(string mac,EntityType entityType,CancellationToken ct= default); 
+      Task<int> GetExternalIdByGuidAndEntityAsync(Guid guid,EntityType entity, CancellationToken ct = default);
       Task InsertComponentMappingAsync(
             Guid guid,
-             string entity,
+             EntityType entity,
             int externalId,
             string mac,
             Vendor vendor,
@@ -32,4 +33,6 @@ public interface IComponentMapping
             short externalId,
             CancellationToken ct = default
       );
+
+      Task<DeviceComponentDto> GetComponentByGuidAsync(Guid guid,CancellationToken ct = default);
 }

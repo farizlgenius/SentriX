@@ -176,6 +176,58 @@ namespace Core.Infrastructure.Migrations
                     b.ToTable("AuditTrails", "core");
                 });
 
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.BreakGlass", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<DateTime>("created_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.Property<int>("device_module_id")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("door_id")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid>("guid")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<bool>("is_active")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("is_default")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("slot_no")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("updated_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.Property<string>("vendor")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("device_module_id");
+
+                    b.HasIndex("guid", "id", "door_id", "device_module_id", "slot_no")
+                        .IsUnique();
+
+                    b.ToTable("BreakGlasses", "core");
+                });
+
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Buzzer", b =>
                 {
                     b.Property<int>("id")
@@ -397,7 +449,7 @@ namespace Core.Infrastructure.Migrations
                         {
                             id = 1,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            entity = "Timezone",
+                            entity = "TimeZone",
                             external_id = 1,
                             guid = new Guid("cff24195-43f8-42ec-a03f-e84857cc958f"),
                             is_active = true,
@@ -409,7 +461,7 @@ namespace Core.Infrastructure.Migrations
                         {
                             id = 2,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            entity = "Timezone",
+                            entity = "TimeZone",
                             external_id = 2,
                             guid = new Guid("614a766c-1241-4fdc-9d0d-7788291cac2d"),
                             is_active = true,
@@ -2678,6 +2730,9 @@ namespace Core.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
 
+                    b.Property<int?>("bg_id")
+                        .HasColumnType("integer");
+
                     b.Property<int?>("buzzer_id")
                         .HasColumnType("integer");
 
@@ -2685,6 +2740,9 @@ namespace Core.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
                         .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.Property<int>("device_id")
+                        .HasColumnType("integer");
 
                     b.Property<Guid>("guid")
                         .ValueGeneratedOnAdd()
@@ -2696,12 +2754,6 @@ namespace Core.Infrastructure.Migrations
 
                     b.Property<bool>("is_default")
                         .HasColumnType("boolean");
-
-                    b.Property<int?>("lane_id")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("laneid")
-                        .HasColumnType("integer");
 
                     b.Property<int>("location_id")
                         .HasColumnType("integer");
@@ -2738,10 +2790,13 @@ namespace Core.Infrastructure.Migrations
 
                     b.HasKey("id");
 
+                    b.HasIndex("bg_id")
+                        .IsUnique();
+
                     b.HasIndex("buzzer_id")
                         .IsUnique();
 
-                    b.HasIndex("laneid");
+                    b.HasIndex("device_id");
 
                     b.HasIndex("location_id");
 
@@ -2754,7 +2809,7 @@ namespace Core.Infrastructure.Migrations
                     b.HasIndex("sensor_id")
                         .IsUnique();
 
-                    b.HasIndex("guid", "id")
+                    b.HasIndex("guid", "id", "device_id")
                         .IsUnique();
 
                     b.ToTable("Doors", "core");
@@ -3747,6 +3802,72 @@ namespace Core.Infrastructure.Migrations
                     b.ToTable("Holidays", "core");
                 });
 
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Input", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<DateTime>("created_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.Property<int>("device_module_id")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid>("guid")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<bool>("is_active")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("is_default")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("location_id")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("metadata")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("mode")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("slot_no")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("updated_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.Property<string>("vendor")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("device_module_id");
+
+                    b.HasIndex("location_id");
+
+                    b.HasIndex("guid", "id", "device_module_id", "slot_no")
+                        .IsUnique();
+
+                    b.ToTable("Input", "core");
+                });
+
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Interval", b =>
                 {
                     b.Property<int>("id")
@@ -4400,7 +4521,7 @@ namespace Core.Infrastructure.Migrations
                     b.HasIndex("guid", "id", "device_module_id", "slot_no")
                         .IsUnique();
 
-                    b.ToTable("Outputs", "core");
+                    b.ToTable("Output", "core");
                 });
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Pin", b =>
@@ -4901,7 +5022,7 @@ namespace Core.Infrastructure.Migrations
                         {
                             id = 1,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            guid = new Guid("cff24195-43f8-42ec-a03f-e84857cc958f"),
                             is_active = true,
                             is_default = true,
                             location_id = 1,
@@ -4912,7 +5033,7 @@ namespace Core.Infrastructure.Migrations
                         {
                             id = 2,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            guid = new Guid("614a766c-1241-4fdc-9d0d-7788291cac2d"),
                             is_active = true,
                             is_default = true,
                             location_id = 1,
@@ -5294,6 +5415,17 @@ namespace Core.Infrastructure.Migrations
                         .HasForeignKey("Locationid");
                 });
 
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.BreakGlass", b =>
+                {
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.DeviceModule", "device_module")
+                        .WithMany("break_glasses")
+                        .HasForeignKey("device_module_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("device_module");
+                });
+
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Buzzer", b =>
                 {
                     b.HasOne("Core.Infrastructure.Persistences.Entities.DeviceModule", "device_module")
@@ -5358,7 +5490,7 @@ namespace Core.Infrastructure.Migrations
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.DeviceModule", b =>
                 {
                     b.HasOne("Core.Infrastructure.Persistences.Entities.Device", "device")
-                        .WithMany("device_module")
+                        .WithMany("device_modules")
                         .HasForeignKey("device_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -5376,14 +5508,21 @@ namespace Core.Infrastructure.Migrations
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Door", b =>
                 {
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.BreakGlass", "bg")
+                        .WithOne("door")
+                        .HasForeignKey("Core.Infrastructure.Persistences.Entities.Door", "bg_id")
+                        .OnDelete(DeleteBehavior.Cascade);
+
                     b.HasOne("Core.Infrastructure.Persistences.Entities.Buzzer", "buzzer")
                         .WithOne("door")
                         .HasForeignKey("Core.Infrastructure.Persistences.Entities.Door", "buzzer_id")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("Core.Infrastructure.Persistences.Entities.Lane", "lane")
-                        .WithMany()
-                        .HasForeignKey("laneid");
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.Device", "device")
+                        .WithMany("doors")
+                        .HasForeignKey("device_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Core.Infrastructure.Persistences.Entities.Location", "location")
                         .WithMany("doors")
@@ -5406,9 +5545,11 @@ namespace Core.Infrastructure.Migrations
                         .HasForeignKey("Core.Infrastructure.Persistences.Entities.Door", "sensor_id")
                         .OnDelete(DeleteBehavior.Cascade);
 
+                    b.Navigation("bg");
+
                     b.Navigation("buzzer");
 
-                    b.Navigation("lane");
+                    b.Navigation("device");
 
                     b.Navigation("location");
 
@@ -5504,6 +5645,25 @@ namespace Core.Infrastructure.Migrations
                         .HasForeignKey("location_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("location");
+                });
+
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Input", b =>
+                {
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.DeviceModule", "device_module")
+                        .WithMany("inputs")
+                        .HasForeignKey("device_module_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.Location", "location")
+                        .WithMany("inputs")
+                        .HasForeignKey("location_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("device_module");
 
                     b.Navigation("location");
                 });
@@ -5853,6 +6013,11 @@ namespace Core.Infrastructure.Migrations
                     b.Navigation("user");
                 });
 
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.BreakGlass", b =>
+                {
+                    b.Navigation("door");
+                });
+
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Buzzer", b =>
                 {
                     b.Navigation("door")
@@ -5886,12 +6051,18 @@ namespace Core.Infrastructure.Migrations
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Device", b =>
                 {
-                    b.Navigation("device_module");
+                    b.Navigation("device_modules");
+
+                    b.Navigation("doors");
                 });
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.DeviceModule", b =>
                 {
+                    b.Navigation("break_glasses");
+
                     b.Navigation("buzzers");
+
+                    b.Navigation("inputs");
 
                     b.Navigation("outputs");
 
@@ -5964,6 +6135,8 @@ namespace Core.Infrastructure.Migrations
                     b.Navigation("groups");
 
                     b.Navigation("holidays");
+
+                    b.Navigation("inputs");
 
                     b.Navigation("intervals");
 

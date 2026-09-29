@@ -4,7 +4,7 @@ namespace Core.Domain.Entities;
 
 public sealed class AuditTrail : BaseDomain
 {
-      public string Entity { get; set; } = string.Empty;       // e.g., Product
+      public EntityType Entity { get; set; }       // e.g., Product
 
       public AuditAction Action { get; set; } = AuditAction.Read;
       public string Username { get; set; } = string.Empty;
@@ -15,7 +15,7 @@ public sealed class AuditTrail : BaseDomain
       public string? Detail { get; set; }                        // JSON delta/changes only
 
       public AuditTrail(
-            string entity,
+            EntityType entity,
             AuditAction action,
             string username,
             string ip,

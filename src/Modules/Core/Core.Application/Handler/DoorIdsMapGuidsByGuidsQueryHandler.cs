@@ -1,6 +1,7 @@
 using Core.Application.Interfaces;
 using Core.Contract.Queries;
 using SharedKernel.Constants;
+using SharedKernel.Enums;
 using SharedKernel.Exceptions;
 using SharedKernel.Messaging;
 
@@ -14,7 +15,7 @@ public sealed class DoorIdsMapGuidsByGuidsQueryHandler(IDoorRepository repo) : I
         foreach (var guid in query.Guids)
         {
             if (!await repo.IsAnyGuidAsync(guid, ct))
-                throw new NotFoundException(EntityType.Door, guid.ToString());
+                throw new NotFoundException(EntityType.Door.ToString(), guid.ToString());
         }
 
 

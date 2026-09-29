@@ -3,6 +3,7 @@ import { Vendor } from "../enum/Vendor";
 const CONTROLLER = `device`;
 
 export const DeviceEndpoint = {
+  GET_LOCATION:(location:string) => `/api/${CONTROLLER}/location/${location}`,
   GET: (locationId: number | string, type: string) =>
     `/api/${CONTROLLER}/option/${type}/${locationId}`,
   GET_OPTION_BY_TYPE: (locationId: number | string, type: string) =>
@@ -25,7 +26,7 @@ export const DeviceEndpoint = {
   CREATE: `/api/${CONTROLLER}`,
   UPDATE: `/api/${CONTROLLER}`,
   VERIFY_MEM: (guid: string) => `/api/${CONTROLLER}/config/${guid}`,
-  VERIFY_COM: (mac: string) => `/api/${CONTROLLER}/verify/com/${mac}`,
+  GET_COMPONENT: (guid: string) => `/api/${CONTROLLER}/component/${guid}`,
   GET_EVENT_STATUS: (guid: string) => `/api/${CONTROLLER}/event/${guid}`,
   GET_SCAN: `/api/${CONTROLLER}/scan`,
   SET_TRAN: `/api/${CONTROLLER}/event`,

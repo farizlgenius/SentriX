@@ -1,4 +1,5 @@
 using Core.Application.Interfaces;
+using Core.Contract.DTOs.Device;
 using Core.Domain.Entities;
 using Core.Infrastructure.Persistences;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -20,7 +21,7 @@ public sealed class ComponentMappingRepository(CoreDbContext context) : ICompone
     await context.SaveChangesAsync(ct);
   }
 
-  public async Task<int> GetExternalIdByMacAndEntityAsync(string mac, string entity, CancellationToken ct = default)
+  public async Task<int> GetExternalIdByMacAndEntityAsync(string mac, EntityType entity, CancellationToken ct = default)
   {
     var res = await context.ComponentMappings
         .AsNoTracking()
@@ -30,14 +31,14 @@ public sealed class ComponentMappingRepository(CoreDbContext context) : ICompone
         .FirstOrDefaultAsync(ct);                       // Don't forget to pass your cancellation token!
 
     if (res == null)
-      throw new NotFoundException(EntityType.ComponentMapping, $"Mac:{mac}, Entity:{entity}");
+      throw new NotFoundException(EntityType.ComponentMapping.ToString(), $"Mac:{mac}, Entity:{entity}");
 
     return res.Value; // Extract the underlying int value
   }
 
 
 
-  public async Task<IEnumerable<int?>> GetExternalIdsByEntityAndVendorAsync(string entity, Vendor vendor, CancellationToken ct = default)
+  public async Task<IEnumerable<int?>> GetExternalIdsByEntityAndVendorAsync(EntityType entity, Vendor vendor, CancellationToken ct = default)
   {
     return await context.ComponentMappings
       .AsNoTracking()
@@ -46,7 +47,7 @@ public sealed class ComponentMappingRepository(CoreDbContext context) : ICompone
       .ToArrayAsync();
   }
 
-  public async Task<int> GetFreeIdByEntityAsync(string entity, int max, IEnumerable<int>? exception = default, CancellationToken ct = default)
+  public async Task<int> GetFreeIdByEntityAsync(EntityType entity, int max, IEnumerable<int>? exception = default, CancellationToken ct = default)
   {
     // 1. Fetch only non-null IDs directly from the database to save memory
     var existingIds = await context.ComponentMappings
@@ -71,10 +72,10 @@ public sealed class ComponentMappingRepository(CoreDbContext context) : ICompone
         return id;
     }
 
-    throw new ExceedException(entity);
+    throw new ExceedException(entity.ToString());
   }
 
-  public async Task<int> GetFreeIdByMacAndEntityAndVendorAsync(string mac, string entity, Vendor vendor, int max, IEnumerable<int>? exception = default, CancellationToken ct = default)
+  public async Task<int> GetFreeIdByMacAndEntityAndVendorAsync(string mac, EntityType entity, Vendor vendor, int max, IEnumerable<int>? exception = default, CancellationToken ct = default)
   {
     // 1. Fetch only non-null IDs directly from the database to save memory
     var existingIds = await context.ComponentMappings
@@ -99,10 +100,10 @@ public sealed class ComponentMappingRepository(CoreDbContext context) : ICompone
         return id;
     }
 
-    throw new ExceedException(entity);
+    throw new ExceedException(entity.ToString());
   }
 
-  public async Task<int> GetFreeIdByEntityAndVendorAsync(string entity, Vendor vendor, int max, IEnumerable<int>? exception = default, CancellationToken ct = default)
+  public async Task<int> GetFreeIdByEntityAndVendorAsync(EntityType entity, Vendor vendor, int max, IEnumerable<int>? exception = default, CancellationToken ct = default)
   {
     // 1. Fetch only non-null IDs directly from the database to save memory
     var existingIds = await context.ComponentMappings
@@ -127,12 +128,12 @@ public sealed class ComponentMappingRepository(CoreDbContext context) : ICompone
         return id;
     }
 
-    throw new ExceedException(entity);
+    throw new ExceedException(entity.ToString());
   }
 
   public async Task<string> GetMacByExternalIdAndEntityAndVendorAsync(
     int externalId,
-    string entity,
+    EntityType entity,
     Vendor vendor,
     CancellationToken ct = default)
   {
@@ -146,7 +147,7 @@ public sealed class ComponentMappingRepository(CoreDbContext context) : ICompone
     return res ?? string.Empty;
   }
 
-  public async Task<int> GetExternalIdByGuidAndEntityAsync(Guid guid, string entity, CancellationToken ct = default)
+  public async Task<int> GetExternalIdByGuidAndEntityAsync(Guid guid, EntityType entity, CancellationToken ct = default)
   {
     var res = await context.ComponentMappings
       .AsNoTracking()
@@ -156,7 +157,7 @@ public sealed class ComponentMappingRepository(CoreDbContext context) : ICompone
       .FirstOrDefaultAsync();
 
     if (res == null)
-      throw new NotFoundException(EntityType.ComponentMapping, guid.ToString());
+      throw new NotFoundException(EntityType.ComponentMapping.ToString(), guid.ToString());
 
     return (int)res;
 
@@ -170,14 +171,14 @@ public sealed class ComponentMappingRepository(CoreDbContext context) : ICompone
               .FirstOrDefaultAsync(ct);
 
             if(entity == null)
-              throw new NotFoundException(EntityType.ComponentMapping,guid.ToString());
+              throw new NotFoundException(EntityType.ComponentMapping.ToString(),guid.ToString());
 
             context.ComponentMappings.Remove(entity);
 
             await context.SaveChangesAsync(ct);
       }
 
-      public async Task<Guid> GetGuidByExternalIdAndEntityAndVendorAsync(short externalId, string entity, Vendor vendor, CancellationToken ct = default)
+      public async Task<Guid> GetGuidByExternalIdAndEntityAndVendorAsync(short externalId, EntityType entity, Vendor vendor, CancellationToken ct = default)
       {
           var res =  await context.ComponentMappings
             .AsNoTracking()
@@ -187,7 +188,7 @@ public sealed class ComponentMappingRepository(CoreDbContext context) : ICompone
             .FirstOrDefaultAsync();
 
           if(res == Guid.Empty)
-            throw new NotFoundException(EntityType.ComponentMapping);
+            throw new NotFoundException(EntityType.ComponentMapping.ToString());
 
           return res;
       }
@@ -200,12 +201,17 @@ public sealed class ComponentMappingRepository(CoreDbContext context) : ICompone
             .FirstOrDefaultAsync();
 
           if(entity == null)
-            throw new NotFoundException(EntityType.ComponentMapping,mac);
+            throw new NotFoundException(EntityType.ComponentMapping.ToString(),mac);
 
           entity.external_id = externalId;
 
           context.ComponentMappings.Update(entity);
 
           await context.SaveChangesAsync(ct);
+      }
+
+      public async Task<DeviceComponentDto> GetComponentByGuidAsync(Guid guid, CancellationToken ct = default)
+      {
+            throw new NotImplementedException();
       }
 }

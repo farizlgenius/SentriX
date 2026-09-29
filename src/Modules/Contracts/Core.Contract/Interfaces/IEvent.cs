@@ -20,7 +20,7 @@ public interface IEvent : IBase<EventDto, CreateEventDto, UpdateEventDto>
       Task<Pagination<AuditTrailDto>> GeAuditPaginationAsync(PaginationParams param,CancellationToken ct = default);
 
       Task InsertAuditAsync(
-        string entity,
+        EntityType entity,
         AuditAction action,
         string username,
         string ip,

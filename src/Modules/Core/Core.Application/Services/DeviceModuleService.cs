@@ -36,6 +36,11 @@ public sealed class DeviceModuleService(IDeviceModuleRepository repo, IMessageBu
     throw new NotImplementedException();
   }
 
+  public async Task<IEnumerable<DeviceModuleDto>> GetByDeviceAsync(Guid guid, CancellationToken ct = default)
+  {
+    return await repo.GetByDeviceAsync(guid, ct);
+  }
+
   public async Task<DeviceModuleDto> GetByGuidAsync(Guid guid, CancellationToken ct = default)
   {
     throw new NotImplementedException();
@@ -57,9 +62,87 @@ public sealed class DeviceModuleService(IDeviceModuleRepository repo, IMessageBu
 
   }
 
+  public async Task<IEnumerable<OptionDto>> GetInputSlotAsync(Guid guid, CancellationToken ct = default)
+  {
+    // 1. Get the data from the repository
+        var slotData = await repo.GetInputSlotAsync(guid, ct);
+
+        if (slotData == null)
+            return Array.Empty<OptionDto>();
+
+        // 2. Apply business logic: Calculate free slots
+        var allPossibleSlots = Enumerable.Range(0, slotData.Value.TotalSlots);
+
+        var occupiedSlots = slotData.Value.InputSlots.Concat(slotData.Value.RexSlots).Concat(slotData.Value.SensorSlots).Concat(slotData.Value.BreakGlassSlots).Distinct();
+        
+        return allPossibleSlots
+            .Except(occupiedSlots)
+            .Order()
+            .Select(x => new OptionDto(
+              $"Input {x+1}",
+              x,
+              string.Empty
+            ))
+            .ToArray();
+
+  }
+
+  public async Task<IEnumerable<OptionDto>> GetOptionByDeviceAsync(Guid guid, CancellationToken ct = default)
+  {
+    return await repo.GetOptionByDeviceAsync(guid, ct);
+  }
+
+  public async Task<IEnumerable<OptionDto>> GetOutputSlotAsync(Guid guid, CancellationToken ct = default)
+  {
+    // 1. Get the data from the repository
+        var slotData = await repo.GetOutputSlotAsync(guid, ct);
+
+        if (slotData == null)
+            return Array.Empty<OptionDto>();
+
+        // 2. Apply business logic: Calculate free slots
+        var allPossibleSlots = Enumerable.Range(0, slotData.Value.TotalSlots);
+
+        var occupiedSlots = slotData.Value.RelaySlots.Concat(slotData.Value.BuzzerSlots).Concat(slotData.Value.OutputSlots).Distinct();
+        
+        return allPossibleSlots
+            .Except(occupiedSlots)
+            .Order()
+            .Select(x => new OptionDto(
+              $"Output {x+1}",
+              x,
+              string.Empty
+            ))
+            .ToArray();
+  }
+
   public async Task<Pagination<DeviceModuleDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
   {
     throw new NotImplementedException();
+  }
+
+  public async Task<IEnumerable<OptionDto>> GetReaderSlotAsync(Guid guid, CancellationToken ct = default)
+  {
+     // 1. Get the data from the repository
+        var slotData = await repo.GetReaderSlotAsync(guid, ct);
+
+        if (slotData == null)
+            return Array.Empty<OptionDto>();
+
+        // 2. Apply business logic: Calculate free slots
+        var allPossibleSlots = Enumerable.Range(0, slotData.Value.TotalSlots);
+
+        var occupiedSlots = slotData.Value.OccupiedSlots.Distinct();
+        
+        return allPossibleSlots
+            .Except(occupiedSlots)
+            .Order()
+            .Select(x => new OptionDto(
+              $"Reader {x+1}",
+              x,
+              string.Empty
+            ))
+            .ToArray();
   }
 
   public async Task<Guid> UpdateAsync(UpdateDeviceModuleDto dto, CancellationToken ct = default)
@@ -67,8 +150,8 @@ public sealed class DeviceModuleService(IDeviceModuleRepository repo, IMessageBu
     throw new NotImplementedException();
   }
 
-      public Task UploadAsync(CancellationToken ct = default)
-      {
-            throw new NotImplementedException();
-      }
+  public Task UploadAsync(CancellationToken ct = default)
+  {
+    throw new NotImplementedException();
+  }
 }

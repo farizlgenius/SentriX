@@ -34,8 +34,6 @@ public class DoorController(IDoor door) : ControllerBase
   [HttpPost]
   public async Task<IActionResult> CreateAsync([FromBody] CreateDoorDto dto)
   {
-    
-      
     var res = await door.CreateAsync(dto);
     return Ok(res);
   }

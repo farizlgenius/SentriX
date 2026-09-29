@@ -5,25 +5,43 @@ using Core.Contract.Queries;
 using Core.Domain.Entities;
 using SharedKernel.Constants;
 using SharedKernel.Domain;
+using SharedKernel.Enums;
 using SharedKernel.Exceptions;
 using SharedKernel.Messaging;
 
 namespace Core.Application.Services;
 
-public sealed class DoorService(IDoorRepository repo, IMessageBus bus) : IDoor
+public sealed class DoorService(
+  IDoorRepository repo, 
+  IMessageBus bus,
+  IDeviceRepository device,
+  IDeviceModuleRepository deviceModule,
+  ILocationRepository loc
+  ) : IDoor
 {
   public async Task<Guid> CreateAsync(CreateDoorDto dto, CancellationToken ct = default)
   {
 
-    var locationId = await bus.QueryAsync(new LocationIdByGuidQuery(dto.LocationGuid));
-    // var deviceModuleId = await bus.QueryAsync(new DeviceModuleIdByGuidQuery(dto.DeviceModuleGuid));
-    var readerMapModuleId = await bus.QueryAsync(new DeviceModuleIdsMapGuidsByGuidsQuery(dto.Readers.Select(x => x.DeviceModuleGuid)));
+    //var locationId = await bus.QueryAsync(new LocationIdByGuidQuery(dto.LocationGuid));
+    var deviceId = await device.GetIdByGuidAsync(dto.DeviceGuid);
+    var locationId = await loc.GetIdByGuidAsync(dto.LocationGuid);
 
-    var sensorMapModuleId = dto.Sensor == null ? 0 : await bus.QueryAsync(new DeviceModuleIdByGuidQuery(dto.Sensor.DeviceModuleGuid));
+    foreach (var reader in dto.Readers)
+    {
+      if (!await repo.IsAnyGuidAsync(reader.DeviceModuleGuid, ct))
+        throw new NotFoundException(EntityType.DeviceModule.ToString(), reader.DeviceModuleGuid.ToString());
+    }
 
-    var relayMapModuleId = dto.Relay == null ? 0 : await bus.QueryAsync(new DeviceModuleIdByGuidQuery(dto.Relay.DeviceModuleGuid));
-    var buzzerMapModuleId = dto.Buzzer == null ? 0 : await bus.QueryAsync(new DeviceModuleIdByGuidQuery(dto.Buzzer.DeviceModuleGuid));
-    var rexMapModuleId = dto.Rex == null ? 0 : await bus.QueryAsync(new DeviceModuleIdByGuidQuery(dto.Rex.DeviceModuleGuid));
+    var readerMapModuleId = await deviceModule.GetDeviceModuleIdsMapGuidsByGuidsAsync(dto.Readers.Select(x => x.DeviceModuleGuid), ct);
+
+    //var readerMapModuleId = await bus.QueryAsync(new DeviceModuleIdsMapGuidsByGuidsQuery(dto.Readers.Select(x => x.DeviceModuleGuid)));
+
+    var sensorMapModuleId = dto.Sensor == null ? 0 : await deviceModule.GetDeviceModuleIdByGuidAsync(dto.Sensor.DeviceModuleGuid);
+
+    var relayMapModuleId = dto.Relay == null ? 0 : await deviceModule.GetDeviceModuleIdByGuidAsync(dto.Relay.DeviceModuleGuid);
+    var buzzerMapModuleId = dto.Buzzer == null ? 0 : await deviceModule.GetDeviceModuleIdByGuidAsync(dto.Buzzer.DeviceModuleGuid);
+    var rexMapModuleId = dto.Rex == null ? 0 : await deviceModule.GetDeviceModuleIdByGuidAsync(dto.Rex.DeviceModuleGuid);
+    var bgMapModuleId = dto.Bg == null ? 0 : await deviceModule.GetDeviceModuleIdByGuidAsync(dto.Bg.DeviceModuleGuid);
 
     if (await repo.IsAnyByNameAndLocationIdAsync(dto.Name, locationId))
       throw new DuplicateException(nameof(dto.Name), dto.Name);
@@ -32,6 +50,7 @@ public sealed class DoorService(IDoorRepository repo, IMessageBus bus) : IDoor
       dto.Name,
       dto.Vendor,
       dto.Type,
+      deviceId,
       dto.Metadata,
       dto.Readers.Select(x => new Reader(
         x.SlotNo,
@@ -69,6 +88,11 @@ public sealed class DoorService(IDoorRepository repo, IMessageBus bus) : IDoor
           dto.Rex.Vendor,
           rexMapModuleId
         ),
+        dto.Bg == null ? null : new BreakGlass(
+          dto.Bg.SlotNo,
+          dto.Bg.Vendor,
+          bgMapModuleId
+        ),
         locationId
     );
 
@@ -83,7 +107,7 @@ public sealed class DoorService(IDoorRepository repo, IMessageBus bus) : IDoor
   public async Task<bool> DeleteByGuidAsync(Guid guid, CancellationToken ct = default)
   {
     if (!await repo.IsAnyGuidAsync(guid, ct))
-      throw new NotFoundException(EntityType.Door, guid.ToString());
+      throw new NotFoundException(EntityType.Door.ToString(), guid.ToString());
 
     // Check relation here 
     if (await repo.IsAnyRelatedEntitiesAsync(guid))
@@ -99,13 +123,13 @@ public sealed class DoorService(IDoorRepository repo, IMessageBus bus) : IDoor
   {
     // Check if guids is empty 
     if (guids.Count() == 0)
-      throw new NotFoundException(EntityType.Door);
+      throw new NotFoundException(EntityType.Door.ToString());
 
     foreach (var guid in guids)
     {
       // Check is any location with guid
       if (!await repo.IsAnyGuidAsync(guid, ct))
-        throw new NotFoundException(EntityType.Door, guid.ToString());
+        throw new NotFoundException(EntityType.Door.ToString(), guid.ToString());
 
       // Check relate object here
       if (await repo.IsAnyRelatedEntitiesAsync(guid))
@@ -121,7 +145,7 @@ public sealed class DoorService(IDoorRepository repo, IMessageBus bus) : IDoor
   {
     // Check is any location with guid
     if (!await repo.IsAnyGuidAsync(guid, ct))
-      throw new NotFoundException(EntityType.Door, guid.ToString());
+      throw new NotFoundException(EntityType.Door.ToString(), guid.ToString());
 
     return await repo.DisableAsync(guid, ct);
   }
@@ -130,7 +154,7 @@ public sealed class DoorService(IDoorRepository repo, IMessageBus bus) : IDoor
   {
     // Check is any location with guid
     if (!await repo.IsAnyGuidAsync(guid, ct))
-      throw new NotFoundException(EntityType.Door, guid.ToString());
+      throw new NotFoundException(EntityType.Door.ToString(), guid.ToString());
 
     return await repo.EnableAsync(guid, ct);
   }
@@ -154,17 +178,28 @@ public sealed class DoorService(IDoorRepository repo, IMessageBus bus) : IDoor
   {
     // Check is any location with guid
     if (!await repo.IsAnyGuidAsync(dto.Guid, ct))
-      throw new NotFoundException(EntityType.Door, dto.Guid.ToString());
+      throw new NotFoundException(EntityType.Door.ToString(), dto.Guid.ToString());
+
+    var deviceId = await device.GetIdByGuidAsync(dto.DeviceGuid);
 
     var locationId = await bus.QueryAsync(new LocationIdByGuidQuery(dto.LocationGuid));
 
-    var readerMapModuleId = await bus.QueryAsync(new DeviceModuleIdsMapGuidsByGuidsQuery(dto.Readers.Select(x => x.DeviceModuleGuid)));
+    //var readerMapModuleId = await bus.QueryAsync(new DeviceModuleIdsMapGuidsByGuidsQuery(dto.Readers.Select(x => x.DeviceModuleGuid)));
 
-    var sensorMapModuleId = dto.Sensor == null ? 0 : await bus.QueryAsync(new DeviceModuleIdByGuidQuery(dto.Sensor.DeviceModuleGuid));
+     foreach (var reader in dto.Readers)
+    {
+      if (!await repo.IsAnyGuidAsync(reader.DeviceModuleGuid, ct))
+        throw new NotFoundException(EntityType.DeviceModule.ToString(), reader.DeviceModuleGuid.ToString());
+    }
 
-    var relayMapModuleId = dto.Relay == null ? 0 : await bus.QueryAsync(new DeviceModuleIdByGuidQuery(dto.Relay.DeviceModuleGuid));
-    var buzzerMapModuleId = dto.Buzzer == null ? 0 : await bus.QueryAsync(new DeviceModuleIdByGuidQuery(dto.Buzzer.DeviceModuleGuid));
-    var rexMapModuleId = dto.Rex == null ? 0 : await bus.QueryAsync(new DeviceModuleIdByGuidQuery(dto.Rex.DeviceModuleGuid));
+    var readerMapModuleId = await deviceModule.GetDeviceModuleIdsMapGuidsByGuidsAsync(dto.Readers.Select(x => x.DeviceModuleGuid), ct);
+
+    var sensorMapModuleId = dto.Sensor == null ? 0 : await deviceModule.GetDeviceModuleIdByGuidAsync(dto.Sensor.DeviceModuleGuid);
+
+    var relayMapModuleId = dto.Relay == null ? 0 : await deviceModule.GetDeviceModuleIdByGuidAsync(dto.Relay.DeviceModuleGuid);
+    var buzzerMapModuleId = dto.Buzzer == null ? 0 : await deviceModule.GetDeviceModuleIdByGuidAsync(dto.Buzzer.DeviceModuleGuid);
+    var rexMapModuleId = dto.Rex == null ? 0 : await deviceModule.GetDeviceModuleIdByGuidAsync(dto.Rex.DeviceModuleGuid);
+    var bgMapModuleId = dto.Bg == null ? 0 : await deviceModule.GetDeviceModuleIdByGuidAsync(dto.Bg.DeviceModuleGuid);
 
     if (await repo.IsAnyByNameAndLocationIdAsync(dto.Name, locationId))
       throw new DuplicateException(nameof(dto.Name), dto.Name);
@@ -173,6 +208,7 @@ public sealed class DoorService(IDoorRepository repo, IMessageBus bus) : IDoor
       dto.Name,
       dto.Vendor,
       dto.Type,
+      deviceId,
       dto.Metadata,
       dto.Readers.Select(x => new Reader(
         x.SlotNo,
@@ -209,6 +245,11 @@ public sealed class DoorService(IDoorRepository repo, IMessageBus bus) : IDoor
           dto.Rex.Metadata,
           dto.Rex.Vendor,
           rexMapModuleId
+        ),
+         dto.Bg == null ? null : new BreakGlass(
+          dto.Bg.SlotNo,
+          dto.Bg.Vendor,
+          bgMapModuleId
         ),
         locationId
     );

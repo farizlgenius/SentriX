@@ -126,6 +126,10 @@ public static class CoreDependencyInjection
     services.AddScoped<IEvent,EventService>();
     services.AddScoped<IEventRepository,EventRepostory>();
 
+    // Output
+    services.AddScoped<IOutput,OutputService>();
+    services.AddScoped<IOutputRepository,OutputRepository>();
+
     // Utility
     services.AddScoped<IUtility,UtilityService>();
 

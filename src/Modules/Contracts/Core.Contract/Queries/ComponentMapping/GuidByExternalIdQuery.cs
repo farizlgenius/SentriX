@@ -6,5 +6,5 @@ namespace Core.Contract.Queries.ComponentMapping;
 
 public sealed record GuidByExternalIdAndEntityAndVendorQuery(
       short externalId,
-      string entity,
+      EntityType entity,
       Vendor vendor) : IQuery<Guid>;

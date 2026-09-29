@@ -10,6 +10,8 @@ export interface DoorDto {
   name: string;
   vendor: Vendor;
   type: DoorType;
+  deviceGuid:string;
+  deviceName:string;
   metadata: string;
   readers: ReaderDto[];
   buzzer: BuzzerDto | null;

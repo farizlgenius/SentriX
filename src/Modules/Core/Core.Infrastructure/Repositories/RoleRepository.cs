@@ -5,6 +5,7 @@ using Core.Infrastructure.Persistences;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel.Constants;
 using SharedKernel.Domain;
+using SharedKernel.Enums;
 using SharedKernel.Exceptions;
 
 namespace Core.Infrastructure.Repositories;
@@ -26,7 +27,7 @@ public sealed class RoleRepository(CoreDbContext context) : IRoleRepository
                   .Where(x => x.guid == guid)
                   .FirstOrDefaultAsync();
 
-            context.Roles.Remove(entity ?? throw new NotFoundException(EntityType.Role, guid.ToString()));
+            context.Roles.Remove(entity ?? throw new NotFoundException(EntityType.Role.ToString(), guid.ToString()));
 
             await context.SaveChangesAsync(ct);
       }
@@ -46,7 +47,7 @@ public sealed class RoleRepository(CoreDbContext context) : IRoleRepository
       {
             var en = await context.Roles
                   .Where(x => x.guid == guid)
-                  .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.Role, guid.ToString());
+                  .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.Role.ToString(), guid.ToString());
 
             en.is_active = false;
 
@@ -61,7 +62,7 @@ public sealed class RoleRepository(CoreDbContext context) : IRoleRepository
       {
             var en = await context.Roles
                   .Where(x => x.guid == guid)
-                  .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.Role, guid.ToString());
+                  .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.Role.ToString(), guid.ToString());
 
             en.is_active = true;
 
@@ -95,7 +96,7 @@ public sealed class RoleRepository(CoreDbContext context) : IRoleRepository
                         )).ToList(),
                         e.is_active,
                         e.is_default
-                  )).FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.Role, guid.ToString());
+                  )).FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.Role.ToString(), guid.ToString());
       }
 
       public async Task<IEnumerable<RoleDto>> GetAsync(CancellationToken ct = default)
@@ -302,7 +303,7 @@ public sealed class RoleRepository(CoreDbContext context) : IRoleRepository
                   .Include(x => x.module_permission)
                   .ThenInclude(x => x.feature_permissions)
                   .Where(x => x.guid == entity.Guid)
-                  .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.Role, entity.Guid.ToString());
+                  .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.Role.ToString(), entity.Guid.ToString());
 
                   // Delete old permission
                   context.ModulePermissions.RemoveRange(en.module_permission);

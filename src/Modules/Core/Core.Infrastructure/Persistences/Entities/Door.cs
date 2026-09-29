@@ -20,12 +20,12 @@ public sealed class Door : BaseEntity,IAuditableEntity
   public Buzzer? buzzer { get; set; }
   public int? rex_id { get; set; }
   public Rex? rex { get; set; }
-  // public int device_module_id { get; set; }
-  // public DeviceModule device_module { get; set; } = default!;
+  public int? bg_id { get; set; }
+  public BreakGlass? bg { get; set; }
+  public int device_id { get; set; }
+  public Device device { get; set; } = default!;
   public int location_id { get; set; }
   public Location location { get; set; } = default!;
-  public int? lane_id { get; set; }
-  public Lane? lane { get; set; }
   public ICollection<GroupComponent> group_components { get; set; } = default!;
   public Door() { }
 
@@ -34,12 +34,14 @@ public sealed class Door : BaseEntity,IAuditableEntity
     name = d.Name;
     vendor = d.Vendor;
     type = d.Type;
+    device_id = d.DeviceId;
     metadata = d.Metadta;
     readers = d.Readers.Select(x => new Reader(x)).ToArray();
     sensor = d.Sensor == null ? null : new Sensor(d.Sensor);
     relay = d.Relay == null ? null : new Relay(d.Relay);
     buzzer = d.Buzzer == null ? null : new Buzzer(d.Buzzer);
     rex = d.Rex == null ? null : new Rex(d.Rex);
+    bg = d.BG == null ? null : new BreakGlass(d.BG);
     location_id = d.LocationId;
   }
 

@@ -5,6 +5,7 @@ using Core.Infrastructure.Persistences;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel.Constants;
 using SharedKernel.Domain;
+using SharedKernel.Enums;
 using SharedKernel.Exceptions;
 
 namespace Core.Infrastructure.Repositories;
@@ -30,7 +31,7 @@ public sealed class DoorRepository(CoreDbContext context) : IDoorRepository
     var entity = await context.Doors
     .OrderByDescending(x => x.id)
       .Where(x => x.guid == guid)
-      .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.Door, guid.ToString());
+      .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.Device.ToString(), guid.ToString());
 
     // Check releation
 
@@ -55,7 +56,7 @@ public sealed class DoorRepository(CoreDbContext context) : IDoorRepository
   {
     var en = await context.Doors
       .Where(x => x.guid == guid)
-      .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.Door, guid.ToString());
+      .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.Device.ToString(), guid.ToString());
 
     en.is_active = false;
 
@@ -70,7 +71,7 @@ public sealed class DoorRepository(CoreDbContext context) : IDoorRepository
   {
     var en = await context.Doors
       .Where(x => x.guid == guid)
-      .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.Door, guid.ToString());
+      .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.Device.ToString(), guid.ToString());
 
     en.is_active = true;
 
@@ -92,6 +93,8 @@ public sealed class DoorRepository(CoreDbContext context) : IDoorRepository
         x.name,
         x.vendor,
         x.type,
+        x.device.guid,
+        x.device.name,
         x.metadata,
         x.readers.Select(
           r => new ReaderDto(
@@ -136,11 +139,17 @@ public sealed class DoorRepository(CoreDbContext context) : IDoorRepository
           x.relay.vendor,
           x.relay.device_module.guid
         ),
+        x.bg == null ? null : new BGDto(
+          x.bg.guid,
+          x.bg.slot_no,
+          x.bg.vendor,
+          x.bg.device_module.guid
+        ),
         x.location.guid,
         x.location.name,
         x.is_active,
         x.is_default
-      )).FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.Door, guid.ToString());
+      )).FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.Device.ToString(), guid.ToString());
   }
 
   public async Task<IEnumerable<DoorDto>> GetByLocationAsync(Guid locationGuid, CancellationToken ct = default)
@@ -153,6 +162,8 @@ public sealed class DoorRepository(CoreDbContext context) : IDoorRepository
         x.name,
         x.vendor,
         x.type,
+         x.device.guid,
+        x.device.name,
         x.metadata,
         x.readers.Select(
           r => new ReaderDto(
@@ -196,6 +207,12 @@ public sealed class DoorRepository(CoreDbContext context) : IDoorRepository
           x.relay.metadata,
           x.relay.vendor,
           x.relay.device_module.guid
+        ),
+         x.bg == null ? null : new BGDto(
+          x.bg.guid,
+          x.bg.slot_no,
+          x.bg.vendor,
+          x.bg.device_module.guid
         ),
         x.location.guid,
         x.location.name,
@@ -226,7 +243,7 @@ public sealed class DoorRepository(CoreDbContext context) : IDoorRepository
       .FirstOrDefaultAsync();
 
     if (res == 0)
-      throw new NotFoundException(EntityType.Door, guid.ToString());
+      throw new NotFoundException(EntityType.Device.ToString(), guid.ToString());
 
     return res;
   }
@@ -287,7 +304,10 @@ public sealed class DoorRepository(CoreDbContext context) : IDoorRepository
                       x.name,
                       x.vendor,
         x.type,
+         x.device.guid,
+        x.device.name,
                       x.metadata,
+                      
                       x.readers.Select(
                         r => new ReaderDto(
                           r.guid,
@@ -331,6 +351,12 @@ public sealed class DoorRepository(CoreDbContext context) : IDoorRepository
                         x.relay.vendor,
                         x.relay.device_module.guid
                       ),
+                       x.bg == null ? null : new BGDto(
+          x.bg.guid,
+          x.bg.slot_no,
+          x.bg.vendor,
+          x.bg.device_module.guid
+        ),
                       x.location.guid,
                       x.location.name,
                       x.is_active,
@@ -378,7 +404,7 @@ public sealed class DoorRepository(CoreDbContext context) : IDoorRepository
     var en = await context.Doors
       .AsNoTracking()
       .Where(x => x.guid == entity.Guid)
-      .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.Door, entity.Guid.ToString());
+      .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.Device.ToString(), entity.Guid.ToString());
 
     en.name = entity.Name;
     en.vendor = entity.Vendor;

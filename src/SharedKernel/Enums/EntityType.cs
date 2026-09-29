@@ -1,0 +1,34 @@
+namespace SharedKernel.Enums;
+
+public enum EntityType
+{
+      Auth,
+      Device,
+      TempDevice,
+      DeviceModule,
+      Location,
+      Company,
+      Department,
+      Position,
+      User,
+      Role,
+      Operator,
+      PasswordRule,
+      WeakPassword,
+      TimeZone,
+      Holiday,
+      Interval,
+      Door,
+      Turnstile,
+      Group,
+      ComponentMapping,
+      Event,
+      AdapterEvent,
+      Input,
+      Output,
+      Procedure,
+      Trigger,
+      MonitorGroup,
+      Area,
+      Web
+}

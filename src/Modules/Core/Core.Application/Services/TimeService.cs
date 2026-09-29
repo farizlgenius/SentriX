@@ -1,5 +1,6 @@
 using Adapter.Contract.Interfaces;
 using Core.Application.Interfaces;
+using Core.Contract.DTOs.Device;
 using Core.Contract.DTOs.Time;
 using Core.Contract.Interfaces;
 using Core.Contract.Queries;
@@ -16,7 +17,7 @@ namespace Core.Application.Services;
 public sealed class TimeService(
   ITimeRepository repo,
   IAdapterFactory adapter,
-  IDevice device,
+  IDeviceRepository device,
   IComponentMapping com,
   IMessageBus bus) : ITime
 {
@@ -25,7 +26,7 @@ public sealed class TimeService(
     var locationId = await bus.QueryAsync(new LocationIdByGuidQuery(dto.LocationGuid));
 
     if (await repo.IsAnyByNameAndLocationIdAsync(dto.Name, locationId))
-      throw new DuplicateException(EntityType.TimeZone, dto.Name);
+      throw new DuplicateException(EntityType.TimeZone.ToString(), dto.Name);
 
     var intervalIds = await bus.QueryAsync(new IntervalIdsByGuidsQuery(dto.IntervalGuids));
 
@@ -60,7 +61,7 @@ public sealed class TimeService(
   public async Task<bool> DeleteByGuidAsync(Guid guid, CancellationToken ct = default)
   {
     if (!await repo.IsAnyGuidAsync(guid))
-      throw new NotFoundException(EntityType.TimeZone, guid.ToString());
+      throw new NotFoundException(EntityType.TimeZone.ToString(), guid.ToString());
 
     // Check relation
 
@@ -75,13 +76,13 @@ public sealed class TimeService(
   {
     // Check if guids is empty 
     if (guids.Count() == 0)
-      throw new NotFoundException(EntityType.Role);
+      throw new NotFoundException(EntityType.Role.ToString());
 
     foreach (var guid in guids)
     {
       // Check is any location with guid
       if (!await repo.IsAnyGuidAsync(guid, ct))
-        throw new NotFoundException(EntityType.Role, guid.ToString());
+        throw new NotFoundException(EntityType.Role.ToString(), guid.ToString());
 
       // Check relate object here
 
@@ -95,7 +96,7 @@ public sealed class TimeService(
   public async Task<bool> DisabledAsync(Guid guid, CancellationToken ct = default)
   {
     if (!await repo.IsAnyGuidAsync(guid, ct))
-      throw new NotFoundException(EntityType.Role, guid.ToString());
+      throw new NotFoundException(EntityType.Role.ToString(), guid.ToString());
 
     return await repo.DisableAsync(guid, ct);
   }
@@ -103,7 +104,7 @@ public sealed class TimeService(
   public async Task<bool> EnabledAsync(Guid guid, CancellationToken ct = default)
   {
     if (!await repo.IsAnyGuidAsync(guid, ct))
-      throw new NotFoundException(EntityType.Role, guid.ToString());
+      throw new NotFoundException(EntityType.Role.ToString(), guid.ToString());
 
     return await repo.EnableAsync(guid, ct);
   }
@@ -118,6 +119,11 @@ public sealed class TimeService(
     return await repo.GetByLocationAsync(guid, ct);
   }
 
+  public async Task<Components> GetComponentsAsync( Guid locationGuid, DateTime syncedAt, CancellationToken ct = default)
+  {
+    return await repo.GetComponentsAsync(locationGuid, syncedAt, ct);
+  }
+
   public async Task<Pagination<TimeZoneDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
   {
     return await repo.GetPaginationAsync(param, ct);
@@ -127,12 +133,12 @@ public sealed class TimeService(
   {
     // Check is any location with guid
     if (!await repo.IsAnyGuidAsync(dto.Guid, ct))
-      throw new NotFoundException(EntityType.TimeZone, dto.Guid.ToString());
+      throw new NotFoundException(EntityType.TimeZone.ToString(), dto.Guid.ToString());
 
     var locationId = await bus.QueryAsync(new LocationIdByGuidQuery(dto.LocationGuid));
 
     if (await repo.IsAnyByNameAndLocationIdAsync(dto.Name, locationId))
-      throw new DuplicateException(EntityType.TimeZone, dto.Name);
+      throw new DuplicateException(EntityType.TimeZone.ToString(), dto.Name);
 
     var intervalIds = await bus.QueryAsync(new IntervalIdsByGuidsQuery(dto.IntervalGuids));
 
@@ -150,16 +156,16 @@ public sealed class TimeService(
     return d.Guid;
   }
 
-  public async Task UploadAsync(Guid guid,CancellationToken ct = default)
+  public async Task UploadAsync(Guid guid, CancellationToken ct = default)
   {
-    var d = await device.GetByGuidAsync(guid,ct);
+    var d = await device.GetAsync(guid, ct);
     var tzs = await repo.GetByLocationAsync(d.LocationGuid);
 
-    var deviceExternalId = await com.GetExternalIdByMacAndEntityAsync(d.Mac,EntityType.Device,ct);
+    var deviceExternalId = await com.GetExternalIdByMacAndEntityAsync(d.Mac, EntityType.Device, ct);
 
-    foreach(var tz in tzs)
+    foreach (var tz in tzs)
     {
-      var tzExternalId = await com.GetExternalIdByGuidAndEntityAsync(tz.Guid,EntityType.TimeZone);
+      var tzExternalId = await com.GetExternalIdByGuidAndEntityAsync(tz.Guid, EntityType.TimeZone, ct);
 
       await adapter.GetAdapter(d.Vendor).Time.TimeZone(
         d.Mac,

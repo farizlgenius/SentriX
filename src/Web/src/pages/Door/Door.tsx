@@ -9,6 +9,8 @@ import {
   LockIcon,
   ModuleIcon,
   MomentIcon,
+  MonitorIcon,
+  OnIcon,
   UnlockIcon,
 } from "../../icons";
 import Logger from "../../utility/Logger";
@@ -36,7 +38,11 @@ import { Vendor } from "../../enum/Vendor";
 import DoorInForm from "./DoorInForm";
 import DoorOutForm from "./DoorOutForm";
 import DoorRexOutForm from "./DoorRexOutForm";
-import DoorGeneralForm from "./DoorGeneratForm";
+import DoorGeneralForm from "./DoorGeneralForm";
+import DoorMonitorForm from "./DoorMonitorForm";
+import DoorBuzzerForm from "./DoorBuzzerForm";
+import DoorRelayForm from "./DoorRelayForm";
+import { Options } from "../../model/Options";
 
 // ACR Page
 const DOOR_TABLE_HEADER: string[] = [
@@ -80,6 +86,8 @@ const Door = () => {
     isDefault: false,
     vendor: Vendor.aero,
     type: DoorType.Single,
+    deviceGuid: "",
+    deviceName: ""
   };
   const [doorDto, setDoorDto] = useState<DoorDto>(defaultDoorDto);
   const [refresh, setRefresh] = useState(false);
@@ -89,6 +97,8 @@ const Door = () => {
   }
   const [form, setForm] = useState<boolean>(false);
   const [formType, setFormType] = useState<FormType>(FormType.CREATE);
+  const [deviceOptions,setDeviceOptions]=useState<Options[]>([]);
+  const [moduleOption,setModuleOption]=useState<Options[]>([]);
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     console.log(e.currentTarget.name);
@@ -355,44 +365,70 @@ const Door = () => {
       label: "General",
       icon: <DoorIcon />,
       content: (
-        <DoorGeneralForm dto={doorDto} setDto={setDoorDto} type={formType} />
+        <DoorGeneralForm dto={doorDto} setDto={setDoorDto} type={formType} deviceOption={deviceOptions} setDeviceOption={setDeviceOptions} setModuleOption={setModuleOption} />
       ),
       title: "General Information",
       description: "General door information",
     },
-    {
-      label: "Door In",
-      icon: <DoorIcon />,
-      content: <DoorInForm dto={doorDto} setDto={setDoorDto} type={formType} />,
-    },
-    ...(doorDto.type === DoorType.Dual
-      ? [
+
+    ...(doorDto.vendor === Vendor.aero) ?
+      [
+        {
+          label: "Door In",
+          icon: <DoorInIcon />,
+          content: <DoorInForm dto={doorDto} setDto={setDoorDto} type={formType} moduleOption={moduleOption} setModuleOption={setModuleOption} />,
+        },
+        ...(doorDto.type === DoorType.Dual
+          ? [
+            {
+              label: "Door Out",
+              icon: <DoorOutIcon />,
+              content: (
+                <DoorOutForm dto={doorDto} setDto={setDoorDto} type={formType} />
+              ),
+            },
+          ]
+          : [
+            {
+              label: "Rex Out",
+              icon: <DoorOutIcon />,
+              content: (
+                <DoorRexOutForm
+                  dto={doorDto}
+                  setDto={setDoorDto}
+                  type={formType}
+                />
+              ),
+            },
+          ]),
+           {
+          label: "Relay",
+          icon: <DoorIcon />,
+          content: <DoorRelayForm dto={doorDto} setDto={setDoorDto} type={formType} />,
+        },
           {
-            label: "Door Out",
-            icon: <DoorIcon />,
-            content: (
-              <DoorOutForm dto={doorDto} setDto={setDoorDto} type={formType} />
-            ),
-          },
-        ]
-      : [
-          {
-            label: "Rex Out",
-            icon: <DoorIcon />,
-            content: (
-              <DoorRexOutForm
-                dto={doorDto}
-                setDto={setDoorDto}
-                type={formType}
-              />
-            ),
-          },
-        ]),
+          label: "Sensor",
+          icon: <MonitorIcon />,
+          content: <DoorMonitorForm dto={doorDto} setDto={setDoorDto} type={formType} />,
+        },
+        {
+          label: "Buzzer",
+          icon: <OnIcon />,
+          content: <DoorBuzzerForm dto={doorDto} setDto={setDoorDto} type={formType} />,
+        },
+         {
+          label: "Break Glass",
+          icon: <OnIcon />,
+          content: <DoorBuzzerForm dto={doorDto} setDto={setDoorDto} type={formType} />,
+        },
+
+      ] : [],
+
 
     ...(doorDto.vendor === Vendor.amico
       ? [
-          /* Add your Amico-specific form object here */
-        ]
+        /* Add your Amico-specific form object here */
+      ]
       : []),
   ];
 
@@ -409,14 +445,14 @@ const Door = () => {
         <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
           <>
             {statusDto.find((b) => b.guid == data.scpId)?.status ===
-            "Secure" ? (
+              "Secure" ? (
               <Badge size="sm" color="success">
                 {statusDto.find((b) => b.guid == data.scpId)?.status}
               </Badge>
             ) : statusDto.find((b) => b.guid == data.scpId)?.status ===
-                "Forced Open" ||
+              "Forced Open" ||
               statusDto.find((b) => b.guid == data.scpId)?.status ===
-                "Locked" ? (
+              "Locked" ? (
               <Badge size="sm" color="error">
                 {statusDto.find((b) => b.guid == data.scpId)?.status}
               </Badge>

@@ -5,6 +5,7 @@ using Core.Contract.Queries;
 using Core.Domain.Entities;
 using SharedKernel.Constants;
 using SharedKernel.Domain;
+using SharedKernel.Enums;
 using SharedKernel.Exceptions;
 using SharedKernel.Messaging;
 
@@ -12,7 +13,8 @@ namespace Core.Application.Services;
 
 public sealed class TurnstileService(
   IMessageBus bus,
-  ITurnstileRepository repo
+  ITurnstileRepository repo,
+  IDeviceModuleRepository deviceModule
   ) : ITurnstile
 {
   public async Task<Guid> CreateAsync(CreateTurnstileDto dto, CancellationToken ct = default)
@@ -22,8 +24,25 @@ public sealed class TurnstileService(
     if (await repo.IsAnyByNameAndLocationIdAsync(dto.Name, locationId))
       throw new DuplicateException(nameof(dto.Name), dto.Name);
 
-    var readerDeviceModuleIdMap = await bus.QueryAsync(new DeviceModuleIdsMapGuidsByGuidsQuery(dto.Lanes.SelectMany(x => x.Readers.Select(r => r.DeviceModuleGuid))));
-    var sensorDeviceModuleIdMap = await bus.QueryAsync(new DeviceModuleIdsMapGuidsByGuidsQuery(dto.Lanes.Where(x => x.Sensor != null).Select(x => x.Sensor.DeviceModuleGuid)));
+    //var readerDeviceModuleIdMap = await bus.QueryAsync(new DeviceModuleIdsMapGuidsByGuidsQuery(dto.Lanes.SelectMany(x => x.Readers.Select(r => r.DeviceModuleGuid))));
+    //var sensorDeviceModuleIdMap = await bus.QueryAsync(new DeviceModuleIdsMapGuidsByGuidsQuery(dto.Lanes.Where(x => x.Sensor != null).Select(x => x.Sensor.DeviceModuleGuid)));
+
+    foreach (var guid in dto.Lanes.SelectMany(x => x.Readers.Select(r => r.DeviceModuleGuid)))
+    {
+      if (!await repo.IsAnyGuidAsync(guid, ct))
+        throw new NotFoundException(EntityType.DeviceModule.ToString(), guid.ToString());
+    }
+
+    var readerDeviceModuleIdMap = await deviceModule.GetDeviceModuleIdsMapGuidsByGuidsAsync(dto.Lanes.SelectMany(x => x.Readers.Select(r => r.DeviceModuleGuid)), ct);
+
+    foreach (var guid in dto.Lanes.Where(x => x.Sensor != null).Select(x => x.Sensor.DeviceModuleGuid))
+    {
+      if (!await repo.IsAnyGuidAsync(guid, ct))
+        throw new NotFoundException(EntityType.DeviceModule.ToString(), guid.ToString());
+    }
+
+    var sensorDeviceModuleIdMap = await deviceModule.GetDeviceModuleIdsMapGuidsByGuidsAsync(dto.Lanes.Where(x => x.Sensor != null).Select(x => x.Sensor.DeviceModuleGuid), ct);
+
 
     var d = new Turnstile(
       dto.Name,
@@ -56,7 +75,7 @@ public sealed class TurnstileService(
   public async Task<bool> DeleteByGuidAsync(Guid guid, CancellationToken ct = default)
   {
     if (!await repo.IsAnyGuidAsync(guid, ct))
-      throw new NotFoundException(EntityType.Turnstile, guid.ToString());
+      throw new NotFoundException(EntityType.Turnstile.ToString(), guid.ToString());
 
     // Check Relation
 
@@ -74,7 +93,7 @@ public sealed class TurnstileService(
   {
     // Check is any location with guid
     if (!await repo.IsAnyGuidAsync(guid, ct))
-      throw new NotFoundException(EntityType.Door, guid.ToString());
+      throw new NotFoundException(EntityType.Door.ToString(), guid.ToString());
 
     return await repo.DisableAsync(guid, ct);
   }
@@ -83,7 +102,7 @@ public sealed class TurnstileService(
   {
     // Check is any location with guid
     if (!await repo.IsAnyGuidAsync(guid, ct))
-      throw new NotFoundException(EntityType.Door, guid.ToString());
+      throw new NotFoundException(EntityType.Door.ToString(), guid.ToString());
 
     return await repo.EnableAsync(guid, ct);
   }
@@ -107,15 +126,31 @@ public sealed class TurnstileService(
   {
     // Check is any location with guid
     if (!await repo.IsAnyGuidAsync(dto.Guid, ct))
-      throw new NotFoundException(EntityType.Turnstile, dto.Guid.ToString());
+      throw new NotFoundException(EntityType.Turnstile.ToString(), dto.Guid.ToString());
 
     var locationId = await bus.QueryAsync(new LocationIdByGuidQuery(dto.LocationGuid));
 
     if (await repo.IsAnyByNameAndLocationIdAsync(dto.Name, locationId))
       throw new DuplicateException(nameof(dto.Name), dto.Name);
 
-    var readerDeviceModuleIdMap = await bus.QueryAsync(new DeviceModuleIdsMapGuidsByGuidsQuery(dto.Lanes.SelectMany(x => x.Readers.Select(r => r.DeviceModuleGuid))));
-    var sensorDeviceModuleIdMap = await bus.QueryAsync(new DeviceModuleIdsMapGuidsByGuidsQuery(dto.Lanes.Where(x => x.Sensor != null).Select(x => x.Sensor.DeviceModuleGuid)));
+    //var readerDeviceModuleIdMap = await bus.QueryAsync(new DeviceModuleIdsMapGuidsByGuidsQuery(dto.Lanes.SelectMany(x => x.Readers.Select(r => r.DeviceModuleGuid))));
+    //var sensorDeviceModuleIdMap = await bus.QueryAsync(new DeviceModuleIdsMapGuidsByGuidsQuery(dto.Lanes.Where(x => x.Sensor != null).Select(x => x.Sensor.DeviceModuleGuid)));
+
+    foreach (var guid in dto.Lanes.SelectMany(x => x.Readers.Select(r => r.DeviceModuleGuid)))
+    {
+      if (!await repo.IsAnyGuidAsync(guid, ct))
+        throw new NotFoundException(EntityType.DeviceModule.ToString(), guid.ToString());
+    }
+
+    var readerDeviceModuleIdMap = await deviceModule.GetDeviceModuleIdsMapGuidsByGuidsAsync(dto.Lanes.SelectMany(x => x.Readers.Select(r => r.DeviceModuleGuid)), ct);
+
+    foreach (var guid in dto.Lanes.Where(x => x.Sensor != null).Select(x => x.Sensor.DeviceModuleGuid))
+    {
+      if (!await repo.IsAnyGuidAsync(guid, ct))
+        throw new NotFoundException(EntityType.DeviceModule.ToString(), guid.ToString());
+    }
+
+    var sensorDeviceModuleIdMap = await deviceModule.GetDeviceModuleIdsMapGuidsByGuidsAsync(dto.Lanes.Where(x => x.Sensor != null).Select(x => x.Sensor.DeviceModuleGuid), ct);
 
     var d = new Turnstile(
       dto.Guid,

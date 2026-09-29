@@ -9,6 +9,7 @@ using Core.Contract.DTOs.Events.Audit;
 using Core.Contract.Queries;
 using SharedKernel.Constants;
 using SharedKernel.Domain;
+using SharedKernel.Enums;
 using SharedKernel.Exceptions;
 using SharedKernel.Helpers;
 using SharedKernel.Messaging;

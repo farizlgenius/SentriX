@@ -4,7 +4,7 @@ namespace Core.Domain.Entities;
 
 public sealed class ComponentMappping : BaseDomain
 {
-  public string Entity { get; private set; } = string.Empty;
+  public EntityType Entity { get; private set; } 
   public int ExternalId { get; private set; }
   public string Mac { get; private set; } = string.Empty;
   public Vendor? Vendor { get; private set; } 
@@ -13,7 +13,7 @@ public sealed class ComponentMappping : BaseDomain
 
   public ComponentMappping(
     Guid guid,
-    string entity,
+    EntityType entity,
     int external,
     string mac,
     int locationId,

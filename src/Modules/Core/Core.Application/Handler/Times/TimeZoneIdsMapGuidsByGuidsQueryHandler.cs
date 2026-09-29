@@ -2,6 +2,7 @@ using Core.Application.Interfaces;
 using Core.Contract.Queries;
 using Core.Contract.Queries.Time;
 using SharedKernel.Constants;
+using SharedKernel.Enums;
 using SharedKernel.Exceptions;
 using SharedKernel.Messaging;
 
@@ -14,7 +15,7 @@ public sealed class TimeZoneIdsMapGuidsByGuidsQueryHandler(ITimeRepository repo)
         foreach (var guid in query.Guids)
         {
             if (!await repo.IsAnyGuidAsync(guid))
-                throw new NotFoundException(EntityType.TimeZone, guid.ToString());
+                throw new NotFoundException(EntityType.TimeZone.ToString(), guid.ToString());
         }
 
         return await repo.GetTimeZoneIdsMapGuidsByGuidsAsync(query.Guids, ct);

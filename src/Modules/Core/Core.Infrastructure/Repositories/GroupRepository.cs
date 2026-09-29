@@ -6,6 +6,7 @@ using Core.Infrastructure.Persistences;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel.Constants;
 using SharedKernel.Domain;
+using SharedKernel.Enums;
 using SharedKernel.Exceptions;
 
 namespace Core.Infrastructure.Repositories;
@@ -25,7 +26,7 @@ public sealed class GroupRepository(CoreDbContext context) : IGroupRepository
       {
             var entity = await context.Groups
                   .Where(x => x.guid == guid)
-                  .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.Group, guid.ToString());
+                  .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.Group.ToString(), guid.ToString());
 
             context.Groups.Remove(entity);
             await context.SaveChangesAsync(ct);
@@ -46,7 +47,7 @@ public sealed class GroupRepository(CoreDbContext context) : IGroupRepository
       {
             var entity = await context.Groups
                   .Where(x => x.guid == guid)
-                  .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.Group, guid.ToString());
+                  .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.Group.ToString(), guid.ToString());
 
             entity.is_active = false;
             await context.SaveChangesAsync(ct);
@@ -57,7 +58,7 @@ public sealed class GroupRepository(CoreDbContext context) : IGroupRepository
       {
             var entity = await context.Groups
                   .Where(x => x.guid == guid)
-                  .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.Group, guid.ToString());
+                  .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.Group.ToString(), guid.ToString());
 
             entity.is_active = true;
             await context.SaveChangesAsync(ct);
@@ -79,7 +80,7 @@ public sealed class GroupRepository(CoreDbContext context) : IGroupRepository
                         x.is_active,
                         x.is_default
                   ))
-                  .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.Group, guid.ToString());
+                  .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.Group.ToString(), guid.ToString());
       }
 
       public async Task<IEnumerable<GroupDto>> GetByLocationAsync(Guid locationGuid, CancellationToken ct = default)
@@ -114,7 +115,7 @@ public sealed class GroupRepository(CoreDbContext context) : IGroupRepository
                   .FirstOrDefaultAsync(ct);
 
             if (res == 0)
-                  throw new NotFoundException(EntityType.Group, guid.ToString());
+                  throw new NotFoundException(EntityType.Group.ToString(), guid.ToString());
 
             return res;
       }
@@ -235,7 +236,7 @@ public sealed class GroupRepository(CoreDbContext context) : IGroupRepository
       {
             var en = await context.Groups
                   .Where(x => x.guid == entity.Guid)
-                  .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.Group, entity.Guid.ToString());
+                  .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.Group.ToString(), entity.Guid.ToString());
 
             en.name = entity.Name;
 

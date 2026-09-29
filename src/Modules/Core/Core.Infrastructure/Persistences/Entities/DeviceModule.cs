@@ -32,6 +32,8 @@ public sealed class DeviceModule : BaseEntity,IAuditableEntity
   public ICollection<Rex> rexes { get; set; } = default!;
   public ICollection<Buzzer> buzzers { get; set; } = default!;
   public ICollection<Output> outputs { get; set; } = default!;
+  public ICollection<Input> inputs { get; set; } = default!;
+  public ICollection<BreakGlass> break_glasses { get; set; } = default!;
 
   public DeviceModule() { }
   public DeviceModule(Core.Domain.Entities.DeviceModule d) : base(d.Guid)

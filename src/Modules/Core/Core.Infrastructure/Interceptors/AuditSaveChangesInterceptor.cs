@@ -54,7 +54,7 @@ public sealed class AuditSaveChangesInterceptor(Channel<AuditTrailInsert> channe
 
 
                   var auditMessage = new AuditTrailInsert(
-                        entry.Entity.GetType().Name,
+                        Enum.Parse<EntityType>(entry.Entity.GetType().Name,ignoreCase:true),
                         MapEntityState(entry.State),
                         username,
                         clientIp,

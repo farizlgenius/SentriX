@@ -4,7 +4,7 @@ namespace Core.Infrastructure.Persistences.Entities;
 
 public sealed class AuditTrail : BaseEntity
 {
-    public string entity { get; set; } = string.Empty;       // e.g., Product
+    public EntityType entity { get; set; }        // e.g., Product
 
     public AuditAction action { get; set; } = AuditAction.Read;
     public string username { get; set; } = string.Empty;

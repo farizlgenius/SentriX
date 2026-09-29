@@ -4,7 +4,7 @@ namespace Core.Contract.DTOs.Events.Audit;
 
 public sealed record AuditTrailDto(
       DateTime Timestamp,
-      string Entity,
+      EntityType Entity,
       AuditAction Action,
       string Username,
       string Ip,

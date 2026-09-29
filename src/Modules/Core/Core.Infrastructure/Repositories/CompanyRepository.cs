@@ -5,6 +5,7 @@ using Core.Infrastructure.Persistences;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel.Constants;
 using SharedKernel.Domain;
+using SharedKernel.Enums;
 using SharedKernel.Exceptions;
 
 namespace Core.Infrastructure.Repositories;
@@ -26,7 +27,7 @@ public sealed class CompanyRepository(CoreDbContext context) : ICompanyRepositor
       .Where(x => x.guid == guid)
       .FirstOrDefaultAsync(ct);
 
-    context.Companies.Remove(entity ?? throw new NotFoundException(EntityType.Company, guid.ToString()));
+    context.Companies.Remove(entity ?? throw new NotFoundException(EntityType.Company.ToString(), guid.ToString()));
 
     await context.SaveChangesAsync(ct);
   }
@@ -46,7 +47,7 @@ public sealed class CompanyRepository(CoreDbContext context) : ICompanyRepositor
   {
     var en = await context.Companies
       .Where(x => x.guid == guid)
-      .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.Location, guid.ToString());
+      .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.Location.ToString(), guid.ToString());
 
     en.is_active = false;
 
@@ -61,7 +62,7 @@ public sealed class CompanyRepository(CoreDbContext context) : ICompanyRepositor
   {
     var en = await context.Companies
       .Where(x => x.guid == guid)
-      .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.Location, guid.ToString());
+      .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.Location.ToString(), guid.ToString());
 
     en.is_active = true;
 
@@ -132,7 +133,7 @@ public sealed class CompanyRepository(CoreDbContext context) : ICompanyRepositor
       .FirstOrDefaultAsync();
 
     if (res == 0)
-      throw new NotFoundException(EntityType.Company, guid.ToString());
+      throw new NotFoundException(EntityType.Company.ToString(), guid.ToString());
 
     return res;
   }
@@ -254,7 +255,7 @@ public sealed class CompanyRepository(CoreDbContext context) : ICompanyRepositor
   {
     var en = await context.Companies
                   .Where(x => x.guid == entity.Guid)
-                  .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.Location, entity.Guid.ToString());
+                  .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.Location.ToString(), entity.Guid.ToString());
 
     en.name = entity.Name;
     en.description = entity.Description;

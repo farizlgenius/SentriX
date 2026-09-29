@@ -7,6 +7,7 @@ using Core.Contract.DTOs.Location;
 using Core.Contract.Interfaces;
 using SharedKernel.Constants;
 using SharedKernel.Domain;
+using SharedKernel.Enums;
 using SharedKernel.Exceptions;
 
 namespace Core.Application.Services;
@@ -25,7 +26,7 @@ public sealed class LocationService(
 
     // Check name is duplicate 
     if (await repo.IsAnyByNameAndLocationIdAsync(dto.Name))
-      throw new DuplicateException(EntityType.Location, dto.Name);
+      throw new DuplicateException(EntityType.Location.ToString(), dto.Name);
 
     await repo.AddAsync(d, ct);
 
@@ -37,11 +38,11 @@ public sealed class LocationService(
   {
     // Check is any location with guid
     if (!await repo.IsAnyGuidAsync(guid, ct))
-      throw new NotFoundException(EntityType.Location, guid.ToString());
+      throw new NotFoundException(EntityType.Location.ToString(), guid.ToString());
 
     // Check is default location
     if (await repo.IsDefaultAsync(guid, ct))
-      throw new DefaultRecordException(MethodType.Delete, EntityType.Location, guid.ToString());
+      throw new DefaultRecordException(MethodType.Delete, EntityType.Location.ToString(), guid.ToString());
 
     // Check relate object here
 
@@ -57,13 +58,13 @@ public sealed class LocationService(
   {
     // Check if guids is empty 
     if (guids.Count() == 0)
-      throw new NotFoundException(EntityType.Location);
+      throw new NotFoundException(EntityType.Location.ToString());
 
     foreach (var guid in guids)
     {
       // Check is any location with guid
       if (!await repo.IsAnyGuidAsync(guid, ct))
-        throw new NotFoundException(EntityType.Location, guid.ToString());
+        throw new NotFoundException(EntityType.Location.ToString(), guid.ToString());
 
       // Check relate object here
     }
@@ -77,7 +78,7 @@ public sealed class LocationService(
   {
     // Check is any location with guid
     if (!await repo.IsAnyGuidAsync(guid, ct))
-      throw new NotFoundException(EntityType.Location, guid.ToString());
+      throw new NotFoundException(EntityType.Location.ToString(), guid.ToString());
 
     return await repo.DisableAsync(guid, ct);
   }
@@ -86,7 +87,7 @@ public sealed class LocationService(
   {
     // Check is any location with guid
     if (!await repo.IsAnyGuidAsync(guid, ct))
-      throw new NotFoundException(EntityType.Location, guid.ToString());
+      throw new NotFoundException(EntityType.Location.ToString(), guid.ToString());
 
     return await repo.EnableAsync(guid, ct);
   }
@@ -120,7 +121,7 @@ public sealed class LocationService(
   {
     // Check is any location with guid
     if (!await repo.IsAnyGuidAsync(dto.Guid, ct))
-      throw new NotFoundException(EntityType.Location, dto.Guid.ToString());
+      throw new NotFoundException(EntityType.Location.ToString(), dto.Guid.ToString());
 
     var d = new Core.Domain.Entities.Location(
       dto.Guid,

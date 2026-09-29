@@ -18,20 +18,27 @@ public sealed class DeviceService(
   IComponentMapping comm,
   IMessageBus bus,
   ITempDevice temp,
-  IAdapterFactory adapter
+  IAdapterFactory adapter,
+  // Below is service that call for get count
+  IDeviceModuleRepository module,
+  IDoorRepository door,
+  IOutputRepository output,
+  ITimeRepository time,
+  IGroupRepository group,
+  IHolidayRepository hol
   ) : IDevice
 {
   public async Task<Guid> CreateAsync(CreateDeviceDto dto, CancellationToken ct = default)
   {
 
     if (!await bus.QueryAsync(new IsAnyLocationByGuidQuery(dto.LocationGuid), ct))
-      throw new NotFoundException(EntityType.Location, dto.LocationGuid.ToString());
+      throw new NotFoundException(EntityType.Location.ToString(), dto.LocationGuid.ToString());
 
     var locationId = await bus.QueryAsync(new LocationIdByGuidQuery(dto.LocationGuid), ct);
 
     // Check name is duplicate
     if (await repo.IsAnyByNameAndLocationIdAsync(dto.Name, locationId, ct))
-      throw new DuplicateException(EntityType.Device, dto.Name);
+      throw new DuplicateException(EntityType.Device.ToString(), dto.Name);
 
 
     var deviceModules = dto.DeviceModules.Select(x => new DeviceModule(
@@ -103,7 +110,7 @@ public sealed class DeviceService(
     // var exceptionId = temp.TryGetUnavailableId(dto.Mac);
 
     // var externalId = await comm.GetFreeIdByEntityAndVendorAsync(
-    //   EntityType.Device,
+    //   EntityType.Device.ToString(),
     //   Vendor.aero,
     //   100, // Limit by License
     //   exceptionId, ct);
@@ -127,7 +134,7 @@ public sealed class DeviceService(
       }
       else
       {
-        throw new NotFoundException(EntityType.TempDevice, d.Mac);
+        throw new NotFoundException(EntityType.TempDevice.ToString(), d.Mac);
       }
 
     }
@@ -145,7 +152,7 @@ public sealed class DeviceService(
   public async Task<bool> DeleteByGuidAsync(Guid guid, CancellationToken ct = default)
   {
     if (!await repo.IsAnyGuidAsync(guid, ct))
-      throw new NotFoundException(EntityType.Device, guid.ToString());
+      throw new NotFoundException(EntityType.Device.ToString(), guid.ToString());
 
     // Check reference before
 
@@ -166,13 +173,13 @@ public sealed class DeviceService(
   {
     // Check if guids is empty 
     if (guids.Count() == 0)
-      throw new NotFoundException(EntityType.Company);
+      throw new NotFoundException(EntityType.Company.ToString());
 
     foreach (var guid in guids)
     {
       // Check is any location with guid
       if (!await repo.IsAnyGuidAsync(guid, ct))
-        throw new NotFoundException(EntityType.Company, guid.ToString());
+        throw new NotFoundException(EntityType.Company.ToString(), guid.ToString());
 
       // Check relate object here
 
@@ -186,7 +193,7 @@ public sealed class DeviceService(
   public async Task<bool> DisabledAsync(Guid guid, CancellationToken ct = default)
   {
     if (!await repo.IsAnyGuidAsync(guid, ct))
-      throw new NotFoundException(EntityType.Device, guid.ToString());
+      throw new NotFoundException(EntityType.Device.ToString(), guid.ToString());
 
     await repo.DisableAsync(guid, ct);
     return true;
@@ -195,7 +202,7 @@ public sealed class DeviceService(
   public async Task<bool> EnabledAsync(Guid guid, CancellationToken ct = default)
   {
     if (!await repo.IsAnyGuidAsync(guid, ct))
-      throw new NotFoundException(EntityType.Device, guid.ToString());
+      throw new NotFoundException(EntityType.Device.ToString(), guid.ToString());
 
     await repo.EnableAsync(guid, ct);
     return true;
@@ -217,7 +224,43 @@ public sealed class DeviceService(
     return await repo.GetByMacAsync(mac, ct);
   }
 
-  public async Task<object> GetConfigurationAsync(Guid guid, CancellationToken ct = default)
+      public async Task<DeviceComponentDto> GetComponentAsync(Guid guid, CancellationToken ct = default)
+      {
+        var com = new List<Components>();
+
+        var d = await repo.GetAsync(guid,ct);
+          // Module
+
+          // Door
+
+          // Input
+
+          // Output
+
+          // Monitor Group
+
+          // Area
+
+          // TimeZone
+          com.Add(
+            await time.GetComponentsAsync(d.LocationGuid,d.SyncedAt,ct)
+          );
+
+          // AccessGroup
+
+          // Holiday
+
+          // Trigger
+
+          // Procedure
+
+          return new DeviceComponentDto(
+            com.All(x => x.isSynced),
+            com
+          );
+      }
+
+      public async Task<object> GetConfigurationAsync(Guid guid, CancellationToken ct = default)
   {
     var device = await repo.GetAsync(guid, ct);
     return adapter.GetAdapter(device.Vendor).Device.GetConfigurationAsync(device.Mac, device.Ip, ct);
@@ -230,7 +273,12 @@ public sealed class DeviceService(
     return true;
   }
 
-  public async Task<Pagination<DeviceDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
+      public async Task<IEnumerable<OptionDto>> GetOptionByVendorAndLocationAsync(Vendor vendor, Guid guid, CancellationToken ct = default)
+      {
+           return await repo.GetOptionByVendorAndLocationAsync(vendor,guid,ct);
+      }
+
+      public async Task<Pagination<DeviceDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
   {
     return await repo.GetPaginationAsync(param, ct);
   }
@@ -264,16 +312,16 @@ public sealed class DeviceService(
   public async Task<Guid> UpdateAsync(UpdateDeviceDto dto, CancellationToken ct = default)
   {
     if (!await repo.IsAnyGuidAsync(dto.Guid, ct))
-      throw new NotFoundException(EntityType.Device, dto.Guid.ToString());
+      throw new NotFoundException(EntityType.Device.ToString(), dto.Guid.ToString());
 
     if (!await repo.IsAnyMacAsync(dto.Mac, ct))
-      throw new DuplicateException(EntityType.Device, dto.Mac);
+      throw new DuplicateException(EntityType.Device.ToString(), dto.Mac);
 
     var locationId = await bus.QueryAsync(new LocationIdByGuidQuery(dto.LocationGuid));
 
     // Check name is duplicate
     if (await repo.IsAnyByNameAndLocationIdAsync(dto.Name, locationId, ct))
-      throw new DuplicateException(EntityType.Device, dto.Name);
+      throw new DuplicateException(EntityType.Device.ToString(), dto.Name);
 
     var d = new Device(
       dto.Guid,

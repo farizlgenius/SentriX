@@ -5,6 +5,7 @@ using Core.Contract.Queries;
 using Core.Contract.Queries.Time;
 using SharedKernel.Constants;
 using SharedKernel.Domain;
+using SharedKernel.Enums;
 using SharedKernel.Exceptions;
 using SharedKernel.Messaging;
 
@@ -43,7 +44,7 @@ public sealed class GroupService(IGroupRepository repo,IMessageBus bus) : IGroup
     public async Task<bool> DeleteByGuidAsync(Guid guid, CancellationToken ct = default)
     {
         if (!await repo.IsAnyGuidAsync(guid, ct))
-            throw new NotFoundException(EntityType.Group, guid.ToString());
+            throw new NotFoundException(EntityType.Group.ToString(), guid.ToString());
 
         // Check related entities before deleting the group
         if (await repo.IsAnyRelatedEntitiesAsync(guid, ct))
@@ -59,13 +60,13 @@ public sealed class GroupService(IGroupRepository repo,IMessageBus bus) : IGroup
     {
         // Check if guids is empty 
         if (guids.Count() == 0)
-            throw new NotFoundException(EntityType.Door);
+            throw new NotFoundException(EntityType.Door.ToString());
 
         foreach (var guid in guids)
         {
             // Check is any location with guid
             if (!await repo.IsAnyGuidAsync(guid, ct))
-                throw new NotFoundException(EntityType.Door, guid.ToString());
+                throw new NotFoundException(EntityType.Door.ToString(), guid.ToString());
 
             // Check relate object here
             if (await repo.IsAnyRelatedEntitiesAsync(guid))
@@ -81,7 +82,7 @@ public sealed class GroupService(IGroupRepository repo,IMessageBus bus) : IGroup
     {
         // Check is any location with guid
         if (!await repo.IsAnyGuidAsync(guid, ct))
-            throw new NotFoundException(EntityType.Door, guid.ToString());
+            throw new NotFoundException(EntityType.Door.ToString(), guid.ToString());
 
         return await repo.DisableAsync(guid, ct);
     }
@@ -90,7 +91,7 @@ public sealed class GroupService(IGroupRepository repo,IMessageBus bus) : IGroup
     {
         // Check is any location with guid
         if (!await repo.IsAnyGuidAsync(guid, ct))
-            throw new NotFoundException(EntityType.Door, guid.ToString());
+            throw new NotFoundException(EntityType.Door.ToString(), guid.ToString());
 
         return await repo.EnableAsync(guid, ct);
     }
@@ -114,7 +115,7 @@ public sealed class GroupService(IGroupRepository repo,IMessageBus bus) : IGroup
     {
         // Check any location with guid
         if (!await repo.IsAnyGuidAsync(dto.Guid, ct))
-            throw new NotFoundException(EntityType.Group, dto.Guid.ToString());
+            throw new NotFoundException(EntityType.Group.ToString(), dto.Guid.ToString());
 
         var locationId = await bus.QueryAsync(new LocationIdByGuidQuery(dto.LocationGuid));
 

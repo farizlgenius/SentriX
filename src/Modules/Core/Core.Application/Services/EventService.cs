@@ -92,7 +92,7 @@ public sealed class EventService(
   }
 
   public async Task InsertAuditAsync(
-    string entity,
+    EntityType entity,
     AuditAction action,
     string username,
     string ip,

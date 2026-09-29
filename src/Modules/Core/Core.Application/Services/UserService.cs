@@ -6,6 +6,7 @@ using Core.Domain.Entities;
 using Setting.Contract.Queries;
 using SharedKernel.Constants;
 using SharedKernel.Domain;
+using SharedKernel.Enums;
 using SharedKernel.Exceptions;
 using SharedKernel.Helpers;
 using SharedKernel.Messaging;
@@ -23,19 +24,19 @@ public sealed class UserService(
   {
     // Check that username exits
     if (!await repo.IsAnyUsernameAsync(dto.Username))
-      throw new NotFoundException(EntityType.User, dto.Username);
+      throw new NotFoundException(EntityType.User.ToString(), dto.Username);
 
     // Get Password from username
     var hashed = await repo.GetHashByUsernameAsync(dto.Username);
 
     // Check old password is valid or not
     if (!PasswordHasher.VerifyPassword(dto.Old, hashed))
-      throw new BadRequestException(EntityType.User, "Password incorrect.");
+      throw new BadRequestException(EntityType.User.ToString(), "Password incorrect.");
 
     // Validate Password
     var IsValidPassword = await bus.QueryAsync(new ValidatePasswordWithRuleQuery(dto.New));
     if (!string.IsNullOrWhiteSpace(IsValidPassword))
-      throw new BadRequestException(EntityType.User, IsValidPassword);
+      throw new BadRequestException(EntityType.User.ToString(), IsValidPassword);
 
     await repo.ChangePasswordAsync(dto.Username, PasswordHasher.HashPassword(dto.New), ct);
 
@@ -88,10 +89,10 @@ public sealed class UserService(
     );
     // Check that if username and identification is already exists
     if (await repo.IsAnyUsernameAsync(dto.Username))
-      throw new DuplicateException(EntityType.User, dto.Username);
+      throw new DuplicateException(EntityType.User.ToString(), dto.Username);
 
     if (await repo.IsAnyIdentificationAsync(dto.Identification))
-      throw new DuplicateException(EntityType.User, dto.Username);
+      throw new DuplicateException(EntityType.User.ToString(), dto.Username);
 
     // Send Command to Device 
 
@@ -104,7 +105,7 @@ public sealed class UserService(
   public async Task<bool> DeleteByGuidAsync(Guid guid, CancellationToken ct = default)
   {
     if (!await repo.IsAnyGuidAsync(guid))
-      throw new NotFoundException(EntityType.User, guid.ToString());
+      throw new NotFoundException(EntityType.User.ToString(), guid.ToString());
 
     // Send command to delete user from device
 
@@ -121,7 +122,7 @@ public sealed class UserService(
   public async Task<bool> DisabledAsync(Guid guid, CancellationToken ct = default)
   {
     if (!await repo.IsAnyGuidAsync(guid))
-      throw new NotFoundException(EntityType.User, guid.ToString());
+      throw new NotFoundException(EntityType.User.ToString(), guid.ToString());
 
     // Send Command to delete user from device
 
@@ -134,7 +135,7 @@ public sealed class UserService(
   public async Task<bool> EnabledAsync(Guid guid, CancellationToken ct = default)
   {
     if (!await repo.IsAnyGuidAsync(guid))
-      throw new NotFoundException(EntityType.User, guid.ToString());
+      throw new NotFoundException(EntityType.User.ToString(), guid.ToString());
 
     // Send Command to add user to device
 
@@ -157,7 +158,7 @@ public sealed class UserService(
   {
     if (!await repo.IsAnyGuidAsync(guid))
       return null;
-      //throw new NotFoundException(EntityType.User, guid.ToString());
+      //throw new NotFoundException(EntityType.User.ToString(), guid.ToString());
 
     return await file.ReadUserAsync(guid.ToString());
   }
@@ -180,7 +181,7 @@ public sealed class UserService(
   public async Task<Guid> UpdateAsync(UpdateUserDto dto, CancellationToken ct = default)
   {
     if (!await repo.IsAnyGuidAsync(dto.Guid))
-      throw new NotFoundException(EntityType.User, dto.Guid.ToString());
+      throw new NotFoundException(EntityType.User.ToString(), dto.Guid.ToString());
 
     var roleId = await bus.QueryAsync(new RoleIdByGuidQuery(dto.RoleGuid));
     var companyId = await bus.QueryAsync(new CompanyIdByGuidQuery(dto.CompanyGuid));
@@ -241,7 +242,7 @@ public sealed class UserService(
       public async Task<bool> UploadImageAsync(Guid guid, Stream stream, CancellationToken ct = default)
   {
     if (!await repo.IsAnyGuidAsync(guid))
-      throw new NotFoundException(EntityType.User, guid.ToString());
+      throw new NotFoundException(EntityType.User.ToString(), guid.ToString());
 
 
     var path = await file.SaveUserAsync(stream, guid.ToString());

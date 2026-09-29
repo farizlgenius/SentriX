@@ -5,6 +5,7 @@ using Core.Infrastructure.Persistences;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel.Constants;
 using SharedKernel.Domain;
+using SharedKernel.Enums;
 using SharedKernel.Exceptions;
 
 namespace Core.Infrastructure.Repositories;
@@ -29,7 +30,7 @@ public sealed class OperatorRepository(CoreDbContext context) : IOperatorReposit
   {
     var entity = await context.Operators
       .Where(x => x.guid == guid)
-      .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.Operator, guid.ToString());
+      .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.Operator.ToString(), guid.ToString());
 
     context.Operators.Remove(entity);
 
@@ -54,7 +55,7 @@ public sealed class OperatorRepository(CoreDbContext context) : IOperatorReposit
   {
     var entity = await context.Operators
       .Where(x => x.guid == guid)
-      .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.Operator, guid.ToString());
+      .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.Operator.ToString(), guid.ToString());
 
     entity.is_active = false;
 
@@ -69,7 +70,7 @@ public sealed class OperatorRepository(CoreDbContext context) : IOperatorReposit
   {
     var entity = await context.Operators
       .Where(x => x.guid == guid)
-      .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.Operator, guid.ToString());
+      .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.Operator.ToString(), guid.ToString());
 
     entity.is_active = true;
 
@@ -105,7 +106,7 @@ public sealed class OperatorRepository(CoreDbContext context) : IOperatorReposit
         x.is_active,
         x.is_default
       ))
-      .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.Operator, guid.ToString());
+      .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.Operator.ToString(), guid.ToString());
 
 
   }
@@ -146,7 +147,7 @@ public sealed class OperatorRepository(CoreDbContext context) : IOperatorReposit
   {
     var entity = await context.Operators
       .Where(x => x.guid == guid)
-      .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.Operator, guid.ToString());
+      .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.Operator.ToString(), guid.ToString());
 
     return entity.id;
   }
@@ -186,7 +187,7 @@ public sealed class OperatorRepository(CoreDbContext context) : IOperatorReposit
         x.is_active,
         x.is_default
       ))
-      .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.Operator, username);
+      .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.Operator.ToString(), username);
 
 
   }
@@ -286,7 +287,7 @@ public sealed class OperatorRepository(CoreDbContext context) : IOperatorReposit
       .AsNoTracking()
       .Where(x => x.username.Equals(username))
       .Select(x => x.password)
-      .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.Operator, username);
+      .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.Operator.ToString(), username);
 
   }
 
@@ -388,7 +389,7 @@ public sealed class OperatorRepository(CoreDbContext context) : IOperatorReposit
   {
     var existingEntity = await context.Operators
       .Where(x => x.guid == entity.Guid)
-      .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.Operator, entity.Guid.ToString());
+      .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.Operator.ToString(), entity.Guid.ToString());
 
     existingEntity.username = entity.Username;
     existingEntity.title = entity.Title;

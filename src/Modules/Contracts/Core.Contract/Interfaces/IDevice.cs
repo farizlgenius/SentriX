@@ -15,4 +15,6 @@ public interface IDevice : IBase<DeviceDto, CreateDeviceDto, UpdateDeviceDto>
       Task<DeviceDto> GetByMacAsync(string mac,CancellationToken ct= default);
       Task<bool> GetEventStatusByGuidAsync(Guid guid,CancellationToken ct = default);
       Task UploadAsync(Guid guid,CancellationToken ct = default);
+      Task<DeviceComponentDto> GetComponentAsync(Guid guid,CancellationToken ct = default);
+      Task<IEnumerable<OptionDto>> GetOptionByVendorAndLocationAsync(Vendor vendor,Guid guid,CancellationToken ct = default);
 }

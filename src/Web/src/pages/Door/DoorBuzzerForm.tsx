@@ -2,10 +2,10 @@ import { PropsWithChildren } from "react";
 import { DoorDto } from "../../model/Door/DoorDto";
 import { FormField } from "../../components/form/template/FormTemplate";
 import Label from "../../components/form/Label";
-import { FormType } from "../../model/Form/FormProp";
+import { FormProp, FormType } from "../../model/Form/FormProp";
 import Select from "../../components/form/Select";
 
-const DoorBuzzerForm: React.FC<PropsWithChildren<DoorDto>> = ({
+const DoorBuzzerForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({
   dto,
   setDto,
   type,

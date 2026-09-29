@@ -17,6 +17,7 @@ const DoorOutForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({
   );
   return (
     <>
+    <div className="grid grid-cols-2 gap-5">
       <FormField>
         <Label htmlFor="ReaderType">Type</Label>
         <Select
@@ -246,6 +247,9 @@ const DoorOutForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({
           </FormField>
         </>
       )}
+      
+    </div>
+      
     </>
   );
 };
