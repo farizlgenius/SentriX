@@ -7,8 +7,7 @@ interface SelectProps {
   name: string;
   options: Options[];
   placeholder?: string;
-  onChange?: (value: string) => void;
-  onChangeWithEvent?: (value: string, e: React.ChangeEvent<HTMLSelectElement>) => void
+  onChange?: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   className?: string;
   defaultValue?: string | number;
   icon?:React.ReactNode;
@@ -22,7 +21,6 @@ const Select: React.FC<SelectProps> = ({
   options,
   placeholder = "Select an option",
   onChange,
-  onChangeWithEvent,
   className = "",
   defaultValue = "",
   icon,
@@ -32,13 +30,10 @@ const Select: React.FC<SelectProps> = ({
   //const [selectedValue, setSelectedValue] = useState<string | number>(defaultValue);
   const [refresh,setRefresh] = useState<boolean>(false);
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const value = e.target.value;
+    // const value = e.target.value;
     //setSelectedValue(value);
     if (onChange != undefined) {
-      onChange(value);
-    }
-    if (onChangeWithEvent != undefined) {
-      onChangeWithEvent(value, e); // Trigger parent handler
+      onChange(e);
     }
 
   };

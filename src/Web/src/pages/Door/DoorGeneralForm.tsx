@@ -8,74 +8,40 @@ import Select from "../../components/form/Select";
 import { Vendor } from "../../enum/Vendor";
 import { DoorType } from "../../enum/DoorType";
 import { Options } from "../../model/Options";
-import { useLocation } from "../../context/LocationContext";
-import { send } from "../../api/api";
-import { DeviceEndpoint } from "../../endpoint/DeviceEndpoint";
-import { DeviceDto } from "../../model/Device/DeviceDto";
-import { ModuleEndpoint } from "../../endpoint/ModuleEndpoint";
+
 
 type ExtraProps = {
-  setModuleOption: React.Dispatch<React.SetStateAction<Options[]>>;
-  setDeviceOption: React.Dispatch<React.SetStateAction<Options[]>>;
   deviceOption:Options[]
 };
 
 const DoorGeneralForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps>> = ({
   dto,
-  setDto,
   type,
-  setModuleOption,
-  setDeviceOption,
-  deviceOption
+  deviceOption,
+   handleChange
 }) => {
   const isReadOnly = type == FormType.INFO;
-  const { locationGuid } = useLocation();
   //const [deviceOption,setDeviceOption] = useState<Options[]>([]);
 
-  const fetchDevice = async () => {
-    var res = await send.get(DeviceEndpoint.GET_LOCATION(locationGuid))
-    var option = res.data.data.map((a:DeviceDto) => ({
-      value:a.guid,
-      label:a.name,
-      description:a.mac,
-      isTaken:false
-    }))
-
-    setDeviceOption(option)
-
-  }
-
-  const fetchModule = async (guid:string) => {
-    var res = await send.get(ModuleEndpoint.GET_BY_GUID(guid))
-    var option = res.data.data.map((a:DeviceDto) => ({
-      value:a.guid,
-      label:a.name,
-      description:a.mac,
-      isTaken:false
-    }))
-
-    setModuleOption(option)
-  }
-
-  useEffect(() => {
-    fetchDevice();
-  },[])
+  
   return (
     <div className="grid grid-cols-2 gap-5">
       <FormField>
         <Label>Name</Label>
         <Input
+        name="name"
           placeholder="Door name"
           disabled={isReadOnly}
           type="text"
-          onChange={(e) => setDto((prev) => ({ ...prev, name: e.target.name }))}
+          onChange={handleChange}
+          value={dto.name}
         />
       </FormField>
       <FormField>
         <Label>Vendor</Label>
         <Select
           disabled={isReadOnly}
-          name={"vendor"}
+          name="vendor"
           options={[
             {
               label: "Aero",
@@ -86,7 +52,7 @@ const DoorGeneralForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps
               value: Vendor.amico,
             },
           ]}
-          onChange={(e) => setDto((prev) => ({ ...prev, vendor: Number(e) }))}
+          onChange={handleChange}
           defaultValue={dto.vendor}
         />
       </FormField>
@@ -105,7 +71,7 @@ const DoorGeneralForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps
               value: DoorType.Single,
             },
           ]}
-          onChange={(e) => setDto((prev) => ({ ...prev, type: Number(e) }))}
+          onChange={handleChange}
           defaultValue={dto.type}
         />
       </FormField>
@@ -114,12 +80,9 @@ const DoorGeneralForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps
         <Select
           isString={true}
           disabled={isReadOnly}
-          name={"device"}
+          name={"deviceGuid"}
           options={deviceOption}
-          onChange={(e) => {
-             setDto((prev) => ({ ...prev, deviceGuid: e }))
-             fetchModule(e);
-          }}
+          onChange={handleChange}
           defaultValue={dto.deviceGuid}
         />
       </FormField>

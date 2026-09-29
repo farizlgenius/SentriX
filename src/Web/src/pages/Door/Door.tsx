@@ -43,6 +43,12 @@ import DoorMonitorForm from "./DoorMonitorForm";
 import DoorBuzzerForm from "./DoorBuzzerForm";
 import DoorRelayForm from "./DoorRelayForm";
 import { Options } from "../../model/Options";
+import { ReaderDto } from "../../model/Door/ReaderDto";
+import { ReaderMode } from "../../enum/ReaderMode";
+import { ReaderDirection } from "../../enum/DoorDirection";
+import { ModuleEndpoint } from "../../endpoint/ModuleEndpoint";
+import { DeviceEndpoint } from "../../endpoint/DeviceEndpoint";
+import { DeviceDto } from "../../model/Device/DeviceDto";
 
 // ACR Page
 const DOOR_TABLE_HEADER: string[] = [
@@ -72,11 +78,48 @@ const Door = () => {
     setMessage,
   } = usePopup();
 
+  const defaultReaderInDto:ReaderDto={
+    guid: "",
+    slotNo: -1,
+    mode: ReaderMode.wiegand,
+    metadata: {
+      osdpFlag:false,
+      address:-1,
+      baudrate:-1,
+      discover:-1,
+      tracing:-1,
+      secureChannel:-1
+    },
+    vendor: Vendor.aero,
+    readerDirection: ReaderDirection.In,
+    deviceModuelGuid: ""
+  }
+
+  const defaultReaderOutDto:ReaderDto={
+    guid: "",
+    slotNo: -1,
+    mode: ReaderMode.wiegand,
+    metadata: {
+      osdpFlag:false,
+      address:-1,
+      baudrate:-1,
+      discover:-1,
+      tracing:-1,
+      secureChannel:-1
+    },
+    vendor: Vendor.aero,
+    readerDirection: ReaderDirection.Out,
+    deviceModuelGuid: ""
+  }
+
   const defaultDoorDto: DoorDto = {
     guid: "",
     name: "",
     metadata: "",
-    readers: [],
+    readers: [
+      defaultReaderInDto,
+      defaultReaderOutDto
+    ],
     buzzer: null,
     rex: null,
     sensor: null,
@@ -97,8 +140,7 @@ const Door = () => {
   }
   const [form, setForm] = useState<boolean>(false);
   const [formType, setFormType] = useState<FormType>(FormType.CREATE);
-  const [deviceOptions,setDeviceOptions]=useState<Options[]>([]);
-  const [moduleOption,setModuleOption]=useState<Options[]>([]);
+  
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     console.log(e.currentTarget.name);
@@ -192,6 +234,40 @@ const Door = () => {
     }
   };
 
+  const handleChange = (e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => {
+    switch(e.target.name){
+      case "name":
+        setDoorDto(prev => ({
+          ...prev,
+          name:e.target.value
+        }))
+        break;
+      case "vendor":
+        setDoorDto(prev => ({
+          ...prev,
+          vendor:Number(e.target.value)
+        }))
+        break;
+       case "type":
+        setDoorDto(prev => ({
+          ...prev,
+          type:Number(e.target.value)
+        }))
+        break;
+        case "deviceGuid":
+        setDoorDto(prev => ({
+          ...prev,
+          deviceGuid:e.target.value
+        }))
+        fetchModule(e.target.value);
+        break;
+        case "readerIn.module":
+          break;
+      default:
+        break;
+    }
+  }
+
   const handleRemove = (data: DoorDto) => {
     setConfirmRemove(() => async () => {
       const res = await send.delete(DoorEndpoint.DELETE(data.id));
@@ -222,6 +298,39 @@ const Door = () => {
     /* Door Data */
   }
   const [doorsDto, setDoorsDto] = useState<DoorDto[]>([]);
+  const [deviceOptions,setDeviceOptions]=useState<Options[]>([]);
+  const [moduleOption,setModuleOption]=useState<Options[]>([]);
+  const [readerOption,setReaderOption] = useState<Options[]>([]);
+
+  const fetchDevice = async () => {
+    var res = await send.get(DeviceEndpoint.GET_LOCATION(locationGuid))
+    var option = res.data.data.map((a:DeviceDto) => ({
+      value:a.guid,
+      label:a.name,
+      description:a.mac,
+      isTaken:false
+    }))
+
+    setDeviceOptions(option)
+
+  }
+
+  const fetchModule = async (guid:string) => {
+    var res = await send.get(ModuleEndpoint.GET_BY_GUID(guid))
+    var option = res.data.data.map((a:DeviceDto) => ({
+      value:a.guid,
+      label:a.name,
+      description:a.mac,
+      isTaken:false
+    }))
+
+    setModuleOption(option)
+  }
+  
+   const fetchReader = async (guid:string) => {
+    var res = await send.get(ModuleEndpoint.GET_READER_SLOT(guid))
+    setReaderOption(res.data.data);
+  }
   const fetchData = async (
     pageNumber: number,
     pageSize: number,
@@ -292,25 +401,9 @@ const Door = () => {
   {
     /* UseEffect */
   }
-  // useEffect(() => {
-  //   var connection = SignalRService.getConnection();
-  //   connection.on("ACR.STATUS", (status: AcrStatus) => {
-  //     setStatus((prev) =>
-  //       prev.map((a) =>
-  //         a.guid == status.scpId && a.componentId == status.number
-  //           ? {
-  //               ...a,
-  //               status: status.status == "" ? a.status : status.status,
-  //               tamper: status.mode == "" ? a.tamper : status.mode,
-  //             }
-  //           : {
-  //               ...a,
-  //             },
-  //       ),
-  //     );
-  //     toggleRefresh();
-  //   });
-  // }, []);
+  useEffect(() => {
+   fetchDevice();
+  }, []);
 
   {
     /* checkBox */
@@ -365,7 +458,7 @@ const Door = () => {
       label: "General",
       icon: <DoorIcon />,
       content: (
-        <DoorGeneralForm dto={doorDto} setDto={setDoorDto} type={formType} deviceOption={deviceOptions} setDeviceOption={setDeviceOptions} setModuleOption={setModuleOption} />
+        <DoorGeneralForm handleChange={handleChange} type={formType} dto={doorDto} deviceOption={deviceOptions}  />
       ),
       title: "General Information",
       description: "General door information",
@@ -376,7 +469,7 @@ const Door = () => {
         {
           label: "Door In",
           icon: <DoorInIcon />,
-          content: <DoorInForm dto={doorDto} setDto={setDoorDto} type={formType} moduleOption={moduleOption} setModuleOption={setModuleOption} />,
+          content: <DoorInForm dto={doorDto} setDto={setDoorDto} type={formType} moduleOption={moduleOption} />,
         },
         ...(doorDto.type === DoorType.Dual
           ? [
@@ -384,7 +477,7 @@ const Door = () => {
               label: "Door Out",
               icon: <DoorOutIcon />,
               content: (
-                <DoorOutForm dto={doorDto} setDto={setDoorDto} type={formType} />
+                <DoorOutForm dto={doorDto} setDto={setDoorDto} type={formType} moduleOption={moduleOption} setModuleOption={setModuleOption} />
               ),
             },
           ]
