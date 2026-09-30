@@ -1,130 +1,152 @@
-import { PropsWithChildren } from "react";
+import { PropsWithChildren, useEffect } from "react";
 import { FormProp, FormType } from "../../model/Form/FormProp";
 import { DoorDto } from "../../model/Door/DoorDto";
 import { FormField } from "../../components/form/template/FormTemplate";
 import Label from "../../components/form/Label";
 import Select from "../../components/form/Select";
+import { Options } from "../../model/Options";
+import { InputMode } from "../../enum/InputMode";
+import { Vendor } from "../../enum/Vendor";
+import { useLocation } from "../../context/LocationContext";
+import { AeroRexMetadata } from "../../model/Door/AeroRexMetadata";
 
-const DoorRexOutForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({
+type ExtraProps = {
+  moduleOption:Options[]
+  inputOption:Options[]
+  timeOption:Options[]
+  fetchTime:(guid:string) => Promise<void>;
+};
+
+
+const DoorRexOutForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps>> = ({
   dto,
   setDto,
   type,
+  moduleOption,
+  inputOption,
+  timeOption,
+  handleChange,
+  fetchTime
 }) => {
+  const {locationGuid} = useLocation();
+  useEffect(() => {
+    fetchTime(locationGuid);
+  },[])
+  const isReadOnly = type == FormType.INFO || dto.rex == null  
   return (
-    <>
+    <div className="grid grid-cols-2 gap-5">
       <FormField>
-        <Label htmlFor="rex.rex0ModuleComponentId">REX - Module</Label>
+        <Label htmlFor="rex.module">REX - Module</Label>
         <Select
+        isString={true}
           disabled={type == FormType.INFO}
-          name="rex.rex0ModuleComponentId"
+          name="rex.module"
           options={moduleOption}
-          onChange={(value: string) => {
-            if (
-              (dto.metadata as AeroDoorMetadata).rex.rex0ModuleComponentId !=
-                Number(value) &&
-              inputOption.length == 0
-            ) {
-              fetchInput(
-                moduleOption.find((x) => x.value == Number(value))
-                  ?.additionalInfo,
-              );
-            }
+          onChange={(e) => {
             setDto((prev) => ({
               ...prev,
-              metadata: {
-                ...(prev.metadata as AeroDoorMetadata),
-                rex: {
-                  ...(prev.metadata as AeroDoorMetadata).rex,
-                  rex0ModuleComponentId: Number(value),
-                  rex0ModuleId: moduleOption.find(
-                    (x) => x.value == Number(value),
-                  )?.additionalInfo,
-                },
-              },
-            }));
-          }}
+              rex:{
+                guid:"",
+                slotNo:-1,
+                mode:InputMode.NC,
+                metadata:"",
+                vendor:Vendor.aero,
+                deviceModuleGuid:e.target.value
+              } 
+            }))
+            handleChange(e)
+          }
+             
+          }
           className="dark:bg-dark-900"
           defaultValue={
-            (dto.metadata as AeroDoorMetadata).rex?.rex0ModuleComponentId ?? ""
+            dto.rex?.deviceModuleGuid ?? ""
           }
         />
       </FormField>
       <FormField>
-        <Label htmlFor="rex0.inputNo">REX - Input No</Label>
+        <Label htmlFor="rex.slot">REX - Input No</Label>
         <Select
-          disabled={type == FormType.INFO}
-          name="rex0.inputNo"
-          options={inputOption.filter((x) => x.isTaken == false)}
-          onChange={(value: string) => {
-            setInputOption((prev) =>
-              Helper.updateOptionByValue(prev, Number(value), true),
-            );
+          disabled={isReadOnly}
+          name="rex.slot"
+          options={inputOption}
+          onChange={(e) =>
             setDto((prev) => ({
               ...prev,
-              metadata: {
-                ...(prev.metadata as AeroDoorMetadata),
-                rex: {
-                  ...(prev.metadata as AeroDoorMetadata).rex,
-                  rex0Number: Number(value),
-                },
-              },
-            }));
-          }}
+              rex: prev.rex != null ?
+                {
+                  ...prev.rex,
+                  slotNo: Number(e)
+                }
+                :
+                prev.rex
+            }))
+          }
           className="dark:bg-dark-900"
           defaultValue={
-            (dto.metadata as AeroDoorMetadata).rex?.rex0Number ?? ""
+            dto.rex?.slotNo ?? -1
           }
         />
       </FormField>
       <FormField>
         <Label htmlFor="rex0.inputMode">REX - Input Mode</Label>
         <Select
-          disabled={type == FormType.INFO}
+          disabled={isReadOnly}
           name="rex0.inputMode"
-          options={inputModeOption}
-          onChange={(value: string) => {
+          options={[
+            {
+              label:"NO",
+              value:InputMode.NO
+            },
+            {
+              label:"NC",
+              value:InputMode.NC
+            }
+          ]}
+          onChange={(e) => 
             setDto((prev) => ({
               ...prev,
-              metadata: {
-                ...(prev.metadata as AeroDoorMetadata),
-                rex: {
-                  ...(prev.metadata as AeroDoorMetadata).rex,
-                  rex0SensorMode: Number(value),
-                },
-              },
-            }));
-          }}
-          className="dark:bg-dark-900"
-          defaultValue={
-            (dto.metadata as AeroDoorMetadata).rex?.rex0SensorMode ?? ""
+              rex: prev.rex != null ? 
+              {
+                ...prev.rex,
+                mode:Number(e)
+              }
+              :
+              prev.rex
+            }))
           }
+          className="dark:bg-dark-900"
+          defaultValue={ dto.rex?.mode ?? InputMode.NC}
         />
       </FormField>
       <FormField>
         <Label htmlFor="rex0.MaskTimeZone">REX - Mask Time Zone</Label>
         <Select
-          disabled={type == FormType.INFO}
+          isString={true}
+          disabled={isReadOnly}
           name="rex0.MaskTimeZone"
-          options={timeZoneOption}
-          onChange={(value: string) => {
-            setDto((prev) => ({
+          options={timeOption}
+          onChange={(e) => 
+            setDto(prev => ({
               ...prev,
-              metadata: {
-                ...(prev.metadata as AeroDoorMetadata),
-                rex: {
-                  ...(prev.metadata as AeroDoorMetadata).rex,
-                  disableRex0Timezone: Number(value),
-                },
-              },
-            }));
-          }}
+              rex: prev.rex != null ? 
+              {
+                ...prev.rex,
+                metadata:{
+                  maskTimeGuid:e.target.value
+                }
+              }
+              :
+              prev.rex
+            }))
+          }
           className="dark:bg-dark-900"
           defaultValue={
-            (dto.metadata as AeroDoorMetadata).rex?.disableRex0Timezone ?? ""
+           (dto.rex?.metadata as AeroRexMetadata)?.maskTimeGuid ?? ""
           }
         />
       </FormField>
-    </>
+    </div>
   );
 };
 

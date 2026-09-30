@@ -1,15 +1,27 @@
 import React, { PropsWithChildren } from "react";
-import { FormProp } from "../../model/Form/FormProp";
+import { FormProp, FormType } from "../../model/Form/FormProp";
 import { DoorDto } from "../../model/Door/DoorDto";
 import { FormField } from "../../components/form/template/FormTemplate";
 import Label from "../../components/form/Label";
 import Select from "../../components/form/Select";
+import { Options } from "../../model/Options";
+import { InputMode } from "../../enum/InputMode";
+import { Vendor } from "../../enum/Vendor";
 
-const DoorMonitorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({
+type ExtraProps = {
+  moduleOption:Options[]
+  inputOption:Options[]
+};
+
+const DoorMonitorForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps>> = ({
   dto,
   setDto,
   type,
+  handleChange,
+  moduleOption,
+  inputOption
 }) => {
+  const isReadOnly = type == FormType.INFO || dto.sensor == null
   return (
     <>
       <FormField>
@@ -18,30 +30,19 @@ const DoorMonitorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({
           disabled={type == FormType.INFO}
           name="sensor.sensorModuleComponentId"
           options={moduleOption}
-          onChange={(value: string) => {
-            if (
-              (dto.metadata as AeroDoorMetadata).rex.rex0ModuleComponentId !=
-              Number(value)
-            ) {
-              fetchInput(
-                moduleOption.find((x) => x.value == Number(value))
-                  ?.additionalInfo,
-              );
-            }
+          onChange={(e) => 
             setDto((prev) => ({
               ...prev,
-              metadata: {
-                ...(prev.metadata as AeroDoorMetadata),
-                sensor: {
-                  ...(prev.metadata as AeroDoorMetadata).sensor,
-                  sensorModuleComponentId: Number(value),
-                  sensorModuleId: moduleOption.find(
-                    (x) => x.value == Number(value),
-                  )?.additionalInfo,
-                },
-              },
-            }));
-          }}
+              sensor:{
+                guid:"",
+                slotNo:-1,
+                mode:InputMode.NC,
+                vendor:Vendor.aero,
+                deviceModuleGuid:e.target.value,
+                metadata:""
+              }
+            }))
+          }
           className="dark:bg-dark-900"
           defaultValue={
             (dto.metadata as AeroDoorMetadata).sensor
@@ -52,7 +53,7 @@ const DoorMonitorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({
       <FormField>
         <Label htmlFor="sensor.sensorNumber">Input No</Label>
         <Select
-          disabled={type == FormType.INFO}
+          disabled={isReadOnly}
           name="sensor.sensorNumber"
           options={inputOption.filter((x) => x.isTaken == false)}
           onChange={(value: string) => {

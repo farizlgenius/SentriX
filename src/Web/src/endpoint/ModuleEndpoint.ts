@@ -24,5 +24,5 @@ export const ModuleEndpoint = {
   PROTOCOL: `/api/${CONTROLLER}/protocol`,
   GET_READER_SLOT:(guid:string) => `/api/${CONTROLLER}/reader/${guid}`,
   GET_INPUT_SLOT:(guid:string) => `/api/${CONTROLLER}/input/${guid}` ,
-  GET_OUtPUT_SLOT:(guid:string) => `/api/${CONTROLLER}/output/${guid}` 
+  GET_OUTPUT_SLOT:(guid:string) => `/api/${CONTROLLER}/output/${guid}` 
 } as const;

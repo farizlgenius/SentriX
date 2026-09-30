@@ -124,7 +124,12 @@ public sealed class TimeService(
     return await repo.GetComponentsAsync(locationGuid, syncedAt, ct);
   }
 
-  public async Task<Pagination<TimeZoneDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
+      public async Task<IEnumerable<OptionDto>> GetOptionByLocationAsync(Guid guid, CancellationToken ct = default)
+      {
+          return await repo.GetOptionByLocationAsync(guid,ct);
+      }
+
+      public async Task<Pagination<TimeZoneDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
   {
     return await repo.GetPaginationAsync(param, ct);
   }

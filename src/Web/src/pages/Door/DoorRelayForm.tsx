@@ -4,112 +4,133 @@ import { DoorDto } from "../../model/Door/DoorDto";
 import { FormField } from "../../components/form/template/FormTemplate";
 import Label from "../../components/form/Label";
 import Select from "../../components/form/Select";
+import { Options } from "../../model/Options";
+import { RelayMode } from "../../enum/RelayMode";
+import { Vendor } from "../../enum/Vendor";
+import Input from "../../components/form/input/InputField";
+import { AeroRelayMetadata } from "../../model/Door/AeroRelayMetadata";
+import { DriveMode } from "../../enum/DriveMode";
+import { OfflineMode } from "../../enum/OfflineMode";
 
-const DoorRelayForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({
+type ExtraProps = {
+  moduleOption: Options[]
+  outputOption: Options[]
+};
+
+
+const DoorRelayForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps>> = ({
   dto,
   setDto,
   type,
+  moduleOption,
+  outputOption,
+  handleChange
 }) => {
+  const isReadOnly = type == FormType.INFO || dto.relay == null
   return (
-    <>
+    <div className="grid grid-cols-2 gap-5">
       <FormField>
-        <Label htmlFor="relay.relayModuleComponentId">Relay - Module</Label>
+        <Label htmlFor="relay.module">Relay - Module</Label>
         <Select
+          isString={true}
           disabled={type == FormType.INFO}
-          name="relay.relayModuleComponentId"
+          name="relay.module"
           options={moduleOption}
-          onChange={(value: string) => {
-            fetchOutput(
-              moduleOption.find((x) => x.value == Number(value))
-                ?.additionalInfo,
-            );
+          onChange={(e) => {
+            console.log(e.target.value)
+            handleChange(e)
             setDto((prev) => ({
               ...prev,
-              metadata: {
-                ...(prev.metadata as AeroDoorMetadata),
-                relay: {
-                  ...(prev.metadata as AeroDoorMetadata).relay,
-                  relayModuleComponentId: Number(value),
-                  relayModuleId: moduleOption.find(
-                    (x) => x.value == Number(value),
-                  )?.additionalInfo,
-                },
-              },
-            }));
-          }}
-          className="dark:bg-dark-900"
-          defaultValue={
-            (dto.metadata as AeroDoorMetadata).relay?.relayModuleComponentId ??
-            ""
+              relay: {
+                  guid: "",
+                  slotNo: -1,
+                  mode: RelayMode.None,
+                  vendor: Vendor.aero,
+                  deviceModuleGuid: e.target.value,
+                  metadata: {
+                    minStrkTime: 1,
+                    maxStrkTime: 5,
+                    driveMode: DriveMode.Normal,
+                    offlineMode: OfflineMode.NoChange
+                  }
+                }
+            }))
           }
+
+          }
+          className="dark:bg-dark-900"
+          defaultValue={dto.relay?.deviceModuleGuid ?? ""}
         />
       </FormField>
       <FormField>
-        <Label htmlFor="strk.outputNo">Relay No</Label>
+        <Label htmlFor="relay.slot">Relay No</Label>
         <Select
-          disabled={type == FormType.INFO}
-          name="strk.outputNo"
+          disabled={isReadOnly}
+          name="relay.slot"
           options={outputOption}
-          onChange={(value: string) => {
+          onChange={(e) =>
             setDto((prev) => ({
               ...prev,
-              metadata: {
-                ...(prev.metadata as AeroDoorMetadata),
-                relay: {
-                  ...(prev.metadata as AeroDoorMetadata).relay,
-                  relayNumber: Number(value),
-                },
-              },
-            }));
-          }}
-          className="dark:bg-dark-900"
-          defaultValue={
-            (dto.metadata as AeroDoorMetadata).relay?.relayNumber ?? ""
+              relay: prev.relay != null ?
+                {
+                  ...prev.relay,
+                  slotNo: Number(e.target.value)
+                } :
+                prev.relay
+            }))
           }
+          className="dark:bg-dark-900"
+          defaultValue={dto.relay?.slotNo ?? -1}
         />
       </FormField>
       <FormField>
-        <Label htmlFor="relay.relayMin">Minimum Strike Active Time</Label>
+        <Label htmlFor="relay.minStrk">Minimum Strike Time</Label>
         <Input
-          disabled={type == FormType.INFO}
+          disabled={isReadOnly}
           defaultValue={1}
-          value={(dto.metadata as AeroDoorMetadata).relay?.relayMin}
-          name="relayMin"
+          value={(dto.relay?.metadata as AeroRelayMetadata)?.minStrkTime ?? 1}
+          name="relay.minStrk"
           type="number"
-          id="strikeMinActiveTime"
-          onChange={(e: ChangeEvent<HTMLInputElement>) => {
+          id="relay.minStrk"
+          onChange={(e) => {
             setDto((prev) => ({
               ...prev,
-              metadata: {
-                ...(prev.metadata as AeroDoorMetadata),
-                relay: {
-                  ...(prev.metadata as AeroDoorMetadata).relay,
-                  relayMin: Number(e.target.value),
-                },
-              },
+              relay: prev.relay != null ?
+                {
+                  ...prev.relay,
+                  metadata: {
+                    ...(prev.relay.metadata as AeroRelayMetadata),
+                    minStrkTime: Number(e.target.value)
+                  }
+                }
+                :
+                prev.relay
             }));
           }}
         />
       </FormField>
       <FormField>
-        <Label htmlFor="strkMax">Maximum Strike Active Time</Label>
+        <Label htmlFor="relay.maxStrk">Maximum Strike Active Time</Label>
         <Input
-          disabled={type == FormType.INFO}
+          disabled={isReadOnly}
           defaultValue={5}
-          value={(dto.metadata as AeroDoorMetadata).relay?.relayMax}
-          name="relayMax"
+          value={(dto.relay?.metadata as AeroRelayMetadata)?.maxStrkTime ?? 5}
+          name="relay.maxStrk"
           type="number"
-          id="strikeMaxActiveTime"
-          onChange={(e: ChangeEvent<HTMLInputElement>) => {
+          id="relay.maxStrk"
+          onChange={(e) => {
             setDto((prev) => ({
               ...prev,
-              metadata: {
-                ...(prev.metadata as AeroDoorMetadata),
-                relay: {
-                  ...(prev.metadata as AeroDoorMetadata).relay,
-                  relayMax: Number(e.target.value),
-                },
-              },
+              relay: prev.relay != null ?
+                {
+                  ...prev.relay,
+                  metadata: {
+                    ...(prev.relay.metadata as AeroRelayMetadata),
+                    maxStrkTime: Number(e.target.value)
+                  }
+                }
+                :
+                prev.relay
             }));
           }}
         />
@@ -117,52 +138,80 @@ const DoorRelayForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({
       <FormField>
         <Label htmlFor="relay.relayMode">Drive Mode</Label>
         <Select
-          disabled={type == FormType.INFO}
+          disabled={isReadOnly}
           name="strkMode"
-          options={relayDriveOption}
-          onChange={(value: string) => {
+          options={[
+            {
+              label: DriveMode[DriveMode.Inverted],
+              value: DriveMode.Inverted
+            },
+            {
+              label: DriveMode[DriveMode.Normal],
+              value: DriveMode.Normal
+            }
+          ]}
+          onChange={(e) => {
             setDto((prev) => ({
               ...prev,
-              metadata: {
-                ...(prev.metadata as AeroDoorMetadata),
-                relay: {
-                  ...(prev.metadata as AeroDoorMetadata).relay,
-                  relayDriveMode: Number(value),
-                },
-              },
+              relay: prev.relay != null ?
+                {
+                  ...prev.relay,
+                  metadata: {
+                    ...(prev.relay.metadata as AeroRelayMetadata),
+                    driveMode: Number(e.target.value)
+                  }
+                }
+                :
+                prev.relay
             }));
           }}
           className="dark:bg-dark-900"
           defaultValue={
-            (dto.metadata as AeroDoorMetadata).relay?.relayDriveMode ?? ""
+            (dto.relay?.metadata as AeroRelayMetadata)?.driveMode ?? -1
           }
         />
       </FormField>
       <FormField>
         <Label htmlFor="relay.relayMode">Offline Mode</Label>
         <Select
-          disabled={type == FormType.INFO}
+          disabled={isReadOnly}
           name="strkMode"
-          options={relayOfflineOption}
-          onChange={(value: string) => {
+          options={[
+            {
+              label: OfflineMode[OfflineMode.Active],
+              value: OfflineMode.Active
+            },
+            {
+              label: OfflineMode[OfflineMode.Inactive],
+              value: OfflineMode.Inactive
+            },
+            {
+              label: OfflineMode[OfflineMode.NoChange],
+              value: OfflineMode.NoChange
+            }
+          ]}
+          onChange={(e) => {
             setDto((prev) => ({
               ...prev,
-              metadata: {
-                ...(prev.metadata as AeroDoorMetadata),
-                relay: {
-                  ...(prev.metadata as AeroDoorMetadata).relay,
-                  relayOfflineMode: Number(value),
-                },
-              },
+              relay: prev.relay != null ?
+                {
+                  ...prev.relay,
+                  metadata: {
+                    ...(prev.relay.metadata as AeroRelayMetadata),
+                    offlineMode: Number(e.target.value)
+                  }
+                }
+                :
+                prev.relay
             }));
           }}
           className="dark:bg-dark-900"
           defaultValue={
-            (dto.metadata as AeroDoorMetadata).relay?.relayOfflineMode ?? ""
+            (dto.relay?.metadata as AeroRelayMetadata)?.offlineMode ?? -1
           }
         />
       </FormField>
-    </>
+    </div>
   );
 };
 

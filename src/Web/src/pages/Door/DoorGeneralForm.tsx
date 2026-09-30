@@ -11,17 +11,24 @@ import { Options } from "../../model/Options";
 
 
 type ExtraProps = {
-  deviceOption:Options[]
+  deviceOption:Options[];
+  fetchDevice:() => Promise<void>;
 };
 
 const DoorGeneralForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps>> = ({
   dto,
   type,
   deviceOption,
-   handleChange
+   handleChange,
+   fetchDevice,
+   setDto
 }) => {
   const isReadOnly = type == FormType.INFO;
   //const [deviceOption,setDeviceOption] = useState<Options[]>([]);
+
+  useEffect(() => {
+    fetchDevice();
+  },[])
 
   
   return (
@@ -29,11 +36,17 @@ const DoorGeneralForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps
       <FormField>
         <Label>Name</Label>
         <Input
-        name="name"
+          name="name"
           placeholder="Door name"
           disabled={isReadOnly}
           type="text"
-          onChange={handleChange}
+          onChange={(e) =>
+            setDto(prev => ({
+              ...prev,
+              name: e.target.value
+            }))
+
+          }
           value={dto.name}
         />
       </FormField>
@@ -52,7 +65,12 @@ const DoorGeneralForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps
               value: Vendor.amico,
             },
           ]}
-          onChange={handleChange}
+          onChange={(e) => 
+            setDto(prev => ({
+          ...prev,
+          vendor: Number(e.target.value)
+        }))
+          }
           defaultValue={dto.vendor}
         />
       </FormField>
@@ -71,7 +89,13 @@ const DoorGeneralForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps
               value: DoorType.Single,
             },
           ]}
-          onChange={handleChange}
+          onChange={(e) => 
+            setDto(prev => ({
+          ...prev,
+          type: Number(e.target.value)
+        }))
+
+          }
           defaultValue={dto.type}
         />
       </FormField>
@@ -82,7 +106,14 @@ const DoorGeneralForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps
           disabled={isReadOnly}
           name={"deviceGuid"}
           options={deviceOption}
-          onChange={handleChange}
+          onChange={(e) => {
+            setDto(prev => ({
+              ...prev,
+              deviceGuid: e.target.value
+            }))
+            handleChange(e)
+          }
+          }
           defaultValue={dto.deviceGuid}
         />
       </FormField>

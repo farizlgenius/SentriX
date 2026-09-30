@@ -7,40 +7,78 @@ import Select from "../../components/form/Select";
 import { ReaderType } from "../../enum/ReaderType";
 import Switch from "../../components/form/switch/Switch";
 import { Options } from "../../model/Options";
-import { send } from "../../api/api";
-import { ModuleEndpoint } from "../../endpoint/ModuleEndpoint";
 import { AeroReaderMetadata } from "../../model/Door/AeroReaderMetadata";
 import { readerAddress, readerBaudrate } from "../../model/Door/ReaderOption";
+import { ReaderMode } from "../../enum/ReaderMode";
+import { Vendor } from "../../enum/Vendor";
+import { ReaderDirection } from "../../enum/DoorDirection";
 
 type ExtraProps = {
-  setModuleOption: React.Dispatch<React.SetStateAction<Options[]>>;
   moduleOption:Options[]
+  readerOption:Options[]
 };
 
 const DoorOutForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps>> = ({
   type,
   setDto,
   dto,
-  setModuleOption,
-  moduleOption
+  handleChange,
+  moduleOption,
+  readerOption,
+  
 }) => {
   const [readerType, setReaderType] = useState<ReaderType>(
-    ReaderType.odsp,
+    ReaderType.wiegand,
   );
-  const [readerOption,setReaderOption] = useState<Options[]>([]);
-    const fetchReader = async (guid:string) => {
-      var res = await send.get(ModuleEndpoint.GET_READER_SLOT(guid))
-      setReaderOption(res.data.data);
-    }
 
   return (
     <>
     <div className="grid grid-cols-2 gap-5">
-      <FormField>
-        <Label htmlFor="ReaderType">Type</Label>
+        <FormField>
+        <Label htmlFor="readerOut.module">Module</Label>
         <Select
+        isString={true}
           disabled={type == FormType.INFO}
-          name="ReaderType"
+          name="readerOut.module"
+          options={moduleOption}
+          placeholder="Select Option"
+          onChange={(e) => 
+          {
+            handleChange(e)
+           setDto((prev) => ({
+                     ...prev,
+                     readers: [...prev.readers,
+                       {
+                         guid: "",
+                         slotNo: -1,
+                         mode: ReaderMode.wiegand,
+                         metadata: {
+                           osdpFlag:false,
+                           address:-1,
+                           baudrate:-1,
+                           discover:-1,
+                           tracing:-1,
+                           secureChannel:-1
+                         },
+                         vendor: Vendor.aero,
+                         readerDirection: ReaderDirection.Out,
+                         deviceModuleGuid: e.target.value
+                       }
+                     ]
+                   }))
+          }  
+          }
+          className="dark:bg-dark-900"
+          defaultValue={
+            dto.readers.find(x => x.readerDirection == ReaderDirection.Out)?.deviceModuleGuid ?? ""
+          }
+        />
+      </FormField>
+      <FormField>
+        <Label htmlFor="readerOut.type">Type</Label>
+        <Select
+          disabled={type == FormType.INFO || dto.readers.length == 0 || dto.readers.find(x => x.readerDirection == ReaderDirection.Out) == undefined}
+          name="readerOut.type"
           options={[
             {
               label: "Wiegand",
@@ -60,8 +98,8 @@ const DoorOutForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps>> =
             setReaderType(Number(value));
             setDto((prev) => ({
               ...prev,
-              readers:prev.readers.map((reader,index) => 
-              index == 1 ? {
+              readers:prev.readers.map((reader) => 
+              reader.readerDirection == ReaderDirection.Out ? {
                 ...reader,
                 mode:Number(value)
               } : reader
@@ -72,50 +110,24 @@ const DoorOutForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps>> =
           defaultValue={readerType}
         />
       </FormField>
+    
       <FormField>
-        <Label htmlFor="module">Module</Label>
+        <Label htmlFor="readerOut.slot">Slot No</Label>
         <Select
-        isString={true}
-          disabled={type == FormType.INFO}
-          name="module"
-          options={moduleOption}
-          placeholder="Select Option"
-          onChangeWithEvent={(value: string) => {
-             setDto((prev) => ({
-              ...prev,
-              readers:prev.readers.map((reader,index) => 
-              index == 1 ? {
-                ...reader,
-                deviceModuelGuid:value
-              } : reader
-              )
-            }))
-            // Fetch Reader Slot
-            fetchReader(value)
-          }}
-          className="dark:bg-dark-900"
-          defaultValue={
-            dto.readers[1].deviceModuelGuid
-          }
-        />
-      </FormField>
-      <FormField>
-        <Label htmlFor="readers">Slot No</Label>
-        <Select
-          disabled={type == FormType.INFO}
-          name="readers"
+          disabled={type == FormType.INFO || dto.readers.length == 0 || dto.readers.find(x => x.readerDirection == ReaderDirection.Out) == undefined}
+          name="readerOut.slot"
           options={readerOption}
           placeholder="Select Option"
-          onChange={(value: string) => {
+          onChange={(e) => 
             setDto(prev => ({
               ...prev,
-              readers:prev.readers.map((reader,index) => 
-              index == 1 ? {...reader,slotNo:Number(value)} : reader
+              readers:prev.readers.map((reader) => 
+              reader.readerDirection == ReaderDirection.Out ? {...reader,slotNo:Number(e.target.value)} : reader
               )
             }))
-          }}
+          }
           className="dark:bg-dark-900"
-         defaultValue={dto.readers[1].slotNo}
+         defaultValue={ dto.readers.find(x => x.readerDirection == ReaderDirection.Out)?.slotNo ?? -1}
         />
       </FormField>
 
@@ -124,62 +136,62 @@ const DoorOutForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps>> =
           <FormField>
             <Label htmlFor="readerOut.osdpAddress">Address</Label>
             <Select
-              disabled={type == FormType.INFO}
+              disabled={type == FormType.INFO || dto.readers.length == 0 || dto.readers.find(x => x.readerDirection == ReaderDirection.Out) == undefined}
               name="readerOut.osdpAddress"
               options={readerAddress}
               placeholder="Select Option"
-              onChange={(value: string) => {
-                setDto(prev => ({
+              onChange={(e) => 
+                   setDto(prev => ({
                                   ...prev,
-                                  readers: prev.readers.map((reader, index) =>
-                                    index == 1 ? { ...reader, metadata: {
+                                  readers: prev.readers.map((reader) =>
+                                    reader.readerDirection == ReaderDirection.Out ? { ...reader, metadata: {
                                       ...(reader.metadata as AeroReaderMetadata),
-                                      address:Number(value)
+                                      address:Number(e.target.value)
                                     } } : reader
                                   )
                                 }))
-              }}
+              }
               className="dark:bg-dark-900"
               defaultValue={
-                (dto.readers[1].metadata as AeroReaderMetadata).address
+                (dto.readers.find(x => x.readerDirection == ReaderDirection.Out)?.metadata as AeroReaderMetadata)?.address ?? -1
               }
             />
           </FormField>
           <FormField>
-            <Label htmlFor="baudrate">Baudrate</Label>
+            <Label htmlFor="readerOut.baudrate">Baudrate</Label>
             <Select
-              disabled={type == FormType.INFO}
-              name="baudrate"
+              disabled={type == FormType.INFO || dto.readers.length == 0 || dto.readers.find(x => x.readerDirection == ReaderDirection.Out) == undefined}
+              name="readerOut.baudrate"
               options={readerBaudrate}
               placeholder="Select Option"
-              onChange={(value: string) => {
-                setDto(prev => ({
+              onChange={(e) => 
+                 setDto(prev => ({
                   ...prev,
-                  readers: prev.readers.map((reader, index) =>
-                    index == 1 ? { ...reader, metadata: {
+                  readers: prev.readers.map((reader) =>
+                    reader.readerDirection == ReaderDirection.Out ? { ...reader, metadata: {
                       ...(reader.metadata as AeroReaderMetadata),
-                      baudrate:Number(value)
+                      baudrate:Number(e.target.value)
                     } } : reader
                   )
                 }))
-              }}
+              }
               className="dark:bg-dark-900"
               defaultValue={
-                (dto.readers[1].metadata as AeroReaderMetadata).baudrate
+                (dto.readers.find(x => x.readerDirection == ReaderDirection.Out)?.metadata as AeroReaderMetadata)?.baudrate ?? -1
               }
             />
           </FormField>
           <FormField>
             <div className="mt-3">
               <Switch
-                disabled={type == FormType.INFO}
+                disabled={type == FormType.INFO || dto.readers.length == 0 || dto.readers.find(x => x.readerDirection == ReaderDirection.Out) == undefined}
                 label="Auto Discover"
                 defaultChecked={true}
                 onChange={(checked: boolean) => {
                   setDto(prev => ({
                   ...prev,
-                  readers: prev.readers.map((reader, index) =>
-                    index == 1 ? { ...reader, metadata: {
+                  readers: prev.readers.map((reader) =>
+                   reader.readerDirection == ReaderDirection.Out ? { ...reader, metadata: {
                       ...(reader.metadata as AeroReaderMetadata),
                       discover:checked ? 0x00 : 0x08
                     } } : reader
@@ -190,14 +202,14 @@ const DoorOutForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps>> =
             </div>
             <div className="mt-3">
               <Switch
-                disabled={type == FormType.INFO}
+                disabled={type == FormType.INFO || dto.readers.length == 0 || dto.readers.find(x => x.readerDirection == ReaderDirection.Out) == undefined}
                 label="Tracing"
                 defaultChecked={false}
                 onChange={(checked: boolean) => {
                    setDto(prev => ({
                   ...prev,
-                  readers: prev.readers.map((reader, index) =>
-                    index == 1 ? { ...reader, metadata: {
+                  readers: prev.readers.map((reader) =>
+                    reader.readerDirection == ReaderDirection.Out ? { ...reader, metadata: {
                       ...(reader.metadata as AeroReaderMetadata),
                       discover:checked ? 0x10 : 0x00
                     } } : reader
@@ -208,14 +220,14 @@ const DoorOutForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps>> =
             </div>
             <div className="mt-3">
               <Switch
-                disabled={type == FormType.INFO}
+               disabled={type == FormType.INFO || dto.readers.length == 0 || dto.readers.find(x => x.readerDirection == ReaderDirection.Out) == undefined}
                 label="Secure Channel"
                 defaultChecked={false}
                 onChange={(checked: boolean) => {
                   setDto(prev => ({
                   ...prev,
-                  readers: prev.readers.map((reader, index) =>
-                    index == 1 ? { ...reader, metadata: {
+                  readers: prev.readers.map((reader) =>
+                    reader.readerDirection == ReaderDirection.Out ? { ...reader, metadata: {
                       ...(reader.metadata as AeroReaderMetadata),
                       discover:checked ? 0x80 : 0x00,
                     } } : reader

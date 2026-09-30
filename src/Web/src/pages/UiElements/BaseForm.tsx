@@ -119,7 +119,7 @@ export const BaseForm: React.FC<PropsWithChildren<FormProp>> = ({
                             className="min-w-[120px]"
                             size="sm"
                           >
-                            {type == FormType.UPDATE ? "Update" : "Create"}
+                            {type == FormType.UPDATE ? "Update" : type == FormType.INFO ? "Info" : "Create"}
                           </Button>
                         ) : (
                           <Button

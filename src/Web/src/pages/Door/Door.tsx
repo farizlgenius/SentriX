@@ -49,6 +49,8 @@ import { ReaderDirection } from "../../enum/DoorDirection";
 import { ModuleEndpoint } from "../../endpoint/ModuleEndpoint";
 import { DeviceEndpoint } from "../../endpoint/DeviceEndpoint";
 import { DeviceDto } from "../../model/Device/DeviceDto";
+import { AeroReaderMetadata } from "../../model/Door/AeroReaderMetadata";
+import { TimezoneEndPoint } from "../../endpoint/TimezoneEndpoint";
 
 // ACR Page
 const DOOR_TABLE_HEADER: string[] = [
@@ -78,51 +80,17 @@ const Door = () => {
     setMessage,
   } = usePopup();
 
-  const defaultReaderInDto:ReaderDto={
-    guid: "",
-    slotNo: -1,
-    mode: ReaderMode.wiegand,
-    metadata: {
-      osdpFlag:false,
-      address:-1,
-      baudrate:-1,
-      discover:-1,
-      tracing:-1,
-      secureChannel:-1
-    },
-    vendor: Vendor.aero,
-    readerDirection: ReaderDirection.In,
-    deviceModuelGuid: ""
-  }
-
-  const defaultReaderOutDto:ReaderDto={
-    guid: "",
-    slotNo: -1,
-    mode: ReaderMode.wiegand,
-    metadata: {
-      osdpFlag:false,
-      address:-1,
-      baudrate:-1,
-      discover:-1,
-      tracing:-1,
-      secureChannel:-1
-    },
-    vendor: Vendor.aero,
-    readerDirection: ReaderDirection.Out,
-    deviceModuelGuid: ""
-  }
+ 
 
   const defaultDoorDto: DoorDto = {
     guid: "",
     name: "",
     metadata: "",
-    readers: [
-      defaultReaderInDto,
-      defaultReaderOutDto
-    ],
+    readers: [],
     buzzer: null,
     rex: null,
     sensor: null,
+    relay:null,
     locationGuid: locationGuid,
     locationName: "",
     isActive: false,
@@ -132,7 +100,7 @@ const Door = () => {
     deviceGuid: "",
     deviceName: ""
   };
-  const [doorDto, setDoorDto] = useState<DoorDto>(defaultDoorDto);
+  const [dto, setDto] = useState<DoorDto>(defaultDoorDto);
   const [refresh, setRefresh] = useState(false);
   const toggleRefresh = () => setRefresh(!refresh);
   {
@@ -176,11 +144,11 @@ const Door = () => {
         break;
       case "create":
         setConfirmCreate(() => async () => {
-          doorDto.metadata = JSON.stringify(doorDto.metadata);
-          const res = await send.post(DoorEndpoint.CREATE, doorDto);
+          dto.metadata = JSON.stringify(dto.metadata);
+          const res = await send.post(DoorEndpoint.CREATE, dto);
           if (Helper.handleToastByResCode(res, DoorToast.CREATE, toggleToast)) {
             setForm(false);
-            setDoorDto(defaultDoorDto);
+            setDto(defaultDoorDto);
             toggleRefresh();
           }
         });
@@ -188,11 +156,11 @@ const Door = () => {
         break;
       case "update":
         setConfirmUpdate(() => async () => {
-          doorDto.metadata = JSON.stringify(doorDto.metadata);
-          const res = await send.put(DoorEndpoint.UPDATE, doorDto);
+          dto.metadata = JSON.stringify(dto.metadata);
+          const res = await send.put(DoorEndpoint.UPDATE, dto);
           if (Helper.handleToastByResCode(res, DoorToast.UPDATE, toggleToast)) {
             setForm(false);
-            setDoorDto(defaultDoorDto);
+            setDto(defaultDoorDto);
             toggleRefresh();
           }
         });
@@ -200,7 +168,7 @@ const Door = () => {
         break;
       case "close":
       case "cancel":
-        setDoorDto(defaultDoorDto);
+        setDto(defaultDoorDto);
         setForm(false);
         break;
       case "unlock":
@@ -235,34 +203,22 @@ const Door = () => {
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => {
-    switch(e.target.name){
-      case "name":
-        setDoorDto(prev => ({
-          ...prev,
-          name:e.target.value
-        }))
-        break;
-      case "vendor":
-        setDoorDto(prev => ({
-          ...prev,
-          vendor:Number(e.target.value)
-        }))
-        break;
-       case "type":
-        setDoorDto(prev => ({
-          ...prev,
-          type:Number(e.target.value)
-        }))
-        break;
-        case "deviceGuid":
-        setDoorDto(prev => ({
-          ...prev,
-          deviceGuid:e.target.value
-        }))
+    switch (e.target.name) {
+      case "deviceGuid":
         fetchModule(e.target.value);
         break;
-        case "readerIn.module":
-          break;
+      case "readerIn.module":
+        fetchReader(e.target.value)
+        break;
+      case "readerOut.module":
+        fetchReader(e.target.value)
+        break;
+      case "rex.module":
+        fetchInput(e.target.value);
+        break;
+        case "relay.module":
+        fetchOutput(e.target.value);
+        break;
       default:
         break;
     }
@@ -283,13 +239,13 @@ const Door = () => {
     /* handle Table Action */
   }
   const handleEdit = (data: DoorDto) => {
-    setDoorDto(data);
+    setDto(data);
     setFormType(FormType.UPDATE);
     setForm(true);
   };
 
   const handleInfo = (data: DoorDto) => {
-    setDoorDto(data);
+    setDto(data);
     setFormType(FormType.INFO);
     setForm(true);
   };
@@ -301,6 +257,9 @@ const Door = () => {
   const [deviceOptions,setDeviceOptions]=useState<Options[]>([]);
   const [moduleOption,setModuleOption]=useState<Options[]>([]);
   const [readerOption,setReaderOption] = useState<Options[]>([]);
+  const [inputOption,setInputOption] = useState<Options[]>([]);
+  const [outputOption,setOutputOption] = useState<Options[]>([]);
+  const [timeOption,setTimeOption] = useState<Options[]>([]);
 
   const fetchDevice = async () => {
     var res = await send.get(DeviceEndpoint.GET_LOCATION(locationGuid))
@@ -330,6 +289,21 @@ const Door = () => {
    const fetchReader = async (guid:string) => {
     var res = await send.get(ModuleEndpoint.GET_READER_SLOT(guid))
     setReaderOption(res.data.data);
+  }
+
+  const fetchInput = async (guid:string) => {
+    var res = await send.get(ModuleEndpoint.GET_INPUT_SLOT(guid))
+    setInputOption(res.data.data);
+  }
+
+  const fetchOutput = async (guid:string) => {
+    var res = await send.get(ModuleEndpoint.GET_OUTPUT_SLOT(guid))
+    setOutputOption(res.data.data);
+  }
+
+  const fetchTime = async (guid:string) => {
+    var res = await send.get(TimezoneEndPoint.GET_OPTION_BY_LOCATION(guid))
+    setTimeOption(res.data.data);
   }
   const fetchData = async (
     pageNumber: number,
@@ -401,9 +375,6 @@ const Door = () => {
   {
     /* UseEffect */
   }
-  useEffect(() => {
-   fetchDevice();
-  }, []);
 
   {
     /* checkBox */
@@ -458,26 +429,26 @@ const Door = () => {
       label: "General",
       icon: <DoorIcon />,
       content: (
-        <DoorGeneralForm handleChange={handleChange} type={formType} dto={doorDto} deviceOption={deviceOptions}  />
+        <DoorGeneralForm fetchDevice={fetchDevice} handleChange={handleChange} type={formType} dto={dto} deviceOption={deviceOptions} setDto={setDto}  />
       ),
       title: "General Information",
       description: "General door information",
     },
 
-    ...(doorDto.vendor === Vendor.aero) ?
+    ...(dto.vendor === Vendor.aero) ?
       [
         {
           label: "Door In",
           icon: <DoorInIcon />,
-          content: <DoorInForm dto={doorDto} setDto={setDoorDto} type={formType} moduleOption={moduleOption} />,
+          content: <DoorInForm dto={dto} setDto={setDto} type={formType} moduleOption={moduleOption} handleChange={handleChange} readerOption={readerOption} />,
         },
-        ...(doorDto.type === DoorType.Dual
+        ...(dto.type === DoorType.Dual
           ? [
             {
               label: "Door Out",
               icon: <DoorOutIcon />,
               content: (
-                <DoorOutForm dto={doorDto} setDto={setDoorDto} type={formType} moduleOption={moduleOption} setModuleOption={setModuleOption} />
+                <DoorOutForm dto={dto} setDto={setDto} type={formType} moduleOption={moduleOption} handleChange={handleChange} readerOption={readerOption} />
               ),
             },
           ]
@@ -487,38 +458,43 @@ const Door = () => {
               icon: <DoorOutIcon />,
               content: (
                 <DoorRexOutForm
-                  dto={doorDto}
-                  setDto={setDoorDto}
+                  dto={dto}
+                  setDto={setDto}
                   type={formType}
-                />
+                  inputOption={inputOption}
+                  handleChange={handleChange} 
+                  moduleOption={moduleOption}
+                  fetchTime={fetchTime}
+                  timeOption={timeOption}
+                  />
               ),
             },
           ]),
            {
           label: "Relay",
           icon: <DoorIcon />,
-          content: <DoorRelayForm dto={doorDto} setDto={setDoorDto} type={formType} />,
+          content: <DoorRelayForm dto={dto} setDto={setDto} type={formType} handleChange={handleChange} moduleOption={moduleOption} outputOption={outputOption}  />,
         },
           {
           label: "Sensor",
           icon: <MonitorIcon />,
-          content: <DoorMonitorForm dto={doorDto} setDto={setDoorDto} type={formType} />,
+          content: <DoorMonitorForm dto={dto} setDto={setDto} type={formType} />,
         },
         {
           label: "Buzzer",
           icon: <OnIcon />,
-          content: <DoorBuzzerForm dto={doorDto} setDto={setDoorDto} type={formType} />,
+          content: <DoorBuzzerForm dto={dto} setDto={setDto} type={formType} />,
         },
          {
           label: "Break Glass",
           icon: <OnIcon />,
-          content: <DoorBuzzerForm dto={doorDto} setDto={setDoorDto} type={formType} />,
+          content: <DoorBuzzerForm dto={dto} setDto={setDto} type={formType} />,
         },
 
       ] : [],
 
 
-    ...(doorDto.vendor === Vendor.amico
+    ...(dto.vendor === Vendor.amico
       ? [
         /* Add your Amico-specific form object here */
       ]
@@ -736,11 +712,11 @@ const Door = () => {
             Break Glass
           </text>
 
-          {doorDto.type == DoorType.Dual
+          {dto.type == DoorType.Dual
             ? device("readerOut", 665, 255, 16, 38)
             : device("rex", 665, 255, 16, 38)}
           <text x="700" y="280" fill="#09090b" fontSize="15" fontWeight="600">
-            {doorDto.type == DoorType.Dual ? "Reader" : "REX"}
+            {dto.type == DoorType.Dual ? "Reader" : "REX"}
           </text>
           <text
             x="580"

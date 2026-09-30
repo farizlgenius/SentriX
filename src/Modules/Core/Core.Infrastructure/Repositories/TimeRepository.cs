@@ -185,7 +185,19 @@ public sealed class TimeRepository(CoreDbContext context) : ITimeRepository
       .FirstOrDefaultAsync();
   }
 
-  public async Task<Pagination<TimeZoneDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
+      public async Task<IEnumerable<OptionDto>> GetOptionByLocationAsync(Guid guid, CancellationToken ct = default)
+      {
+          return await context.TimeZones
+            .AsNoTracking()
+            .Where(x => x.location.guid == guid || x.is_default)
+            .Select(x => new OptionDto(
+              x.name,
+              x.guid,
+              string.Empty
+            )).ToArrayAsync();
+      }
+
+      public async Task<Pagination<TimeZoneDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
   {
     var query = context.TimeZones
                   .Where(x => x.is_default || x.location.guid == param.locationGuid)

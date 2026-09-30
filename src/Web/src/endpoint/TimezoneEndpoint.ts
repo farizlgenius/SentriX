@@ -2,8 +2,8 @@ const CONTROLLER = "time";
 
 export const TimezoneEndPoint = {
   GET: `/api/${CONTROLLER}`,
-  GET_OPTION_BY_LOCATION: (locationId: number) =>
-    `/api/${CONTROLLER}/option/${locationId}`,
+  GET_OPTION_BY_LOCATION: (guid: string) =>
+    `/api/${CONTROLLER}/option/${guid}`,
   LOCATION: (location: number) => `/api/${location}/${CONTROLLER}`,
   PAGINATION: (
     pageNumber: number,

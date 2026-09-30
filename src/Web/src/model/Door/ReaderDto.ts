@@ -10,5 +10,5 @@ export interface ReaderDto {
   metadata: string | AeroReaderMetadata;
   vendor: Vendor;
   readerDirection: ReaderDirection;
-  deviceModuelGuid: string;
+  deviceModuleGuid: string;
 }

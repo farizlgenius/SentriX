@@ -254,9 +254,23 @@ public sealed class DeviceModuleRepository(CoreDbContext context) : IDeviceModul
             )).ToArrayAsync();
       }
 
-      public Task<(int TotalSlots, List<int> OutputSlots,List<int> BuzzerSlots,List<int> RelaySlots)?> GetOutputSlotAsync(Guid guid,CancellationToken ct = default)
+      public async Task<(int TotalSlots, List<int> OutputSlots,List<int> BuzzerSlots,List<int> RelaySlots)?> GetOutputSlotAsync(Guid guid,CancellationToken ct = default)
       {
-            throw new NotImplementedException();
+            var res = await context.DeviceModules
+                  .AsNoTracking()
+                  .Where(x => x.guid == guid)
+                  .Select(x => new
+                  {
+                        TotalSlots = x.output_slot,
+                        OutputSlots = x.outputs.Select(x => x.slot_no).ToList(),
+                        BuzzerSlots = x.buzzers.Select(x => x.slot_no).ToList(),
+                        RelaySlots = x.relays.Select(x => x.slot_no).ToList()
+                  }).FirstOrDefaultAsync();
+
+            if(res == null)
+                  return null;
+
+            return (res.TotalSlots,res.OutputSlots,res.BuzzerSlots,res.RelaySlots);
       }
 
       public async Task<Pagination<DeviceModuleDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)

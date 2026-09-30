@@ -1,10 +1,10 @@
 import { Vendor } from "../../enum/Vendor";
-import { OutputMode } from "./OutputMode";
+import { RelayMode } from "../../enum/RelayMode";
 
 export interface BuzzerDto {
   guid: string;
   slotNo: number;
-  mode: OutputMode;
+  mode: RelayMode;
   metadata: string;
   vendor: Vendor;
 }
