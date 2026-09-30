@@ -28,7 +28,7 @@ public sealed class DoorService(
 
     foreach (var reader in dto.Readers)
     {
-      if (!await repo.IsAnyGuidAsync(reader.DeviceModuleGuid, ct))
+      if (await repo.IsAnyGuidAsync(reader.DeviceModuleGuid, ct))
         throw new NotFoundException(EntityType.DeviceModule.ToString(), reader.DeviceModuleGuid.ToString());
     }
 

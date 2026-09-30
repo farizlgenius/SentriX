@@ -26,9 +26,30 @@ const DoorRexOutForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps>
   inputOption,
   timeOption,
   handleChange,
-  fetchTime
+  fetchTime,
+  setIsNext
 }) => {
   const {locationGuid} = useLocation();
+
+  useEffect(() => {
+      if (setIsNext) {
+        let isValid = false;
+        // 1. Safely find the reader (might be undefined)
+        const rex = dto.rex;
+  
+        // 2. Extract values safely, providing fallbacks if undefined
+        const moduleGuid = rex?.deviceModuleGuid || "";
+        const slotNo = rex?.slotNo ?? -1;
+  
+        // 3. Perform the validation check safely
+        isValid = moduleGuid.trim() !== "" && slotNo !== -1;
+  
+  
+        console.log("RexForm isValid:", isValid); 
+        setIsNext(isValid); // This will now successfully run!
+      }
+    }, [dto.rex, setIsNext]); // Simplified dependency array
+
   useEffect(() => {
     fetchTime(locationGuid);
   },[])
@@ -36,7 +57,7 @@ const DoorRexOutForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps>
   return (
     <div className="grid grid-cols-2 gap-5">
       <FormField>
-        <Label htmlFor="rex.module">REX - Module</Label>
+        <Label htmlFor="rex.module">Module *</Label>
         <Select
         isString={true}
           disabled={type == FormType.INFO}
@@ -46,7 +67,6 @@ const DoorRexOutForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps>
             setDto((prev) => ({
               ...prev,
               rex:{
-                guid:"",
                 slotNo:-1,
                 mode:InputMode.NC,
                 metadata:"",
@@ -65,7 +85,7 @@ const DoorRexOutForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps>
         />
       </FormField>
       <FormField>
-        <Label htmlFor="rex.slot">REX - Input No</Label>
+        <Label htmlFor="rex.slot">Slot *</Label>
         <Select
           disabled={isReadOnly}
           name="rex.slot"
@@ -76,7 +96,7 @@ const DoorRexOutForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps>
               rex: prev.rex != null ?
                 {
                   ...prev.rex,
-                  slotNo: Number(e)
+                  slotNo: Number(e.target.value)
                 }
                 :
                 prev.rex
@@ -89,7 +109,7 @@ const DoorRexOutForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps>
         />
       </FormField>
       <FormField>
-        <Label htmlFor="rex0.inputMode">REX - Input Mode</Label>
+        <Label htmlFor="rex0.inputMode">Mode</Label>
         <Select
           disabled={isReadOnly}
           name="rex0.inputMode"
@@ -120,7 +140,7 @@ const DoorRexOutForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps>
         />
       </FormField>
       <FormField>
-        <Label htmlFor="rex0.MaskTimeZone">REX - Mask Time Zone</Label>
+        <Label htmlFor="rex0.MaskTimeZone">Mask Time (Optional)</Label>
         <Select
           isString={true}
           disabled={isReadOnly}

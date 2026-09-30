@@ -159,7 +159,6 @@ public sealed class TurnstileService(
         x.Guid,
         x.LaneNo,
         x.Readers.Select(r => new Reader(
-          r.Guid,
           r.SlotNo,
           r.Mode,
           r.Metadata,
@@ -168,7 +167,6 @@ public sealed class TurnstileService(
           readerDeviceModuleIdMap[r.DeviceModuleGuid]
         )).ToList(),
         x.Sensor == null ? null : new Sensor(
-          x.Sensor.Guid,
           x.Sensor.SlotNo,
           x.Sensor.Mode,
           x.Sensor.Metadata,

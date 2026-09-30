@@ -86,7 +86,6 @@ public sealed class TurnstileRepository(CoreDbContext context) : ITurnstileRepos
           l.guid,
           l.lane_no,
           l.readers.Select(x => new ReaderDto(
-            x.guid,
             x.slot_no,
             x.mode,
             x.metadata,
@@ -96,7 +95,6 @@ public sealed class TurnstileRepository(CoreDbContext context) : ITurnstileRepos
             )).ToList(),
             l.sensor == null ? null :
             new SensorDto(
-              l.sensor.guid,
               l.sensor.slot_no,
               l.sensor.mode,
               l.sensor.metadata,
@@ -127,7 +125,6 @@ public sealed class TurnstileRepository(CoreDbContext context) : ITurnstileRepos
           l.guid,
           l.lane_no,
           l.readers.Select(x => new ReaderDto(
-            x.guid,
             x.slot_no,
             x.mode,
             x.metadata,
@@ -137,7 +134,6 @@ public sealed class TurnstileRepository(CoreDbContext context) : ITurnstileRepos
             )).ToList(),
             l.sensor == null ? null :
             new SensorDto(
-              l.sensor.guid,
               l.sensor.slot_no,
               l.sensor.mode,
               l.sensor.metadata,
@@ -233,7 +229,6 @@ public sealed class TurnstileRepository(CoreDbContext context) : ITurnstileRepos
           l.guid,
           l.lane_no,
           l.readers.Select(x => new ReaderDto(
-            x.guid,
             x.slot_no,
             x.mode,
             x.metadata,
@@ -243,7 +238,6 @@ public sealed class TurnstileRepository(CoreDbContext context) : ITurnstileRepos
             )).ToList(),
             l.sensor == null ? null :
             new SensorDto(
-              l.sensor.guid,
               l.sensor.slot_no,
               l.sensor.mode,
               l.sensor.metadata,

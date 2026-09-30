@@ -21,7 +21,8 @@ const DoorGeneralForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps
   deviceOption,
    handleChange,
    fetchDevice,
-   setDto
+   setDto,
+   setIsNext
 }) => {
   const isReadOnly = type == FormType.INFO;
   //const [deviceOption,setDeviceOption] = useState<Options[]>([]);
@@ -29,6 +30,15 @@ const DoorGeneralForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps
   useEffect(() => {
     fetchDevice();
   },[])
+
+  // NEW: Automatically validate whenever name or deviceGuid changes
+  useEffect(() => {
+    if (setIsNext) {
+      // .trim() ensures spaces aren't counted as valid input
+      const isValid = dto.name.trim() !== "" && dto.deviceGuid.trim() !== "";
+      setIsNext(isValid);
+    }
+  }, [dto.name, dto.deviceGuid, setIsNext]);
 
   
   return (
@@ -40,12 +50,15 @@ const DoorGeneralForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps
           placeholder="Door name"
           disabled={isReadOnly}
           type="text"
-          onChange={(e) =>
+          onChange={(e) => {
+
             setDto(prev => ({
               ...prev,
               name: e.target.value
             }))
-
+            
+            
+          }
           }
           value={dto.name}
         />
@@ -65,11 +78,14 @@ const DoorGeneralForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps
               value: Vendor.amico,
             },
           ]}
-          onChange={(e) => 
+          onChange={(e) => {
             setDto(prev => ({
           ...prev,
           vendor: Number(e.target.value)
         }))
+
+          }
+            
           }
           defaultValue={dto.vendor}
         />
@@ -89,11 +105,15 @@ const DoorGeneralForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps
               value: DoorType.Single,
             },
           ]}
-          onChange={(e) => 
-            setDto(prev => ({
+          onChange={(e) => {
+             setDto(prev => ({
           ...prev,
           type: Number(e.target.value)
         }))
+
+  
+          }
+           
 
           }
           defaultValue={dto.type}
@@ -112,6 +132,7 @@ const DoorGeneralForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps
               deviceGuid: e.target.value
             }))
             handleChange(e)
+         
           }
           }
           defaultValue={dto.deviceGuid}

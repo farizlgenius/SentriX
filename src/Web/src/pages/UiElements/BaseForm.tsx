@@ -12,6 +12,7 @@ interface FormProp {
   type: FormType;
   handleClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
   layout?: JSX.Element | undefined;
+  isNext?:boolean;
 }
 
 export const BaseForm: React.FC<PropsWithChildren<FormProp>> = ({
@@ -21,6 +22,7 @@ export const BaseForm: React.FC<PropsWithChildren<FormProp>> = ({
   header = "",
   desc = "",
   layout = undefined,
+  isNext=true,
 }) => {
   const [activeTab, setActiveTab] = useState<string>(tabContent[0].label);
   const currentStepIndex = Math.max(
@@ -123,7 +125,10 @@ export const BaseForm: React.FC<PropsWithChildren<FormProp>> = ({
                           </Button>
                         ) : (
                           <Button
-                            onClick={() => goToStep(currentStepIndex + 1)}
+                            disabled={!isNext}
+                            onClick={() => {
+                              goToStep(currentStepIndex + 1)
+                            }}
                             className="min-w-[120px]"
                             size="sm"
                           >

@@ -29,7 +29,7 @@ public sealed class Door : BaseEntity,IAuditableEntity
   public ICollection<GroupComponent> group_components { get; set; } = default!;
   public Door() { }
 
-  public Door(Domain.Entities.Door d)
+  public Door(Domain.Entities.Door d) : base(d.Guid)
   {
     name = d.Name;
     vendor = d.Vendor;

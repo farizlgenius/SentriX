@@ -1,4 +1,4 @@
-import React, { PropsWithChildren } from "react";
+import React, { PropsWithChildren, useEffect } from "react";
 import { FormProp, FormType } from "../../model/Form/FormProp";
 import { DoorDto } from "../../model/Door/DoorDto";
 import { FormField } from "../../components/form/template/FormTemplate";
@@ -24,9 +24,28 @@ const DoorRelayForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps>>
   type,
   moduleOption,
   outputOption,
-  handleChange
+  handleChange,
+  setIsNext
 }) => {
   const isReadOnly = type == FormType.INFO || dto.relay == null
+
+  // NEW: Automatically validate whenever name or deviceGuid changes
+     useEffect(() => {
+        if (setIsNext) {
+    
+          // 2. Extract values safely, providing fallbacks if undefined
+          const moduleGuid = dto.relay?.deviceModuleGuid || "";
+          const slotNo = dto.relay?.slotNo ?? -1;
+    
+          // 3. Perform the validation check safely
+          const isValid = moduleGuid.trim() !== "" && slotNo !== -1;
+    
+          console.log("DoorOutForm isValid:", isValid); 
+          setIsNext(isValid); // This will now successfully run!
+        }
+      }, [dto.relay, setIsNext]); // Simplified dependency array
+
+      
   return (
     <div className="grid grid-cols-2 gap-5">
       <FormField>
@@ -42,7 +61,6 @@ const DoorRelayForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps>>
             setDto((prev) => ({
               ...prev,
               relay: {
-                  guid: "",
                   slotNo: -1,
                   mode: RelayMode.None,
                   vendor: Vendor.aero,

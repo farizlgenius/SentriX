@@ -1,5 +1,6 @@
 import { DoorType } from "../../enum/DoorType";
 import { Vendor } from "../../enum/Vendor";
+import { BgDto } from "./BgDto";
 import { BuzzerDto } from "./BuzzerDto";
 import { ReaderDto } from "./ReaderDto";
 import { RelayDto } from "./RelayDto";
@@ -19,6 +20,7 @@ export interface DoorDto {
   rex: RexDto | null;
   relay:RelayDto | null;
   sensor: SensorDto | null;
+  bg:BgDto | null;
   locationGuid: string;
   locationName: string;
   isActive: boolean;

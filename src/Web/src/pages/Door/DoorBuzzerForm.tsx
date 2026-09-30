@@ -1,168 +1,99 @@
-import { PropsWithChildren } from "react";
+import { PropsWithChildren, useEffect } from "react";
 import { DoorDto } from "../../model/Door/DoorDto";
 import { FormField } from "../../components/form/template/FormTemplate";
 import Label from "../../components/form/Label";
 import { FormProp, FormType } from "../../model/Form/FormProp";
 import Select from "../../components/form/Select";
+import { Options } from "../../model/Options";
+import { Vendor } from "../../enum/Vendor";
+import { RelayMode } from "../../enum/RelayMode";
 
-const DoorBuzzerForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({
+type ExtraProps = {
+  moduleOption:Options[]
+  outputOption:Options[]
+};
+
+const DoorBuzzerForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps>> = ({
   dto,
   setDto,
   type,
+  moduleOption,
+  outputOption,
+  handleChange
 }) => {
+
+  const isReadOnly = type == FormType.INFO || dto.buzzer == null
+
+  //  useEffect(() => {
+  //       if (setIsNext) {
+  //         let isValid = false;
+  //         // 1. Safely find the reader (might be undefined)
+  //         const buzzer = dto.buzzer;
+    
+  //         // 2. Extract values safely, providing fallbacks if undefined
+  //         const moduleGuid = buzzer?.deviceModuleGuid || "";
+  //         const slotNo = buzzer?.slotNo ?? -1;
+    
+  //         // 3. Perform the validation check safely
+  //         isValid = moduleGuid.trim() !== "" && slotNo !== -1;
+    
+    
+  //         console.log("BuzzerForm isValid:", isValid); 
+  //         setIsNext(isValid); // This will now successfully run!
+  //       }
+  //     }, [dto.buzzer, setIsNext]); // Simplified dependency array
+
   return (
-    <>
+    <div className="grid grid-cols-2 gap-5">
       <FormField>
-        <Label htmlFor="relay.relayModuleComponentId">Relay - Module</Label>
+        <Label htmlFor="buzzer.module">Buzzer - Module</Label>
         <Select
+        isString={true}
           disabled={type == FormType.INFO}
-          name="relay.relayModuleComponentId"
+          name="buzzer.module"
           options={moduleOption}
-          onChange={(value: string) => {
-            fetchOutput(
-              moduleOption.find((x) => x.value == Number(value))
-                ?.additionalInfo,
-            );
+          onChange={(e) => {
             setDto((prev) => ({
               ...prev,
-              metadata: {
-                ...(prev.metadata as AeroDoorMetadata),
-                relay: {
-                  ...(prev.metadata as AeroDoorMetadata).relay,
-                  relayModuleComponentId: Number(value),
-                  relayModuleId: moduleOption.find(
-                    (x) => x.value == Number(value),
-                  )?.additionalInfo,
-                },
-              },
-            }));
-          }}
-          className="dark:bg-dark-900"
-          defaultValue={
-            (dto.metadata as AeroDoorMetadata).relay?.relayModuleComponentId ??
-            ""
+              buzzer:{
+                slotNo:-1,
+                mode:RelayMode.None,
+                metadata:"",
+                deviceModuleGuid:e.target.value,
+                vendor:Vendor.aero
+              }
+            }))
+            handleChange(e)
           }
+            
+          }
+          className="dark:bg-dark-900"
+          defaultValue={dto.buzzer?.deviceModuleGuid ?? ""}
         />
       </FormField>
       <FormField>
-        <Label htmlFor="strk.outputNo">Relay No</Label>
+        <Label htmlFor="buzzer.slot">Output No</Label>
         <Select
-          disabled={type == FormType.INFO}
-          name="strk.outputNo"
+          disabled={isReadOnly}
+          name="strk.slot"
           options={outputOption}
-          onChange={(value: string) => {
+          onChange={(e) => 
             setDto((prev) => ({
               ...prev,
-              metadata: {
-                ...(prev.metadata as AeroDoorMetadata),
-                relay: {
-                  ...(prev.metadata as AeroDoorMetadata).relay,
-                  relayNumber: Number(value),
-                },
-              },
-            }));
-          }}
-          className="dark:bg-dark-900"
-          defaultValue={
-            (dto.metadata as AeroDoorMetadata).relay?.relayNumber ?? ""
+              buzzer:prev.buzzer != null ?
+               {
+                ...prev.buzzer,
+                slotNo:Number(e.target.value)
+               }
+              :
+              prev.buzzer
+            }))
           }
-        />
-      </FormField>
-      <FormField>
-        <Label htmlFor="relay.relayMin">Minimum Strike Active Time</Label>
-        <Input
-          disabled={type == FormType.INFO}
-          defaultValue={1}
-          value={(dto.metadata as AeroDoorMetadata).relay?.relayMin}
-          name="relayMin"
-          type="number"
-          id="strikeMinActiveTime"
-          onChange={(e: ChangeEvent<HTMLInputElement>) => {
-            setDto((prev) => ({
-              ...prev,
-              metadata: {
-                ...(prev.metadata as AeroDoorMetadata),
-                relay: {
-                  ...(prev.metadata as AeroDoorMetadata).relay,
-                  relayMin: Number(e.target.value),
-                },
-              },
-            }));
-          }}
-        />
-      </FormField>
-      <FormField>
-        <Label htmlFor="strkMax">Maximum Strike Active Time</Label>
-        <Input
-          disabled={type == FormType.INFO}
-          defaultValue={5}
-          value={(dto.metadata as AeroDoorMetadata).relay?.relayMax}
-          name="relayMax"
-          type="number"
-          id="strikeMaxActiveTime"
-          onChange={(e: ChangeEvent<HTMLInputElement>) => {
-            setDto((prev) => ({
-              ...prev,
-              metadata: {
-                ...(prev.metadata as AeroDoorMetadata),
-                relay: {
-                  ...(prev.metadata as AeroDoorMetadata).relay,
-                  relayMax: Number(e.target.value),
-                },
-              },
-            }));
-          }}
-        />
-      </FormField>
-      <FormField>
-        <Label htmlFor="relay.relayMode">Drive Mode</Label>
-        <Select
-          disabled={type == FormType.INFO}
-          name="strkMode"
-          options={relayDriveOption}
-          onChange={(value: string) => {
-            setDto((prev) => ({
-              ...prev,
-              metadata: {
-                ...(prev.metadata as AeroDoorMetadata),
-                relay: {
-                  ...(prev.metadata as AeroDoorMetadata).relay,
-                  relayDriveMode: Number(value),
-                },
-              },
-            }));
-          }}
           className="dark:bg-dark-900"
-          defaultValue={
-            (dto.metadata as AeroDoorMetadata).relay?.relayDriveMode ?? ""
-          }
+          defaultValue={dto.buzzer?.slotNo ?? -1}
         />
       </FormField>
-      <FormField>
-        <Label htmlFor="relay.relayMode">Offline Mode</Label>
-        <Select
-          disabled={type == FormType.INFO}
-          name="strkMode"
-          options={relayOfflineOption}
-          onChange={(value: string) => {
-            setDto((prev) => ({
-              ...prev,
-              metadata: {
-                ...(prev.metadata as AeroDoorMetadata),
-                relay: {
-                  ...(prev.metadata as AeroDoorMetadata).relay,
-                  relayOfflineMode: Number(value),
-                },
-              },
-            }));
-          }}
-          className="dark:bg-dark-900"
-          defaultValue={
-            (dto.metadata as AeroDoorMetadata).relay?.relayOfflineMode ?? ""
-          }
-        />
-      </FormField>
-    </>
+    </div>
   );
 };
 

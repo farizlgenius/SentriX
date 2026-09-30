@@ -1,4 +1,4 @@
-import { PropsWithChildren, useState } from "react";
+import { PropsWithChildren, useEffect, useState } from "react";
 import Label from "../../components/form/Label";
 import { FormField } from "../../components/form/template/FormTemplate";
 import { DoorDto } from "../../model/Door/DoorDto";
@@ -25,11 +25,30 @@ const DoorOutForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps>> =
   handleChange,
   moduleOption,
   readerOption,
+  setIsNext
   
 }) => {
   const [readerType, setReaderType] = useState<ReaderType>(
     ReaderType.wiegand,
   );
+
+   // NEW: Automatically validate whenever name or deviceGuid changes
+   useEffect(() => {
+      if (setIsNext) {
+        // 1. Safely find the reader (might be undefined)
+        const readerOut = dto.readers.find(x => x.readerDirection === ReaderDirection.Out);
+  
+        // 2. Extract values safely, providing fallbacks if undefined
+        const moduleGuid = readerOut?.deviceModuleGuid || "";
+        const slotNo = readerOut?.slotNo ?? -1;
+  
+        // 3. Perform the validation check safely
+        const isValid = moduleGuid.trim() !== "" && slotNo !== -1;
+  
+        console.log("DoorOutForm isValid:", isValid); 
+        setIsNext(isValid); // This will now successfully run!
+      }
+    }, [dto.readers, setIsNext]); // Simplified dependency array
 
   return (
     <>
@@ -49,7 +68,6 @@ const DoorOutForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps>> =
                      ...prev,
                      readers: [...prev.readers,
                        {
-                         guid: "",
                          slotNo: -1,
                          mode: ReaderMode.wiegand,
                          metadata: {

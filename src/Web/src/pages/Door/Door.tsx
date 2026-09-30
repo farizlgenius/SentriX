@@ -43,14 +43,12 @@ import DoorMonitorForm from "./DoorMonitorForm";
 import DoorBuzzerForm from "./DoorBuzzerForm";
 import DoorRelayForm from "./DoorRelayForm";
 import { Options } from "../../model/Options";
-import { ReaderDto } from "../../model/Door/ReaderDto";
-import { ReaderMode } from "../../enum/ReaderMode";
-import { ReaderDirection } from "../../enum/DoorDirection";
 import { ModuleEndpoint } from "../../endpoint/ModuleEndpoint";
 import { DeviceEndpoint } from "../../endpoint/DeviceEndpoint";
 import { DeviceDto } from "../../model/Device/DeviceDto";
-import { AeroReaderMetadata } from "../../model/Door/AeroReaderMetadata";
 import { TimezoneEndPoint } from "../../endpoint/TimezoneEndpoint";
+import DoorBGForm from "./DoorBGForm";
+import { ReaderDto } from "../../model/Door/ReaderDto";
 
 // ACR Page
 const DOOR_TABLE_HEADER: string[] = [
@@ -91,6 +89,7 @@ const Door = () => {
     rex: null,
     sensor: null,
     relay:null,
+    bg:null,
     locationGuid: locationGuid,
     locationName: "",
     isActive: false,
@@ -108,6 +107,7 @@ const Door = () => {
   }
   const [form, setForm] = useState<boolean>(false);
   const [formType, setFormType] = useState<FormType>(FormType.CREATE);
+  const [isNext,setIsNext] = useState<boolean>(false);
   
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -144,6 +144,33 @@ const Door = () => {
         break;
       case "create":
         setConfirmCreate(() => async () => {
+          // Reader
+          if(dto.readers.length > 0){
+            dto.readers = dto.readers.map((a:ReaderDto) => ({
+              ...a,
+              metadata:JSON.stringify(a.metadata)
+            }))
+          }
+          // Relay
+          if(dto.relay != null){
+            dto.relay.metadata = JSON.stringify(dto.relay.metadata);
+          }
+          // Rex
+          if(dto.rex != null){
+            dto.rex.metadata = JSON.stringify(dto.rex.metadata);
+          }
+          // Sensor
+          if(dto.sensor != null){
+            dto.sensor.metadata = JSON.stringify(dto.sensor.metadata);
+          }
+          // Buzzer
+          if(dto.buzzer != null){
+            dto.buzzer.metadata = JSON.stringify(dto.buzzer.metadata);
+          }
+          // Bg
+          if(dto.bg != null){
+            dto.bg.metadata = JSON.stringify(dto.bg.metadata);
+          }
           dto.metadata = JSON.stringify(dto.metadata);
           const res = await send.post(DoorEndpoint.CREATE, dto);
           if (Helper.handleToastByResCode(res, DoorToast.CREATE, toggleToast)) {
@@ -219,6 +246,15 @@ const Door = () => {
         case "relay.module":
         fetchOutput(e.target.value);
         break;
+        case "sensor.module":
+        fetchInput(e.target.value);
+        break;
+         case "bg.module":
+        fetchInput(e.target.value);
+        break;
+        case "buzzer.module":
+          fetchOutput(e.target.value)
+          break;
       default:
         break;
     }
@@ -226,7 +262,7 @@ const Door = () => {
 
   const handleRemove = (data: DoorDto) => {
     setConfirmRemove(() => async () => {
-      const res = await send.delete(DoorEndpoint.DELETE(data.id));
+      const res = await send.delete(DoorEndpoint.DELETE(data.guid));
       if (Helper.handleToastByResCode(res, DoorToast.DELETE, toggleToast)) {
         setRemove(false);
         toggleRefresh();
@@ -429,7 +465,7 @@ const Door = () => {
       label: "General",
       icon: <DoorIcon />,
       content: (
-        <DoorGeneralForm fetchDevice={fetchDevice} handleChange={handleChange} type={formType} dto={dto} deviceOption={deviceOptions} setDto={setDto}  />
+        <DoorGeneralForm fetchDevice={fetchDevice} handleChange={handleChange} type={formType} dto={dto} deviceOption={deviceOptions} setDto={setDto} setIsNext={setIsNext} />
       ),
       title: "General Information",
       description: "General door information",
@@ -440,7 +476,7 @@ const Door = () => {
         {
           label: "Door In",
           icon: <DoorInIcon />,
-          content: <DoorInForm dto={dto} setDto={setDto} type={formType} moduleOption={moduleOption} handleChange={handleChange} readerOption={readerOption} />,
+          content: <DoorInForm dto={dto} setDto={setDto} type={formType} moduleOption={moduleOption} handleChange={handleChange} readerOption={readerOption} setIsNext={setIsNext} />,
         },
         ...(dto.type === DoorType.Dual
           ? [
@@ -448,7 +484,7 @@ const Door = () => {
               label: "Door Out",
               icon: <DoorOutIcon />,
               content: (
-                <DoorOutForm dto={dto} setDto={setDto} type={formType} moduleOption={moduleOption} handleChange={handleChange} readerOption={readerOption} />
+                <DoorOutForm dto={dto} setDto={setDto} type={formType} moduleOption={moduleOption} handleChange={handleChange} readerOption={readerOption} setIsNext={setIsNext} />
               ),
             },
           ]
@@ -466,6 +502,7 @@ const Door = () => {
                   moduleOption={moduleOption}
                   fetchTime={fetchTime}
                   timeOption={timeOption}
+                  setIsNext={setIsNext}
                   />
               ),
             },
@@ -473,22 +510,22 @@ const Door = () => {
            {
           label: "Relay",
           icon: <DoorIcon />,
-          content: <DoorRelayForm dto={dto} setDto={setDto} type={formType} handleChange={handleChange} moduleOption={moduleOption} outputOption={outputOption}  />,
+          content: <DoorRelayForm dto={dto} setDto={setDto} type={formType} handleChange={handleChange} moduleOption={moduleOption} outputOption={outputOption} setIsNext={setIsNext}  />,
         },
           {
           label: "Sensor",
           icon: <MonitorIcon />,
-          content: <DoorMonitorForm dto={dto} setDto={setDto} type={formType} />,
+          content: <DoorMonitorForm dto={dto} setDto={setDto} type={formType} moduleOption={moduleOption} handleChange={handleChange} inputOption={inputOption} setIsNext={setIsNext} />,
         },
         {
           label: "Buzzer",
           icon: <OnIcon />,
-          content: <DoorBuzzerForm dto={dto} setDto={setDto} type={formType} />,
+          content: <DoorBuzzerForm dto={dto} setDto={setDto} type={formType} moduleOption={moduleOption} outputOption={outputOption} handleChange={handleChange }  setIsNext={setIsNext}/>,
         },
          {
           label: "Break Glass",
           icon: <OnIcon />,
-          content: <DoorBuzzerForm dto={dto} setDto={setDto} type={formType} />,
+          content: <DoorBGForm dto={dto} setDto={setDto} type={formType} moduleOption={moduleOption} handleChange={handleChange} inputOption={inputOption} setIsNext={setIsNext} />,
         },
 
       ] : [],
@@ -743,6 +780,7 @@ const Door = () => {
           tabContent={content}
           header={""}
           desc={""}
+          isNext={isNext}
           layout={
             <DoorLayout
               selected={selectedComponent}

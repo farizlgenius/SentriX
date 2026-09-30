@@ -13,49 +13,48 @@ type ExtraProps = {
   inputOption:Options[]
 };
 
-const DoorMonitorForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps>> = ({
+const DoorBGForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps>> = ({
   dto,
   setDto,
   type,
   handleChange,
   moduleOption,
-  inputOption,
-  setIsNext
+  inputOption
 }) => {
-  const isReadOnly = type == FormType.INFO || dto.sensor == null
+  const isReadOnly = type == FormType.INFO || dto.bg == null
 
-   useEffect(() => {
-      if (setIsNext) {
-        let isValid = false;
-        // 1. Safely find the reader (might be undefined)
-        const sensor = dto.sensor;
-  
-        // 2. Extract values safely, providing fallbacks if undefined
-        const moduleGuid = sensor?.deviceModuleGuid || "";
-        const slotNo = sensor?.slotNo ?? -1;
-  
-        // 3. Perform the validation check safely
-        isValid = moduleGuid.trim() !== "" && slotNo !== -1;
-  
-  
-        console.log("SensorForm isValid:", isValid); 
-        setIsNext(isValid); // This will now successfully run!
-      }
-    }, [dto.sensor, setIsNext]); // Simplified dependency array
-    
+  //  useEffect(() => {
+  //         if (setIsNext) {
+  //           let isValid = false;
+  //           // 1. Safely find the reader (might be undefined)
+  //           const bg = dto.bg;
+      
+  //           // 2. Extract values safely, providing fallbacks if undefined
+  //           const moduleGuid = bg?.deviceModuleGuid || "";
+  //           const slotNo = bg?.slotNo ?? -1;
+      
+  //           // 3. Perform the validation check safely
+  //           isValid = moduleGuid.trim() !== "" && slotNo !== -1;
+      
+      
+  //           console.log("BgForm isValid:", isValid); 
+  //           setIsNext(isValid); // This will now successfully run!
+  //         }
+  //       }, [dto.buzzer, setIsNext]); // Simplified dependency array
+        
   return (
      <div className="grid grid-cols-2 gap-5">
       <FormField>
-        <Label htmlFor="sensor.module">Module</Label>
+        <Label htmlFor="bg.module">Break Glass Module</Label>
         <Select
         isString={true}
           disabled={type == FormType.INFO}
-          name="sensor.module"
+          name="bg.module"
           options={moduleOption}
           onChange={(e) => {
              setDto((prev) => ({
               ...prev,
-              sensor:{
+              bg:{
                 slotNo:-1,
                 mode:InputMode.NC,
                 vendor:Vendor.aero,
@@ -67,37 +66,37 @@ const DoorMonitorForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps
           }
           }
           className="dark:bg-dark-900"
-          defaultValue={dto.sensor?.deviceModuleGuid ?? ""}
+          defaultValue={dto.bg?.deviceModuleGuid ?? ""}
         />
       </FormField>
       <FormField>
-        <Label htmlFor="sensor.slot">Input No</Label>
+        <Label htmlFor="bg.slot">Input No</Label>
         <Select
           disabled={isReadOnly}
-          name="sensor.slot"
+          name="bg.slot"
           options={inputOption}
           onChange={(e) => 
             setDto((prev) => ({
               ...prev,
-              sensor:prev.sensor != null 
+              bg:prev.bg != null 
               ?
               {
-                ...prev.sensor,
+                ...prev.bg,
                 slotNo:Number(e.target.value)
               }
                :
-               prev.sensor
+               prev.bg
             }))
           }
           className="dark:bg-dark-900"
-          defaultValue={dto.sensor?.slotNo ?? -1}
+          defaultValue={dto.bg?.slotNo ?? -1}
         />
       </FormField>
       <FormField>
-        <Label htmlFor="sensor.mode">Input Mode</Label>
+        <Label htmlFor="bg.mode">Input Mode</Label>
         <Select
           disabled={type == FormType.INFO}
-          name="sensor.mode"
+          name="bg.mode"
           options={[
             {
               label:InputMode[InputMode.NC],
@@ -111,18 +110,18 @@ const DoorMonitorForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps
           onChange={(e) => 
             setDto((prev) => ({
               ...prev,
-              sensor:prev.sensor != null ? 
+              bg:prev.bg != null ? 
               {
-                ...prev.sensor,
+                ...prev.bg,
                 mode:Number(e.target.value)
               }
               :
-              prev.sensor
+              prev.bg
             }))
           }
           className="dark:bg-dark-900"
           defaultValue={
-            dto.sensor?.mode ?? InputMode.NC
+            dto.bg?.mode ?? InputMode.NC
           }
         />
       </FormField>
@@ -130,4 +129,4 @@ const DoorMonitorForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps
   );
 };
 
-export default DoorMonitorForm;
+export default DoorBGForm;

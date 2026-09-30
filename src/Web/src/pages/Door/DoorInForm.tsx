@@ -24,10 +24,36 @@ const DoorInForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps>> = 
   type,
   moduleOption,
   readerOption,
-  handleChange
+  handleChange,
+  setIsNext
 }) => {
   const [readerType, setReaderType] = useState<ReaderType>(ReaderType.wiegand);
   
+
+  // NEW: Automatically validate whenever name or deviceGuid changes
+ useEffect(() => {
+    if (setIsNext) {
+      let isValid = false;
+      // 1. Safely find the reader (might be undefined)
+      const readerIn = dto.readers.find(x => x.readerDirection === ReaderDirection.In);
+
+      // 2. Extract values safely, providing fallbacks if undefined
+      const moduleGuid = readerIn?.deviceModuleGuid || "";
+      const slotNo = readerIn?.slotNo ?? -1;
+      const address = (readerIn?.metadata as AeroReaderMetadata)?.address ?? -1;
+      const baudrate = (readerIn?.metadata as AeroReaderMetadata)?.baudrate ?? -1;
+
+      // 3. Perform the validation check safely
+      isValid = moduleGuid.trim() !== "" && slotNo !== -1;
+
+      if(readerIn?.mode == ReaderMode.osdp && isValid){
+        isValid = address !== -1 && baudrate !== -1;
+      }
+
+      console.log("DoorInForm isValid:", isValid); 
+      setIsNext(isValid); // This will now successfully run!
+    }
+  }, [dto.readers, setIsNext]); // Simplified dependency array
  
 
   return (
@@ -46,7 +72,6 @@ const DoorInForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps>> = 
           ...prev,
           readers: [...prev.readers,
             {
-              guid: "",
               slotNo: -1,
               mode: ReaderMode.wiegand,
               metadata: {

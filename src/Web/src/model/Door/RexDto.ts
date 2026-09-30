@@ -3,7 +3,6 @@ import { Vendor } from "../../enum/Vendor";
 import { AeroRexMetadata } from "./AeroRexMetadata";
 
 export interface RexDto {
-  guid: string;
   slotNo: number;
   mode: InputMode;
   vendor: Vendor;
