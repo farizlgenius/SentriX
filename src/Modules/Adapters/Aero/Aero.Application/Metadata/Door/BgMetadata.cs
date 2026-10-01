@@ -1,0 +1,8 @@
+namespace Aero.Application.Metadata.Door;
+
+public sealed class BgMetadata
+{
+      public short Mode { get; set; }
+      public short Debounce { get; set; }
+      public short HoldTime { get; set; }
+}
