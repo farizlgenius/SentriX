@@ -2,5 +2,5 @@ namespace SharedKernel.Enums;
 
 public enum DoorType
 {
-      Single, Dual, Slave
+      Single, Dual,Monitor,Turnstile
 }

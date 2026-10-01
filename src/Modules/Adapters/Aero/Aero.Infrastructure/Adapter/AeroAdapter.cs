@@ -11,12 +11,12 @@ public sealed class AeroAdapter : IAdapter
       public IUtilityAdapter Utility {get;}
       public ITimeAdapter Time { get; }
 
-      // public IInputAdapter Monitor { get; }
+      public IInputAdapter Input { get; }
 
-      // public IOutputAdapter Control { get; }
+      public IOutputAdapter Output { get; }
 
       
-      // public IDoorAdapter Door { get; }
+      public IDoorAdapter Door { get; }
       // public IGroupAdapter Group { get; }
 
       // public IUserAdapter User { get; }
@@ -25,10 +25,10 @@ public sealed class AeroAdapter : IAdapter
       public AeroAdapter(
             IDeviceAdapter devices,
             IUtilityAdapter utility,
-            // IAeroOutputAdapter controls,
-            // IAeroInputAdapter monitor,
-            ITimeAdapter time
-            // IAeroDoorAdapter door,
+            IOutputAdapter output,
+            IInputAdapter input,
+            ITimeAdapter time,
+            IDoorAdapter door
             // IAeroGroupAdapter group,
             // IAeroUserAdapter user,
             // IAeroSettingAdapter setting
@@ -36,10 +36,10 @@ public sealed class AeroAdapter : IAdapter
       {
             Device = devices;
             Utility = utility;
-            // Control = controls;
-            // Monitor = monitor;
+            Output = output;
+            Input = input;
             Time = time;
-            // Door = door;
+            Door = door;
             // Group = group;
             // User = user;
             // Setting = setting;

@@ -14,5 +14,6 @@ public interface IDeviceRepository : IBaseRepository<DeviceDto, Device>
       Task<DeviceDto> GetByMacAsync(string mac,CancellationToken ct = default);
       Task UpdateConfigurationStatusByMacAsync(string mac, bool isSync,bool isUploaded, CancellationToken ct = default);
       Task<IEnumerable<OptionDto>> GetOptionByVendorAndLocationAsync(Vendor vendor,Guid guid,CancellationToken ct  = default);
+      Task<string> GetMacByGuidAsync(Guid guid, CancellationToken ct = default);
      
 }

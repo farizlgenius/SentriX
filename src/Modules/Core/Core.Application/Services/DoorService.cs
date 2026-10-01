@@ -1,9 +1,9 @@
+using Adapter.Contract.Interfaces;
 using Core.Application.Interfaces;
 using Core.Contract.DTOs.Door;
 using Core.Contract.Interfaces;
 using Core.Contract.Queries;
 using Core.Domain.Entities;
-using SharedKernel.Constants;
 using SharedKernel.Domain;
 using SharedKernel.Enums;
 using SharedKernel.Exceptions;
@@ -16,7 +16,8 @@ public sealed class DoorService(
   IMessageBus bus,
   IDeviceRepository device,
   IDeviceModuleRepository deviceModule,
-  ILocationRepository loc
+  ILocationRepository loc,
+  IAdapterFactory adapter
   ) : IDoor
 {
   public async Task<Guid> CreateAsync(CreateDoorDto dto, CancellationToken ct = default)
@@ -24,6 +25,7 @@ public sealed class DoorService(
 
     //var locationId = await bus.QueryAsync(new LocationIdByGuidQuery(dto.LocationGuid));
     var deviceId = await device.GetIdByGuidAsync(dto.DeviceGuid);
+    var dev = await device.GetAsync(dto.DeviceGuid, ct);
     var locationId = await loc.GetIdByGuidAsync(dto.LocationGuid);
 
     foreach (var reader in dto.Readers)
@@ -97,7 +99,13 @@ public sealed class DoorService(
     );
 
 
-    // Send command to controller 
+    // Send command to controller
+    await adapter.GetAdapter(d.Vendor).Door.Doors(
+      dev.Mac,
+      dev.Ip,
+      dto,
+      ct
+    );
 
     await repo.AddAsync(d, ct);
 

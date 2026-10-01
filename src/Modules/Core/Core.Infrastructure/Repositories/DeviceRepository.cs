@@ -249,6 +249,15 @@ public sealed class DeviceRepository(CoreDbContext context) : IDeviceRepository
                   .FirstOrDefaultAsync();
       }
 
+      public async Task<string> GetMacByGuidAsync(Guid guid, CancellationToken ct = default)
+      {
+            return await context.Devices
+                  .AsNoTracking()
+                  .Where(x => x.guid == guid)
+                  .Select(x => x.mac)
+                  .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.Device.ToString(), guid.ToString());
+      }
+
       public async Task<(string, int)> GetNameAndLocationIdByMacAsync(string mac, CancellationToken ct = default)
       {
             var res = await context.Devices
