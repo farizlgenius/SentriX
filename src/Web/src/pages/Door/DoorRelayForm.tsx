@@ -11,6 +11,7 @@ import Input from "../../components/form/input/InputField";
 import { AeroRelayMetadata } from "../../model/Door/AeroRelayMetadata";
 import { DriveMode } from "../../enum/DriveMode";
 import { OfflineMode } from "../../enum/OfflineMode";
+import { StrikeMode } from "../../enum/StrikeMode";
 
 type ExtraProps = {
   moduleOption: Options[]
@@ -66,10 +67,11 @@ const DoorRelayForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps>>
                   vendor: Vendor.aero,
                   deviceModuleGuid: e.target.value,
                   metadata: {
-                    minStrkTime: 1,
-                    maxStrkTime: 5,
+                    strikeMin: 1,
+                    strikeMax: 5,
                     driveMode: DriveMode.Normal,
-                    offlineMode: OfflineMode.NoChange
+                    offlineMode: OfflineMode.NoChange,
+                    strikeMode: StrikeMode.None
                   }
                 }
             }))
@@ -106,7 +108,7 @@ const DoorRelayForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps>>
         <Input
           disabled={isReadOnly}
           defaultValue={1}
-          value={(dto.relay?.metadata as AeroRelayMetadata)?.minStrkTime ?? 1}
+          value={(dto.relay?.metadata as AeroRelayMetadata)?.strikeMin ?? 1}
           name="relay.minStrk"
           type="number"
           id="relay.minStrk"
@@ -118,7 +120,7 @@ const DoorRelayForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps>>
                   ...prev.relay,
                   metadata: {
                     ...(prev.relay.metadata as AeroRelayMetadata),
-                    minStrkTime: Number(e.target.value)
+                    strikeMin: Number(e.target.value)
                   }
                 }
                 :
@@ -132,7 +134,7 @@ const DoorRelayForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps>>
         <Input
           disabled={isReadOnly}
           defaultValue={5}
-          value={(dto.relay?.metadata as AeroRelayMetadata)?.maxStrkTime ?? 5}
+          value={(dto.relay?.metadata as AeroRelayMetadata)?.strikeMax ?? 5}
           name="relay.maxStrk"
           type="number"
           id="relay.maxStrk"
@@ -144,7 +146,7 @@ const DoorRelayForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps>>
                   ...prev.relay,
                   metadata: {
                     ...(prev.relay.metadata as AeroRelayMetadata),
-                    maxStrkTime: Number(e.target.value)
+                    strikeMax: Number(e.target.value)
                   }
                 }
                 :
@@ -206,6 +208,50 @@ const DoorRelayForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps>>
             {
               label: OfflineMode[OfflineMode.NoChange],
               value: OfflineMode.NoChange
+            }
+          ]}
+          onChange={(e) => {
+            setDto((prev) => ({
+              ...prev,
+              relay: prev.relay != null ?
+                {
+                  ...prev.relay,
+                  metadata: {
+                    ...(prev.relay.metadata as AeroRelayMetadata),
+                    offlineMode: Number(e.target.value)
+                  }
+                }
+                :
+                prev.relay
+            }));
+          }}
+          className="dark:bg-dark-900"
+          defaultValue={
+            (dto.relay?.metadata as AeroRelayMetadata)?.offlineMode ?? -1
+          }
+        />
+      </FormField>
+      <FormField>
+        <Label htmlFor="relay.relayMode">Strike Mode</Label>
+        <Select
+          disabled={isReadOnly}
+          name="strkMode"
+          options={[
+            {
+              label: "None",
+              value: StrikeMode.None
+            },
+            {
+              label: "Deactivate Open",
+              value: StrikeMode.DeactOpen
+            },
+            {
+              label: "Deactivate Close",
+              value: StrikeMode.DeactClose
+            },
+            {
+              label: "Tailgate",
+              value: StrikeMode.Tailgate
             }
           ]}
           onChange={(e) => {

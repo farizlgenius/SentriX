@@ -215,18 +215,5 @@ public sealed class ComponentMappingRepository(CoreDbContext context) : ICompone
             throw new NotImplementedException();
       }
 
-  public async Task<int> GetExternalIdByInternalIdAndEntityAsync(int id, EntityType entity, CancellationToken ct = default)
-  {
-    var res = await context.ComponentMappings
-        .AsNoTracking()
-        .Where(x => x.entity == entity && x.internale_id == id)
-        .OrderByDescending(x => x.id)
-        .Select(x => x.external_id)
-        .FirstOrDefaultAsync();
 
-    if (res == null)
-      throw new NotFoundException(EntityType.ComponentMapping.ToString(), $"{entity}:{id}");
-
-    return (int)res;
-  }
 }

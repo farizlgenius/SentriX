@@ -1,10 +1,9 @@
 import { Vendor } from "../../enum/Vendor";
-import { RelayMode } from "../../enum/RelayMode";
+import { AeroBuzzerMetadata } from "./AeroBuzzerMetadata";
 
 export interface BuzzerDto {
   slotNo: number;
-  mode: RelayMode;
-  metadata: string;
+  metadata: string | AeroBuzzerMetadata;
   vendor: Vendor;
   deviceModuleGuid:string;
 }

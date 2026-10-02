@@ -1,8 +1,7 @@
 export interface AeroReaderMetadata {
-  osdpFlag: boolean;
   address:number;
   baudrate:number;
-  discover:number;
+  autoDiscover:number;
   tracing:number;
   secureChannel:number;
 }

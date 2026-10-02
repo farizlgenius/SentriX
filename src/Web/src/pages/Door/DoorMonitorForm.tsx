@@ -7,6 +7,8 @@ import Select from "../../components/form/Select";
 import { Options } from "../../model/Options";
 import { InputMode } from "../../enum/InputMode";
 import { Vendor } from "../../enum/Vendor";
+import { AeroSensorMetadata } from "../../model/Door/AeroSensorMetadata";
+import Input from "../../components/form/input/InputField";
 
 type ExtraProps = {
   moduleOption:Options[]
@@ -60,7 +62,12 @@ const DoorMonitorForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps
                 mode:InputMode.NC,
                 vendor:Vendor.aero,
                 deviceModuleGuid:e.target.value,
-                metadata:""
+                metadata:{
+                  mode:InputMode.NC,
+                  debounce:4,
+                  holdTime:0,
+                  dcHeld:1
+                }
               }
             }))
             handleChange(e)
@@ -98,14 +105,22 @@ const DoorMonitorForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps
         <Select
           disabled={type == FormType.INFO}
           name="sensor.mode"
-          options={[
+         options={[
             {
-              label:InputMode[InputMode.NC],
+              label:"Normally Close",
               value:InputMode.NC
             },
             {
-              label:InputMode[InputMode.NO],
+              label:"Normally Open",
               value:InputMode.NO
+            },
+             {
+              label:"Standard Noraml 1K Active 2K",
+              value:InputMode.StandardN1A2
+            },
+            {
+              label:"Standard Noraml 2K Active 1K",
+              value:InputMode.StandardN2A1
             }
           ]}
           onChange={(e) => 
@@ -123,6 +138,76 @@ const DoorMonitorForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps
           className="dark:bg-dark-900"
           defaultValue={
             dto.sensor?.mode ?? InputMode.NC
+          }
+        />
+      </FormField>
+       <FormField>
+        <Label htmlFor="sensor.debounce">Debounce</Label>
+        <Input 
+        disabled={isReadOnly}
+        type="number" min="0" max="15" 
+        value={ (dto.sensor?.metadata as AeroSensorMetadata)?.debounce ?? ""}
+        onChange={(e) => 
+            setDto(prev => ({
+              ...prev,
+              sensor: prev.sensor != null ? 
+              {
+                ...prev.sensor,
+                metadata:{
+                  ...(prev.sensor.metadata as AeroSensorMetadata),
+                  debounce:Number(e.target.value)
+                }
+              }
+              :
+              prev.sensor
+            }))
+          }
+        />
+      </FormField>
+       <FormField>
+        <Label htmlFor="sensor.holdTime">Hold Time</Label>
+        <Input 
+        disabled={isReadOnly}
+        type="number" min="2" max="15" 
+        defaultValue={2}
+        value={ (dto.sensor?.metadata as AeroSensorMetadata)?.holdTime ?? ""}
+        onChange={(e) => 
+            setDto(prev => ({
+              ...prev,
+              sensor: prev.sensor != null ? 
+              {
+                ...prev.sensor,
+                metadata:{
+                  ...(prev.sensor.metadata as AeroSensorMetadata),
+                  holdTime:Number(e.target.value)
+                }
+              }
+              :
+              prev.sensor
+            }))
+          }
+        />
+      </FormField>
+       <FormField>
+        <Label htmlFor="sensor.holdTime">Dc Held</Label>
+        <Input 
+        disabled={isReadOnly}
+        type="number" min="1" max="32767" 
+        value={ (dto.sensor?.metadata as AeroSensorMetadata)?.dcHeld ?? ""}
+        onChange={(e) => 
+            setDto(prev => ({
+              ...prev,
+              sensor: prev.sensor != null ? 
+              {
+                ...prev.sensor,
+                metadata:{
+                  ...(prev.sensor.metadata as AeroSensorMetadata),
+                  dcHeld:Number(e.target.value)
+                }
+              }
+              :
+              prev.sensor
+            }))
           }
         />
       </FormField>

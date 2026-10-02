@@ -1,6 +1,7 @@
 export interface AeroRelayMetadata {
-      minStrkTime:number;
-      maxStrkTime:number;
+      strikeMin:number;
+      strikeMax:number;
       driveMode:number;
       offlineMode:number;
+      strikeMode:number;
 }     

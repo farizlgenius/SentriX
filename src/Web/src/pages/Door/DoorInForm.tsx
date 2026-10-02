@@ -75,10 +75,9 @@ const DoorInForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps>> = 
               slotNo: -1,
               mode: ReaderMode.wiegand,
               metadata: {
-                osdpFlag:false,
                 address:-1,
                 baudrate:-1,
-                discover:-1,
+                autoDiscover:-1,
                 tracing:-1,
                 secureChannel:-1
               },
@@ -221,7 +220,7 @@ const DoorInForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps>> = 
                   readers: prev.readers.map((reader) =>
                    reader.readerDirection == ReaderDirection.In ? { ...reader, metadata: {
                       ...(reader.metadata as AeroReaderMetadata),
-                      discover:checked ? 0x00 : 0x08
+                      autoDiscover:checked ? 0x00 : 0x08
                     } } : reader
                   )
                 }))
@@ -241,7 +240,7 @@ const DoorInForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps>> = 
                   readers: prev.readers.map((reader) =>
                     reader.readerDirection == ReaderDirection.In ? { ...reader, metadata: {
                       ...(reader.metadata as AeroReaderMetadata),
-                      discover:checked ? 0x10 : 0x00
+                      autoDiscover:checked ? 0x10 : 0x00
                     } } : reader
                   )
                 }))
@@ -260,7 +259,7 @@ const DoorInForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps>> = 
                   readers: prev.readers.map((reader) =>
                    reader.readerDirection == ReaderDirection.In ? { ...reader, metadata: {
                       ...(reader.metadata as AeroReaderMetadata),
-                      discover:checked ? 0x80 : 0x00,
+                      autoDiscover:checked ? 0x80 : 0x00,
                     } } : reader
                   )
                 }))

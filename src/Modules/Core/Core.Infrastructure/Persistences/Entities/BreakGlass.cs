@@ -6,6 +6,7 @@ public sealed class BreakGlass : BaseEntity
 {
       public int slot_no { get; set; }
       public Vendor vendor { get; set; } = Vendor.aero;
+      public string metadata {get; set; }= string.Empty;
       public int? door_id { get; set; }
       public Door? door { get; set; }
       public int device_module_id { get; set; }
@@ -18,6 +19,7 @@ public sealed class BreakGlass : BaseEntity
       )
       {
             slot_no = d.SlotNo;
+            metadata = d.Metadata;
             vendor = d.Vendor;
             device_module_id = d.DeviceModuleId;
       }

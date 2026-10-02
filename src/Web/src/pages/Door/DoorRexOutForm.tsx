@@ -9,6 +9,7 @@ import { InputMode } from "../../enum/InputMode";
 import { Vendor } from "../../enum/Vendor";
 import { useLocation } from "../../context/LocationContext";
 import { AeroRexMetadata } from "../../model/Door/AeroRexMetadata";
+import Input from "../../components/form/input/InputField";
 
 type ExtraProps = {
   moduleOption:Options[]
@@ -69,7 +70,12 @@ const DoorRexOutForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps>
               rex:{
                 slotNo:-1,
                 mode:InputMode.NC,
-                metadata:"",
+                metadata:{
+                  debounce:2,
+                  holdTime:0,
+                  maskTime:"",
+                  mode:InputMode.NC
+                },
                 vendor:Vendor.aero,
                 deviceModuleGuid:e.target.value
               } 
@@ -115,12 +121,20 @@ const DoorRexOutForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps>
           name="rex0.inputMode"
           options={[
             {
-              label:"NO",
-              value:InputMode.NO
+              label:"Normally Close",
+              value:InputMode.NC
             },
             {
-              label:"NC",
-              value:InputMode.NC
+              label:"Normally Open",
+              value:InputMode.NO
+            },
+             {
+              label:"Standard Noraml 1K Active 2K",
+              value:InputMode.StandardN1A2
+            },
+            {
+              label:"Standard Noraml 2K Active 1K",
+              value:InputMode.StandardN2A1
             }
           ]}
           onChange={(e) => 
@@ -129,14 +143,64 @@ const DoorRexOutForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps>
               rex: prev.rex != null ? 
               {
                 ...prev.rex,
-                mode:Number(e)
+                metadata:{
+                  ...(prev.rex.metadata as AeroRexMetadata),
+                  mode:Number(e.target.value)
+                }
               }
               :
               prev.rex
             }))
           }
           className="dark:bg-dark-900"
-          defaultValue={ dto.rex?.mode ?? InputMode.NC}
+          defaultValue={(dto.rex?.metadata as AeroRexMetadata)?.mode ?? InputMode.NC}
+        />
+      </FormField>
+      <FormField>
+        <Label htmlFor="rex0.inputMode">Debounce</Label>
+        <Input 
+        disabled={isReadOnly}
+        type="number" min="0" max="15" 
+        value={ (dto.rex?.metadata as AeroRexMetadata)?.debounce ?? ""}
+        onChange={(e) => 
+            setDto(prev => ({
+              ...prev,
+              rex: prev.rex != null ? 
+              {
+                ...prev.rex,
+                metadata:{
+                  ...(prev.rex.metadata as AeroRexMetadata),
+                  debounce:Number(e.target.value)
+                }
+              }
+              :
+              prev.rex
+            }))
+          }
+        />
+      </FormField>
+       <FormField>
+        <Label htmlFor="rex0.inputMode">Hold Time</Label>
+        <Input 
+        disabled={isReadOnly}
+        type="number" min="2" max="15" 
+        defaultValue={2}
+        value={ (dto.rex?.metadata as AeroRexMetadata)?.holdTime ?? ""}
+        onChange={(e) => 
+            setDto(prev => ({
+              ...prev,
+              rex: prev.rex != null ? 
+              {
+                ...prev.rex,
+                metadata:{
+                  ...(prev.rex.metadata as AeroRexMetadata),
+                  holdTime:Number(e.target.value)
+                }
+              }
+              :
+              prev.rex
+            }))
+          }
         />
       </FormField>
       <FormField>
@@ -153,7 +217,8 @@ const DoorRexOutForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps>
               {
                 ...prev.rex,
                 metadata:{
-                  maskTimeGuid:e.target.value
+                  ...(prev.rex.metadata as AeroRexMetadata),
+                  maskTime:e.target.value
                 }
               }
               :
@@ -162,7 +227,7 @@ const DoorRexOutForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps>
           }
           className="dark:bg-dark-900"
           defaultValue={
-           (dto.rex?.metadata as AeroRexMetadata)?.maskTimeGuid ?? ""
+           (dto.rex?.metadata as AeroRexMetadata)?.maskTime ?? ""
           }
         />
       </FormField>

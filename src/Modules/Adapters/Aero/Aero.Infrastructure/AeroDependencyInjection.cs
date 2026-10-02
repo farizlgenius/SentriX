@@ -58,13 +58,24 @@ public static class AeroDependencyInjection
     services.AddScoped<IDeviceRepository,DeviceRepostory>();
     services.AddScoped<IDeviceAdapter,DeviceService>();
 
+    // DeviceModule
+    services.AddScoped<IDeviceModuleRepository,DeviceModuleRepository>();
+
+    // Door
+    services.AddScoped<IDoorRepository,DoorRepository>();
+    services.AddScoped<IDoorAdapter,DoorService>();
+
+    // Output 
+    services.AddScoped<IOutputRepository,OutputRepository>();
+
+    // Input
+    services.AddScoped<IInputRepository,InputRepository>();
+
     // Time
     services.AddScoped<ITimeRepository,TimeRepository>();
     services.AddScoped<ITimeAdapter,TimeService>();
 
-    // Door
-
-    services.AddScoped<IDeviceModuleRepository,DeviceModuleRepository>();
+    
 
     // Utility
     services.AddScoped<IUtilityAdapter,UtilityService>();

@@ -113,13 +113,13 @@ public sealed class DoorRepository(CoreDbContext context) : IDoorRepository
           x.buzzer.vendor,
           x.buzzer.device_module.guid
         ),
-        x.rex == null ? null : new RexDto(
-          x.rex.slot_no,
-          x.rex.mode,
-          x.rex.metadata,
-          x.rex.vendor,
-          x.rex.device_module.guid
-        ),
+        x.rexes.Select(x => new RexDto(
+          x.slot_no,
+          x.mode,
+          x.metadata,
+          x.vendor,
+          x.device_module.guid
+        )).ToList(),
         x.sensor == null ? null : new SensorDto(
           x.sensor.slot_no,
           x.sensor.mode,
@@ -136,8 +136,9 @@ public sealed class DoorRepository(CoreDbContext context) : IDoorRepository
         ),
         x.bg == null ? null : new BGDto(
           x.bg.slot_no,
+          x.bg.metadata,
           x.bg.vendor,
-          x.bg.device_module.guid,
+          x.bg.device_module.guid
         ),
         x.location.guid,
         x.location.name,
@@ -176,13 +177,13 @@ public sealed class DoorRepository(CoreDbContext context) : IDoorRepository
           x.buzzer.vendor,
           x.buzzer.device_module.guid
         ),
-        x.rex == null ? null : new RexDto(
-          x.rex.slot_no,
-          x.rex.mode,
-          x.rex.metadata,
-          x.rex.vendor,
-          x.rex.device_module.guid
-        ),
+        x.rexes.Select(x => new RexDto(
+          x.slot_no,
+          x.mode,
+          x.metadata,
+          x.vendor,
+          x.device_module.guid
+        )).ToList(),
         x.sensor == null ? null : new SensorDto(
           x.sensor.slot_no,
           x.sensor.mode,
@@ -199,6 +200,7 @@ public sealed class DoorRepository(CoreDbContext context) : IDoorRepository
         ),
          x.bg == null ? null : new BGDto(
           x.bg.slot_no,
+          x.metadata,
           x.bg.vendor,
           x.bg.device_module.guid
         ),
@@ -313,13 +315,13 @@ public sealed class DoorRepository(CoreDbContext context) : IDoorRepository
                         x.buzzer.vendor,
                         x.buzzer.device_module.guid
                       ),
-                      x.rex == null ? null : new RexDto(
-                        x.rex.slot_no,
-                        x.rex.mode,
-                        x.rex.metadata,
-                        x.rex.vendor,
-                        x.rex.device_module.guid
-                      ),
+                      x.rexes.Select(x => new RexDto(
+          x.slot_no,
+          x.mode,
+          x.metadata,
+          x.vendor,
+          x.device_module.guid
+        )).ToList(),
                       x.sensor == null ? null : new SensorDto(
                         x.sensor.slot_no,
                         x.sensor.mode,
@@ -336,6 +338,7 @@ public sealed class DoorRepository(CoreDbContext context) : IDoorRepository
                       ),
                        x.bg == null ? null : new BGDto(
           x.bg.slot_no,
+          x.metadata,
           x.bg.vendor,
           x.bg.device_module.guid
         ),
@@ -395,7 +398,6 @@ public sealed class DoorRepository(CoreDbContext context) : IDoorRepository
     en.sensor = entity.Sensor == null ? null : new Persistences.Entities.Sensor(entity.Sensor);
     en.relay = entity.Relay == null ? null : new Persistences.Entities.Relay(entity.Relay);
     en.buzzer = entity.Buzzer == null ? null : new Persistences.Entities.Buzzer(entity.Buzzer);
-    en.rex = entity.Rex == null ? null : new Persistences.Entities.Rex(entity.Rex);
 
     // 1 : N Handler
 
@@ -406,6 +408,16 @@ public sealed class DoorRepository(CoreDbContext context) : IDoorRepository
     {
       en.readers.Add(
         new Persistences.Entities.Reader(reader)
+      );
+    }
+
+    context.Rexes.RemoveRange(en.rexes);
+    en.rexes.Clear();
+
+    foreach (var rex in entity.Rexes)
+    {
+      en.rexes.Add(
+        new Persistences.Entities.Rex(rex)
       );
     }
 

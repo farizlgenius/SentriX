@@ -1,6 +1,6 @@
-export interface AeroRexMetadata{
+export interface AeroSensorMetadata{
       mode:number;
       debounce:number;
       holdTime:number;
-      maskTime:string;
+      dcHeld:number;
 }

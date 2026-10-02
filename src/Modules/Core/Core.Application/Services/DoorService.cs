@@ -120,13 +120,13 @@ public sealed class DoorService(
     // Send command to controller
     var readers = new List<(short SlotNo, ReaderMode ReaderMode, ReaderDirection ReaderDirection, string Metadata, short ExternalId)>();
 
-    foreach (var x in d.Readers)
+    foreach (var x in dto.Readers)
     {
-        var externalId = (short)await com.GetExternalIdByInternalIdAndEntityAsync(x.DeviceModuleId, EntityType.DeviceModule, ct);
+        var externalId = (short)await com.GetExternalIdByGuidAndEntityAsync(x.DeviceModuleGuid, EntityType.DeviceModule, ct);
         
         readers.Add((
             (short)x.SlotNo,
-            x.ReaderMode,
+            x.Mode,
             x.ReaderDirection,
             x.Metadata,
             externalId
@@ -135,9 +135,9 @@ public sealed class DoorService(
 
     var rexes = new List<(short SlotNo, string Metadata, short ExternalId)>();
 
-    foreach (var x in d.Rexes)
+    foreach (var x in dto.Rexes)
     {
-        var externalId = (short)await com.GetExternalIdByInternalIdAndEntityAsync(x.DeviceModuleId, EntityType.DeviceModule, ct);
+        var externalId = (short)await com.GetExternalIdByGuidAndEntityAsync(x.DeviceModuleGuid, EntityType.DeviceModule, ct);
         
         rexes.Add((
             (short)x.SlotNo,
@@ -154,36 +154,36 @@ public sealed class DoorService(
       doorExternalIds,
       d.Metadata,
       readers,
-      d.Buzzer == null ? 
+      d.Buzzer == null || dto.Buzzer == null ? 
       null : 
       (
         (short)d.Buzzer.SlotNo,
         d.Buzzer.Metadata,
-        (short)(await com.GetExternalIdByInternalIdAndEntityAsync(d.Buzzer.DeviceModuleId,EntityType.Output,ct)),
-        (short)(await com.GetFreeIdByMacAndEntityAndVendorAsync(dev.Mac,EntityType.Output,Vendor.aero,100,[],ct))
+        (short)await com.GetExternalIdByGuidAndEntityAsync(dto.Buzzer.DeviceModuleGuid,EntityType.Output,ct),
+        (short)await com.GetFreeIdByMacAndEntityAndVendorAsync(dev.Mac,EntityType.Output,Vendor.aero,100,[],ct)
       ),
       rexes,
-      d.BG == null ? 
+      d.BG == null || dto.Bg == null ? 
       null : 
       (
         (short)d.BG.SlotNo,
         d.BG.Metadata,
-        (short)(await com.GetExternalIdByInternalIdAndEntityAsync(d.BG.DeviceModuleId,EntityType.Output,ct)),
-        (short)(await com.GetFreeIdByMacAndEntityAndVendorAsync(dev.Mac,EntityType.Input,Vendor.aero,100,[],ct))
+        (short)await com.GetExternalIdByGuidAndEntityAsync(dto.Bg.DeviceModuleGuid,EntityType.Output,ct),
+        (short)await com.GetFreeIdByMacAndEntityAndVendorAsync(dev.Mac,EntityType.Input,Vendor.aero,100,[],ct)
       ),
-      d.Sensor == null ? 
+      d.Sensor == null || dto.Sensor == null ? 
       null : 
       (
         (short)d.Sensor.SlotNo,
         d.Sensor.Metadata,
-        (short)(await com.GetExternalIdByInternalIdAndEntityAsync(d.Sensor.DeviceModuleId,EntityType.Output,ct))
+        (short)await com.GetExternalIdByGuidAndEntityAsync(dto.Sensor.DeviceModuleGuid,EntityType.Output,ct)
       ),
-      d.Relay == null ? 
+      d.Relay == null || dto.Relay == null ? 
       null :
       (
         (short)d.Relay.SlotNo,
         d.Relay.Metadata,
-        (short)(await com.GetExternalIdByInternalIdAndEntityAsync(d.Relay.DeviceModuleId,EntityType.Output,ct))
+        (short)await com.GetExternalIdByGuidAndEntityAsync(dto.Relay.DeviceModuleGuid,EntityType.Output,ct)
       ),
       ct
     );

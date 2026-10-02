@@ -84,7 +84,7 @@ public sealed class DoorService(
                         relay.Value.deviceModuleId,
                         relay.Value.outputNo,
                         meta.OfflineMode,
-                        meta.DefaultMode
+                        meta.DriveMode
                   );
 
                   await bus.SendAsync(new AdapterEventCommand(res));
@@ -317,9 +317,9 @@ public sealed class DoorService(
                   (short)(readers.Count() == 0 ? -1 : readers.ElementAt(0).readerNo),
                   (short)(relay == null ? -1 : relay.Value.deviceModuleId),
                   (short)(relay == null ? -1 : relay.Value.outputNo),
-                  (short)(relay == null || relayMeta == null ? 1 : relayMeta.RelayMin),
-                  (short)(relay == null || relayMeta == null ? 5 : relayMeta.RelayMax),
-                  (short)(relay == null || relayMeta == null ? 0 : relayMeta.RelayMode),
+                  (short)(relay == null || relayMeta == null ? 1 : relayMeta.StrikeMin),
+                  (short)(relay == null || relayMeta == null ? 5 : relayMeta.StrikeMax),
+                  (short)(relay == null || relayMeta == null ? 0 : relayMeta.StrikeMode),
                   (short)(sensor == null ? -1 : sensor.Value.deviceModuleId),
                   (short)(sensor == null ? -1 : sensor.Value.inputNo),
                   (short)(sensor == null || sensorMeta == null ? 1 : sensorMeta.DcHeld),

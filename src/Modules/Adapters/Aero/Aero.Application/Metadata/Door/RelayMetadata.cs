@@ -2,10 +2,10 @@ namespace Aero.Application.Metadata.Door;
 
 public sealed class RelayMetadata
 {
-      public short DefaultMode { get; set; }
+      public short DriveMode { get; set; }
       public short OfflineMode { get; set; }
-      public short RelayMin {get; set;}
-      public short RelayMax { get; set;}
-      public short RelayMode {get; set;}
+      public short StrikeMin {get; set;}
+      public short StrikeMax { get; set;}
+      public short StrikeMode {get; set;}
       
 }
