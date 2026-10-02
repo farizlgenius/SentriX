@@ -31,14 +31,15 @@ public sealed class DoorService(
                   ReaderMode readerMode,
                   ReaderDirection readerDirection,
                   string metadata,
-                  int deviceModuleId
+                  short deviceModuleId
             )> readers,
             (short outputNo,string metadata,short deviceModuleId,short buzzerId)? buzzer,
-            (short inputNo,string metadata,short deviceModuleId)? rex,
+            List<(short inputNo,string metadata,short deviceModuleId)> rexes,
             (short inputNo,string metadata,short deviceModuleId,short bgId)? bg,
             (short inputNo,string metadata,short deviceModuleId)? sensor,
             (short outputNo,string metadata,short deviceModuleId)? relay,
-            CancellationToken ct = default)
+            CancellationToken ct = default
+            )
       {
             // Reader Configuation
             foreach(var reader in readers)
@@ -112,25 +113,25 @@ public sealed class DoorService(
             }
 
             // Rex Configuration
-            if(rex != null)
+            foreach(var rex in rexes)
             {
-                  var meta = JsonHelper.Deserialize<InputMetadata>(rex.Value.metadata);
+                  var meta = JsonHelper.Deserialize<InputMetadata>(rex.metadata);
                   if (meta == null)
                         throw new Exception(MessageHelper.Common.DeserializeFailed("InputMetadata"));
 
                   var res = input.InputPointSpecification(
                         mac,
                         deviceId,
-                        rex.Value.deviceModuleId,
-                        rex.Value.inputNo,
+                        rex.deviceModuleId,
+                        rex.inputNo,
                         meta.Mode,
                         meta.Debounce,
                         meta.HoldTime
                   );
 
                   await bus.SendAsync(new AdapterEventCommand(res));
-
             }
+
 
             // Buzzer Configuration
             if(buzzer != null)
@@ -287,11 +288,21 @@ public sealed class DoorService(
                         throw new Exception(MessageHelper.Common.DeserializeFailed("SensorMetadata"));
             }
 
-            RexMetadata? rexMeta = null;
-            if (rex != null)
+            
+
+            RexMetadata? rexMeta0 = null;
+            RexMetadata? rexMeta1 = null;
+            if(rexes.Count() == 1)
             {
-                  rexMeta = JsonHelper.Deserialize<RexMetadata>(rex.Value.metadata);
-                  if (rexMeta == null)
+                  rexMeta0 = JsonHelper.Deserialize<RexMetadata>(rexes.ElementAt(0).metadata);
+                  if (rexMeta0 == null)
+                        throw new Exception(MessageHelper.Common.DeserializeFailed("RexMetadata"));
+            }
+
+            if (rexes.Count() == 2)
+            {
+                  rexMeta1 = JsonHelper.Deserialize<RexMetadata>(rexes.ElementAt(1).metadata);
+                  if (rexMeta1 == null)
                         throw new Exception(MessageHelper.Common.DeserializeFailed("RexMetadata"));
             }
 
@@ -312,12 +323,12 @@ public sealed class DoorService(
                   (short)(sensor == null ? -1 : sensor.Value.deviceModuleId),
                   (short)(sensor == null ? -1 : sensor.Value.inputNo),
                   (short)(sensor == null || sensorMeta == null ? 1 : sensorMeta.DcHeld),
-                  (short)(rex == null ? -1 : rex.Value.deviceModuleId),
-                  (short)(rex == null ? -1 : rex.Value.inputNo),
-                  (short)-1,
-                  (short)-1,
-                  (short)(rex == null || rexMeta == null ? 0 : rexMeta.MaskTime),
-                  0,
+                  (short)(rexes.Count() == 0 ? -1 : rexes.ElementAt(0).deviceModuleId),
+                  (short)(rexes.Count() == 0 ? -1 : rexes.ElementAt(0).inputNo),
+                  (short)(rexes.Count() <= 1 ? -1 : rexes.ElementAt(1).deviceModuleId),
+                  (short)(rexes.Count() <= 1 ? -1 : rexes.ElementAt(1).inputNo),
+                  (short)(rexMeta0 == null ? 0 : rexMeta0.MaskTime),
+                  (short)(rexMeta1 == null ? 0 : rexMeta1.MaskTime),
                   -1,
                   -1,
                   0,

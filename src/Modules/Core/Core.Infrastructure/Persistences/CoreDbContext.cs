@@ -880,9 +880,9 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Door>()
-                  .HasOne(x => x.rex)
+                  .HasMany(x => x.rexes)
                   .WithOne(x => x.door)
-                  .HasForeignKey<Door>(x => x.rex_id)
+                  .HasForeignKey(x => x.door_id)
                   .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Door>()

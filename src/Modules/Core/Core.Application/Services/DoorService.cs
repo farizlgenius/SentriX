@@ -16,6 +16,7 @@ public sealed class DoorService(
   IMessageBus bus,
   IDeviceRepository device,
   IDeviceModuleRepository deviceModule,
+  IComponentMappingRepository com,
   ILocationRepository loc,
   IAdapterFactory adapter
   ) : IDoor
@@ -42,7 +43,7 @@ public sealed class DoorService(
 
     var relayMapModuleId = dto.Relay == null ? 0 : await deviceModule.GetDeviceModuleIdByGuidAsync(dto.Relay.DeviceModuleGuid);
     var buzzerMapModuleId = dto.Buzzer == null ? 0 : await deviceModule.GetDeviceModuleIdByGuidAsync(dto.Buzzer.DeviceModuleGuid);
-    var rexMapModuleId = dto.Rex == null ? 0 : await deviceModule.GetDeviceModuleIdByGuidAsync(dto.Rex.DeviceModuleGuid);
+    var rexMapModuleId = await deviceModule.GetDeviceModuleIdsMapGuidsByGuidsAsync(dto.Rexes.Select(x => x.DeviceModuleGuid), ct);
     var bgMapModuleId = dto.Bg == null ? 0 : await deviceModule.GetDeviceModuleIdByGuidAsync(dto.Bg.DeviceModuleGuid);
 
     if (await repo.IsAnyByNameAndLocationIdAsync(dto.Name, locationId))
@@ -83,27 +84,107 @@ public sealed class DoorService(
           dto.Buzzer.Vendor,
           buzzerMapModuleId
         ),
-        dto.Rex == null ? null : new Rex(
-          dto.Rex.SlotNo,
-          dto.Rex.Mode,
-          dto.Rex.Metadata,
-          dto.Rex.Vendor,
-          rexMapModuleId
-        ),
+        dto.Rexes.Select(x => new Rex(
+        x.SlotNo,
+        x.Mode,
+        x.Metadata,
+        x.Vendor,
+        readerMapModuleId[x.DeviceModuleGuid]
+      )).ToList(),
         dto.Bg == null ? null : new BreakGlass(
           dto.Bg.SlotNo,
           dto.Bg.Vendor,
+          dto.Bg.Metadata,
           bgMapModuleId
         ),
         locationId
     );
 
 
+    // Get Component ExternalId
+    var deviceExternalId = await com.GetExternalIdByMacAndEntityAsync(dev.Mac, EntityType.Device);
+    var doorExternalIds = new List<short>();
+    
+    var doorId1 = await com.GetFreeIdByMacAndEntityAndVendorAsync(dev.Mac,EntityType.Door,dto.Vendor,100);
+    doorExternalIds.Add((short)doorId1);
+
+    if(dto.Type == DoorType.Dual)
+    {
+      var doorId2 = await com.GetFreeIdByMacAndEntityAndVendorAsync(dev.Mac,EntityType.Door,dto.Vendor,100,[doorId1],ct);
+      doorExternalIds.Add((short)doorId2);
+    }
+
+    // Buzzer
+
+
     // Send command to controller
+    var readers = new List<(short SlotNo, ReaderMode ReaderMode, ReaderDirection ReaderDirection, string Metadata, short ExternalId)>();
+
+    foreach (var x in d.Readers)
+    {
+        var externalId = (short)await com.GetExternalIdByInternalIdAndEntityAsync(x.DeviceModuleId, EntityType.DeviceModule, ct);
+        
+        readers.Add((
+            (short)x.SlotNo,
+            x.ReaderMode,
+            x.ReaderDirection,
+            x.Metadata,
+            externalId
+        ));
+    }
+
+    var rexes = new List<(short SlotNo, string Metadata, short ExternalId)>();
+
+    foreach (var x in d.Rexes)
+    {
+        var externalId = (short)await com.GetExternalIdByInternalIdAndEntityAsync(x.DeviceModuleId, EntityType.DeviceModule, ct);
+        
+        rexes.Add((
+            (short)x.SlotNo,
+            x.Metadata,
+            externalId
+        ));
+    }
+
     await adapter.GetAdapter(d.Vendor).Door.Doors(
       dev.Mac,
       dev.Ip,
-      dto,
+      d.Type,
+      (short)deviceExternalId,
+      doorExternalIds,
+      d.Metadata,
+      readers,
+      d.Buzzer == null ? 
+      null : 
+      (
+        (short)d.Buzzer.SlotNo,
+        d.Buzzer.Metadata,
+        (short)(await com.GetExternalIdByInternalIdAndEntityAsync(d.Buzzer.DeviceModuleId,EntityType.Output,ct)),
+        (short)(await com.GetFreeIdByMacAndEntityAndVendorAsync(dev.Mac,EntityType.Output,Vendor.aero,100,[],ct))
+      ),
+      rexes,
+      d.BG == null ? 
+      null : 
+      (
+        (short)d.BG.SlotNo,
+        d.BG.Metadata,
+        (short)(await com.GetExternalIdByInternalIdAndEntityAsync(d.BG.DeviceModuleId,EntityType.Output,ct)),
+        (short)(await com.GetFreeIdByMacAndEntityAndVendorAsync(dev.Mac,EntityType.Input,Vendor.aero,100,[],ct))
+      ),
+      d.Sensor == null ? 
+      null : 
+      (
+        (short)d.Sensor.SlotNo,
+        d.Sensor.Metadata,
+        (short)(await com.GetExternalIdByInternalIdAndEntityAsync(d.Sensor.DeviceModuleId,EntityType.Output,ct))
+      ),
+      d.Relay == null ? 
+      null :
+      (
+        (short)d.Relay.SlotNo,
+        d.Relay.Metadata,
+        (short)(await com.GetExternalIdByInternalIdAndEntityAsync(d.Relay.DeviceModuleId,EntityType.Output,ct))
+      ),
       ct
     );
 
@@ -206,7 +287,7 @@ public sealed class DoorService(
 
     var relayMapModuleId = dto.Relay == null ? 0 : await deviceModule.GetDeviceModuleIdByGuidAsync(dto.Relay.DeviceModuleGuid);
     var buzzerMapModuleId = dto.Buzzer == null ? 0 : await deviceModule.GetDeviceModuleIdByGuidAsync(dto.Buzzer.DeviceModuleGuid);
-    var rexMapModuleId = dto.Rex == null ? 0 : await deviceModule.GetDeviceModuleIdByGuidAsync(dto.Rex.DeviceModuleGuid);
+    var rexMapModuleId = await deviceModule.GetDeviceModuleIdsMapGuidsByGuidsAsync(dto.Rexes.Select(x => x.DeviceModuleGuid), ct);
     var bgMapModuleId = dto.Bg == null ? 0 : await deviceModule.GetDeviceModuleIdByGuidAsync(dto.Bg.DeviceModuleGuid);
 
     if (await repo.IsAnyByNameAndLocationIdAsync(dto.Name, locationId))
@@ -247,16 +328,17 @@ public sealed class DoorService(
           dto.Buzzer.Vendor,
           buzzerMapModuleId
         ),
-        dto.Rex == null ? null : new Rex(
-          dto.Rex.SlotNo,
-          dto.Rex.Mode,
-          dto.Rex.Metadata,
-          dto.Rex.Vendor,
-          rexMapModuleId
-        ),
+       dto.Rexes.Select(x => new Rex(
+        x.SlotNo,
+        x.Mode,
+        x.Metadata,
+        x.Vendor,
+        readerMapModuleId[x.DeviceModuleGuid]
+      )).ToList(),
          dto.Bg == null ? null : new BreakGlass(
           dto.Bg.SlotNo,
           dto.Bg.Vendor,
+          dto.Bg.Metadata,
           bgMapModuleId
         ),
         locationId

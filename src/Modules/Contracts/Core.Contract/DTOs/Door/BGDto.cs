@@ -4,7 +4,7 @@ namespace Core.Contract.DTOs.Door;
 
 public sealed record BGDto(
   int SlotNo,
-  InputMode Mode,
+  string Metadata,
   Vendor Vendor,
   Guid DeviceModuleGuid
 );

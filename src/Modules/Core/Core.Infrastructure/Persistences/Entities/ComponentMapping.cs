@@ -8,6 +8,7 @@ public sealed class ComponentMapping : BaseEntity
 {
   public EntityType entity { get; set; } 
   public int? external_id { get; set; }
+  public int? internale_id {get; set;}
   public string? mac { get; set; } 
   public SharedKernel.Enums.Vendor? vendor { get; set; } = SharedKernel.Enums.Vendor.aero;
 
@@ -20,6 +21,8 @@ public sealed class ComponentMapping : BaseEntity
     entity = d.Entity;
     if(d.ExternalId != 0)
       external_id = d.ExternalId;
+    if(d.InternaleId != 0)
+      internale_id = d.InternaleId;
     if(!string.IsNullOrWhiteSpace(d.Mac))
       mac = d.Mac;
     if(d.Vendor == null)

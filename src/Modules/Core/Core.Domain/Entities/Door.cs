@@ -9,12 +9,12 @@ public sealed class Door : BaseDomain
   public Vendor Vendor { get; private set; }
   public DoorType Type { get; private set; }
   public int DeviceId {get; private set;}
-  public string Metadta { get; private set; } = string.Empty;
+  public string Metadata { get; private set; } = string.Empty;
   public List<Reader> Readers { get; private set; } = default!;
   public Sensor? Sensor { get; private set; }
   public Relay? Relay { get; private set; }
   public Buzzer? Buzzer { get; private set; }
-  public Rex? Rex { get; private set; }
+  public List<Rex> Rexes { get; private set; } = default!;
   public BreakGlass? BG {get; private set;}
   public int LocationId { get; private set; }
   public Door(
@@ -27,7 +27,7 @@ public sealed class Door : BaseDomain
     Sensor? sensor,
     Relay? relay,
     Buzzer? buzzer,
-    Rex? rex,
+     List<Rex> rexes,
     BreakGlass? bg,
     int locationId
   ) : base(Guid.NewGuid())
@@ -36,12 +36,12 @@ public sealed class Door : BaseDomain
     Vendor = vendor;
     Type = type;
     DeviceId = deviceId;
-    Metadta = metadata;
+    Metadata = metadata;
     Readers = readers;
     Sensor = sensor;
     Relay = relay;
     Buzzer = buzzer;
-    Rex = rex;
+    Rexes = rexes;
     BG = bg;
     LocationId = locationId;
   }
@@ -56,7 +56,7 @@ public sealed class Door : BaseDomain
     Sensor? sensor,
     Relay? relay,
     Buzzer? buzzer,
-    Rex? rex,
+    List<Rex> rexes,
     BreakGlass? bg,
     int locationId
   ) : base(guid)
@@ -68,12 +68,12 @@ public sealed class Door : BaseDomain
     Vendor = vendor;
     Type = type;
     DeviceId = deviceId;
-    Metadta = metadata;
+    Metadata = metadata;
     Readers = readers;
     Sensor = sensor;
     Relay = relay;
     Buzzer = buzzer;
-    Rex = rex;
+   Rexes = rexes;
     BG = bg;
     LocationId = locationId;
   }

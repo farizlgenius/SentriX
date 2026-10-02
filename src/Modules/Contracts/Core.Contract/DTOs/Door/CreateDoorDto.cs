@@ -10,7 +10,7 @@ public sealed record CreateDoorDto(
   string Metadata,
   List<ReaderDto> Readers,
   BuzzerDto? Buzzer,
-  RexDto? Rex,
+  List<RexDto> Rexes,
   BGDto? Bg,
   SensorDto Sensor,
   RelayDto Relay,

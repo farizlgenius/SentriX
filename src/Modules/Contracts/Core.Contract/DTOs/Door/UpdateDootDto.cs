@@ -11,7 +11,7 @@ public sealed record UpdateDoorDto(
   string Metadata,
   List<ReaderDto> Readers,
   BuzzerDto? Buzzer,
-  RexDto? Rex,
+ List<RexDto> Rexes,
   BGDto? Bg,
   SensorDto Sensor,
   RelayDto Relay,

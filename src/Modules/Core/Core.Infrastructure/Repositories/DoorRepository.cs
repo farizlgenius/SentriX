@@ -137,7 +137,7 @@ public sealed class DoorRepository(CoreDbContext context) : IDoorRepository
         x.bg == null ? null : new BGDto(
           x.bg.slot_no,
           x.bg.vendor,
-          x.bg.device_module.guid
+          x.bg.device_module.guid,
         ),
         x.location.guid,
         x.location.name,
@@ -391,7 +391,7 @@ public sealed class DoorRepository(CoreDbContext context) : IDoorRepository
     en.name = entity.Name;
     en.vendor = entity.Vendor;
     en.type = entity.Type;
-    en.metadata = entity.Metadta;
+    en.metadata = entity.Metadata;
     en.sensor = entity.Sensor == null ? null : new Persistences.Entities.Sensor(entity.Sensor);
     en.relay = entity.Relay == null ? null : new Persistences.Entities.Relay(entity.Relay);
     en.buzzer = entity.Buzzer == null ? null : new Persistences.Entities.Buzzer(entity.Buzzer);

@@ -15,11 +15,9 @@ public sealed class Door : BaseEntity,IAuditableEntity
   public Sensor? sensor { get; set; }
   public int? relay_id { get; set; }
   public Relay? relay { get; set; }
-
   public int? buzzer_id { get; set; }
   public Buzzer? buzzer { get; set; }
-  public int? rex_id { get; set; }
-  public Rex? rex { get; set; }
+  public ICollection<Rex> rexes { get; set; } = default!;
   public int? bg_id { get; set; }
   public BreakGlass? bg { get; set; }
   public int device_id { get; set; }
@@ -35,12 +33,12 @@ public sealed class Door : BaseEntity,IAuditableEntity
     vendor = d.Vendor;
     type = d.Type;
     device_id = d.DeviceId;
-    metadata = d.Metadta;
+    metadata = d.Metadata;
     readers = d.Readers.Select(x => new Reader(x)).ToArray();
     sensor = d.Sensor == null ? null : new Sensor(d.Sensor);
     relay = d.Relay == null ? null : new Relay(d.Relay);
     buzzer = d.Buzzer == null ? null : new Buzzer(d.Buzzer);
-    rex = d.Rex == null ? null : new Rex(d.Rex);
+    rexes = d.Rexes.Select(x => new Rex(x)).ToArray();
     bg = d.BG == null ? null : new BreakGlass(d.BG);
     location_id = d.LocationId;
   }

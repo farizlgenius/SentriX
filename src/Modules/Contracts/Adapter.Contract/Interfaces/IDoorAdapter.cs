@@ -17,10 +17,10 @@ public interface IDoorAdapter
                   ReaderMode readerMode,
                   ReaderDirection readerDirection,
                   string metadata,
-                  int deviceModuleId
+                  short deviceModuleId
             )> readers,
             (short outputNo,string metadata,short deviceModuleId,short buzzerId)? buzzer,
-            (short inputNo,string metadata,short deviceModuleId)? rex,
+            List<(short inputNo,string metadata,short deviceModuleId)> rexes,
             (short inputNo,string metadata,short deviceModuleId,short bgId)? bg,
             (short inputNo,string metadata,short deviceModuleId)? sensor,
             (short outputNo,string metadata,short deviceModuleId)? relay,
