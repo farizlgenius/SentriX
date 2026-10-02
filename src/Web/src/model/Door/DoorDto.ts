@@ -17,7 +17,7 @@ export interface DoorDto {
   metadata: string;
   readers: ReaderDto[];
   buzzer: BuzzerDto | null;
-  rex: RexDto | null;
+  rexes: RexDto[];
   relay:RelayDto | null;
   sensor: SensorDto | null;
   bg:BgDto | null;

@@ -21,4 +21,5 @@ public sealed class DoorMetadata
       public bool HostOfflineGrant {get; set;}
 
 
+
 }

@@ -118,7 +118,8 @@ public sealed class DoorRepository(CoreDbContext context) : IDoorRepository
           x.mode,
           x.metadata,
           x.vendor,
-          x.device_module.guid
+          x.device_module.guid,
+           x.timezone == null ? default : x.timezone.guid
         )).ToList(),
         x.sensor == null ? null : new SensorDto(
           x.sensor.slot_no,
@@ -182,7 +183,8 @@ public sealed class DoorRepository(CoreDbContext context) : IDoorRepository
           x.mode,
           x.metadata,
           x.vendor,
-          x.device_module.guid
+          x.device_module.guid,
+           x.timezone == null ? default : x.timezone.guid
         )).ToList(),
         x.sensor == null ? null : new SensorDto(
           x.sensor.slot_no,
@@ -219,12 +221,12 @@ public sealed class DoorRepository(CoreDbContext context) : IDoorRepository
       .ToDictionaryAsync(x => x.guid, x => x.id, ct);
   }
 
-      public Task<Guid> GetGuidByIdAsync(int id, CancellationToken ct = default)
-      {
-            throw new NotImplementedException();
-      }
+  public Task<Guid> GetGuidByIdAsync(int id, CancellationToken ct = default)
+  {
+    throw new NotImplementedException();
+  }
 
-      public async Task<int> GetIdByGuidAsync(Guid guid, CancellationToken ct = default)
+  public async Task<int> GetIdByGuidAsync(Guid guid, CancellationToken ct = default)
   {
     var res = await context.Doors
       .AsNoTracking()
@@ -297,7 +299,7 @@ public sealed class DoorRepository(CoreDbContext context) : IDoorRepository
          x.device.guid,
         x.device.name,
                       x.metadata,
-                      
+
                       x.readers.Select(
                         r => new ReaderDto(
                           r.slot_no,
@@ -320,7 +322,8 @@ public sealed class DoorRepository(CoreDbContext context) : IDoorRepository
           x.mode,
           x.metadata,
           x.vendor,
-          x.device_module.guid
+          x.device_module.guid,
+           x.timezone == null ? default : x.timezone.guid
         )).ToList(),
                       x.sensor == null ? null : new SensorDto(
                         x.sensor.slot_no,

@@ -10,6 +10,7 @@ public sealed class TimeZone : BaseEntity,IAuditableEntity
   public int location_id { get; set; }
   public Location location { get; set; } = default!;
   public ICollection<GroupComponent> group_components { get; set; } = default!;
+  public ICollection<Rex> rexes {get; set; } = default!;
   public TimeZone() { }
   public TimeZone(Domain.Entities.TimeZone d)
   {

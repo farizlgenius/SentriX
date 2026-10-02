@@ -7,6 +7,8 @@ import Select from "../../components/form/Select";
 import { Options } from "../../model/Options";
 import { InputMode } from "../../enum/InputMode";
 import { Vendor } from "../../enum/Vendor";
+import { AeroBgMetadata } from "../../model/Door/AeroBgMetadata";
+import Input from "../../components/form/input/InputField";
 
 type ExtraProps = {
   moduleOption:Options[]
@@ -92,19 +94,28 @@ const DoorBGForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps>> = 
           defaultValue={dto.bg?.slotNo ?? -1}
         />
       </FormField>
-      <FormField>
+   
+       <FormField>
         <Label htmlFor="bg.mode">Input Mode</Label>
         <Select
           disabled={type == FormType.INFO}
           name="bg.mode"
-          options={[
+         options={[
             {
-              label:InputMode[InputMode.NC],
+              label:"Normally Close",
               value:InputMode.NC
             },
             {
-              label:InputMode[InputMode.NO],
+              label:"Normally Open",
               value:InputMode.NO
+            },
+             {
+              label:"Standard Noraml 1K Active 2K",
+              value:InputMode.StandardN1A2
+            },
+            {
+              label:"Standard Noraml 2K Active 1K",
+              value:InputMode.StandardN2A1
             }
           ]}
           onChange={(e) => 
@@ -122,6 +133,53 @@ const DoorBGForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps>> = 
           className="dark:bg-dark-900"
           defaultValue={
             dto.bg?.mode ?? InputMode.NC
+          }
+        />
+      </FormField>
+       <FormField>
+        <Label htmlFor="sensor.debounce">Debounce</Label>
+        <Input 
+        disabled={isReadOnly}
+        type="number" min="0" max="15" 
+        value={ (dto.bg?.metadata as AeroBgMetadata)?.debounce ?? ""}
+        onChange={(e) => 
+            setDto(prev => ({
+              ...prev,
+              bg: prev.bg != null ? 
+              {
+                ...prev.bg,
+                metadata:{
+                  ...(prev.bg.metadata as AeroBgMetadata),
+                  debounce:Number(e.target.value)
+                }
+              }
+              :
+              prev.bg
+            }))
+          }
+        />
+      </FormField>
+       <FormField>
+        <Label htmlFor="sensor.holdTime">Hold Time</Label>
+        <Input 
+        disabled={isReadOnly}
+        type="number" min="2" max="15" 
+        defaultValue={2}
+        value={(dto.bg?.metadata as AeroBgMetadata)?.holdTime ?? ""}
+        onChange={(e) => 
+            setDto(prev => ({
+              ...prev,
+              bg: prev.bg != null ? 
+              {
+                ...prev.bg,
+                metadata:{
+                  ...(prev.bg.metadata as AeroBgMetadata),
+                  holdTime:Number(e.target.value)
+                }
+              }
+              :
+              prev.bg
+            }))
           }
         />
       </FormField>

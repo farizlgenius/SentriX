@@ -13,6 +13,8 @@ public sealed class Rex : BaseEntity
   public Door door { get; set; } = default!;
   public int device_module_id { get; set; }
   public DeviceModule device_module { get; set; } = default!;
+  public int? timezone_id {get; set;}
+  public TimeZone? timezone {get; set;}
   public Rex()
   { }
 

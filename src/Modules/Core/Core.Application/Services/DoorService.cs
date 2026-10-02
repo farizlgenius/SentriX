@@ -31,7 +31,7 @@ public sealed class DoorService(
 
     foreach (var reader in dto.Readers)
     {
-      if (await repo.IsAnyGuidAsync(reader.DeviceModuleGuid, ct))
+      if(!await deviceModule.IsAnyGuidAsync(reader.DeviceModuleGuid, ct))
         throw new NotFoundException(EntityType.DeviceModule.ToString(), reader.DeviceModuleGuid.ToString());
     }
 
@@ -114,8 +114,6 @@ public sealed class DoorService(
       doorExternalIds.Add((short)doorId2);
     }
 
-    // Buzzer
-
 
     // Send command to controller
     var readers = new List<(short SlotNo, ReaderMode ReaderMode, ReaderDirection ReaderDirection, string Metadata, short ExternalId)>();
@@ -133,16 +131,18 @@ public sealed class DoorService(
         ));
     }
 
-    var rexes = new List<(short SlotNo, string Metadata, short ExternalId)>();
+    var rexes = new List<(short SlotNo, string Metadata, short ExternalId,short TzExternalId)>();
 
     foreach (var x in dto.Rexes)
     {
         var externalId = (short)await com.GetExternalIdByGuidAndEntityAsync(x.DeviceModuleGuid, EntityType.DeviceModule, ct);
+        var tzExternalId = x.MaskGuid == null ? (short)0 : (short)await com.GetExternalIdByGuidAndEntityAsync(x.MaskGuid ?? Guid.Empty,EntityType.TimeZone,ct);
         
         rexes.Add((
             (short)x.SlotNo,
             x.Metadata,
-            externalId
+            externalId,
+            tzExternalId
         ));
     }
 
@@ -159,7 +159,7 @@ public sealed class DoorService(
       (
         (short)d.Buzzer.SlotNo,
         d.Buzzer.Metadata,
-        (short)await com.GetExternalIdByGuidAndEntityAsync(dto.Buzzer.DeviceModuleGuid,EntityType.Output,ct),
+        (short)await com.GetExternalIdByGuidAndEntityAsync(dto.Buzzer.DeviceModuleGuid,EntityType.DeviceModule,ct),
         (short)await com.GetFreeIdByMacAndEntityAndVendorAsync(dev.Mac,EntityType.Output,Vendor.aero,100,[],ct)
       ),
       rexes,
@@ -168,7 +168,7 @@ public sealed class DoorService(
       (
         (short)d.BG.SlotNo,
         d.BG.Metadata,
-        (short)await com.GetExternalIdByGuidAndEntityAsync(dto.Bg.DeviceModuleGuid,EntityType.Output,ct),
+        (short)await com.GetExternalIdByGuidAndEntityAsync(dto.Bg.DeviceModuleGuid,EntityType.DeviceModule,ct),
         (short)await com.GetFreeIdByMacAndEntityAndVendorAsync(dev.Mac,EntityType.Input,Vendor.aero,100,[],ct)
       ),
       d.Sensor == null || dto.Sensor == null ? 
@@ -176,17 +176,44 @@ public sealed class DoorService(
       (
         (short)d.Sensor.SlotNo,
         d.Sensor.Metadata,
-        (short)await com.GetExternalIdByGuidAndEntityAsync(dto.Sensor.DeviceModuleGuid,EntityType.Output,ct)
+        (short)await com.GetExternalIdByGuidAndEntityAsync(dto.Sensor.DeviceModuleGuid,EntityType.DeviceModule,ct)
       ),
       d.Relay == null || dto.Relay == null ? 
       null :
       (
         (short)d.Relay.SlotNo,
         d.Relay.Metadata,
-        (short)await com.GetExternalIdByGuidAndEntityAsync(dto.Relay.DeviceModuleGuid,EntityType.Output,ct)
+        (short)await com.GetExternalIdByGuidAndEntityAsync(dto.Relay.DeviceModuleGuid,EntityType.DeviceModule,ct)
       ),
       ct
     );
+
+    await com.InsertAsync(
+      new ComponentMappping(
+        d.Guid,
+        EntityType.Door,
+        doorExternalIds.Count == 0 ? -1 : doorExternalIds.ElementAt(0),
+        string.Empty,
+        d.LocationId,
+        d.Vendor
+      ),
+      ct
+    );
+
+    if(d.Type == DoorType.Dual)
+    {
+      await com.InsertAsync(
+      new ComponentMappping(
+        d.Guid,
+        EntityType.Door,
+        doorExternalIds.Count <= 1 ? -1 : doorExternalIds.ElementAt(1),
+        string.Empty,
+        d.LocationId,
+        d.Vendor
+      ),
+      ct
+    );
+    }
 
     await repo.AddAsync(d, ct);
 

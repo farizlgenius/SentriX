@@ -49,6 +49,7 @@ import { DeviceDto } from "../../model/Device/DeviceDto";
 import { TimezoneEndPoint } from "../../endpoint/TimezoneEndpoint";
 import DoorBGForm from "./DoorBGForm";
 import { ReaderDto } from "../../model/Door/ReaderDto";
+import { RexDto } from "../../model/Door/RexDto";
 
 // ACR Page
 const DOOR_TABLE_HEADER: string[] = [
@@ -86,7 +87,7 @@ const Door = () => {
     metadata: "",
     readers: [],
     buzzer: null,
-    rex: null,
+    rexes: [],
     sensor: null,
     relay:null,
     bg:null,
@@ -148,30 +149,34 @@ const Door = () => {
           if(dto.readers.length > 0){
             dto.readers = dto.readers.map((a:ReaderDto) => ({
               ...a,
-              metadata:JSON.stringify(a.metadata)
+              metadata:typeof a.metadata === 'string' ? a.metadata : JSON.stringify(a.metadata)
             }))
           }
           // Relay
           if(dto.relay != null){
-            dto.relay.metadata = JSON.stringify(dto.relay.metadata);
+            dto.relay.metadata = typeof dto.relay.metadata === 'string' ?  dto.relay.metadata : JSON.stringify(dto.relay.metadata)
           }
           // Rex
-          if(dto.rex != null){
-            dto.rex.metadata = JSON.stringify(dto.rex.metadata);
+          if(dto.rexes.length > 0){
+            dto.rexes = dto.rexes.map((a:RexDto) => ({
+              ...a,
+              metadata:typeof a.metadata === 'string' ? a.metadata : JSON.stringify(a.metadata)
+            }))
           }
           // Sensor
           if(dto.sensor != null){
-            dto.sensor.metadata = JSON.stringify(dto.sensor.metadata);
+            dto.sensor.metadata = typeof dto.sensor.metadata === 'string' ?  dto.sensor.metadata : JSON.stringify(dto.sensor.metadata)
           }
           // Buzzer
           if(dto.buzzer != null){
-            dto.buzzer.metadata = JSON.stringify(dto.buzzer.metadata);
+            dto.buzzer.metadata = typeof dto.buzzer.metadata === 'string' ?  dto.buzzer.metadata : JSON.stringify(dto.buzzer.metadata)
           }
           // Bg
           if(dto.bg != null){
-            dto.bg.metadata = JSON.stringify(dto.bg.metadata);
+            dto.bg.metadata = typeof dto.bg.metadata === 'string' ?  dto.bg.metadata : JSON.stringify(dto.bg.metadata)
           }
-          dto.metadata = JSON.stringify(dto.metadata);
+          dto.metadata = typeof dto.metadata === 'string' ?  dto.metadata : JSON.stringify(dto.metadata)
+          dto.locationGuid = locationGuid;
           const res = await send.post(DoorEndpoint.CREATE, dto);
           if (Helper.handleToastByResCode(res, DoorToast.CREATE, toggleToast)) {
             setForm(false);
@@ -503,6 +508,7 @@ const Door = () => {
                   fetchTime={fetchTime}
                   timeOption={timeOption}
                   setIsNext={setIsNext}
+                  setInputOption={setInputOption}
                   />
               ),
             },

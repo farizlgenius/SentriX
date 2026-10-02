@@ -2,5 +2,4 @@ export interface AeroRexMetadata{
       mode:number;
       debounce:number;
       holdTime:number;
-      maskTime:string;
 }

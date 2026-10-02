@@ -46,14 +46,14 @@ const Select: React.FC<SelectProps> = ({
   }, [options])
 
   return (
-    <div className="relative w-full">
+    <div className="relative w-full ">
       <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
         {icon}
       </div>
       <select
         id={id}
         name={name}
-        className={`${icon ? 'pl-10 ' : ''}h-12 w-full appearance-none rounded-2xl border border-[var(--app-panel-border)] bg-[var(--app-panel-bg)] px-4 py-3 pr-11 text-sm shadow-theme-xs placeholder:text-gray-400 transition-colors focus:border-brand-300 focus:outline-hidden focus:ring-4 focus:ring-brand-500/10 dark:text-white/90 dark:placeholder:text-white/30 ${defaultValue
+        className={`${disabled ? "cursor-not-allowed text-gray-500 opacity-50" : ""} ${icon ? 'pl-10 ' : ''}h-12 w-full appearance-none rounded-2xl border border-[var(--app-panel-border)] bg-[var(--app-panel-bg)] px-4 py-3 pr-11 text-sm shadow-theme-xs placeholder:text-gray-400 transition-colors focus:border-brand-300 focus:outline-hidden focus:ring-4 focus:ring-brand-500/10 dark:text-white/90 dark:placeholder:text-white/30 ${defaultValue
             ? "text-gray-800 dark:text-white/90"
             : "text-gray-400 dark:text-gray-400"
           } ${className}`}
@@ -68,7 +68,7 @@ const Select: React.FC<SelectProps> = ({
           disabled
           className="text-gray-700 dark:bg-gray-900 dark:text-gray-400"
         >
-          {placeholder}
+          {disabled ? "Disabled" : placeholder}
         </option>
         {/* Map over options */}
         {options.map((option) => (

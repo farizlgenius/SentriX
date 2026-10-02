@@ -20,7 +20,7 @@ public interface IDoorAdapter
                   short deviceModuleId
             )> readers,
             (short outputNo,string metadata,short deviceModuleId,short buzzerId)? buzzer,
-            List<(short inputNo,string metadata,short deviceModuleId)> rexes,
+            List<(short inputNo,string metadata,short deviceModuleId,short maskId)> rexes,
             (short inputNo,string metadata,short deviceModuleId,short bgId)? bg,
             (short inputNo,string metadata,short deviceModuleId)? sensor,
             (short outputNo,string metadata,short deviceModuleId)? relay,

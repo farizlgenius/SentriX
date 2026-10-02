@@ -7,5 +7,6 @@ public sealed record RexDto(
   InputMode Mode,
   string Metadata,
   Vendor Vendor,
-  Guid DeviceModuleGuid
+  Guid DeviceModuleGuid,
+  Guid? MaskGuid
 );

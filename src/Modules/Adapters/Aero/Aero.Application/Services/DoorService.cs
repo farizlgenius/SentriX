@@ -34,7 +34,7 @@ public sealed class DoorService(
                   short deviceModuleId
             )> readers,
             (short outputNo,string metadata,short deviceModuleId,short buzzerId)? buzzer,
-            List<(short inputNo,string metadata,short deviceModuleId)> rexes,
+            List<(short inputNo,string metadata,short deviceModuleId,short maskId)> rexes,
             (short inputNo,string metadata,short deviceModuleId,short bgId)? bg,
             (short inputNo,string metadata,short deviceModuleId)? sensor,
             (short outputNo,string metadata,short deviceModuleId)? relay,
@@ -201,31 +201,36 @@ public sealed class DoorService(
 
             }
 
-            var doorMetadata = JsonHelper.Deserialize<DoorMetadata>(metadata);
+            // Door Configuration
+            short spare = 0x00;
+            short accessFlag = 0x00;
+            DoorMetadata doorMetadata = new DoorMetadata();
+
+            if (!string.IsNullOrWhiteSpace(metadata))
+            {
+                  doorMetadata = JsonHelper.Deserialize<DoorMetadata>(metadata);
                   if (doorMetadata == null)
                         throw new Exception(MessageHelper.Common.DeserializeFailed("DoorMetadata"));
 
-            
+                  if(doorMetadata.ForceCardPin) spare |= (short)ExtendedAccessControlFlags.ACR_FE_NOPINCARD;
+                  if(doorMetadata.DoubleCard) spare |= (short)ExtendedAccessControlFlags.ACR_FE_DCARD;
+                  if(doorMetadata.OutputSelectionTracking) spare |= (short)ExtendedAccessControlFlags.ACR_FE_FLOOR_PIN;
+                  if(doorMetadata.LockedOverride) spare |= (short)ExtendedAccessControlFlags.ACR_FE_CRD_OVR_EN;
+                  if(doorMetadata.HostPermission) spare |= (short)ExtendedAccessControlFlags.ACR_FE_HOST_BYPASS; 
 
-            // Door Configuration
-            short spare = 0x00;
-            if(doorMetadata.ForceCardPin) spare |= (short)ExtendedAccessControlFlags.ACR_FE_NOPINCARD;
-            if(doorMetadata.DoubleCard) spare |= (short)ExtendedAccessControlFlags.ACR_FE_DCARD;
-            if(doorMetadata.OutputSelectionTracking) spare |= (short)ExtendedAccessControlFlags.ACR_FE_FLOOR_PIN;
-            if(doorMetadata.LockedOverride) spare |= (short)ExtendedAccessControlFlags.ACR_FE_CRD_OVR_EN;
-            if(doorMetadata.HostPermission) spare |= (short)ExtendedAccessControlFlags.ACR_FE_HOST_BYPASS; 
+                  if(type == DoorType.Dual) spare |= (short)ExtendedAccessControlFlags.ACR_FE_LINK_MODE;
 
-            if(type == DoorType.Dual) spare |= (short)ExtendedAccessControlFlags.ACR_FE_LINK_MODE;
-
-            short accessFlag = 0x00;
-            if(doorMetadata.DecreaseUseLimit) accessFlag |= (short)AccessControlFlags.ACR_F_DCR;
-            if(doorMetadata.RequireUseLimit) accessFlag |= (short)AccessControlFlags.ACR_F_CUL;
-            if(doorMetadata.DeniedDuress) accessFlag |= (short)AccessControlFlags.ACR_F_DRSS;
-            if(doorMetadata.QuietRex) accessFlag |= (short)AccessControlFlags.ACR_F_QEXIT;
-            if(doorMetadata.FilterStatus) accessFlag |= (short)AccessControlFlags.ACR_F_FILTER;
-            if(doorMetadata.DoubleCardAccess) accessFlag |= (short)AccessControlFlags.ACR_F_2CARD; 
-            if(doorMetadata.HostPermission) accessFlag |= (short)AccessControlFlags.ACR_F_HOST_CBG;
-            if(doorMetadata.HostOfflineGrant) accessFlag |= (short)AccessControlFlags.ACR_F_HOST_SFT;
+                  
+                  if(doorMetadata.DecreaseUseLimit) accessFlag |= (short)AccessControlFlags.ACR_F_DCR;
+                  if(doorMetadata.RequireUseLimit) accessFlag |= (short)AccessControlFlags.ACR_F_CUL;
+                  if(doorMetadata.DeniedDuress) accessFlag |= (short)AccessControlFlags.ACR_F_DRSS;
+                  if(doorMetadata.QuietRex) accessFlag |= (short)AccessControlFlags.ACR_F_QEXIT;
+                  if(doorMetadata.FilterStatus) accessFlag |= (short)AccessControlFlags.ACR_F_FILTER;
+                  if(doorMetadata.DoubleCardAccess) accessFlag |= (short)AccessControlFlags.ACR_F_2CARD; 
+                  if(doorMetadata.HostPermission) accessFlag |= (short)AccessControlFlags.ACR_F_HOST_CBG;
+                  if(doorMetadata.HostOfflineGrant) accessFlag |= (short)AccessControlFlags.ACR_F_HOST_SFT;
+                  
+            }            
 
             if(type == DoorType.Dual)
             {
@@ -312,7 +317,7 @@ public sealed class DoorService(
                   deviceId,
                   doorId.ElementAt(0),
                   (short)(type == DoorType.Single ? 0 : 1),
-                  doorId.ElementAt(1),
+                  type == DoorType.Single && doorId.Count() <= 1 ? (short)-1 : doorId.ElementAt(1),
                   (short)(readers.Count() == 0 ? -1 : readers.ElementAt(0).deviceModuleId),
                   (short)(readers.Count() == 0 ? -1 : readers.ElementAt(0).readerNo),
                   (short)(relay == null ? -1 : relay.Value.deviceModuleId),
@@ -327,8 +332,8 @@ public sealed class DoorService(
                   (short)(rexes.Count() == 0 ? -1 : rexes.ElementAt(0).inputNo),
                   (short)(rexes.Count() <= 1 ? -1 : rexes.ElementAt(1).deviceModuleId),
                   (short)(rexes.Count() <= 1 ? -1 : rexes.ElementAt(1).inputNo),
-                  (short)(rexMeta0 == null ? 0 : rexMeta0.MaskTime),
-                  (short)(rexMeta1 == null ? 0 : rexMeta1.MaskTime),
+                  (short)(rexes.Count() == 0 ? 0 : rexes.ElementAt(0).maskId),
+                  (short)(rexes.Count() <= 1 ? 0 : rexes.ElementAt(1).maskId),
                   -1,
                   -1,
                   0,

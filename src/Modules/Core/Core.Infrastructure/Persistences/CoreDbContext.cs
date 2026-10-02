@@ -840,6 +840,13 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
 
 
             // Time 
+            modelBuilder.Entity<Persistences.Entities.TimeZone>()
+                  .HasMany(x => x.rexes)
+                  .WithOne(x => x.timezone)
+                  .IsRequired(false)
+                  .HasForeignKey(x => x.timezone_id)
+                  .OnDelete(DeleteBehavior.SetNull);
+  
 
             modelBuilder.Entity<TimeZoneInterval>()
                   .HasOne(x => x.timezone)

@@ -21,6 +21,7 @@ public static class JsonHelper
 
       public static T Deserialize<T>(string json)
       {
+            Console.WriteLine(json);
             return JsonSerializer.Deserialize<T>(json, Options) ?? throw new Exception($"Deserialized invalid:{nameof(T)}");
       }
 

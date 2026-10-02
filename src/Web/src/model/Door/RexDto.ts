@@ -5,5 +5,6 @@ export interface RexDto {
   slotNo: number;
   vendor: Vendor;
   deviceModuleGuid:string;
-  metadata : string | AeroRexMetadata
+  metadata : string | AeroRexMetadata;
+  maskGuid:string | null;
 }
