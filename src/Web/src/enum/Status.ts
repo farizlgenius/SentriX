@@ -4,5 +4,6 @@ export enum Status{
       Error,
       Unknown,
       Active,
-      Inactive
+      Inactive,
+      Disabled
 }

@@ -127,7 +127,7 @@ const AeroDeviceForm: React.FC<PropsWithChildren<FormProp<DeviceDto>>> = ({
               onChange={(checked) =>
                 setDto((prev) => ({
                   ...prev,
-                  metadata: { ...prev.metadata, portOne: checked },
+                  metadata: { ...(prev.metadata as AeroMetadata), portOne: checked },
                 }))
               }
             />
@@ -144,7 +144,7 @@ const AeroDeviceForm: React.FC<PropsWithChildren<FormProp<DeviceDto>>> = ({
                   onChange={(v) =>
                     setDto((prev) => ({
                       ...prev,
-                      metadata: { ...prev.metadata, protocolOne: Number(v) },
+                      metadata: { ...(prev.metadata as AeroMetadata), protocolOne: Number(v) },
                     }))
                   }
                 />
@@ -159,7 +159,7 @@ const AeroDeviceForm: React.FC<PropsWithChildren<FormProp<DeviceDto>>> = ({
                   onChange={(v) =>
                     setDto((prev) => ({
                       ...prev,
-                      metadata: { ...prev.metadata, baudRateOne: Number(v) },
+                      metadata: { ...(prev.metadata as AeroMetadata), baudRateOne: Number(v) },
                     }))
                   }
                 />
@@ -176,7 +176,7 @@ const AeroDeviceForm: React.FC<PropsWithChildren<FormProp<DeviceDto>>> = ({
               onChange={(checked) =>
                 setDto((prev) => ({
                   ...prev,
-                  metadata: { ...prev.metadata, portTwo: checked },
+                  metadata: { ...(prev.metadata as AeroMetadata), portTwo: checked },
                 }))
               }
             />
@@ -193,7 +193,7 @@ const AeroDeviceForm: React.FC<PropsWithChildren<FormProp<DeviceDto>>> = ({
                   onChange={(v) =>
                     setDto((prev) => ({
                       ...prev,
-                      metadata: { ...prev.metadata, protocolTwo: Number(v) },
+                      metadata: { ...(prev.metadata as AeroMetadata), protocolTwo: Number(v) },
                     }))
                   }
                 />
@@ -208,7 +208,7 @@ const AeroDeviceForm: React.FC<PropsWithChildren<FormProp<DeviceDto>>> = ({
                   onChange={(v) =>
                     setDto((prev) => ({
                       ...prev,
-                      metadata: { ...prev.metadata, baudRateTwo: Number(v) },
+                      metadata: { ...(prev.metadata as AeroMetadata), baudRateTwo: Number(v) },
                     }))
                   }
                 />

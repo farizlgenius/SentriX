@@ -331,19 +331,19 @@ public sealed class ReplyWorker(Channel<ReplyMessage> queue, ILogger<ReplyWorker
                   //     );
               break;
             case (int)enSCPReplyType.enSCPReplySrSio:
-              //     // var siostatus = new SioStatus(message.ScpId, message.sts_sio.number, DecodeHelper.TypeSioCommTranCodeDecode(message.sts_sio.com_status), DecodeHelper.TypeCosStatusDecode(Convert.ToByte(message.sts_sio.ip_stat[4])), DecodeHelper.TypeCosStatusDecode(Convert.ToByte(message.sts_sio.ip_stat[5])), DecodeHelper.TypeCosStatusDecode(Convert.ToByte(message.sts_sio.ip_stat[6])));
-              //     // await publisher.SioNotifyStatus(siostatus);
-              //     // var s = scope.ServiceProvider.GetRequiredService<IModule>();
-              //     notifier = scope.ServiceProvider.GetRequiredService<INotifier>();
-              //     // await s.HandleFoundSioAsync(message.SCPId,message.sts_sio);
-              //     await notifier.SendToTopic(NotifierTopic.MODULE_STATUS, new StatusDto(
-              //         message.SCPId,
-              //         message.sts_sio.number,
-              //         TranHelper.GetCode((tranSrc)message.tran.source_type, tranType.tranTypeSioComm, message.sts_sio.com_status),
-              //         DescriptionHelper.DecodeStatusTypeCoS(message.sts_sio.ct_stat),
-              //         DescriptionHelper.DecodeStatusTypeCoS(message.sts_sio.pw_stat),
-              //         string.Empty
-              //     ), ct);
+                  // var siostatus = new SioStatus(message.ScpId, message.sts_sio.number, DecodeHelper.TypeSioCommTranCodeDecode(message.sts_sio.com_status), DecodeHelper.TypeCosStatusDecode(Convert.ToByte(message.sts_sio.ip_stat[4])), DecodeHelper.TypeCosStatusDecode(Convert.ToByte(message.sts_sio.ip_stat[5])), DecodeHelper.TypeCosStatusDecode(Convert.ToByte(message.sts_sio.ip_stat[6])));
+                  // await publisher.SioNotifyStatus(siostatus);
+                  bus = scope.ServiceProvider.GetRequiredService<IMessageBus>();
+                  notifier = scope.ServiceProvider.GetRequiredService<INotifier>();
+                  guid = await bus.QueryAsync(new GuidByExternalIdAndEntityAndVendorQuery(message.sts_sio.number,EntityType.DeviceModule,Vendor.aero));
+                  // await s.HandleFoundSioAsync(message.SCPId,message.sts_sio);
+                  await notifier.SendToTopic(NotifierTopic.MODULE_STATUS,
+                  new StatusDto(
+                      guid,
+                     message.sts_sio.com_status == 5 ? Status.Online : message.sts_sio.com_status == 1 ? Status.Disabled : Status.Offline,
+                      DescriptionHelper.DecodeStatusTypeCoS(message.sts_sio.ct_stat),
+                      DescriptionHelper.DecodeStatusTypeCoS(message.sts_sio.pw_stat)
+                  ), ct);
               break;
             case (int)enSCPReplyType.enSCPReplySrMp:
               // var mpstatus = new MpStatus(message.ScpId, message.sts_mp.first, DecodeHelper.TypeCosStatusDecode(Convert.ToByte(message.sts_mp.status[0])));

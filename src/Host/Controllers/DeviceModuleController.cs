@@ -15,6 +15,13 @@ public class DeviceModuleController(IDeviceModule module) : ControllerBase
     return Ok(res);
   }
 
+  [HttpGet("status/{guid}")]
+  public async Task<IActionResult> GetSatusAsync(Guid guid)
+  {
+    var res = await module.GetStatusAsync(guid);
+    return Ok(res);
+  }
+
   [HttpGet("option/{guid}")]
   public async Task<IActionResult> GetOptionByDeviceAsync(Guid guid)
   {

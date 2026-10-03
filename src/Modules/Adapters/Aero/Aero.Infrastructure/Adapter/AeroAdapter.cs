@@ -8,6 +8,7 @@ public sealed class AeroAdapter : IAdapter
       public Vendor Vendor => Vendor.aero;
 
       public IDeviceAdapter Device { get; }
+      public IModuleAdapter Module {get;}
       public IUtilityAdapter Utility {get;}
       public ITimeAdapter Time { get; }
 
@@ -24,6 +25,7 @@ public sealed class AeroAdapter : IAdapter
 
       public AeroAdapter(
             IDeviceAdapter devices,
+            IModuleAdapter module,
             IUtilityAdapter utility,
             //IOutputAdapter output,
             //IInputAdapter input,
@@ -35,6 +37,7 @@ public sealed class AeroAdapter : IAdapter
       )
       {
             Device = devices;
+            Module = module;
             Utility = utility;
             //Output = output;
             //Input = input;

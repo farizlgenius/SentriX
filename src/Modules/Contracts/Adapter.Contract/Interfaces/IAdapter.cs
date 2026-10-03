@@ -8,6 +8,7 @@ public interface IAdapter
 {
       Vendor Vendor {get;}
       IDeviceAdapter Device {get;}
+      IModuleAdapter Module {get;}
       IUtilityAdapter Utility {get;}
       //IInputAdapter Input {get;}
       //IOutputAdapter Output {get;}

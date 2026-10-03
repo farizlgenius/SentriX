@@ -4,7 +4,6 @@ namespace Core.Contract.DTOs.Door;
 
 public sealed record RexDto(
   int SlotNo,
-  InputMode Mode,
   string Metadata,
   Vendor Vendor,
   Guid DeviceModuleGuid,

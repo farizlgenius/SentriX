@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Core.Infrastructure.Migrations
 {
     [DbContext(typeof(CoreDbContext))]
-    [Migration("20260929054754_InititlaDb2")]
-    partial class InititlaDb2
+    [Migration("20261003153559_InitialDb")]
+    partial class InitialDb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -179,6 +179,62 @@ namespace Core.Infrastructure.Migrations
                     b.ToTable("AuditTrails", "core");
                 });
 
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.BreakGlass", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<DateTime>("created_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.Property<int>("device_module_id")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("door_id")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid>("guid")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<bool>("is_active")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("is_default")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("metadata")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("slot_no")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("updated_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.Property<string>("vendor")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("device_module_id");
+
+                    b.HasIndex("guid", "id", "door_id", "device_module_id", "slot_no")
+                        .IsUnique();
+
+                    b.ToTable("BreakGlasses", "core");
+                });
+
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Buzzer", b =>
                 {
                     b.Property<int>("id")
@@ -212,9 +268,6 @@ namespace Core.Infrastructure.Migrations
                     b.Property<string>("metadata")
                         .IsRequired()
                         .HasColumnType("text");
-
-                    b.Property<int>("mode")
-                        .HasColumnType("integer");
 
                     b.Property<int>("slot_no")
                         .HasColumnType("integer");
@@ -286,6 +339,163 @@ namespace Core.Infrastructure.Migrations
                     b.HasIndex("user_id");
 
                     b.ToTable("Cards", "core");
+                });
+
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.CardFormat", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<short>("bits")
+                        .HasColumnType("smallint");
+
+                    b.Property<short>("card_no_len")
+                        .HasColumnType("smallint");
+
+                    b.Property<short>("card_no_loc")
+                        .HasColumnType("smallint");
+
+                    b.Property<DateTime>("created_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.Property<short>("even_parity_len")
+                        .HasColumnType("smallint");
+
+                    b.Property<short>("even_parity_loc")
+                        .HasColumnType("smallint");
+
+                    b.Property<short>("fac")
+                        .HasColumnType("smallint");
+
+                    b.Property<short>("fac_len")
+                        .HasColumnType("smallint");
+
+                    b.Property<short>("fac_loc")
+                        .HasColumnType("smallint");
+
+                    b.Property<Guid>("guid")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<bool>("is_active")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("is_default")
+                        .HasColumnType("boolean");
+
+                    b.Property<short>("issue_code_len")
+                        .HasColumnType("smallint");
+
+                    b.Property<short>("issue_code_loc")
+                        .HasColumnType("smallint");
+
+                    b.Property<int?>("location_id")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("locationid")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("metadata")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<short>("odd_parity_len")
+                        .HasColumnType("smallint");
+
+                    b.Property<short>("odd_parity_loc")
+                        .HasColumnType("smallint");
+
+                    b.Property<DateTime>("updated_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("locationid");
+
+                    b.ToTable("CardFormats", "core");
+
+                    b.HasData(
+                        new
+                        {
+                            id = 1,
+                            bits = (short)26,
+                            card_no_len = (short)26,
+                            card_no_loc = (short)0,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            even_parity_len = (short)0,
+                            even_parity_loc = (short)-1,
+                            fac = (short)-1,
+                            fac_len = (short)0,
+                            fac_loc = (short)-1,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
+                            issue_code_len = (short)0,
+                            issue_code_loc = (short)-1,
+                            metadata = "",
+                            name = "26-bit Wiegand",
+                            odd_parity_len = (short)0,
+                            odd_parity_loc = (short)-1,
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            id = 2,
+                            bits = (short)32,
+                            card_no_len = (short)32,
+                            card_no_loc = (short)0,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            even_parity_len = (short)0,
+                            even_parity_loc = (short)-1,
+                            fac = (short)-1,
+                            fac_len = (short)0,
+                            fac_loc = (short)-1,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
+                            issue_code_len = (short)0,
+                            issue_code_loc = (short)-1,
+                            metadata = "",
+                            name = "32-bit Wiegand",
+                            odd_parity_len = (short)0,
+                            odd_parity_loc = (short)-1,
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            id = 3,
+                            bits = (short)37,
+                            card_no_len = (short)37,
+                            card_no_loc = (short)0,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            even_parity_len = (short)0,
+                            even_parity_loc = (short)-1,
+                            fac = (short)-1,
+                            fac_len = (short)0,
+                            fac_loc = (short)-1,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
+                            issue_code_len = (short)0,
+                            issue_code_loc = (short)-1,
+                            metadata = "",
+                            name = "37-bit Wiegand",
+                            odd_parity_len = (short)0,
+                            odd_parity_loc = (short)-1,
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        });
                 });
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Company", b =>
@@ -2681,6 +2891,9 @@ namespace Core.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
 
+                    b.Property<int?>("bg_id")
+                        .HasColumnType("integer");
+
                     b.Property<int?>("buzzer_id")
                         .HasColumnType("integer");
 
@@ -2717,9 +2930,6 @@ namespace Core.Infrastructure.Migrations
                     b.Property<int?>("relay_id")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("rex_id")
-                        .HasColumnType("integer");
-
                     b.Property<int?>("sensor_id")
                         .HasColumnType("integer");
 
@@ -2738,6 +2948,9 @@ namespace Core.Infrastructure.Migrations
 
                     b.HasKey("id");
 
+                    b.HasIndex("bg_id")
+                        .IsUnique();
+
                     b.HasIndex("buzzer_id")
                         .IsUnique();
 
@@ -2746,9 +2959,6 @@ namespace Core.Infrastructure.Migrations
                     b.HasIndex("location_id");
 
                     b.HasIndex("relay_id")
-                        .IsUnique();
-
-                    b.HasIndex("rex_id")
                         .IsUnique();
 
                     b.HasIndex("sensor_id")
@@ -3747,6 +3957,68 @@ namespace Core.Infrastructure.Migrations
                     b.ToTable("Holidays", "core");
                 });
 
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Input", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<DateTime>("created_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.Property<int>("device_module_id")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid>("guid")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<bool>("is_active")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("is_default")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("location_id")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("metadata")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("slot_no")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("updated_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.Property<string>("vendor")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("device_module_id");
+
+                    b.HasIndex("location_id");
+
+                    b.HasIndex("guid", "id", "device_module_id", "slot_no")
+                        .IsUnique();
+
+                    b.ToTable("Input", "core");
+                });
+
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Interval", b =>
                 {
                     b.Property<int>("id")
@@ -4371,10 +4643,6 @@ namespace Core.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("mode")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<string>("name")
                         .IsRequired()
                         .HasColumnType("text");
@@ -4400,7 +4668,7 @@ namespace Core.Infrastructure.Migrations
                     b.HasIndex("guid", "id", "device_module_id", "slot_no")
                         .IsUnique();
 
-                    b.ToTable("Outputs", "core");
+                    b.ToTable("Output", "core");
                 });
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Pin", b =>
@@ -4646,10 +4914,6 @@ namespace Core.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("mode")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<int>("slot_no")
                         .HasColumnType("integer");
 
@@ -4706,11 +4970,10 @@ namespace Core.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("mode")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<int>("slot_no")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("timezone_id")
                         .HasColumnType("integer");
 
                     b.Property<DateTime>("updated_at")
@@ -4725,6 +4988,10 @@ namespace Core.Infrastructure.Migrations
                     b.HasKey("id");
 
                     b.HasIndex("device_module_id");
+
+                    b.HasIndex("door_id");
+
+                    b.HasIndex("timezone_id");
 
                     b.HasIndex("guid", "id", "door_id", "device_module_id", "slot_no")
                         .IsUnique();
@@ -4824,10 +5091,6 @@ namespace Core.Infrastructure.Migrations
                         .HasColumnType("integer");
 
                     b.Property<string>("metadata")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("mode")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -5294,6 +5557,17 @@ namespace Core.Infrastructure.Migrations
                         .HasForeignKey("Locationid");
                 });
 
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.BreakGlass", b =>
+                {
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.DeviceModule", "device_module")
+                        .WithMany("break_glasses")
+                        .HasForeignKey("device_module_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("device_module");
+                });
+
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Buzzer", b =>
                 {
                     b.HasOne("Core.Infrastructure.Persistences.Entities.DeviceModule", "device_module")
@@ -5313,6 +5587,15 @@ namespace Core.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("user");
+                });
+
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.CardFormat", b =>
+                {
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.Location", "location")
+                        .WithMany()
+                        .HasForeignKey("locationid");
+
+                    b.Navigation("location");
                 });
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Company", b =>
@@ -5376,6 +5659,11 @@ namespace Core.Infrastructure.Migrations
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Door", b =>
                 {
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.BreakGlass", "bg")
+                        .WithOne("door")
+                        .HasForeignKey("Core.Infrastructure.Persistences.Entities.Door", "bg_id")
+                        .OnDelete(DeleteBehavior.Cascade);
+
                     b.HasOne("Core.Infrastructure.Persistences.Entities.Buzzer", "buzzer")
                         .WithOne("door")
                         .HasForeignKey("Core.Infrastructure.Persistences.Entities.Door", "buzzer_id")
@@ -5398,15 +5686,12 @@ namespace Core.Infrastructure.Migrations
                         .HasForeignKey("Core.Infrastructure.Persistences.Entities.Door", "relay_id")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("Core.Infrastructure.Persistences.Entities.Rex", "rex")
-                        .WithOne("door")
-                        .HasForeignKey("Core.Infrastructure.Persistences.Entities.Door", "rex_id")
-                        .OnDelete(DeleteBehavior.Cascade);
-
                     b.HasOne("Core.Infrastructure.Persistences.Entities.Sensor", "sensor")
                         .WithOne("door")
                         .HasForeignKey("Core.Infrastructure.Persistences.Entities.Door", "sensor_id")
                         .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("bg");
 
                     b.Navigation("buzzer");
 
@@ -5415,8 +5700,6 @@ namespace Core.Infrastructure.Migrations
                     b.Navigation("location");
 
                     b.Navigation("relay");
-
-                    b.Navigation("rex");
 
                     b.Navigation("sensor");
                 });
@@ -5506,6 +5789,25 @@ namespace Core.Infrastructure.Migrations
                         .HasForeignKey("location_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("location");
+                });
+
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Input", b =>
+                {
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.DeviceModule", "device_module")
+                        .WithMany("inputs")
+                        .HasForeignKey("device_module_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.Location", "location")
+                        .WithMany("inputs")
+                        .HasForeignKey("location_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("device_module");
 
                     b.Navigation("location");
                 });
@@ -5681,7 +5983,22 @@ namespace Core.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.Door", "door")
+                        .WithMany("rexes")
+                        .HasForeignKey("door_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.TimeZone", "timezone")
+                        .WithMany("rexes")
+                        .HasForeignKey("timezone_id")
+                        .OnDelete(DeleteBehavior.SetNull);
+
                     b.Navigation("device_module");
+
+                    b.Navigation("door");
+
+                    b.Navigation("timezone");
                 });
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Role", b =>
@@ -5855,6 +6172,11 @@ namespace Core.Infrastructure.Migrations
                     b.Navigation("user");
                 });
 
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.BreakGlass", b =>
+                {
+                    b.Navigation("door");
+                });
+
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Buzzer", b =>
                 {
                     b.Navigation("door")
@@ -5895,7 +6217,11 @@ namespace Core.Infrastructure.Migrations
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.DeviceModule", b =>
                 {
+                    b.Navigation("break_glasses");
+
                     b.Navigation("buzzers");
+
+                    b.Navigation("inputs");
 
                     b.Navigation("outputs");
 
@@ -5913,6 +6239,8 @@ namespace Core.Infrastructure.Migrations
                     b.Navigation("group_components");
 
                     b.Navigation("readers");
+
+                    b.Navigation("rexes");
                 });
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Face", b =>
@@ -5968,6 +6296,8 @@ namespace Core.Infrastructure.Migrations
                     b.Navigation("groups");
 
                     b.Navigation("holidays");
+
+                    b.Navigation("inputs");
 
                     b.Navigation("intervals");
 
@@ -6028,12 +6358,6 @@ namespace Core.Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Rex", b =>
-                {
-                    b.Navigation("door")
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Role", b =>
                 {
                     b.Navigation("module_permission");
@@ -6053,6 +6377,8 @@ namespace Core.Infrastructure.Migrations
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.TimeZone", b =>
                 {
                     b.Navigation("group_components");
+
+                    b.Navigation("rexes");
 
                     b.Navigation("timezone_intervals");
                 });

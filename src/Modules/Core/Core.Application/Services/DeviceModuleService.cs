@@ -1,3 +1,4 @@
+using Adapter.Contract.Interfaces;
 using Core.Application.Interfaces;
 using Core.Contract.DTOs.DeviceModule;
 using Core.Contract.Interfaces;
@@ -9,7 +10,12 @@ using SharedKernel.Messaging;
 
 namespace Core.Application.Services;
 
-public sealed class DeviceModuleService(IDeviceModuleRepository repo, IMessageBus bus) : IDeviceModule
+public sealed class DeviceModuleService(
+  IComponentMappingRepository com,
+  IDeviceModuleRepository repo,
+  IAdapterFactory adapter, 
+  IMessageBus bus
+  ) : IDeviceModule
 {
   public async Task<Guid> CreateAsync(CreateDeviceModuleDto dto, CancellationToken ct = default)
   {
@@ -145,7 +151,30 @@ public sealed class DeviceModuleService(IDeviceModuleRepository repo, IMessageBu
             .ToArray();
   }
 
-  public async Task<Guid> UpdateAsync(UpdateDeviceModuleDto dto, CancellationToken ct = default)
+      public async Task<bool> GetStatusAsync(Guid guid, CancellationToken ct = default)
+      {
+          var deviceModule = await repo.GetAsync(guid,ct);
+
+          var deviceId = (short)await com.GetExternalIdByMacAndEntityAsync(deviceModule.Mac,EntityType.Device);
+          var moduleId = (short)await com.GetExternalIdByGuidAndEntityAsync(guid,EntityType.DeviceModule);
+
+          await adapter.GetAdapter(Vendor.aero).Module.GetStatusAsync(
+            deviceModule.Mac,
+            string.Empty,
+            deviceId,
+            moduleId,
+            ct
+          );
+
+          return true;
+      }
+
+      public Task<bool> GetStatusesAsync(IEnumerable<Guid> guids, CancellationToken ct = default)
+      {
+            throw new NotImplementedException();
+      }
+
+      public async Task<Guid> UpdateAsync(UpdateDeviceModuleDto dto, CancellationToken ct = default)
   {
     throw new NotImplementedException();
   }

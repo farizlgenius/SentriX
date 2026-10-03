@@ -58,7 +58,6 @@ public sealed class TurnstileService(
         )).ToList(),
         x.Sensor == null ? null : new Sensor(
           x.Sensor.SlotNo,
-          x.Sensor.Mode,
           x.Sensor.Metadata,
           x.Sensor.Vendor,
           sensorDeviceModuleIdMap[x.Sensor.DeviceModuleGuid]
@@ -168,7 +167,6 @@ public sealed class TurnstileService(
         )).ToList(),
         x.Sensor == null ? null : new Sensor(
           x.Sensor.SlotNo,
-          x.Sensor.Mode,
           x.Sensor.Metadata,
           x.Sensor.Vendor,
           sensorDeviceModuleIdMap[x.Sensor.DeviceModuleGuid]

@@ -131,6 +131,17 @@ public sealed class DeviceService(
           locationId,
           ct
         );
+
+        //await adapter.GetAdapter(d.Vendor).Device.SetExternalIdAsync(d.Mac, d.Ip, tempD.Id, (int)externalId);
+        await comm.InsertComponentMappingAsync(
+          d.Guid,
+          EntityType.DeviceModule,
+          0,
+          d.Mac,
+          d.Vendor,
+          locationId,
+          ct
+        );
       }
       else
       {

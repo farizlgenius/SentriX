@@ -55,6 +55,7 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
       public DbSet<AdapterEvent> AdapterEvents { get; set; }
       public DbSet<ExceptionEvent> ExceptionEvent {get ;set;}
       public DbSet<AuditTrail> AuditTrails {get; set;}
+      public DbSet<CardFormat> CardFormats {get; set;}
       
       protected override void OnModelCreating(ModelBuilder modelBuilder)
       {
@@ -161,6 +162,8 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
             .Property(o => o.entity)
             .HasConversion<string>();
 
+
+
             modelBuilder.Entity<AdapterEvent>(b =>
            {
                  b.Property(d => d.vendor).HasConversion<string>();
@@ -186,21 +189,21 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
             modelBuilder.Entity<Rex>(b =>
             {
                   b.Property(x => x.vendor).HasConversion<string>();
-                  b.Property(x => x.mode).HasConversion<string>();
+                  
             });
 
             // Relay Enums
             modelBuilder.Entity<Relay>(b =>
             {
                   b.Property(x => x.vendor).HasConversion<string>();
-                  b.Property(x => x.mode).HasConversion<string>();
+                  
             });
 
             // Sensor Enums
             modelBuilder.Entity<Sensor>(b =>
             {
                   b.Property(x => x.vendor).HasConversion<string>();
-                  b.Property(x => x.mode).HasConversion<string>();
+                  
             });
 
              modelBuilder.Entity<BreakGlass>(b =>
@@ -212,13 +215,13 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
             modelBuilder.Entity<Output>(b =>
             {
                   b.Property(x => x.vendor).HasConversion<string>();
-                  b.Property(x => x.mode).HasConversion<string>();
+                  
             });
 
             modelBuilder.Entity<Input>(b =>
             {
                   b.Property(x => x.vendor).HasConversion<string>();
-                  b.Property(x => x.mode).HasConversion<string>();
+                  
             });
 
 
@@ -1509,6 +1512,8 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                         }
                   );
 
+
+
             // Map Timezone
 
             modelBuilder.Entity<Core.Infrastructure.Persistences.Entities.ComponentMapping>()
@@ -1536,6 +1541,66 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                               location_id=1
                         }
                   );
+
+            // Card Format
+
+            modelBuilder.Entity<CardFormat>()
+            .HasData(
+                  new CardFormat
+                  {
+                        id=1,
+                        name="26-bit Wiegand",
+                        fac=-1,
+                        bits=26,
+                        even_parity_len=0,
+                        even_parity_loc=-1,
+                        odd_parity_len=0,
+                        odd_parity_loc=-1,
+                        fac_len=0,
+                        fac_loc=-1,
+                        card_no_len=26,
+                        card_no_loc=0,
+                        issue_code_len=0,
+                        issue_code_loc=-1,
+
+                  },
+                  new CardFormat
+                  {
+                        id=2,
+                        name="32-bit Wiegand",
+                        fac=-1,
+                        bits=32,
+                        even_parity_len=0,
+                        even_parity_loc=-1,
+                        odd_parity_len=0,
+                        odd_parity_loc=-1,
+                        fac_len=0,
+                        fac_loc=-1,
+                        card_no_len=32,
+                        card_no_loc=0,
+                        issue_code_len=0,
+                        issue_code_loc=-1,
+
+                  },
+                  new CardFormat
+                  {
+                        id=3,
+                        name="37-bit Wiegand",
+                        fac=-1,
+                        bits=37,
+                        even_parity_len=0,
+                        even_parity_loc=-1,
+                        odd_parity_len=0,
+                        odd_parity_loc=-1,
+                        fac_len=0,
+                        fac_loc=-1,
+                        card_no_len=37,
+                        card_no_loc=0,
+                        issue_code_len=0,
+                        issue_code_loc=-1,
+
+                  }
+            );
 
 
 

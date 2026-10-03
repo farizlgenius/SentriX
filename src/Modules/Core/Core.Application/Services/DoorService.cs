@@ -24,6 +24,7 @@ public sealed class DoorService(
   public async Task<Guid> CreateAsync(CreateDoorDto dto, CancellationToken ct = default)
   {
 
+    // Actually it need to check that 
     //var locationId = await bus.QueryAsync(new LocationIdByGuidQuery(dto.LocationGuid));
     var deviceId = await device.GetIdByGuidAsync(dto.DeviceGuid);
     var dev = await device.GetAsync(dto.DeviceGuid, ct);
@@ -65,28 +66,24 @@ public sealed class DoorService(
       )).ToList(),
       dto.Sensor == null ? null : new Sensor(
         dto.Sensor.SlotNo,
-        dto.Sensor.Mode,
         dto.Sensor.Metadata,
         dto.Sensor.Vendor,
         sensorMapModuleId
         ),
         dto.Relay == null ? null : new Relay(
           dto.Relay.SlotNo,
-          dto.Relay.Mode,
           dto.Relay.Metadata,
           dto.Relay.Vendor,
           relayMapModuleId
         ),
         dto.Buzzer == null ? null : new Buzzer(
           dto.Buzzer.SlotNo,
-          dto.Buzzer.Mode,
           dto.Buzzer.Metadata,
           dto.Buzzer.Vendor,
           buzzerMapModuleId
         ),
         dto.Rexes.Select(x => new Rex(
         x.SlotNo,
-        x.Mode,
         x.Metadata,
         x.Vendor,
         readerMapModuleId[x.DeviceModuleGuid]
@@ -220,7 +217,15 @@ public sealed class DoorService(
     return d.Guid;
   }
 
-  public async Task<bool> DeleteByGuidAsync(Guid guid, CancellationToken ct = default)
+  public async Task<Guid> CreateTemplateAsync(CreateTemplateDto dto, CancellationToken ct = default)
+  {
+    throw new NotImplementedException();
+    
+  }
+
+
+
+      public async Task<bool> DeleteByGuidAsync(Guid guid, CancellationToken ct = default)
   {
     if (!await repo.IsAnyGuidAsync(guid, ct))
       throw new NotFoundException(EntityType.Door.ToString(), guid.ToString());
@@ -290,7 +295,8 @@ public sealed class DoorService(
     return await repo.GetPaginationAsync(param, ct);
   }
 
-  public async Task<Guid> UpdateAsync(UpdateDoorDto dto, CancellationToken ct = default)
+
+      public async Task<Guid> UpdateAsync(UpdateDoorDto dto, CancellationToken ct = default)
   {
     // Check is any location with guid
     if (!await repo.IsAnyGuidAsync(dto.Guid, ct))
@@ -336,28 +342,24 @@ public sealed class DoorService(
       )).ToList(),
       dto.Sensor == null ? null : new Sensor(
         dto.Sensor.SlotNo,
-        dto.Sensor.Mode,
         dto.Sensor.Metadata,
         dto.Sensor.Vendor,
         sensorMapModuleId
         ),
         dto.Relay == null ? null : new Relay(
           dto.Relay.SlotNo,
-          dto.Relay.Mode,
           dto.Relay.Metadata,
           dto.Relay.Vendor,
           relayMapModuleId
         ),
         dto.Buzzer == null ? null : new Buzzer(
           dto.Buzzer.SlotNo,
-          dto.Buzzer.Mode,
           dto.Buzzer.Metadata,
           dto.Buzzer.Vendor,
           buzzerMapModuleId
         ),
        dto.Rexes.Select(x => new Rex(
         x.SlotNo,
-        x.Mode,
         x.Metadata,
         x.Vendor,
         readerMapModuleId[x.DeviceModuleGuid]

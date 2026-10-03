@@ -1,4 +1,5 @@
 using HID.Aero.ScpdNet.Wrapper;
+using SharedKernel.Enums;
 
 namespace Aero.Infrastructure.Helpers;
 
@@ -849,11 +850,11 @@ public sealed class DescriptionHelper
     }
   }
 
-  public static string DecodeStatusTypeCoS(short b)
+  public static InputStatus DecodeStatusTypeCoS(short b)
   {
     byte codeValue = (byte)(b & 0x07);
 
-    return ((StatusCode)codeValue).ToString();
+    return (InputStatus)codeValue;
 
   }
 

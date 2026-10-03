@@ -8,7 +8,6 @@ public sealed class Output : BaseDomain
   public string Name { get; set; } = string.Empty;
   public int SlotNo { get; set; }
   public string Metadata { get; set; } = string.Empty;
-  public OutputMode Mode { get; set; } = OutputMode.NC;
   public Vendor Vendor { get; set; } = Vendor.aero;
   public int DeviceModuleId { get; set; }
   public int LocationId { get; set; }
@@ -17,7 +16,6 @@ public sealed class Output : BaseDomain
     string name,
     int slotNo,
     string metadata,
-    OutputMode mode,
     Vendor vendor,
     int deviceModuleId,
     int locationId
@@ -28,7 +26,6 @@ public sealed class Output : BaseDomain
     Name = name;
     SlotNo = slotNo;
     Metadata = metadata;
-    Mode = mode;
     Vendor = vendor;
     DeviceModuleId = deviceModuleId;
     LocationId = locationId;
@@ -39,7 +36,6 @@ public sealed class Output : BaseDomain
     string name,
     int slotNo,
     string metadata,
-    OutputMode mode,
     Vendor vendor,
     int deviceModuleId,
     int locationId
@@ -50,7 +46,6 @@ public sealed class Output : BaseDomain
     Name = name;
     SlotNo = slotNo;
     Metadata = metadata;
-    Mode = mode;
     Vendor = vendor;
     DeviceModuleId = deviceModuleId;
     LocationId = locationId;

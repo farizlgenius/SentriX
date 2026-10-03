@@ -12,8 +12,8 @@ using Setting.Infrastructure.Persistences;
 namespace Setting.Infrastructure.Migrations
 {
     [DbContext(typeof(SettingDbContext))]
-    [Migration("20260923162116_AddElvlAeroSettingValue2")]
-    partial class AddElvlAeroSettingValue2
+    [Migration("20261003153635_InitialDb")]
+    partial class InitialDb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -71,7 +71,13 @@ namespace Setting.Infrastructure.Migrations
                     b.Property<int>("host_timeout")
                         .HasColumnType("integer");
 
+                    b.Property<bool>("is_active")
+                        .HasColumnType("boolean");
+
                     b.Property<bool>("is_daylight_saving")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("is_default")
                         .HasColumnType("boolean");
 
                     b.Property<int>("issue_code_bit")
@@ -176,7 +182,9 @@ namespace Setting.Infrastructure.Migrations
                             gmt_offset = -25200,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             host_timeout = 5,
+                            is_active = true,
                             is_daylight_saving = false,
+                            is_default = false,
                             issue_code_bit = 1,
                             max_elalvl = 256,
                             max_floor_per_acr = 128,
@@ -225,6 +233,12 @@ namespace Setting.Infrastructure.Migrations
                         .HasColumnType("uuid")
                         .HasDefaultValueSql("gen_random_uuid()");
 
+                    b.Property<bool>("is_active")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("is_default")
+                        .HasColumnType("boolean");
+
                     b.Property<bool>("is_digit")
                         .HasColumnType("boolean");
 
@@ -255,6 +269,8 @@ namespace Setting.Infrastructure.Migrations
                             id = 1,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             guid = new Guid("ae243161-6067-47d0-8bcc-1990388bb6e6"),
+                            is_active = true,
+                            is_default = false,
                             is_digit = false,
                             is_lower = false,
                             is_symbol = false,
@@ -282,6 +298,12 @@ namespace Setting.Infrastructure.Migrations
                         .HasColumnType("uuid")
                         .HasDefaultValueSql("gen_random_uuid()");
 
+                    b.Property<bool>("is_active")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("is_default")
+                        .HasColumnType("boolean");
+
                     b.Property<Guid>("password_rule_guid")
                         .HasColumnType("uuid");
 
@@ -306,6 +328,8 @@ namespace Setting.Infrastructure.Migrations
                             id = 1,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             guid = new Guid("f371dff7-fa82-4a0f-95ba-f24954cf73f7"),
+                            is_active = true,
+                            is_default = false,
                             password_rule_guid = new Guid("ae243161-6067-47d0-8bcc-1990388bb6e6"),
                             pattern = "P@ssw0rd",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -315,6 +339,8 @@ namespace Setting.Infrastructure.Migrations
                             id = 2,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             guid = new Guid("c347ec2d-17e7-4048-82df-9b1b65730669"),
+                            is_active = true,
+                            is_default = false,
                             password_rule_guid = new Guid("ae243161-6067-47d0-8bcc-1990388bb6e6"),
                             pattern = "password",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -324,6 +350,8 @@ namespace Setting.Infrastructure.Migrations
                             id = 3,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             guid = new Guid("b3124c81-3c54-46b3-bafd-a945854fc946"),
+                            is_active = true,
+                            is_default = false,
                             password_rule_guid = new Guid("ae243161-6067-47d0-8bcc-1990388bb6e6"),
                             pattern = "admin",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -333,6 +361,8 @@ namespace Setting.Infrastructure.Migrations
                             id = 4,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             guid = new Guid("df75695c-6821-49ad-a857-60e1b0763329"),
+                            is_active = true,
+                            is_default = false,
                             password_rule_guid = new Guid("ae243161-6067-47d0-8bcc-1990388bb6e6"),
                             pattern = "123456",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)

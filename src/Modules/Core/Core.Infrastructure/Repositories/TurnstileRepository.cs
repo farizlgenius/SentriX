@@ -96,7 +96,6 @@ public sealed class TurnstileRepository(CoreDbContext context) : ITurnstileRepos
             l.sensor == null ? null :
             new SensorDto(
               l.sensor.slot_no,
-              l.sensor.mode,
               l.sensor.metadata,
               l.sensor.vendor,
               l.sensor.device_module.guid
@@ -135,7 +134,6 @@ public sealed class TurnstileRepository(CoreDbContext context) : ITurnstileRepos
             l.sensor == null ? null :
             new SensorDto(
               l.sensor.slot_no,
-              l.sensor.mode,
               l.sensor.metadata,
               l.sensor.vendor,
               l.sensor.device_module.guid
@@ -239,7 +237,6 @@ public sealed class TurnstileRepository(CoreDbContext context) : ITurnstileRepos
             l.sensor == null ? null :
             new SensorDto(
               l.sensor.slot_no,
-              l.sensor.mode,
               l.sensor.metadata,
               l.sensor.vendor,
               l.sensor.device_module.guid

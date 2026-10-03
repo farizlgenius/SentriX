@@ -17,6 +17,9 @@ import { BaseTable } from "../../../pages/UiElements/BaseTable";
 import { DeviceModuleModel } from "../../../enum/DeviceModuleModel";
 import { useAuth } from "../../../context/AuthContext";
 import { FeatureId } from "../../../enum/FeatureId";
+import { ModuleEndpoint } from "../../../endpoint/ModuleEndpoint";
+import { send } from "../../../api/api";
+import { InputStatus } from "../../../enum/InputStatus";
 
 interface AeroModuleDetailFormInterface {
   data: DeviceDto;
@@ -50,7 +53,14 @@ const keys = [
 export const AeroModuleDetailForm: React.FC<
   PropsWithChildren<AeroModuleDetailFormInterface>
 > = ({ data }) => {
-  const [status, setStatus] = useState<StatusDto[]>([]);
+  const statusDefault:StatusDto[] = data.deviceModules.map((a:DeviceModuleDto) => ({
+    guid:a.guid,
+    status:Status.Unknown,
+    batt:InputStatus.Unknown,
+    ac:InputStatus.Unknown,
+    tamper:InputStatus.Unknown
+  }))
+  const [status, setStatus] = useState<StatusDto[]>(statusDefault);
   const [refresh, setRefresh] = useState<boolean>(false);
   const toggleRefresh = () => setRefresh(!refresh);
   const [select, setSelect] = useState<DeviceModuleDto[]>([]);
@@ -68,10 +78,10 @@ export const AeroModuleDetailForm: React.FC<
 
   };
 
-  // const fetchStatus = async (moduleId: number) => {
-  //   await send.get(ModuleEndpoint.STATUS(moduleId));
-  //   //Helper.handlePopup(res, PopUpMsg.GET_MODULE_STATUS, showPopup)
-  // };
+  const fetchStatus = async (guid: string) => {
+    var res = await send.get(ModuleEndpoint.STATUS(guid));
+    console.log(res);
+  };
 
   const handleEdit = (item: DeviceModuleDto) => { }
   const handleInfo = (item: DeviceModuleDto) => { }
@@ -90,13 +100,13 @@ export const AeroModuleDetailForm: React.FC<
         <Badge
           size="sm"
           color={
-            status.find((x) => x.guid == item.guid)?.batt == Status.Active
+            status.find((x) => x.guid == item.guid)?.batt == InputStatus.Active
               ? "success"
               : "error"
           }
         >
-          {status.find((x) => x.guid == item.guid)?.batt == Status.Active ? "Active" :
-            "Inactive"}
+          {status.find((x) => x.guid == item.guid)?.batt == InputStatus.Active ? "Active" :
+           InputStatus[status.find((x) => x.guid == item.guid)?.batt ?? InputStatus.Unknown]}
         </Badge>
       </TableCell>,
       <TableCell
@@ -105,13 +115,13 @@ export const AeroModuleDetailForm: React.FC<
         <Badge
           size="sm"
           color={
-            status.find((x) => x.guid == item.guid)?.ac == Status.Active
+            status.find((x) => x.guid == item.guid)?.ac == InputStatus.Active
               ? "success"
               : "error"
           }
         >
-          {status.find((x) => x.guid == item.guid)?.ac == Status.Active ? "Active" :
-            "Inactive"}
+          {status.find((x) => x.guid == item.guid)?.ac == InputStatus.Active ? "Active" :
+            InputStatus[status.find((x) => x.guid == item.guid)?.ac ?? InputStatus.Unknown]}
         </Badge>
       </TableCell>,
       <TableCell key={index + 3} className="text-center">
@@ -119,13 +129,13 @@ export const AeroModuleDetailForm: React.FC<
         <Badge
           size="sm"
           color={
-            status.find((x) => x.guid == item.guid)?.tamper == Status.Active
+            status.find((x) => x.guid == item.guid)?.tamper == InputStatus.Active
               ? "success"
               : "error"
           }
         >
-          {status.find((x) => x.guid == item.guid)?.tamper == Status.Active ? "Active" :
-            "Inactive"}
+          {status.find((x) => x.guid == item.guid)?.tamper == InputStatus.Active ? "Active" :
+            InputStatus[status.find((x) => x.guid == item.guid)?.tamper ?? InputStatus.Unknown]}
         </Badge>
       </TableCell>,
 
@@ -144,7 +154,7 @@ export const AeroModuleDetailForm: React.FC<
         >
           {statusDto.find((statusItem) => statusItem.guid === item.guid)?.status == Status.Online
             ? "Online"
-            : "Offline"}
+            : Status[statusDto.find((statusItem) => statusItem.guid === item.guid)?.status ?? Status.Unknown]}
         </Badge>
       </TableCell>,
     ];
@@ -154,7 +164,7 @@ export const AeroModuleDetailForm: React.FC<
     /* UseEffect */
   }
   useEffect(() => {
-    const setup = async () => {
+    const initSignalR = async () => {
       const connection = SignalRService.getConnection();
       if (!connection) return;
 
@@ -178,22 +188,32 @@ export const AeroModuleDetailForm: React.FC<
               },
           ),
         );
-        toggleRefresh();
       });
-
-      await SignalRService.joinGroup(SignalRTopic.MODULE_STATUS);
-      // fetchModule();
+      try{
+        await SignalRService.joinGroup(SignalRTopic.MODULE_STATUS);
+      }catch(err){
+        console.error("Subscribe error:", err);
+      }
+      
+      
     };
 
-    setup();
+    initSignalR();
 
     return () => {
       const connection = SignalRService.getConnection();
       connection?.off(SignalRTopic.MODULE_STATUS);
     };
-  }, []);
+  }, [refresh, token]);
 
-  useEffect(() => { }, [refresh]);
+  useEffect(() => {
+    data.deviceModules.map((a:DeviceModuleDto) => {
+      fetchStatus(a.guid);
+    })
+  },[])
+
+  
+
 
   return (
     <>

@@ -1,5 +1,6 @@
 using Core.Contract.DTOs.Door;
 using Core.Domain.Entities;
+using SharedKernel.Domain;
 
 namespace Core.Application.Interfaces;
 

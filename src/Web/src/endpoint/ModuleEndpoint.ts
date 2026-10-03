@@ -19,7 +19,7 @@ export const ModuleEndpoint = {
   GET_ID: (id: number) => `/api/${CONTROLLER}/${id}`,
   GET_BY_DEVICE_ID: (deviceId: number) =>
     `/api/${CONTROLLER}/option/${deviceId}`,
-  STATUS: (moduleId: number) => `/api/${CONTROLLER}/status/${moduleId}`,
+  STATUS: (guid: string) => `/api/${CONTROLLER}/status/${guid}`,
   BAUDRATE: `/api/${CONTROLLER}/baudrate`,
   PROTOCOL: `/api/${CONTROLLER}/protocol`,
   GET_READER_SLOT:(guid:string) => `/api/${CONTROLLER}/reader/${guid}`,

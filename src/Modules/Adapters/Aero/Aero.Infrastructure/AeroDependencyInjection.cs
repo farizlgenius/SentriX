@@ -65,6 +65,10 @@ public static class AeroDependencyInjection
     services.AddScoped<IDoorRepository,DoorRepository>();
     services.AddScoped<IDoorAdapter,DoorService>();
 
+    // Module 
+    services.AddScoped<IModuleRepository,ModuleRepository>();
+    services.AddScoped<IModuleAdapter,ModuleService>();
+
     // Output 
     services.AddScoped<IOutputRepository,OutputRepository>();
 

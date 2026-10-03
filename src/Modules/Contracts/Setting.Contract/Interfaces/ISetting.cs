@@ -1,4 +1,6 @@
+using Setting.Contract.DTOs;
 using Setting.Contract.DTOs.Setting;
+using SharedKernel.Domain;
 
 namespace Setting.Contract.Interfaces;
 

@@ -7,7 +7,6 @@ namespace Core.Infrastructure.Persistences.Entities;
 public sealed class Buzzer : BaseEntity
 {
   public int slot_no { get; set; }
-  public OutputMode mode { get; set; } = OutputMode.NC;
   public string metadata { get; set; } = string.Empty;
   public Vendor vendor { get; set; } = Vendor.aero;
   // Relation
@@ -23,7 +22,6 @@ public sealed class Buzzer : BaseEntity
     slot_no = d.SlotNo;
     metadata = d.Metadata;
     vendor = d.Vendor;
-    mode = d.OutputMode;
     device_module_id = d.DeviceModuleId;
   }
 }

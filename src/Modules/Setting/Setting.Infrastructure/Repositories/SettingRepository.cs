@@ -3,6 +3,8 @@ using Setting.Contract.DTOs.Setting;
 using Setting.Infrastructure.Persistences;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel.Exceptions;
+using SharedKernel.Domain;
+using Setting.Contract.DTOs;
 
 namespace Setting.Infrastructure.Repositories;
 
@@ -53,4 +55,6 @@ public sealed class SettingRepository(SettingDbContext context) : ISettingReposi
       ))
       .FirstOrDefaultAsync(ct) ?? throw new NotFoundException($"Aero Driver Setting.");
   }
+
+  
 }

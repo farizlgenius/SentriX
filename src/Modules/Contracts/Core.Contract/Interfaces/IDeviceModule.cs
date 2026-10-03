@@ -13,4 +13,6 @@ public interface IDeviceModule : IBase<DeviceModuleDto, CreateDeviceModuleDto, U
   Task<IEnumerable<OptionDto>> GetReaderSlotAsync(Guid guid,CancellationToken ct = default);
   Task<IEnumerable<OptionDto>> GetInputSlotAsync(Guid guid,CancellationToken ct = default);
   Task<IEnumerable<OptionDto>> GetOutputSlotAsync(Guid guid,CancellationToken ct = default);
+  Task<bool> GetStatusAsync(Guid guid,CancellationToken ct= default);
+  Task<bool> GetStatusesAsync(IEnumerable<Guid> guids,CancellationToken ct = default);
 }

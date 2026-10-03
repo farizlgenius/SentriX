@@ -5,7 +5,6 @@ namespace Core.Infrastructure.Persistences.Entities;
 public sealed class Rex : BaseEntity
 {
   public int slot_no { get; set; }
-  public InputMode mode { get; set; }
   public string metadata { get; set; } = string.Empty;
   public Vendor vendor { get; set; } = Vendor.aero;
   // Relation
@@ -23,7 +22,6 @@ public sealed class Rex : BaseEntity
  )
   {
     slot_no = d.SlotNo;
-    mode = d.InputMode;
     metadata = d.Metadata;
     vendor = d.Vendor;
     device_module_id = d.DeviceModuleId;

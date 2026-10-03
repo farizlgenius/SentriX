@@ -17,6 +17,7 @@ public class DoorController(IDoor door) : ControllerBase
     return Ok(res);
   }
 
+
   [HttpGet("{guid}")]
   public async Task<IActionResult> GetByGuidAsync([FromQuery] Guid guid)
   {
@@ -36,6 +37,13 @@ public class DoorController(IDoor door) : ControllerBase
   {
     var res = await door.CreateAsync(dto);
     return Ok(res);
+  }
+
+  [HttpPost]
+  public async Task<IActionResult> CreateTemplateAsync([FromBody] CreateTemplateDto dto)
+  {
+      var res = await door.CreateTemplateAsync(dto);
+      return Ok(res);
   }
 
   [HttpPut]

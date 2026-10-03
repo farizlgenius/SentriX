@@ -108,14 +108,12 @@ public sealed class DoorRepository(CoreDbContext context) : IDoorRepository
         ).ToList(),
         x.buzzer == null ? null : new BuzzerDto(
           x.buzzer.slot_no,
-          x.buzzer.mode,
           x.buzzer.metadata,
           x.buzzer.vendor,
           x.buzzer.device_module.guid
         ),
         x.rexes.Select(x => new RexDto(
           x.slot_no,
-          x.mode,
           x.metadata,
           x.vendor,
           x.device_module.guid,
@@ -123,14 +121,12 @@ public sealed class DoorRepository(CoreDbContext context) : IDoorRepository
         )).ToList(),
         x.sensor == null ? null : new SensorDto(
           x.sensor.slot_no,
-          x.sensor.mode,
           x.sensor.metadata,
           x.sensor.vendor,
           x.sensor.device_module.guid
         ),
         x.relay == null ? null : new RelayDto(
           x.relay.slot_no,
-          x.relay.mode,
           x.relay.metadata,
           x.relay.vendor,
           x.relay.device_module.guid
@@ -173,14 +169,12 @@ public sealed class DoorRepository(CoreDbContext context) : IDoorRepository
         ).ToList(),
         x.buzzer == null ? null : new BuzzerDto(
           x.buzzer.slot_no,
-          x.buzzer.mode,
           x.buzzer.metadata,
           x.buzzer.vendor,
           x.buzzer.device_module.guid
         ),
         x.rexes.Select(x => new RexDto(
           x.slot_no,
-          x.mode,
           x.metadata,
           x.vendor,
           x.device_module.guid,
@@ -188,14 +182,12 @@ public sealed class DoorRepository(CoreDbContext context) : IDoorRepository
         )).ToList(),
         x.sensor == null ? null : new SensorDto(
           x.sensor.slot_no,
-          x.sensor.mode,
           x.sensor.metadata,
           x.sensor.vendor,
           x.sensor.device_module.guid
         ),
         x.relay == null ? null : new RelayDto(
           x.relay.slot_no,
-          x.relay.mode,
           x.relay.metadata,
           x.relay.vendor,
           x.relay.device_module.guid
@@ -312,14 +304,12 @@ public sealed class DoorRepository(CoreDbContext context) : IDoorRepository
                       ).ToList(),
                       x.buzzer == null ? null : new BuzzerDto(
                         x.buzzer.slot_no,
-                        x.buzzer.mode,
                         x.buzzer.metadata,
                         x.buzzer.vendor,
                         x.buzzer.device_module.guid
                       ),
                       x.rexes.Select(x => new RexDto(
           x.slot_no,
-          x.mode,
           x.metadata,
           x.vendor,
           x.device_module.guid,
@@ -327,14 +317,12 @@ public sealed class DoorRepository(CoreDbContext context) : IDoorRepository
         )).ToList(),
                       x.sensor == null ? null : new SensorDto(
                         x.sensor.slot_no,
-                        x.sensor.mode,
                         x.sensor.metadata,
                         x.sensor.vendor,
                         x.sensor.device_module.guid
                       ),
                       x.relay == null ? null : new RelayDto(
                         x.relay.slot_no,
-                        x.relay.mode,
                         x.relay.metadata,
                         x.relay.vendor,
                         x.relay.device_module.guid
@@ -359,6 +347,7 @@ public sealed class DoorRepository(CoreDbContext context) : IDoorRepository
           res
           );
   }
+
 
   public async Task<bool> IsAnyByNameAndLocationIdAsync(string name, int locationId = 0, CancellationToken ct = default)
   {
