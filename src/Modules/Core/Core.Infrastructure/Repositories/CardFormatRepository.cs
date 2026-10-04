@@ -121,7 +121,6 @@ public sealed class CardFormatRepository(CoreDbContext context) : ICardFormatRep
                         x.card_no_loc,
                         x.issue_code_len,
                         x.issue_code_loc,
-                        x.location == null ? Guid.Empty : x.location.guid,
                         x.is_active,
                         x.is_default
                   )).ToListAsync();

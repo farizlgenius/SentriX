@@ -16,4 +16,11 @@ public class BaseRepository : IBaseRepository
     return success;
 
   }
+
+  public bool ASCIISend(string command)
+  {
+    return SCPDLL.scpConfigCommand(command);
+  }
+
+
 }

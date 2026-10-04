@@ -63,6 +63,14 @@ public interface IDeviceAdapter
             CancellationToken ct = default
       );
 
+      Task CommandAsync(
+            string mac,
+            string ip,
+            short scpId,
+            string command,
+            CancellationToken ct = default
+      );
+
       
 
 

@@ -337,6 +337,7 @@ public sealed class ReplyWorker(Channel<ReplyMessage> queue, ILogger<ReplyWorker
                   notifier = scope.ServiceProvider.GetRequiredService<INotifier>();
                   guid = await bus.QueryAsync(new GuidByExternalIdAndEntityAndVendorQuery(message.sts_sio.number,EntityType.DeviceModule,Vendor.aero));
                   // await s.HandleFoundSioAsync(message.SCPId,message.sts_sio);
+                  Console.WriteLine(message.sts_sio.GetDebuggerDisplay());
                   await notifier.SendToTopic(NotifierTopic.MODULE_STATUS,
                   new StatusDto(
                       guid,

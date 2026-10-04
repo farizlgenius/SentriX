@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 
 namespace Aero.Domain.Entities;
 
@@ -587,6 +588,7 @@ public sealed class ReplyMessage
     public short throughput { get; set; }
   }
 
+  [DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
   public sealed class SCPReplySrSio
   {
     public short number { get; set; }
@@ -617,6 +619,22 @@ public sealed class ReplyMessage
     public byte nEncKeyStatus { get; set; }
     public byte[] mac_addr { get; set; } = default!;
     public short emg_stat { get; set; }
+
+    // Add this override method to your class
+    public override string ToString()
+    {
+      // Using System.Text.Json to automatically format all properties and arrays cleanly
+      return System.Text.Json.JsonSerializer.Serialize(this, new System.Text.Json.JsonSerializerOptions
+      {
+        WriteIndented = true
+      });
+    }
+
+    // Keep your existing debugger display method, it will now use the new ToString()
+    public string GetDebuggerDisplay()
+    {
+      return ToString();
+    }
   }
 
   public sealed class SCPReplySrMp
@@ -947,5 +965,7 @@ public sealed class ReplyMessage
 
     public short nNicSel { get; set; }
   }
+
+
 }
 

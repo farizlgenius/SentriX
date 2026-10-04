@@ -381,7 +381,10 @@ public sealed class DeviceService(
 
       }
 
+      public async Task CommandAsync(string mac,string ip,short scpId,string command, CancellationToken ct = default)
+      {
+            var res = repo.AsciiCommandAsync(mac,scpId,command);
 
-
-
+            await bus.SendAsync(new AdapterEventCommand(res));
+      }
 }

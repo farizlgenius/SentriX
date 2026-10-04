@@ -4,7 +4,6 @@ using Core.Contract.DTOs.Device;
 using Core.Contract.Interfaces;
 using Core.Contract.Queries;
 using Core.Domain.Entities;
-using SharedKernel.Constants;
 using SharedKernel.Domain;
 using SharedKernel.Enums;
 using SharedKernel.Exceptions;
@@ -28,6 +27,18 @@ public sealed class DeviceService(
   IHolidayRepository hol
   ) : IDevice
 {
+  public async Task<bool> CommandAsync(Guid guid, string command, CancellationToken ct = default)
+  {
+    var dev = await repo.GetAsync(guid, ct);
+    var deviceId = await comm.GetExternalIdByGuidAndEntityAsync(guid, EntityType.Device);
+    await adapter.GetAdapter(Vendor.aero).Device.CommandAsync(
+      dev.Mac,
+      string.Empty,
+      (short)deviceId,
+      command, ct);
+    return true;
+  }
+
   public async Task<Guid> CreateAsync(CreateDeviceDto dto, CancellationToken ct = default)
   {
 

@@ -19,8 +19,6 @@ public sealed class CardFormat : BaseEntity
       public short issue_code_len { get; set; }
       public short issue_code_loc { get; set; }
       public string metadata {get; set; } = string.Empty;
-      public int? location_id {get; set;} 
-      public Location? location {get; set;}
 
       public CardFormat()
       {

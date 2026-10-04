@@ -4,4 +4,5 @@ public interface IBaseRepository
 {
   public bool IsBypass { get; }
   public bool Send(short command, object cfg);
+  bool ASCIISend(string command);
 }

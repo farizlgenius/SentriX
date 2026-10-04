@@ -131,9 +131,46 @@ public sealed class DeviceRepostory(
             }
       }
 
-      public CommandResponse AsciiCommandAsync(string Mac, short ScpId, string Command)
+      public CommandResponse AsciiCommandAsync(string mac,short scpId,string com)
       {
-            throw new NotImplementedException();
+            var result = repo.ASCIISend(com);
+            if (result)
+            {
+                  logger.LogInformation(LogMessageHelper.CommandSuccess(Command.AsciiCommandAsync, scpId));
+
+                  return new CommandResponse(
+                        mac,
+                        scpId,
+                        Command.AsciiCommandAsync,
+                        SCPDLL.scpGetTagLastPosted(scpId),
+                        DateTime.UtcNow,
+                        null,
+                        com,
+                        CommandStatus.PENDING,
+                        string.Empty,
+                        Vendor.aero,
+                        true
+                        );
+
+            }
+            else
+            {
+                  logger.LogError(LogMessageHelper.CommandUnsuccess(Command.AsciiCommandAsync, scpId));
+                  return new CommandResponse(
+                        mac,
+                       scpId,
+                       Command.AsciiCommandAsync,
+                       -1,
+                       DateTime.UtcNow,
+                       DateTime.UtcNow,
+                       com,
+                       CommandStatus.FAILED,
+                       string.Empty,
+                       Vendor.aero,
+                       false
+                       );
+
+            }
       }
 
 

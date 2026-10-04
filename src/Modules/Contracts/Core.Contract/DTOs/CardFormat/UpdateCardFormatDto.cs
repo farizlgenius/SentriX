@@ -16,6 +16,5 @@ public sealed record UpdateCardFormatDto(
       short CardNoLen,
       short CardNoLoc,
       short IssueCodeLen,
-      short IssueCodeLoc,
-      Guid LocationGuid
+      short IssueCodeLoc
 );

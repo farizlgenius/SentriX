@@ -17,6 +17,5 @@ public sealed record CreateCardFormatDto(
       short CardNoLen,
       short CardNoLoc,
       short IssueCodeLen,
-      short IssueCodeLoc,
-      Guid LocationGuid
+      short IssueCodeLoc
 );

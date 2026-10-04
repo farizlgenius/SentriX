@@ -34,10 +34,10 @@ import Modals from "../UiElements/Modals";
 import { CaptureModalData } from "../../model/Event/CaptureModalData";
 
 // Define header Table
-const headers: string[] = ["Date", "Name", "Status", "Remark", "Capture"];
+const headers: string[] = ["Date","Name", "Status", "Remark", "Capture"];
 
 // Define kwy Table
-const keys: string[] = ["dateTime", "name", "code", "remarks", "capture"];
+const keys: string[] = ["timestamp","componentName", "eventCode", "remarks", "capture"];
 
 const Event = () => {
   {
@@ -48,7 +48,7 @@ const Event = () => {
     location: "",
     time: new Date().toString(),
   };
-  const { locationGuid: locationId, locationList } = useLocation();
+  const { locationGuid, locationList } = useLocation();
   const { accentColor } = useTheme();
   const { token } = useAuth();
   const [search, setSearch] = useState<string | undefined>();
@@ -168,7 +168,7 @@ const Event = () => {
       EventEndpoint.GET_PAGINATION(
         pageNumber,
         pageSize,
-        locationId,
+        locationGuid,
         search,
         startDate,
         endDate,
@@ -208,7 +208,7 @@ const Event = () => {
       const connection = SignalRService.getConnection();
       connection?.off(SignalRTopic.EVENT);
     };
-  }, [locationId]);
+  }, [locationGuid]);
 
   useEffect(() => {
     fetchData(1, pageSize, search, startDate, endDate);
@@ -440,7 +440,7 @@ const Event = () => {
               tableKeys={keys}
               specialDisplay={[
                 {
-                  key: "name",
+                  key: "componentName",
                   content: (data, i) => (
                     <TableCell
                       key={i}
@@ -455,7 +455,7 @@ const Event = () => {
                   ),
                 },
                 {
-                  key: "dateTime",
+                  key: "timestamp",
                   content: (data, i) => (
                     <TableCell
                       key={i}

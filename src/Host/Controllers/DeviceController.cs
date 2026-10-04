@@ -74,6 +74,13 @@ namespace Host.Controllers
       return Ok(res);
     }
 
+    [HttpPost("ascii/{guid}")]
+    public async Task<IActionResult> CommandAsync(Guid guid,[FromBody] string command)
+    {
+      var res = await device.CommandAsync(guid,command);
+      return Ok(res);
+    }
+
 
 
   

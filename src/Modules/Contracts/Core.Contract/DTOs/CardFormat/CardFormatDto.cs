@@ -17,7 +17,6 @@ public sealed record CardFormatDto(
       short CardNoLoc,
       short IssueCodeLen,
       short IssueCodeLoc,
-      Guid LocationGuid,
       bool IsActive,
       bool IsDefault
 );

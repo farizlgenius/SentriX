@@ -39,12 +39,12 @@ public class DoorController(IDoor door) : ControllerBase
     return Ok(res);
   }
 
-  [HttpPost]
-  public async Task<IActionResult> CreateTemplateAsync([FromBody] CreateTemplateDto dto)
-  {
-      var res = await door.CreateTemplateAsync(dto);
-      return Ok(res);
-  }
+  // [HttpPost]
+  // public async Task<IActionResult> CreateTemplateAsync([FromBody] CreateTemplateDto dto)
+  // {
+  //     var res = await door.CreateTemplateAsync(dto);
+  //     return Ok(res);
+  // }
 
   [HttpPut]
   public async Task<IActionResult> UpdateAsync([FromBody] UpdateDoorDto dto)

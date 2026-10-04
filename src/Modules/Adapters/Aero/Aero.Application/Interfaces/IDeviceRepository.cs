@@ -86,11 +86,12 @@ public interface IDeviceRepository
       CommandResponse ScpStructureStatusRead(string Mac, short ScpId, List<short> StructureList);
       CommandResponse ElevatorAccessLevelSpecification(string Mac, short ScpId, short MaxEAlvl, short MaxFloor);
       CommandResponse ScpReset(string Mac, short ScpId);
-      CommandResponse AsciiCommandAsync(string Mac, short ScpId, string Command);
+      CommandResponse AsciiCommandAsync(string Mac,short ScpId,string Command);
       CommandResponse SetScpId(string Mac, short ScpId, short To);
       CommandResponse GetTransactionStatus(string Mac, short ScpId);
       CommandResponse SetTransactionLogIndex(string Mac, short ScpId, bool IsEnable);
       CommandResponse DetachScpFromChannel(string Mac, short ScpId);
       CommandResponse DeleteScp(string Mac, short ScpId);
       Task<bool> VerifyMemoryAllocateAsync(string mac,List<StructureStatusMetadata> data,CancellationToken ct= default);
+
 }

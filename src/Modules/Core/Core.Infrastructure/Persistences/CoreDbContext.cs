@@ -1579,7 +1579,7 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                         card_no_len=32,
                         card_no_loc=0,
                         issue_code_len=0,
-                        issue_code_loc=-1,
+                        issue_code_loc=-1
 
                   },
                   new CardFormat
