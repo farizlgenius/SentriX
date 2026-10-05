@@ -16,7 +16,7 @@ export const DoorEndpoint = {
   DELETE_RANGE: `/api/${CONTROLLER}/list`,
   UPDATE: `/api/${CONTROLLER}`,
   POST_ACR_CHANGE_MODE: `/api/${CONTROLLER}/mode`,
-  POST_ACR_UNLOCK: (id: number) => `/api/${CONTROLLER}/unlock/${id}`,
+  POST_ACR_UNLOCK: (guid: string) => `/api/${CONTROLLER}/unlock/${guid}`,
   CREATE: `/api/${CONTROLLER}`,
   GET_ACCESS_READER_MODE: `/api/${CONTROLLER}/reader/mode`,
   GET_DOOR_TYPE: `/api/${CONTROLLER}/type`,

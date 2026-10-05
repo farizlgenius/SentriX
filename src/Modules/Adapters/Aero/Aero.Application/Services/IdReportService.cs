@@ -31,7 +31,6 @@ public sealed class IdReportService(
 {
   public async Task HandleInCommingDeviceAsync(ReplyMessage.SCPReplyIDReport dto, CancellationToken ct = default)
   {
-    Console.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>> Here");
     // Get Setting
     var scpDevice = await setting.GetAeroDriverSettingAsync();
 

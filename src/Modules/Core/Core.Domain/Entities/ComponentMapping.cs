@@ -8,7 +8,7 @@ public sealed class ComponentMappping : BaseDomain
   public int ExternalId { get; private set; }
   public string Mac { get; private set; } = string.Empty;
   public Vendor? Vendor { get; private set; } 
-  public int LocationId { get; private set; }
+  public int? LocationId { get; private set; }
 
 
   public ComponentMappping(
@@ -16,7 +16,7 @@ public sealed class ComponentMappping : BaseDomain
     EntityType entity,
     int external,
     string mac,
-    int locationId,
+    int? locationId = 0,
      Vendor? vendor = null
     ) : base(guid)
   {

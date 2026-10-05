@@ -5,7 +5,7 @@ namespace Adapter.Contract.Interfaces;
 
 public interface IDoorAdapter
 {
-      Task DoorsAsync(
+      Task AddDoorsAsync(
            string mac,
             string ip,
             DoorType type,
@@ -27,11 +27,39 @@ public interface IDoorAdapter
             CancellationToken ct = default
       );
 
+      Task DeleteDoorsAsync(
+           string mac,
+            string ip,
+            DoorType type,
+            short deviceId,
+            List<short> doorId,
+            short? buzzerId = 0,
+            short? bgId = 0,
+            CancellationToken ct = default
+      );
+
       Task StatusAsync(
             string mac,
             string ip,
             short deviceId,
             short doorId,
+            CancellationToken ct = default
+      );
+
+      Task ChangeDoorModeAsync(
+            string mac,
+            string ip,
+            short deviceId,
+            short acrId,
+            DoorMode mode,
+            CancellationToken ct  =default
+      );
+
+      Task UnlockAsync(
+            string mac,
+            string ip,
+            short deviceId,
+            short acrId,
             CancellationToken ct = default
       );
 }

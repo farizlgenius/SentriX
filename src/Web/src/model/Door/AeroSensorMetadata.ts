@@ -1,5 +1,7 @@
+import { InputMode } from "../../enum/InputMode";
+
 export interface AeroSensorMetadata{
-      mode:number;
+      mode:InputMode;
       debounce:number;
       holdTime:number;
       dcHeld:number;

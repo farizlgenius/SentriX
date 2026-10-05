@@ -168,12 +168,12 @@ public sealed class ComponentMappingRepository(CoreDbContext context) : ICompone
             var entity = await context.ComponentMappings
               .Where(x => x.guid == guid)
               .OrderByDescending(x => x.id)
-              .FirstOrDefaultAsync(ct);
+              .ToArrayAsync(ct);
 
-            if(entity == null)
+            if(entity.Count() == 0)
               throw new NotFoundException(EntityType.ComponentMapping.ToString(),guid.ToString());
 
-            context.ComponentMappings.Remove(entity);
+            context.ComponentMappings.RemoveRange(entity);
 
             await context.SaveChangesAsync(ct);
       }
@@ -196,7 +196,7 @@ public sealed class ComponentMappingRepository(CoreDbContext context) : ICompone
       public async Task UpdateExternalIdByMacAsync(string mac, short externalId, CancellationToken ct = default)
       {
           var entity = await context.ComponentMappings
-            .Where(x => x.mac != null && x.mac.Equals(mac))
+            .Where(x => x.mac != null && x.mac.Equals(mac) && x.entity == EntityType.Device)
             .OrderByDescending(x => x.id)
             .FirstOrDefaultAsync();
 

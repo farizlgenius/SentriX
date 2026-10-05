@@ -34,6 +34,8 @@ public static class Command
   public static string DetachScpChannel = "208 : Detach Scp from Channel";
   public static string DeleteScp = "015 : Delete Scp";
   public static string DoorStatus = "407 : enCcAcrSrq";
+  public static string AcrMode = "308 : Acr Mode";
+  public static string MomentaryUnlock = "311 : Momentary Unlock";
 
 }
 

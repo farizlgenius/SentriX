@@ -34,6 +34,30 @@ public sealed class CardFormatRepository(CoreDbContext context) : ICardFormatRep
             throw new NotImplementedException();
       }
 
+      public async Task<IEnumerable<CardFormatDto>> GetAllAsync(CancellationToken ct = default)
+      {
+            return await context.CardFormats
+                  .AsNoTracking()
+                  .Select(x => new CardFormatDto(
+                        x.guid,
+                        x.name,
+                        x.fac,
+                        x.bits,
+                        x.even_parity_len,
+                        x.even_parity_loc,
+                        x.odd_parity_len,
+                        x.odd_parity_loc,
+                        x.fac_len,
+                        x.fac_loc,
+                        x.card_no_len,
+                        x.card_no_loc,
+                        x.issue_code_len,
+                        x.issue_code_loc,
+                        x.is_active,
+                        x.is_default
+                  )).ToArrayAsync();
+      }
+
       public Task<CardFormatDto> GetAsync(Guid guid, CancellationToken ct = default)
       {
             throw new NotImplementedException();

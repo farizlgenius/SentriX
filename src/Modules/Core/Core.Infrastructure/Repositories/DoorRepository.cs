@@ -35,7 +35,61 @@ public sealed class DoorRepository(CoreDbContext context) : IDoorRepository
 
     // Check releation
 
+
     context.Doors.Remove(entity);
+
+    // // Reader
+    // var reader = await context.Readers
+    //   .Where(x => x.door_id == entity.id)
+    //   .ToArrayAsync();
+
+    // if(reader.Count() > 0)
+    //   context.Readers.RemoveRange(reader);
+
+    // // Sensor
+    // var sensor = await context.Sensors
+    //   .Where(x => x.door_id == entity.id)
+    //   .OrderByDescending(x => x.id)
+    //   .FirstOrDefaultAsync();
+
+    // if(sensor != null)
+    //   context.Sensors.Remove(sensor);
+
+    // // Relay
+    // var relay = await context.Relays
+    //   .Where(x => x.door_id == entity.id)
+    //   .OrderByDescending(x => x.id)
+    //   .FirstOrDefaultAsync();
+
+    // if(relay != null)
+    //   context.Relays.Remove(relay);
+
+    // // Buzzer
+    // var buzzer = await context.Buzzers
+    //   .Where(x => x.door_id == entity.id)
+    //   .OrderByDescending(x => x.id)
+    //   .FirstOrDefaultAsync();
+
+    // if(buzzer != null)
+    //   context.Buzzers.Remove(buzzer);
+
+    // // Rex
+
+    // var rexes = await context.Rexes
+    //   .Where(x => x.door_id == entity.id)
+    //   .ToArrayAsync();
+
+    // if(rexes.Count() > 0)
+    //   context.Rexes.RemoveRange(rexes);
+
+    // // BG
+    // var bg = await context.BreakGlasses
+    //   .Where(x => x.door_id == entity.id)
+    //   .OrderByDescending(x => x.id)
+    //   .FirstOrDefaultAsync();
+
+    // if(bg != null)
+    //   context.BreakGlasses.Remove(bg);
 
     await context.SaveChangesAsync(ct);
 

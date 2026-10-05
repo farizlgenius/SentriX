@@ -57,6 +57,8 @@ import { ReaderStatus } from "../../enum/ReaderStatus";
 import { InputStatus } from "../../enum/InputStatus";
 import { ReaderDirection } from "../../enum/DoorDirection";
 import { AeroReaderMetadata } from "../../model/Door/AeroReaderMetadata";
+import SignalRService from "../../services/SignalRService";
+import { SignalRTopic } from "../../constants/signalr-constant";
 
 // ACR Page
 const DOOR_TABLE_HEADER: string[] = [
@@ -71,7 +73,7 @@ const DOOR_KEY: string[] = ["name", "doorType"];
 // Default Value
 
 const Door = () => {
-  const { filterPermission } = useAuth();
+  const { filterPermission,token } = useAuth();
   const { toggleToast } = useToast();
   const { locationGuid } = useLocation();
   const { setPagination } = usePagination();
@@ -213,28 +215,28 @@ const Door = () => {
         break;
       case "unlock":
         selectedObjects.map((a) => {
-          changeDoorMode(a.id, a.scpId, a.acrId, 2);
+          changeDoorMode(a.guid, DoorMode.Unlocked);
         });
         break;
       case "lock":
         selectedObjects.map((a) => {
-          changeDoorMode(a.id, a.scpId, a.acrId, 3);
+          changeDoorMode(a.guid, DoorMode.Locked);
         });
         break;
       case "moment":
         selectedObjects.map((a) => {
-          unlockDoor(a.id);
+          unlockDoor(a.guid);
         });
         break;
       case "secure":
         selectedObjects.map((a) => {
           console.log(a);
-          changeDoorMode(a.id, a.scpId, a.acrId, a.defaultMode);
+          changeDoorMode(a.guid, a.metadata);
         });
         break;
       case "disable":
         selectedObjects.map((a) => {
-          changeDoorMode(a.id, a.scpId, a.acrId, 1);
+          changeDoorMode(a.guid, DoorMode.Disabled);
         });
         break;
       default:
@@ -450,8 +452,6 @@ const Door = () => {
 
       }));
 
-      console.log(">>>>>>>>>." + JSON.stringify(newStatuses));
-
       setStatus((prev) => [...prev, ...newStatuses]);
 
       // Fetch status for each
@@ -466,22 +466,18 @@ const Door = () => {
   };
 
   const changeDoorMode = async ( 
-    id: number,
-    scpId: number,
-    acrId: number,
+    guid: string,
     mode: number,
   ) => {
     const data = {
-      id,
-      scpId,
-      acrId,
+      guid,
       mode,
     };
     const res = await send.post(DoorEndpoint.POST_ACR_CHANGE_MODE, data);
     Logger.info(res);
   };
-  const unlockDoor = async (id: number) => {
-    const res = await send.post(DoorEndpoint.POST_ACR_UNLOCK(id));
+  const unlockDoor = async (guid: string) => {
+    const res = await send.post(DoorEndpoint.POST_ACR_UNLOCK(guid));
     Logger.info(res);
   };
   {
@@ -621,7 +617,7 @@ const Door = () => {
         <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
           <>
             <Badge size="sm" color="dark">
-              {DoorMode[statusDto.find((b) => b.guid == item.guid)?.altr4 as DoorMode] ?? "Unknown"}
+              {DoorMode[statusDto.find((b) => b.guid == item.guid)?.altr1 as DoorMode] ?? "Unknown"}
             </Badge>
           </>
         </TableCell>
@@ -841,6 +837,50 @@ const Door = () => {
       </div>
     );
   };
+
+  useEffect(() => {
+      const initSignalR = async () => {
+        if (!token) return;
+  
+        await SignalRService.startConnection();
+        const connection = SignalRService.getConnection();
+        if (!connection) return;
+  
+        connection.on(SignalRTopic.DOOR_STATUS, (status: StatusDto) => {
+          console.log(status);
+          setStatus((prev) =>
+            prev.map((item) =>
+              item.guid === status.guid
+                ? {
+                  ...item,
+                  status: status.status,
+                  altr1:status.altr1,
+                  altr2:status.altr2,
+                  altr3:status.altr3,
+                  altr4:status.altr4
+                }
+                : item,
+            ),
+          );
+        });
+  
+
+  
+        try {
+        await SignalRService.joinGroup(SignalRTopic.DOOR_STATUS);
+        } catch (err) {
+          console.error("Subscribe error:", err);
+        }
+  
+      };
+  
+      initSignalR();
+  
+      return () => {
+        const connection = SignalRService.getConnection();
+        connection?.off(SignalRTopic.DOOR_STATUS);
+      };
+    }, [refresh, locationGuid, token]);
 
   return (
     <>

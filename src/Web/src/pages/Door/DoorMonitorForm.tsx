@@ -70,7 +70,6 @@ const DoorMonitorForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps
               ...prev,
               sensor:{
                 slotNo:-1,
-                mode:InputMode.NC,
                 vendor:Vendor.aero,
                 deviceModuleGuid:e.target.value,
                 metadata:{
@@ -140,7 +139,10 @@ const DoorMonitorForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps
               sensor:prev.sensor != null ? 
               {
                 ...prev.sensor,
-                mode:Number(e.target.value)
+                 metadata:{
+                  ...(prev.sensor.metadata as AeroSensorMetadata),
+                  mode:Number(e.target.value)
+                }
               }
               :
               prev.sensor
@@ -148,7 +150,7 @@ const DoorMonitorForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps
           }
           className="dark:bg-dark-900"
           defaultValue={
-            dto.sensor?.mode ?? InputMode.NC
+           (dto.sensor?.metadata as AeroSensorMetadata)?.mode ?? InputMode.NC
           }
         />
       </FormField>

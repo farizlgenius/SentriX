@@ -12,19 +12,19 @@ public sealed class ComponentMapping : BaseEntity
   public SharedKernel.Enums.Vendor? vendor { get; set; } = SharedKernel.Enums.Vendor.aero;
 
   // Relation
-  public int location_id { get; set; }
-  public Location location { get; set; } = default!;
+  public int? location_id { get; set; }
+  public Location? location { get; set; } = default!;
   public ComponentMapping() { }
   public ComponentMapping(Core.Domain.Entities.ComponentMappping d) : base(d.Guid)
   {
     entity = d.Entity;
-    if(d.ExternalId != 0)
-      external_id = d.ExternalId;
+    external_id = d.ExternalId;
     if(!string.IsNullOrWhiteSpace(d.Mac))
       mac = d.Mac;
     if(d.Vendor == null)
     vendor = d.Vendor;
-    location_id = d.LocationId;
+    if(d.LocationId == 0)
+      location_id = d.LocationId;
   }
 
 }

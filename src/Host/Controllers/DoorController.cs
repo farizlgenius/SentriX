@@ -62,6 +62,20 @@ public class DoorController(IDoor door) : ControllerBase
     return Ok(res);
   }
 
+  [HttpPost("mode")]
+  public async Task<IActionResult> ChangeDoorModeAsync([FromBody] ChangeDoorModeDto dto)
+  {
+    var res = await door.ChangeDoorModeAsync(dto);
+    return Ok(res);
+  }
+
+  [HttpPost("unlock/{guid}")]
+  public async Task<IActionResult> UnlockAsync(Guid guid)
+  {
+    var res = await door.UnlockAsync(guid);
+    return Ok(res);
+  }
+
   [HttpDelete("{guid}")]
   public async Task<IActionResult> DeleteAsync(Guid guid)
   {

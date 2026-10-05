@@ -9,6 +9,7 @@ using Core.Contract.Commands.Device;
 using Core.Contract.Commands.Events;
 using Core.Contract.Interfaces;
 using Core.Contract.Queries;
+using Core.Contract.Queries.CardFormat;
 using Core.Contract.Queries.ComponentMapping;
 using Core.Contract.Queries.Time;
 using Setting.Contract.Interfaces;
@@ -22,6 +23,7 @@ namespace Aero.Application.Services;
 public sealed class DeviceService(
       IDeviceRepository repo,
       ITimeRepository tRepo,
+      ICardFormatRepository cfmtRepo,
       IDeviceModuleRepository module,
       IMessageBus bus
       ) : IDeviceAdapter
@@ -373,6 +375,40 @@ public sealed class DeviceService(
 
                   await bus.SendAsync(new AdapterEventCommand(res));
             }
+
+
+            // CardFormat
+
+            var cfmts = await bus.QueryAsync(new CardFormatQuery());
+            foreach(var cfmt in cfmts)
+            {
+                  var cfmtId = await bus.QueryAsync(new ExternalIdByGuidAndEntityQuery(cfmt.Guid, EntityType.CardFormat));
+
+                  var res = cfmtRepo.CardFormatterConfiguration(
+                        device.Mac,
+                        (short)componentId,
+                        (short)cfmtId,
+                        cfmt.Fac,
+                        0,
+                        1,
+                        0,
+                        cfmt.Bits,
+                        cfmt.EvenParityLen,
+                        cfmt.EvenParityLoc,
+                        cfmt.OddParityLen,
+                        cfmt.OddParityLoc,
+                        cfmt.FacLen,
+                        cfmt.FacLoc,
+                        cfmt.CardNoLen,
+                        cfmt.CardNoLoc,
+                        cfmt.IssueCodeLen,
+                        cfmt.IssueCodeLoc
+                  );
+
+                  await bus.SendAsync(new AdapterEventCommand(res));
+            }
+
+            // Door
 
 
             // finally

@@ -14,4 +14,7 @@ public sealed class NotifierTopic
       public static string EVENT = "EVENT";
       public static string ADAPTER_EVENT = "ADAPTER.EVENT";
       public static string EXCEPTION_EVENT = "EXCEPTION.EVENT";
+
+      // Door
+      public static string DOOR_STATUS = "DOOR.STATUS";
 }

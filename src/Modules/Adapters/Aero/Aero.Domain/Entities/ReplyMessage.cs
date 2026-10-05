@@ -651,7 +651,8 @@ public sealed class ReplyMessage
     public short[] status { get; set; } = default!;
   }
 
-  public sealed class SCPReplySrAcr
+      [DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
+      public sealed class SCPReplySrAcr
   {
     public short number { get; set; }
     public short mode { get; set; }
@@ -669,7 +670,21 @@ public sealed class ReplyMessage
     public short nHardwareType { get; set; }
     public byte[] nExtFeatureStatus { get; set; } = default!;
     public int nAuthModFlags { get; set; }
-  }
+
+     public override string ToString()
+    {
+      // Using System.Text.Json to automatically format all properties and arrays cleanly
+      return System.Text.Json.JsonSerializer.Serialize(this, new System.Text.Json.JsonSerializerOptions
+      {
+        WriteIndented = true
+      });
+    }
+
+            public string GetDebuggerDisplay()
+            {
+                  return ToString();
+            }
+      }
 
   public sealed class SCPReplySrTz
   {

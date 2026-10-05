@@ -10,6 +10,7 @@ using Aero.Domain.Entities;
 using Aero.Infrastructure.Adapter;
 using Aero.Infrastructure.Repositories;
 using Aero.Infrastructure.Workers;
+using Core.Contract.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -78,6 +79,9 @@ public static class AeroDependencyInjection
     // Time
     services.AddScoped<ITimeRepository,TimeRepository>();
     services.AddScoped<ITimeAdapter,TimeService>();
+
+    // CardFormat
+    services.AddScoped<ICardFormatRepository,CardFormatRepository>();
 
     
 

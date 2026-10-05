@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Core.Infrastructure.Migrations
 {
     [DbContext(typeof(CoreDbContext))]
-    [Migration("20261004012405_DeleteCardFormatLoc")]
-    partial class DeleteCardFormatLoc
+    [Migration("20261005151212_InititalDb")]
+    partial class InititalDb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -229,6 +229,9 @@ namespace Core.Infrastructure.Migrations
 
                     b.HasIndex("device_module_id");
 
+                    b.HasIndex("door_id")
+                        .IsUnique();
+
                     b.HasIndex("guid", "id", "door_id", "device_module_id", "slot_no")
                         .IsUnique();
 
@@ -431,7 +434,7 @@ namespace Core.Infrastructure.Migrations
                             fac = (short)-1,
                             fac_len = (short)0,
                             fac_loc = (short)-1,
-                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            guid = new Guid("356b51d4-5650-4ef9-821b-bf38eb4ec2db"),
                             is_active = true,
                             is_default = false,
                             issue_code_len = (short)0,
@@ -454,7 +457,7 @@ namespace Core.Infrastructure.Migrations
                             fac = (short)-1,
                             fac_len = (short)0,
                             fac_loc = (short)-1,
-                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            guid = new Guid("f04c1839-991d-4f13-be52-4a057d30af68"),
                             is_active = true,
                             is_default = false,
                             issue_code_len = (short)0,
@@ -477,7 +480,7 @@ namespace Core.Infrastructure.Migrations
                             fac = (short)-1,
                             fac_len = (short)0,
                             fac_loc = (short)-1,
-                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            guid = new Guid("2ec6aa6c-dd76-4b3a-98b3-e8b5ecff0d1e"),
                             is_active = true,
                             is_default = false,
                             issue_code_len = (short)0,
@@ -575,7 +578,7 @@ namespace Core.Infrastructure.Migrations
                     b.Property<bool>("is_default")
                         .HasColumnType("boolean");
 
-                    b.Property<int>("location_id")
+                    b.Property<int?>("location_id")
                         .HasColumnType("integer");
 
                     b.Property<string>("mac")
@@ -620,6 +623,39 @@ namespace Core.Infrastructure.Migrations
                             is_active = true,
                             is_default = true,
                             location_id = 1,
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            id = 3,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            entity = "CardFormat",
+                            external_id = 0,
+                            guid = new Guid("356b51d4-5650-4ef9-821b-bf38eb4ec2db"),
+                            is_active = true,
+                            is_default = false,
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            id = 4,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            entity = "CardFormat",
+                            external_id = 1,
+                            guid = new Guid("f04c1839-991d-4f13-be52-4a057d30af68"),
+                            is_active = true,
+                            is_default = false,
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            id = 5,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            entity = "CardFormat",
+                            external_id = 2,
+                            guid = new Guid("2ec6aa6c-dd76-4b3a-98b3-e8b5ecff0d1e"),
+                            is_active = true,
+                            is_default = false,
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         });
                 });
@@ -2940,21 +2976,12 @@ namespace Core.Infrastructure.Migrations
 
                     b.HasKey("id");
 
-                    b.HasIndex("bg_id")
-                        .IsUnique();
-
                     b.HasIndex("buzzer_id")
                         .IsUnique();
 
                     b.HasIndex("device_id");
 
                     b.HasIndex("location_id");
-
-                    b.HasIndex("relay_id")
-                        .IsUnique();
-
-                    b.HasIndex("sensor_id")
-                        .IsUnique();
 
                     b.HasIndex("guid", "id", "device_id")
                         .IsUnique();
@@ -4922,6 +4949,9 @@ namespace Core.Infrastructure.Migrations
 
                     b.HasIndex("device_module_id");
 
+                    b.HasIndex("door_id")
+                        .IsUnique();
+
                     b.HasIndex("guid", "id", "door_id", "device_module_id", "slot_no")
                         .IsUnique();
 
@@ -5101,6 +5131,9 @@ namespace Core.Infrastructure.Migrations
                     b.HasKey("id");
 
                     b.HasIndex("device_module_id");
+
+                    b.HasIndex("door_id")
+                        .IsUnique();
 
                     b.HasIndex("guid", "id", "door_id", "device_module_id", "slot_no")
                         .IsUnique();
@@ -5557,7 +5590,14 @@ namespace Core.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.Door", "door")
+                        .WithOne("bg")
+                        .HasForeignKey("Core.Infrastructure.Persistences.Entities.BreakGlass", "door_id")
+                        .OnDelete(DeleteBehavior.Cascade);
+
                     b.Navigation("device_module");
+
+                    b.Navigation("door");
                 });
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Buzzer", b =>
@@ -5591,10 +5631,9 @@ namespace Core.Infrastructure.Migrations
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.ComponentMapping", b =>
                 {
                     b.HasOne("Core.Infrastructure.Persistences.Entities.Location", "location")
-                        .WithMany("component_mapping")
+                        .WithMany("component_mappings")
                         .HasForeignKey("location_id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("location");
                 });
@@ -5642,11 +5681,6 @@ namespace Core.Infrastructure.Migrations
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Door", b =>
                 {
-                    b.HasOne("Core.Infrastructure.Persistences.Entities.BreakGlass", "bg")
-                        .WithOne("door")
-                        .HasForeignKey("Core.Infrastructure.Persistences.Entities.Door", "bg_id")
-                        .OnDelete(DeleteBehavior.Cascade);
-
                     b.HasOne("Core.Infrastructure.Persistences.Entities.Buzzer", "buzzer")
                         .WithOne("door")
                         .HasForeignKey("Core.Infrastructure.Persistences.Entities.Door", "buzzer_id")
@@ -5664,27 +5698,11 @@ namespace Core.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Core.Infrastructure.Persistences.Entities.Relay", "relay")
-                        .WithOne("door")
-                        .HasForeignKey("Core.Infrastructure.Persistences.Entities.Door", "relay_id")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("Core.Infrastructure.Persistences.Entities.Sensor", "sensor")
-                        .WithOne("door")
-                        .HasForeignKey("Core.Infrastructure.Persistences.Entities.Door", "sensor_id")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.Navigation("bg");
-
                     b.Navigation("buzzer");
 
                     b.Navigation("device");
 
                     b.Navigation("location");
-
-                    b.Navigation("relay");
-
-                    b.Navigation("sensor");
                 });
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Event", b =>
@@ -5955,7 +5973,15 @@ namespace Core.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.Door", "door")
+                        .WithOne("relay")
+                        .HasForeignKey("Core.Infrastructure.Persistences.Entities.Relay", "door_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("device_module");
+
+                    b.Navigation("door");
                 });
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Rex", b =>
@@ -5999,7 +6025,14 @@ namespace Core.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.Door", "door")
+                        .WithOne("sensor")
+                        .HasForeignKey("Core.Infrastructure.Persistences.Entities.Sensor", "door_id")
+                        .OnDelete(DeleteBehavior.Cascade);
+
                     b.Navigation("device_module");
+
+                    b.Navigation("door");
                 });
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.TimeZone", b =>
@@ -6155,11 +6188,6 @@ namespace Core.Infrastructure.Migrations
                     b.Navigation("user");
                 });
 
-            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.BreakGlass", b =>
-                {
-                    b.Navigation("door");
-                });
-
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Buzzer", b =>
                 {
                     b.Navigation("door")
@@ -6219,11 +6247,17 @@ namespace Core.Infrastructure.Migrations
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Door", b =>
                 {
+                    b.Navigation("bg");
+
                     b.Navigation("group_components");
 
                     b.Navigation("readers");
 
+                    b.Navigation("relay");
+
                     b.Navigation("rexes");
+
+                    b.Navigation("sensor");
                 });
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Face", b =>
@@ -6268,7 +6302,7 @@ namespace Core.Infrastructure.Migrations
 
                     b.Navigation("companies");
 
-                    b.Navigation("component_mapping");
+                    b.Navigation("component_mappings");
 
                     b.Navigation("devices");
 
@@ -6335,12 +6369,6 @@ namespace Core.Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Relay", b =>
-                {
-                    b.Navigation("door")
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Role", b =>
                 {
                     b.Navigation("module_permission");
@@ -6352,8 +6380,6 @@ namespace Core.Infrastructure.Migrations
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Sensor", b =>
                 {
-                    b.Navigation("door");
-
                     b.Navigation("lane");
                 });
 

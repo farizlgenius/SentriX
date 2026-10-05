@@ -21,7 +21,26 @@ public sealed class DoorService(
   IAdapterFactory adapter
   ) : IDoor
 {
-  public async Task<Guid> CreateAsync(CreateDoorDto dto, CancellationToken ct = default)
+      public async Task<bool> ChangeDoorModeAsync(ChangeDoorModeDto dto, CancellationToken ct = default)
+      {
+          var door = await repo.GetAsync(dto.Guid,ct);
+          var dev = await device.GetAsync(door.DeviceGuid,ct);
+          var deviceExternalId = (short)await com.GetExternalIdByGuidAndEntityAsync(dev.Guid,EntityType.Device);
+          var doorExternalId = (short)await com.GetExternalIdByGuidAndEntityAsync(dto.Guid,EntityType.Door);
+
+            await adapter.GetAdapter(door.Vendor).Door.ChangeDoorModeAsync(
+              dev.Mac,
+              dev.Ip,
+              deviceExternalId,
+              doorExternalId,
+              dto.Mode,
+              ct
+            );
+
+            return true;
+      }
+
+      public async Task<Guid> CreateAsync(CreateDoorDto dto, CancellationToken ct = default)
   {
 
     // Actually it need to check that 
@@ -143,7 +162,20 @@ public sealed class DoorService(
         ));
     }
 
-    await adapter.GetAdapter(d.Vendor).Door.DoorsAsync(
+    short BuzzerExternalId = 0;
+    short BgExternalId = 0;
+
+    if(d.Buzzer != null)
+    {
+      BuzzerExternalId = (short)await com.GetFreeIdByMacAndEntityAndVendorAsync(dev.Mac,EntityType.Output,Vendor.aero,100,[],ct);
+    }
+
+    if(d.BG != null)
+    {
+      BgExternalId = (short)await com.GetFreeIdByMacAndEntityAndVendorAsync(dev.Mac,EntityType.Input,Vendor.aero,100,[],ct);
+    }
+
+    await adapter.GetAdapter(d.Vendor).Door.AddDoorsAsync(
       dev.Mac,
       dev.Ip,
       d.Type,
@@ -157,7 +189,7 @@ public sealed class DoorService(
         (short)d.Buzzer.SlotNo,
         d.Buzzer.Metadata,
         (short)await com.GetExternalIdByGuidAndEntityAsync(dto.Buzzer.DeviceModuleGuid,EntityType.DeviceModule,ct),
-        (short)await com.GetFreeIdByMacAndEntityAndVendorAsync(dev.Mac,EntityType.Output,Vendor.aero,100,[],ct)
+        BuzzerExternalId
       ),
       rexes,
       d.BG == null || dto.Bg == null ? 
@@ -166,7 +198,7 @@ public sealed class DoorService(
         (short)d.BG.SlotNo,
         d.BG.Metadata,
         (short)await com.GetExternalIdByGuidAndEntityAsync(dto.Bg.DeviceModuleGuid,EntityType.DeviceModule,ct),
-        (short)await com.GetFreeIdByMacAndEntityAndVendorAsync(dev.Mac,EntityType.Input,Vendor.aero,100,[],ct)
+        BgExternalId
       ),
       d.Sensor == null || dto.Sensor == null ? 
       null : 
@@ -190,21 +222,51 @@ public sealed class DoorService(
         d.Guid,
         EntityType.Door,
         doorExternalIds.Count == 0 ? -1 : doorExternalIds.ElementAt(0),
-        string.Empty,
+        dev.Mac,
         d.LocationId,
         d.Vendor
       ),
       ct
     );
 
-    if(d.Type == DoorType.Dual)
+    if (d.BG != null)
+    {
+      await com.InsertAsync(
+      new ComponentMappping(
+        d.Guid,
+        EntityType.Input,
+        BgExternalId,
+        dev.Mac,
+        d.LocationId,
+        d.Vendor
+      ),
+      ct
+    );
+    }
+
+     if (d.Buzzer != null)
+    {
+      await com.InsertAsync(
+      new ComponentMappping(
+        d.Guid,
+        EntityType.Output,
+        BuzzerExternalId,
+        dev.Mac,
+        d.LocationId,
+        d.Vendor
+      ),
+      ct
+    );
+    }
+
+    if (d.Type == DoorType.Dual)
     {
       await com.InsertAsync(
       new ComponentMappping(
         d.Guid,
         EntityType.Door,
         doorExternalIds.Count <= 1 ? -1 : doorExternalIds.ElementAt(1),
-        string.Empty,
+        dev.Mac,
         d.LocationId,
         d.Vendor
       ),
@@ -227,14 +289,34 @@ public sealed class DoorService(
 
       public async Task<bool> DeleteByGuidAsync(Guid guid, CancellationToken ct = default)
   {
-    if (!await repo.IsAnyGuidAsync(guid, ct))
-      throw new NotFoundException(EntityType.Door.ToString(), guid.ToString());
+    var door = await repo.GetAsync(guid,ct);
+          var dev = await device.GetAsync(door.DeviceGuid,ct);
+          var deviceExternalId = (short)await com.GetExternalIdByGuidAndEntityAsync(dev.Guid,EntityType.Device);
+          var doorExternalId = (short)await com.GetExternalIdByGuidAndEntityAsync(guid,EntityType.Door);
 
     // Check relation here 
-    if (await repo.IsAnyRelatedEntitiesAsync(guid))
-      throw new FoundRelateException();
+    // if (await repo.IsAnyRelatedEntitiesAsync(guid))
+    //   throw new FoundRelateException();
+
+    
+    // Send Command 
+    // await adapter.GetAdapter(door.Vendor).Door.DeleteDoorsAsync(
+    //   dev.Mac,
+    //   dev.Ip,
+    //   door.Type,
+    //   deviceExternalId,
+    //   doorExternalId,
+    //   buzz
+    //   );
+
+    
+    // Delete Door
 
     await repo.DeleteAsync(guid);
+
+
+    // Delete ComponentMapping
+    await com.DeleteAsync(guid,ct);
 
     return true;
 
@@ -310,6 +392,24 @@ public sealed class DoorService(
             dev.Ip,
             deviceExternalId,
             doorExternalId
+            );
+
+            return true;
+      }
+
+      public async Task<bool> UnlockAsync(Guid guid, CancellationToken ct = default)
+      {
+            var door = await repo.GetAsync(guid,ct);
+          var dev = await device.GetAsync(door.DeviceGuid,ct);
+          var deviceExternalId = (short)await com.GetExternalIdByGuidAndEntityAsync(dev.Guid,EntityType.Device);
+          var doorExternalId = (short)await com.GetExternalIdByGuidAndEntityAsync(guid,EntityType.Door);
+
+            await adapter.GetAdapter(door.Vendor).Door.UnlockAsync(
+              dev.Mac,
+              dev.Ip,
+              deviceExternalId,
+              doorExternalId,
+              ct
             );
 
             return true;

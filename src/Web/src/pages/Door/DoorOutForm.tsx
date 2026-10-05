@@ -87,9 +87,9 @@ const DoorOutForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps>> =
                            osdpFlag:false,
                            address:-1,
                            baudrate:-1,
-                           autoDiscover:-1,
-                           tracing:-1,
-                           secureChannel:-1
+                           autoDiscover: 0x00,
+                  tracing: 0x00,
+                  secureChannel: 0x00
                          },
                          vendor: Vendor.aero,
                          readerDirection: ReaderDirection.Out,
@@ -242,7 +242,7 @@ const DoorOutForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps>> =
                   readers: prev.readers.map((reader) =>
                     reader.readerDirection == ReaderDirection.Out ? { ...reader, metadata: {
                       ...(reader.metadata as AeroReaderMetadata),
-                      autoDiscover:checked ? 0x10 : 0x00
+                      tracing:checked ? 0x10 : 0x00
                     } } : reader
                   )
                 }))
@@ -260,7 +260,7 @@ const DoorOutForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps>> =
                   readers: prev.readers.map((reader) =>
                     reader.readerDirection == ReaderDirection.Out ? { ...reader, metadata: {
                       ...(reader.metadata as AeroReaderMetadata),
-                      autoDiscover:checked ? 0x80 : 0x00,
+                      secureChannel:checked ? 0x80 : 0x00,
                     } } : reader
                   )
                 }))

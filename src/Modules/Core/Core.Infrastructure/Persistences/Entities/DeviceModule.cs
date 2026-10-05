@@ -43,6 +43,10 @@ public sealed class DeviceModule : BaseEntity,IAuditableEntity
     firmware = d.Firmware;
     mac = d.Mac;
     model = d.Model;
+    reader_slot = d.ReaderSlot;
+    address = d.Address;
+    input_slot = d.InputSlot;
+    output_slot = d.OutputSlot;
     location_id = d.LocationId;
   }
 }

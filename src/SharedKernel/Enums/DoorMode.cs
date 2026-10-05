@@ -2,8 +2,8 @@ namespace SharedKernel.Enums;
 
 public enum DoorMode
 {
-
-      Disabled,
+       Unknown,
+      Disabled=1,
       Unlocked,
       Locked,
       Fac,
@@ -11,5 +11,5 @@ public enum DoorMode
       PIN,
       CardPIN,
       CardOrPIN,
-      Unknown,
+     
 }

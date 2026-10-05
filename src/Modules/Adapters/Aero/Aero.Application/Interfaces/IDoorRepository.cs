@@ -1,3 +1,4 @@
+using SharedKernel.Enums;
 using SharedKernel.Model;
 
 namespace Aero.Application.Interfaces;
@@ -50,6 +51,25 @@ public interface IDoorRepository
       );
 
       CommandResponse EnCcAcrSrq(
+            string mac,
+            short scpId,
+            short acrNo
+      );
+
+      CommandResponse AcrMode(
+            string mac,
+            short scpId,
+            short acrNo,
+            DoorMode mode
+      );
+
+      CommandResponse Unlock(
+            string mac,
+            short scpId,
+            short acrNo
+      );
+
+      CommandResponse MomentaryUnlock(
             string mac,
             short scpId,
             short acrNo

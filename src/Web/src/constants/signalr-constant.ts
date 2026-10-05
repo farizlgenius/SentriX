@@ -7,7 +7,8 @@ export enum SignalRTopic {
       EVENT = "EVENT",
       EXCEPTION_EVENT = "EXCEPTION.EVENT",
       ADAPTER_EVENT = "ADAPTER.EVENT",
-      CONFIG = "DEVICE.CONFIG"
+      CONFIG = "DEVICE.CONFIG",
+      DOOR_STATUS = "DOOR.STATUS"
 }
 
 export enum SignalRHub {

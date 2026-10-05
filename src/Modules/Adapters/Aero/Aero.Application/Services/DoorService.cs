@@ -18,8 +18,20 @@ public sealed class DoorService(
       IMessageBus bus
       ) : IDoorAdapter
 {
-      public async Task DoorsAsync
-      ( 
+      public async Task ChangeDoorModeAsync(string mac, string ip, short deviceId, short acrId, DoorMode mode, CancellationToken ct = default)
+      {
+            var res = door.AcrMode(
+                  mac,
+                  deviceId,
+                  acrId,
+                  mode
+                  );
+
+            await bus.SendAsync(new AdapterEventCommand(res));
+      }
+
+      public async Task AddDoorsAsync
+      (
             string mac,
             string ip,
             DoorType type,
@@ -33,16 +45,16 @@ public sealed class DoorService(
                   string metadata,
                   short deviceModuleId
             )> readers,
-            (short outputNo,string metadata,short deviceModuleId,short buzzerId)? buzzer,
-            List<(short inputNo,string metadata,short deviceModuleId,short maskId)> rexes,
-            (short inputNo,string metadata,short deviceModuleId,short bgId)? bg,
-            (short inputNo,string metadata,short deviceModuleId)? sensor,
-            (short outputNo,string metadata,short deviceModuleId)? relay,
+            (short outputNo, string metadata, short deviceModuleId, short buzzerId)? buzzer,
+            List<(short inputNo, string metadata, short deviceModuleId, short maskId)> rexes,
+            (short inputNo, string metadata, short deviceModuleId, short bgId)? bg,
+            (short inputNo, string metadata, short deviceModuleId)? sensor,
+            (short outputNo, string metadata, short deviceModuleId)? relay,
             CancellationToken ct = default
             )
       {
             // Reader Configuation
-            foreach(var reader in readers)
+            foreach (var reader in readers)
             {
                   var meta = JsonHelper.Deserialize<ReaderMetadata>(reader.metadata);
                   if (meta == null)
@@ -69,10 +81,10 @@ public sealed class DoorService(
                   await bus.SendAsync(new AdapterEventCommand(res));
 
             }
-            
+
 
             // Relay Configuration
-            if(relay != null)
+            if (relay != null)
             {
                   var meta = JsonHelper.Deserialize<RelayMetadata>(relay.Value.metadata);
                   if (meta == null)
@@ -90,9 +102,9 @@ public sealed class DoorService(
                   await bus.SendAsync(new AdapterEventCommand(res));
 
             }
-            
+
             // Sensor Configuration
-            if(sensor != null)
+            if (sensor != null)
             {
                   var meta = JsonHelper.Deserialize<InputMetadata>(sensor.Value.metadata);
                   if (meta == null)
@@ -113,7 +125,7 @@ public sealed class DoorService(
             }
 
             // Rex Configuration
-            foreach(var rex in rexes)
+            foreach (var rex in rexes)
             {
                   var meta = JsonHelper.Deserialize<InputMetadata>(rex.metadata);
                   if (meta == null)
@@ -134,7 +146,7 @@ public sealed class DoorService(
 
 
             // Buzzer Configuration
-            if(buzzer != null)
+            if (buzzer != null)
             {
                   var meta = JsonHelper.Deserialize<OutputMetadata>(buzzer.Value.metadata);
                   if (meta == null)
@@ -167,7 +179,7 @@ public sealed class DoorService(
             // and the trigger setting here
 
             // BG Configuration
-            if(bg != null)
+            if (bg != null)
             {
                   var meta = JsonHelper.Deserialize<BgMetadata>(bg.Value.metadata);
                   if (meta == null)
@@ -212,27 +224,27 @@ public sealed class DoorService(
                   if (doorMetadata == null)
                         throw new Exception(MessageHelper.Common.DeserializeFailed("DoorMetadata"));
 
-                  if(doorMetadata.ForceCardPin) spare |= (short)ExtendedAccessControlFlags.ACR_FE_NOPINCARD;
-                  if(doorMetadata.DoubleCard) spare |= (short)ExtendedAccessControlFlags.ACR_FE_DCARD;
-                  if(doorMetadata.OutputSelectionTracking) spare |= (short)ExtendedAccessControlFlags.ACR_FE_FLOOR_PIN;
-                  if(doorMetadata.LockedOverride) spare |= (short)ExtendedAccessControlFlags.ACR_FE_CRD_OVR_EN;
-                  if(doorMetadata.HostPermission) spare |= (short)ExtendedAccessControlFlags.ACR_FE_HOST_BYPASS; 
+                  if (doorMetadata.ForceCardPin) spare |= (short)ExtendedAccessControlFlags.ACR_FE_NOPINCARD;
+                  if (doorMetadata.DoubleCard) spare |= (short)ExtendedAccessControlFlags.ACR_FE_DCARD;
+                  if (doorMetadata.OutputSelectionTracking) spare |= (short)ExtendedAccessControlFlags.ACR_FE_FLOOR_PIN;
+                  if (doorMetadata.LockedOverride) spare |= (short)ExtendedAccessControlFlags.ACR_FE_CRD_OVR_EN;
+                  if (doorMetadata.HostPermission) spare |= (short)ExtendedAccessControlFlags.ACR_FE_HOST_BYPASS;
 
-                  if(type == DoorType.Dual) spare |= (short)ExtendedAccessControlFlags.ACR_FE_LINK_MODE;
+                  if (type == DoorType.Dual) spare |= (short)ExtendedAccessControlFlags.ACR_FE_LINK_MODE;
 
-                  
-                  if(doorMetadata.DecreaseUseLimit) accessFlag |= (short)AccessControlFlags.ACR_F_DCR;
-                  if(doorMetadata.RequireUseLimit) accessFlag |= (short)AccessControlFlags.ACR_F_CUL;
-                  if(doorMetadata.DeniedDuress) accessFlag |= (short)AccessControlFlags.ACR_F_DRSS;
-                  if(doorMetadata.QuietRex) accessFlag |= (short)AccessControlFlags.ACR_F_QEXIT;
-                  if(doorMetadata.FilterStatus) accessFlag |= (short)AccessControlFlags.ACR_F_FILTER;
-                  if(doorMetadata.DoubleCardAccess) accessFlag |= (short)AccessControlFlags.ACR_F_2CARD; 
-                  if(doorMetadata.HostPermission) accessFlag |= (short)AccessControlFlags.ACR_F_HOST_CBG;
-                  if(doorMetadata.HostOfflineGrant) accessFlag |= (short)AccessControlFlags.ACR_F_HOST_SFT;
-                  
-            }            
 
-            if(type == DoorType.Dual)
+                  if (doorMetadata.DecreaseUseLimit) accessFlag |= (short)AccessControlFlags.ACR_F_DCR;
+                  if (doorMetadata.RequireUseLimit) accessFlag |= (short)AccessControlFlags.ACR_F_CUL;
+                  if (doorMetadata.DeniedDuress) accessFlag |= (short)AccessControlFlags.ACR_F_DRSS;
+                  if (doorMetadata.QuietRex) accessFlag |= (short)AccessControlFlags.ACR_F_QEXIT;
+                  if (doorMetadata.FilterStatus) accessFlag |= (short)AccessControlFlags.ACR_F_FILTER;
+                  if (doorMetadata.DoubleCardAccess) accessFlag |= (short)AccessControlFlags.ACR_F_2CARD;
+                  if (doorMetadata.HostPermission) accessFlag |= (short)AccessControlFlags.ACR_F_HOST_CBG;
+                  if (doorMetadata.HostOfflineGrant) accessFlag |= (short)AccessControlFlags.ACR_F_HOST_SFT;
+
+            }
+
+            if (type == DoorType.Dual)
             {
 
                   var res = door.AccessControlReaderConfiguration(
@@ -293,11 +305,11 @@ public sealed class DoorService(
                         throw new Exception(MessageHelper.Common.DeserializeFailed("SensorMetadata"));
             }
 
-            
+
 
             RexMetadata? rexMeta0 = null;
             RexMetadata? rexMeta1 = null;
-            if(rexes.Count() == 1)
+            if (rexes.Count() == 1)
             {
                   rexMeta0 = JsonHelper.Deserialize<RexMetadata>(rexes.ElementAt(0).metadata);
                   if (rexMeta0 == null)
@@ -358,8 +370,103 @@ public sealed class DoorService(
 
       public async Task StatusAsync(string mac, string ip, short deviceId, short doorId, CancellationToken ct = default)
       {
-           var res = door.EnCcAcrSrq(mac,deviceId,doorId);
+            var res = door.EnCcAcrSrq(mac, deviceId, doorId);
 
-           await bus.SendAsync(new AdapterEventCommand(res));
+            await bus.SendAsync(new AdapterEventCommand(res));
+      }
+
+      public async Task UnlockAsync(string mac, string ip, short deviceId, short acrId, CancellationToken ct = default)
+      {
+            var res = door.MomentaryUnlock(mac, deviceId, acrId);
+
+            await bus.SendAsync(new AdapterEventCommand(res));
+      }
+
+      public async Task DeleteDoorsAsync(string mac, string ip, DoorType type, short deviceId, List<short> doorId, short? buzzerId = 0, short? bgId = 0, CancellationToken ct = default)
+      {
+            if (type == DoorType.Dual)
+            {
+
+                  var res = door.AccessControlReaderConfiguration(
+                        mac,
+                        deviceId,
+                        doorId.ElementAt(1),
+                        2,
+                        doorId.ElementAt(0),
+                        -1,
+                        -1,
+                        -1,
+                        -1,
+                        1,
+                        5,
+                        0,
+                        -1,
+                        -1,
+                        1,
+                        -1,
+                        -1,
+                        -1,
+                        -1,
+                        0,
+                        0,
+                        -1,
+                        -1,
+                        0,
+                        255,
+                        0,
+                        -1,
+                        1,
+                        0,
+                        0,
+                        1,
+                        1,
+                        0,
+                        0,
+                        0
+                  );
+
+                  await bus.SendAsync(new AdapterEventCommand(res));
+
+            }
+
+            var doorRes = door.AccessControlReaderConfiguration(
+                  mac,
+                  deviceId,
+                  doorId.ElementAt(0),
+                  (short)(type == DoorType.Single ? 0 : 1),
+                  type == DoorType.Single && doorId.Count() <= 1 ? (short)-1 : doorId.ElementAt(1),
+                  -1,
+                        -1,
+                        -1,
+                        -1,
+                        1,
+                        5,
+                        0,
+                        -1,
+                        -1,
+                        1,
+                        -1,
+                        -1,
+                        -1,
+                        -1,
+                        0,
+                        0,
+                        -1,
+                        -1,
+                        0,
+                        255,
+                        0,
+                        -1,
+                        1,
+                        0,
+                        0,
+                        1,
+                        1,
+                        0,
+                        0,
+                        0
+            );
+
+            await bus.SendAsync(new AdapterEventCommand(doorRes));
       }
 }

@@ -130,6 +130,10 @@ public static class CoreDependencyInjection
     services.AddScoped<IOutput,OutputService>();
     services.AddScoped<IOutputRepository,OutputRepository>();
 
+    // Card Format
+    services.AddScoped<ICardFormat,CardFormatService>();
+    services.AddScoped<ICardFormatRepository,CardFormatRepository>();
+
     // Utility
     services.AddScoped<IUtility,UtilityService>();
 

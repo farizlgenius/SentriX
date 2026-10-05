@@ -30,5 +30,6 @@ public enum EntityType
       Trigger,
       MonitorGroup,
       Area,
-      Web
+      Web,
+      CardFormat
 }

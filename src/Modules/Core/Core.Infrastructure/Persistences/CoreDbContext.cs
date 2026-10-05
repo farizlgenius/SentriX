@@ -588,7 +588,14 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Location>()
-                  .HasMany(x => x.component_mapping)
+                  .HasMany(x => x.component_mappings)
+                  .WithOne(x => x.location)
+                  .HasForeignKey(x => x.location_id)
+                  .IsRequired(false)
+                  .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<Location>()
+                  .HasMany(x => x.component_mappings)
                   .WithOne(x => x.location)
                   .HasForeignKey(x => x.location_id)
                   .OnDelete(DeleteBehavior.Cascade);
@@ -877,17 +884,6 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   .HasForeignKey(x => x.door_id)
                   .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<Door>()
-                  .HasOne(x => x.sensor)
-                  .WithOne(x => x.door)
-                  .HasForeignKey<Door>(x => x.sensor_id)
-                  .OnDelete(DeleteBehavior.Cascade);
-
-            modelBuilder.Entity<Door>()
-                  .HasOne(x => x.bg)
-                  .WithOne(x => x.door)
-                  .HasForeignKey<Door>(x => x.bg_id)
-                  .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Door>()
                   .HasMany(x => x.rexes)
@@ -895,11 +891,27 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   .HasForeignKey(x => x.door_id)
                   .OnDelete(DeleteBehavior.Cascade);
 
+
+                  // Sensor configuration
             modelBuilder.Entity<Door>()
-                  .HasOne(x => x.relay)
-                  .WithOne(x => x.door)
-                  .HasForeignKey<Door>(x => x.relay_id)
-                  .OnDelete(DeleteBehavior.Cascade);
+            .HasOne(x => x.sensor)
+            .WithOne(x => x.door)
+            .HasForeignKey<Sensor>(x => x.door_id) // FK is now on Sensor
+            .OnDelete(DeleteBehavior.Cascade);
+
+            // Relay configuration
+            modelBuilder.Entity<Door>()
+            .HasOne(x => x.relay)
+            .WithOne(x => x.door)
+            .HasForeignKey<Relay>(x => x.door_id) // FK is now on Relay
+            .OnDelete(DeleteBehavior.Cascade);
+
+            // Bg configuration
+            modelBuilder.Entity<Door>()
+            .HasOne(x => x.bg)
+            .WithOne(x => x.door)
+            .HasForeignKey<BreakGlass>(x => x.door_id) // FK is now on Bg
+            .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Door>()
             .HasOne(x => x.buzzer)
@@ -1550,6 +1562,7 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   {
                         id=1,
                         name="26-bit Wiegand",
+                        guid=new Guid("356b51d4-5650-4ef9-821b-bf38eb4ec2db"),
                         fac=-1,
                         bits=26,
                         even_parity_len=0,
@@ -1568,6 +1581,7 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   {
                         id=2,
                         name="32-bit Wiegand",
+                        guid=new Guid("f04c1839-991d-4f13-be52-4a057d30af68"),
                         fac=-1,
                         bits=32,
                         even_parity_len=0,
@@ -1586,6 +1600,7 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   {
                         id=3,
                         name="37-bit Wiegand",
+                        guid=new Guid("2ec6aa6c-dd76-4b3a-98b3-e8b5ecff0d1e"),
                         fac=-1,
                         bits=37,
                         even_parity_len=0,
@@ -1599,6 +1614,37 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                         issue_code_len=0,
                         issue_code_loc=-1,
 
+                  }
+            );
+
+            modelBuilder.Entity<ComponentMapping>()
+            .HasData(
+                  new ComponentMapping
+                  {
+                        id=3,
+                        guid=new Guid("356b51d4-5650-4ef9-821b-bf38eb4ec2db"),
+                        entity = EntityType.CardFormat,
+                        external_id=0,
+                        mac=null,
+                        vendor=null
+                  },
+                  new ComponentMapping
+                  {
+                        id=4,
+                        guid=new Guid("f04c1839-991d-4f13-be52-4a057d30af68"),
+                        entity = EntityType.CardFormat,
+                        external_id=1,
+                        mac=null,
+                        vendor=null
+                  },
+                  new ComponentMapping
+                  {
+                        id=5,
+                        guid=new Guid("2ec6aa6c-dd76-4b3a-98b3-e8b5ecff0d1e"),
+                        entity = EntityType.CardFormat,
+                        external_id=2,
+                        mac=null,
+                        vendor=null
                   }
             );
 

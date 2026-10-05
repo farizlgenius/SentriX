@@ -1,5 +1,6 @@
 export enum DoorMode{
-      Disabled,
+      Unknown=0,
+      Disabled=1,
       Unlocked,
       Locked,
       Fac,
@@ -7,5 +8,5 @@ export enum DoorMode{
       PIN,
       CardPIN,
       CardOrPIN,
-      Unknown,
+      
 }

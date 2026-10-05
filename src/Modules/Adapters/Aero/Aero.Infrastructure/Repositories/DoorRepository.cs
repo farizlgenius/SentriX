@@ -103,6 +103,55 @@ public sealed class DoorRepository(
             }
       }
 
+      public CommandResponse AcrMode(string mac, short scpId, short acrNo, DoorMode mode)
+      {
+            CC_ACRMODE c = new CC_ACRMODE();
+            c.scp_number = scpId;
+            c.acr_number = acrNo;
+            c.acr_mode = (short)mode;
+            c.nAuthModFlags = 0;
+            var result = repo.Send((short)enCfgCmnd.enCcAcrMode, c);
+            if (result)
+            {
+                  logger.LogInformation(LogMessageHelper.CommandSuccess(Command.AcrMode, scpId));
+
+                  return new CommandResponse(
+                        mac,
+                        scpId,
+                        Command.AcrMode,
+                        SCPDLL.scpGetTagLastPosted(scpId),
+                        DateTime.UtcNow,
+                        null,
+                        ObjectHelper.ToAsciiString(c),
+                        CommandStatus.PENDING,
+                        string.Empty,
+                        Vendor.aero,
+                        true
+                        );
+
+            }
+            else
+            {
+                  logger.LogError(LogMessageHelper.CommandUnsuccess(Command.AcrMode, scpId));
+                  return new CommandResponse(
+                        mac,
+                       scpId,
+                       Command.AcrMode,
+                       -1,
+                       DateTime.UtcNow,
+                       DateTime.UtcNow,
+                       ObjectHelper.ToAsciiString(c),
+                       CommandStatus.PENDING,
+                       string.Empty,
+                       Vendor.aero,
+                       false
+                       );
+
+            }
+
+
+      }
+
       public CommandResponse EnCcAcrSrq(string mac, short scpId, short acrNo)
       {
             CC_ACRSRQ c = new CC_ACRSRQ();
@@ -149,6 +198,11 @@ public sealed class DoorRepository(
             }
       }
 
+      public CommandResponse MomentaryUnlock(string mac, short scpId, short acrNo)
+      {
+            throw new NotImplementedException();
+      }
+
       public CommandResponse ReaderSpecification(string mac, short scpId, short sioNo, short readerNo, short osdpFlag)
       {
             CC_RDR c = new CC_RDR();
@@ -158,7 +212,7 @@ public sealed class DoorRepository(
             c.reader = readerNo;
             c.dt_fmt = 0x01;
             c.keypad_mode = 2;
-            c.led_drive_mode = osdpFlag == 0 ? (short)1 : (short)2;
+            c.led_drive_mode = osdpFlag == 0 ? (short)1 : (short)7;
             c.osdp_flags = osdpFlag;
             var result = repo.Send((short)enCfgCmnd.enCcReader, c);
             if (result)
@@ -201,4 +255,48 @@ public sealed class DoorRepository(
 
       }
 
+      public CommandResponse Unlock(string mac, short scpId, short acrNo)
+      {
+            CC_UNLOCK c = new CC_UNLOCK();
+            c.scp_number = scpId;
+            c.acr_number = acrNo;
+            var result = repo.Send((short)enCfgCmnd.enCcUnlock, c);
+            if (result)
+            {
+                  logger.LogInformation(LogMessageHelper.CommandSuccess(Command.MomentaryUnlock, scpId));
+
+                  return new CommandResponse(
+                        mac,
+                        scpId,
+                        Command.MomentaryUnlock,
+                        SCPDLL.scpGetTagLastPosted(scpId),
+                        DateTime.UtcNow,
+                        null,
+                         ObjectHelper.ToAsciiString(c),
+                        CommandStatus.PENDING,
+                        string.Empty,
+                        Vendor.aero,
+                        true
+                        );
+
+            }
+            else
+            {
+                  logger.LogError(LogMessageHelper.CommandUnsuccess(Command.MomentaryUnlock, scpId));
+                  return new CommandResponse(
+                        mac,
+                       scpId,
+                       Command.MomentaryUnlock,
+                       -1,
+                       DateTime.UtcNow,
+                       DateTime.UtcNow,
+                        ObjectHelper.ToAsciiString(c),
+                       CommandStatus.PENDING,
+                       string.Empty,
+                        Vendor.aero,
+                       false
+                       );
+
+            }
+      }
 }
