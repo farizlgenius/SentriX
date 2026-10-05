@@ -1,4 +1,7 @@
-export enum DoorStatus{
+namespace SharedKernel.Enums;
+
+public enum DoorStatus
+{
       Unknown,
       Secure,
       Unlocked,

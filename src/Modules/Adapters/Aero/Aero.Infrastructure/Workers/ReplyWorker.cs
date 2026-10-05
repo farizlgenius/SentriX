@@ -355,8 +355,20 @@ public sealed class ReplyWorker(Channel<ReplyMessage> queue, ILogger<ReplyWorker
               // await publisher.CpNotifyStatus(cpstatus);
               break;
             case (int)enSCPReplyType.enSCPReplySrAcr:
-              // var acrstatus = new AcrStatus((short)message.ScpId, message.sts_acr.number, DescriptionHelper.GetAcrModeForStatus(message.sts_acr.door_status), DescriptionHelper.GetAccessPointStatusFlagResult((byte)message.sts_acr.ap_status));
-              // await publisher.AcrNotifyStatus(acrstatus);
+              bus = scope.ServiceProvider.GetRequiredService<IMessageBus>();
+                  notifier = scope.ServiceProvider.GetRequiredService<INotifier>();
+                  guid = await bus.QueryAsync(new GuidByExternalIdAndEntityAndVendorQuery(message.sts_sio.number,EntityType.Door,Vendor.aero));
+                  // await s.HandleFoundSioAsync(message.SCPId,message.sts_sio);
+                  //Console.WriteLine(message.sts_acr.GetDebuggerDisplay());
+                  await notifier.SendToTopic(NotifierTopic.MODULE_STATUS,
+                  new DoorStatusDto(
+                      guid,
+                      DescriptionHelper.DecodeTypeDoorCos(message.sts_acr.ap_status),
+                      (DoorMode)message.sts_acr.mode,
+                      (ReaderStatus)DescriptionHelper.DecodeStatusTypeCoS(message.sts_sio.ct_stat,(short)tranSrc.tranSrcAcrTmpr),
+                      DescriptionHelper.DecodeStatusTypeCoS(message.sts_sio.ct_stat),
+                      DescriptionHelper.DecodeStatusTypeCoS(message.sts_sio.pw_stat)
+                  ), ct);
               break;
             case (int)enSCPReplyType.enSCPReplySrTz:
               break;

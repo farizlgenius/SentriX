@@ -32,23 +32,36 @@ const DoorOutForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps>> =
     ReaderType.wiegand,
   );
 
-   // NEW: Automatically validate whenever name or deviceGuid changes
-   useEffect(() => {
-      if (setIsNext) {
-        // 1. Safely find the reader (might be undefined)
-        const readerOut = dto.readers.find(x => x.readerDirection === ReaderDirection.Out);
-  
-        // 2. Extract values safely, providing fallbacks if undefined
-        const moduleGuid = readerOut?.deviceModuleGuid || "";
-        const slotNo = readerOut?.slotNo ?? -1;
-  
-        // 3. Perform the validation check safely
-        const isValid = moduleGuid.trim() !== "" && slotNo !== -1;
-  
-        console.log("DoorOutForm isValid:", isValid); 
-        setIsNext(isValid); // This will now successfully run!
+  // NEW: Automatically validate whenever name or deviceGuid changes
+  useEffect(() => {
+    if (setIsNext) {
+
+
+      // 1. Safely find the reader (might be undefined)
+      const readerOut = dto.readers.find(x => x.readerDirection === ReaderDirection.Out);
+
+      // 2. Extract values safely, providing fallbacks if undefined
+      const moduleGuid = readerOut?.deviceModuleGuid || "";
+      const slotNo = readerOut?.slotNo ?? -1;
+
+      if (moduleGuid !== "") {
+        handleChange({
+          target: {
+            name: "readerOut.module",
+            value: moduleGuid
+          }
+        } as React.ChangeEvent<HTMLInputElement>);
       }
-    }, [dto.readers, setIsNext]); // Simplified dependency array
+
+
+
+      // 3. Perform the validation check safely
+      const isValid = moduleGuid.trim() !== "" && slotNo !== -1;
+
+      console.log("DoorOutForm isValid:", isValid);
+      setIsNext(isValid); // This will now successfully run!
+    }
+  }, [dto.readers, setIsNext]); // Simplified dependency array
 
   return (
     <>

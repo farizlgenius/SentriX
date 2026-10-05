@@ -16,7 +16,7 @@ public sealed class AeroDbContext(DbContextOptions<AeroDbContext> options) : DbC
       public DbSet<ElevatorAccessLevelSpecification> ElevatorAccessLevelSpecifications { get; set; }
       public DbSet<RelayMode> RelayModes {get; set;}
       public DbSet<TimezoneMode> TimezoneModes {get; set;}
-      public DbSet<DoorMode> DoorModes {get; set;}
+      public DbSet<Entities.DoorMode> DoorModes {get; set;}
 
       // Resource Allocate Tracking Table
       public DbSet<ScpSlot> ScpSlots {get; set;}

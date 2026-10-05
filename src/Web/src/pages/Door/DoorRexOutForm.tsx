@@ -44,6 +44,15 @@ const DoorRexOutForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps>
         // 2. Extract values safely, providing fallbacks if undefined
         const moduleGuid = rex[0]?.deviceModuleGuid || "";
         const slotNo = rex[0]?.slotNo ?? -1;
+
+        if(moduleGuid !== ""){
+          handleChange({
+            target: {
+              name: "rex.module",
+              value: moduleGuid
+            }
+          } as React.ChangeEvent<HTMLInputElement>);
+        }
   
         // 3. Perform the validation check safely
         isValid = moduleGuid.trim() !== "" && slotNo !== -1;
@@ -174,7 +183,7 @@ const DoorRexOutForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps>
         <Input 
         disabled={isReadOnly}
         type="number" min="0" max="15" 
-        value={ (dto.rexes[0]?.metadata as AeroRexMetadata)?.debounce ?? ""}
+        value={(dto.rexes[0]?.metadata as AeroRexMetadata)?.debounce ?? ""}
         onChange={(e) => 
             setDto((prev) => ({
               ...prev,

@@ -1,4 +1,8 @@
-export enum DoorMode{
+namespace SharedKernel.Enums;
+
+public enum DoorMode
+{
+
       Disabled,
       Unlocked,
       Locked,

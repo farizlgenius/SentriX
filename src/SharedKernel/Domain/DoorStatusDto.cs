@@ -2,11 +2,11 @@ using SharedKernel.Enums;
 
 namespace SharedKernel.Domain;
 
-public sealed record StatusDto(
+public sealed record DoorStatusDto(
       Guid Guid,
-      Status Status,
-      InputStatus Altr1=InputStatus.Unknown,
-      InputStatus Altr2=InputStatus.Unknown,
+      DoorStatus Status = DoorStatus.Unknown,
+      DoorMode Altr1=DoorMode.Unknown,
+      ReaderStatus Altr2=ReaderStatus.Unknown,
       InputStatus Altr3=InputStatus.Unknown,
       InputStatus Altr4=InputStatus.Unknown
 );

@@ -55,6 +55,8 @@ import { DoorStatus } from "../../enum/DoorStatus";
 import { DoorMode } from "../../enum/DoorMode";
 import { ReaderStatus } from "../../enum/ReaderStatus";
 import { InputStatus } from "../../enum/InputStatus";
+import { ReaderDirection } from "../../enum/DoorDirection";
+import { AeroReaderMetadata } from "../../model/Door/AeroReaderMetadata";
 
 // ACR Page
 const DOOR_TABLE_HEADER: string[] = [
@@ -84,7 +86,7 @@ const Door = () => {
     setMessage,
   } = usePopup();
 
- 
+
 
   const defaultDoorDto: DoorDto = {
     guid: "",
@@ -94,8 +96,8 @@ const Door = () => {
     buzzer: null,
     rexes: [],
     sensor: null,
-    relay:null,
-    bg:null,
+    relay: null,
+    bg: null,
     locationGuid: locationGuid,
     locationName: "",
     isActive: false,
@@ -107,15 +109,15 @@ const Door = () => {
   };
   const [dto, setDto] = useState<DoorDto>(defaultDoorDto);
   const [refresh, setRefresh] = useState(false);
-  const [status,setStatus] = useState<StatusDto[]>([]);
+  const [status, setStatus] = useState<StatusDto[]>([]);
   const toggleRefresh = () => setRefresh(!refresh);
   {
     /* Modal */
   }
   const [form, setForm] = useState<boolean>(false);
   const [formType, setFormType] = useState<FormType>(FormType.CREATE);
-  const [isNext,setIsNext] = useState<boolean>(false);
-  
+  const [isNext, setIsNext] = useState<boolean>(false);
+
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     console.log(e.currentTarget.name);
@@ -152,36 +154,36 @@ const Door = () => {
       case "create":
         setConfirmCreate(() => async () => {
           // Reader
-          if(dto.readers.length > 0){
-            dto.readers = dto.readers.map((a:ReaderDto) => ({
+          if (dto.readers.length > 0) {
+            dto.readers = dto.readers.map((a: ReaderDto) => ({
               ...a,
-              metadata:typeof a.metadata === 'string' ? a.metadata : JSON.stringify(a.metadata)
+              metadata: typeof a.metadata === 'string' ? a.metadata : JSON.stringify(a.metadata)
             }))
           }
           // Relay
-          if(dto.relay != null){
-            dto.relay.metadata = typeof dto.relay.metadata === 'string' ?  dto.relay.metadata : JSON.stringify(dto.relay.metadata)
+          if (dto.relay != null) {
+            dto.relay.metadata = typeof dto.relay.metadata === 'string' ? dto.relay.metadata : JSON.stringify(dto.relay.metadata)
           }
           // Rex
-          if(dto.rexes.length > 0){
-            dto.rexes = dto.rexes.map((a:RexDto) => ({
+          if (dto.rexes.length > 0) {
+            dto.rexes = dto.rexes.map((a: RexDto) => ({
               ...a,
-              metadata:typeof a.metadata === 'string' ? a.metadata : JSON.stringify(a.metadata)
+              metadata: typeof a.metadata === 'string' ? a.metadata : JSON.stringify(a.metadata)
             }))
           }
           // Sensor
-          if(dto.sensor != null){
-            dto.sensor.metadata = typeof dto.sensor.metadata === 'string' ?  dto.sensor.metadata : JSON.stringify(dto.sensor.metadata)
+          if (dto.sensor != null) {
+            dto.sensor.metadata = typeof dto.sensor.metadata === 'string' ? dto.sensor.metadata : JSON.stringify(dto.sensor.metadata)
           }
           // Buzzer
-          if(dto.buzzer != null){
-            dto.buzzer.metadata = typeof dto.buzzer.metadata === 'string' ?  dto.buzzer.metadata : JSON.stringify(dto.buzzer.metadata)
+          if (dto.buzzer != null) {
+            dto.buzzer.metadata = typeof dto.buzzer.metadata === 'string' ? dto.buzzer.metadata : JSON.stringify(dto.buzzer.metadata)
           }
           // Bg
-          if(dto.bg != null){
-            dto.bg.metadata = typeof dto.bg.metadata === 'string' ?  dto.bg.metadata : JSON.stringify(dto.bg.metadata)
+          if (dto.bg != null) {
+            dto.bg.metadata = typeof dto.bg.metadata === 'string' ? dto.bg.metadata : JSON.stringify(dto.bg.metadata)
           }
-          dto.metadata = typeof dto.metadata === 'string' ?  dto.metadata : JSON.stringify(dto.metadata)
+          dto.metadata = typeof dto.metadata === 'string' ? dto.metadata : JSON.stringify(dto.metadata)
           dto.locationGuid = locationGuid;
           const res = await send.post(DoorEndpoint.CREATE, dto);
           if (Helper.handleToastByResCode(res, DoorToast.CREATE, toggleToast)) {
@@ -254,18 +256,18 @@ const Door = () => {
       case "rex.module":
         fetchInput(e.target.value);
         break;
-        case "relay.module":
+      case "relay.module":
         fetchOutput(e.target.value);
         break;
-        case "sensor.module":
+      case "sensor.module":
         fetchInput(e.target.value);
         break;
-         case "bg.module":
+      case "bg.module":
         fetchInput(e.target.value);
         break;
-        case "buzzer.module":
-          fetchOutput(e.target.value)
-          break;
+      case "buzzer.module":
+        fetchOutput(e.target.value)
+        break;
       default:
         break;
     }
@@ -301,55 +303,55 @@ const Door = () => {
     /* Door Data */
   }
   const [doorsDto, setDoorsDto] = useState<DoorDto[]>([]);
-  const [deviceOptions,setDeviceOptions]=useState<Options[]>([]);
-  const [moduleOption,setModuleOption]=useState<Options[]>([]);
-  const [readerOption,setReaderOption] = useState<Options[]>([]);
-  const [inputOption,setInputOption] = useState<Options[]>([]);
-  const [outputOption,setOutputOption] = useState<Options[]>([]);
-  const [timeOption,setTimeOption] = useState<Options[]>([]);
+  const [deviceOptions, setDeviceOptions] = useState<Options[]>([]);
+  const [moduleOption, setModuleOption] = useState<Options[]>([]);
+  const [readerOption, setReaderOption] = useState<Options[]>([]);
+  const [inputOption, setInputOption] = useState<Options[]>([]);
+  const [outputOption, setOutputOption] = useState<Options[]>([]);
+  const [timeOption, setTimeOption] = useState<Options[]>([]);
 
 
   const fetchDevice = async () => {
     var res = await send.get(DeviceEndpoint.GET_LOCATION(locationGuid))
-    var option = res.data.data.map((a:DeviceDto) => ({
-      value:a.guid,
-      label:a.name,
-      description:a.mac,
-      isTaken:false
+    var option = res.data.data.map((a: DeviceDto) => ({
+      value: a.guid,
+      label: a.name,
+      description: a.mac,
+      isTaken: false
     }))
 
     setDeviceOptions(option)
 
   }
 
-  const fetchModule = async (guid:string) => {
+  const fetchModule = async (guid: string) => {
     var res = await send.get(ModuleEndpoint.GET_BY_GUID(guid))
-    var option = res.data.data.map((a:DeviceDto) => ({
-      value:a.guid,
-      label:a.name,
-      description:a.mac,
-      isTaken:false
+    var option = res.data.data.map((a: DeviceDto) => ({
+      value: a.guid,
+      label: a.name,
+      description: a.mac,
+      isTaken: false
     }))
 
     setModuleOption(option)
   }
-  
-   const fetchReader = async (guid:string) => {
+
+  const fetchReader = async (guid: string) => {
     var res = await send.get(ModuleEndpoint.GET_READER_SLOT(guid))
     setReaderOption(res.data.data);
   }
 
-  const fetchInput = async (guid:string) => {
+  const fetchInput = async (guid: string) => {
     var res = await send.get(ModuleEndpoint.GET_INPUT_SLOT(guid))
     setInputOption(res.data.data);
   }
 
-  const fetchOutput = async (guid:string) => {
+  const fetchOutput = async (guid: string) => {
     var res = await send.get(ModuleEndpoint.GET_OUTPUT_SLOT(guid))
     setOutputOption(res.data.data);
   }
 
-  const fetchTime = async (guid:string) => {
+  const fetchTime = async (guid: string) => {
     var res = await send.get(TimezoneEndPoint.GET_OPTION_BY_LOCATION(guid))
     setTimeOption(res.data.data);
   }
@@ -373,7 +375,68 @@ const Door = () => {
     );
     console.log(res);
     if (res.data) {
-      setDoorsDto(res.data.data.items);
+
+      // 1. Map over the items and parse the metadata string
+      const parsedItems = res.data.data.items.map((door: DoorDto) => {
+        let parsedMetadata = null; // Default value if empty or parsing fails
+        let parsedReaderInMetadata = null;
+        let parsedReaderOutMetadata = null;
+        let parsedSensorMetadata = null;
+        let parsedRelayMetadata = null;
+        let parsedRex0Metadata = null;
+        let parsedRex1Metadata = null;
+
+        let readerIn = door.readers.find(x => x.readerDirection == ReaderDirection.In)?.metadata
+        let readerOut = door.readers.find(x => x.readerDirection == ReaderDirection.Out)?.metadata
+        let sensor = door.sensor?.metadata;
+        let relay = door.relay?.metadata;
+        let rex0 = door.rexes.length > 0 && door.rexes[0].metadata;
+        let rex1 = door.rexes.length > 1 && door.rexes[1].metadata;
+
+
+        parsedMetadata = door.metadata == undefined || door.metadata == "" ? "" : JSON.parse(door.metadata);
+        parsedReaderInMetadata = readerIn == "" || readerIn == undefined ? "" : JSON.parse(readerIn as string);
+        parsedReaderOutMetadata = readerOut == "" || readerOut == undefined ? "" : JSON.parse(readerOut as string);
+        parsedSensorMetadata = sensor == "" || sensor == undefined ? "" : JSON.parse(sensor as string);
+        parsedRelayMetadata = relay == "" || relay == undefined ? "" : JSON.parse(relay as string);
+        parsedRex0Metadata = rex0 == "" || rex0 == undefined ? "" : JSON.parse(rex0 as string);
+        parsedRex1Metadata = rex1 == "" || rex1 == undefined ? "" : JSON.parse(rex1 as string);
+
+        return {
+          ...door,
+          metadata: parsedMetadata,
+           readers:door.readers.map(x =>  
+            x.readerDirection == ReaderDirection.In ? 
+            {
+              ...x,
+              metadata:parsedReaderInMetadata
+            }: x.readerDirection == ReaderDirection.Out ? {
+              ...x,
+              metadata:parsedReaderOutMetadata
+            }:x
+           ),
+          sensor:{
+            ...door.sensor,
+            metadata:parsedSensorMetadata
+          },
+          relay:{
+            ...door.relay,
+            metadata:parsedRelayMetadata
+          },
+          rexes:door.rexes.map((x,i) => 
+          i == 0 ? {
+            ...x,
+            metadata : parsedRex0Metadata
+          } : i == 1 ? {
+            ...x,
+            metadata: parsedRex1Metadata         
+          } : x
+          )
+         
+        };
+      });
+
+      setDoorsDto(parsedItems);
       setPagination(res.data.data);
 
       // Batch set state
@@ -402,7 +465,7 @@ const Door = () => {
     Logger.info(res);
   };
 
-  const changeDoorMode = async (
+  const changeDoorMode = async ( 
     id: number,
     scpId: number,
     acrId: number,
@@ -511,22 +574,22 @@ const Door = () => {
                   setDto={setDto}
                   type={formType}
                   inputOption={inputOption}
-                  handleChange={handleChange} 
+                  handleChange={handleChange}
                   moduleOption={moduleOption}
                   fetchTime={fetchTime}
                   timeOption={timeOption}
                   setIsNext={setIsNext}
                   setInputOption={setInputOption}
-                  />
+                />
               ),
             },
           ]),
-           {
+        {
           label: "Relay",
           icon: <DoorIcon />,
-          content: <DoorRelayForm dto={dto} setDto={setDto} type={formType} handleChange={handleChange} moduleOption={moduleOption} outputOption={outputOption} setIsNext={setIsNext}  />,
+          content: <DoorRelayForm dto={dto} setDto={setDto} type={formType} handleChange={handleChange} moduleOption={moduleOption} outputOption={outputOption} setIsNext={setIsNext} />,
         },
-          {
+        {
           label: "Sensor",
           icon: <MonitorIcon />,
           content: <DoorMonitorForm dto={dto} setDto={setDto} type={formType} moduleOption={moduleOption} handleChange={handleChange} inputOption={inputOption} setIsNext={setIsNext} />,
@@ -534,9 +597,9 @@ const Door = () => {
         {
           label: "Buzzer",
           icon: <OnIcon />,
-          content: <DoorBuzzerForm dto={dto} setDto={setDto} type={formType} moduleOption={moduleOption} outputOption={outputOption} handleChange={handleChange }  setIsNext={setIsNext}/>,
+          content: <DoorBuzzerForm dto={dto} setDto={setDto} type={formType} moduleOption={moduleOption} outputOption={outputOption} handleChange={handleChange} setIsNext={setIsNext} />,
         },
-         {
+        {
           label: "Break Glass",
           icon: <OnIcon />,
           content: <DoorBGForm dto={dto} setDto={setDto} type={formType} moduleOption={moduleOption} handleChange={handleChange} inputOption={inputOption} setIsNext={setIsNext} />,
@@ -552,10 +615,10 @@ const Door = () => {
       : []),
   ];
 
-  const renderOptional = (item: DoorDto, statusDto: StatusDto[],i:number) => {
+  const renderOptional = (item: DoorDto, statusDto: StatusDto[], i: number) => {
     return [
-      <React.Fragment key={i+1}>
-        <TableCell  className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+      <React.Fragment key={i + 1}>
+        <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
           <>
             <Badge size="sm" color="dark">
               {DoorMode[statusDto.find((b) => b.guid == item.guid)?.altr4 as DoorMode] ?? "Unknown"}
@@ -571,7 +634,7 @@ const Door = () => {
             ) : statusDto.find((b) => b.guid == item.guid)?.status === DoorStatus.Forced ||
               statusDto.find((b) => b.guid == item.guid)?.status === DoorStatus.Locked ? (
               <Badge size="sm" color="error">
-                {statusDto.find((b) => b.guid == item.guid)?.status == DoorStatus.Forced ? DoorStatus[DoorStatus.Forced]: DoorStatus[DoorStatus.Locked] ?? "Unknown"}
+                {statusDto.find((b) => b.guid == item.guid)?.status == DoorStatus.Forced ? DoorStatus[DoorStatus.Forced] : DoorStatus[DoorStatus.Locked] ?? "Unknown"}
               </Badge>
             ) : (
               <Badge size="sm" color="warning">
@@ -818,7 +881,7 @@ const Door = () => {
           specialDisplay={[
             {
               key: "doorType",
-              content: (d,i) => (
+              content: (d, i) => (
                 <TableCell key={i} className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400">
                   {d.type == DoorType.Dual ? (
                     <div className="flex items-center gap-2">

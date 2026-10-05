@@ -1,3 +1,4 @@
+using Aero.Application.Enums;
 using HID.Aero.ScpdNet.Wrapper;
 using SharedKernel.Enums;
 
@@ -761,28 +762,7 @@ public sealed class DescriptionHelper
 
   #region tranTypeCos
 
-  public enum StatusCode
-  {
-    Inactive = 0,
-    Active = 1,
-    GroundFault = 2,
-    Short = 3,
-    OpenCircuit = 4,
-    ForeignVoltage = 5,
-    NonSettlingError = 6,
-    SupervisoryFault = 7
-  }
 
-  [Flags]
-  public enum StatusFlags : byte
-  {
-    None = 0x00,
-    Offline = 0x08,
-    Masked = 0x10,
-    LocalMask = 0x20,
-    EntryDelay = 0x40,
-    NotAttached = 0x80
-  }
 
   public static string DecodePowerFaultStatus(byte code)
   {
@@ -796,15 +776,15 @@ public sealed class DescriptionHelper
     };
   }
 
-  public static string DecodeReaderTamperStatus(byte code)
+  public static ReaderStatus DecodeReaderTamperStatus(byte code)
   {
     return code switch
     {
-      0 => "Online, tamper inactive",
-      1 => "Online, tamper active",
-      2 => "N/A",
-      3 => "Communication broken (offline)",
-      _ => "Unknown tamper status"
+      0 => ReaderStatus.Online,
+      1 => ReaderStatus.Tamper,
+      2 => ReaderStatus.NA,
+      3 => ReaderStatus.NA,
+      _ => ReaderStatus.Unknown
     };
   }
 
@@ -831,10 +811,36 @@ public sealed class DescriptionHelper
     }
   }
 
-  public static string DecodeStatusTypeCoS(short b, short sourceType)
+  public static object DecodeStatusTypeCoS(short b, short sourceType)
   {
     byte codeValue = (byte)(b & 0x07);
-    var flags = (StatusFlags)(b & 0xF8);
+    var flags = (TypeCosStatusFlag)(b & 0xF8);
+
+    if (flags.HasFlag(TypeCosStatusFlag.Offline))
+    {
+      return InputStatus.Offline;
+    }
+
+    if (flags.HasFlag(TypeCosStatusFlag.Masked))
+    {
+      return InputStatus.Mask;
+    }
+
+    if (flags.HasFlag(TypeCosStatusFlag.LocalMask))
+    {
+      return InputStatus.LocalMask;
+    }
+
+    if (flags.HasFlag(TypeCosStatusFlag.DelayInProgress))
+    {
+      return InputStatus.DelayInProgress;
+    }
+
+    if (flags.HasFlag(TypeCosStatusFlag.NotAttached))
+    {
+      return InputStatus.NotAttached;
+    }
+
 
     if (sourceType == (short)tranSrc.tranSrcAcrTmpr)
     {
@@ -846,11 +852,22 @@ public sealed class DescriptionHelper
     }
     else
     {
-      return ((StatusCode)codeValue).ToString();
+      return codeValue switch
+      {
+        (byte)MonitorStatus.Inactive => InputStatus.Inactive,
+        (byte)MonitorStatus.Active => InputStatus.Active,
+        (byte)MonitorStatus.GroundFault => InputStatus.GroundFault,
+        (byte)MonitorStatus.Short => InputStatus.Short,
+        (byte)MonitorStatus.OpenCircuit => InputStatus.Open,
+        (byte)MonitorStatus.ForeignVoltage => InputStatus.Foreign,
+        (byte)MonitorStatus.NonSettlingError => InputStatus.NonSetting,
+        (byte)MonitorStatus.SupervisoryFault => InputStatus.SupFault,
+        _ => InputStatus.Unknown
+      };
     }
   }
 
-  public static InputStatus DecodeStatusTypeCoS(short b)
+    public static InputStatus DecodeStatusTypeCoS(short b)
   {
     byte codeValue = (byte)(b & 0x07);
 
@@ -858,25 +875,49 @@ public sealed class DescriptionHelper
 
   }
 
-
-  public static short DecodeStatusTypeCoSNumber(short b, short sourceType)
+  public static DoorStatus DecodeTypeDoorCos(short b)
   {
-    byte codeValue = (byte)(b & 0x07);
-    var flags = (StatusFlags)(b & 0xF8);
+    AccessPointStatus s = (AccessPointStatus)b;
 
-    if (sourceType == (short)tranSrc.tranSrcAcrTmpr)
+    if (!s.HasFlag(AccessPointStatus.ForcedOpenMasked))
     {
-      return codeValue;
+      if (s.HasFlag(AccessPointStatus.ForcedOpen))
+      {
+        return DoorStatus.Forced;
+      }
     }
-    else if (sourceType == (short)tranSrc.tranSrcSioPwr)
+
+
+    if (!s.HasFlag(AccessPointStatus.HeldOpenMasked))
     {
-      return codeValue;
+      if (s.HasFlag(AccessPointStatus.HeldOpen))
+      {
+        return DoorStatus.Held;
+      }
     }
-    else
+
+
+
+    if (s.HasFlag(AccessPointStatus.ExitCycleInProgress))
     {
-      return codeValue;
+      return DoorStatus.ExitedCycle;
     }
+
+    if (s.HasFlag(AccessPointStatus.Unlocked))
+    {
+      return DoorStatus.Unlocked;
+    }
+
+    if (s.HasFlag(AccessPointStatus.None))
+    {
+      return DoorStatus.Secure;
+    }
+
+    return DoorStatus.Unknown;
   }
+
+
+
 
 
 
@@ -909,19 +950,7 @@ public sealed class DescriptionHelper
 
   #region tranTypeCosDoor
 
-  [Flags]
-  public enum AccessPointStatus : byte
-  {
-    None = 0x00,
-    Unlocked = 0x01,
-    ExitCycleInProgress = 0x02,
-    ForcedOpen = 0x04,
-    ForcedOpenMasked = 0x08,
-    HeldOpen = 0x10,
-    HeldOpenMasked = 0x20,
-    HeldOpenPreAlarm = 0x40,
-    ExtendedHeldOpenMode = 0x80
-  }
+
 
   public static string GetTranCodeTypeCosDoorDesc(short t)
   {
@@ -942,84 +971,8 @@ public sealed class DescriptionHelper
     }
   }
 
-  public static string GetAccessPointStatusFlagResult(byte status)
-  {
-    AccessPointStatus s = (AccessPointStatus)status;
-
-    if (!s.HasFlag(AccessPointStatus.ForcedOpenMasked))
-    {
-      if (s.HasFlag(AccessPointStatus.ForcedOpen))
-      {
-        return "Forced Open";
-      }
-    }
 
 
-    if (!s.HasFlag(AccessPointStatus.HeldOpenMasked))
-    {
-      if (s.HasFlag(AccessPointStatus.HeldOpen))
-      {
-        return "Held Open";
-      }
-    }
-
-
-
-    if (s.HasFlag(AccessPointStatus.ExitCycleInProgress))
-    {
-      return "Unlocked";
-    }
-
-    if (s.HasFlag(AccessPointStatus.Unlocked))
-    {
-      return "Unlocked";
-    }
-
-    if (s.HasFlag(AccessPointStatus.None))
-    {
-      return "Secure";
-    }
-
-    return "";
-
-    //if (s.HasFlag(AccessPointStatus.HeldOpenPreAlarm))
-    //{
-    //    result.Add("Held Open Pre Alarm");
-    //}
-
-    //if (s.HasFlag(AccessPointStatus.ExtendedHeldOpenMode))
-    //{
-    //    result.Add("extend Held Open");
-    //}
-
-
-  }
-
-  public static string GetStatusTypeCosDoorDesc(byte b)
-  {
-    switch (b)
-    {
-      case 0x01:
-        return "flag: set if access point is unlocked";
-      case 0x02:
-        return "flag: access (exit) cycle in progress";
-      case 0x04:
-        return "flag: forced open status";
-      case 0x08:
-        return "flag: forced open mask status";
-      case 0x10:
-        return "flag: held open status";
-      case 0x20:
-        return "flag: held open mask status";
-      case 0x40:
-        return "flag: held open pre-alarm status";
-      case 0x80:
-        return "flag: door is in \"extended held open\" mode";
-      default:
-        return "";
-    }
-
-  }
 
   #endregion
 

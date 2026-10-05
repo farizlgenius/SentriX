@@ -10,5 +10,10 @@ public enum InputStatus
       Foreign,
       NonSetting,
       SupFault,
+      Offline,
+      Mask,
+      LocalMask,
+      DelayInProgress,
+      NotAttached,
       Unknown
 }

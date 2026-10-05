@@ -35,6 +35,17 @@ const DoorMonitorForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps
         // 2. Extract values safely, providing fallbacks if undefined
         const moduleGuid = sensor?.deviceModuleGuid || "";
         const slotNo = sensor?.slotNo ?? -1;
+
+        if(moduleGuid !== ""){
+           if(moduleGuid !== ""){
+          handleChange({
+            target: {
+              name: "sensor.module",
+              value: moduleGuid
+            }
+          } as React.ChangeEvent<HTMLInputElement>);
+        }
+        }
   
         // 3. Perform the validation check safely
         isValid = moduleGuid.trim() !== "" && slotNo !== -1;

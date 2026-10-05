@@ -31,22 +31,33 @@ const DoorRelayForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps>>
   const isReadOnly = type == FormType.INFO || dto.relay == null
 
   // NEW: Automatically validate whenever name or deviceGuid changes
-     useEffect(() => {
-        if (setIsNext) {
-    
-          // 2. Extract values safely, providing fallbacks if undefined
-          const moduleGuid = dto.relay?.deviceModuleGuid || "";
-          const slotNo = dto.relay?.slotNo ?? -1;
-    
-          // 3. Perform the validation check safely
-          const isValid = moduleGuid.trim() !== "" && slotNo !== -1;
-    
-          console.log("DoorOutForm isValid:", isValid); 
-          setIsNext(isValid); // This will now successfully run!
-        }
-      }, [dto.relay, setIsNext]); // Simplified dependency array
+  useEffect(() => {
+    if (setIsNext) {
 
-      
+      // 2. Extract values safely, providing fallbacks if undefined
+      const moduleGuid = dto.relay?.deviceModuleGuid || "";
+      const slotNo = dto.relay?.slotNo ?? -1;
+
+      if (moduleGuid !== "") {
+        if (moduleGuid !== "") {
+          handleChange({
+            target: {
+              name: "relay.module",
+              value: moduleGuid
+            }
+          } as React.ChangeEvent<HTMLInputElement>);
+        }
+      }
+
+      // 3. Perform the validation check safely
+      const isValid = moduleGuid.trim() !== "" && slotNo !== -1;
+
+      console.log("DoorOutForm isValid:", isValid);
+      setIsNext(isValid); // This will now successfully run!
+    }
+  }, [dto.relay, setIsNext]); // Simplified dependency array
+
+
   return (
     <div className="grid grid-cols-2 gap-5">
       <FormField>
@@ -62,18 +73,18 @@ const DoorRelayForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps>>
             setDto((prev) => ({
               ...prev,
               relay: {
-                  slotNo: -1,
-                  mode: RelayMode.None,
-                  vendor: Vendor.aero,
-                  deviceModuleGuid: e.target.value,
-                  metadata: {
-                    strikeMin: 1,
-                    strikeMax: 5,
-                    driveMode: DriveMode.Normal,
-                    offlineMode: OfflineMode.NoChange,
-                    strikeMode: StrikeMode.None
-                  }
+                slotNo: -1,
+                mode: RelayMode.None,
+                vendor: Vendor.aero,
+                deviceModuleGuid: e.target.value,
+                metadata: {
+                  strikeMin: 1,
+                  strikeMax: 5,
+                  driveMode: DriveMode.Normal,
+                  offlineMode: OfflineMode.NoChange,
+                  strikeMode: StrikeMode.None
                 }
+              }
             }))
           }
 
