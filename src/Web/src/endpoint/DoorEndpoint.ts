@@ -11,7 +11,7 @@ export const DoorEndpoint = {
     startDate?: string | undefined,
     endDate?: string | undefined,
   ) =>
-    `/api/${CONTROLLER}/pagination?PageNumber=${pageNumber}&PageSize=${pageSize}${search == undefined || search == "" ? "" : `&search=${search}`}${startDate == undefined ? "" : `&startDate=${startDate}`}${endDate == undefined ? "" : `&startDate=${endDate}`}${locationGuid == "" || locationGuid == undefined ? "" : `&locationGuid=${locationGuid}`}`,
+    `/api/${CONTROLLER}/pagination?PageNumber=${pageNumber}&PageSize=${pageSize}${search == undefined || search == "" ? "" : `&search=${search}`}${startDate == undefined ? "" : `&startDate=${startDate}`}${endDate == undefined ? "" : `&endDate=${endDate}`}${locationGuid == "" || locationGuid == undefined ? "" : `&locationGuid=${locationGuid}`}`,
   DELETE: (guid: string) => `/api/${CONTROLLER}/${guid}`,
   DELETE_RANGE: `/api/${CONTROLLER}/list`,
   UPDATE: `/api/${CONTROLLER}`,
@@ -21,7 +21,7 @@ export const DoorEndpoint = {
   GET_ACCESS_READER_MODE: `/api/${CONTROLLER}/reader/mode`,
   GET_DOOR_TYPE: `/api/${CONTROLLER}/type`,
   GET_ACR_BY_DEVICE_ID: (deviceId: number) => `/api/${CONTROLLER}/${deviceId}`,
-  GET_ACR_STATUS: (id: number) => `/api/${CONTROLLER}/status/${id}`,
+  STATUS: (guid: string) => `/api/${CONTROLLER}/status/${guid}`,
   GET_ACR_READER: (module: number) => `/api/${CONTROLLER}/reader/${module}`,
   GET_STRK_MODE: `/api/${CONTROLLER}/strike/mode`,
   GET_ACR_MODE: `/api/${CONTROLLER}/mode`,

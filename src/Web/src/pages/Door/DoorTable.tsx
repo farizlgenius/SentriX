@@ -60,7 +60,7 @@ export const DoorTable: React.FC<PropsWithChildren<TableContent>> = ({ selectedO
                                 <>
                                     <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
                                         <>
-                                            <Badge size="sm" color="dark">{statusDto.find(b => b.componentId == data.componentId)?.tamper}</Badge>
+                                            <Badge size="sm" color="dark">{statusDto.find(b => b.componentId == data.componentId)?.altr1}</Badge>
                                         </>
                                     </TableCell>
                                     <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">

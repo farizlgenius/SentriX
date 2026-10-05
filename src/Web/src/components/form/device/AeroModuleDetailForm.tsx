@@ -100,13 +100,13 @@ export const AeroModuleDetailForm: React.FC<
         <Badge
           size="sm"
           color={
-            status.find((x) => x.guid == item.guid)?.batt == InputStatus.Active
+            status.find((x) => x.guid == item.guid)?.altr3 == InputStatus.Active
               ? "success"
               : "error"
           }
         >
-          {status.find((x) => x.guid == item.guid)?.batt == InputStatus.Active ? "Active" :
-           InputStatus[status.find((x) => x.guid == item.guid)?.batt ?? InputStatus.Unknown]}
+          {status.find((x) => x.guid == item.guid)?.altr3 == InputStatus.Active ? "Active" :
+           InputStatus[status.find((x) => x.guid == item.guid)?.altr3 ?? InputStatus.Unknown]}
         </Badge>
       </TableCell>,
       <TableCell
@@ -115,13 +115,13 @@ export const AeroModuleDetailForm: React.FC<
         <Badge
           size="sm"
           color={
-            status.find((x) => x.guid == item.guid)?.ac == InputStatus.Active
+            status.find((x) => x.guid == item.guid)?.altr2 == InputStatus.Active
               ? "success"
               : "error"
           }
         >
-          {status.find((x) => x.guid == item.guid)?.ac == InputStatus.Active ? "Active" :
-            InputStatus[status.find((x) => x.guid == item.guid)?.ac ?? InputStatus.Unknown]}
+          {status.find((x) => x.guid == item.guid)?.altr2 == InputStatus.Active ? "Active" :
+            InputStatus[status.find((x) => x.guid == item.guid)?.altr2 ?? InputStatus.Unknown]}
         </Badge>
       </TableCell>,
       <TableCell key={index + 3} className="text-center">
@@ -129,13 +129,13 @@ export const AeroModuleDetailForm: React.FC<
         <Badge
           size="sm"
           color={
-            status.find((x) => x.guid == item.guid)?.tamper == InputStatus.Active
+            status.find((x) => x.guid == item.guid)?.altr1 == InputStatus.Active
               ? "success"
               : "error"
           }
         >
-          {status.find((x) => x.guid == item.guid)?.tamper == InputStatus.Active ? "Active" :
-            InputStatus[status.find((x) => x.guid == item.guid)?.tamper ?? InputStatus.Unknown]}
+          {status.find((x) => x.guid == item.guid)?.altr1 == InputStatus.Active ? "Active" :
+            InputStatus[status.find((x) => x.guid == item.guid)?.altr1 ?? InputStatus.Unknown]}
         </Badge>
       </TableCell>,
 
@@ -176,9 +176,9 @@ export const AeroModuleDetailForm: React.FC<
               ? {
                 ...a,
                 status: status.status,
-                ac: status.ac,
-                batt: status.batt,
-                tamper: status.tamper,
+                altr2: status.altr2,
+                altr3: status.altr3,
+                tamper: status.altr1,
               }
               : {
                 // scpIp:ScpIp,

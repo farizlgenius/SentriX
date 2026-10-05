@@ -12,7 +12,7 @@ public static class Command
   public static string ScpStructureStatusRead = "1853 : Scp Structure Status Read";
   public static string ElevatorAccessLevelSpecification = "501 : Elevator Access Level Specification";
   public static string ScpReset = "301 : Scp Reset";
-  public static string SioStatusReq = "404 : Sio Status Req";
+  public static string SioStatusReq = "404 : enCcSioSrq";
   public static string OutputPointSpecification = "111 : Output Point Specification";
   public static string ControlPointConfiguration = "114 : Control Point Configuration";
   public static string ControlPointConfigurationDelete = "Delete : Control Point Configuration";
@@ -33,6 +33,7 @@ public static class Command
   public static string CardDelete = "3305 : Card Delete";
   public static string DetachScpChannel = "208 : Detach Scp from Channel";
   public static string DeleteScp = "015 : Delete Scp";
+  public static string DoorStatus = "407 : enCcAcrSrq";
 
 }
 

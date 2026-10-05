@@ -16,7 +16,7 @@ export const DeviceEndpoint = {
     startDate?: string | undefined,
     endDate?: string | undefined,
   ) =>
-    `/api/${CONTROLLER}/pagination?PageNumber=${pageNumber}&PageSize=${pageSize}${search == undefined || search == "" ? "" : `&search=${search}`}${startDate == undefined ? "" : `&startDate=${startDate}`}${endDate == undefined ? "" : `&startDate=${endDate}`}${locationGuid == undefined ? "" : `&locationGuid=${locationGuid}`}`,
+    `/api/${CONTROLLER}/pagination?PageNumber=${pageNumber}&PageSize=${pageSize}${search == undefined || search == "" ? "" : `&search=${search}`}${startDate == undefined ? "" : `&startDate=${startDate}`}${endDate == undefined ? "" : `&endDate=${endDate}`}${locationGuid == undefined ? "" : `&locationGuid=${locationGuid}`}`,
   TYPE: `/api/${CONTROLLER}/type`,
   DELETE: (guid: string) => `/api/${CONTROLLER}/${guid}`,
   DELETE_RANGE: `/api/${CONTROLLER}/range`,

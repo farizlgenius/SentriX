@@ -32,6 +32,13 @@ public class DoorController(IDoor door) : ControllerBase
     return Ok(res);
   }
 
+  [HttpGet("status/{guid}")]
+  public async Task<IActionResult> GetStatusAsync(Guid guid)
+  {
+    var res = await door.GetStatusAsync(guid);
+    return Ok(res);
+  }
+
   [HttpPost]
   public async Task<IActionResult> CreateAsync([FromBody] CreateDoorDto dto)
   {

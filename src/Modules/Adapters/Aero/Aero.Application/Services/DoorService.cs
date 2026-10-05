@@ -18,7 +18,7 @@ public sealed class DoorService(
       IMessageBus bus
       ) : IDoorAdapter
 {
-      public async Task Doors
+      public async Task DoorsAsync
       ( 
             string mac,
             string ip,
@@ -356,4 +356,10 @@ public sealed class DoorService(
 
       }
 
+      public async Task StatusAsync(string mac, string ip, short deviceId, short doorId, CancellationToken ct = default)
+      {
+           var res = door.EnCcAcrSrq(mac,deviceId,doorId);
+
+           await bus.SendAsync(new AdapterEventCommand(res));
+      }
 }

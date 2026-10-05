@@ -143,7 +143,7 @@ public sealed class DoorService(
         ));
     }
 
-    await adapter.GetAdapter(d.Vendor).Door.Doors(
+    await adapter.GetAdapter(d.Vendor).Door.DoorsAsync(
       dev.Mac,
       dev.Ip,
       d.Type,
@@ -295,6 +295,25 @@ public sealed class DoorService(
     return await repo.GetPaginationAsync(param, ct);
   }
 
+      public async Task<bool> GetStatusAsync(Guid guid, CancellationToken ct = default)
+      {
+          var door = await repo.GetAsync(guid,ct);
+
+          var deviceExternalId = (short)await com.GetExternalIdByGuidAndEntityAsync(door.DeviceGuid,EntityType.Device,ct);
+
+          var doorExternalId = (short)await com.GetExternalIdByGuidAndEntityAsync(guid,EntityType.Door);
+
+          var dev = await device.GetAsync(door.DeviceGuid,ct);
+
+          await adapter.GetAdapter(door.Vendor).Door.StatusAsync(
+            dev.Mac,
+            dev.Ip,
+            deviceExternalId,
+            doorExternalId
+            );
+
+            return true;
+      }
 
       public async Task<Guid> UpdateAsync(UpdateDoorDto dto, CancellationToken ct = default)
   {

@@ -540,6 +540,7 @@ const Device = () => {
           type={formType}
           setDto={setDeviceDto}
           dto={deviceDto}
+          handleChange={()=>{}} 
         />
       ),
     },
@@ -569,8 +570,7 @@ const Device = () => {
           handleClick={handleClickWithEvent}
           type={formType}
           setDto={setDeviceDto}
-          dto={deviceDto}
-        />
+          dto={deviceDto} handleChange={()=>{}}        />
       ),
     },
   ];

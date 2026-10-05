@@ -50,13 +50,18 @@ import { TimezoneEndPoint } from "../../endpoint/TimezoneEndpoint";
 import DoorBGForm from "./DoorBGForm";
 import { ReaderDto } from "../../model/Door/ReaderDto";
 import { RexDto } from "../../model/Door/RexDto";
+import { Status } from "../../enum/Status";
+import { DoorStatus } from "../../enum/DoorStatus";
+import { DoorMode } from "../../enum/DoorMode";
+import { ReaderStatus } from "../../enum/ReaderStatus";
+import { InputStatus } from "../../enum/InputStatus";
 
 // ACR Page
 const DOOR_TABLE_HEADER: string[] = [
   "Name",
   "Door Type",
+  "Mode",
   "Status",
-  "",
   "Action",
 ];
 const DOOR_KEY: string[] = ["name", "doorType"];
@@ -102,6 +107,7 @@ const Door = () => {
   };
   const [dto, setDto] = useState<DoorDto>(defaultDoorDto);
   const [refresh, setRefresh] = useState(false);
+  const [status,setStatus] = useState<StatusDto[]>([]);
   const toggleRefresh = () => setRefresh(!refresh);
   {
     /* Modal */
@@ -302,6 +308,7 @@ const Door = () => {
   const [outputOption,setOutputOption] = useState<Options[]>([]);
   const [timeOption,setTimeOption] = useState<Options[]>([]);
 
+
   const fetchDevice = async () => {
     var res = await send.get(DeviceEndpoint.GET_LOCATION(locationGuid))
     var option = res.data.data.map((a:DeviceDto) => ({
@@ -349,10 +356,10 @@ const Door = () => {
   const fetchData = async (
     pageNumber: number,
     pageSize: number,
+    locationGuid?: string,
     search?: string,
     startDate?: string,
     endDate?: string,
-    locationGuid?: string,
   ) => {
     const res = await send.get(
       DoorEndpoint.PAGINATION(
@@ -370,29 +377,30 @@ const Door = () => {
       setPagination(res.data.data);
 
       // Batch set state
-      // const newStatuses = res.data.data.data.map((a: DoorDto) => ({
-      //   scpId: a.scpId,
-      //   driverId: a.acrId,
-      //   status: 0,
-      //   tamper: a.modeDesc,
-      //   ac: 0,
-      //   batt: 0,
-      // }));
+      const newStatuses = res.data.data.items.map((a: DoorDto) => ({
+        guid: a.guid,
+        status: DoorStatus.Unknown,
+        altr1: DoorMode.Unknown,
+        altr2: ReaderStatus.Unknown,
+        altr3: InputStatus.Unknown, // Strile
+        altr4: InputStatus.Unknown, // rex
 
-      // console.log(">>>>>>>>>." + JSON.stringify(newStatuses));
+      }));
 
-      // setStatus((prev) => [...prev, ...newStatuses]);
+      console.log(">>>>>>>>>." + JSON.stringify(newStatuses));
 
-      // // Fetch status for each
-      // res.data.data.data.forEach((a: DoorDto) => {
-      //   fetchStatus(a.id);
-      // });
+      setStatus((prev) => [...prev, ...newStatuses]);
+
+      // Fetch status for each
+      res.data.data.items.forEach((a: DoorDto) => {
+        fetchStatus(a.guid);
+      });
     }
   };
-  // const fetchStatus = async (id: number) => {
-  //   const res = await send.get(DoorEndpoint.GET_ACR_STATUS(id));
-  //   Logger.info(res);
-  // };
+  const fetchStatus = async (guid: string) => {
+    const res = await send.get(DoorEndpoint.STATUS(guid));
+    Logger.info(res);
+  };
 
   const changeDoorMode = async (
     id: number,
@@ -544,40 +552,35 @@ const Door = () => {
       : []),
   ];
 
-  const filterComponet = (data: any, statusDto: StatusDto[]) => {
+  const renderOptional = (item: DoorDto, statusDto: StatusDto[],i:number) => {
     return [
-      <>
-        <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+      <React.Fragment key={i+1}>
+        <TableCell  className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
           <>
             <Badge size="sm" color="dark">
-              {statusDto.find((b) => b.guid == data.scpId)?.tamper}
+              {DoorMode[statusDto.find((b) => b.guid == item.guid)?.altr4 as DoorMode] ?? "Unknown"}
             </Badge>
           </>
         </TableCell>
         <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
           <>
-            {statusDto.find((b) => b.guid == data.scpId)?.status ===
-              "Secure" ? (
+            {statusDto.find((b) => b.guid == item.guid)?.status === DoorStatus.Secure ? (
               <Badge size="sm" color="success">
-                {statusDto.find((b) => b.guid == data.scpId)?.status}
+                {DoorStatus[DoorStatus.Secure]}
               </Badge>
-            ) : statusDto.find((b) => b.guid == data.scpId)?.status ===
-              "Forced Open" ||
-              statusDto.find((b) => b.guid == data.scpId)?.status ===
-              "Locked" ? (
+            ) : statusDto.find((b) => b.guid == item.guid)?.status === DoorStatus.Forced ||
+              statusDto.find((b) => b.guid == item.guid)?.status === DoorStatus.Locked ? (
               <Badge size="sm" color="error">
-                {statusDto.find((b) => b.guid == data.scpId)?.status}
+                {statusDto.find((b) => b.guid == item.guid)?.status == DoorStatus.Forced ? DoorStatus[DoorStatus.Forced]: DoorStatus[DoorStatus.Locked] ?? "Unknown"}
               </Badge>
             ) : (
               <Badge size="sm" color="warning">
-                {statusDto.find((b) => b.guid == data.scpId)?.status === 0
-                  ? "Error"
-                  : statusDto.find((b) => b.guid == data.scpId)?.status}
+                {DoorStatus[statusDto.find((b) => b.guid == item.guid)?.status as DoorStatus] ?? "Unknown"}
               </Badge>
             )}
           </>
         </TableCell>
-      </>,
+      </React.Fragment>,
     ];
   };
 
@@ -805,30 +808,33 @@ const Door = () => {
           onEdit={handleEdit}
           onRemove={handleRemove}
           data={doorsDto}
-          // status={status}
+          status={status}
           action={action}
           permission={filterPermission(FeatureId.acr)}
-          renderOptionalComponent={filterComponet}
+          renderOptionalComponent={renderOptional}
           fetchData={fetchData}
           locationGuid={locationGuid}
           refresh={refresh}
           specialDisplay={[
             {
               key: "doorType",
-              content: (d) => (
-                <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400">
+              content: (d,i) => (
+                <TableCell key={i} className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400">
                   {d.type == DoorType.Dual ? (
                     <div className="flex items-center gap-2">
                       <DoorInIcon fontSize={20} />
                       <DoorOutIcon fontSize={20} />
+                      {DoorType[d.type]}
                     </div>
                   ) : d.type == DoorType.Single ? (
-                    <div className="flex items-center gap-5">
+                    <div className="flex items-center gap-2">
                       <DoorInIcon fontSize={20} />
+                      {DoorType[d.type]}
                     </div>
                   ) : (
-                    <div className="flex items-center gap-5">
+                    <div className="flex items-center gap-2">
                       <DoorOutIcon fontSize={20} />
+                      {DoorType[d.type]}
                     </div>
                   )}
                 </TableCell>

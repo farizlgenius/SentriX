@@ -240,8 +240,6 @@ public sealed class DoorRepository(CoreDbContext context) : IDoorRepository
                   .AsQueryable();
 
     if (!string.IsNullOrWhiteSpace(param.search))
-    {
-      if (!string.IsNullOrWhiteSpace(param.search))
       {
         var search = param.search.Trim();
 
@@ -261,7 +259,6 @@ public sealed class DoorRepository(CoreDbContext context) : IDoorRepository
         }
 
       }
-    }
 
 
     if (param.startDate != null)
@@ -349,7 +346,7 @@ public sealed class DoorRepository(CoreDbContext context) : IDoorRepository
   }
 
 
-  public async Task<bool> IsAnyByNameAndLocationIdAsync(string name, int locationId = 0, CancellationToken ct = default)
+      public async Task<bool> IsAnyByNameAndLocationIdAsync(string name, int locationId = 0, CancellationToken ct = default)
   {
     return await context.Doors
       .AsNoTracking()

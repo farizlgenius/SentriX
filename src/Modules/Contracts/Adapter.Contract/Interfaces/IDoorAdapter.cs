@@ -5,7 +5,7 @@ namespace Adapter.Contract.Interfaces;
 
 public interface IDoorAdapter
 {
-      Task Doors(
+      Task DoorsAsync(
            string mac,
             string ip,
             DoorType type,
@@ -24,6 +24,14 @@ public interface IDoorAdapter
             (short inputNo,string metadata,short deviceModuleId,short bgId)? bg,
             (short inputNo,string metadata,short deviceModuleId)? sensor,
             (short outputNo,string metadata,short deviceModuleId)? relay,
+            CancellationToken ct = default
+      );
+
+      Task StatusAsync(
+            string mac,
+            string ip,
+            short deviceId,
+            short doorId,
             CancellationToken ct = default
       );
 }

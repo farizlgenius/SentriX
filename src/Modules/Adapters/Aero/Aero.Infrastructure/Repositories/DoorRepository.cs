@@ -103,6 +103,52 @@ public sealed class DoorRepository(
             }
       }
 
+      public CommandResponse EnCcAcrSrq(string mac, short scpId, short acrNo)
+      {
+            CC_ACRSRQ c = new CC_ACRSRQ();
+            c.scp_number = scpId;
+            c.first = acrNo;
+            c.count = 1;
+            var result = repo.Send((short)enCfgCmnd.enCcAcrSrq,c);
+            if (result)
+            {
+                  logger.LogInformation(LogMessageHelper.CommandSuccess(Command.DoorStatus, scpId));
+
+                  return new CommandResponse(
+                        mac,
+                        scpId,
+                        Command.DoorStatus,
+                        SCPDLL.scpGetTagLastPosted(scpId),
+                        DateTime.UtcNow,
+                        null,
+                         ObjectHelper.ToAsciiString(c),
+                        CommandStatus.PENDING,
+                        string.Empty,
+                        Vendor.aero,
+                        true
+                        );
+
+            }
+            else
+            {
+                  logger.LogError(LogMessageHelper.CommandUnsuccess(Command.DoorStatus, scpId));
+                  return new CommandResponse(
+                        mac,
+                       scpId,
+                       Command.DoorStatus,
+                       -1,
+                       DateTime.UtcNow,
+                       DateTime.UtcNow,
+                        ObjectHelper.ToAsciiString(c),
+                       CommandStatus.PENDING,
+                       string.Empty,
+                        Vendor.aero,
+                       false
+                       );
+
+            }
+      }
+
       public CommandResponse ReaderSpecification(string mac, short scpId, short sioNo, short readerNo, short osdpFlag)
       {
             CC_RDR c = new CC_RDR();

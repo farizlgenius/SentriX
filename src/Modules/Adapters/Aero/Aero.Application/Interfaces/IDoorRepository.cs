@@ -48,4 +48,10 @@ public interface IDoorRepository
             short preAalrm,
             short apbDelay
       );
+
+      CommandResponse EnCcAcrSrq(
+            string mac,
+            short scpId,
+            short acrNo
+      );
 }

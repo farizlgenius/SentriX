@@ -7,7 +7,7 @@ import {
 } from "../../components/ui/table";
 import Search from "../../components/ui/table/Search";
 import { TableProp } from "../../model/TableProp";
-import { TrashBinIcon } from "../../icons";
+import { EditIcon, Info2Icon, TrashBinIcon } from "../../icons";
 import { useEffect, useMemo, useState } from "react";
 import Pagination from "../../components/ui/table/Pagination";
 import { usePagination } from "../../context/PaginationContext";
@@ -35,6 +35,7 @@ export const BaseTable = <
   refresh,
   altrAction,
   locationGuid,
+  onInfo
 }: TableProp<T>) => {
   const { search, startDate, endDate, pageSize, pagination, setPageSize } =
     usePagination();
@@ -237,7 +238,7 @@ export const BaseTable = <
                         className="cursor-pointer hover:bg-gray-900 active:bg-gray-800"
                         onClickWithEvent={() => {
                           console.log(data);
-                          onEdit(data);
+                          onInfo(data);
                         }}
                       >
                         <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400">
@@ -291,6 +292,22 @@ export const BaseTable = <
                             !data.isDefault &&
 
                             <div className="flex gap-2">
+                               <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  onEdit(data);
+                                }}
+
+                                className={`
+                                                                    inline-flex items-center justify-center
+                                                                    rounded-lg p-1
+                                                                    transition-all duration-200
+                                                                    cursor-pointer text-brand-600 hover:bg-brand-50 hover:text-brand-700 active:scale-95
+  `}
+                              >
+                                <EditIcon className="h-5 w-5" />
+                              </button>
                               <button
                                 type="button"
                                 onClick={(e) => {
@@ -307,6 +324,7 @@ export const BaseTable = <
                               >
                                 <TrashBinIcon className="h-5 w-5" />
                               </button>
+                              
                             </div>
 
                           }
