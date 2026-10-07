@@ -215,5 +215,40 @@ public sealed class ComponentMappingRepository(CoreDbContext context) : ICompone
             throw new NotImplementedException();
       }
 
+      // 1. Changed return type to a single Dictionary<Guid, int>
+public async Task<Dictionary<Guid, int>> GetExternalIdMapGuidByGuidsAndEntityAsync(IEnumerable<Guid> guids, EntityType type, CancellationToken ct = default)
+{
+    // 2. Fetch the data from the database into memory first
+    var res = await context.ComponentMappings
+        .AsNoTracking()
+        .Where(x => guids.Contains(x.guid) && x.entity == type)
+        .Select(x => new { x.guid, x.external_id })
+        .ToArrayAsync(ct);
 
+
+    return res.ToDictionary(
+        keySelector: x => x.guid, 
+        elementSelector: x => x.external_id ?? 0
+    );
+
+}
+
+  public async Task<IEnumerable<int>> GetExternalIdsByGuidAndEntityAsync(Guid guid, EntityType entity, CancellationToken ct = default)
+  {
+    return await context.ComponentMappings
+      .AsNoTracking()
+      .Where(x => x.entity == entity && x.guid == guid && x.external_id != null)
+      .OrderByDescending(x => x.external_id)
+      .Select(x => x.external_id!.Value)
+      .ToArrayAsync(ct);
+  }
+
+      public async Task<IEnumerable<int>> GetExternalIdsByGuidsAndEntityAsync(IEnumerable<Guid> guids, EntityType entity, CancellationToken ct = default)
+      {
+           return await context.ComponentMappings
+            .AsNoTracking()
+            .Where(x => guids.Contains(x.guid) && x.entity == entity && x.external_id != null)
+            .Select(x => x.external_id!.Value)
+            .ToArrayAsync();
+      }
 }

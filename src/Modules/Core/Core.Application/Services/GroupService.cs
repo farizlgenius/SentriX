@@ -1,3 +1,4 @@
+using Adapter.Contract.Interfaces;
 using Core.Application.Interfaces;
 using Core.Contract.DTOs.Group;
 using Core.Contract.Interfaces;
@@ -11,15 +12,26 @@ using SharedKernel.Messaging;
 
 namespace Core.Application.Services;
 
-public sealed class GroupService(IGroupRepository repo,IMessageBus bus) : IGroup
+public sealed class GroupService(
+    IGroupRepository repo,
+    IDoorRepository door,
+    ILocationRepository loc,
+    ITimeRepository time,
+    IAdapterFactory adapter,
+    IComponentMappingRepository com,
+    IMessageBus bus) : IGroup
 {
     public async Task<Guid> CreateAsync(CreateGroupDto dto, CancellationToken ct = default)
     {
-        var locationId = await bus.QueryAsync(new LocationIdByGuidQuery(dto.LocationGuid), ct);
+        //var locationId = await bus.QueryAsync(new LocationIdByGuidQuery(dto.LocationGuid), ct);
+        var locationId = await loc.GetIdByGuidAsync(dto.LocationGuid,ct);
 
-        var doorIds = await bus.QueryAsync(new DoorIdsMapGuidsByGuidsQuery(dto.Components.Select(x => x.Doors)), ct);
+        //var doorIds = await bus.QueryAsync(new DoorIdsMapGuidsByGuidsQuery(dto.Components.Select(x => x.Doors)), ct);
+        //var doorIds = await door.GetDoorIdsMapGuidsAsync(dto.Components.Select(x => x.Doors),ct);
+        var doorDetails = await door.GetDetailsByGuidAsync(dto.Components.Select(x => x.Doors),ct);
 
-        var timeZoneIds = await bus.QueryAsync(new TimeZoneIdsMapGuidsByGuidsQuery(dto.Components.Select(x => x.TimeZone)), ct);
+        //var timeZoneIds = await bus.QueryAsync(new TimeZoneIdsMapGuidsByGuidsQuery(dto.Components.Select(x => x.TimeZone)), ct);
+        var timeZoneIds = await time.GetTimeZoneIdsMapGuidsByGuidsAsync(dto.Components.Select(x => x.TimeZone),ct);
 
         if (await repo.IsAnyByNameAndLocationIdAsync(dto.Name, locationId, ct))
             throw new DuplicateException(nameof(dto.Name), dto.Name);
@@ -29,12 +41,44 @@ public sealed class GroupService(IGroupRepository repo,IMessageBus bus) : IGroup
             dto.Name,
             dto.Components.Select(
                 x => new Domain.Entities.GroupComponent(
-                    doorIds[x.Doors],
+                    doorDetails.FirstOrDefault(d => d.guid == x.Doors).id,
                     timeZoneIds[x.TimeZone]
                 )
             ).ToList(),
             locationId
         );
+
+        // Send command here.
+        var doorExternalIds = await com.GetExternalIdMapGuidByGuidsAndEntityAsync(dto.Components.Select(x => x.Doors),EntityType.Door,ct);
+        var timeExternalIds = await com.GetExternalIdMapGuidByGuidsAndEntityAsync(dto.Components.Select(x => x.TimeZone),EntityType.TimeZone,ct);
+
+        var uniqueDevice = doorDetails
+            .GroupBy(x => x.mac)
+            .Select(x => new
+            {
+                Mac=x.Key,
+                Vendor=x.First().vendor,
+                Ip = x.First().ip,
+                Guids=x.Select(x => x.guid).ToList(),
+            } )
+            .ToList();
+
+
+        foreach(var dev in uniqueDevice) // Each Mac
+        {
+            var groupExternalId = await com.GetFreeIdByMacAndEntityAndVendorAsync(dev.Mac,EntityType.Group,dev.Vendor,100,[],ct);
+            var deviceId = await com.GetExternalIdByMacAndEntityAsync(dev.Mac,EntityType.Device,ct);
+
+            await adapter.GetAdapter(dev.Vendor).Group.AddAccessGroupAsync(
+                dev.Mac,
+                dev.Ip,
+                (short)deviceId,
+                (short)groupExternalId,
+                dto.Components.Where(x => dev.Guids.Contains(x.Doors)).Select(x => ((short)doorExternalIds[x.Doors], (short)timeExternalIds[x.TimeZone])).ToList()
+            );
+        }
+
+
 
         await repo.AddAsync(d, ct);
 

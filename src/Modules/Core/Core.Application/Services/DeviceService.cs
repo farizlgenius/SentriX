@@ -24,18 +24,15 @@ public sealed class DeviceService(
   IOutputRepository output,
   ITimeRepository time,
   IGroupRepository group,
-  IHolidayRepository hol
+  IHolidayRepository hol,
+  IUtility util
   ) : IDevice
 {
-  public async Task<bool> CommandAsync(Guid guid, string command, CancellationToken ct = default)
+  public async Task<bool> CommandAsync(string command, CancellationToken ct = default)
   {
-    var dev = await repo.GetAsync(guid, ct);
-    var deviceId = await comm.GetExternalIdByGuidAndEntityAsync(guid, EntityType.Device);
-    await adapter.GetAdapter(Vendor.aero).Device.CommandAsync(
-      dev.Mac,
-      string.Empty,
-      (short)deviceId,
-      command, ct);
+    var deviceId = util.GetScpNumberAsync(command,Vendor.aero);
+    var mac = await comm.GetMacByExternalIdAndEntityAndVendorAsync(int.Parse(deviceId),EntityType.Device,Vendor.aero);
+    await adapter.GetAdapter(Vendor.aero).Device.CommandAsync(mac,string.Empty,short.Parse(deviceId),command, ct);
     return true;
   }
 

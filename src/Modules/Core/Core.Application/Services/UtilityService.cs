@@ -15,4 +15,9 @@ public sealed class UtilityService(IAdapterFactory adapter) : IUtility
       {
             return adapter.GetAdapter(vendor).Utility.DecodeCommandWithColor(ascii);;
       }
+
+      public string GetScpNumberAsync(string ascii,Vendor vendor,CancellationToken ct = default)
+      {
+            return adapter.GetAdapter(vendor).Utility.GetScpNumber(ascii);
+      }
 }

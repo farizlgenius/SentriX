@@ -5,12 +5,15 @@ using Aero.Application.Helpers;
 using Aero.Application.Interfaces;
 using Aero.Application.Metadata;
 using Aero.Application.Metadata.Device;
+using Aero.Application.Metadata.Door;
 using Core.Contract.Commands.Device;
 using Core.Contract.Commands.Events;
 using Core.Contract.Interfaces;
 using Core.Contract.Queries;
 using Core.Contract.Queries.CardFormat;
 using Core.Contract.Queries.ComponentMapping;
+using Core.Contract.Queries.Door;
+using Core.Contract.Queries.Group;
 using Core.Contract.Queries.Time;
 using Setting.Contract.Interfaces;
 using Setting.Contract.Queries;
@@ -22,6 +25,10 @@ namespace Aero.Application.Services;
 
 public sealed class DeviceService(
       IDeviceRepository repo,
+      IOutputRepository oRepo,
+      IInputRepository iRepo,
+      IGroupRepository gRepo,
+      IDoorRepository dRepo,
       ITimeRepository tRepo,
       ICardFormatRepository cfmtRepo,
       IDeviceModuleRepository module,
@@ -380,7 +387,7 @@ public sealed class DeviceService(
             // CardFormat
 
             var cfmts = await bus.QueryAsync(new CardFormatQuery());
-            foreach(var cfmt in cfmts)
+            foreach (var cfmt in cfmts)
             {
                   var cfmtId = await bus.QueryAsync(new ExternalIdByGuidAndEntityQuery(cfmt.Guid, EntityType.CardFormat));
 
@@ -409,17 +416,385 @@ public sealed class DeviceService(
             }
 
             // Door
+            var doors = await bus.QueryAsync(new DoorByMacQuery(device.Mac));
+            foreach (var d in doors)
+            {
+                  // Reader Configuation
+                  foreach (var reader in d.Readers)
+                  {
+                        var moduleId = await bus.QueryAsync(new ExternalIdByGuidAndEntityQuery(reader.DeviceModuleGuid, EntityType.DeviceModule));
+
+                        var meta = JsonHelper.Deserialize<ReaderMetadata>(reader.Metadata);
+                        if (meta == null)
+                              throw new Exception(MessageHelper.Common.DeserializeFailed("ReaderMetadata"));
+
+                        short osdpFlag = 0x00;
+                        if (reader.Mode == ReaderMode.Osdp)
+                        {
+                              osdpFlag += meta.Baudrate;
+                              osdpFlag |= meta.AutoDiscover;
+                              osdpFlag |= meta.Tracing;
+                              osdpFlag |= (short)(meta.Address << 5);
+                              osdpFlag |= meta.SecureChannel;
+                        }
+
+                        var res = dRepo.ReaderSpecification(
+                              mac,
+                              (short)componentId,
+                              (short)moduleId,
+                              (short)reader.SlotNo,
+                              osdpFlag
+                        );
+
+                        await bus.SendAsync(new AdapterEventCommand(res));
+
+                  }
 
 
-            // finally
+                  // Relay Configuration
+                  var relayModuleId = -1;
+                  if (d.Relay != null)
+                  {
+                        relayModuleId = await bus.QueryAsync(new ExternalIdByGuidAndEntityQuery(d.Relay.DeviceModuleGuid, EntityType.DeviceModule));
 
-            await bus.SendAsync(new ConfigurationStatusCommand(mac,true,true));
+                        var meta = JsonHelper.Deserialize<RelayMetadata>(d.Relay.Metadata);
+                        if (meta == null)
+                              throw new Exception(MessageHelper.Common.DeserializeFailed("RelayMetadata"));
 
+                        var res = oRepo.OutputPointSpecification(
+                              mac,
+                             (short)componentId,
+                              (short)relayModuleId,
+                              (short)d.Relay.SlotNo,
+                              meta.OfflineMode,
+                              meta.DriveMode
+                        );
+
+                        await bus.SendAsync(new AdapterEventCommand(res));
+
+                  }
+
+                  // Sensor Configuration
+                  var sensorModuleId = -1;
+                  if (d.Sensor != null)
+                  {
+                        sensorModuleId = await bus.QueryAsync(new ExternalIdByGuidAndEntityQuery(d.Sensor.DeviceModuleGuid, EntityType.DeviceModule));
+
+                        var meta = JsonHelper.Deserialize<InputMetadata>(d.Sensor.Metadata);
+                        if (meta == null)
+                              throw new Exception(MessageHelper.Common.DeserializeFailed("InputMetadata"));
+
+                        var res = iRepo.InputPointSpecification(
+                              mac,
+                              (short)componentId,
+                              (short)sensorModuleId,
+                              (short)d.Sensor.SlotNo,
+                              meta.Mode,
+                              meta.Debounce,
+                              meta.HoldTime
+                        );
+
+                        await bus.SendAsync(new AdapterEventCommand(res));
+
+                  }
+
+                  // Rex Configuration
+                  var rex0ModuleId = -1;
+                  var rex1ModuleId = -1;
+                  int i = 0;
+                  foreach (var rex in d.Rexes)
+                  {
+                        if(i == 0)
+                        {
+                              rex0ModuleId = await bus.QueryAsync(new ExternalIdByGuidAndEntityQuery(rex.DeviceModuleGuid, EntityType.DeviceModule));
+                        }else if(i == 1)
+                        {
+                              rex1ModuleId = await bus.QueryAsync(new ExternalIdByGuidAndEntityQuery(rex.DeviceModuleGuid, EntityType.DeviceModule));
+                        }
+                        
+
+                        var meta = JsonHelper.Deserialize<InputMetadata>(rex.Metadata);
+                        if (meta == null)
+                              throw new Exception(MessageHelper.Common.DeserializeFailed("InputMetadata"));
+
+                        var res = iRepo.InputPointSpecification(
+                              mac,
+                              (short)componentId,
+                              (short)(i == 0 ? rex0ModuleId : rex1ModuleId),
+                              (short)rex.SlotNo,
+                              meta.Mode,
+                              meta.Debounce,
+                              meta.HoldTime
+                        );
+
+                        await bus.SendAsync(new AdapterEventCommand(res));
+
+                        i++;
+                  }
+
+
+                  // Buzzer Configuration
+                  if (d.Buzzer != null)
+                  {
+                        var moduleId = await bus.QueryAsync(new ExternalIdByGuidAndEntityQuery(d.Buzzer.DeviceModuleGuid, EntityType.DeviceModule));
+                        var outputId = await bus.QueryAsync(new ExternalIdByGuidAndEntityQuery(d.Guid, EntityType.Output));
+
+                        var meta = JsonHelper.Deserialize<OutputMetadata>(d.Buzzer.Metadata);
+                        if (meta == null)
+                              throw new Exception(MessageHelper.Common.DeserializeFailed("OutputMetadata"));
+
+                        var res = oRepo.OutputPointSpecification(
+                              mac,
+                              (short)componentId,
+                              (short)moduleId,
+                              (short)d.Buzzer.SlotNo,
+                              meta.OfflineMode,
+                              meta.DefaultMode
+                        );
+
+                        await bus.SendAsync(new AdapterEventCommand(res));
+
+                        res = oRepo.ControlPointConfiguration(
+                              mac,
+                              (short)componentId,
+                              (short)moduleId,
+                              (short)outputId,
+                              (short)d.Buzzer.SlotNo,
+                              1
+                        );
+
+                        await bus.SendAsync(new AdapterEventCommand(res));
+
+                  }
+
+                  // and the trigger setting here
+
+                  // BG Configuration
+                  if (d.Bg != null)
+                  {
+                        var moduleId = await bus.QueryAsync(new ExternalIdByGuidAndEntityQuery(d.Bg.DeviceModuleGuid, EntityType.DeviceModule));
+                        var inputId = await bus.QueryAsync(new ExternalIdByGuidAndEntityQuery(d.Guid, EntityType.Input));
+
+                        var meta = JsonHelper.Deserialize<BgMetadata>(d.Bg.Metadata);
+                        if (meta == null)
+                              throw new Exception(MessageHelper.Common.DeserializeFailed("BgMetadata"));
+
+                        var res = iRepo.InputPointSpecification(
+                              mac,
+                              (short)componentId,
+                              (short)moduleId,
+                              (short)d.Bg.SlotNo,
+                              meta.Mode,
+                              meta.Debounce,
+                              meta.HoldTime
+                        );
+
+                        await bus.SendAsync(new AdapterEventCommand(res));
+
+                        res = iRepo.MonitorPointConfiguration(
+                              mac,
+                              (short)componentId,
+                              (short)inputId,
+                              (short)moduleId,
+                              (short)d.Bg.SlotNo,
+                              0,
+                              0,
+                              0,
+                              0
+                        );
+
+                        await bus.SendAsync(new AdapterEventCommand(res));
+
+                  }
+
+                  // Door Configuration
+                  short spare = 0x00;
+                  short accessFlag = 0x00;
+                  DoorMetadata doorMetadata = new DoorMetadata();
+
+                  if (!string.IsNullOrWhiteSpace(d.Metadata))
+                  {
+                        doorMetadata = JsonHelper.Deserialize<DoorMetadata>(d.Metadata);
+                        if (doorMetadata == null)
+                              throw new Exception(MessageHelper.Common.DeserializeFailed("DoorMetadata"));
+
+                        if (doorMetadata.ForceCardPin) spare |= (short)ExtendedAccessControlFlags.ACR_FE_NOPINCARD;
+                        if (doorMetadata.DoubleCard) spare |= (short)ExtendedAccessControlFlags.ACR_FE_DCARD;
+                        if (doorMetadata.OutputSelectionTracking) spare |= (short)ExtendedAccessControlFlags.ACR_FE_FLOOR_PIN;
+                        if (doorMetadata.LockedOverride) spare |= (short)ExtendedAccessControlFlags.ACR_FE_CRD_OVR_EN;
+                        if (doorMetadata.HostPermission) spare |= (short)ExtendedAccessControlFlags.ACR_FE_HOST_BYPASS;
+
+                        if (d.Type == DoorType.Dual) spare |= (short)ExtendedAccessControlFlags.ACR_FE_LINK_MODE;
+
+
+                        if (doorMetadata.DecreaseUseLimit) accessFlag |= (short)AccessControlFlags.ACR_F_DCR;
+                        if (doorMetadata.RequireUseLimit) accessFlag |= (short)AccessControlFlags.ACR_F_CUL;
+                        if (doorMetadata.DeniedDuress) accessFlag |= (short)AccessControlFlags.ACR_F_DRSS;
+                        if (doorMetadata.QuietRex) accessFlag |= (short)AccessControlFlags.ACR_F_QEXIT;
+                        if (doorMetadata.FilterStatus) accessFlag |= (short)AccessControlFlags.ACR_F_FILTER;
+                        if (doorMetadata.DoubleCardAccess) accessFlag |= (short)AccessControlFlags.ACR_F_2CARD;
+                        if (doorMetadata.HostPermission) accessFlag |= (short)AccessControlFlags.ACR_F_HOST_CBG;
+                        if (doorMetadata.HostOfflineGrant) accessFlag |= (short)AccessControlFlags.ACR_F_HOST_SFT;
+
+                  }
+
+                  var doorIds = await bus.QueryAsync(new ExternalIdsByGuidAndEntityQuery(d.Guid, EntityType.Door),ct);
+
+
+                  RelayMetadata? relayMeta = null;
+                  if (d.Relay != null)
+                  {
+                        relayMeta = JsonHelper.Deserialize<RelayMetadata>(d.Relay.Metadata) ?? throw new Exception(MessageHelper.Common.DeserializeFailed("RelayMetadata"));
+                  }
+
+                  SensorMetadata? sensorMeta = null;
+                  if (d.Sensor != null)
+                  {
+                        sensorMeta = JsonHelper.Deserialize<SensorMetadata>(d.Sensor.Metadata) ?? throw new Exception(MessageHelper.Common.DeserializeFailed("SensorMetadata"));
+                  }
+
+
+
+                  RexMetadata? rexMeta0 = null;
+                  RexMetadata? rexMeta1 = null;
+                  if (d.Rexes.Count == 1)
+                  {
+                        rexMeta0 = JsonHelper.Deserialize<RexMetadata>(d.Rexes.ElementAt(0).Metadata) ?? throw new Exception(MessageHelper.Common.DeserializeFailed("RexMetadata"));
+                  }
+
+                  if (d.Rexes.Count() == 2)
+                  {
+                        rexMeta1 = JsonHelper.Deserialize<RexMetadata>(d.Rexes.ElementAt(1).Metadata) ?? throw new Exception(MessageHelper.Common.DeserializeFailed("RexMetadata"));
+                  }
+
+                  var readerGuid = d.Readers.Where(x => x.ReaderDirection == ReaderDirection.In).Select(x => x.DeviceModuleGuid).First();
+                  var readerModuleId = (short)(d.Readers.Count == 0 ? -1 : await bus.QueryAsync(new ExternalIdByGuidAndEntityQuery(readerGuid, EntityType.DeviceModule), ct));
+                  var readerSlot = (short)(d.Readers.Count == 0 ? -1 : d.Readers.Where(x => x.ReaderDirection == ReaderDirection.In).Select(x => x.SlotNo).First());
+
+                  
+                  var mask0Id = d.Rexes.Count == 0 ? 0 : d.Rexes.ElementAt(0).MaskGuid == null || d.Rexes.ElementAt(0).MaskGuid == Guid.Empty ? 0 : await bus.QueryAsync(new ExternalIdByGuidAndEntityQuery(d.Rexes.ElementAt(0).MaskGuid ?? Guid.Empty,EntityType.TimeZone),ct);
+                  var mask1Id = d.Rexes.Count <= 1 ? 0 : d.Rexes.ElementAt(1).MaskGuid == null || d.Rexes.ElementAt(1).MaskGuid == Guid.Empty ? 0 : await bus.QueryAsync(new ExternalIdByGuidAndEntityQuery(d.Rexes.ElementAt(1).MaskGuid ?? Guid.Empty,EntityType.TimeZone),ct);
+
+                  var doorRes = dRepo.AccessControlReaderConfiguration(
+                        mac,
+                        (short)componentId,
+                        (short)doorIds.Min(),
+                        (short)(d.Type == DoorType.Single ? 0 : 1),
+                        d.Type == DoorType.Single && doorIds.Count() <= 1 ? (short)-1 : (short)doorIds.Max(),
+                        readerModuleId,
+                        readerSlot,
+                        (short)(d.Relay == null ? -1 : relayModuleId),
+                        (short)(d.Relay == null ? -1 : d.Relay.SlotNo),
+                        (short)(d.Relay == null || relayMeta == null ? 1 : relayMeta.StrikeMin),
+                        (short)(d.Relay == null || relayMeta == null ? 5 : relayMeta.StrikeMax),
+                        (short)(d.Relay == null || relayMeta == null ? 0 : relayMeta.StrikeMode),
+                        (short)(d.Sensor == null ? -1 : sensorModuleId),
+                        (short)(d.Sensor == null ? -1 : d.Sensor.SlotNo),
+                        (short)(d.Sensor == null || sensorMeta == null ? 1 : sensorMeta.DcHeld),
+                        (short)(d.Rexes.Count == 0 ? -1 : rex0ModuleId),
+                        (short)(d.Rexes.Count == 0 ? -1 : d.Rexes.ElementAt(0).SlotNo),
+                        (short)(d.Rexes.Count <= 1 ? -1 : rex1ModuleId),
+                        (short)(d.Rexes.Count <= 1 ? -1 : rex1ModuleId),
+                        (short)(d.Rexes.Count == 0 ? 0 : mask0Id),
+                        (short)(d.Rexes.Count <= 1 ? 0 : mask1Id),
+                        -1,
+                        -1,
+                        0,
+                        255,
+                        0,
+                        -1,
+                        1,
+                        spare,
+                        accessFlag,
+                        doorMetadata.OfflineMode,
+                        doorMetadata.DefaultMode,
+                        doorMetadata.DefaultLedMode,
+                        0,
+                        0
+                  );
+
+                  await bus.SendAsync(new AdapterEventCommand(doorRes), ct);
+
+                  if (d.Type == DoorType.Dual)
+                  {
+                        readerGuid = d.Readers.Where(x => x.ReaderDirection == ReaderDirection.Out).Select(x => x.DeviceModuleGuid).First();
+                        readerModuleId = (short)(d.Readers.Count == 0 ? -1 : await bus.QueryAsync(new ExternalIdByGuidAndEntityQuery(readerGuid, EntityType.DeviceModule), ct));
+                        readerSlot = (short)(d.Readers.Count == 0 ? -1 : d.Readers.Where(x => x.ReaderDirection == ReaderDirection.Out).Select(x => x.SlotNo).First());
+                        
+                        var res = dRepo.AccessControlReaderConfiguration(
+                              mac,
+                              (short)componentId,
+                              (short)doorIds.Max(),
+                              2,
+                              (short)doorIds.Min(),
+                              readerModuleId,
+                              readerSlot,
+                              -1,
+                              -1,
+                              1,
+                              5,
+                              0,
+                              -1,
+                              -1,
+                              1,
+                              -1,
+                              -1,
+                              -1,
+                              -1,
+                              0,
+                              0,
+                              -1,
+                              -1,
+                              0,
+                              255,
+                              0,
+                              -1,
+                              1,
+                              spare,
+                              accessFlag,
+                              doorMetadata.OfflineMode,
+                              doorMetadata.DefaultMode,
+                              doorMetadata.DefaultLedMode,
+                              0,
+                              0
+                        );
+
+                        await bus.SendAsync(new AdapterEventCommand(res), ct);
+
+                  }
+
+                  
+
+                  // Group
+                  var gps = await bus.QueryAsync(new GroupByMacQuery(device.Mac),ct);
+                  foreach (var g in gps)
+                  {
+                        var groupId = await bus.QueryAsync(new ExternalIdByGuidAndEntityQuery(g.Guid, EntityType.Group),ct);
+                        var doorExIds = await bus.QueryAsync(new ExternalIdMapGuidByGuidsAndEntityQuery(g.Components.Select(x => x.Doors),EntityType.Door),ct);
+                        var timeExIds = await bus.QueryAsync(new ExternalIdMapGuidByGuidsAndEntityQuery(g.Components.Select(x => x.TimeZone),EntityType.TimeZone),ct);
+
+                        var res = gRepo.AddAccessGroup(
+                              mac,
+                              (short)componentId,
+                              (short)groupId,
+                              0,
+                              g.Components.Select(x => ((short)doorExIds[x.Doors],(short)timeExIds[x.TimeZone])).ToList()
+                        );
+
+                        await bus.SendAsync(new AdapterEventCommand(res));
+                  }
+
+
+                  // finally
+
+                  await bus.SendAsync(new ConfigurationStatusCommand(mac, true, true));
+
+            }
       }
 
-      public async Task CommandAsync(string mac,string ip,short scpId,string command, CancellationToken ct = default)
+      public async Task CommandAsync(string mac, string ip, short scpId, string command, CancellationToken ct = default)
       {
-            var res = repo.AsciiCommandAsync(mac,scpId,command);
+            var res = repo.AsciiCommandAsync(mac, scpId, command);
 
             await bus.SendAsync(new AdapterEventCommand(res));
       }

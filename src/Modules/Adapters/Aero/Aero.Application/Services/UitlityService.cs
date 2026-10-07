@@ -24,5 +24,11 @@ public sealed class UtilityService(CommandDecoder decoder) : IUtilityAdapter
         decoder.CurrentProductFamily = CommandDecoder.ProductFamily.Aero;
         return decoder.Decode(ascii);
     }
+
+    public string GetScpNumber(string ascii)
+    {
+         decoder.CurrentProductFamily = CommandDecoder.ProductFamily.Aero;
+        return decoder.GetScpNumber(ascii);
+    }
 }
 

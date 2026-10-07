@@ -14,7 +14,7 @@ public interface IAdapter
       //IOutputAdapter Output {get;}
       ITimeAdapter Time {get;}
       IDoorAdapter Door {get;}
-      // IGroupAdapter Group {get;}
-      // IUserAdapter User {get;}
+      IGroupAdapter Group {get;}
+      IUserAdapter User {get;}
       // ISettingAdapter Setting {get;}
 }

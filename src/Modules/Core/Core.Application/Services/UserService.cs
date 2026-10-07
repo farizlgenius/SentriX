@@ -1,3 +1,4 @@
+using Adapter.Contract.Interfaces;
 using Core.Application.Interfaces;
 using Core.Contract.DTOs.User;
 using Core.Contract.Interfaces;
@@ -16,6 +17,11 @@ namespace Core.Application.Services;
 
 public sealed class UserService(
   IUserRepository repo,
+  IRoleRepository role,
+  ICompanyRepository company,
+  IGroupRepository group,
+  IAdapterFactory adapter,
+  IComponentMappingRepository com,
   IStorage file,
   IMessageBus bus
   ) : IUser
@@ -46,12 +52,15 @@ public sealed class UserService(
   public async Task<Guid> CreateAsync(CreateUserDto dto, CancellationToken ct = default)
   {
 
-    var roleId = dto.RoleGuid == Guid.Empty ? 0 : await bus.QueryAsync(new RoleIdByGuidQuery(dto.RoleGuid));
-    var companyId = dto.CompanyGuid == Guid.Empty ? 0 : await bus.QueryAsync(new CompanyIdByGuidQuery(dto.CompanyGuid));
-    var departmentId = dto.DepartmentGuid == Guid.Empty ? 0 : await bus.QueryAsync(new DepartmentIdByGuidQuery(dto.DepartmentGuid));
-    var positionId = dto.PositionGuid == Guid.Empty ? 0 : await bus.QueryAsync(new PositionIdByGuidQuery(dto.PositionGuid));
-    var locationIds = dto.Locations.Count() == 0 ? new List<int>() : await bus.QueryAsync(new LocationIdsByGuidsQuery(dto.Locations));
-    var groupIds = dto.Groups.Count() == 0 ? new List<int>() : await bus.QueryAsync(new GroupIdsByGuidsQuery(dto.Groups));
+    //var roleId = dto.RoleGuid == Guid.Empty ? 0 : await bus.QueryAsync(new RoleIdByGuidQuery(dto.RoleGuid));
+    var roleId = dto.RoleGuid == Guid.Empty ? 0 : await role.GetIdByGuidAsync(dto.RoleGuid,ct);
+    //var companyId = dto.CompanyGuid == Guid.Empty ? 0 : await bus.QueryAsync(new CompanyIdByGuidQuery(dto.CompanyGuid));
+    var companyId = dto.CompanyGuid == Guid.Empty ? 0 : await company.GetIdByGuidAsync(dto.CompanyGuid,ct);
+    var departmentId = dto.DepartmentGuid == Guid.Empty ? 0 : await bus.QueryAsync(new DepartmentIdByGuidQuery(dto.DepartmentGuid), ct);
+    var positionId = dto.PositionGuid == Guid.Empty ? 0 : await bus.QueryAsync(new PositionIdByGuidQuery(dto.PositionGuid), ct);
+    var locationIds = dto.Locations.Count == 0 ? [] : await bus.QueryAsync(new LocationIdsByGuidsQuery(dto.Locations), ct);
+    var groupIds = dto.Groups.Count == 0 ? [] : await bus.QueryAsync(new GroupIdsByGuidsQuery(dto.Groups), ct);
+    var details = dto.Groups.Count == 0 ? [] : await group.GetDetailsByGroupGuidsAsync(dto.Groups,ct);
 
     var d = new User(
       dto.UserCode,
@@ -94,7 +103,34 @@ public sealed class UserService(
     if (await repo.IsAnyIdentificationAsync(dto.Identification))
       throw new DuplicateException(EntityType.User.ToString(), dto.Username);
 
-    // Send Command to Device 
+    // Send Command to Device
+
+    foreach (var m in details)
+    {
+      var deviceId = await com.GetExternalIdByMacAndEntityAsync(m.mac, EntityType.Device);
+      var groupIdss = await com.GetExternalIdsByGuidsAndEntityAsync(dto.Groups,EntityType.Group);
+      int i = 0;
+      foreach (var c in dto.Cards)
+      {
+        await adapter.GetAdapter(m.vendor).User.AddUserAsync(
+        m.mac,
+        m.ip,
+        (short)deviceId,
+        c.CardNumber,
+        0,
+        i == 0 && dto.Pin != null ? dto.Pin.Pin : string.Empty,
+        groupIdss.Select(x => (short)x).ToList(),
+        0,
+        10,
+        dto.JoinedDate,
+        dto.ExpiredDate,
+        ct
+       );
+
+      }
+
+    }
+
 
     await repo.AddAsync(d, ct);
 

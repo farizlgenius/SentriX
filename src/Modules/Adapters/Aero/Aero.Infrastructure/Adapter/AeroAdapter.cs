@@ -1,4 +1,5 @@
 using Adapter.Contract.Interfaces;
+using Core.Contract.Interfaces;
 using SharedKernel.Enums;
 
 namespace Aero.Infrastructure.Adapter;
@@ -18,9 +19,12 @@ public sealed class AeroAdapter : IAdapter
 
       
       public IDoorAdapter Door { get; }
+
+      public IGroupAdapter Group { get; }
+
       // public IGroupAdapter Group { get; }
 
-      // public IUserAdapter User { get; }
+      public IUserAdapter User { get; }
       // public ISettingAdapter Setting { get; }
 
       public AeroAdapter(
@@ -30,9 +34,9 @@ public sealed class AeroAdapter : IAdapter
             //IOutputAdapter output,
             //IInputAdapter input,
             ITimeAdapter time,
-            IDoorAdapter door
-            // IAeroGroupAdapter group,
-            // IAeroUserAdapter user,
+            IDoorAdapter door,
+            IGroupAdapter group,
+            IUserAdapter user
             // IAeroSettingAdapter setting
       )
       {
@@ -43,8 +47,8 @@ public sealed class AeroAdapter : IAdapter
             //Input = input;
             Time = time;
             Door = door;
-            // Group = group;
-            // User = user;
+            Group = group;
+            User = user;
             // Setting = setting;
       }
 }

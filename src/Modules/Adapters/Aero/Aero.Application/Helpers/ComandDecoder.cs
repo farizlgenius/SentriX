@@ -2220,6 +2220,10 @@ public sealed class CommandDecoder
       {
         5304,
         (Action<string[], int, bool>) ((words, numWords, honeywellCommands) => this.ParseEnCcAdbCard5304(words, numWords, honeywellCommands))
+      },
+      {
+        8304,
+        (Action<string[], int, bool>) ((words, numWords, honeywellCommands) => this.ParseEnCcAdbCard8304(words, numWords, honeywellCommands))
       }
     });
     this.activeCommandMap = this.commandMapList[this.productFamily];
@@ -2302,6 +2306,35 @@ public sealed class CommandDecoder
     else
       this.InsertLine("Invalid input string");
     return this.Lines;
+  }
+
+  /// <summary>
+  /// Extracts the SCP number/ID from a command, when its decoded fields contain
+  /// an SCP field. Returns null when the command has no such field.
+  /// </summary>
+  public string GetScpNumber(string commandString)
+  {
+    List<DecodedLine> previousLines = this.Lines.ToList();
+    try
+    {
+      foreach (DecodedLine line in this.Decode(commandString))
+      {
+        string text = line.Text.TrimStart();
+        if (text.StartsWith("scp_number:", StringComparison.OrdinalIgnoreCase) ||
+            text.StartsWith("nScpId:", StringComparison.OrdinalIgnoreCase) ||
+            text.StartsWith("nScpID:", StringComparison.OrdinalIgnoreCase))
+        {
+          return text.Substring(text.IndexOf(':') + 1).Trim();
+        }
+      }
+
+      return null;
+    }
+    finally
+    {
+      this.Lines.Clear();
+      this.Lines.AddRange(previousLines);
+    }
   }
 
 

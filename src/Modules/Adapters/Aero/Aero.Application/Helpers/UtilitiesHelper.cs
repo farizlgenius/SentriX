@@ -15,6 +15,11 @@ public sealed class UtilitiesHelper
     return dto.ToUnixTimeSeconds();
   }
 
+  public static long DateTimeToElapeSecond(DateTime date)
+  {
+    return ((DateTimeOffset)date).ToUnixTimeSeconds();
+  }
+
   public static int ConvertDayToBinary(
         bool Sunday,
         bool Monday,

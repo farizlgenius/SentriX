@@ -1554,6 +1554,7 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                         }
                   );
 
+
             // Card Format
 
             modelBuilder.Entity<CardFormat>()
@@ -1647,6 +1648,32 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                         vendor=null
                   }
             );
+
+
+                // Access Group
+            modelBuilder.Entity<Group>()
+                  .HasData(
+                        new Group
+                        {
+                              id=1,
+                              name="All Door",
+                              guid=new Guid("895b0301-3d77-4ec7-8917-43260a839643"),
+                              is_default=true
+                        }
+                  );
+
+            modelBuilder.Entity<ComponentMapping>()
+                  .HasData(
+                        new ComponentMapping
+                        {
+                              id=6,
+                              guid=new Guid("895b0301-3d77-4ec7-8917-43260a839643"),
+                              entity = EntityType.Group,
+                              external_id=1,
+                              mac=null,
+                              vendor=null
+                        }
+                  );
 
 
 

@@ -31,6 +31,13 @@ namespace Host.Controllers
                   return Ok(res);
             }
 
+            [HttpPost("aero/scp")]
+            public async Task<IActionResult> GetScpNumberAsync([FromBody] DecodeCommandRequest com)
+            {
+                  var res = utility.GetScpNumberAsync(com.Command,Vendor.aero);
+                  return Ok(res);
+            }
+
 
       }
 }

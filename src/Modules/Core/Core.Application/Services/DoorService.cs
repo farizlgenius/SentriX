@@ -13,6 +13,7 @@ namespace Core.Application.Services;
 
 public sealed class DoorService(
   IDoorRepository repo, 
+  IGroupRepository group,
   IMessageBus bus,
   IDeviceRepository device,
   IDeviceModuleRepository deviceModule,

@@ -1,5 +1,6 @@
 using Core.Application.Interfaces;
 using Core.Contract.Dtos.Group;
+using Core.Contract.DTOs.Device;
 using Core.Contract.DTOs.Group;
 using Core.Domain.Entities;
 using Core.Infrastructure.Persistences;
@@ -87,7 +88,25 @@ public sealed class GroupRepository(CoreDbContext context) : IGroupRepository
       {
             return await context.Groups
                   .AsNoTracking()
-                  .Where(x => x.location.guid == locationGuid || x.is_default)
+                  .Where(x => x.location == null || x.location.guid == locationGuid || x.is_default)
+                  .Select(x => new GroupDto(
+                        x.guid,
+                        x.name,
+                        x.components.Select(c => new GroupComponentDto(
+                              c.door.guid,
+                              c.timezone.guid
+                        )).ToList(),
+                        x.is_active,
+                        x.is_default
+                  ))
+                  .ToArrayAsync(ct);
+      }
+
+      public async Task<IEnumerable<GroupDto>> GetByMacAsync(string mac, CancellationToken ct = default)
+      {
+            return await context.Groups
+                  .AsNoTracking()
+                  .Where(x => x.is_default || x.components.Any(x => x.door.device.mac == mac))
                   .Select(x => new GroupDto(
                         x.guid,
                         x.name,
@@ -130,10 +149,29 @@ public sealed class GroupRepository(CoreDbContext context) : IGroupRepository
                   .ToListAsync();
       }
 
+      public async Task<IEnumerable<(string mac,string ip,Vendor vendor)>> GetDetailsByGroupGuidsAsync(IEnumerable<Guid> guids,CancellationToken ct = default)
+      {
+            var res = await context.Groups
+                  .AsNoTracking()
+                  .Where(x => guids.Contains(x.guid))
+                  .SelectMany(a => a.components.Select(
+                        b => new
+                        {
+                              b.door.device.mac,
+                              b.door.device.ip,
+                              b.door.device.vendor
+                        }
+                  ))
+                  .DistinctBy(x => x.mac)
+                  .ToArrayAsync();
+
+            return res.Select(x => (x.mac,x.ip,x.vendor));
+      }
+
       public async Task<Pagination<GroupDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
       {
             var query = context.Groups
-                  .Where(x => x.location.guid == param.locationGuid)
+                  .Where(x => x.is_default || x.location == null || x.location.guid == param.locationGuid)
                   .AsNoTracking()
                   .AsQueryable();
 
@@ -201,6 +239,16 @@ public sealed class GroupRepository(CoreDbContext context) : IGroupRepository
                   );
       }
 
+      public async Task InsertGroupComponentAsync(GroupComponent group, CancellationToken ct = default)
+      {
+            await context.GroupComponents.AddAsync(
+                  new Persistences.Entities.GroupComponent(group),
+                  ct
+            );
+
+            await context.SaveChangesAsync(ct);
+      }
+
       public async Task<bool> IsAnyByNameAndLocationIdAsync(string name, int locationId = 0, CancellationToken ct = default)
       {
             return await context.Groups
@@ -230,6 +278,11 @@ public sealed class GroupRepository(CoreDbContext context) : IGroupRepository
                   .AsNoTracking()
                   .Where(x => x.guid == guid)
                   .AnyAsync(x => x.is_default, ct);
+      }
+
+      public Task RemoveGroupComponentAsync(GroupComponent group, CancellationToken ct = default)
+      {
+            throw new NotImplementedException();
       }
 
       public async Task UpdateAsync(Group entity, CancellationToken ct = default)

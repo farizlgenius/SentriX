@@ -41,6 +41,10 @@ public sealed class Door : BaseEntity,IAuditableEntity
     rexes = d.Rexes.Select(x => new Rex(x)).ToArray();
     bg = d.BG == null ? null : new BreakGlass(d.BG);
     location_id = d.LocationId;
+    group_components = new List<GroupComponent>
+    {
+      new GroupComponent(1,1)
+    };
   }
 
 

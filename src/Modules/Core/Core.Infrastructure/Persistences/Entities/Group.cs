@@ -7,8 +7,8 @@ public sealed class Group : BaseEntity,IAuditableEntity
   public string name { get; set; } = string.Empty;
   public ICollection<GroupComponent> components { get; set; } = default!;
   public ICollection<UserGroup> user_groups { get; set; } = default!;
-  public int location_id { get; set; }
-  public Location location { get; set; } = default!;
+  public int? location_id { get; set; }
+  public Location? location { get; set; } = default!;
 
   public Group() { }
   public Group(
@@ -17,6 +17,8 @@ public sealed class Group : BaseEntity,IAuditableEntity
   {
     name = d.Name;
     components = d.Components.Select(x => new GroupComponent(x)).ToArray();
+    if(d.LocationId != 0)
+      location_id = d.LocationId;
   }
 
 }

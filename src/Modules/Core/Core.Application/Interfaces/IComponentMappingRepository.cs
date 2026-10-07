@@ -12,6 +12,9 @@ public interface IComponentMappingRepository
   Task<int> GetFreeIdByEntityAndVendorAsync(EntityType entity, Vendor vendor, int max,IEnumerable<int>? exception = default, CancellationToken ct = default);
   Task<int> GetFreeIdByEntityAsync(EntityType entity,int max,IEnumerable<int>? exception = default, CancellationToken ct = default);
   Task<IEnumerable<int?>> GetExternalIdsByEntityAndVendorAsync(EntityType entity, Vendor vendor, CancellationToken ct = default);
+  Task<IEnumerable<int>> GetExternalIdsByGuidAndEntityAsync(Guid guid, EntityType entity, CancellationToken ct = default);
+  Task<IEnumerable<int>> GetExternalIdsByGuidsAndEntityAsync(IEnumerable<Guid> guids, EntityType entity, CancellationToken ct = default);
+  Task<Dictionary<Guid, int>> GetExternalIdMapGuidByGuidsAndEntityAsync(IEnumerable<Guid> guids, EntityType type, CancellationToken ct = default);
   Task<int> GetExternalIdByMacAndEntityAsync(string mac,EntityType entity,CancellationToken ct = default);
   Task<int> GetExternalIdByGuidAndEntityAsync(Guid guid,EntityType entity,CancellationToken ct = default);
   Task<string> GetMacByExternalIdAndEntityAndVendorAsync(

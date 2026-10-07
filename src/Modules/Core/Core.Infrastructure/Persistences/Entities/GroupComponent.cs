@@ -15,4 +15,13 @@ public sealed class GroupComponent : BaseEntity
         door_id = d.DoorId;
         timezone_id = d.TimeZoneId;
     }
+
+    public GroupComponent(
+        int groupId,
+        int timezoneId
+    ) : base(Guid.NewGuid())
+    {
+        group_id = groupId;
+        timezone_id = timezoneId;
+    }
 }

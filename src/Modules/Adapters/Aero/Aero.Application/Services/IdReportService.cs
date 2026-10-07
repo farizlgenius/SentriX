@@ -69,6 +69,7 @@ public sealed class IdReportService(
       return;
     }
 
+    #region Found Device
     if (await bus.QueryAsync(new IsAnyMacQuery(mac)))
     {
 
@@ -233,6 +234,8 @@ public sealed class IdReportService(
 
       return;
     }
+
+    #endregion
 
     // Send Command to get Ip
     res = repo.ReadsConfiguration(
