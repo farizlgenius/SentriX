@@ -5,7 +5,6 @@ using Core.Contract.Interfaces;
 using Core.Contract.Queries;
 using Core.Domain.Entities;
 using Setting.Contract.Queries;
-using SharedKernel.Constants;
 using SharedKernel.Domain;
 using SharedKernel.Enums;
 using SharedKernel.Exceptions;
@@ -53,11 +52,11 @@ public sealed class UserService(
   {
 
     //var roleId = dto.RoleGuid == Guid.Empty ? 0 : await bus.QueryAsync(new RoleIdByGuidQuery(dto.RoleGuid));
-    var roleId = dto.RoleGuid == Guid.Empty ? 0 : await role.GetIdByGuidAsync(dto.RoleGuid,ct);
+    var roleId = dto.RoleGuid == null ? 0 : await role.GetIdByGuidAsync(dto.RoleGuid ?? Guid.Empty,ct);
     //var companyId = dto.CompanyGuid == Guid.Empty ? 0 : await bus.QueryAsync(new CompanyIdByGuidQuery(dto.CompanyGuid));
-    var companyId = dto.CompanyGuid == Guid.Empty ? 0 : await company.GetIdByGuidAsync(dto.CompanyGuid,ct);
-    var departmentId = dto.DepartmentGuid == Guid.Empty ? 0 : await bus.QueryAsync(new DepartmentIdByGuidQuery(dto.DepartmentGuid), ct);
-    var positionId = dto.PositionGuid == Guid.Empty ? 0 : await bus.QueryAsync(new PositionIdByGuidQuery(dto.PositionGuid), ct);
+    var companyId = dto.CompanyGuid == null ? 0 : await company.GetIdByGuidAsync(dto.CompanyGuid ?? Guid.Empty,ct);
+    var departmentId = dto.DepartmentGuid == null ? 0 : await bus.QueryAsync(new DepartmentIdByGuidQuery(dto.DepartmentGuid ?? Guid.Empty), ct);
+    var positionId = dto.PositionGuid == null ? 0 : await bus.QueryAsync(new PositionIdByGuidQuery(dto.PositionGuid ?? Guid.Empty), ct);
     var locationIds = dto.Locations.Count == 0 ? [] : await bus.QueryAsync(new LocationIdsByGuidsQuery(dto.Locations), ct);
     var groupIds = dto.Groups.Count == 0 ? [] : await bus.QueryAsync(new GroupIdsByGuidsQuery(dto.Groups), ct);
     var details = dto.Groups.Count == 0 ? [] : await group.GetDetailsByGroupGuidsAsync(dto.Groups,ct);
@@ -81,12 +80,11 @@ public sealed class UserService(
       dto.Additionals,
       locationIds.ToList(),
       groupIds.ToList(),
-      dto.IsOperator,
-      dto.IsUser,
       roleId,
       companyId,
       departmentId,
       positionId,
+      dto.Metadata,
       dto.Cards.Select(x => new Card(
         x.Bits,
         x.Fac,
@@ -103,34 +101,35 @@ public sealed class UserService(
     if (await repo.IsAnyIdentificationAsync(dto.Identification))
       throw new DuplicateException(EntityType.User.ToString(), dto.Username);
 
-    // Send Command to Device
 
-    foreach (var m in details)
+    // 1.Get mac or device list that this user in by group
+    var deviceDetail = await group.GetDetailsByGroupGuidsAsync(dto.Groups,ct);
+
+    // 2.Send credential to each device
+    foreach (var dev in deviceDetail)
     {
-      var deviceId = await com.GetExternalIdByMacAndEntityAsync(m.mac, EntityType.Device);
-      var groupIdss = await com.GetExternalIdsByGuidsAndEntityAsync(dto.Groups,EntityType.Group);
+      // Send card detail
       int i = 0;
       foreach (var c in dto.Cards)
       {
-        await adapter.GetAdapter(m.vendor).User.AddUserAsync(
-        m.mac,
-        m.ip,
-        (short)deviceId,
-        c.CardNumber,
-        0,
-        i == 0 && dto.Pin != null ? dto.Pin.Pin : string.Empty,
-        groupIdss.Select(x => (short)x).ToList(),
-        0,
-        10,
-        dto.JoinedDate,
-        dto.ExpiredDate,
-        ct
-       );
-
+        var deviceExternalId = await com.GetExternalIdByMacAndEntityAsync(dev.mac, EntityType.Device, ct);
+        var groupExternaIds = await com.GetExternalIdsByGuidsAndEntityAsync(dto.Groups,EntityType.Group,ct);
+        await adapter.GetAdapter(dev.vendor).User.AddUserAsync(
+          dev.mac,
+          dev.ip,
+          (short)deviceExternalId,
+          c.CardNumber,
+          i == 0 && dto.Pin != null ? dto.Pin.Pin : string.Empty,
+          groupExternaIds.Select(x => (short)x).ToList(),
+          dto.JoinedDate,
+          dto.ExpiredDate,
+          dto.Metadata,
+          ct
+        );
+        i++;
       }
 
     }
-
 
     await repo.AddAsync(d, ct);
 
@@ -144,6 +143,23 @@ public sealed class UserService(
       throw new NotFoundException(EntityType.User.ToString(), guid.ToString());
 
     // Send command to delete user from device
+    var user = await repo.GetAsync(guid,ct);
+    var deviceDetail = await repo.GetDetailsByUserGuidAsync(guid,ct);
+
+    foreach (var dev in deviceDetail)
+    {
+      var deviceId = await com.GetExternalIdByMacAndEntityAsync(dev.mac,EntityType.Device,ct);
+      foreach (var c in user.Cards)
+      {
+        await adapter.GetAdapter(dev.vendor).User.DeleteUserAsync(
+        dev.mac,
+        dev.ip,
+        (short)deviceId,
+        c.CardNumber,
+        ct);
+      }
+
+    }
 
     await repo.DeleteAsync(guid, ct);
 
@@ -199,15 +215,6 @@ public sealed class UserService(
     return await file.ReadUserAsync(guid.ToString());
   }
 
-  public async Task<Pagination<UserDto>> GetOnlyOperatorAsync(PaginationParams param, CancellationToken ct = default)
-  {
-    return await repo.GetPaginationOperatorAsync(param, ct);
-  }
-
-  public async Task<Pagination<UserDto>> GetOnlyUserAsync(PaginationParams param, CancellationToken ct = default)
-  {
-    return await repo.GetPaginationUserAsync(param, ct);
-  }
 
   public async Task<Pagination<UserDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
   {
@@ -219,12 +226,12 @@ public sealed class UserService(
     if (!await repo.IsAnyGuidAsync(dto.Guid))
       throw new NotFoundException(EntityType.User.ToString(), dto.Guid.ToString());
 
-    var roleId = await bus.QueryAsync(new RoleIdByGuidQuery(dto.RoleGuid));
-    var companyId = await bus.QueryAsync(new CompanyIdByGuidQuery(dto.CompanyGuid));
-    var departmentId = await bus.QueryAsync(new DepartmentIdByGuidQuery(dto.DepartmentGuid));
-    var positionId = await bus.QueryAsync(new PositionIdByGuidQuery(dto.PositionGuid));
+    var roleId = dto.RoleGuid == null ? 0 :  await bus.QueryAsync(new RoleIdByGuidQuery(dto.RoleGuid ?? Guid.Empty));
+    var companyId = dto.CompanyGuid == null ? 0 : await bus.QueryAsync(new CompanyIdByGuidQuery(dto.CompanyGuid ?? Guid.Empty));
+    var departmentId = dto.DepartmentGuid == null ? 0 : await bus.QueryAsync(new DepartmentIdByGuidQuery(dto.DepartmentGuid ?? Guid.Empty));
+    var positionId = dto.PositionGuid == null ? 0 : await bus.QueryAsync(new PositionIdByGuidQuery(dto.PositionGuid ?? Guid.Empty));
     var locationIds = await bus.QueryAsync(new LocationIdsByGuidsQuery(dto.Locations));
-    var groupIds = await bus.QueryAsync(new GroupIdsByGuidsQuery(dto.Groups));
+    var groupIds = dto.Groups.Count == 0 ? [] : await bus.QueryAsync(new GroupIdsByGuidsQuery(dto.Groups));
 
     var d = new User(
       dto.UserCode,
@@ -245,12 +252,11 @@ public sealed class UserService(
       dto.Additionals,
       locationIds.ToList(),
       groupIds.ToList(),
-      dto.IsOperator,
-      dto.IsUser,
       roleId,
       companyId,
       departmentId,
       positionId,
+      dto.Metadata,
       dto.Cards.Select(x => new Card(
         x.Bits,
         x.Fac,

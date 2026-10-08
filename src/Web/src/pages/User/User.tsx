@@ -100,8 +100,6 @@ const User = () => {
     dateOfBirth: new Date(),
     email: "",
     phone: "",
-    isOperator: false,
-    isUser: false,
     role: "",
     company: "",
     department: "",
@@ -121,11 +119,19 @@ const User = () => {
     locations: [],
     isDefault: false,
     isActive: false,
-    roleGuid: "",
-    companyGuid: "00000000-0000-0000-0000-000000000000",
-    departmentGuid: "00000000-0000-0000-0000-000000000000",
-    positionGuid: "00000000-0000-0000-0000-000000000000",
+    roleGuid: null,
+    companyGuid: null,
+    departmentGuid: null,
+    positionGuid: null,
     userCode: "",
+    metadata:{
+      issueCode:0,
+      useCount:0,
+      apbLoc:0,
+      oneFreeApb:false,
+      apbExempt:false,
+      pinExempt:false
+    }
   };
 
   const [userDto, setUserDto] = useState<UserDto>(defaultDto);
@@ -169,6 +175,7 @@ const User = () => {
         break;
       case "create":
         setConfirmCreate(() => async () => {
+          userDto.metadata = typeof userDto.metadata === 'string' ? userDto.metadata : JSON.stringify(userDto.metadata)
           const res1 = await send.post(UserEndpoint.CREATE, userDto);
           if (
             Helper.handleToastByResCode(res1, UserToast.CREATE, toggleToast)
@@ -274,6 +281,7 @@ const User = () => {
   const content: FormContent[] = [
     {
       label: "Personal Information",
+      title:"Personal Information",
       content: (
         <PersonalInformationForm
           type={formType}
@@ -282,34 +290,37 @@ const User = () => {
           handleClick={handleClick}
           image={image}
           setImage={setImage}
+          handleChange={()=>{}}
         />
       ),
-      icon: <UserIcon />,
+      icon: <UserIcon />
     },
     {
       label: "Operator Information",
+      title:"Lean and focused form",
+      description:"Clean inputs for account setup, contact details, role assignment, and location access.",
       content: (
         <UserOperatorForm
           type={formType}
           dto={userDto}
           setDto={setUserDto}
           handleClick={handleClick}
-          // image={image}
-          // setImage={setImage}
+          handleChange={()=>{}}
         />
       ),
       icon: <UserIcon />,
     },
     {
       label: "Location Information",
+      title:"Manage assigned locations",
+      description:"Add locations one by one, then tap cards below to mark which ones should be removed.",
       content: (
         <LocationForm
           type={formType}
           dto={userDto}
           setDto={setUserDto}
           handleClick={handleClick}
-          // image={image}
-          // setImage={setImage}
+          handleChange={()=>{}}
         />
       ),
       icon: <UserIcon />,
@@ -322,8 +333,7 @@ const User = () => {
           dto={userDto}
           setDto={setUserDto}
           handleClick={handleClick}
-          // image={image}
-          // setImage={setImage}
+          handleChange={()=>{}}
         />
       ),
       icon: <UserIcon />,
@@ -336,8 +346,9 @@ const User = () => {
           dto={userDto}
           setDto={setUserDto}
           handleClick={handleClick}
-          // image={image}
-          // setImage={setImage}
+          image={image}
+          setImage={setImage}
+          handleChange={()=>{}}
         />
       ),
       icon: <UserIcon />,
@@ -350,8 +361,7 @@ const User = () => {
           dto={userDto}
           setDto={setUserDto}
           handleClick={handleClick}
-          // image={image}
-          // setImage={setImage}
+          handleChange={()=>{}}
         />
       ),
       icon: <UserIcon />,
@@ -424,7 +434,8 @@ const User = () => {
                   key={i}
                   className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400"
                 >
-                  {Title[d.title]} {d.firstname} {d.middlename} {d.lastname}
+                  {/* {Title[d.title]}  */}
+                  {d.firstname} {d.middlename} {d.lastname}
                 </TableCell>
               ),
             },

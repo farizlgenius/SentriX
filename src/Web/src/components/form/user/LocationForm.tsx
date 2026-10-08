@@ -8,6 +8,7 @@ import Helper from "../../../utility/Helper";
 import { LocationIcon } from "../../../icons";
 import { UserDto } from "../../../model/User/UserDto";
 import { useLocation } from "../../../context/LocationContext";
+import { FormField } from "../template/FormTemplate";
 
 export const LocationForm: React.FC<PropsWithChildren<FormProp<UserDto>>> = ({
   dto,
@@ -72,33 +73,20 @@ export const LocationForm: React.FC<PropsWithChildren<FormProp<UserDto>>> = ({
 
   return (
     <>
-      <div className="rounded-[28px] border border-[var(--app-panel-border)] bg-[var(--app-panel-bg)] p-6 shadow-theme-xs lg:p-8">
-        <div className="mb-6">
-          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-brand-500">
-            Location Access
-          </p>
-          <h3 className="mt-2 text-xl font-semibold text-gray-900 dark:text-white">
-            Manage assigned locations
-          </h3>
-          <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
-            Add locations one by one, then tap cards below to mark which ones
-            should be removed.
-          </p>
-        </div>
+      <div className="grid grid-cols-2 gap-5 rounded-[28px] border border-[var(--app-panel-border)] bg-[var(--app-panel-bg)] p-6 shadow-theme-xs lg:p-8">
 
-        <div className="flex flex-col gap-3 lg:flex-row">
-          <div className="flex-1">
+        <FormField >
             <Label htmlFor="location">Location</Label>
             <Select
               disabled={isReadOnly}
               isString={true}
               options={locations.filter((x) => x.isTaken == false)}
               defaultValue={locationsGuid}
-              onChange={(value) => setLocationGuid(value)}
+              onChange={(e) => setLocationGuid(e.target.value)}
               name="location"
               placeholder="Select location"
             />
-          </div>
+          </FormField>
           <div className="flex gap-3 lg:items-end">
             <Button
               disabled={isReadOnly || locationsGuid === ""}
@@ -116,9 +104,8 @@ export const LocationForm: React.FC<PropsWithChildren<FormProp<UserDto>>> = ({
               Remove
             </Button>
           </div>
-        </div>
 
-        <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+        <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-3 col-span-2">
           {dto.locations.length > 0 ? (
             dto.locations.map((id, i) => (
               <button

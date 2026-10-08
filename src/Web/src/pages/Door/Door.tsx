@@ -59,6 +59,8 @@ import { ReaderDirection } from "../../enum/DoorDirection";
 import { AeroReaderMetadata } from "../../model/Door/AeroReaderMetadata";
 import SignalRService from "../../services/SignalRService";
 import { SignalRTopic } from "../../constants/signalr-constant";
+import DoorAdvanceForm from "./DoorAdvanceForm";
+import { AeroDoorMetadata } from "../../model/Door/AeroDoorMetadata";
 
 // ACR Page
 const DOOR_TABLE_HEADER: string[] = [
@@ -93,7 +95,23 @@ const Door = () => {
   const defaultDoorDto: DoorDto = {
     guid: "",
     name: "",
-    metadata: "",
+    metadata: {
+      offlineMode:DoorMode.Unlocked,
+      defaultMode:DoorMode.Card,
+      defaultLedMode:0,
+      forceCardPin:false,
+      doubleCard:true,
+      outputSelectionTracking:false,
+      lockedOverrid:true,
+      decreaseUseLimit:false,
+      requireUseLimit:false,
+      deniedDuress:false,
+      quietRex:false,
+      filterStatus:false,
+      doubleCardAccess:false,
+      hostPermission:false,
+      hostOfflineGrant:false
+    },
     readers: [],
     buzzer: null,
     rexes: [],
@@ -231,7 +249,7 @@ const Door = () => {
       case "secure":
         selectedObjects.map((a) => {
           console.log(a);
-          changeDoorMode(a.guid, a.metadata);
+          changeDoorMode(a.guid, (a.metadata as AeroDoorMetadata).defaultMode ?? DoorMode.Card);
         });
         break;
       case "disable":
@@ -396,7 +414,7 @@ const Door = () => {
         let rex1 = door.rexes.length > 1 && door.rexes[1].metadata;
 
 
-        parsedMetadata = door.metadata == undefined || door.metadata == "" ? "" : JSON.parse(door.metadata);
+        parsedMetadata = door.metadata == undefined || door.metadata == "" ? "" : JSON.parse(door.metadata as string);
         parsedReaderInMetadata = readerIn == "" || readerIn == undefined ? "" : JSON.parse(readerIn as string);
         parsedReaderOutMetadata = readerOut == "" || readerOut == undefined ? "" : JSON.parse(readerOut as string);
         parsedSensorMetadata = sensor == "" || sensor == undefined ? "" : JSON.parse(sensor as string);
@@ -600,6 +618,11 @@ const Door = () => {
           icon: <OnIcon />,
           content: <DoorBGForm dto={dto} setDto={setDto} type={formType} moduleOption={moduleOption} handleChange={handleChange} inputOption={inputOption} setIsNext={setIsNext} />,
         },
+        {
+          label:"Advance",
+          icon:<DoorIcon/>,
+          content:<DoorAdvanceForm dto={dto} setDto={setDto} type={formType} handleChange={handleChange} setIsNext={setIsNext} />
+        }
 
       ] : [],
 

@@ -12,7 +12,7 @@ import { useLocation } from "../../context/LocationContext";
 import { FormProp, FormType } from "../../model/Form/FormProp";
 import { DoorIcon, TimeIcon } from "../../icons";
 import React from "react";
-import { GroupDoorDto } from "../../model/Group/GroupDoorDto";
+import { GroupComponentDto } from "../../model/Group/GroupComponentDto";
 
 const GroupForm: React.FC<PropsWithChildren<FormProp<GroupDto>>> = ({
   dto,
@@ -20,7 +20,7 @@ const GroupForm: React.FC<PropsWithChildren<FormProp<GroupDto>>> = ({
   handleClick,
   type,
 }) => {
-  const defaulComponent: GroupDoorDto = {
+  const defaulComponent: GroupComponentDto = {
     mac: "",
     doorComponentId: -1,
     timezoneComponentId: -1,
@@ -41,7 +41,7 @@ const GroupForm: React.FC<PropsWithChildren<FormProp<GroupDto>>> = ({
   const [doorOption, setDoorOption] = useState<Options[]>([]);
   const [timeZoneOption, setTimeZoneOption] = useState<Options[]>([]);
   const [selectComponent, setSelectComponent] =
-    useState<GroupDoorDto>(defaulComponent);
+    useState<GroupComponentDto>(defaulComponent);
 
   const handleSelect = (
     value: string,

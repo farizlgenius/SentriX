@@ -1,5 +1,8 @@
 using System.Reflection;
 using System.Text;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using HID.Aero.ScpdNet.Wrapper;
 
 namespace Aero.Infrastructure.Helpers;
@@ -54,8 +57,14 @@ public static class ObjectHelper
                 return;
 
             case char[] chars:
-                // Filter out null characters from fixed-length buffers
-                values.AddRange(chars.Where(c => c != '\0').Select(c => c.ToString()));
+                // Filter out null characters and build a single string
+                var cleanCharStr = new string(chars.Where(c => c != '\0').ToArray());
+                
+                if (!string.IsNullOrWhiteSpace(cleanCharStr))
+                {
+                    // Wrap the resulting string in literal double quotes
+                    values.Add($"\"{cleanCharStr}\"");
+                }
                 return;
                 
             case char c when c == '\0':

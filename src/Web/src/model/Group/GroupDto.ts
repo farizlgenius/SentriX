@@ -1,12 +1,10 @@
-import { BaseDto } from "../BaseDto";
-import { GroupDoorDto } from "./GroupDoorDto";
+import { GroupComponentDto } from "./GroupComponentDto";
 
-export interface GroupDto extends BaseDto{
-    id:number;
-    componentId:number;
+export interface GroupDto {
+    guid:string;
     name:string;
-    doors:GroupDoorDto[];
-    locationId:number;
+    components:GroupComponentDto[];
     isActive:boolean;
+    isDefault:boolean;
 }
 

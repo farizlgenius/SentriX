@@ -17,8 +17,6 @@ public sealed class User : BaseEntity,IAuditableEntity
       public DateTime date_of_birth { get; set; }
       public string email { get; set; } = string.Empty;
       public string phone { get; set; } = string.Empty;
-      public bool is_operator { get; set; } = false;
-      public bool is_user { get; set; } = true;
       public int? role_id { get; set; }
       public Role? role { get; set; } = null!;
       public int? company_id { get; set; }
@@ -42,6 +40,7 @@ public sealed class User : BaseEntity,IAuditableEntity
       public QrCode? qr_code { get; set; }
       public ICollection<UserLocation> user_locations { get; set; } = default!;
       public ICollection<UserGroup> user_groups { get; set; } = default!;
+      public string metadata {get; set; } = string.Empty;
 
       public User() { }
 
@@ -59,7 +58,6 @@ public sealed class User : BaseEntity,IAuditableEntity
             this.date_of_birth = d.DateOfBirth;
             this.email = d.Email;
             this.phone = d.Phone;
-            this.is_operator = d.IsOperator;
             this.role_id = d.RoleId == 0 ? null : d.RoleId;
             this.company_id = d.CompanyId == 0 ? null : d.CompanyId;
             this.department_id = d.DepartmentId == 0 ? null : d.DepartmentId;
@@ -76,6 +74,7 @@ public sealed class User : BaseEntity,IAuditableEntity
             if (d.QrCode is not null)
                   this.qr_code = new QrCode(d.QrCode);
             this.user_locations = d.LocationIds.Select(x => new UserLocation(0,x)).ToArray();
+            metadata = d.Metadata;
       }
 
 }

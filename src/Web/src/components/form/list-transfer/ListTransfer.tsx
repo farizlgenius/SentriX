@@ -29,25 +29,25 @@ export default function ListTransfer<T extends BaseDto>({
       const [rightItems, setRightItems] = useState<T[]>(selectedItems);
 
 
-      const [selectedLeft, setSelectedLeft] = useState<Set<number>>(new Set());
-      const [selectedRight, setSelectedRight] = useState<Set<number>>(new Set());
+      const [selectedLeft, setSelectedLeft] = useState<Set<string>>(new Set());
+      const [selectedRight, setSelectedRight] = useState<Set<string>>(new Set());
 
 
       const toggle = (
-            setFn: React.Dispatch<React.SetStateAction<Set<number>>>,
-            id: number
+            setFn: React.Dispatch<React.SetStateAction<Set<string>>>,
+            guid: string
       ): void => {
             setFn((prev) => {
                   const next = new Set(prev);
-                  next.has(id) ? next.delete(id) : next.add(id);
+                  next.has(guid) ? next.delete(guid) : next.add(guid);
                   return next;
             });
       };
 
 
       const moveToRight = (): void => {
-            const moving = leftItems.filter((i) => selectedLeft.has(Number(i.id)));
-            const nextLeft = leftItems.filter((i) => !selectedLeft.has(Number(i.id)));
+            const moving = leftItems.filter((i) => selectedLeft.has(i.guid));
+            const nextLeft = leftItems.filter((i) => !selectedLeft.has(i.guid));
             const nextRight = [...rightItems, ...moving];
 
             setLeftItems(nextLeft);
@@ -58,8 +58,8 @@ export default function ListTransfer<T extends BaseDto>({
 
 
       const moveToLeft = (): void => {
-            const moving = rightItems.filter((i) => selectedRight.has(Number(i.id)));
-            const nextRight = rightItems.filter((i) => !selectedRight.has(Number(i.id)));
+            const moving = rightItems.filter((i) => selectedRight.has(i.guid));
+            const nextRight = rightItems.filter((i) => !selectedRight.has(i.guid));
             const nextLeft = [...leftItems, ...moving];
 
 
@@ -99,12 +99,12 @@ export default function ListTransfer<T extends BaseDto>({
                         {/* Left Box */}
                         <div>
                               <Label>Available</Label>
-                              <div className="flex flex-col gap-2 overflow-auto scrollbar-thin scrollbar-transparent h-64 w-full rounded-lg border px-4 py-2.5 text-sm shadow-theme-xs bg-transparent">
+                              <div className="flex flex-col gap-2 overflow-auto scrollbar-thin scrollbar-transparent h-64 w-full rounded-lg border px-4 py-2.5 text-sm shadow-theme-xs bg-transparent h-100">
                                     {leftItems.map((item) => (
                                           <div
-                                                key={Number(item.id)}
-                                                onClick={() => toggle(setSelectedLeft, Number(item.id))}
-                                                className={itemClass(selectedLeft.has(Number(item.id)))}
+                                                key={item.guid}
+                                                onClick={() => toggle(setSelectedLeft, item.guid)}
+                                                className={itemClass(selectedLeft.has(item.guid))}
                                           >
                                                 {/* Icon */}
                                                 <div className="pt-1">
@@ -146,12 +146,12 @@ export default function ListTransfer<T extends BaseDto>({
                         {/* Right Box */}
                         <div>
                               <Label>Selected</Label>
-                              <div className="flex flex-col gap-2 overflow-auto scrollbar-thin scrollbar-transparent h-64 w-full rounded-lg border px-4 py-2.5 text-sm shadow-theme-xs bg-transparent">
+                              <div className="flex flex-col gap-2 overflow-auto scrollbar-thin scrollbar-transparent h-64 w-full rounded-lg border px-4 py-2.5 text-sm shadow-theme-xs bg-transparent h-100">
                                     {rightItems.map((item) => (
                                           <div
-                                                key={Number(item.id)}
-                                                onClick={() => toggle(setSelectedRight, Number(item.id))}
-                                                className={itemClass(selectedRight.has(Number(item.id)))}
+                                                key={Number(item.guid)}
+                                                onClick={() => toggle(setSelectedRight, item.guid)}
+                                                className={itemClass(selectedRight.has(item.guid))}
                                           >
                                                 {/* Icon */}
                                                 <div className="pt-1">

@@ -15,12 +15,6 @@ public sealed record CreateUserDto(
   DateTime DateOfBirth,
   string Email,
   string Phone,
-  bool IsOperator,
-  bool IsUser,
-  Guid RoleGuid,
-  Guid CompanyGuid,
-  Guid DepartmentGuid,
-  Guid PositionGuid,
   string Address,
   DateTime JoinedDate,
   DateTime ExpiredDate,
@@ -31,5 +25,10 @@ public sealed record CreateUserDto(
   PinDto Pin,
   QrCodeDto QrCode,
   FaceDto Face,
-  List<Guid> Locations
+  List<Guid> Locations,
+  string Metadata,
+  Guid? RoleGuid=null,
+  Guid? CompanyGuid=null,
+  Guid? DepartmentGuid=null,
+  Guid? PositionGuid=null
 );

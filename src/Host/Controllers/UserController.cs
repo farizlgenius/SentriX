@@ -19,19 +19,6 @@ public class UserController(IUser user) : ControllerBase
     return Ok(res);
   }
 
-  [HttpGet("operator/pagination")]
-  public async Task<IActionResult> GetOperatorPaginationAsync([FromQuery] PaginationParams param)
-  {
-    var res = await user.GetOnlyOperatorAsync(param);
-    return Ok(res);
-  }
-
-  [HttpGet("user/pagination")]
-  public async Task<IActionResult> GetUserOnlyPaginationAsync([FromQuery] PaginationParams param)
-  {
-    var res = await user.GetOnlyUserAsync(param);
-    return Ok(res);
-  }
 
   [HttpPatch]
   public async Task<IActionResult> ChangePasswordAsync([FromBody] ChangePasswordDto dto)
@@ -43,8 +30,6 @@ public class UserController(IUser user) : ControllerBase
   [HttpPost]
   public async Task<IActionResult> CreateUserAsync([FromBody] CreateUserDto dto)
   {
-    
-    
     var res = await user.CreateAsync(dto);
     return Ok(res);
   }

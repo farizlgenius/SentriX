@@ -17,8 +17,6 @@ public sealed class User : BaseDomain
       public DateTime DateOfBirth { get; private set; }
       public string Email { get; private set; } = string.Empty;
       public string Phone { get; private set; } = string.Empty;
-      public bool IsOperator { get; private set; } = false;
-      public bool IsUser { get; private set; } = true;
       public int? RoleId { get; private set; }
       public int? CompanyId { get; private set; }
       public int? DepartmentId { get; private set; }
@@ -35,6 +33,7 @@ public sealed class User : BaseDomain
       public Face? Face { get; private set; } = default!;
       public List<int> LocationIds { get; private set; } = default!;
       public List<int> GroupIds { get; private set; } = default!;
+      public string Metadata {get; private set;} = string.Empty;
 
       public User(
             string UserCode,
@@ -55,22 +54,20 @@ public sealed class User : BaseDomain
     List<string> Additionals,
     List<int> LocationIds,
     List<int> GroupIds,
-    bool IsOperator,
-    bool IsUser,
     int RoleId,
     int CompanyId,
     int DepartmentId,
     int PositionId,
+    string metadata,
     List<Card> Cards,
     LicensePlate? LicensePlate = null,
     Pin? Pin = null,
     QrCode? QrCode = null
-)
+    )
       {
             ValidationHelper.Name(Firstname);
             ValidationHelper.CharAndDigit(Identification, nameof(this.Identification));
             ValidationHelper.Email(Email, nameof(Email));
-            ValidationHelper.IsNullOrEmpty(Password, nameof(Password));
             ValidationHelper.CharAndDigit(UserCode, nameof(UserCode));
             this.Username = Username;
             if (!string.IsNullOrWhiteSpace(Password))
@@ -86,8 +83,6 @@ public sealed class User : BaseDomain
             this.DateOfBirth = DateOfBirth;
             this.Email = Email;
             this.Phone = Phone;
-            this.IsOperator = IsOperator;
-            this.IsUser = IsUser;
             this.RoleId = RoleId;
             this.CompanyId = CompanyId;
             this.DepartmentId = DepartmentId;
@@ -104,6 +99,7 @@ public sealed class User : BaseDomain
             this.LocationIds = LocationIds;
             this.GroupIds = GroupIds;
             this.UserCode = UserCode;
+            this.Metadata = metadata;
       }
 
       public User(
@@ -126,12 +122,11 @@ public sealed class User : BaseDomain
     List<string> Additionals,
     List<int> LocationIds,
     List<int> GroupIds,
-    bool IsOperator,
-    bool IsUser,
     int RoleId,
     int CompanyId,
     int DepartmentId,
     int PositionId,
+     string metadata,
     List<Card> Cards,
     LicensePlate? LicensePlate = null,
     Pin? Pin = null,
@@ -157,8 +152,6 @@ public sealed class User : BaseDomain
             this.DateOfBirth = DateOfBirth;
             this.Email = Email;
             this.Phone = Phone;
-            this.IsOperator = IsOperator;
-            this.IsUser = IsUser;
             this.RoleId = RoleId;
             this.CompanyId = CompanyId;
             this.DepartmentId = DepartmentId;
@@ -175,6 +168,7 @@ public sealed class User : BaseDomain
             this.LocationIds = LocationIds;
             this.GroupIds = GroupIds;
             this.UserCode = UserCode;
+            Metadata = metadata;
       }
 
 

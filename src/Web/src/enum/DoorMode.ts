@@ -3,7 +3,7 @@ export enum DoorMode{
       Disabled=1,
       Unlocked,
       Locked,
-      Fac,
+      Facility,
       Card,
       PIN,
       CardPIN,

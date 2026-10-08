@@ -149,24 +149,27 @@ public sealed class GroupRepository(CoreDbContext context) : IGroupRepository
                   .ToListAsync();
       }
 
-      public async Task<IEnumerable<(string mac,string ip,Vendor vendor)>> GetDetailsByGroupGuidsAsync(IEnumerable<Guid> guids,CancellationToken ct = default)
-      {
-            var res = await context.Groups
-                  .AsNoTracking()
-                  .Where(x => guids.Contains(x.guid))
-                  .SelectMany(a => a.components.Select(
-                        b => new
-                        {
-                              b.door.device.mac,
-                              b.door.device.ip,
-                              b.door.device.vendor
-                        }
-                  ))
-                  .DistinctBy(x => x.mac)
-                  .ToArrayAsync();
+      public async Task<IEnumerable<(string mac, string ip, Vendor vendor)>> GetDetailsByGroupGuidsAsync(IEnumerable<Guid> guids, CancellationToken ct = default)
+{
+    var res = await context.Groups
+        .AsNoTracking()
+        .Where(x => guids.Contains(x.guid))
+        .SelectMany(a => a.components.Select(
+            b => new
+            {
+                b.door.device.mac,
+                b.door.device.ip,
+                b.door.device.vendor
+            }
+        ))
+        // 1. Group the database results strictly by MAC address
+        .GroupBy(x => x.mac)
+        // 2. Select the first row from each group (discarding any with duplicate MACs)
+        .Select(g => g.FirstOrDefault()) 
+        .ToArrayAsync(ct);
 
-            return res.Select(x => (x.mac,x.ip,x.vendor));
-      }
+    return res.Select(x => (x.mac, x.ip, x.vendor));
+}
 
       public async Task<Pagination<GroupDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
       {

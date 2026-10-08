@@ -7,14 +7,14 @@ public interface IUserAdapter
       string ip,
       short deviceId,
       int cardNo,
-      short issueCode,
       string pin,
       List<short> alvl,
-      short apbLoc,
-      short useCount,
       DateTime actTime,
       DateTime dactTime,
+      string metadata,
       CancellationToken ct = default
       );
+
+      Task DeleteUserAsync(string mac,string ip,short deviceId,int cardNumber,CancellationToken ct = default);
 
 }

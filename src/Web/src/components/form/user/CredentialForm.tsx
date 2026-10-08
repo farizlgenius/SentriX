@@ -15,28 +15,42 @@ import { DeviceDto } from "../../../model/Device/DeviceDto";
 import { DoorEndpoint } from "../../../endpoint/DoorEndpoint";
 import { DoorDto } from "../../../model/Door/DoorDto";
 import { ScanCardDto } from "../../../model/User/ScanCard";
-import { AddIcon, CardIcon, ScanIcon, TrashBinIcon } from "../../../icons";
+import { AddIcon, CamIcon, CardIcon, FileIcon, ScanIcon, TrashBinIcon } from "../../../icons";
 import { FormActions, FormField, FormSection } from "../template/FormTemplate";
 import { CardDto } from "../../../model/User/CardDto";
 import Modals from "../../../pages/UiElements/Modals";
 import Select from "../Select";
 import Spinner from "../../../pages/UiElements/Spinner";
 import { Vendor } from "../../../enum/Vendor";
+import DropzoneComponent from "../form-elements/DropZone";
+import { NativeWebcam } from "../../../pages/UiElements/NativeWebcam";
+import { Avatar } from "../../../pages/UiElements/Avatar";
 
 const emptyCard: CardDto = { bits: 26, fac: 0, cardNumber: 0 };
 const maxCards = 10;
 
-export const CredentialForm: React.FC<PropsWithChildren<FormProp<UserDto>>> = ({
+interface CredentialFormProp extends FormProp<UserDto> {
+  image: File | undefined;
+  setImage: React.Dispatch<React.SetStateAction<File | undefined>>;
+}
+
+export const CredentialForm: React.FC<PropsWithChildren<CredentialFormProp>> = ({
   dto,
   setDto,
   type,
+  image,
+  setImage
 }) => {
+  const isReadOnly = type == FormType.INFO;
   const { locationGuid: locationId } = useLocation();
   const [cardModal, setCardModal] = useState(false);
   const [scanModal, setScanModal] = useState(false);
   const [controllerOptions, setControllerOptions] = useState<Options[]>([]);
   const [doorOptions, setDoorOptions] = useState<Options[]>([]);
   const [scanning, setScanning] = useState(false);
+  const [newImage, setNewImage] = useState<File | undefined>();
+  const [file, setFile] = useState<boolean>(false);
+  const [cam, setCam] = useState<boolean>(false);
   const [scanData, setScanData] = useState<ScanCardDto>({
     deviceId: -1,
     doorId: -1,
@@ -46,6 +60,25 @@ export const CredentialForm: React.FC<PropsWithChildren<FormProp<UserDto>>> = ({
     null,
   );
   const readOnly = type === FormType.INFO;
+
+  const handleClickInternal = (e: React.MouseEvent<HTMLButtonElement>) => {
+    switch (e.currentTarget.name) {
+      case "file":
+        setFile(true);
+        break;
+      case "cam":
+        setCam(true);
+        break;
+      case "close":
+        setCam(false);
+        setFile(false);
+        break;
+      case "cancle":
+        setCam(false);
+        setFile(false);
+        break;
+    }
+  };
 
   const updateValue = (key: "licensePlate" | "qrCode" | "pin", value: string) =>
     setDto((previous) => {
@@ -111,6 +144,7 @@ export const CredentialForm: React.FC<PropsWithChildren<FormProp<UserDto>>> = ({
     };
     fetchControllers();
   }, []);
+
   const startScan = async () => {
     const connection = SignalRService.getConnection();
     if (!connection) return;
@@ -132,27 +166,28 @@ export const CredentialForm: React.FC<PropsWithChildren<FormProp<UserDto>>> = ({
     }
   };
   const selectScanDevice = (
-    value: string,
     event: React.ChangeEvent<HTMLSelectElement>,
   ) => {
     if (event.currentTarget.name === "scpId") {
-      const deviceId = Number(value);
+      const deviceId = Number(event.target.value);
       setScanData((previous) => ({ ...previous, deviceId, doorId: -1 }));
       setDoorOptions([]);
       fetchDoors(deviceId);
-    } else setScanData((previous) => ({ ...previous, doorId: Number(value) }));
+    } else setScanData((previous) => ({ ...previous, doorId: Number(event.target.value) }));
   };
   const Tile = ({
     label,
     hint,
     icon,
     children,
+    className=""
   }: PropsWithChildren<{
     label: string;
     hint: string;
     icon: React.ReactNode;
+    className?:string;
   }>) => (
-    <div className="rounded-2xl border border-[var(--app-panel-border)] bg-[var(--app-panel-bg)] p-4 shadow-theme-xs transition hover:border-brand-200 dark:hover:border-brand-500/50">
+    <div className={`rounded-2xl border border-[var(--app-panel-border)] bg-[var(--app-panel-bg)] p-4 shadow-theme-xs transition hover:border-brand-200 dark:hover:border-brand-500/50 ${className}`}>
       <div className="mb-4 flex items-start gap-3">
         <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand-50 text-brand-500 dark:bg-brand-500/15">
           {icon}
@@ -170,8 +205,43 @@ export const CredentialForm: React.FC<PropsWithChildren<FormProp<UserDto>>> = ({
     </div>
   );
 
+  
+
   return (
     <>
+    {file || cam ? (
+                  file ? (
+                    <Modals
+                      handleClickWithEvent={handleClickInternal}
+                      body={
+                        <DropzoneComponent
+                          newImage={newImage}
+                          setNewImage={setNewImage}
+                          image={image}
+                          setImage={setImage}
+                          setFile={setFile}
+                        />
+                      }
+                    />
+                  ) : (
+                    <Modals
+                      isWide={true}
+                      handleClickWithEvent={handleClickInternal}
+                      body={
+                        <NativeWebcam    
+                          setNewImage={setNewImage}
+                          image={image}
+                          setImage={setImage}
+                          modelStatus={cam}
+                          handleClick={handleClickInternal}
+                        />
+                      }
+                    />
+                  )
+                ) : (
+                 <></>
+                )}
+                
       {cardModal && (
         <Modals
           header="Add access card"
@@ -274,7 +344,7 @@ export const CredentialForm: React.FC<PropsWithChildren<FormProp<UserDto>>> = ({
                     name="scpId"
                     options={controllerOptions}
                     placeholder="Choose a controller"
-                    onChangeWithEvent={selectScanDevice}
+                    onChange={selectScanDevice}
                     defaultValue={scanData.deviceId}
                   />
                 </FormField>
@@ -285,7 +355,7 @@ export const CredentialForm: React.FC<PropsWithChildren<FormProp<UserDto>>> = ({
                     name="doorId"
                     options={doorOptions}
                     placeholder="Choose a reader"
-                    onChangeWithEvent={selectScanDevice}
+                    onChange={selectScanDevice}
                     defaultValue={scanData.doorId}
                   />
                 </FormField>
@@ -309,6 +379,65 @@ export const CredentialForm: React.FC<PropsWithChildren<FormProp<UserDto>>> = ({
         description="Add the ways this person can identify themselves at your entry points."
       >
         <div className="grid gap-5 lg:grid-cols-2">
+          <Tile
+          label="Profile Image"
+          hint="For face scan access"
+          icon={<span className="text-sm font-bold">Face</span>}
+          className="col-span-2"
+          >
+            
+                 <>
+                  <div className="flex flex-wrap justify-center gap-3 mb-5">
+                    <div className="h-70 w-70 overflow-hidden rounded-full border-4 border-white bg-white shadow-lg ring-1 ring-gray-200 dark:border-gray-900 dark:bg-gray-900 dark:ring-gray-700">
+                      <Avatar
+                        userId={dto.identification}
+                        newImage={newImage}
+                        image={image}
+                      />
+                    </div>
+
+                  </div>
+                    
+                    <div className="flex flex-wrap justify-center gap-3">
+                      {/* <Button
+                        disabled={isReadOnly}
+                        name="file"
+                        onClickWithEvent={handleClickInternal}
+                        startIcon={<FileIcon />}
+                      >
+                        Browse
+                      </Button> */}
+                      <Button
+                        disabled={isReadOnly}
+                        variant="outline"
+                        onClickWithEvent={handleClickInternal}
+                        name="file"
+                        startIcon={<FileIcon />}
+                        className="justify-center"
+                      >
+                        Browse
+                      </Button>
+                      {/* <Button
+                        disabled={isReadOnly}
+                        name="cam"
+                        onClickWithEvent={handleClickInternal}
+                        startIcon={<CamIcon />}
+                      >
+                        Take Picture
+                      </Button> */}
+                      <Button
+                        disabled={isReadOnly}
+                        variant="outline"
+                        onClickWithEvent={handleClickInternal}
+                        name="cam"
+                        startIcon={<CamIcon />}
+                        className="justify-center"
+                      >
+                        Take Picture
+                      </Button>
+                    </div>
+                  </>
+          </Tile>
           <Tile
             label="License plate"
             hint="For vehicle and parking access"

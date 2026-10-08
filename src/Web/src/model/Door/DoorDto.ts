@@ -1,5 +1,6 @@
 import { DoorType } from "../../enum/DoorType";
 import { Vendor } from "../../enum/Vendor";
+import { AeroDoorMetadata } from "./AeroDoorMetadata";
 import { BgDto } from "./BgDto";
 import { BuzzerDto } from "./BuzzerDto";
 import { ReaderDto } from "./ReaderDto";
@@ -14,7 +15,7 @@ export interface DoorDto {
   type: DoorType;
   deviceGuid:string;
   deviceName:string;
-  metadata: string;
+  metadata: string | AeroDoorMetadata;
   readers: ReaderDto[];
   buzzer: BuzzerDto | null;
   rexes: RexDto[];

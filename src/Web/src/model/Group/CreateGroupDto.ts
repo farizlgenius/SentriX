@@ -1,9 +1,9 @@
 import { BaseDto } from "../BaseDto";
-import { GroupDoorDto } from "./GroupDoorDto";
+import { GroupComponentDto } from "./GroupComponentDto";
 
 export interface CreateGroupDto extends BaseDto{
     name:string;
-    doors:GroupDoorDto[];
+    doors:GroupComponentDto[];
     locationId:number;
     isActive:boolean;
 }

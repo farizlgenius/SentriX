@@ -15,8 +15,6 @@ public sealed record UserDto(
   DateTime DateOfBirth,
   string Email,
   string Phone,
-  bool IsOperator,
-  bool IsUser,
   string Role,
   string Company,
   string Department,
@@ -30,5 +28,6 @@ public sealed record UserDto(
   LicensePlateDto LicensePlate,
   PinDto Pin,
   QrCodeDto QrCode,
-  List<string> Locations
+  List<string> Locations,
+  string Metadata
 );

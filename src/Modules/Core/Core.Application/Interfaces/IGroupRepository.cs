@@ -11,4 +11,6 @@ public interface IGroupRepository : IBaseRepository<GroupDto, Core.Domain.Entiti
       Task RemoveGroupComponentAsync(Core.Domain.Entities.GroupComponent group,CancellationToken ct = default);
       Task<IEnumerable<GroupDto>> GetByMacAsync(string mac,CancellationToken ct = default);
       Task<IEnumerable<(string mac,string ip,Vendor vendor)>> GetDetailsByGroupGuidsAsync(IEnumerable<Guid> guids,CancellationToken ct = default);
+
+      
 }

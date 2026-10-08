@@ -34,10 +34,10 @@ import Modals from "../UiElements/Modals";
 import { CaptureModalData } from "../../model/Event/CaptureModalData";
 
 // Define header Table
-const headers: string[] = ["Date","Name", "Status", "Remark", "Capture"];
+const headers: string[] = ["Date","Name","Actor", "Status", "Remark", "Capture"];
 
 // Define kwy Table
-const keys: string[] = ["timestamp","componentName", "eventCode", "remarks", "capture"];
+const keys: string[] = ["timestamp","componentName","actor", "eventCode", "remarks", "capture"];
 
 const Event = () => {
   {

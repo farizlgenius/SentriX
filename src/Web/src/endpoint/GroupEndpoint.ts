@@ -3,7 +3,7 @@ const CONTROLLER = 'group'
 
 
 export const GroupEndpoint = {
-    GET_BY_LOCATION: (location:number) => `/api/${CONTROLLER}/${location}`,
+    GET_BY_LOCATION: (guid:string) => `/api/${CONTROLLER}/location/${guid}`,
     PAGINATION:(pageNumber:number,pageSize:number,locationId?:number | undefined,search?:string | undefined,startDate?:string | undefined,endDate?:string | undefined) => `/api/${CONTROLLER}/pagination?PageNumber=${pageNumber}&PageSize=${pageSize}${search == undefined || search == "" ? "" : `&search=${search}`}${startDate == undefined ? "" : `&startDate=${startDate}`}${endDate == undefined ? "" : `&startDate=${endDate}`}${locationId == 0 || locationId == undefined ?  "" : `&locationId=${locationId}` }`,
     CREATE: `/api/${CONTROLLER}`,
     UPDATE : `/api/${CONTROLLER}`,

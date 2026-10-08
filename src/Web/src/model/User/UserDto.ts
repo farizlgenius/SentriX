@@ -5,6 +5,7 @@ import { FaceDto } from "./FaceDto";
 import { LicensePlateDto } from "./LicensePlateDto";
 import { PinDto } from "./PinDto";
 import { QrCodeDto } from "./QrCodeDto";
+import { UserMetadata } from "./UserMetadata";
 
 export interface UserDto {
   guid: string;
@@ -20,15 +21,13 @@ export interface UserDto {
   dateOfBirth: Date;
   email: string;
   phone: string;
-  isOperator: boolean;
-  isUser: boolean;
-  roleGuid: string;
+  roleGuid: string | null;
   role: string;
-  companyGuid: string;
+  companyGuid: string | null;
   company: string;
-  departmentGuid: string;
+  departmentGuid: string | null;
   department: string;
-  positionGuid: string;
+  positionGuid: string | null;
   position: string;
   address: string;
   joinedDate: Date;
@@ -43,4 +42,5 @@ export interface UserDto {
   locations: string[];
   isDefault: boolean;
   isActive: boolean;
+  metadata:string | UserMetadata;
 }

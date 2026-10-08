@@ -19,13 +19,8 @@ public sealed class UserRepository(IBaseRepository repo,ILogger<UserRepository> 
             c.flags = flags;
             c.card_number = cardNumber;
             c.issue_code = issueCode;
-            for(int i = 0;i <= pin.Length; i++)
+            for(int i = 0;i < pin.Length; i++)
             {
-                  if(i == pin.Length)
-                  {
-                        c.pin[i] = '\0';
-                        break;
-                  }
                   c.pin[i] = pin[i];
             }
             for(int i = 0;i < alvl.Count; i++)

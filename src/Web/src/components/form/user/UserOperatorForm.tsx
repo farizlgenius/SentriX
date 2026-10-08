@@ -311,16 +311,9 @@ export const UserOperatorForm: React.FC<PropsWithChildren<FormProp<UserDto>>> = 
           </div>
         </div>
       ) : (
-        <div>
-          <section className="space-y-6">
-            <FormSection
-              overall="Operator Details"
-              title="Lean and focused form"
-              description="Clean inputs for account setup, contact details, role assignment, and location access."
-            >
-              <div className="flex flex-col gap-5">
+       <div className="flex flex-col gap-5">
                 <Switch
-                  label={"Is Operator"}
+                  label={"Operator"}
                   onChange={(e) =>
                     setDto((prev) => ({
                       ...prev,
@@ -345,8 +338,26 @@ export const UserOperatorForm: React.FC<PropsWithChildren<FormProp<UserDto>>> = 
                         placeholder="operator.account"
                       />
                     </FormField>
-                    <div className="w-full max-w-xs">
-                      <Label>Password</Label>
+                  <FormField>
+                      <Label htmlFor="role">Role</Label>
+                      <Select
+                        disabled={isReadOnly}
+                        isString={true}
+                        options={roles}
+                        defaultValue={dto.roleGuid}
+                        onChange={(e) =>
+                          setDto((prev) => ({
+                            ...prev,
+                            roleGuid: e.target.value
+                          }))
+                        }
+                        name="roleId"
+                        placeholder="Select role"
+                      />
+                    </FormField>
+
+                    <FormField>
+                        <Label>Password</Label>
                       {type === FormType.UPDATE || type === FormType.CREATE ? (
                         <Button
                           onClick={handleChangePassword}
@@ -370,34 +381,12 @@ export const UserOperatorForm: React.FC<PropsWithChildren<FormProp<UserDto>>> = 
                           value={dto.password}
                         />
                       )}
-                    </div>
+                    </FormField>
 
-                    <div>
-                      <Label htmlFor="role">Role</Label>
-                      <Select
-                        disabled={isReadOnly}
-                        isString={true}
-                        options={roles}
-                        defaultValue={dto.roleGuid}
-                        onChange={(e) =>
-                          setDto((prev) => ({
-                            ...prev,
-                            roleGuid: e,
-                            role:
-                              roles.find((option) => option.value === e)
-                                ?.label ?? "",
-                          }))
-                        }
-                        name="roleId"
-                        placeholder="Select role"
-                      />
-                    </div>
+                  
                   </div>
                 )}
               </div>
-            </FormSection>
-          </section>
-        </div>
       )}
     </>
   );

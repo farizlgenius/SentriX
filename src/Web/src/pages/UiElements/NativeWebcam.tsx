@@ -26,6 +26,7 @@ export const NativeWebcam: React.FC<PropsWithChildren<NativeWebcamProp>> = ({ ha
             videoRef.current.srcObject = null;
         }
         setStream(null);
+        console.log("stop finished")
     };
 
     useEffect(() => {
@@ -55,6 +56,8 @@ export const NativeWebcam: React.FC<PropsWithChildren<NativeWebcamProp>> = ({ ha
                 setError(err?.message ?? "Failed to access camera");
             }
         };
+
+        console.log("start again")
 
         startCamera();
 
@@ -90,6 +93,8 @@ export const NativeWebcam: React.FC<PropsWithChildren<NativeWebcamProp>> = ({ ha
         canvas.toBlob((blob) => {
             if (!blob) return;
             const file = new File([blob], `capture_${Date.now()}.png`, { type: "image/png" });
+            console.log("Capture........")
+            console.log(file)
             setImage(file);
             setNewImage(file); 
             const url = URL.createObjectURL(blob);
@@ -101,6 +106,7 @@ export const NativeWebcam: React.FC<PropsWithChildren<NativeWebcamProp>> = ({ ha
     useEffect(() => {
         stopStream()
     },[image])
+
     return (
         <ComponentCard title="Image Session" desc="Align face in the frame, then capture a clear photo.">
             <section className="space-y-4">

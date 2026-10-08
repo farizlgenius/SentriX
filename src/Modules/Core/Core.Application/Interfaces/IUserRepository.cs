@@ -1,6 +1,7 @@
 using Core.Contract.DTOs.User;
 using Core.Domain.Entities;
 using SharedKernel.Domain;
+using SharedKernel.Enums;
 
 namespace Core.Application.Interfaces;
 
@@ -14,8 +15,7 @@ public interface IUserRepository : IBaseRepository<UserDto, User>
   Task<Guid> GetRoleGuidByUsernameAsync(string username, CancellationToken ct = default);
   Task<UserDto> GetByUsernameAsync(string username, CancellationToken ct = default);
   Task<Guid> GetDefaultLocationGuidAsync();
-  Task<Pagination<UserDto>> GetPaginationOperatorAsync(PaginationParams param, CancellationToken ct = default);
-  Task<Pagination<UserDto>> GetPaginationUserAsync(PaginationParams param, CancellationToken ct = default);
   Task UpdateImagePathAsync(Guid guid, CancellationToken ct = default);
+ Task<IEnumerable<(string mac, string ip, Vendor vendor)>> GetDetailsByUserGuidAsync(Guid guid, CancellationToken ct = default);
 
 }

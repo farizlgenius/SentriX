@@ -1,7 +1,4 @@
 export interface BaseDto{
-  id:number;
+  guid:string;
   name:string;
-  locationId:number;
-  isActive:boolean;
-  isDefault:boolean;
 }
