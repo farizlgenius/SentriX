@@ -9,11 +9,9 @@ public sealed class UserGroup : BaseEntity
 
   public UserGroup() { }
   public UserGroup(
-    int userId,
     int groupId
   )
   {
-    user_id = userId;
     group_id = groupId;
   }
 

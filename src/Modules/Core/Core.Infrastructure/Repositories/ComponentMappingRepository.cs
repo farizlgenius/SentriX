@@ -251,4 +251,13 @@ public async Task<Dictionary<Guid, int>> GetExternalIdMapGuidByGuidsAndEntityAsy
             .Select(x => x.external_id!.Value)
             .ToArrayAsync();
       }
+
+      public async Task<Guid> GuidByExternalIdAndMacAndEntityAndVendorQuery(short externalId, string mac, EntityType type, Vendor vendor, CancellationToken ct = default)
+      {
+          return await context.ComponentMappings
+            .AsNoTracking()
+            .Where(x => x.external_id == externalId && x.mac == mac && x.entity == type && x.vendor == vendor)
+            .Select(x => x.guid)
+            .FirstOrDefaultAsync();
+      }
 }

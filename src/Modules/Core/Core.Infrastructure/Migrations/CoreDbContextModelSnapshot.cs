@@ -5379,7 +5379,6 @@ namespace Core.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("password")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("phone")
@@ -5412,7 +5411,6 @@ namespace Core.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("username")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("id");

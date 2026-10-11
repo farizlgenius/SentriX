@@ -1,0 +1,35 @@
+namespace Aero.Application.Enums;
+
+public enum ActionType
+{
+      DeleteAll,
+      MonitorPointMask,
+      ControlPointCommand,
+      DoorMode,
+      ForceOpenMask,
+      HeldOpenMask,
+      MomentaryUnlock,
+      ProcedureControlCommand,
+      TriggerVariableControlCommand,
+      TimeZoneControl,
+      ReaderLEDModeControl,
+      AntipassbackControlCommand,
+      MonitorPointGroupArmDisarmCommand=14,
+      SetActionTypePrefixMaskCountBased,
+      SetActionTypePrefixActionPointBased,
+      ModifyAreaConfiguration,
+      AbortWaitForDoorOpenState,
+      TempReaderLEDControl,
+      TextLCDTerminal,
+      TempDoorMode=24,
+      HostSimulateCardRead,
+      SetUseLimit,
+      SetOperationMode,
+      HostSimulatedKeyPress,
+      FilterOutTriggerActivationSummary,
+      TriggerActivationSummary,
+      DelayMillisecIncrement,
+      DelayMinIncrement
+
+
+}

@@ -274,6 +274,11 @@ public sealed class DeviceRepository(CoreDbContext context) : IDeviceRepository
             return res == null ? (string.Empty,0) : (res.name,res.location_id);
       }
 
+      public Task<string> GetNameByGuidAsync(Guid guid, CancellationToken ct = default)
+      {
+            throw new NotImplementedException();
+      }
+
       public async Task<IEnumerable<OptionDto>> GetOptionByVendorAndLocationAsync(Vendor vendor, Guid guid, CancellationToken ct = default)
       {
             return await context.Devices

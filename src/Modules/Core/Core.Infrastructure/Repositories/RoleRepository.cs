@@ -153,6 +153,11 @@ public sealed class RoleRepository(CoreDbContext context) : IRoleRepository
              .FirstOrDefaultAsync();
       }
 
+      public Task<string> GetNameByGuidAsync(Guid guid, CancellationToken ct = default)
+      {
+            throw new NotImplementedException();
+      }
+
       public async Task<Pagination<RoleDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
       {
             var query = context.Roles

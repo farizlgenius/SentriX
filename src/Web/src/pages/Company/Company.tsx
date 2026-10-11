@@ -185,6 +185,7 @@ export const Company = () => {
           dto={dto}
           setDto={setDto}
           handleClick={handleClickWithEvent}
+          handleChange={()=>{}}
         />
       ),
     },
@@ -194,7 +195,7 @@ export const Company = () => {
     <>
       <PageBreadcrumb pageTitle="Companies" />
       {form ? (
-        <BaseForm tabContent={tabContent} header={""} desc={""} />
+        <BaseForm tabContent={tabContent} header={""} desc={""} type={formType} />
       ) : (
         <div className="space-y-6">
           <BaseTable<CompanyDto>

@@ -78,6 +78,11 @@ public sealed class CardFormatRepository(CoreDbContext context) : ICardFormatRep
             throw new NotImplementedException();
       }
 
+      public Task<string> GetNameByGuidAsync(Guid guid, CancellationToken ct = default)
+      {
+            throw new NotImplementedException();
+      }
+
       public async Task<Pagination<CardFormatDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
       {
             var query = context.CardFormats

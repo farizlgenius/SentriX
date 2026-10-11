@@ -169,7 +169,12 @@ public sealed class TurnstileRepository(CoreDbContext context) : ITurnstileRepos
     return res;
   }
 
-  public async Task<Pagination<TurnstileDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
+      public Task<string> GetNameByGuidAsync(Guid guid, CancellationToken ct = default)
+      {
+            throw new NotImplementedException();
+      }
+
+      public async Task<Pagination<TurnstileDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
   {
     var query = context.Turnstiles
                   .Where(x => x.location.guid == param.locationGuid)

@@ -1,13 +1,19 @@
+import { Vendor } from "../../enum/Vendor";
 
 export interface EventDto{
-    timestamp:string;
+    guid:string;
+    timestamp:Date;
     actor:string;
     module:string;
-    type:string;
-    image:string;
+    eventType:string;
+    imageName:string;
     mac:string;
-    name:string;
+    componentName:string;
+    eventCode:string
     remarks:string;
-    locationId:number;
-    capture:string;
+    captureImageName:string;
+    vendor:Vendor;
+    locationGuid:string;
+    isActive:boolean;
+    isDefault:boolean;
 }

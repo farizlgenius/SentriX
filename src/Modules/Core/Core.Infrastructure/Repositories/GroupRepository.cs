@@ -305,4 +305,9 @@ public sealed class GroupRepository(CoreDbContext context) : IGroupRepository
             context.Groups.Update(en);
             await context.SaveChangesAsync(ct);
       }
+
+      public Task<string> GetNameByGuidAsync(Guid guid, CancellationToken ct = default)
+      {
+            throw new NotImplementedException();
+      }
 }

@@ -195,6 +195,7 @@ export const Department = () => {
           dto={departmentDto}
           setDto={setDepartmentDto}
           handleClick={handleClickWithEvent}
+          handleChange={()=>{}}
         />
       ),
     },
@@ -223,7 +224,7 @@ export const Department = () => {
     <>
       <PageBreadcrumb pageTitle="Departments" />
       {form ? (
-        <BaseForm tabContent={tabContent} header={""} desc={""} />
+        <BaseForm tabContent={tabContent} header={""} desc={""} type={formType} />
       ) : (
         <div className="space-y-6">
           <div className="rounded-xl border border-gray-200 p-6 dark:border-gray-800 border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03] ">
@@ -235,14 +236,11 @@ export const Department = () => {
                 name="Company"
                 defaultValue={selectedCompany}
                 onChange={(e) => {
-                  setSelectedCompany(e);
+                  setSelectedCompany(e.target.value);
                   setDepartmentDto((prev) => ({
                     ...prev,
-                    companyGuid: e,
-                    company:
-                      companyOptions.find((x) => x.value == e)?.label ?? "",
-                  }));
-                  fetchData(1, 10, e);
+                    companyGuid: e.target.value}));
+                  fetchData(1, 10, e.target.value);
                 }}
               />
             </div>

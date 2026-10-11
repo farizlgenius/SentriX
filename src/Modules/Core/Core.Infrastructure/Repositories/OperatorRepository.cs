@@ -161,9 +161,12 @@ public sealed class OperatorRepository(CoreDbContext context) : IOperatorReposit
       .ToArrayAsync(ct);
   }
 
+      public Task<string> GetNameByGuidAsync(Guid guid, CancellationToken ct = default)
+      {
+            throw new NotImplementedException();
+      }
 
-
-  public async Task<OperatorDto> GetOperatorByUsernameAsync(string username, CancellationToken ct = default)
+      public async Task<OperatorDto> GetOperatorByUsernameAsync(string username, CancellationToken ct = default)
   {
     return await context.Operators
          .AsNoTracking()

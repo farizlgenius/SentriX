@@ -25,7 +25,6 @@ public sealed class User : BaseDomain
       public DateTime JoinedTime { get; set; }
       public DateTime ExpiredTime { get; set; }
       public List<string> Additionals { get; private set; } = new List<string>();
-      public List<Guid> Groups { get; private set; } = new List<Guid>();
       public List<Card> Cards { get; private set; } = default!;
       public LicensePlate? LicensePlate { get; private set; } = default!;
       public Pin? Pin { get; private set; } = default!;
@@ -69,7 +68,10 @@ public sealed class User : BaseDomain
             ValidationHelper.CharAndDigit(Identification, nameof(this.Identification));
             ValidationHelper.Email(Email, nameof(Email));
             ValidationHelper.CharAndDigit(UserCode, nameof(UserCode));
-            this.Username = Username;
+            if (!string.IsNullOrWhiteSpace(Username))
+            {
+                  this.Username = Username;
+            }
             if (!string.IsNullOrWhiteSpace(Password))
             {
                   this.Password = PasswordHasher.HashPassword(Password);
@@ -91,7 +93,6 @@ public sealed class User : BaseDomain
             this.JoinedTime = ActiveTime;
             this.ExpiredTime = ExpireTime;
             this.Additionals = Additionals;
-            this.Groups = Groups;
             this.Cards = Cards;
             this.LicensePlate = LicensePlate;
             this.Pin = Pin;
@@ -136,9 +137,11 @@ public sealed class User : BaseDomain
             ValidationHelper.Name(Firstname);
             ValidationHelper.CharAndDigit(Identification, nameof(this.Identification));
             ValidationHelper.Email(Email, nameof(Email));
-            ValidationHelper.IsNullOrEmpty(Password, nameof(Password));
             ValidationHelper.CharAndDigit(UserCode, nameof(UserCode));
-            this.Username = Username;
+            if (!string.IsNullOrWhiteSpace(Username))
+            {
+                  this.Username = Username;
+            }
             if (!string.IsNullOrWhiteSpace(Password))
             {
                   this.Password = PasswordHasher.HashPassword(Password);
@@ -160,7 +163,6 @@ public sealed class User : BaseDomain
             this.JoinedTime = ActiveTime;
             this.ExpiredTime = ExpireTime;
             this.Additionals = Additionals;
-            this.Groups = Groups;
             this.Cards = Cards;
             this.LicensePlate = LicensePlate;
             this.Pin = Pin;

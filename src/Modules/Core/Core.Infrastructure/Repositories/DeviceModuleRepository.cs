@@ -239,6 +239,11 @@ public sealed class DeviceModuleRepository(CoreDbContext context) : IDeviceModul
             return (res.TotalSlots,res.InputSlots,res.RexSlots,res.SensorSlots,res.BreakGlassSlots);
       }
 
+      public Task<string> GetNameByGuidAsync(Guid guid, CancellationToken ct = default)
+      {
+            throw new NotImplementedException();
+      }
+
       public async Task<IEnumerable<OptionDto>> GetOptionByDeviceAsync(Guid guid, CancellationToken ct = default)
       {
            return await context.DeviceModules

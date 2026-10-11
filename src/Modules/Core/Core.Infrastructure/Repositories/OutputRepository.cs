@@ -53,7 +53,12 @@ public sealed class OutputRepository(CoreDbContext context) : IOutputRepository
     throw new NotImplementedException();
   }
 
-  public async Task<Pagination<OutputDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
+      public Task<string> GetNameByGuidAsync(Guid guid, CancellationToken ct = default)
+      {
+            throw new NotImplementedException();
+      }
+
+      public async Task<Pagination<OutputDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
   {
     throw new NotImplementedException();
   }

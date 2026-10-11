@@ -178,7 +178,12 @@ public sealed class IntervalRepository(CoreDbContext context) : IIntervalReposit
       .ToArrayAsync();
   }
 
-  public async Task<Pagination<IntervalDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
+      public Task<string> GetNameByGuidAsync(Guid guid, CancellationToken ct = default)
+      {
+            throw new NotImplementedException();
+      }
+
+      public async Task<Pagination<IntervalDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
   {
     var query = context.Intervals
                   .AsNoTracking()

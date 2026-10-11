@@ -215,13 +215,11 @@ public class Program
 
                     OnAuthenticationFailed = context =>
                     {
-                        Console.WriteLine("❌ JWT FAILED: " + context.Exception.Message);
                         return Task.CompletedTask;
                     },
 
                     OnTokenValidated = context =>
                     {
-                        Console.WriteLine("✅ TOKEN VALIDATED");
                         return Task.CompletedTask;
                     },
 

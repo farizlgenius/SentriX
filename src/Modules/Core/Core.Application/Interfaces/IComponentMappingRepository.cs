@@ -26,4 +26,5 @@ public interface IComponentMappingRepository
    Task<Guid> GetGuidByExternalIdAndEntityAndVendorAsync(short externalId,EntityType entity,Vendor vendor,CancellationToken ct = default);
    Task UpdateExternalIdByMacAsync(string mac,short externalId,CancellationToken ct = default);
    Task<DeviceComponentDto> GetComponentByGuidAsync(Guid guid,CancellationToken ct = default);
+   Task<Guid> GuidByExternalIdAndMacAndEntityAndVendorQuery(short externalId,string mac,EntityType type,Vendor vendor,CancellationToken ct = default);
 }

@@ -2,6 +2,7 @@
 
 using Core.Domain.Entities;
 using SharedKernel.Domain;
+using SharedKernel.Enums;
 
 
 namespace Core.Application.Interfaces;
@@ -23,5 +24,6 @@ public interface IBaseRepository<TDto, TDomain> where TDto : class where TDomain
   Task<Pagination<TDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default);
   Task<IEnumerable<TDto>> GetByLocationAsync(Guid locationGuid, CancellationToken ct = default);
   Task<bool> IsAnyRelatedEntitiesAsync(Guid guid, CancellationToken ct = default);
+  Task<string> GetNameByGuidAsync(Guid guid,CancellationToken ct = default);
 
 }

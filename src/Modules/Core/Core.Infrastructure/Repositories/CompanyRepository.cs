@@ -138,7 +138,12 @@ public sealed class CompanyRepository(CoreDbContext context) : ICompanyRepositor
     return res;
   }
 
-  public async Task<Pagination<CompanyDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
+      public Task<string> GetNameByGuidAsync(Guid guid, CancellationToken ct = default)
+      {
+            throw new NotImplementedException();
+      }
+
+      public async Task<Pagination<CompanyDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
   {
     var query = context.Companies
                   .AsNoTracking()

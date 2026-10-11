@@ -82,12 +82,13 @@ const Event = () => {
   };
 
   const handleClickSeeImage = (capture: EventDto) => {
-    fetchCapture(capture.capture);
+    fetchCapture(capture.captureImageName);
     setCaptureModalData({
-      name: capture.name,
+      name: capture.componentName,
       location:
-        locationList.find((x) => x.id == capture.locationId)?.name ?? "",
-      time: formatDate(capture.timestamp),
+        locationList.find((x) => x.guid == capture.locationGuid)?.name ?? "",
+      // time: formatDate(capture.timestamp),
+      time:capture.timestamp.toISOString()
     });
   };
 
@@ -449,7 +450,7 @@ const Event = () => {
                       <span className="flex gap-2">
                         {switchModuleIcon(data.module)}
                         {/* {<HardwareIcon/>} */}
-                        {data.name}
+                        {data.componentName}
                       </span>
                     </TableCell>
                   ),
@@ -489,11 +490,11 @@ const Event = () => {
                       key={i}
                       className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400"
                     >
-                      {!data.image ||
-                        (data.image != "" && (
+                      {!data.imageName ||
+                        (data.imageName != "" && (
                           <div className="flex items-center gap-2">
                             <div className="cursor-pointer w-7 h-7 overflow-hidden border border-gray-200 rounded-full dark:border-gray-800">
-                              <Avatar userId={data.image} />
+                              <Avatar userId={data.imageName} />
                             </div>
                             {data.actor}
                           </div>
@@ -508,8 +509,8 @@ const Event = () => {
                       key={i}
                       className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400"
                     >
-                      {!data.capture ||
-                        (data.capture != "" && (
+                      {!data.captureImageName ||
+                        (data.captureImageName != "" && (
                           <div
                             onClick={() => handleClickSeeImage(data)}
                             className="cursor-pointer flex items-center gap-2"

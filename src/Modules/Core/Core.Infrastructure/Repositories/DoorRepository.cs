@@ -364,7 +364,16 @@ public sealed class DoorRepository(CoreDbContext context) : IDoorRepository
     return res;
   }
 
-  public async Task<Pagination<DoorDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
+      public async Task<string> GetNameByGuidAsync(Guid guid, CancellationToken ct = default)
+      {
+           return await context.Doors
+            .AsNoTracking()
+            .Where(x => x.guid == guid)
+            .Select(x => x.name)
+            .FirstOrDefaultAsync() ?? string.Empty;
+      }
+
+      public async Task<Pagination<DoorDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
   {
     var query = context.Doors
                   .Where(x => x.location.guid == param.locationGuid)

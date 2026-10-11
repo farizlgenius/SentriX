@@ -185,6 +185,11 @@ public sealed class TimeRepository(CoreDbContext context) : ITimeRepository
       .FirstOrDefaultAsync();
   }
 
+      public Task<string> GetNameByGuidAsync(Guid guid, CancellationToken ct = default)
+      {
+            throw new NotImplementedException();
+      }
+
       public async Task<IEnumerable<OptionDto>> GetOptionByLocationAsync(Guid guid, CancellationToken ct = default)
       {
           return await context.TimeZones

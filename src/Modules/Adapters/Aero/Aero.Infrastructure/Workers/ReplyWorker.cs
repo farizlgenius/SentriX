@@ -8,8 +8,10 @@ using Aero.Domain.Entities;
 using Aero.Infrastructure.Helpers;
 using Core.Contract.DTOs.Events.Event;
 using Core.Contract.Interfaces;
+using Core.Contract.Queries;
 using Core.Contract.Queries.ComponentMapping;
 using Core.Contract.Queries.Device;
+using Core.Contract.Queries.Door;
 using HID.Aero.ScpdNet.Wrapper;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -85,8 +87,9 @@ public sealed class ReplyWorker(Channel<ReplyMessage> queue, ILogger<ReplyWorker
                   //     ScanAcrNo = -1;
                   //     ScanScpId = -1;
                   // }
-                  // var door = scope.ServiceProvider.GetRequiredService<IDoor>();
-                  // name = await door.GetNameByMacAndComponentIdAsync(mac,message.tran.source_number);
+                  bus = scope.ServiceProvider.GetRequiredService<IMessageBus>();
+                  var doorGuid = await bus.QueryAsync(new GuidByExternalIdAndMacAndEntityAndVendorQuery(message.tran.source_number,mac,EntityType.Door,Vendor.aero), ct);
+                  name = await bus.QueryAsync(new DoorNameByGuidQuery(doorGuid), ct);
                   break;
                 case (short)tranType.tranTypeDblCardFull:
                   // if (isWaitingCardScan && ScanScpId == message.ScpId && ScanAcrNo == message.tran.source_number)
@@ -105,8 +108,9 @@ public sealed class ReplyWorker(Channel<ReplyMessage> queue, ILogger<ReplyWorker
                   //     ScanAcrNo = -1;
                   //     ScanScpId = -1;
                   // }
-                  // door = scope.ServiceProvider.GetRequiredService<IDoor>();
-                  // name = await door.GetNameByMacAndComponentIdAsync(mac,message.tran.source_number);
+                  bus = scope.ServiceProvider.GetRequiredService<IMessageBus>();
+                  doorGuid = await bus.QueryAsync(new GuidByExternalIdAndMacAndEntityAndVendorQuery(message.tran.source_number,mac,EntityType.Door,Vendor.aero), ct);
+                  name = await bus.QueryAsync(new DoorNameByGuidQuery(doorGuid), ct);
                   break;
                 case (short)tranType.tranTypeI64CardFull:
                   // if (isWaitingCardScan && ScanScpId == message.ScpId && ScanAcrNo == message.tran.source_number)
@@ -125,8 +129,9 @@ public sealed class ReplyWorker(Channel<ReplyMessage> queue, ILogger<ReplyWorker
                   //     ScanAcrNo = -1;
                   //     ScanScpId = -1;
                   // }
-                  // door = scope.ServiceProvider.GetRequiredService<IDoor>();
-                  // name = await door.GetNameByMacAndComponentIdAsync(mac,message.tran.source_number);
+                  bus = scope.ServiceProvider.GetRequiredService<IMessageBus>();
+                  doorGuid = await bus.QueryAsync(new GuidByExternalIdAndMacAndEntityAndVendorQuery(message.tran.source_number,mac,EntityType.Door,Vendor.aero), ct);
+                  name = await bus.QueryAsync(new DoorNameByGuidQuery(doorGuid), ct);
                   break;
                 case (short)tranType.tranTypeI64CardFullIc32:
                   // if (isWaitingCardScan && ScanScpId == message.ScpId && ScanAcrNo == message.tran.source_number)
@@ -145,20 +150,24 @@ public sealed class ReplyWorker(Channel<ReplyMessage> queue, ILogger<ReplyWorker
                   //     ScanAcrNo = -1;
                   //     ScanScpId = -1;
                   // }
-                  // door = scope.ServiceProvider.GetRequiredService<IDoor>();
-                  // name = await door.GetNameByMacAndComponentIdAsync(mac,message.tran.source_number);
+                  bus = scope.ServiceProvider.GetRequiredService<IMessageBus>();
+                  doorGuid = await bus.QueryAsync(new GuidByExternalIdAndMacAndEntityAndVendorQuery(message.tran.source_number,mac,EntityType.Door,Vendor.aero), ct);
+                  name = await bus.QueryAsync(new DoorNameByGuidQuery(doorGuid), ct);
                   break;
                 case (short)tranType.tranTypeCardID:
-                  // door = scope.ServiceProvider.GetRequiredService<IDoor>();
-                  // name = await door.GetNameByMacAndComponentIdAsync(mac,message.tran.source_number);
+                  bus = scope.ServiceProvider.GetRequiredService<IMessageBus>();
+                  doorGuid = await bus.QueryAsync(new GuidByExternalIdAndMacAndEntityAndVendorQuery(message.tran.source_number,mac,EntityType.Door,Vendor.aero), ct);
+                  name = await bus.QueryAsync(new DoorNameByGuidQuery(doorGuid), ct);
                   break;
                 case (short)tranType.tranTypeDblCardID:
-                  // door = scope.ServiceProvider.GetRequiredService<IDoor>();
-                  // name = await door.GetNameByMacAndComponentIdAsync(mac,message.tran.source_number);
+                  bus = scope.ServiceProvider.GetRequiredService<IMessageBus>();
+                  doorGuid = await bus.QueryAsync(new GuidByExternalIdAndMacAndEntityAndVendorQuery(message.tran.source_number,mac,EntityType.Door,Vendor.aero), ct);
+                  name = await bus.QueryAsync(new DoorNameByGuidQuery(doorGuid), ct);
                   break;
                 case (short)tranType.tranTypeI64CardID:
-                  // door = scope.ServiceProvider.GetRequiredService<IDoor>();
-                  // name = await door.GetNameByMacAndComponentIdAsync(mac,message.tran.source_number);
+                  bus = scope.ServiceProvider.GetRequiredService<IMessageBus>();
+                  doorGuid = await bus.QueryAsync(new GuidByExternalIdAndMacAndEntityAndVendorQuery(message.tran.source_number,mac,EntityType.Door,Vendor.aero), ct);
+                  name = await bus.QueryAsync(new DoorNameByGuidQuery(doorGuid), ct);
                   break;
                 case (short)tranType.tranTypeCoS:
                   switch (message.tran.source_type)

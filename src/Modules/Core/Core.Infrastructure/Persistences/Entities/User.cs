@@ -5,8 +5,8 @@ namespace Core.Infrastructure.Persistences.Entities;
 
 public sealed class User : BaseEntity,IAuditableEntity
 {
-      public string username { get; set; } = string.Empty;
-      public string password { get; set; } = string.Empty;
+      public string? username { get; set; }
+      public string? password { get; set; } 
       public string user_code { get; set; } = string.Empty;
       public string identification { get; set; } = string.Empty;
       public Title title { get; set; } = Title.Mr;
@@ -75,6 +75,7 @@ public sealed class User : BaseEntity,IAuditableEntity
                   this.qr_code = new QrCode(d.QrCode);
             this.user_locations = d.LocationIds.Select(x => new UserLocation(0,x)).ToArray();
             metadata = d.Metadata;
+            user_groups = d.GroupIds.Select(x => new UserGroup(x)).ToArray();
       }
 
 }

@@ -631,4 +631,9 @@ public sealed class UserRepository(CoreDbContext context) : IUserRepository
 
             return res.Select(x => (x.mac,x.ip,x.vendor)).ToArray();
       }
+
+      public Task<string> GetNameByGuidAsync(Guid guid, CancellationToken ct = default)
+      {
+            throw new NotImplementedException();
+      }
 }

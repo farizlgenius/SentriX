@@ -202,6 +202,7 @@ export const Position = () => {
           dto={positionDto}
           setDto={setPositionDto}
           handleClick={handleClickWithEvent}
+          handleChange={()=>{}}
         />
       ),
     },
@@ -249,7 +250,7 @@ export const Position = () => {
     <>
       <PageBreadcrumb pageTitle="Positions" />
       {form ? (
-        <BaseForm tabContent={tabContent} header={""} desc={""} />
+        <BaseForm tabContent={tabContent} header={""} desc={""} type={formType} />
       ) : (
         <div className="space-y-6">
           <div className="rounded-xl border border-gray-200 p-6 dark:border-gray-800 border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03] ">
@@ -262,14 +263,12 @@ export const Position = () => {
                 defaultValue={selectedCompany}
                 onChange={(e) => {
                   setPositionsDto([]);
-                  setSelectedCompany(e);
+                  setSelectedCompany(e.target.value);
                   setSelectedDepartment("");
-                  fetchDepartments(e);
+                  fetchDepartments(e.target.value);
                   setPositionDto((prev) => ({
                     ...prev,
-                    companyGuid: e,
-                    company:
-                      companyOptions.find((x) => x.value == e)?.label ?? "",
+                    companyGuid: e.target.value
                   }));
                 }}
               />
@@ -280,14 +279,12 @@ export const Position = () => {
                 name="Department"
                 defaultValue={selectedDepartment}
                 onChange={(e) => {
-                  setSelectedDepartment(e);
+                  setSelectedDepartment(e.target.value);
                   setPositionDto((prev) => ({
                     ...prev,
-                    departmentGuid: e,
-                    department:
-                      departmentOptions.find((x) => x.value == e)?.label ?? "",
+                    departmentGuid: e.target.value
                   }));
-                  fetchData(1, 10, e);
+                  fetchData(1, 10, e.target.value);
                 }}
               />
             </div>

@@ -112,6 +112,11 @@ public sealed class PositionRepository(CoreDbContext context) : IPositionReposit
                   .FirstOrDefaultAsync();
       }
 
+      public Task<string> GetNameByGuidAsync(Guid guid, CancellationToken ct = default)
+      {
+            throw new NotImplementedException();
+      }
+
       public async Task<Pagination<PositionDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
       {
             var query = context.Positions

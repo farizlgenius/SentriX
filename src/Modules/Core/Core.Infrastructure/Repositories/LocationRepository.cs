@@ -187,6 +187,11 @@ public sealed class LocationRepository(CoreDbContext context) : ILocationReposit
                   )).ToListAsync();
       }
 
+      public Task<string> GetNameByGuidAsync(Guid guid, CancellationToken ct = default)
+      {
+            throw new NotImplementedException();
+      }
+
       public async Task<Pagination<LocationDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
       {
             var query = context.Locations

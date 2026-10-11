@@ -126,7 +126,12 @@ public sealed class DepartmentRepository(CoreDbContext context) : IDepartmentRep
       .FirstOrDefaultAsync();
   }
 
-  public async Task<Pagination<DepartmentDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
+      public Task<string> GetNameByGuidAsync(Guid guid, CancellationToken ct = default)
+      {
+            throw new NotImplementedException();
+      }
+
+      public async Task<Pagination<DepartmentDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
   {
     var query = context.Departments
                   .AsNoTracking()

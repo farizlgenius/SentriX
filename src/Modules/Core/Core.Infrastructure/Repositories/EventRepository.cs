@@ -362,7 +362,12 @@ new AdapterEvent(@event)
     throw new NotImplementedException();
   }
 
-  public async Task<Pagination<EventDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
+      public Task<string> GetNameByGuidAsync(Guid guid, CancellationToken ct = default)
+      {
+            throw new NotImplementedException();
+      }
+
+      public async Task<Pagination<EventDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
   {
     var query = context.Events
                   .Where(x => x.location == null || x.location.guid == param.locationGuid)

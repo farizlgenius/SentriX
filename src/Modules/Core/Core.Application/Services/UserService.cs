@@ -61,6 +61,8 @@ public sealed class UserService(
     var groupIds = dto.Groups.Count == 0 ? [] : await bus.QueryAsync(new GroupIdsByGuidsQuery(dto.Groups), ct);
     var details = dto.Groups.Count == 0 ? [] : await group.GetDetailsByGroupGuidsAsync(dto.Groups,ct);
 
+        
+
     var d = new User(
       dto.UserCode,
       dto.Username,
@@ -94,12 +96,14 @@ public sealed class UserService(
       dto.Pin is null || string.IsNullOrWhiteSpace(dto.Pin.Pin) ? null : new Pin(dto.Pin.Pin),
       dto.QrCode is null || string.IsNullOrWhiteSpace(dto.QrCode.QrCode) ? null : new QrCode(dto.QrCode.QrCode)
     );
+
     // Check that if username and identification is already exists
-    if (await repo.IsAnyUsernameAsync(dto.Username))
+    if (d.Username != null && await repo.IsAnyUsernameAsync(d.Username, ct))
       throw new DuplicateException(EntityType.User.ToString(), dto.Username);
 
-    if (await repo.IsAnyIdentificationAsync(dto.Identification))
+    if (await repo.IsAnyIdentificationAsync(dto.Identification,ct))
       throw new DuplicateException(EntityType.User.ToString(), dto.Username);
+
 
 
     // 1.Get mac or device list that this user in by group
