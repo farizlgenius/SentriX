@@ -56,6 +56,9 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
       public DbSet<ExceptionEvent> ExceptionEvent {get ;set;}
       public DbSet<AuditTrail> AuditTrails {get; set;}
       public DbSet<CardFormat> CardFormats {get; set;}
+      public DbSet<Procedure> Procedures {get; set;}
+      public DbSet<Persistences.Entities.Action> Action {get; set;}
+      public DbSet<ProcedureAction> ProcedureActions {get; set;}
       
       protected override void OnModelCreating(ModelBuilder modelBuilder)
       {
@@ -162,6 +165,9 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
             .Property(o => o.entity)
             .HasConversion<string>();
 
+            modelBuilder.Entity<Persistences.Entities.Action>()
+            .Property(o => o.type)
+            .HasConversion<string>();
 
 
             modelBuilder.Entity<AdapterEvent>(b =>
@@ -547,6 +553,36 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                         }
                   ).IsUnique();
 
+            modelBuilder.Entity<Procedure>()
+                  .HasIndex(
+                        x => new
+                        {
+                              x.guid,
+                              x.id,
+                              x.device_id
+                        }
+                  ).IsUnique();
+
+            modelBuilder.Entity<Persistences.Entities.Action>()
+                  .HasIndex(
+                        x => new
+                        {
+                              x.guid,
+                              x.id,
+                              x.type,
+                              x.device_id
+                        }
+                  ).IsUnique();
+
+            modelBuilder.Entity<Persistences.Entities.ProcedureAction>()
+                  .HasIndex(
+                        x => new
+                        {
+                              x.procedure_id,
+                              x.action_id
+                        }
+                  ).IsUnique();
+
             // Configure relationships 
 
             // Location
@@ -679,6 +715,18 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
 
             modelBuilder.Entity<Device>()
                   .HasMany(x => x.doors)
+                  .WithOne(x => x.device)
+                  .HasForeignKey(x => x.device_id)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Device>()
+                  .HasMany(x => x.procedures)
+                  .WithOne(x => x.device)
+                  .HasForeignKey(x => x.device_id)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Device>()
+                  .HasMany(x => x.actions)
                   .WithOne(x => x.device)
                   .HasForeignKey(x => x.device_id)
                   .OnDelete(DeleteBehavior.Cascade);
@@ -964,7 +1012,18 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   .HasForeignKey(x => x.timezone_id)
                   .OnDelete(DeleteBehavior.Cascade);
 
+            // Procedure && Action
+            modelBuilder.Entity<Procedure>()
+                  .HasMany(x => x.procedure_actions)
+                  .WithOne(x => x.procedure)
+                  .HasForeignKey(x => x.procedure_id)
+                  .OnDelete(DeleteBehavior.Cascade);
 
+            modelBuilder.Entity<Persistences.Entities.Action>()
+                  .HasMany(x => x.procedure_actions)
+                  .WithOne(x => x.action)
+                  .HasForeignKey(x => x.action_id)
+                  .OnDelete(DeleteBehavior.Cascade);
 
 
             // Seed Default data

@@ -1,4 +1,4 @@
-namespace Aero.Application.Enums;
+namespace SharedKernel.Enums;
 
 public enum ActionType
 {

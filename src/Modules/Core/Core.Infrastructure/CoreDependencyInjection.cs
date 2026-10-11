@@ -134,6 +134,10 @@ public static class CoreDependencyInjection
     services.AddScoped<ICardFormat,CardFormatService>();
     services.AddScoped<ICardFormatRepository,CardFormatRepository>();
 
+    // Procedure
+    services.AddScoped<IProcedure,ProcedureService>();
+    services.AddScoped<IProcedureRepository,ProcedureRepository>();
+
     // Utility
     services.AddScoped<IUtility,UtilityService>();
 

@@ -24,6 +24,8 @@ public sealed class Device : BaseEntity,IAuditableEntity
   public Location location { get; set; } = default!;
   public ICollection<DeviceModule> device_modules { get; set; } = default!;
   public ICollection<Door> doors {get; set;} = default!;
+  public ICollection<Procedure> procedures {get; set;} = default!;
+  public ICollection<Persistences.Entities.Action> actions {get; set;} = default!;
 
   public Device() { }
   public Device(Core.Domain.Entities.Device domain) : base(domain.Guid)
