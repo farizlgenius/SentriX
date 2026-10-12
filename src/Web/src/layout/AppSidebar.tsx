@@ -185,6 +185,7 @@ const acsNavItems: NavItem[] = [
     subItems: [
       { name: "Trigger", path: "/trigger" },
       { name: "Procedure", path: "/procedure" },
+      { name: "Action", path: "/action" },
     ],
   },
   {

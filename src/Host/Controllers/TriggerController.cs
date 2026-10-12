@@ -18,14 +18,14 @@ public class TriggerController(ITrigger trigger) : ControllerBase
       }
 
       [HttpGet("type/{source}")]
-      public async Task<IActionResult> GetTypeAsync(short source)
+      public async Task<IActionResult> GetTypeAsync(Guid source)
       {
             var res = await trigger.GetTypeAsync(source);
             return Ok(res);
       }
 
       [HttpGet("code/{type}")]
-      public async Task<IActionResult> GetCodeAsync(short type)
+      public async Task<IActionResult> GetCodeAsync(Guid type)
       {
             var res = await trigger.GetCodeAsync(type);
             return Ok(res);

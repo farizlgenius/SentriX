@@ -77,6 +77,7 @@ import Interval from "./pages/Interval/Interval";
 import Turnstile from "./pages/Turnstile/Turnstile";
 import ExceptionEvent from "./pages/Diagnostic/ExceptionEvent";
 import { AuditTrail } from "./pages/Report/AuditTrail";
+import { Action } from "./pages/Action/Action";
 
 export default function App() {
   const navigate = useNavigate();
@@ -243,6 +244,7 @@ export default function App() {
             <Route path="/operator" element={<Operator />} />
             <Route path="/procedure" element={<Procedure />} />
             <Route path="/trigger" element={<Trigger />} />
+            <Route path="/action" element={<Action/>}/>
             <Route path="/pass" element={<PasswordRule />} />
             <Route path="/map" element={<Map />} />
             <Route path="/report" element={<Reports />} />

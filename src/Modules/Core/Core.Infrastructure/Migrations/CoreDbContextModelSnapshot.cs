@@ -57,6 +57,10 @@ namespace Core.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("type")
                         .IsRequired()
                         .HasColumnType("text");

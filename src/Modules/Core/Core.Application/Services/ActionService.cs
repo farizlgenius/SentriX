@@ -1,22 +1,49 @@
+using Core.Application.Interfaces;
 using Core.Contract.DTOs.Action;
 using Core.Contract.Interfaces;
 using SharedKernel.Domain;
+using SharedKernel.Enums;
+using SharedKernel.Exceptions;
 
 namespace Core.Application.Services;
 
-public sealed class ActionService : IAction
+public sealed class ActionService(
+      IActionRepository repo,
+      IDeviceRepository device,
+      ILocationRepository loc
+      ) : IAction
 {
-      public Task<Guid> CreateAsync(CreateActionDto dto, CancellationToken ct = default)
+      public async Task<Guid> CreateAsync(CreateActionDto dto, CancellationToken ct = default)
       {
-            throw new NotImplementedException();
+            var deviceId = await device.GetIdByGuidAsync(dto.DeviceGuid,ct);
+            var locationId = await loc.GetIdByGuidAsync(dto.LocationGuid,ct);
+
+            var d = new Domain.Entities.Actions(
+                  dto.Name,
+                  dto.Type,
+                  dto.Metadata,
+                  deviceId,
+                  locationId
+            );
+
+            await repo.AddAsync(d,ct);
+
+            return d.Guid;
       }
 
-      public Task<bool> DeleteByGuidAsync(Guid guid, CancellationToken ct = default)
+      public async Task<bool> DeleteByGuidAsync(Guid guid, CancellationToken ct = default)
       {
-            throw new NotImplementedException();
+            // Check any relate first 
+
+            if(await repo.IsAnyRelatedEntitiesAsync(guid,ct))
+                  throw new FoundRelateException();
+
+            await repo.DeleteAsync(guid,ct);
+
+            return true;
       }
 
-      public Task<IEnumerable<Guid>> DeleteListAsync(IEnumerable<Guid> guids, CancellationToken ct = default)
+      public async Task<IEnumerable<Guid>> DeleteListAsync(IEnumerable<Guid> guids, CancellationToken ct = default)
       {
             throw new NotImplementedException();
       }
@@ -31,19 +58,19 @@ public sealed class ActionService : IAction
             throw new NotImplementedException();
       }
 
-      public Task<ActionDto> GetByGuidAsync(Guid guid, CancellationToken ct = default)
+      public async Task<ActionDto> GetByGuidAsync(Guid guid, CancellationToken ct = default)
       {
             throw new NotImplementedException();
       }
 
-      public Task<IEnumerable<ActionDto>> GetByLocationAsync(Guid guid, CancellationToken ct = default)
+      public async Task<IEnumerable<ActionDto>> GetByLocationAsync(Guid guid, CancellationToken ct = default)
       {
             throw new NotImplementedException();
       }
 
-      public Task<Pagination<ActionDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
+      public async Task<Pagination<ActionDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
       {
-            throw new NotImplementedException();
+            return await repo.GetPaginationAsync(param,ct);
       }
 
       public Task<Guid> UpdateAsync(UpdateActionDto dto, CancellationToken ct = default)

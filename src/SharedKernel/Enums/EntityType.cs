@@ -31,5 +31,6 @@ public enum EntityType
       MonitorGroup,
       Area,
       Web,
-      CardFormat
+      CardFormat,
+      Action
 }

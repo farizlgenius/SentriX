@@ -14,6 +14,25 @@ namespace Aero.Infrastructure.Repositories;
 
 public sealed class ProcedureRepository(IBaseRepository repo,ILogger<ProcedureRepository> logger) : IProcedureRepository
 {
+      // public CommandResponse ActionSpecification(string mac,short scpId,short procId,ActionType type,object values)
+      // {
+      //       CC_ACTN c = new CC_ACTN((short)type);
+      //       c.hdr.lastModified = 0;
+      //       c.hdr.scp_number = scpId;
+      //       c.hdr.proc_number = procId;
+      //       switch (type)
+      //       {
+      //             case ActionType.MonitorPointMask:
+      //             if(values is not InputMaskMetadata)
+      //                   break;
+      //             c.mp_mask.scp_number = scpId;
+      //             c.mp_mask.mp_number = values.
+      //             break;
+      //             default:
+      //             break;
+      //       }
+      // }
+
       public CommandResponse ActionSpecification(string mac, short scpId, short procId,Dictionary<ActionType,object> values)
       {
             CC_ACTN c = new CC_ACTN
