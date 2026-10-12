@@ -38,6 +38,7 @@ public static class Command
   public static string AccessDatabaseCardRecords = "8304 : Access Database Card Records";
   public static string CardDelete = "3305 : Card Delete";
   public static string ActionSpecification = "118 : Action Specification";
+  public static string TriggerSpecification = "117 : Trigger Specification";
 
 }
 

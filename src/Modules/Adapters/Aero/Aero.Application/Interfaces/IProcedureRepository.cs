@@ -1,4 +1,5 @@
 using Aero.Application.Enums;
+using SharedKernel.Enums;
 using SharedKernel.Model;
 
 namespace Aero.Application.Interfaces;

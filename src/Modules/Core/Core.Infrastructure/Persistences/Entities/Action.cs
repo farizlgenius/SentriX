@@ -11,7 +11,11 @@ public sealed class Action : BaseEntity
       // Relate to location and device
       public int device_id {get; set;}
       public Device device {get; set;} = default!;
+      public int location_id {get; set;}
+      public Location location {get; set; } =default!;
       public ICollection<ProcedureAction> procedure_actions {get; set;} = default!;
+
+      public Action(){}
       public Action(Actions d) : base(d.Guid)
       {
             type = d.Type;

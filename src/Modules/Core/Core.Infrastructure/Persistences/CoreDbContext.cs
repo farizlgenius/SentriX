@@ -42,7 +42,7 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
       public DbSet<Door> Doors { get; set; }
       public DbSet<Reader> Readers { get; set; }
       public DbSet<Sensor> Sensors { get; set; }
-      public DbSet<BreakGlass> BreakGlasses {get; set;}
+      public DbSet<BreakGlass> BreakGlasses { get; set; }
       public DbSet<Rex> Rexes { get; set; }
       public DbSet<Relay> Relays { get; set; }
       public DbSet<Buzzer> Buzzers { get; set; }
@@ -53,13 +53,16 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
       public DbSet<Output> Inputs { get; set; }
       public DbSet<Event> Events { get; set; }
       public DbSet<AdapterEvent> AdapterEvents { get; set; }
-      public DbSet<ExceptionEvent> ExceptionEvent {get ;set;}
-      public DbSet<AuditTrail> AuditTrails {get; set;}
-      public DbSet<CardFormat> CardFormats {get; set;}
-      public DbSet<Procedure> Procedures {get; set;}
-      public DbSet<Persistences.Entities.Action> Action {get; set;}
-      public DbSet<ProcedureAction> ProcedureActions {get; set;}
-      
+      public DbSet<ExceptionEvent> ExceptionEvent { get; set; }
+      public DbSet<AuditTrail> AuditTrails { get; set; }
+      public DbSet<CardFormat> CardFormats { get; set; }
+      public DbSet<Procedure> Procedures { get; set; }
+      public DbSet<Persistences.Entities.Action> Action { get; set; }
+      public DbSet<ProcedureAction> ProcedureActions { get; set; }
+      public DbSet<TriggerSource> TriggerSources { get; set; }
+      public DbSet<TriggerType> TriggerTypes { get; set; }
+      public DbSet<TriggerCode> TriggerCodes { get; set; }
+
       protected override void OnModelCreating(ModelBuilder modelBuilder)
       {
             Console.WriteLine("=== Entities ===");
@@ -99,6 +102,22 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
             {
                   throw new Exception("Unsupported database provider");
             }
+
+            // Trigger
+            modelBuilder.Entity<TriggerSource>()
+                  .Property(x => x.guid)
+                  .HasDefaultValueSql(guidSql)
+                  .ValueGeneratedOnAdd();
+
+            modelBuilder.Entity<TriggerType>()
+                  .Property(x => x.guid)
+                  .HasDefaultValueSql(guidSql)
+                  .ValueGeneratedOnAdd();
+
+            modelBuilder.Entity<TriggerCode>()
+                  .Property(x => x.guid)
+                  .HasDefaultValueSql(guidSql)
+                  .ValueGeneratedOnAdd();
 
             foreach (var entityType in modelBuilder.Model.GetEntityTypes())
             {
@@ -195,39 +214,39 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
             modelBuilder.Entity<Rex>(b =>
             {
                   b.Property(x => x.vendor).HasConversion<string>();
-                  
+
             });
 
             // Relay Enums
             modelBuilder.Entity<Relay>(b =>
             {
                   b.Property(x => x.vendor).HasConversion<string>();
-                  
+
             });
 
             // Sensor Enums
             modelBuilder.Entity<Sensor>(b =>
             {
                   b.Property(x => x.vendor).HasConversion<string>();
-                  
+
             });
 
-             modelBuilder.Entity<BreakGlass>(b =>
-            {
-                  b.Property(x => x.vendor).HasConversion<string>();
-            });
+            modelBuilder.Entity<BreakGlass>(b =>
+           {
+                 b.Property(x => x.vendor).HasConversion<string>();
+           });
 
             // Sensor Enums
             modelBuilder.Entity<Output>(b =>
             {
                   b.Property(x => x.vendor).HasConversion<string>();
-                  
+
             });
 
             modelBuilder.Entity<Input>(b =>
             {
                   b.Property(x => x.vendor).HasConversion<string>();
-                  
+
             });
 
 
@@ -559,7 +578,8 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                         {
                               x.guid,
                               x.id,
-                              x.device_id
+                              x.device_id,
+                              x.location_id
                         }
                   ).IsUnique();
 
@@ -570,7 +590,8 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                               x.guid,
                               x.id,
                               x.type,
-                              x.device_id
+                              x.device_id,
+                              x.location_id
                         }
                   ).IsUnique();
 
@@ -580,6 +601,33 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                         {
                               x.procedure_id,
                               x.action_id
+                        }
+                  ).IsUnique();
+
+            modelBuilder.Entity<Persistences.Entities.TriggerSource>()
+                  .HasIndex(
+                        x => new
+                        {
+                              x.guid,
+                              x.id
+                        }
+                  ).IsUnique();
+
+            modelBuilder.Entity<Persistences.Entities.TriggerCode>()
+                  .HasIndex(
+                        x => new
+                        {
+                              x.guid,
+                              x.id
+                        }
+                  ).IsUnique();
+
+            modelBuilder.Entity<Persistences.Entities.TriggerType>()
+                  .HasIndex(
+                        x => new
+                        {
+                              x.guid,
+                              x.id
                         }
                   ).IsUnique();
 
@@ -683,6 +731,18 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   .WithOne(x => x.location)
                   .HasForeignKey(x => x.location_id)
                   .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<Location>()
+                  .HasMany(x => x.procedures)
+                  .WithOne(x => x.location)
+                  .HasForeignKey(x => x.location_id)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Location>()
+                  .HasMany(x => x.actions)
+                  .WithOne(x => x.location)
+                  .HasForeignKey(x => x.location_id)
+                  .OnDelete(DeleteBehavior.Cascade);
 
 
 
@@ -904,7 +964,7 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   .IsRequired(false)
                   .HasForeignKey(x => x.timezone_id)
                   .OnDelete(DeleteBehavior.SetNull);
-  
+
 
             modelBuilder.Entity<TimeZoneInterval>()
                   .HasOne(x => x.timezone)
@@ -940,7 +1000,7 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   .OnDelete(DeleteBehavior.Cascade);
 
 
-                  // Sensor configuration
+            // Sensor configuration
             modelBuilder.Entity<Door>()
             .HasOne(x => x.sensor)
             .WithOne(x => x.door)
@@ -1023,6 +1083,18 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   .HasMany(x => x.procedure_actions)
                   .WithOne(x => x.action)
                   .HasForeignKey(x => x.action_id)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<TriggerSource>()
+                  .HasMany(x => x.types)
+                  .WithOne(x => x.trigger_source)
+                  .HasForeignKey(x => x.trigger_source_id)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<TriggerType>()
+                  .HasMany(x => x.codes)
+                  .WithOne(x => x.trigger_type)
+                  .HasForeignKey(x => x.trigger_type_id)
                   .OnDelete(DeleteBehavior.Cascade);
 
 
@@ -1567,19 +1639,19 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   .HasData(
                         new Core.Infrastructure.Persistences.Entities.TimeZone
                         {
-                              id=1,
+                              id = 1,
                               guid = new Guid("cff24195-43f8-42ec-a03f-e84857cc958f"),
                               name = "Always",
-                              location_id=1,
-                              is_default=true,
+                              location_id = 1,
+                              is_default = true,
                         },
                         new Core.Infrastructure.Persistences.Entities.TimeZone
                         {
-                              id=2,
+                              id = 2,
                               guid = new Guid("614a766c-1241-4fdc-9d0d-7788291cac2d"),
                               name = "Never",
-                              location_id=1,
-                              is_default=true
+                              location_id = 1,
+                              is_default = true
                         }
                   );
 
@@ -1591,25 +1663,25 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   .HasData(
                         new Core.Infrastructure.Persistences.Entities.ComponentMapping
                         {
-                              id=1,
+                              id = 1,
                               guid = new Guid("cff24195-43f8-42ec-a03f-e84857cc958f"),
                               entity = EntityType.TimeZone,
-                              external_id=1,
-                              mac=null,
-                              vendor=null,
-                              is_default=true,
-                              location_id=1
+                              external_id = 1,
+                              mac = null,
+                              vendor = null,
+                              is_default = true,
+                              location_id = 1
                         },
                         new Core.Infrastructure.Persistences.Entities.ComponentMapping
                         {
-                              id=2,
+                              id = 2,
                               guid = new Guid("614a766c-1241-4fdc-9d0d-7788291cac2d"),
                               entity = EntityType.TimeZone,
-                              external_id=2,
-                              mac=null,
-                              vendor=null,
-                              is_default=true,
-                              location_id=1
+                              external_id = 2,
+                              mac = null,
+                              vendor = null,
+                              is_default = true,
+                              location_id = 1
                         }
                   );
 
@@ -1620,59 +1692,59 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
             .HasData(
                   new CardFormat
                   {
-                        id=1,
-                        name="26-bit Wiegand",
-                        guid=new Guid("356b51d4-5650-4ef9-821b-bf38eb4ec2db"),
-                        fac=-1,
-                        bits=26,
-                        even_parity_len=0,
-                        even_parity_loc=-1,
-                        odd_parity_len=0,
-                        odd_parity_loc=-1,
-                        fac_len=0,
-                        fac_loc=-1,
-                        card_no_len=26,
-                        card_no_loc=0,
-                        issue_code_len=0,
-                        issue_code_loc=-1,
+                        id = 1,
+                        name = "26-bit Wiegand",
+                        guid = new Guid("356b51d4-5650-4ef9-821b-bf38eb4ec2db"),
+                        fac = -1,
+                        bits = 26,
+                        even_parity_len = 0,
+                        even_parity_loc = -1,
+                        odd_parity_len = 0,
+                        odd_parity_loc = -1,
+                        fac_len = 0,
+                        fac_loc = -1,
+                        card_no_len = 26,
+                        card_no_loc = 0,
+                        issue_code_len = 0,
+                        issue_code_loc = -1,
 
                   },
                   new CardFormat
                   {
-                        id=2,
-                        name="32-bit Wiegand",
-                        guid=new Guid("f04c1839-991d-4f13-be52-4a057d30af68"),
-                        fac=-1,
-                        bits=32,
-                        even_parity_len=0,
-                        even_parity_loc=-1,
-                        odd_parity_len=0,
-                        odd_parity_loc=-1,
-                        fac_len=0,
-                        fac_loc=-1,
-                        card_no_len=32,
-                        card_no_loc=0,
-                        issue_code_len=0,
-                        issue_code_loc=-1
+                        id = 2,
+                        name = "32-bit Wiegand",
+                        guid = new Guid("f04c1839-991d-4f13-be52-4a057d30af68"),
+                        fac = -1,
+                        bits = 32,
+                        even_parity_len = 0,
+                        even_parity_loc = -1,
+                        odd_parity_len = 0,
+                        odd_parity_loc = -1,
+                        fac_len = 0,
+                        fac_loc = -1,
+                        card_no_len = 32,
+                        card_no_loc = 0,
+                        issue_code_len = 0,
+                        issue_code_loc = -1
 
                   },
                   new CardFormat
                   {
-                        id=3,
-                        name="37-bit Wiegand",
-                        guid=new Guid("2ec6aa6c-dd76-4b3a-98b3-e8b5ecff0d1e"),
-                        fac=-1,
-                        bits=37,
-                        even_parity_len=0,
-                        even_parity_loc=-1,
-                        odd_parity_len=0,
-                        odd_parity_loc=-1,
-                        fac_len=0,
-                        fac_loc=-1,
-                        card_no_len=37,
-                        card_no_loc=0,
-                        issue_code_len=0,
-                        issue_code_loc=-1,
+                        id = 3,
+                        name = "37-bit Wiegand",
+                        guid = new Guid("2ec6aa6c-dd76-4b3a-98b3-e8b5ecff0d1e"),
+                        fac = -1,
+                        bits = 37,
+                        even_parity_len = 0,
+                        even_parity_loc = -1,
+                        odd_parity_len = 0,
+                        odd_parity_loc = -1,
+                        fac_len = 0,
+                        fac_loc = -1,
+                        card_no_len = 37,
+                        card_no_loc = 0,
+                        issue_code_len = 0,
+                        issue_code_loc = -1,
 
                   }
             );
@@ -1681,43 +1753,43 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
             .HasData(
                   new ComponentMapping
                   {
-                        id=3,
-                        guid=new Guid("356b51d4-5650-4ef9-821b-bf38eb4ec2db"),
+                        id = 3,
+                        guid = new Guid("356b51d4-5650-4ef9-821b-bf38eb4ec2db"),
                         entity = EntityType.CardFormat,
-                        external_id=0,
-                        mac=null,
-                        vendor=null
+                        external_id = 0,
+                        mac = null,
+                        vendor = null
                   },
                   new ComponentMapping
                   {
-                        id=4,
-                        guid=new Guid("f04c1839-991d-4f13-be52-4a057d30af68"),
+                        id = 4,
+                        guid = new Guid("f04c1839-991d-4f13-be52-4a057d30af68"),
                         entity = EntityType.CardFormat,
-                        external_id=1,
-                        mac=null,
-                        vendor=null
+                        external_id = 1,
+                        mac = null,
+                        vendor = null
                   },
                   new ComponentMapping
                   {
-                        id=5,
-                        guid=new Guid("2ec6aa6c-dd76-4b3a-98b3-e8b5ecff0d1e"),
+                        id = 5,
+                        guid = new Guid("2ec6aa6c-dd76-4b3a-98b3-e8b5ecff0d1e"),
                         entity = EntityType.CardFormat,
-                        external_id=2,
-                        mac=null,
-                        vendor=null
+                        external_id = 2,
+                        mac = null,
+                        vendor = null
                   }
             );
 
 
-                // Access Group
+            // Access Group
             modelBuilder.Entity<Group>()
                   .HasData(
                         new Group
                         {
-                              id=1,
-                              name="All Door",
-                              guid=new Guid("895b0301-3d77-4ec7-8917-43260a839643"),
-                              is_default=true
+                              id = 1,
+                              name = "All Door",
+                              guid = new Guid("895b0301-3d77-4ec7-8917-43260a839643"),
+                              is_default = true
                         }
                   );
 
@@ -1725,13 +1797,292 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   .HasData(
                         new ComponentMapping
                         {
-                              id=6,
-                              guid=new Guid("895b0301-3d77-4ec7-8917-43260a839643"),
+                              id = 6,
+                              guid = new Guid("895b0301-3d77-4ec7-8917-43260a839643"),
                               entity = EntityType.Group,
-                              external_id=1,
-                              mac=null,
-                              vendor=null
+                              external_id = 1,
+                              mac = null,
+                              vendor = null
                         }
+                  );
+
+            // Trigger
+
+            modelBuilder.Entity<TriggerSource>()
+    .HasData(
+        new TriggerSource { id = 1, name = "Device diagnostics", value = 0x00 },
+        new TriggerSource { id = 2, name = "Device to HOST communication driver - not defined", value = 0x01 },
+        new TriggerSource { id = 3, name = "Device local monitor points (tamper & power fault)", value = 0x02 },
+        new TriggerSource { id = 4, name = "Module diagnostics", value = 0x03 },
+        new TriggerSource { id = 5, name = "Module communication driver", value = 0x04 },
+        new TriggerSource { id = 6, name = "Module cabinet tamper", value = 0x05 },
+        new TriggerSource { id = 7, name = "Module power monitor", value = 0x06 },
+        new TriggerSource { id = 8, name = "Alarm monitor point", value = 0x07 },
+        new TriggerSource { id = 9, name = "Output control point", value = 0x08 },
+        new TriggerSource { id = 10, name = "Access Control Reader (ACR)", value = 0x09 },
+        new TriggerSource { id = 11, name = "Door: reader tamper monitor", value = 0x0A },
+        new TriggerSource { id = 12, name = "Door: door position sensor", value = 0x0B },
+        new TriggerSource { id = 13, name = "Door: 1st \"Request to exit\" input", value = 0x0D },
+        new TriggerSource { id = 14, name = "Door: 2nd \"Request to exit\" input", value = 0x0E },
+        new TriggerSource { id = 15, name = "Time zone", value = 0x0F },
+        new TriggerSource { id = 16, name = "Procedure (action list)", value = 0x10 },
+        new TriggerSource { id = 17, name = "Trigger", value = 0x11 },
+        new TriggerSource { id = 18, name = "Trigger variable", value = 0x12 },
+        new TriggerSource { id = 19, name = "Monitor point group", value = 0x13 },
+        new TriggerSource { id = 20, name = "Access area", value = 0x14 },
+        new TriggerSource { id = 21, name = "Door: the alternate reader's tamper monitor source_number", value = 0x15 },
+        new TriggerSource { id = 22, name = "Login Service", value = 0x18 }
+    );
+
+            modelBuilder.Entity<TriggerType>()
+            .HasData(
+                new TriggerType { id = 1, name = "System", value = 0x01, trigger_source_id = 1 },
+                new TriggerType { id = 2, name = "SIO communication status report", value = 0x02, trigger_source_id = 5 },
+                new TriggerType { id = 3, name = "Binary card data", value = 0x03, trigger_source_id = 10 },
+                new TriggerType { id = 4, name = "Card data", value = 0x04, trigger_source_id = 10 },
+                new TriggerType { id = 5, name = "Formatted card: facility code, card number ID, issue code", value = 0x05, trigger_source_id = 10 },
+                new TriggerType { id = 6, name = "Formatted card: card number only", value = 0x06, trigger_source_id = 10 },
+                new TriggerType { id = 7, name = "Change-of-state", value = 0x07, trigger_source_id = 3 },
+                new TriggerType { id = 8, name = "Exit request", value = 0x08, trigger_source_id = 10 },
+                new TriggerType { id = 9, name = "Door status monitor change-of-state", value = 0x09, trigger_source_id = 10 },
+                new TriggerType { id = 10, name = "Procedure (command list) log", value = 0x0A, trigger_source_id = 16 },
+                new TriggerType { id = 11, name = "User command request report", value = 0x0B, trigger_source_id = 10 },
+                new TriggerType { id = 12, name = "Change of state: trigger variable, time zone, & triggers", value = 0x0C, trigger_source_id = 15 },
+                new TriggerType { id = 13, name = "ACR mode change", value = 0x0D, trigger_source_id = 10 },
+                new TriggerType { id = 14, name = "Monitor point group status change", value = 0x0E, trigger_source_id = 19 },
+                new TriggerType { id = 15, name = "Access area", value = 0x0F, trigger_source_id = 20 },
+                new TriggerType { id = 16, name = "Extended user command", value = 0x12, trigger_source_id = 10 },
+                new TriggerType { id = 17, name = "Use limit report", value = 0x13, trigger_source_id = 10 },
+                new TriggerType { id = 18, name = "Web activity", value = 0x14, trigger_source_id = 1 },
+                new TriggerType { id = 19, name = "Specify tranTypeCardFull (0x05) instead", value = 0x15, trigger_source_id = 10 },
+                new TriggerType { id = 20, name = "Specify tranTypeCardID (0x06) instead", value = 0x16, trigger_source_id = 10 },
+                new TriggerType { id = 21, name = "Operating mode change", value = 0x18, trigger_source_id = 1 },
+                new TriggerType { id = 22, name = "Elevator Floor Status CoS", value = 0x1A, trigger_source_id = 10 },
+                new TriggerType { id = 23, name = "File Download Status", value = 0x1B, trigger_source_id = 1 },
+                new TriggerType { id = 24, name = "Elevator Floor Access Transaction", value = 0x1D, trigger_source_id = 10 },
+                new TriggerType { id = 25, name = "Specify tranTypeCardFull (0x05) instead", value = 0x25, trigger_source_id = 10 },
+                new TriggerType { id = 26, name = "Specify tranTypeCardID (0x06) instead", value = 0x26, trigger_source_id = 10 },
+                new TriggerType { id = 27, name = "Specify tranTypeCardFull (0x05) instead", value = 0x35, trigger_source_id = 10 },
+                new TriggerType { id = 28, name = "ACR extended feature stateless transition", value = 0x40, trigger_source_id = 10 },
+                new TriggerType { id = 29, name = "ACR extended feature change-of-state", value = 0x41, trigger_source_id = 10 },
+                //
+                new TriggerType { id = 30, name = "Change-of-state", value = 0x07, trigger_source_id = 6 },
+                new TriggerType { id = 31, name = "Change-of-state", value = 0x07, trigger_source_id = 7 },
+                new TriggerType { id = 32, name = "Change-of-state", value = 0x07, trigger_source_id = 8 },
+                new TriggerType { id = 33, name = "Change-of-state", value = 0x07, trigger_source_id = 9 },
+                new TriggerType { id = 34, name = "Change-of-state", value = 0x07, trigger_source_id = 11 },
+                new TriggerType { id = 35, name = "Change-of-state", value = 0x07, trigger_source_id = 13 },
+                new TriggerType { id = 36, name = "Change-of-state", value = 0x07, trigger_source_id = 14 },
+                new TriggerType { id = 37, name = "Change-of-state", value = 0x07, trigger_source_id = 21 },
+                new TriggerType { id = 38, name = "Change-of-state", value = 0x07, trigger_source_id = 22 },
+                //
+                new TriggerType { id = 39, name = "Change of state: trigger variable, time zone, & triggers", value = 0x0C, trigger_source_id = 17 },
+                new TriggerType { id = 40, name = "Change of state: trigger variable, time zone, & triggers", value = 0x0C, trigger_source_id = 18 }
+            );
+
+            modelBuilder.Entity<TriggerCode>()
+                  .HasData(
+                        // Typesys
+                        new TriggerCode { id = 1, name = "SCP Power-up diagnostic" , value =1,trigger_type_id=1 },
+                        new TriggerCode { id = 2, name = "Host communication offline" , value =2,trigger_type_id=1 },
+                        new TriggerCode { id = 3, name = "Host communication online" , value =3,trigger_type_id=1 },
+                        new TriggerCode { id = 4, name = "Transaction count exceed limit" , value =4,trigger_type_id=1 },
+                        new TriggerCode { id = 5, name = "Configuration DB save complete" , value =5,trigger_type_id=1 },
+                        new TriggerCode { id = 6, name = "Card database save complete" , value =6,trigger_type_id=1 },
+                        new TriggerCode { id = 7, name = "Card database cleared due to SRAM buffer overflow" , value =7,trigger_type_id=1 },
+                        // Type Module Comm
+                        new TriggerCode { id = 8, name = "Disabled" , value =1,trigger_type_id=2 },
+                        new TriggerCode { id = 9, name = "Offline:timeout" , value =2,trigger_type_id=2 },
+                        new TriggerCode { id = 10, name = "Offline:invalid identificatiion from module" , value =3,trigger_type_id=2 },
+                        new TriggerCode { id = 11, name = "Offline:command too long" , value =4,trigger_type_id=2 },
+                        new TriggerCode { id = 12, name = "Online:normal connection" , value =5,trigger_type_id=2 },
+                        new TriggerCode { id = 13, name = "hexLoad report: ser_num is address loaded (-1 = last record)" , value =6,trigger_type_id=2 },
+                        // CardBin
+                        new TriggerCode { id = 14, name = "Access denied, Invalid card format" , value=1,trigger_type_id=3 },
+                        // CardBcd
+                        new TriggerCode { id = 15, name = "Access denied, Invalid card format, forward read" , value=1,trigger_type_id=4 },
+                        new TriggerCode { id = 16, name = "Access denied, Invalid card format, reverse read" , value=2,trigger_type_id=4 },
+                        // Card full
+                        new TriggerCode { id = 17, name = "Request rejected: access point \"locked\"" , value =1,trigger_type_id=5 },
+                        new TriggerCode { id = 18, name = "Request accepted: access point \"unlocked\"" , value =2,trigger_type_id=5 },
+                        new TriggerCode { id = 19, name = "Request rejected: invalid facility code" , value =3,trigger_type_id=5 },
+                        new TriggerCode { id = 20, name = "Request rejected: invalid facility code extension" , value =4,trigger_type_id=5 },
+                        new TriggerCode { id = 21, name = "Request rejected: not in card file" , value =5,trigger_type_id=5 },
+                        new TriggerCode { id = 22, name = "Request rejected: invalid issue code" , value =6,trigger_type_id=5 },
+                        new TriggerCode { id = 23, name = "Request granted: facility code verified, not used" , value =7,trigger_type_id=5 },
+                        new TriggerCode { id = 24, name = "Request granted: facility code verified, door used" , value =8,trigger_type_id=5 },
+                        new TriggerCode { id = 25, name = "Access denied - asked for host approval, then timed out" , value =9,trigger_type_id=5 },
+                        new TriggerCode { id = 26, name = "Reporting that this card is \"about to get access granted\"" , value =10,trigger_type_id=5 },
+                        new TriggerCode { id = 27, name = "Access denied count exceeded" , value =11,trigger_type_id=5 },
+                        new TriggerCode { id = 28, name = "Access denied - asked for host approval, then host denied" , value =12,trigger_type_id=5 },
+                        new TriggerCode { id = 29, name = "Request rejected: Airlock is busy" , value =13,trigger_type_id=5 },
+                        // CardID
+                        new TriggerCode { id = 30, name = "Request rejected: deactivated card", value = 1, trigger_type_id = 6 },
+                        new TriggerCode { id = 31, name = "Request rejected: before activation date", value = 2, trigger_type_id = 6 },
+                        new TriggerCode { id = 32, name = "Request rejected: after expiration date", value = 3, trigger_type_id = 6 },
+                        new TriggerCode { id = 33, name = "Request rejected: invalid time", value = 4, trigger_type_id = 6 },
+                        new TriggerCode { id = 34, name = "Request rejected: invalid PIN", value = 5, trigger_type_id = 6 },
+                        new TriggerCode { id = 35, name = "Request rejected: anti-passback violation", value = 6, trigger_type_id = 6 },
+                        new TriggerCode { id = 36, name = "Request granted: APB violation, not used", value = 7, trigger_type_id = 6 },
+                        new TriggerCode { id = 37, name = "Request granted: APB violation, used", value = 8, trigger_type_id = 6 },
+                        new TriggerCode { id = 38, name = "Request rejected: duress code detected", value = 9, trigger_type_id = 6 },
+                        new TriggerCode { id = 39, name = "Request granted: duress, used", value = 10, trigger_type_id = 6 },
+                        new TriggerCode { id = 40, name = "Request granted: duress, not used", value = 11, trigger_type_id = 6 },
+                        new TriggerCode { id = 41, name = "Request granted: full test, not used", value = 12, trigger_type_id = 6 },
+                        new TriggerCode { id = 42, name = "Request granted: full test, used", value = 13, trigger_type_id = 6 },
+                        new TriggerCode { id = 43, name = "Request denied: never allowed at this reader (all Tz's = 0)", value = 14, trigger_type_id = 6 },
+                        new TriggerCode { id = 44, name = "Request denied: no second card presented", value = 15, trigger_type_id = 6 },
+                        new TriggerCode { id = 45, name = "Request denied: occupancy limit reached", value = 16, trigger_type_id = 6 },
+                        new TriggerCode { id = 46, name = "Request denied: the area is NOT enabled", value = 17, trigger_type_id = 6 },
+                        new TriggerCode { id = 47, name = "Request denied: use limit", value = 18, trigger_type_id = 6 },
+                        new TriggerCode { id = 48, name = "Granting access: used/not used transaction will follow", value = 21, trigger_type_id = 6 },
+                        new TriggerCode { id = 49, name = "Request rejected: no escort card presented", value = 24, trigger_type_id = 6 },
+                        new TriggerCode { id = 50, name = "Reserved", value = 25, trigger_type_id = 6 },
+                        new TriggerCode { id = 51, name = "Reserved", value = 26, trigger_type_id = 6 },
+                        new TriggerCode { id = 52, name = "Reserved", value = 27, trigger_type_id = 6 },
+                        new TriggerCode { id = 53, name = "Request rejected: airlock is busy", value = 29, trigger_type_id = 6 },
+                        new TriggerCode { id = 54, name = "Request rejected: incomplete CARD & PIN sequence", value = 30, trigger_type_id = 6 },
+                        new TriggerCode { id = 55, name = "Request granted: double-card event", value = 31, trigger_type_id = 6 },
+                        new TriggerCode { id = 56, name = "Request granted: double-card event while in uncontrolled state (locked/unlocked)", value = 32, trigger_type_id = 6 },
+                        new TriggerCode { id = 57, name = "Granting access: requires escort, pending escort card", value = 39, trigger_type_id = 6 },
+                        new TriggerCode { id = 58, name = "Request rejected: violates minimum occupancy count", value = 40, trigger_type_id = 6 },
+                        new TriggerCode { id = 59, name = "Request rejected: card pending at another reader", value = 41, trigger_type_id = 6 },
+                        // COS
+                        new TriggerCode { id = 60, name = "Disconnected", value = 1, trigger_type_id = 7 },
+                        new TriggerCode { id = 61, name = "Unknown", value = 2, trigger_type_id = 7 },
+                        new TriggerCode { id = 62, name = "Secure", value = 3, trigger_type_id = 7 },
+                        new TriggerCode { id = 63, name = "Alarm", value = 4, trigger_type_id = 7 },
+                        new TriggerCode { id = 64, name = "Fault", value = 5, trigger_type_id = 7 },
+                        new TriggerCode { id = 65, name = "Exit delay in progress", value = 6, trigger_type_id = 7 },
+                        new TriggerCode { id = 66, name = "Entry delay in progress", value = 7, trigger_type_id = 7 },
+                        new TriggerCode { id = 67, name = "Online, reader tamper inactive", value = 0, trigger_type_id = 7 },
+                        new TriggerCode { id = 68, name = "Online, reader tamper active", value = 1, trigger_type_id = 7 },
+                        new TriggerCode { id = 69, name = "N/A", value = 2, trigger_type_id = 7 },
+                        new TriggerCode { id = 70, name = "Communication broken (reader offline)", value = 3, trigger_type_id = 7 },
+                        // REX
+                        new TriggerCode { id = 176, name = "Disconnected", value = 1, trigger_type_id = 8 },
+                        new TriggerCode { id = 177, name = "Exit cycle: door use not verified", value = 1, trigger_type_id = 8 },
+                        new TriggerCode { id = 178, name = "Exit cycle: door not used", value = 2, trigger_type_id = 8 },
+                        new TriggerCode { id = 179, name = "Exit cycle: door used", value = 3, trigger_type_id = 8 },
+                        new TriggerCode { id = 71, name = "Host initiated request: door use not verified", value = 4, trigger_type_id = 8 },
+                        new TriggerCode { id = 72, name = "Host initiated request: door not used", value = 5, trigger_type_id = 8 },
+                        new TriggerCode { id = 73, name = "Host initiated request: door used", value = 6, trigger_type_id = 8 },
+                        new TriggerCode { id = 74, name = "Exit cycle: started", value = 9, trigger_type_id = 8 },
+                        // CosDoor
+                        new TriggerCode { id = 75, name = "Disconnected", value = 1, trigger_type_id = 9 },
+                        new TriggerCode { id = 76, name = "Unknown", value = 2, trigger_type_id = 9 },
+                        new TriggerCode { id = 77, name = "Secure", value = 3, trigger_type_id = 9 },
+                        new TriggerCode { id = 78, name = "Alarm (forced, held open or both)", value = 4, trigger_type_id = 9 },
+                        new TriggerCode { id = 79, name = "Fault", value = 5, trigger_type_id = 9 },
+                        // Procedure
+                        new TriggerCode { id = 80, name = "Cancel procedure (abort delay)", value = 1, trigger_type_id = 10 },
+                        new TriggerCode { id = 81, name = "Execute procedure (start new)", value = 2, trigger_type_id = 10 },
+                        new TriggerCode { id = 82, name = "Resume procedure, if paused", value = 3, trigger_type_id = 10 },
+                        new TriggerCode { id = 83, name = "Execute procedure with prefix 256 actions", value = 4, trigger_type_id = 10 },
+                        new TriggerCode { id = 84, name = "Execute procedure with prefix 512 actions", value = 5, trigger_type_id = 10 },
+                        new TriggerCode { id = 85, name = "Execute procedure with prefix 1024 actions", value = 6, trigger_type_id = 10 },
+                        new TriggerCode { id = 86, name = "Resume procedure with prefix 256 actions", value = 7, trigger_type_id = 10 },
+                        new TriggerCode { id = 87, name = "Resume procedure with prefix 512 actions", value = 8, trigger_type_id = 10 },
+                        new TriggerCode { id = 88, name = "Resume procedure with prefix 1024 actions", value = 9, trigger_type_id = 10 },
+                        new TriggerCode { id = 89, name = "Command was issued to procedure with no actions - (NOP)", value = 10, trigger_type_id = 10 },
+                        // User Cmnd
+                        new TriggerCode { id = 90, name = "Command entered by the user", value = 1, trigger_type_id = 11 },
+                        // Type Activate 
+                        new TriggerCode { id = 91, name = "Became inactive", value = 1, trigger_type_id = 12 },
+                        new TriggerCode { id = 92, name = "Became active", value = 2, trigger_type_id = 12 },
+                        // Door Mode
+                         new TriggerCode { id = 93, name = "Disabled", value = 1, trigger_type_id = 13 },
+                         new TriggerCode { id = 94, name = "Unlocked", value = 2, trigger_type_id = 13 },
+                         new TriggerCode { id = 95, name = "Locked (exit request enabled)", value = 3, trigger_type_id = 13 },
+                         new TriggerCode { id = 96, name = "Facility code only", value = 4, trigger_type_id = 13 },
+                         new TriggerCode { id = 97, name = "Card only", value = 5, trigger_type_id = 13 },
+                         new TriggerCode { id = 98, name = "PIN only", value = 6, trigger_type_id = 13 },
+                         new TriggerCode { id = 99, name = "Card and PIN", value = 7, trigger_type_id = 13 },
+                         new TriggerCode { id = 100, name = "PIN or card", value = 8, trigger_type_id = 13 },
+                        // Type MPG
+                        new TriggerCode { id = 101, name = "First disarm command executed (mask_count was 0, all MPs got masked)", value = 1, trigger_type_id = 14 },
+                        new TriggerCode { id = 102, name = "Subsequent disarm command executed (mask_count incremented, MPs already masked)", value = 2, trigger_type_id = 14 },
+                        new TriggerCode { id = 103, name = "Override command: armed (mask_count cleared, all points unmasked)", value = 3, trigger_type_id = 14 },
+                        new TriggerCode { id = 104, name = "Override command: disarmed (mask_count set, unmasked all points)", value = 4, trigger_type_id = 14 },
+                        new TriggerCode { id = 105, name = "Force arm command, MPG armed, (may have active zones, mask_count is now zero)", value = 5, trigger_type_id = 14 },
+                        new TriggerCode { id = 106, name = "Force arm command, MPG not armed (mask_count decremented)", value = 6, trigger_type_id = 14 },
+                        new TriggerCode { id = 107, name = "Standard arm command, MPG armed (did not have active zones, mask_count is now zero)", value = 7, trigger_type_id = 14 },
+                        new TriggerCode { id = 108, name = "Standard arm command, MPG did not arm, (had active zones, mask_count unchanged)", value = 8, trigger_type_id = 14 },
+                        new TriggerCode { id = 109, name = "Standard arm command, MPG still armed, (mask_count decremented)", value = 9, trigger_type_id = 14 },
+                        new TriggerCode { id = 110, name = "Override arm command, MPG armed (mask_count is now zero)", value = 10, trigger_type_id = 14 },
+                        new TriggerCode { id = 111, name = "Override arm command, MPG did not arm, (mask_count decremented)", value = 11, trigger_type_id = 14 },
+                        // Type Area
+                        new TriggerCode { id = 112, name = "Area disabled", value = 1, trigger_type_id = 15 },
+                        new TriggerCode { id = 113, name = "Area enabled", value = 2, trigger_type_id = 15 },
+                        new TriggerCode { id = 114, name = "Occupancy count reached zero", value = 3, trigger_type_id = 15 },
+                        new TriggerCode { id = 115, name = "Occupancy count reached the \"downward-limit\"", value = 4, trigger_type_id = 15 },
+                        new TriggerCode { id = 116, name = "Occupancy count reached the \"upward-limit\"", value = 5, trigger_type_id = 15 },
+                        new TriggerCode { id = 117, name = "Occupancy count reached the \"max-occupancy-limit\"", value = 6, trigger_type_id = 15 },
+                        new TriggerCode { id = 118, name = "Multi-occupancy mode changed", value = 7, trigger_type_id = 15 },
+                        // Type Use Limit
+                        new TriggerCode { id = 119, name = "Use limit changed, reporting new limit", value = 1, trigger_type_id = 17 },
+                        // Web Activity
+                        new TriggerCode { id = 120, name = "Save home notes", value = 1, trigger_type_id = 18 },
+                        new TriggerCode { id = 121, name = "Save network settings", value = 2, trigger_type_id = 18 },
+                        new TriggerCode { id = 122, name = "Save host communication settings", value = 3, trigger_type_id = 18 },
+                        new TriggerCode { id = 123, name = "Add user", value = 4, trigger_type_id = 18 },
+                        new TriggerCode { id = 124, name = "Delete user", value = 5, trigger_type_id = 18 },
+                        new TriggerCode { id = 125, name = "Modify user", value = 6, trigger_type_id = 18 },
+                        new TriggerCode { id = 126, name = "Save password strength and session timer", value = 7, trigger_type_id = 18 },
+                        new TriggerCode { id = 127, name = "Save web server options", value = 8, trigger_type_id = 18 },
+                        new TriggerCode { id = 128, name = "Save time server settings", value = 9, trigger_type_id = 18 },
+                        new TriggerCode { id = 129, name = "Auto save timer settings", value = 10, trigger_type_id = 18 },
+                        new TriggerCode { id = 130, name = "Load certificate", value = 11, trigger_type_id = 18 },
+                        new TriggerCode { id = 131, name = "Logged out by link", value = 12, trigger_type_id = 18 },
+                        new TriggerCode { id = 132, name = "Logged out by timeout", value = 13, trigger_type_id = 18 },
+                        new TriggerCode { id = 133, name = "Logged out by user", value = 14, trigger_type_id = 18 },
+                        new TriggerCode { id = 134, name = "Logged out by apply", value = 15, trigger_type_id = 18 },
+                        new TriggerCode { id = 135, name = "Invalid login", value = 16, trigger_type_id = 18 },
+                        new TriggerCode { id = 136, name = "Successful login", value = 17, trigger_type_id = 18 },
+                        new TriggerCode { id = 137, name = "Network diagnostic saved", value = 18, trigger_type_id = 18 },
+                        new TriggerCode { id = 138, name = "Card DB size saved", value = 19, trigger_type_id = 18 },
+                        new TriggerCode { id = 139, name = "Diagnostic page saved", value = 21, trigger_type_id = 18 },
+                        new TriggerCode { id = 140, name = "Security options page saved", value = 22, trigger_type_id = 18 },
+                        new TriggerCode { id = 141, name = "Add-on package page saved", value = 23, trigger_type_id = 18 },
+                        new TriggerCode { id = 142, name = "Not used", value = 24, trigger_type_id = 18 },
+                        new TriggerCode { id = 143, name = "Not used", value = 25, trigger_type_id = 18 },
+                        new TriggerCode { id = 144, name = "Not used", value = 26, trigger_type_id = 18 },
+                        new TriggerCode { id = 145, name = "Invalid login limit reached", value = 27, trigger_type_id = 18 },
+                        new TriggerCode { id = 146, name = "Firmware download initiated", value = 28, trigger_type_id = 18 },
+                        new TriggerCode { id = 147, name = "Advanced networking routes saved", value = 29, trigger_type_id = 18 },
+                        new TriggerCode { id = 148, name = "Advanced networking reversion timer started", value = 30, trigger_type_id = 18 },
+                        new TriggerCode { id = 149, name = "Advanced networking reversion timer elapsed", value = 31, trigger_type_id = 18 },
+                        new TriggerCode { id = 150, name = "Advanced networking route changes reverted", value = 32, trigger_type_id = 18 },
+                        new TriggerCode { id = 151, name = "Advanced networking route changes cleared", value = 33, trigger_type_id = 18 },
+                        new TriggerCode { id = 152, name = "Certificate generation started", value = 34, trigger_type_id = 18 },
+                        // Operation Mode
+                        new TriggerCode { id = 153, name = "Operating mode changed to mode 0", value = 1, trigger_type_id = 21 },
+                        new TriggerCode { id = 154, name = "Operating mode changed to mode 1", value = 2, trigger_type_id = 21 },
+                        new TriggerCode { id = 155, name = "Operating mode changed to mode 2", value = 3, trigger_type_id = 21 },
+                        new TriggerCode { id = 156, name = "Operating mode changed to mode 3", value = 4, trigger_type_id = 21 },
+                        new TriggerCode { id = 157, name = "Operating mode changed to mode 4", value = 5, trigger_type_id = 21 },
+                        new TriggerCode { id = 158, name = "Operating mode changed to mode 5", value = 6, trigger_type_id = 21 },
+                        new TriggerCode { id = 159, name = "Operating mode changed to mode 6", value = 7, trigger_type_id = 21 },
+                        new TriggerCode { id = 160, name = "Operating mode changed to mode 7", value = 8, trigger_type_id = 21 },
+                        // Type CosElevator
+                        new TriggerCode { id = 161, name = "Floor status is secure", value = 1, trigger_type_id = 22 },
+                        new TriggerCode { id = 162, name = "Floor status is public", value = 2, trigger_type_id = 22 },
+                        new TriggerCode { id = 163, name = "Floor status is disabled (override)", value = 3, trigger_type_id = 22 },
+                        // Type File Download
+                        new TriggerCode { id = 164, name = "File transfer success", value = 1, trigger_type_id = 23 },
+                        new TriggerCode { id = 165, name = "File transfer error", value = 2, trigger_type_id = 23 },
+                        new TriggerCode { id = 166, name = "File delete successful", value = 3, trigger_type_id = 23 },
+                        new TriggerCode { id = 167, name = "File delete unsuccessful", value = 4, trigger_type_id = 23 },
+                        new TriggerCode { id = 168, name = "OSDP file transfer complete (primary ACR) - look at source number for ACR number", value = 5, trigger_type_id = 23 },
+                        new TriggerCode { id = 169, name = "OSDP file transfer error (primary ACR) - look at source number for ACR number", value = 6, trigger_type_id = 23 },
+                        new TriggerCode { id = 170, name = "OSDP file transfer complete (alternate ACR) - look at source number for ACR number", value = 7, trigger_type_id = 23 },
+                        new TriggerCode { id = 171, name = "OSDP file transfer error (alternate ACR) - look at source number for ACR number", value = 8, trigger_type_id = 23 },
+                        // Type Cos Elevator Access
+                        new TriggerCode { id = 172, name = "Elevator access", value = 1, trigger_type_id = 24 },
+                        // ACR EXtend feature cos
+                        new TriggerCode { id = 173, name = "Extended status updated", value = 1, trigger_type_id = 28 },
+                        new TriggerCode { id = 174, name = "Secure / Inactive", value = 3, trigger_type_id = 29 },
+                        new TriggerCode { id = 175, name = "Alarm / Active", value = 4, trigger_type_id = 29 }
                   );
 
 

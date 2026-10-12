@@ -27,6 +27,8 @@ public sealed class Location : BaseEntity,IAuditableEntity
   public ICollection<Event> events { get; set; } = default!;
   public ICollection<AdapterEvent> adapter_events { get; set; } = default!;
   public ICollection<AuditTrail> audit_trails { get; set; } = default!;
+  public ICollection<Procedure> procedures { get; set; } = default!;
+  public ICollection<Persistences.Entities.Action> actions { get; set; } = default!;
   public Location() { }
   public Location(Core.Domain.Entities.Location d) : base(d.Guid)
   {

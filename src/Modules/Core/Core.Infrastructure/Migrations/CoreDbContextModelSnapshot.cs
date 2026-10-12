@@ -23,6 +23,61 @@ namespace Core.Infrastructure.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Action", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<DateTime>("created_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.Property<int>("device_id")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid>("guid")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<bool>("is_active")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("is_default")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("location_id")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("metadata")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("type")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("updated_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("device_id");
+
+                    b.HasIndex("location_id");
+
+                    b.HasIndex("guid", "id", "type", "device_id", "location_id")
+                        .IsUnique();
+
+                    b.ToTable("Action", "core");
+                });
+
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.AdapterEvent", b =>
                 {
                     b.Property<int>("id")
@@ -4804,6 +4859,81 @@ namespace Core.Infrastructure.Migrations
                     b.ToTable("Positions", "core");
                 });
 
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Procedure", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<DateTime>("created_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.Property<int>("device_id")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid>("guid")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<bool>("is_active")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("is_default")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("location_id")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("updated_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("device_id");
+
+                    b.HasIndex("location_id");
+
+                    b.HasIndex("guid", "id", "device_id", "location_id")
+                        .IsUnique();
+
+                    b.ToTable("Procedures", "core");
+                });
+
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.ProcedureAction", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<int>("action_id")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("procedure_id")
+                        .HasColumnType("integer");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("action_id");
+
+                    b.HasIndex("procedure_id", "action_id")
+                        .IsUnique();
+
+                    b.ToTable("ProcedureActions", "core");
+                });
+
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.QrCode", b =>
                 {
                     b.Property<int>("id")
@@ -5252,6 +5382,2012 @@ namespace Core.Infrastructure.Migrations
                     b.ToTable("TimeZoneIntervals", "core");
                 });
 
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.TriggerCode", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<Guid>("guid")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<string>("name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int?>("trigger_type_id")
+                        .HasColumnType("integer");
+
+                    b.Property<short>("value")
+                        .HasColumnType("smallint");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("trigger_type_id");
+
+                    b.HasIndex("guid", "id")
+                        .IsUnique();
+
+                    b.ToTable("TriggerCodes", "core");
+
+                    b.HasData(
+                        new
+                        {
+                            id = 1,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "SCP Power-up diagnostic",
+                            trigger_type_id = 1,
+                            value = (short)1
+                        },
+                        new
+                        {
+                            id = 2,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Host communication offline",
+                            trigger_type_id = 1,
+                            value = (short)2
+                        },
+                        new
+                        {
+                            id = 3,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Host communication online",
+                            trigger_type_id = 1,
+                            value = (short)3
+                        },
+                        new
+                        {
+                            id = 4,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Transaction count exceed limit",
+                            trigger_type_id = 1,
+                            value = (short)4
+                        },
+                        new
+                        {
+                            id = 5,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Configuration DB save complete",
+                            trigger_type_id = 1,
+                            value = (short)5
+                        },
+                        new
+                        {
+                            id = 6,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Card database save complete",
+                            trigger_type_id = 1,
+                            value = (short)6
+                        },
+                        new
+                        {
+                            id = 7,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Card database cleared due to SRAM buffer overflow",
+                            trigger_type_id = 1,
+                            value = (short)7
+                        },
+                        new
+                        {
+                            id = 8,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Disabled",
+                            trigger_type_id = 2,
+                            value = (short)1
+                        },
+                        new
+                        {
+                            id = 9,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Offline:timeout",
+                            trigger_type_id = 2,
+                            value = (short)2
+                        },
+                        new
+                        {
+                            id = 10,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Offline:invalid identificatiion from module",
+                            trigger_type_id = 2,
+                            value = (short)3
+                        },
+                        new
+                        {
+                            id = 11,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Offline:command too long",
+                            trigger_type_id = 2,
+                            value = (short)4
+                        },
+                        new
+                        {
+                            id = 12,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Online:normal connection",
+                            trigger_type_id = 2,
+                            value = (short)5
+                        },
+                        new
+                        {
+                            id = 13,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "hexLoad report: ser_num is address loaded (-1 = last record)",
+                            trigger_type_id = 2,
+                            value = (short)6
+                        },
+                        new
+                        {
+                            id = 14,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Access denied, Invalid card format",
+                            trigger_type_id = 3,
+                            value = (short)1
+                        },
+                        new
+                        {
+                            id = 15,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Access denied, Invalid card format, forward read",
+                            trigger_type_id = 4,
+                            value = (short)1
+                        },
+                        new
+                        {
+                            id = 16,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Access denied, Invalid card format, reverse read",
+                            trigger_type_id = 4,
+                            value = (short)2
+                        },
+                        new
+                        {
+                            id = 17,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Request rejected: access point \"locked\"",
+                            trigger_type_id = 5,
+                            value = (short)1
+                        },
+                        new
+                        {
+                            id = 18,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Request accepted: access point \"unlocked\"",
+                            trigger_type_id = 5,
+                            value = (short)2
+                        },
+                        new
+                        {
+                            id = 19,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Request rejected: invalid facility code",
+                            trigger_type_id = 5,
+                            value = (short)3
+                        },
+                        new
+                        {
+                            id = 20,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Request rejected: invalid facility code extension",
+                            trigger_type_id = 5,
+                            value = (short)4
+                        },
+                        new
+                        {
+                            id = 21,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Request rejected: not in card file",
+                            trigger_type_id = 5,
+                            value = (short)5
+                        },
+                        new
+                        {
+                            id = 22,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Request rejected: invalid issue code",
+                            trigger_type_id = 5,
+                            value = (short)6
+                        },
+                        new
+                        {
+                            id = 23,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Request granted: facility code verified, not used",
+                            trigger_type_id = 5,
+                            value = (short)7
+                        },
+                        new
+                        {
+                            id = 24,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Request granted: facility code verified, door used",
+                            trigger_type_id = 5,
+                            value = (short)8
+                        },
+                        new
+                        {
+                            id = 25,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Access denied - asked for host approval, then timed out",
+                            trigger_type_id = 5,
+                            value = (short)9
+                        },
+                        new
+                        {
+                            id = 26,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Reporting that this card is \"about to get access granted\"",
+                            trigger_type_id = 5,
+                            value = (short)10
+                        },
+                        new
+                        {
+                            id = 27,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Access denied count exceeded",
+                            trigger_type_id = 5,
+                            value = (short)11
+                        },
+                        new
+                        {
+                            id = 28,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Access denied - asked for host approval, then host denied",
+                            trigger_type_id = 5,
+                            value = (short)12
+                        },
+                        new
+                        {
+                            id = 29,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Request rejected: Airlock is busy",
+                            trigger_type_id = 5,
+                            value = (short)13
+                        },
+                        new
+                        {
+                            id = 30,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Request rejected: deactivated card",
+                            trigger_type_id = 6,
+                            value = (short)1
+                        },
+                        new
+                        {
+                            id = 31,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Request rejected: before activation date",
+                            trigger_type_id = 6,
+                            value = (short)2
+                        },
+                        new
+                        {
+                            id = 32,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Request rejected: after expiration date",
+                            trigger_type_id = 6,
+                            value = (short)3
+                        },
+                        new
+                        {
+                            id = 33,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Request rejected: invalid time",
+                            trigger_type_id = 6,
+                            value = (short)4
+                        },
+                        new
+                        {
+                            id = 34,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Request rejected: invalid PIN",
+                            trigger_type_id = 6,
+                            value = (short)5
+                        },
+                        new
+                        {
+                            id = 35,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Request rejected: anti-passback violation",
+                            trigger_type_id = 6,
+                            value = (short)6
+                        },
+                        new
+                        {
+                            id = 36,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Request granted: APB violation, not used",
+                            trigger_type_id = 6,
+                            value = (short)7
+                        },
+                        new
+                        {
+                            id = 37,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Request granted: APB violation, used",
+                            trigger_type_id = 6,
+                            value = (short)8
+                        },
+                        new
+                        {
+                            id = 38,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Request rejected: duress code detected",
+                            trigger_type_id = 6,
+                            value = (short)9
+                        },
+                        new
+                        {
+                            id = 39,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Request granted: duress, used",
+                            trigger_type_id = 6,
+                            value = (short)10
+                        },
+                        new
+                        {
+                            id = 40,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Request granted: duress, not used",
+                            trigger_type_id = 6,
+                            value = (short)11
+                        },
+                        new
+                        {
+                            id = 41,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Request granted: full test, not used",
+                            trigger_type_id = 6,
+                            value = (short)12
+                        },
+                        new
+                        {
+                            id = 42,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Request granted: full test, used",
+                            trigger_type_id = 6,
+                            value = (short)13
+                        },
+                        new
+                        {
+                            id = 43,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Request denied: never allowed at this reader (all Tz's = 0)",
+                            trigger_type_id = 6,
+                            value = (short)14
+                        },
+                        new
+                        {
+                            id = 44,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Request denied: no second card presented",
+                            trigger_type_id = 6,
+                            value = (short)15
+                        },
+                        new
+                        {
+                            id = 45,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Request denied: occupancy limit reached",
+                            trigger_type_id = 6,
+                            value = (short)16
+                        },
+                        new
+                        {
+                            id = 46,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Request denied: the area is NOT enabled",
+                            trigger_type_id = 6,
+                            value = (short)17
+                        },
+                        new
+                        {
+                            id = 47,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Request denied: use limit",
+                            trigger_type_id = 6,
+                            value = (short)18
+                        },
+                        new
+                        {
+                            id = 48,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Granting access: used/not used transaction will follow",
+                            trigger_type_id = 6,
+                            value = (short)21
+                        },
+                        new
+                        {
+                            id = 49,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Request rejected: no escort card presented",
+                            trigger_type_id = 6,
+                            value = (short)24
+                        },
+                        new
+                        {
+                            id = 50,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Reserved",
+                            trigger_type_id = 6,
+                            value = (short)25
+                        },
+                        new
+                        {
+                            id = 51,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Reserved",
+                            trigger_type_id = 6,
+                            value = (short)26
+                        },
+                        new
+                        {
+                            id = 52,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Reserved",
+                            trigger_type_id = 6,
+                            value = (short)27
+                        },
+                        new
+                        {
+                            id = 53,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Request rejected: airlock is busy",
+                            trigger_type_id = 6,
+                            value = (short)29
+                        },
+                        new
+                        {
+                            id = 54,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Request rejected: incomplete CARD & PIN sequence",
+                            trigger_type_id = 6,
+                            value = (short)30
+                        },
+                        new
+                        {
+                            id = 55,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Request granted: double-card event",
+                            trigger_type_id = 6,
+                            value = (short)31
+                        },
+                        new
+                        {
+                            id = 56,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Request granted: double-card event while in uncontrolled state (locked/unlocked)",
+                            trigger_type_id = 6,
+                            value = (short)32
+                        },
+                        new
+                        {
+                            id = 57,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Granting access: requires escort, pending escort card",
+                            trigger_type_id = 6,
+                            value = (short)39
+                        },
+                        new
+                        {
+                            id = 58,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Request rejected: violates minimum occupancy count",
+                            trigger_type_id = 6,
+                            value = (short)40
+                        },
+                        new
+                        {
+                            id = 59,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Request rejected: card pending at another reader",
+                            trigger_type_id = 6,
+                            value = (short)41
+                        },
+                        new
+                        {
+                            id = 60,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Disconnected",
+                            trigger_type_id = 7,
+                            value = (short)1
+                        },
+                        new
+                        {
+                            id = 61,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Unknown",
+                            trigger_type_id = 7,
+                            value = (short)2
+                        },
+                        new
+                        {
+                            id = 62,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Secure",
+                            trigger_type_id = 7,
+                            value = (short)3
+                        },
+                        new
+                        {
+                            id = 63,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Alarm",
+                            trigger_type_id = 7,
+                            value = (short)4
+                        },
+                        new
+                        {
+                            id = 64,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Fault",
+                            trigger_type_id = 7,
+                            value = (short)5
+                        },
+                        new
+                        {
+                            id = 65,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Exit delay in progress",
+                            trigger_type_id = 7,
+                            value = (short)6
+                        },
+                        new
+                        {
+                            id = 66,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Entry delay in progress",
+                            trigger_type_id = 7,
+                            value = (short)7
+                        },
+                        new
+                        {
+                            id = 67,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Online, reader tamper inactive",
+                            trigger_type_id = 7,
+                            value = (short)0
+                        },
+                        new
+                        {
+                            id = 68,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Online, reader tamper active",
+                            trigger_type_id = 7,
+                            value = (short)1
+                        },
+                        new
+                        {
+                            id = 69,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "N/A",
+                            trigger_type_id = 7,
+                            value = (short)2
+                        },
+                        new
+                        {
+                            id = 70,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Communication broken (reader offline)",
+                            trigger_type_id = 7,
+                            value = (short)3
+                        },
+                        new
+                        {
+                            id = 176,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Disconnected",
+                            trigger_type_id = 8,
+                            value = (short)1
+                        },
+                        new
+                        {
+                            id = 177,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Exit cycle: door use not verified",
+                            trigger_type_id = 8,
+                            value = (short)1
+                        },
+                        new
+                        {
+                            id = 178,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Exit cycle: door not used",
+                            trigger_type_id = 8,
+                            value = (short)2
+                        },
+                        new
+                        {
+                            id = 179,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Exit cycle: door used",
+                            trigger_type_id = 8,
+                            value = (short)3
+                        },
+                        new
+                        {
+                            id = 71,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Host initiated request: door use not verified",
+                            trigger_type_id = 8,
+                            value = (short)4
+                        },
+                        new
+                        {
+                            id = 72,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Host initiated request: door not used",
+                            trigger_type_id = 8,
+                            value = (short)5
+                        },
+                        new
+                        {
+                            id = 73,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Host initiated request: door used",
+                            trigger_type_id = 8,
+                            value = (short)6
+                        },
+                        new
+                        {
+                            id = 74,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Exit cycle: started",
+                            trigger_type_id = 8,
+                            value = (short)9
+                        },
+                        new
+                        {
+                            id = 75,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Disconnected",
+                            trigger_type_id = 9,
+                            value = (short)1
+                        },
+                        new
+                        {
+                            id = 76,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Unknown",
+                            trigger_type_id = 9,
+                            value = (short)2
+                        },
+                        new
+                        {
+                            id = 77,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Secure",
+                            trigger_type_id = 9,
+                            value = (short)3
+                        },
+                        new
+                        {
+                            id = 78,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Alarm (forced, held open or both)",
+                            trigger_type_id = 9,
+                            value = (short)4
+                        },
+                        new
+                        {
+                            id = 79,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Fault",
+                            trigger_type_id = 9,
+                            value = (short)5
+                        },
+                        new
+                        {
+                            id = 80,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Cancel procedure (abort delay)",
+                            trigger_type_id = 10,
+                            value = (short)1
+                        },
+                        new
+                        {
+                            id = 81,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Execute procedure (start new)",
+                            trigger_type_id = 10,
+                            value = (short)2
+                        },
+                        new
+                        {
+                            id = 82,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Resume procedure, if paused",
+                            trigger_type_id = 10,
+                            value = (short)3
+                        },
+                        new
+                        {
+                            id = 83,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Execute procedure with prefix 256 actions",
+                            trigger_type_id = 10,
+                            value = (short)4
+                        },
+                        new
+                        {
+                            id = 84,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Execute procedure with prefix 512 actions",
+                            trigger_type_id = 10,
+                            value = (short)5
+                        },
+                        new
+                        {
+                            id = 85,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Execute procedure with prefix 1024 actions",
+                            trigger_type_id = 10,
+                            value = (short)6
+                        },
+                        new
+                        {
+                            id = 86,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Resume procedure with prefix 256 actions",
+                            trigger_type_id = 10,
+                            value = (short)7
+                        },
+                        new
+                        {
+                            id = 87,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Resume procedure with prefix 512 actions",
+                            trigger_type_id = 10,
+                            value = (short)8
+                        },
+                        new
+                        {
+                            id = 88,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Resume procedure with prefix 1024 actions",
+                            trigger_type_id = 10,
+                            value = (short)9
+                        },
+                        new
+                        {
+                            id = 89,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Command was issued to procedure with no actions - (NOP)",
+                            trigger_type_id = 10,
+                            value = (short)10
+                        },
+                        new
+                        {
+                            id = 90,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Command entered by the user",
+                            trigger_type_id = 11,
+                            value = (short)1
+                        },
+                        new
+                        {
+                            id = 91,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Became inactive",
+                            trigger_type_id = 12,
+                            value = (short)1
+                        },
+                        new
+                        {
+                            id = 92,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Became active",
+                            trigger_type_id = 12,
+                            value = (short)2
+                        },
+                        new
+                        {
+                            id = 93,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Disabled",
+                            trigger_type_id = 13,
+                            value = (short)1
+                        },
+                        new
+                        {
+                            id = 94,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Unlocked",
+                            trigger_type_id = 13,
+                            value = (short)2
+                        },
+                        new
+                        {
+                            id = 95,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Locked (exit request enabled)",
+                            trigger_type_id = 13,
+                            value = (short)3
+                        },
+                        new
+                        {
+                            id = 96,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Facility code only",
+                            trigger_type_id = 13,
+                            value = (short)4
+                        },
+                        new
+                        {
+                            id = 97,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Card only",
+                            trigger_type_id = 13,
+                            value = (short)5
+                        },
+                        new
+                        {
+                            id = 98,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "PIN only",
+                            trigger_type_id = 13,
+                            value = (short)6
+                        },
+                        new
+                        {
+                            id = 99,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Card and PIN",
+                            trigger_type_id = 13,
+                            value = (short)7
+                        },
+                        new
+                        {
+                            id = 100,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "PIN or card",
+                            trigger_type_id = 13,
+                            value = (short)8
+                        },
+                        new
+                        {
+                            id = 101,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "First disarm command executed (mask_count was 0, all MPs got masked)",
+                            trigger_type_id = 14,
+                            value = (short)1
+                        },
+                        new
+                        {
+                            id = 102,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Subsequent disarm command executed (mask_count incremented, MPs already masked)",
+                            trigger_type_id = 14,
+                            value = (short)2
+                        },
+                        new
+                        {
+                            id = 103,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Override command: armed (mask_count cleared, all points unmasked)",
+                            trigger_type_id = 14,
+                            value = (short)3
+                        },
+                        new
+                        {
+                            id = 104,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Override command: disarmed (mask_count set, unmasked all points)",
+                            trigger_type_id = 14,
+                            value = (short)4
+                        },
+                        new
+                        {
+                            id = 105,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Force arm command, MPG armed, (may have active zones, mask_count is now zero)",
+                            trigger_type_id = 14,
+                            value = (short)5
+                        },
+                        new
+                        {
+                            id = 106,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Force arm command, MPG not armed (mask_count decremented)",
+                            trigger_type_id = 14,
+                            value = (short)6
+                        },
+                        new
+                        {
+                            id = 107,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Standard arm command, MPG armed (did not have active zones, mask_count is now zero)",
+                            trigger_type_id = 14,
+                            value = (short)7
+                        },
+                        new
+                        {
+                            id = 108,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Standard arm command, MPG did not arm, (had active zones, mask_count unchanged)",
+                            trigger_type_id = 14,
+                            value = (short)8
+                        },
+                        new
+                        {
+                            id = 109,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Standard arm command, MPG still armed, (mask_count decremented)",
+                            trigger_type_id = 14,
+                            value = (short)9
+                        },
+                        new
+                        {
+                            id = 110,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Override arm command, MPG armed (mask_count is now zero)",
+                            trigger_type_id = 14,
+                            value = (short)10
+                        },
+                        new
+                        {
+                            id = 111,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Override arm command, MPG did not arm, (mask_count decremented)",
+                            trigger_type_id = 14,
+                            value = (short)11
+                        },
+                        new
+                        {
+                            id = 112,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Area disabled",
+                            trigger_type_id = 15,
+                            value = (short)1
+                        },
+                        new
+                        {
+                            id = 113,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Area enabled",
+                            trigger_type_id = 15,
+                            value = (short)2
+                        },
+                        new
+                        {
+                            id = 114,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Occupancy count reached zero",
+                            trigger_type_id = 15,
+                            value = (short)3
+                        },
+                        new
+                        {
+                            id = 115,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Occupancy count reached the \"downward-limit\"",
+                            trigger_type_id = 15,
+                            value = (short)4
+                        },
+                        new
+                        {
+                            id = 116,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Occupancy count reached the \"upward-limit\"",
+                            trigger_type_id = 15,
+                            value = (short)5
+                        },
+                        new
+                        {
+                            id = 117,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Occupancy count reached the \"max-occupancy-limit\"",
+                            trigger_type_id = 15,
+                            value = (short)6
+                        },
+                        new
+                        {
+                            id = 118,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Multi-occupancy mode changed",
+                            trigger_type_id = 15,
+                            value = (short)7
+                        },
+                        new
+                        {
+                            id = 119,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Use limit changed, reporting new limit",
+                            trigger_type_id = 17,
+                            value = (short)1
+                        },
+                        new
+                        {
+                            id = 120,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Save home notes",
+                            trigger_type_id = 18,
+                            value = (short)1
+                        },
+                        new
+                        {
+                            id = 121,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Save network settings",
+                            trigger_type_id = 18,
+                            value = (short)2
+                        },
+                        new
+                        {
+                            id = 122,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Save host communication settings",
+                            trigger_type_id = 18,
+                            value = (short)3
+                        },
+                        new
+                        {
+                            id = 123,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Add user",
+                            trigger_type_id = 18,
+                            value = (short)4
+                        },
+                        new
+                        {
+                            id = 124,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Delete user",
+                            trigger_type_id = 18,
+                            value = (short)5
+                        },
+                        new
+                        {
+                            id = 125,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Modify user",
+                            trigger_type_id = 18,
+                            value = (short)6
+                        },
+                        new
+                        {
+                            id = 126,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Save password strength and session timer",
+                            trigger_type_id = 18,
+                            value = (short)7
+                        },
+                        new
+                        {
+                            id = 127,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Save web server options",
+                            trigger_type_id = 18,
+                            value = (short)8
+                        },
+                        new
+                        {
+                            id = 128,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Save time server settings",
+                            trigger_type_id = 18,
+                            value = (short)9
+                        },
+                        new
+                        {
+                            id = 129,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Auto save timer settings",
+                            trigger_type_id = 18,
+                            value = (short)10
+                        },
+                        new
+                        {
+                            id = 130,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Load certificate",
+                            trigger_type_id = 18,
+                            value = (short)11
+                        },
+                        new
+                        {
+                            id = 131,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Logged out by link",
+                            trigger_type_id = 18,
+                            value = (short)12
+                        },
+                        new
+                        {
+                            id = 132,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Logged out by timeout",
+                            trigger_type_id = 18,
+                            value = (short)13
+                        },
+                        new
+                        {
+                            id = 133,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Logged out by user",
+                            trigger_type_id = 18,
+                            value = (short)14
+                        },
+                        new
+                        {
+                            id = 134,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Logged out by apply",
+                            trigger_type_id = 18,
+                            value = (short)15
+                        },
+                        new
+                        {
+                            id = 135,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Invalid login",
+                            trigger_type_id = 18,
+                            value = (short)16
+                        },
+                        new
+                        {
+                            id = 136,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Successful login",
+                            trigger_type_id = 18,
+                            value = (short)17
+                        },
+                        new
+                        {
+                            id = 137,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Network diagnostic saved",
+                            trigger_type_id = 18,
+                            value = (short)18
+                        },
+                        new
+                        {
+                            id = 138,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Card DB size saved",
+                            trigger_type_id = 18,
+                            value = (short)19
+                        },
+                        new
+                        {
+                            id = 139,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Diagnostic page saved",
+                            trigger_type_id = 18,
+                            value = (short)21
+                        },
+                        new
+                        {
+                            id = 140,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Security options page saved",
+                            trigger_type_id = 18,
+                            value = (short)22
+                        },
+                        new
+                        {
+                            id = 141,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Add-on package page saved",
+                            trigger_type_id = 18,
+                            value = (short)23
+                        },
+                        new
+                        {
+                            id = 142,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Not used",
+                            trigger_type_id = 18,
+                            value = (short)24
+                        },
+                        new
+                        {
+                            id = 143,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Not used",
+                            trigger_type_id = 18,
+                            value = (short)25
+                        },
+                        new
+                        {
+                            id = 144,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Not used",
+                            trigger_type_id = 18,
+                            value = (short)26
+                        },
+                        new
+                        {
+                            id = 145,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Invalid login limit reached",
+                            trigger_type_id = 18,
+                            value = (short)27
+                        },
+                        new
+                        {
+                            id = 146,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Firmware download initiated",
+                            trigger_type_id = 18,
+                            value = (short)28
+                        },
+                        new
+                        {
+                            id = 147,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Advanced networking routes saved",
+                            trigger_type_id = 18,
+                            value = (short)29
+                        },
+                        new
+                        {
+                            id = 148,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Advanced networking reversion timer started",
+                            trigger_type_id = 18,
+                            value = (short)30
+                        },
+                        new
+                        {
+                            id = 149,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Advanced networking reversion timer elapsed",
+                            trigger_type_id = 18,
+                            value = (short)31
+                        },
+                        new
+                        {
+                            id = 150,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Advanced networking route changes reverted",
+                            trigger_type_id = 18,
+                            value = (short)32
+                        },
+                        new
+                        {
+                            id = 151,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Advanced networking route changes cleared",
+                            trigger_type_id = 18,
+                            value = (short)33
+                        },
+                        new
+                        {
+                            id = 152,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Certificate generation started",
+                            trigger_type_id = 18,
+                            value = (short)34
+                        },
+                        new
+                        {
+                            id = 153,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Operating mode changed to mode 0",
+                            trigger_type_id = 21,
+                            value = (short)1
+                        },
+                        new
+                        {
+                            id = 154,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Operating mode changed to mode 1",
+                            trigger_type_id = 21,
+                            value = (short)2
+                        },
+                        new
+                        {
+                            id = 155,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Operating mode changed to mode 2",
+                            trigger_type_id = 21,
+                            value = (short)3
+                        },
+                        new
+                        {
+                            id = 156,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Operating mode changed to mode 3",
+                            trigger_type_id = 21,
+                            value = (short)4
+                        },
+                        new
+                        {
+                            id = 157,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Operating mode changed to mode 4",
+                            trigger_type_id = 21,
+                            value = (short)5
+                        },
+                        new
+                        {
+                            id = 158,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Operating mode changed to mode 5",
+                            trigger_type_id = 21,
+                            value = (short)6
+                        },
+                        new
+                        {
+                            id = 159,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Operating mode changed to mode 6",
+                            trigger_type_id = 21,
+                            value = (short)7
+                        },
+                        new
+                        {
+                            id = 160,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Operating mode changed to mode 7",
+                            trigger_type_id = 21,
+                            value = (short)8
+                        },
+                        new
+                        {
+                            id = 161,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Floor status is secure",
+                            trigger_type_id = 22,
+                            value = (short)1
+                        },
+                        new
+                        {
+                            id = 162,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Floor status is public",
+                            trigger_type_id = 22,
+                            value = (short)2
+                        },
+                        new
+                        {
+                            id = 163,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Floor status is disabled (override)",
+                            trigger_type_id = 22,
+                            value = (short)3
+                        },
+                        new
+                        {
+                            id = 164,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "File transfer success",
+                            trigger_type_id = 23,
+                            value = (short)1
+                        },
+                        new
+                        {
+                            id = 165,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "File transfer error",
+                            trigger_type_id = 23,
+                            value = (short)2
+                        },
+                        new
+                        {
+                            id = 166,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "File delete successful",
+                            trigger_type_id = 23,
+                            value = (short)3
+                        },
+                        new
+                        {
+                            id = 167,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "File delete unsuccessful",
+                            trigger_type_id = 23,
+                            value = (short)4
+                        },
+                        new
+                        {
+                            id = 168,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "OSDP file transfer complete (primary ACR) - look at source number for ACR number",
+                            trigger_type_id = 23,
+                            value = (short)5
+                        },
+                        new
+                        {
+                            id = 169,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "OSDP file transfer error (primary ACR) - look at source number for ACR number",
+                            trigger_type_id = 23,
+                            value = (short)6
+                        },
+                        new
+                        {
+                            id = 170,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "OSDP file transfer complete (alternate ACR) - look at source number for ACR number",
+                            trigger_type_id = 23,
+                            value = (short)7
+                        },
+                        new
+                        {
+                            id = 171,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "OSDP file transfer error (alternate ACR) - look at source number for ACR number",
+                            trigger_type_id = 23,
+                            value = (short)8
+                        },
+                        new
+                        {
+                            id = 172,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Elevator access",
+                            trigger_type_id = 24,
+                            value = (short)1
+                        },
+                        new
+                        {
+                            id = 173,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Extended status updated",
+                            trigger_type_id = 28,
+                            value = (short)1
+                        },
+                        new
+                        {
+                            id = 174,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Secure / Inactive",
+                            trigger_type_id = 29,
+                            value = (short)3
+                        },
+                        new
+                        {
+                            id = 175,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Alarm / Active",
+                            trigger_type_id = 29,
+                            value = (short)4
+                        });
+                });
+
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.TriggerSource", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<Guid>("guid")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<string>("name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<short>("value")
+                        .HasColumnType("smallint");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("guid", "id")
+                        .IsUnique();
+
+                    b.ToTable("TriggerSources", "core");
+
+                    b.HasData(
+                        new
+                        {
+                            id = 1,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Device diagnostics",
+                            value = (short)0
+                        },
+                        new
+                        {
+                            id = 2,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Device to HOST communication driver - not defined",
+                            value = (short)1
+                        },
+                        new
+                        {
+                            id = 3,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Device local monitor points (tamper & power fault)",
+                            value = (short)2
+                        },
+                        new
+                        {
+                            id = 4,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Module diagnostics",
+                            value = (short)3
+                        },
+                        new
+                        {
+                            id = 5,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Module communication driver",
+                            value = (short)4
+                        },
+                        new
+                        {
+                            id = 6,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Module cabinet tamper",
+                            value = (short)5
+                        },
+                        new
+                        {
+                            id = 7,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Module power monitor",
+                            value = (short)6
+                        },
+                        new
+                        {
+                            id = 8,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Alarm monitor point",
+                            value = (short)7
+                        },
+                        new
+                        {
+                            id = 9,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Output control point",
+                            value = (short)8
+                        },
+                        new
+                        {
+                            id = 10,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Access Control Reader (ACR)",
+                            value = (short)9
+                        },
+                        new
+                        {
+                            id = 11,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Door: reader tamper monitor",
+                            value = (short)10
+                        },
+                        new
+                        {
+                            id = 12,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Door: door position sensor",
+                            value = (short)11
+                        },
+                        new
+                        {
+                            id = 13,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Door: 1st \"Request to exit\" input",
+                            value = (short)13
+                        },
+                        new
+                        {
+                            id = 14,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Door: 2nd \"Request to exit\" input",
+                            value = (short)14
+                        },
+                        new
+                        {
+                            id = 15,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Time zone",
+                            value = (short)15
+                        },
+                        new
+                        {
+                            id = 16,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Procedure (action list)",
+                            value = (short)16
+                        },
+                        new
+                        {
+                            id = 17,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Trigger",
+                            value = (short)17
+                        },
+                        new
+                        {
+                            id = 18,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Trigger variable",
+                            value = (short)18
+                        },
+                        new
+                        {
+                            id = 19,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Monitor point group",
+                            value = (short)19
+                        },
+                        new
+                        {
+                            id = 20,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Access area",
+                            value = (short)20
+                        },
+                        new
+                        {
+                            id = 21,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Door: the alternate reader's tamper monitor source_number",
+                            value = (short)21
+                        },
+                        new
+                        {
+                            id = 22,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Login Service",
+                            value = (short)24
+                        });
+                });
+
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.TriggerType", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<Guid>("guid")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<string>("name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int?>("trigger_source_id")
+                        .HasColumnType("integer");
+
+                    b.Property<short>("value")
+                        .HasColumnType("smallint");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("trigger_source_id");
+
+                    b.HasIndex("guid", "id")
+                        .IsUnique();
+
+                    b.ToTable("TriggerTypes", "core");
+
+                    b.HasData(
+                        new
+                        {
+                            id = 1,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "System",
+                            trigger_source_id = 1,
+                            value = (short)1
+                        },
+                        new
+                        {
+                            id = 2,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "SIO communication status report",
+                            trigger_source_id = 5,
+                            value = (short)2
+                        },
+                        new
+                        {
+                            id = 3,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Binary card data",
+                            trigger_source_id = 10,
+                            value = (short)3
+                        },
+                        new
+                        {
+                            id = 4,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Card data",
+                            trigger_source_id = 10,
+                            value = (short)4
+                        },
+                        new
+                        {
+                            id = 5,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Formatted card: facility code, card number ID, issue code",
+                            trigger_source_id = 10,
+                            value = (short)5
+                        },
+                        new
+                        {
+                            id = 6,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Formatted card: card number only",
+                            trigger_source_id = 10,
+                            value = (short)6
+                        },
+                        new
+                        {
+                            id = 7,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Change-of-state",
+                            trigger_source_id = 3,
+                            value = (short)7
+                        },
+                        new
+                        {
+                            id = 8,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Exit request",
+                            trigger_source_id = 10,
+                            value = (short)8
+                        },
+                        new
+                        {
+                            id = 9,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Door status monitor change-of-state",
+                            trigger_source_id = 10,
+                            value = (short)9
+                        },
+                        new
+                        {
+                            id = 10,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Procedure (command list) log",
+                            trigger_source_id = 16,
+                            value = (short)10
+                        },
+                        new
+                        {
+                            id = 11,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "User command request report",
+                            trigger_source_id = 10,
+                            value = (short)11
+                        },
+                        new
+                        {
+                            id = 12,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Change of state: trigger variable, time zone, & triggers",
+                            trigger_source_id = 15,
+                            value = (short)12
+                        },
+                        new
+                        {
+                            id = 13,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "ACR mode change",
+                            trigger_source_id = 10,
+                            value = (short)13
+                        },
+                        new
+                        {
+                            id = 14,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Monitor point group status change",
+                            trigger_source_id = 19,
+                            value = (short)14
+                        },
+                        new
+                        {
+                            id = 15,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Access area",
+                            trigger_source_id = 20,
+                            value = (short)15
+                        },
+                        new
+                        {
+                            id = 16,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Extended user command",
+                            trigger_source_id = 10,
+                            value = (short)18
+                        },
+                        new
+                        {
+                            id = 17,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Use limit report",
+                            trigger_source_id = 10,
+                            value = (short)19
+                        },
+                        new
+                        {
+                            id = 18,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Web activity",
+                            trigger_source_id = 1,
+                            value = (short)20
+                        },
+                        new
+                        {
+                            id = 19,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Specify tranTypeCardFull (0x05) instead",
+                            trigger_source_id = 10,
+                            value = (short)21
+                        },
+                        new
+                        {
+                            id = 20,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Specify tranTypeCardID (0x06) instead",
+                            trigger_source_id = 10,
+                            value = (short)22
+                        },
+                        new
+                        {
+                            id = 21,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Operating mode change",
+                            trigger_source_id = 1,
+                            value = (short)24
+                        },
+                        new
+                        {
+                            id = 22,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Elevator Floor Status CoS",
+                            trigger_source_id = 10,
+                            value = (short)26
+                        },
+                        new
+                        {
+                            id = 23,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "File Download Status",
+                            trigger_source_id = 1,
+                            value = (short)27
+                        },
+                        new
+                        {
+                            id = 24,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Elevator Floor Access Transaction",
+                            trigger_source_id = 10,
+                            value = (short)29
+                        },
+                        new
+                        {
+                            id = 25,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Specify tranTypeCardFull (0x05) instead",
+                            trigger_source_id = 10,
+                            value = (short)37
+                        },
+                        new
+                        {
+                            id = 26,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Specify tranTypeCardID (0x06) instead",
+                            trigger_source_id = 10,
+                            value = (short)38
+                        },
+                        new
+                        {
+                            id = 27,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Specify tranTypeCardFull (0x05) instead",
+                            trigger_source_id = 10,
+                            value = (short)53
+                        },
+                        new
+                        {
+                            id = 28,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "ACR extended feature stateless transition",
+                            trigger_source_id = 10,
+                            value = (short)64
+                        },
+                        new
+                        {
+                            id = 29,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "ACR extended feature change-of-state",
+                            trigger_source_id = 10,
+                            value = (short)65
+                        },
+                        new
+                        {
+                            id = 30,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Change-of-state",
+                            trigger_source_id = 6,
+                            value = (short)7
+                        },
+                        new
+                        {
+                            id = 31,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Change-of-state",
+                            trigger_source_id = 7,
+                            value = (short)7
+                        },
+                        new
+                        {
+                            id = 32,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Change-of-state",
+                            trigger_source_id = 8,
+                            value = (short)7
+                        },
+                        new
+                        {
+                            id = 33,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Change-of-state",
+                            trigger_source_id = 9,
+                            value = (short)7
+                        },
+                        new
+                        {
+                            id = 34,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Change-of-state",
+                            trigger_source_id = 11,
+                            value = (short)7
+                        },
+                        new
+                        {
+                            id = 35,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Change-of-state",
+                            trigger_source_id = 13,
+                            value = (short)7
+                        },
+                        new
+                        {
+                            id = 36,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Change-of-state",
+                            trigger_source_id = 14,
+                            value = (short)7
+                        },
+                        new
+                        {
+                            id = 37,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Change-of-state",
+                            trigger_source_id = 21,
+                            value = (short)7
+                        },
+                        new
+                        {
+                            id = 38,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Change-of-state",
+                            trigger_source_id = 22,
+                            value = (short)7
+                        },
+                        new
+                        {
+                            id = 39,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Change of state: trigger variable, time zone, & triggers",
+                            trigger_source_id = 17,
+                            value = (short)12
+                        },
+                        new
+                        {
+                            id = 40,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Change of state: trigger variable, time zone, & triggers",
+                            trigger_source_id = 18,
+                            value = (short)12
+                        });
+                });
+
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Turnstile", b =>
                 {
                     b.Property<int>("id")
@@ -5579,6 +7715,25 @@ namespace Core.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("UserLocations", "core");
+                });
+
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Action", b =>
+                {
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.Device", "device")
+                        .WithMany("actions")
+                        .HasForeignKey("device_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.Location", "location")
+                        .WithMany("actions")
+                        .HasForeignKey("location_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("device");
+
+                    b.Navigation("location");
                 });
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.AdapterEvent", b =>
@@ -5955,6 +8110,44 @@ namespace Core.Infrastructure.Migrations
                     b.Navigation("department");
                 });
 
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Procedure", b =>
+                {
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.Device", "device")
+                        .WithMany("procedures")
+                        .HasForeignKey("device_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.Location", "location")
+                        .WithMany("procedures")
+                        .HasForeignKey("location_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("device");
+
+                    b.Navigation("location");
+                });
+
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.ProcedureAction", b =>
+                {
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.Action", "action")
+                        .WithMany("procedure_actions")
+                        .HasForeignKey("action_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.Procedure", "procedure")
+                        .WithMany("procedure_actions")
+                        .HasForeignKey("procedure_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("action");
+
+                    b.Navigation("procedure");
+                });
+
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Reader", b =>
                 {
                     b.HasOne("Core.Infrastructure.Persistences.Entities.DeviceModule", "device_module")
@@ -6080,6 +8273,26 @@ namespace Core.Infrastructure.Migrations
                     b.Navigation("timezone");
                 });
 
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.TriggerCode", b =>
+                {
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.TriggerType", "trigger_type")
+                        .WithMany("codes")
+                        .HasForeignKey("trigger_type_id")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("trigger_type");
+                });
+
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.TriggerType", b =>
+                {
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.TriggerSource", "trigger_source")
+                        .WithMany("types")
+                        .HasForeignKey("trigger_source_id")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("trigger_source");
+                });
+
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Turnstile", b =>
                 {
                     b.HasOne("Core.Infrastructure.Persistences.Entities.Location", "location")
@@ -6203,6 +8416,11 @@ namespace Core.Infrastructure.Migrations
                     b.Navigation("user");
                 });
 
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Action", b =>
+                {
+                    b.Navigation("procedure_actions");
+                });
+
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Buzzer", b =>
                 {
                     b.Navigation("door")
@@ -6236,9 +8454,13 @@ namespace Core.Infrastructure.Migrations
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Device", b =>
                 {
+                    b.Navigation("actions");
+
                     b.Navigation("device_modules");
 
                     b.Navigation("doors");
+
+                    b.Navigation("procedures");
                 });
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.DeviceModule", b =>
@@ -6311,6 +8533,8 @@ namespace Core.Infrastructure.Migrations
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Location", b =>
                 {
+                    b.Navigation("actions");
+
                     b.Navigation("adapter_events");
 
                     b.Navigation("audit_trails");
@@ -6338,6 +8562,8 @@ namespace Core.Infrastructure.Migrations
                     b.Navigation("operator_locations");
 
                     b.Navigation("outputs");
+
+                    b.Navigation("procedures");
 
                     b.Navigation("roles");
 
@@ -6378,6 +8604,11 @@ namespace Core.Infrastructure.Migrations
                     b.Navigation("users");
                 });
 
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Procedure", b =>
+                {
+                    b.Navigation("procedure_actions");
+                });
+
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.QrCode", b =>
                 {
                     b.Navigation("user")
@@ -6405,6 +8636,16 @@ namespace Core.Infrastructure.Migrations
                     b.Navigation("rexes");
 
                     b.Navigation("timezone_intervals");
+                });
+
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.TriggerSource", b =>
+                {
+                    b.Navigation("types");
+                });
+
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.TriggerType", b =>
+                {
+                    b.Navigation("codes");
                 });
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Turnstile", b =>

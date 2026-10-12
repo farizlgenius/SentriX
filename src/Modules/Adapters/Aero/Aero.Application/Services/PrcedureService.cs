@@ -11,7 +11,7 @@ public sealed class ProcedureService(
       IMessageBus bus,
       IProcedureRepository repo) : IProcedureAdapter
 {
-      public async Task AddActionAsync(string mac, string ip,short deviceId,short procId, string metadata,CancellationToken ct = default)
+      public async Task AddProcedureAsync(string mac, string ip,short deviceId,short procId, string metadata,CancellationToken ct = default)
       {
             var meta = JsonHelper.Deserialize<ProcedureMetadata>(metadata);
             if (meta == null)

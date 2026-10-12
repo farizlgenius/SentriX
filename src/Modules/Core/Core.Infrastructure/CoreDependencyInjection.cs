@@ -138,6 +138,10 @@ public static class CoreDependencyInjection
     services.AddScoped<IProcedure,ProcedureService>();
     services.AddScoped<IProcedureRepository,ProcedureRepository>();
 
+    // Action
+    services.AddScoped<IAction,ActionService>();
+    services.AddScoped<IActionRepository,ActionRepository>();
+
     // Utility
     services.AddScoped<IUtility,UtilityService>();
 

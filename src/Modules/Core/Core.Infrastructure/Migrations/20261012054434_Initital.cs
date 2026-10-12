@@ -9,7 +9,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Core.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class InititalDb : Migration
+    public partial class Initital : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -245,6 +245,22 @@ namespace Core.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "TriggerSources",
+                schema: "core",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    guid = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
+                    name = table.Column<string>(type: "text", nullable: false),
+                    value = table.Column<short>(type: "smallint", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TriggerSources", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Locations",
                 schema: "core",
                 columns: table => new
@@ -295,6 +311,30 @@ namespace Core.Infrastructure.Migrations
                         column: x => x.module_id,
                         principalSchema: "core",
                         principalTable: "Modules",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TriggerTypes",
+                schema: "core",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    guid = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
+                    name = table.Column<string>(type: "text", nullable: false),
+                    value = table.Column<short>(type: "smallint", nullable: false),
+                    trigger_source_id = table.Column<int>(type: "integer", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TriggerTypes", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_TriggerTypes_TriggerSources_trigger_source_id",
+                        column: x => x.trigger_source_id,
+                        principalSchema: "core",
+                        principalTable: "TriggerSources",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -508,7 +548,7 @@ namespace Core.Infrastructure.Migrations
                     id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     name = table.Column<string>(type: "text", nullable: false),
-                    location_id = table.Column<int>(type: "integer", nullable: false),
+                    location_id = table.Column<int>(type: "integer", nullable: true),
                     guid = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
                     created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
                     updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
@@ -674,6 +714,30 @@ namespace Core.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "TriggerCodes",
+                schema: "core",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    guid = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
+                    name = table.Column<string>(type: "text", nullable: false),
+                    value = table.Column<short>(type: "smallint", nullable: false),
+                    trigger_type_id = table.Column<int>(type: "integer", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TriggerCodes", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_TriggerCodes_TriggerTypes_trigger_type_id",
+                        column: x => x.trigger_type_id,
+                        principalSchema: "core",
+                        principalTable: "TriggerTypes",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Departments",
                 schema: "core",
                 columns: table => new
@@ -697,6 +761,42 @@ namespace Core.Infrastructure.Migrations
                         column: x => x.company_id,
                         principalSchema: "core",
                         principalTable: "Companies",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Action",
+                schema: "core",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    type = table.Column<string>(type: "text", nullable: false),
+                    metadata = table.Column<string>(type: "text", nullable: false),
+                    device_id = table.Column<int>(type: "integer", nullable: false),
+                    location_id = table.Column<int>(type: "integer", nullable: false),
+                    guid = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    is_active = table.Column<bool>(type: "boolean", nullable: false),
+                    is_default = table.Column<bool>(type: "boolean", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Action", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_Action_Devices_device_id",
+                        column: x => x.device_id,
+                        principalSchema: "core",
+                        principalTable: "Devices",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Action_Locations_location_id",
+                        column: x => x.location_id,
+                        principalSchema: "core",
+                        principalTable: "Locations",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -738,6 +838,41 @@ namespace Core.Infrastructure.Migrations
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_DeviceModules_Locations_location_id",
+                        column: x => x.location_id,
+                        principalSchema: "core",
+                        principalTable: "Locations",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Procedures",
+                schema: "core",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    name = table.Column<string>(type: "text", nullable: false),
+                    device_id = table.Column<int>(type: "integer", nullable: false),
+                    location_id = table.Column<int>(type: "integer", nullable: false),
+                    guid = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    is_active = table.Column<bool>(type: "boolean", nullable: false),
+                    is_default = table.Column<bool>(type: "boolean", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Procedures", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_Procedures_Devices_device_id",
+                        column: x => x.device_id,
+                        principalSchema: "core",
+                        principalTable: "Devices",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Procedures_Locations_location_id",
                         column: x => x.location_id,
                         principalSchema: "core",
                         principalTable: "Locations",
@@ -981,6 +1116,35 @@ namespace Core.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ProcedureActions",
+                schema: "core",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    procedure_id = table.Column<int>(type: "integer", nullable: false),
+                    action_id = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProcedureActions", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_ProcedureActions_Action_action_id",
+                        column: x => x.action_id,
+                        principalSchema: "core",
+                        principalTable: "Action",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ProcedureActions_Procedures_procedure_id",
+                        column: x => x.procedure_id,
+                        principalSchema: "core",
+                        principalTable: "Procedures",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "FeaturePermissions",
                 schema: "core",
                 columns: table => new
@@ -1059,8 +1223,8 @@ namespace Core.Infrastructure.Migrations
                 {
                     id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    username = table.Column<string>(type: "text", nullable: false),
-                    password = table.Column<string>(type: "text", nullable: false),
+                    username = table.Column<string>(type: "text", nullable: true),
+                    password = table.Column<string>(type: "text", nullable: true),
                     user_code = table.Column<string>(type: "text", nullable: false),
                     identification = table.Column<string>(type: "text", nullable: false),
                     title = table.Column<string>(type: "text", nullable: false),
@@ -1071,8 +1235,6 @@ namespace Core.Infrastructure.Migrations
                     date_of_birth = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     email = table.Column<string>(type: "text", nullable: false),
                     phone = table.Column<string>(type: "text", nullable: false),
-                    is_operator = table.Column<bool>(type: "boolean", nullable: false),
-                    is_user = table.Column<bool>(type: "boolean", nullable: false),
                     role_id = table.Column<int>(type: "integer", nullable: true),
                     company_id = table.Column<int>(type: "integer", nullable: true),
                     department_id = table.Column<int>(type: "integer", nullable: true),
@@ -1084,6 +1246,7 @@ namespace Core.Infrastructure.Migrations
                     face_id = table.Column<int>(type: "integer", nullable: true),
                     license_plate_id = table.Column<int>(type: "integer", nullable: true),
                     qr_code_id = table.Column<int>(type: "integer", nullable: true),
+                    metadata = table.Column<string>(type: "text", nullable: false),
                     Locationid = table.Column<int>(type: "integer", nullable: true),
                     guid = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
                     created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
@@ -1632,7 +1795,8 @@ namespace Core.Infrastructure.Migrations
                 {
                     { 3, "CardFormat", 0, new Guid("356b51d4-5650-4ef9-821b-bf38eb4ec2db"), true, false, null, null, null },
                     { 4, "CardFormat", 1, new Guid("f04c1839-991d-4f13-be52-4a057d30af68"), true, false, null, null, null },
-                    { 5, "CardFormat", 2, new Guid("2ec6aa6c-dd76-4b3a-98b3-e8b5ecff0d1e"), true, false, null, null, null }
+                    { 5, "CardFormat", 2, new Guid("2ec6aa6c-dd76-4b3a-98b3-e8b5ecff0d1e"), true, false, null, null, null },
+                    { 6, "Group", 1, new Guid("895b0301-3d77-4ec7-8917-43260a839643"), true, false, null, null, null }
                 });
 
             migrationBuilder.InsertData(
@@ -1823,6 +1987,12 @@ namespace Core.Infrastructure.Migrations
 
             migrationBuilder.InsertData(
                 schema: "core",
+                table: "Groups",
+                columns: new[] { "id", "guid", "is_active", "is_default", "location_id", "name" },
+                values: new object[] { 1, new Guid("895b0301-3d77-4ec7-8917-43260a839643"), true, true, null, "All Door" });
+
+            migrationBuilder.InsertData(
+                schema: "core",
                 table: "Modules",
                 columns: new[] { "id", "is_active", "is_default", "name" },
                 values: new object[,]
@@ -1837,6 +2007,36 @@ namespace Core.Infrastructure.Migrations
                 table: "Roles",
                 columns: new[] { "id", "Locationid", "guid", "is_active", "is_default", "name" },
                 values: new object[] { 1, null, new Guid("fe527691-7b13-4294-98b5-cb95181f5453"), true, true, "Administrator" });
+
+            migrationBuilder.InsertData(
+                schema: "core",
+                table: "TriggerSources",
+                columns: new[] { "id", "name", "value" },
+                values: new object[,]
+                {
+                    { 1, "Device diagnostics", (short)0 },
+                    { 2, "Device to HOST communication driver - not defined", (short)1 },
+                    { 3, "Device local monitor points (tamper & power fault)", (short)2 },
+                    { 4, "Module diagnostics", (short)3 },
+                    { 5, "Module communication driver", (short)4 },
+                    { 6, "Module cabinet tamper", (short)5 },
+                    { 7, "Module power monitor", (short)6 },
+                    { 8, "Alarm monitor point", (short)7 },
+                    { 9, "Output control point", (short)8 },
+                    { 10, "Access Control Reader (ACR)", (short)9 },
+                    { 11, "Door: reader tamper monitor", (short)10 },
+                    { 12, "Door: door position sensor", (short)11 },
+                    { 13, "Door: 1st \"Request to exit\" input", (short)13 },
+                    { 14, "Door: 2nd \"Request to exit\" input", (short)14 },
+                    { 15, "Time zone", (short)15 },
+                    { 16, "Procedure (action list)", (short)16 },
+                    { 17, "Trigger", (short)17 },
+                    { 18, "Trigger variable", (short)18 },
+                    { 19, "Monitor point group", (short)19 },
+                    { 20, "Access area", (short)20 },
+                    { 21, "Door: the alternate reader's tamper monitor source_number", (short)21 },
+                    { 22, "Login Service", (short)24 }
+                });
 
             migrationBuilder.InsertData(
                 schema: "core",
@@ -1901,6 +2101,54 @@ namespace Core.Infrastructure.Migrations
 
             migrationBuilder.InsertData(
                 schema: "core",
+                table: "TriggerTypes",
+                columns: new[] { "id", "name", "trigger_source_id", "value" },
+                values: new object[,]
+                {
+                    { 1, "System", 1, (short)1 },
+                    { 2, "SIO communication status report", 5, (short)2 },
+                    { 3, "Binary card data", 10, (short)3 },
+                    { 4, "Card data", 10, (short)4 },
+                    { 5, "Formatted card: facility code, card number ID, issue code", 10, (short)5 },
+                    { 6, "Formatted card: card number only", 10, (short)6 },
+                    { 7, "Change-of-state", 3, (short)7 },
+                    { 8, "Exit request", 10, (short)8 },
+                    { 9, "Door status monitor change-of-state", 10, (short)9 },
+                    { 10, "Procedure (command list) log", 16, (short)10 },
+                    { 11, "User command request report", 10, (short)11 },
+                    { 12, "Change of state: trigger variable, time zone, & triggers", 15, (short)12 },
+                    { 13, "ACR mode change", 10, (short)13 },
+                    { 14, "Monitor point group status change", 19, (short)14 },
+                    { 15, "Access area", 20, (short)15 },
+                    { 16, "Extended user command", 10, (short)18 },
+                    { 17, "Use limit report", 10, (short)19 },
+                    { 18, "Web activity", 1, (short)20 },
+                    { 19, "Specify tranTypeCardFull (0x05) instead", 10, (short)21 },
+                    { 20, "Specify tranTypeCardID (0x06) instead", 10, (short)22 },
+                    { 21, "Operating mode change", 1, (short)24 },
+                    { 22, "Elevator Floor Status CoS", 10, (short)26 },
+                    { 23, "File Download Status", 1, (short)27 },
+                    { 24, "Elevator Floor Access Transaction", 10, (short)29 },
+                    { 25, "Specify tranTypeCardFull (0x05) instead", 10, (short)37 },
+                    { 26, "Specify tranTypeCardID (0x06) instead", 10, (short)38 },
+                    { 27, "Specify tranTypeCardFull (0x05) instead", 10, (short)53 },
+                    { 28, "ACR extended feature stateless transition", 10, (short)64 },
+                    { 29, "ACR extended feature change-of-state", 10, (short)65 },
+                    { 30, "Change-of-state", 6, (short)7 },
+                    { 31, "Change-of-state", 7, (short)7 },
+                    { 32, "Change-of-state", 8, (short)7 },
+                    { 33, "Change-of-state", 9, (short)7 },
+                    { 34, "Change-of-state", 11, (short)7 },
+                    { 35, "Change-of-state", 13, (short)7 },
+                    { 36, "Change-of-state", 14, (short)7 },
+                    { 37, "Change-of-state", 21, (short)7 },
+                    { 38, "Change-of-state", 22, (short)7 },
+                    { 39, "Change of state: trigger variable, time zone, & triggers", 17, (short)12 },
+                    { 40, "Change of state: trigger variable, time zone, & triggers", 18, (short)12 }
+                });
+
+            migrationBuilder.InsertData(
+                schema: "core",
                 table: "ComponentMappings",
                 columns: new[] { "id", "entity", "external_id", "guid", "is_active", "is_default", "location_id", "mac", "vendor" },
                 values: new object[,]
@@ -1954,6 +2202,212 @@ namespace Core.Infrastructure.Migrations
                     { 1, new Guid("cff24195-43f8-42ec-a03f-e84857cc958f"), true, true, 1, "Always" },
                     { 2, new Guid("614a766c-1241-4fdc-9d0d-7788291cac2d"), true, true, 1, "Never" }
                 });
+
+            migrationBuilder.InsertData(
+                schema: "core",
+                table: "TriggerCodes",
+                columns: new[] { "id", "name", "trigger_type_id", "value" },
+                values: new object[,]
+                {
+                    { 1, "SCP Power-up diagnostic", 1, (short)1 },
+                    { 2, "Host communication offline", 1, (short)2 },
+                    { 3, "Host communication online", 1, (short)3 },
+                    { 4, "Transaction count exceed limit", 1, (short)4 },
+                    { 5, "Configuration DB save complete", 1, (short)5 },
+                    { 6, "Card database save complete", 1, (short)6 },
+                    { 7, "Card database cleared due to SRAM buffer overflow", 1, (short)7 },
+                    { 8, "Disabled", 2, (short)1 },
+                    { 9, "Offline:timeout", 2, (short)2 },
+                    { 10, "Offline:invalid identificatiion from module", 2, (short)3 },
+                    { 11, "Offline:command too long", 2, (short)4 },
+                    { 12, "Online:normal connection", 2, (short)5 },
+                    { 13, "hexLoad report: ser_num is address loaded (-1 = last record)", 2, (short)6 },
+                    { 14, "Access denied, Invalid card format", 3, (short)1 },
+                    { 15, "Access denied, Invalid card format, forward read", 4, (short)1 },
+                    { 16, "Access denied, Invalid card format, reverse read", 4, (short)2 },
+                    { 17, "Request rejected: access point \"locked\"", 5, (short)1 },
+                    { 18, "Request accepted: access point \"unlocked\"", 5, (short)2 },
+                    { 19, "Request rejected: invalid facility code", 5, (short)3 },
+                    { 20, "Request rejected: invalid facility code extension", 5, (short)4 },
+                    { 21, "Request rejected: not in card file", 5, (short)5 },
+                    { 22, "Request rejected: invalid issue code", 5, (short)6 },
+                    { 23, "Request granted: facility code verified, not used", 5, (short)7 },
+                    { 24, "Request granted: facility code verified, door used", 5, (short)8 },
+                    { 25, "Access denied - asked for host approval, then timed out", 5, (short)9 },
+                    { 26, "Reporting that this card is \"about to get access granted\"", 5, (short)10 },
+                    { 27, "Access denied count exceeded", 5, (short)11 },
+                    { 28, "Access denied - asked for host approval, then host denied", 5, (short)12 },
+                    { 29, "Request rejected: Airlock is busy", 5, (short)13 },
+                    { 30, "Request rejected: deactivated card", 6, (short)1 },
+                    { 31, "Request rejected: before activation date", 6, (short)2 },
+                    { 32, "Request rejected: after expiration date", 6, (short)3 },
+                    { 33, "Request rejected: invalid time", 6, (short)4 },
+                    { 34, "Request rejected: invalid PIN", 6, (short)5 },
+                    { 35, "Request rejected: anti-passback violation", 6, (short)6 },
+                    { 36, "Request granted: APB violation, not used", 6, (short)7 },
+                    { 37, "Request granted: APB violation, used", 6, (short)8 },
+                    { 38, "Request rejected: duress code detected", 6, (short)9 },
+                    { 39, "Request granted: duress, used", 6, (short)10 },
+                    { 40, "Request granted: duress, not used", 6, (short)11 },
+                    { 41, "Request granted: full test, not used", 6, (short)12 },
+                    { 42, "Request granted: full test, used", 6, (short)13 },
+                    { 43, "Request denied: never allowed at this reader (all Tz's = 0)", 6, (short)14 },
+                    { 44, "Request denied: no second card presented", 6, (short)15 },
+                    { 45, "Request denied: occupancy limit reached", 6, (short)16 },
+                    { 46, "Request denied: the area is NOT enabled", 6, (short)17 },
+                    { 47, "Request denied: use limit", 6, (short)18 },
+                    { 48, "Granting access: used/not used transaction will follow", 6, (short)21 },
+                    { 49, "Request rejected: no escort card presented", 6, (short)24 },
+                    { 50, "Reserved", 6, (short)25 },
+                    { 51, "Reserved", 6, (short)26 },
+                    { 52, "Reserved", 6, (short)27 },
+                    { 53, "Request rejected: airlock is busy", 6, (short)29 },
+                    { 54, "Request rejected: incomplete CARD & PIN sequence", 6, (short)30 },
+                    { 55, "Request granted: double-card event", 6, (short)31 },
+                    { 56, "Request granted: double-card event while in uncontrolled state (locked/unlocked)", 6, (short)32 },
+                    { 57, "Granting access: requires escort, pending escort card", 6, (short)39 },
+                    { 58, "Request rejected: violates minimum occupancy count", 6, (short)40 },
+                    { 59, "Request rejected: card pending at another reader", 6, (short)41 },
+                    { 60, "Disconnected", 7, (short)1 },
+                    { 61, "Unknown", 7, (short)2 },
+                    { 62, "Secure", 7, (short)3 },
+                    { 63, "Alarm", 7, (short)4 },
+                    { 64, "Fault", 7, (short)5 },
+                    { 65, "Exit delay in progress", 7, (short)6 },
+                    { 66, "Entry delay in progress", 7, (short)7 },
+                    { 67, "Online, reader tamper inactive", 7, (short)0 },
+                    { 68, "Online, reader tamper active", 7, (short)1 },
+                    { 69, "N/A", 7, (short)2 },
+                    { 70, "Communication broken (reader offline)", 7, (short)3 },
+                    { 71, "Host initiated request: door use not verified", 8, (short)4 },
+                    { 72, "Host initiated request: door not used", 8, (short)5 },
+                    { 73, "Host initiated request: door used", 8, (short)6 },
+                    { 74, "Exit cycle: started", 8, (short)9 },
+                    { 75, "Disconnected", 9, (short)1 },
+                    { 76, "Unknown", 9, (short)2 },
+                    { 77, "Secure", 9, (short)3 },
+                    { 78, "Alarm (forced, held open or both)", 9, (short)4 },
+                    { 79, "Fault", 9, (short)5 },
+                    { 80, "Cancel procedure (abort delay)", 10, (short)1 },
+                    { 81, "Execute procedure (start new)", 10, (short)2 },
+                    { 82, "Resume procedure, if paused", 10, (short)3 },
+                    { 83, "Execute procedure with prefix 256 actions", 10, (short)4 },
+                    { 84, "Execute procedure with prefix 512 actions", 10, (short)5 },
+                    { 85, "Execute procedure with prefix 1024 actions", 10, (short)6 },
+                    { 86, "Resume procedure with prefix 256 actions", 10, (short)7 },
+                    { 87, "Resume procedure with prefix 512 actions", 10, (short)8 },
+                    { 88, "Resume procedure with prefix 1024 actions", 10, (short)9 },
+                    { 89, "Command was issued to procedure with no actions - (NOP)", 10, (short)10 },
+                    { 90, "Command entered by the user", 11, (short)1 },
+                    { 91, "Became inactive", 12, (short)1 },
+                    { 92, "Became active", 12, (short)2 },
+                    { 93, "Disabled", 13, (short)1 },
+                    { 94, "Unlocked", 13, (short)2 },
+                    { 95, "Locked (exit request enabled)", 13, (short)3 },
+                    { 96, "Facility code only", 13, (short)4 },
+                    { 97, "Card only", 13, (short)5 },
+                    { 98, "PIN only", 13, (short)6 },
+                    { 99, "Card and PIN", 13, (short)7 },
+                    { 100, "PIN or card", 13, (short)8 },
+                    { 101, "First disarm command executed (mask_count was 0, all MPs got masked)", 14, (short)1 },
+                    { 102, "Subsequent disarm command executed (mask_count incremented, MPs already masked)", 14, (short)2 },
+                    { 103, "Override command: armed (mask_count cleared, all points unmasked)", 14, (short)3 },
+                    { 104, "Override command: disarmed (mask_count set, unmasked all points)", 14, (short)4 },
+                    { 105, "Force arm command, MPG armed, (may have active zones, mask_count is now zero)", 14, (short)5 },
+                    { 106, "Force arm command, MPG not armed (mask_count decremented)", 14, (short)6 },
+                    { 107, "Standard arm command, MPG armed (did not have active zones, mask_count is now zero)", 14, (short)7 },
+                    { 108, "Standard arm command, MPG did not arm, (had active zones, mask_count unchanged)", 14, (short)8 },
+                    { 109, "Standard arm command, MPG still armed, (mask_count decremented)", 14, (short)9 },
+                    { 110, "Override arm command, MPG armed (mask_count is now zero)", 14, (short)10 },
+                    { 111, "Override arm command, MPG did not arm, (mask_count decremented)", 14, (short)11 },
+                    { 112, "Area disabled", 15, (short)1 },
+                    { 113, "Area enabled", 15, (short)2 },
+                    { 114, "Occupancy count reached zero", 15, (short)3 },
+                    { 115, "Occupancy count reached the \"downward-limit\"", 15, (short)4 },
+                    { 116, "Occupancy count reached the \"upward-limit\"", 15, (short)5 },
+                    { 117, "Occupancy count reached the \"max-occupancy-limit\"", 15, (short)6 },
+                    { 118, "Multi-occupancy mode changed", 15, (short)7 },
+                    { 119, "Use limit changed, reporting new limit", 17, (short)1 },
+                    { 120, "Save home notes", 18, (short)1 },
+                    { 121, "Save network settings", 18, (short)2 },
+                    { 122, "Save host communication settings", 18, (short)3 },
+                    { 123, "Add user", 18, (short)4 },
+                    { 124, "Delete user", 18, (short)5 },
+                    { 125, "Modify user", 18, (short)6 },
+                    { 126, "Save password strength and session timer", 18, (short)7 },
+                    { 127, "Save web server options", 18, (short)8 },
+                    { 128, "Save time server settings", 18, (short)9 },
+                    { 129, "Auto save timer settings", 18, (short)10 },
+                    { 130, "Load certificate", 18, (short)11 },
+                    { 131, "Logged out by link", 18, (short)12 },
+                    { 132, "Logged out by timeout", 18, (short)13 },
+                    { 133, "Logged out by user", 18, (short)14 },
+                    { 134, "Logged out by apply", 18, (short)15 },
+                    { 135, "Invalid login", 18, (short)16 },
+                    { 136, "Successful login", 18, (short)17 },
+                    { 137, "Network diagnostic saved", 18, (short)18 },
+                    { 138, "Card DB size saved", 18, (short)19 },
+                    { 139, "Diagnostic page saved", 18, (short)21 },
+                    { 140, "Security options page saved", 18, (short)22 },
+                    { 141, "Add-on package page saved", 18, (short)23 },
+                    { 142, "Not used", 18, (short)24 },
+                    { 143, "Not used", 18, (short)25 },
+                    { 144, "Not used", 18, (short)26 },
+                    { 145, "Invalid login limit reached", 18, (short)27 },
+                    { 146, "Firmware download initiated", 18, (short)28 },
+                    { 147, "Advanced networking routes saved", 18, (short)29 },
+                    { 148, "Advanced networking reversion timer started", 18, (short)30 },
+                    { 149, "Advanced networking reversion timer elapsed", 18, (short)31 },
+                    { 150, "Advanced networking route changes reverted", 18, (short)32 },
+                    { 151, "Advanced networking route changes cleared", 18, (short)33 },
+                    { 152, "Certificate generation started", 18, (short)34 },
+                    { 153, "Operating mode changed to mode 0", 21, (short)1 },
+                    { 154, "Operating mode changed to mode 1", 21, (short)2 },
+                    { 155, "Operating mode changed to mode 2", 21, (short)3 },
+                    { 156, "Operating mode changed to mode 3", 21, (short)4 },
+                    { 157, "Operating mode changed to mode 4", 21, (short)5 },
+                    { 158, "Operating mode changed to mode 5", 21, (short)6 },
+                    { 159, "Operating mode changed to mode 6", 21, (short)7 },
+                    { 160, "Operating mode changed to mode 7", 21, (short)8 },
+                    { 161, "Floor status is secure", 22, (short)1 },
+                    { 162, "Floor status is public", 22, (short)2 },
+                    { 163, "Floor status is disabled (override)", 22, (short)3 },
+                    { 164, "File transfer success", 23, (short)1 },
+                    { 165, "File transfer error", 23, (short)2 },
+                    { 166, "File delete successful", 23, (short)3 },
+                    { 167, "File delete unsuccessful", 23, (short)4 },
+                    { 168, "OSDP file transfer complete (primary ACR) - look at source number for ACR number", 23, (short)5 },
+                    { 169, "OSDP file transfer error (primary ACR) - look at source number for ACR number", 23, (short)6 },
+                    { 170, "OSDP file transfer complete (alternate ACR) - look at source number for ACR number", 23, (short)7 },
+                    { 171, "OSDP file transfer error (alternate ACR) - look at source number for ACR number", 23, (short)8 },
+                    { 172, "Elevator access", 24, (short)1 },
+                    { 173, "Extended status updated", 28, (short)1 },
+                    { 174, "Secure / Inactive", 29, (short)3 },
+                    { 175, "Alarm / Active", 29, (short)4 },
+                    { 176, "Disconnected", 8, (short)1 },
+                    { 177, "Exit cycle: door use not verified", 8, (short)1 },
+                    { 178, "Exit cycle: door not used", 8, (short)2 },
+                    { 179, "Exit cycle: door used", 8, (short)3 }
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Action_device_id",
+                schema: "core",
+                table: "Action",
+                column: "device_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Action_guid_id_type_device_id_location_id",
+                schema: "core",
+                table: "Action",
+                columns: new[] { "guid", "id", "type", "device_id", "location_id" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Action_location_id",
+                schema: "core",
+                table: "Action",
+                column: "location_id");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AdapterEvents_guid_id_location_id_created_at_mac_send_at_re~",
@@ -2370,6 +2824,38 @@ namespace Core.Infrastructure.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_ProcedureActions_action_id",
+                schema: "core",
+                table: "ProcedureActions",
+                column: "action_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProcedureActions_procedure_id_action_id",
+                schema: "core",
+                table: "ProcedureActions",
+                columns: new[] { "procedure_id", "action_id" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Procedures_device_id",
+                schema: "core",
+                table: "Procedures",
+                column: "device_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Procedures_guid_id_device_id_location_id",
+                schema: "core",
+                table: "Procedures",
+                columns: new[] { "guid", "id", "device_id", "location_id" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Procedures_location_id",
+                schema: "core",
+                table: "Procedures",
+                column: "location_id");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_QrCodes_guid",
                 schema: "core",
                 table: "QrCodes",
@@ -2497,6 +2983,39 @@ namespace Core.Infrastructure.Migrations
                 table: "TimeZones",
                 columns: new[] { "location_id", "guid", "name" },
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TriggerCodes_guid_id",
+                schema: "core",
+                table: "TriggerCodes",
+                columns: new[] { "guid", "id" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TriggerCodes_trigger_type_id",
+                schema: "core",
+                table: "TriggerCodes",
+                column: "trigger_type_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TriggerSources_guid_id",
+                schema: "core",
+                table: "TriggerSources",
+                columns: new[] { "guid", "id" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TriggerTypes_guid_id",
+                schema: "core",
+                table: "TriggerTypes",
+                columns: new[] { "guid", "id" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TriggerTypes_trigger_source_id",
+                schema: "core",
+                table: "TriggerTypes",
+                column: "trigger_source_id");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Turnstiles_locationid",
@@ -2676,6 +3195,10 @@ namespace Core.Infrastructure.Migrations
                 schema: "core");
 
             migrationBuilder.DropTable(
+                name: "ProcedureActions",
+                schema: "core");
+
+            migrationBuilder.DropTable(
                 name: "Readers",
                 schema: "core");
 
@@ -2689,6 +3212,10 @@ namespace Core.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "TimeZoneIntervals",
+                schema: "core");
+
+            migrationBuilder.DropTable(
+                name: "TriggerCodes",
                 schema: "core");
 
             migrationBuilder.DropTable(
@@ -2716,6 +3243,14 @@ namespace Core.Infrastructure.Migrations
                 schema: "core");
 
             migrationBuilder.DropTable(
+                name: "Action",
+                schema: "core");
+
+            migrationBuilder.DropTable(
+                name: "Procedures",
+                schema: "core");
+
+            migrationBuilder.DropTable(
                 name: "Lanes",
                 schema: "core");
 
@@ -2725,6 +3260,10 @@ namespace Core.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "TimeZones",
+                schema: "core");
+
+            migrationBuilder.DropTable(
+                name: "TriggerTypes",
                 schema: "core");
 
             migrationBuilder.DropTable(
@@ -2749,6 +3288,10 @@ namespace Core.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "DayInWeeks",
+                schema: "core");
+
+            migrationBuilder.DropTable(
+                name: "TriggerSources",
                 schema: "core");
 
             migrationBuilder.DropTable(
