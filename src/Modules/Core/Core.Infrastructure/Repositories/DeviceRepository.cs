@@ -279,6 +279,21 @@ public sealed class DeviceRepository(CoreDbContext context) : IDeviceRepository
             throw new NotImplementedException();
       }
 
+      public async Task<IEnumerable<OptionDto>> GetOptionByLocationAsync(Guid guid, CancellationToken ct = default)
+      {
+            return await context.Devices
+                  .AsNoTracking()
+                  .Where(x => x.location.guid == guid)
+                  .OrderByDescending(x => x.id)
+                  .Select(x => new OptionDto(
+                        x.name,
+                        x.guid,
+                        x.mac,
+                        null,
+                        false
+                  )).ToArrayAsync(ct);
+      }
+
       public async Task<IEnumerable<OptionDto>> GetOptionByVendorAndLocationAsync(Vendor vendor, Guid guid, CancellationToken ct = default)
       {
             return await context.Devices

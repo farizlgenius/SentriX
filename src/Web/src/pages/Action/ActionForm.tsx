@@ -1,12 +1,20 @@
 import { PropsWithChildren, useEffect, useState } from "react";
 import { FormProp, FormType } from "../../model/Form/FormProp";
-import { DoorDto } from "../../model/Door/DoorDto";
 import { FormField } from "../../components/form/template/FormTemplate";
 import Label from "../../components/form/Label";
 import Input from "../../components/form/input/InputField";
 import Select from "../../components/form/Select";
 import { ActionDto } from "../../model/Action/ActionDto";
 import { ActionType } from "../../enum/ActionType";
+import { Options } from "../../model/Options";
+import { send } from "../../api/api";
+import { DeviceEndpoint } from "../../endpoint/DeviceEndpoint";
+import { DeviceDto } from "../../model/Device/DeviceDto";
+import { useLocation } from "../../context/LocationContext";
+import { MonitorPointEndpoint } from "../../endpoint/MonitorPointEndpoint";
+import { OutputEndpoint } from "../../endpoint/ControlPointEndpoint";
+import { MaskAction } from "../../enum/MaskAction";
+import { InputMaskMetadata } from "../../model/Action/InputMaskMetadata";
 
 
 
@@ -16,26 +24,61 @@ const ActionForm: React.FC<PropsWithChildren<FormProp<ActionDto>>> = ({
       setDto,
 }) => {
       const isReadOnly = type == FormType.INFO;
+      const [deviceOption,setDeviceOption] = useState<Options[]>([]);
+      const [inputOption,setInputOption] = useState<Options[]>([]);
+      const [outputOption,setOutputOption] = useState<Options[]>([]);
+      const {locationGuid} = useLocation();
 
       // Helper renderer to yield dynamic form fields based on dto.type
       const renderDynamicFields = () => {
             switch (dto.type) {
                   case ActionType.MonitorPointMask:
+                        fetchInput();
                         return (
-                              <FormField>
-                                    <Label>Delay (Seconds)</Label>
-                                    {/* <Input
-                                          type="number"
-                                          disabled={isReadOnly}
-                                          value={dto.delaySeconds || 0}
-                                          onChange={(e) =>
-                                                setDto((prev) => ({
-                                                      ...prev,
-                                                      delaySeconds: Number(e.target.value),
-                                                }))
-                                          }
-                                    /> */}
-                              </FormField>
+                              <div className="rounded-[24px] border border-[var(--app-panel-border)] p-10 grid grid-cols-2 col-span-2 gap-5">
+                                    <FormField>
+                                          <Label>Monitor Number</Label>
+                                          <Select 
+                                                name={""} 
+                                                options={inputOption}
+                                                onChange={(e) => 
+                                                      setDto(prev => ({
+                                                            ...prev,
+                                                            metadata:{
+                                                                  ...(prev.metadata as InputMaskMetadata),
+                                                                  inputNumber : Number(e.target.value)
+                                                            }
+                                                      }))
+                                                }                                       
+                                          />
+                                    </FormField>
+                                    <FormField>
+                                          <Label>Mask Action</Label>
+                                          <Select 
+                                                name={""} 
+                                                options={[
+                                                      {
+                                                            label:MaskAction[MaskAction.MASK],
+                                                            value:MaskAction.MASK
+                                                      },
+                                                      {
+                                                            label:MaskAction[MaskAction.UNMASK],
+                                                            value:MaskAction.UNMASK
+                                                      }
+                                                ]}  
+                                                onChange={(e) => 
+                                                      setDto(prev => ({
+                                                            ...prev,
+                                                            metadata:{
+                                                                  ...(prev.metadata as InputMaskMetadata),
+                                                                  setClear : Number(e.target.value)
+                                                            }
+                                                      }))
+                                                }                                          
+                                          />
+                                    </FormField>
+                              </div>
+
                         );
 
                   case ActionType.ControlPointCommand:
@@ -60,12 +103,48 @@ const ActionForm: React.FC<PropsWithChildren<FormProp<ActionDto>>> = ({
             }
       };
 
+      const fetchDevice = async () => {
+            const res = await send.get(DeviceEndpoint.GET_LOCATION(locationGuid));
+            if(res){
+                  res.data.data.map((d:DeviceDto) => {
+                        setDeviceOption(prev => (
+                              prev.some(x => x.value == d.guid) ? 
+                              [...prev]
+                              :
+                              [...prev,{
+                                    label:d.name,
+                                    value:d.guid
+                              }]
+                        ))
+                  })
+            }
+      }
+
+      const fetchInput = async () => {
+            const res = await send.get(MonitorPointEndpoint.GET_BY_DEVICE(dto.deviceGuid ?? ""));
+            if(res){
+                  setInputOption(res.data.data);
+            }
+      }
+
+      const fetchOutput = async () => {
+            const res = await send.get(OutputEndpoint.GET_DEVICE(dto.deviceGuid ?? ""));
+            if(res){
+                  setOutputOption(res.data.data);
+            }
+      }
+
+      useEffect(() => {
+            fetchDevice();
+      },[])
+
 
       return (
             <div className="grid grid-cols-2 gap-5">
                   <FormField>
                         <Label>Name</Label>
                         <Input type="text" disabled={isReadOnly}
+                              placeholder="Action name"
                               onChange={(e) => {
                                     setDto(prev => ({
                                           ...prev,
@@ -74,9 +153,14 @@ const ActionForm: React.FC<PropsWithChildren<FormProp<ActionDto>>> = ({
                               }}
                         />
                   </FormField>
+                   <FormField>
+                        <Label>Device</Label>
+                        <Select isString={true} name={""} options={deviceOption} />
+                  </FormField>
                   <FormField>
                         <Label>Type</Label>
                         <Select
+                              // disabled={isReadOnly || dto.deviceGuid == "" || dto.deviceGuid == null}
                               isString={false}
                               defaultValue={dto.type}
                               options={[
@@ -189,9 +273,14 @@ const ActionForm: React.FC<PropsWithChildren<FormProp<ActionDto>>> = ({
                               }}
                         />
                   </FormField>
+                  <div></div>
+                  <FormField className="col-span-2">
+                  <Label>Action Detail</Label>
                   {
                         renderDynamicFields()
                   }
+                  </FormField>
+                  
 
 
             </div>

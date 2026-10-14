@@ -18,6 +18,14 @@ namespace Host.Controllers
       var res = await device.GetOptionByVendorAndLocationAsync(vendor,guid);
       return Ok(res);
     }
+
+    [HttpGet("option/location/{guid}")]
+    public async Task<IActionResult> GetOptionByLocationAsync(Guid guid)
+    {
+      var res = await device.GetOptionByLocationAsync(guid);
+      return Ok(res);
+    }
+
     [HttpGet("pagination")]
     public async Task<IActionResult> GetPaginationAsync([FromQuery] PaginationParams param)
     {
@@ -61,7 +69,7 @@ namespace Host.Controllers
     }
 
     [HttpGet("location/{guid}")]
-    public async Task<IActionResult> GetOptionByLocationAsync(Guid guid)
+    public async Task<IActionResult> GetByLocationAsync(Guid guid)
     {
       var res = await device.GetByLocationAsync(guid);
       return Ok(res);

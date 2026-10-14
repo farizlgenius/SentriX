@@ -2,6 +2,7 @@ const CONTROLLER = `output`;
 
 export const OutputEndpoint = {
     GET:(location:number) => `/api/${location}/${CONTROLLER}`,
+    GET_DEVICE:(guid:string) => `/api/${CONTROLLER}/device/${guid}`,
     DELETE :(component:number) => `/api/${CONTROLLER}/${component}`,
     PAGINATION:(pageNumber:number,pageSize:number,locationId?:number | undefined,search?:string | undefined,startDate?:string | undefined,endDate?:string | undefined) => `/api/${CONTROLLER}/pagination?PageNumber=${pageNumber}&PageSize=${pageSize}${search == undefined || search == "" ? "" : `&search=${search}`}${startDate == undefined ? "" : `&startDate=${startDate}`}${endDate == undefined ? "" : `&startDate=${endDate}`}${locationId == undefined ?  "" : `&locationId=${locationId}` }`,
     TRIGGER : `/api/${CONTROLLER}/command`,

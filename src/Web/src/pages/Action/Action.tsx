@@ -49,6 +49,7 @@ export const Action = () => {
     name: "",
     guid: "",
     metadata: "",
+    deviceGuid :null,
     isActive: true,
     isDefault: false,
     type: ActionType.DeleteAll
@@ -85,7 +86,7 @@ export const Action = () => {
     setForm(true);
   };
 
-  const handleClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     switch (e.currentTarget.name) {
       case "add":
         setFormType(FormType.CREATE);
@@ -185,7 +186,7 @@ export const Action = () => {
           dto={dto}
           setDto={setDto}
           type={formType}
-          handleChange={()=>{}}
+          handleChange={() => {}}
         />
       ),
     },
@@ -196,7 +197,7 @@ export const Action = () => {
       <PageBreadcrumb pageTitle="Actions" />
 
       {form ? (
-        <BaseForm tabContent={tabContent} type={formType} />
+        <BaseForm handleClick={handleClick} tabContent={tabContent} type={formType} desc="" />
       ) : (
         <BaseTable<ActionDto>
           refresh={refresh}

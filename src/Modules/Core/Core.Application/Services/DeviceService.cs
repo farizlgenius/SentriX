@@ -292,6 +292,11 @@ public sealed class DeviceService(
     return true;
   }
 
+      public async Task<IEnumerable<OptionDto>> GetOptionByLocationAsync(Guid guid, CancellationToken ct = default)
+      {
+            return await repo.GetOptionByLocationAsync(guid,ct);
+      }
+
       public async Task<IEnumerable<OptionDto>> GetOptionByVendorAndLocationAsync(Vendor vendor, Guid guid, CancellationToken ct = default)
       {
            return await repo.GetOptionByVendorAndLocationAsync(vendor,guid,ct);

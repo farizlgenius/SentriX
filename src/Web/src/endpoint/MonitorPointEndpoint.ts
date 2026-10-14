@@ -2,6 +2,7 @@ const CONTROLLER = `input`;
 
 export const MonitorPointEndpoint = {
     GET:(locationId:number)=> `/api/${locationId}/${CONTROLLER}`,
+    GET_BY_DEVICE:(guid:string) => `/api/${CONTROLLER}/device/${guid}`,
     PAGINATION:(pageNumber:number,pageSize:number,locationId?:number | undefined,search?:string | undefined,startDate?:string | undefined,endDate?:string | undefined) => `/api${locationId == 0 || locationId == undefined ?  "" : `/${locationId}` }/${CONTROLLER}/pagination?PageNumber=${pageNumber}&PageSize=${pageSize}${search == undefined || search == "" ? "" : `&search=${search}`}${startDate == undefined ? "" : `&startDate=${startDate}`}${endDate == undefined ? "" : `&startDate=${endDate}`}`,
     MP_BY_MAC:(mac:string) =>  `/api/${CONTROLLER}/${mac}`,
     CREATE : `/api/${CONTROLLER}`,

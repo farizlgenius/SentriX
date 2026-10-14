@@ -249,6 +249,13 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
 
             });
 
+            // Alert 
+             modelBuilder.Entity<Persistences.Entities.EventDetail>(b =>
+           {
+                 b.Property(d => d.entity).HasConversion<string>();
+                 b.Property(d => d.event_detail).HasConversion<string>();
+           });
+
 
             // Indexing and key setting 
             modelBuilder.Entity<Card>()
@@ -630,6 +637,10 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                               x.id
                         }
                   ).IsUnique();
+
+            // Alert 
+
+            
 
             // Configure relationships 
 
@@ -1095,6 +1106,20 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   .HasMany(x => x.codes)
                   .WithOne(x => x.trigger_type)
                   .HasForeignKey(x => x.trigger_type_id)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            // Alert
+
+            modelBuilder.Entity<Alert>()
+                  .HasMany(x => x.alert_event_details)
+                  .WithOne(x => x.alert)
+                  .HasForeignKey(x => x.alert_id)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Persistences.Entities.EventDetail>()
+                  .HasMany(x => x.alert_event_details)
+                  .WithOne(x => x.event_detail)
+                  .HasForeignKey(x => x.event_detail_id)
                   .OnDelete(DeleteBehavior.Cascade);
 
 
@@ -1881,41 +1906,42 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
             );
 
             modelBuilder.Entity<TriggerCode>()
-                  .HasData(
+                  .HasData
+                  (
                         // Typesys
-                        new TriggerCode { id = 1, name = "SCP Power-up diagnostic" , value =1,trigger_type_id=1 },
-                        new TriggerCode { id = 2, name = "Host communication offline" , value =2,trigger_type_id=1 },
-                        new TriggerCode { id = 3, name = "Host communication online" , value =3,trigger_type_id=1 },
-                        new TriggerCode { id = 4, name = "Transaction count exceed limit" , value =4,trigger_type_id=1 },
-                        new TriggerCode { id = 5, name = "Configuration DB save complete" , value =5,trigger_type_id=1 },
-                        new TriggerCode { id = 6, name = "Card database save complete" , value =6,trigger_type_id=1 },
-                        new TriggerCode { id = 7, name = "Card database cleared due to SRAM buffer overflow" , value =7,trigger_type_id=1 },
+                        new TriggerCode { id = 1, name = "SCP Power-up diagnostic", value = 1, trigger_type_id = 1 },
+                        new TriggerCode { id = 2, name = "Host communication offline", value = 2, trigger_type_id = 1 },
+                        new TriggerCode { id = 3, name = "Host communication online", value = 3, trigger_type_id = 1 },
+                        new TriggerCode { id = 4, name = "Transaction count exceed limit", value = 4, trigger_type_id = 1 },
+                        new TriggerCode { id = 5, name = "Configuration DB save complete", value = 5, trigger_type_id = 1 },
+                        new TriggerCode { id = 6, name = "Card database save complete", value = 6, trigger_type_id = 1 },
+                        new TriggerCode { id = 7, name = "Card database cleared due to SRAM buffer overflow", value = 7, trigger_type_id = 1 },
                         // Type Module Comm
-                        new TriggerCode { id = 8, name = "Disabled" , value =1,trigger_type_id=2 },
-                        new TriggerCode { id = 9, name = "Offline:timeout" , value =2,trigger_type_id=2 },
-                        new TriggerCode { id = 10, name = "Offline:invalid identificatiion from module" , value =3,trigger_type_id=2 },
-                        new TriggerCode { id = 11, name = "Offline:command too long" , value =4,trigger_type_id=2 },
-                        new TriggerCode { id = 12, name = "Online:normal connection" , value =5,trigger_type_id=2 },
-                        new TriggerCode { id = 13, name = "hexLoad report: ser_num is address loaded (-1 = last record)" , value =6,trigger_type_id=2 },
+                        new TriggerCode { id = 8, name = "Disabled", value = 1, trigger_type_id = 2 },
+                        new TriggerCode { id = 9, name = "Offline:timeout", value = 2, trigger_type_id = 2 },
+                        new TriggerCode { id = 10, name = "Offline:invalid identificatiion from module", value = 3, trigger_type_id = 2 },
+                        new TriggerCode { id = 11, name = "Offline:command too long", value = 4, trigger_type_id = 2 },
+                        new TriggerCode { id = 12, name = "Online:normal connection", value = 5, trigger_type_id = 2 },
+                        new TriggerCode { id = 13, name = "hexLoad report: ser_num is address loaded (-1 = last record)", value = 6, trigger_type_id = 2 },
                         // CardBin
-                        new TriggerCode { id = 14, name = "Access denied, Invalid card format" , value=1,trigger_type_id=3 },
+                        new TriggerCode { id = 14, name = "Access denied, Invalid card format", value = 1, trigger_type_id = 3 },
                         // CardBcd
-                        new TriggerCode { id = 15, name = "Access denied, Invalid card format, forward read" , value=1,trigger_type_id=4 },
-                        new TriggerCode { id = 16, name = "Access denied, Invalid card format, reverse read" , value=2,trigger_type_id=4 },
+                        new TriggerCode { id = 15, name = "Access denied, Invalid card format, forward read", value = 1, trigger_type_id = 4 },
+                        new TriggerCode { id = 16, name = "Access denied, Invalid card format, reverse read", value = 2, trigger_type_id = 4 },
                         // Card full
-                        new TriggerCode { id = 17, name = "Request rejected: access point \"locked\"" , value =1,trigger_type_id=5 },
-                        new TriggerCode { id = 18, name = "Request accepted: access point \"unlocked\"" , value =2,trigger_type_id=5 },
-                        new TriggerCode { id = 19, name = "Request rejected: invalid facility code" , value =3,trigger_type_id=5 },
-                        new TriggerCode { id = 20, name = "Request rejected: invalid facility code extension" , value =4,trigger_type_id=5 },
-                        new TriggerCode { id = 21, name = "Request rejected: not in card file" , value =5,trigger_type_id=5 },
-                        new TriggerCode { id = 22, name = "Request rejected: invalid issue code" , value =6,trigger_type_id=5 },
-                        new TriggerCode { id = 23, name = "Request granted: facility code verified, not used" , value =7,trigger_type_id=5 },
-                        new TriggerCode { id = 24, name = "Request granted: facility code verified, door used" , value =8,trigger_type_id=5 },
-                        new TriggerCode { id = 25, name = "Access denied - asked for host approval, then timed out" , value =9,trigger_type_id=5 },
-                        new TriggerCode { id = 26, name = "Reporting that this card is \"about to get access granted\"" , value =10,trigger_type_id=5 },
-                        new TriggerCode { id = 27, name = "Access denied count exceeded" , value =11,trigger_type_id=5 },
-                        new TriggerCode { id = 28, name = "Access denied - asked for host approval, then host denied" , value =12,trigger_type_id=5 },
-                        new TriggerCode { id = 29, name = "Request rejected: Airlock is busy" , value =13,trigger_type_id=5 },
+                        new TriggerCode { id = 17, name = "Request rejected: access point \"locked\"", value = 1, trigger_type_id = 5 },
+                        new TriggerCode { id = 18, name = "Request accepted: access point \"unlocked\"", value = 2, trigger_type_id = 5 },
+                        new TriggerCode { id = 19, name = "Request rejected: invalid facility code", value = 3, trigger_type_id = 5 },
+                        new TriggerCode { id = 20, name = "Request rejected: invalid facility code extension", value = 4, trigger_type_id = 5 },
+                        new TriggerCode { id = 21, name = "Request rejected: not in card file", value = 5, trigger_type_id = 5 },
+                        new TriggerCode { id = 22, name = "Request rejected: invalid issue code", value = 6, trigger_type_id = 5 },
+                        new TriggerCode { id = 23, name = "Request granted: facility code verified, not used", value = 7, trigger_type_id = 5 },
+                        new TriggerCode { id = 24, name = "Request granted: facility code verified, door used", value = 8, trigger_type_id = 5 },
+                        new TriggerCode { id = 25, name = "Access denied - asked for host approval, then timed out", value = 9, trigger_type_id = 5 },
+                        new TriggerCode { id = 26, name = "Reporting that this card is \"about to get access granted\"", value = 10, trigger_type_id = 5 },
+                        new TriggerCode { id = 27, name = "Access denied count exceeded", value = 11, trigger_type_id = 5 },
+                        new TriggerCode { id = 28, name = "Access denied - asked for host approval, then host denied", value = 12, trigger_type_id = 5 },
+                        new TriggerCode { id = 29, name = "Request rejected: Airlock is busy", value = 13, trigger_type_id = 5 },
                         // CardID
                         new TriggerCode { id = 30, name = "Request rejected: deactivated card", value = 1, trigger_type_id = 6 },
                         new TriggerCode { id = 31, name = "Request rejected: before activation date", value = 2, trigger_type_id = 6 },
@@ -1990,7 +2016,7 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                         // Type Activate 
                         new TriggerCode { id = 91, name = "Became inactive", value = 1, trigger_type_id = 12 },
                         new TriggerCode { id = 92, name = "Became active", value = 2, trigger_type_id = 12 },
-                        // Door Mode
+                         // Door Mode
                          new TriggerCode { id = 93, name = "Disabled", value = 1, trigger_type_id = 13 },
                          new TriggerCode { id = 94, name = "Unlocked", value = 2, trigger_type_id = 13 },
                          new TriggerCode { id = 95, name = "Locked (exit request enabled)", value = 3, trigger_type_id = 13 },
@@ -2083,6 +2109,53 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                         new TriggerCode { id = 173, name = "Extended status updated", value = 1, trigger_type_id = 28 },
                         new TriggerCode { id = 174, name = "Secure / Inactive", value = 3, trigger_type_id = 29 },
                         new TriggerCode { id = 175, name = "Alarm / Active", value = 4, trigger_type_id = 29 }
+                  );
+
+            modelBuilder.Entity<Entities.EventDetail>()
+                  .HasData(
+                        // device
+                        new Entities.EventDetail{ id = 1, entity = EntityType.Device,event_detail=SharedKernel.Enums.EventDetail.Online, detail = "Online"  },
+                        new Entities.EventDetail{ id = 2, entity = EntityType.Device,event_detail=SharedKernel.Enums.EventDetail.Offline, detail = "Offline"  },
+                        // module
+                         new Entities.EventDetail{ id = 5, entity = EntityType.DeviceModule,event_detail=SharedKernel.Enums.EventDetail.Online, detail = "Online"  },
+                         new Entities.EventDetail{ id = 6, entity = EntityType.DeviceModule,event_detail=SharedKernel.Enums.EventDetail.Offline, detail = "Offline" },
+                         new Entities.EventDetail{ id = 7, entity = EntityType.DeviceModule,event_detail=SharedKernel.Enums.EventDetail.Disabled, detail = "Disabled"  },
+                         // Door
+                         new Entities.EventDetail{ id = 8, entity = EntityType.Door,event_detail=SharedKernel.Enums.EventDetail.Online, detail = "Reader online"  },
+                         new Entities.EventDetail{ id = 9, entity = EntityType.Door,event_detail=SharedKernel.Enums.EventDetail.Offline, detail = "Reader offline" },
+                         new Entities.EventDetail{ id = 14, entity = EntityType.Door,event_detail=SharedKernel.Enums.EventDetail.Tamper, detail = "Reader tamper"  },
+                         new Entities.EventDetail{ id = 10, entity = EntityType.Door,event_detail=SharedKernel.Enums.EventDetail.CardNoFound, detail = "Card not found"  },
+                         new Entities.EventDetail{ id = 11, entity = EntityType.Door,event_detail=SharedKernel.Enums.EventDetail.Grant, detail = "Grant"  },
+                         new Entities.EventDetail{ id = 12, entity = EntityType.Door,event_detail=SharedKernel.Enums.EventDetail.Rejected, detail = "Rejected"  },
+                         new Entities.EventDetail{ id = 13, entity = EntityType.Door,event_detail=SharedKernel.Enums.EventDetail.Denied, detail = "Denied"  },
+                         new Entities.EventDetail{ id = 14, entity = EntityType.Door,event_detail=SharedKernel.Enums.EventDetail.Duress, detail = "Duress"  },
+                          new Entities.EventDetail{ id = 14, entity = EntityType.Door,event_detail=SharedKernel.Enums.EventDetail.HeldOpen, detail = "Held open"  },
+                          new Entities.EventDetail{ id = 14, entity = EntityType.Door,event_detail=SharedKernel.Enums.EventDetail.ForcedOpen, detail = "Force open"  },
+                          new Entities.EventDetail{ id = 14, entity = EntityType.Door,event_detail=SharedKernel.Enums.EventDetail.DoubleCardEvent, detail = "Double card"  },
+                          // Input
+                          new Entities.EventDetail{ id = 14, entity = EntityType.Input,event_detail=SharedKernel.Enums.EventDetail.Active, detail = "Active"  },
+                          new Entities.EventDetail{ id = 14, entity = EntityType.Input,event_detail=SharedKernel.Enums.EventDetail.Inactive, detail = "Inactive"  },
+                          new Entities.EventDetail{ id = 14, entity = EntityType.Input,event_detail=SharedKernel.Enums.EventDetail.Disconnect, detail = "Disconnected"  },
+                          // Output 
+                          new Entities.EventDetail{ id = 14, entity = EntityType.Output,event_detail=SharedKernel.Enums.EventDetail.Active, detail = "Active"  },
+                          new Entities.EventDetail{ id = 14, entity = EntityType.Output,event_detail=SharedKernel.Enums.EventDetail.Inactive, detail = "Inactive"  },
+                          new Entities.EventDetail{ id = 14, entity = EntityType.Output,event_detail=SharedKernel.Enums.EventDetail.Disconnect, detail = "Disconnected"  },
+                          // Antipassback
+                          new Entities.EventDetail{ id = 14, entity = EntityType.Door,event_detail=SharedKernel.Enums.EventDetail.APB, detail = "Antipassback violate"  },
+                          // Area
+                          new Entities.EventDetail{ id = 14, entity = EntityType.Door,event_detail=SharedKernel.Enums.EventDetail.OccLimit, detail = "Occupancy reached limit"  }
+                          
+                         
+                         
+                  );
+
+            modelBuilder.Entity<AlertLevel>()
+                  .HasData(
+                        new AlertLevel{id = 1,name="Emergency",color_code="#ff1100"},
+                        new AlertLevel{id = 2,name="Danger",color_code="#c2432d"},
+                        new AlertLevel{id = 3,name="High",color_code="#ff911c"},
+                        new AlertLevel{id = 4,name="Moderate",color_code="#ffbd2d"},
+                        new AlertLevel{id = 5,name="Low",color_code="#989a9c"}
                   );
 
 
