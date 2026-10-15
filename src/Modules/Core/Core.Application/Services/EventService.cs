@@ -71,7 +71,12 @@ public sealed class EventService(
     return await repo.GetAdapterPaginationAsync(param, ct);
   }
 
-  public async Task<EventDto> GetByGuidAsync(Guid guid, CancellationToken ct = default)
+      public async Task<IEnumerable<OptionDto>> GetBaseEventAsync()
+      {
+           return await repo.GetBaseEventAsync();
+      }
+
+      public async Task<EventDto> GetByGuidAsync(Guid guid, CancellationToken ct = default)
   {
     throw new NotImplementedException();
   }

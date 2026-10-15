@@ -10,4 +10,10 @@ public sealed class AlertLevel : BaseEntity
       {
             
       }
+
+      public AlertLevel(Domain.Entities.AlertLevel d) : base(d.Guid)
+      {
+            name = d.Name;
+            color_code = d.ColorCode;
+      }
 }

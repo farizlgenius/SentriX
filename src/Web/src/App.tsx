@@ -31,7 +31,6 @@ import Door from "./pages/Door/Door";
 import User from "./pages/User/User";
 import TimeZone from "./pages/TimeZone/TimeZone";
 import CardFormat from "./pages/CardFormat/CardFormat";
-import Alert from "./components/ui/alert/Alert";
 import { useEffect, useState } from "react";
 import Holiday from "./pages/Holiday/Holiday";
 import { useAlert } from "./context/AlertContext";
@@ -78,6 +77,10 @@ import Turnstile from "./pages/Turnstile/Turnstile";
 import ExceptionEvent from "./pages/Diagnostic/ExceptionEvent";
 import { AuditTrail } from "./pages/Report/AuditTrail";
 import { Action } from "./pages/Action/Action";
+import AlertEvent from "./pages/Alert/AlertEvent";
+import Alert from "./components/ui/alert/Alert";
+import { AlertPage } from "./pages/Alert/Alert";
+import { AlertLevel } from "./pages/Alert/AlertLevel";
 
 export default function App() {
   const navigate = useNavigate();
@@ -253,6 +256,10 @@ export default function App() {
             <Route path="/exception" element={<ExceptionEvent />} />
             <Route path="/interval" element={<Interval />} />
             <Route path="/audit" element={<AuditTrail/>} />
+            {/* Alert */}
+            <Route path="/alert-event" element={<AlertEvent/>}/>
+            <Route path="/alert" element={<AlertPage/>}/>
+            <Route path="/alert-level" element={<AlertLevel/>}/>
 
             {/* VMS */}
             <Route path="/visitor" element={<Visitor />} />

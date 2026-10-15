@@ -98,7 +98,11 @@ const acsNavItems: NavItem[] = [
     id: 4,
     name: "Alerts",
     icon: <NotiIcon />,
-    path: "/",
+    subItems:[
+      {name:"Real Time",path:"/alert-event"},
+      {name:"Alert",path:"/alert"},
+      {name:"Level",path:"/alert-level"}
+    ],
   },
   {
     id: 5,

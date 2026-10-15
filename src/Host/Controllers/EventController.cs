@@ -20,6 +20,14 @@ namespace Host.Controllers
 
     }
 
+    [HttpGet("base")]
+    public async Task<IActionResult> GetBaseEventAsync()
+    {
+      var res = await @event.GetBaseEventAsync();
+      return Ok(res);
+    }
+
+
     [HttpGet("adapter/pagination")]
     public async Task<IActionResult> GetAdapterPaginationAsync([FromQuery] PaginationParams param)
     {

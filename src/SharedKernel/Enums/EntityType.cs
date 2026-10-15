@@ -32,5 +32,7 @@ public enum EntityType
       Area,
       Web,
       CardFormat,
-      Action
+      Action,
+      Alert,
+      AlertLevel
 }

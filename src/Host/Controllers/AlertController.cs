@@ -5,19 +5,29 @@ using SharedKernel.Domain;
 
 namespace Host.Controllers;
 
+
+[Route("api/[controller]")]
+[ApiController]
 public class AlertController(IAlert alert) : ControllerBase
 {
       [HttpGet("pagination")]
-      public async Task<IActionResult> GetPaginationAsync(PaginationParams param)
+      public async Task<IActionResult> GetPaginationAsync([FromQuery] PaginationParams param)
       {
             var res = await alert.GetPaginationAsync(param);
             return Ok(res);
       }
 
       [HttpGet("event/pagination")]
-      public async Task<IActionResult> GetEventPaginationAsync(PaginationParams param)
+      public async Task<IActionResult> GetEventPaginationAsync([FromQuery] PaginationParams param)
       {
             var res = await alert.GetEventPaginationAsync(param);
+            return Ok(res);
+      }
+
+      [HttpGet("level/pagination")]
+      public async Task<IActionResult> GetLevelPaginationAsync([FromQuery] PaginationParams param)
+      {
+            var res = await alert.GetLevelPaginationAsync(param);
             return Ok(res);
       }
 
@@ -35,6 +45,13 @@ public class AlertController(IAlert alert) : ControllerBase
             return Ok(res);
       }
 
+      [HttpPost("level")]
+      public async Task<IActionResult> CreateLevelAsync([FromBody] CreateAlertLevelDto dto)
+      {
+            var res = await alert.CreateLevelAsync(dto);
+            return Ok(res);
+      }
+
       [HttpPut]
       public async Task<IActionResult> UpdateAsync([FromBody] UpdateAlertDto dto)
       {
@@ -42,10 +59,24 @@ public class AlertController(IAlert alert) : ControllerBase
             return Ok(res);
       }
 
+      [HttpPut("level")]
+      public async Task<IActionResult> UpdateLevelAsync([FromBody] UpdateAlertLevelDto dto)
+      {
+            var res = await alert.UpdateLevelAsync(dto);
+            return Ok(res);
+      }
+
       [HttpDelete("{guid}")]
       public async Task<IActionResult> DeleteAsync(Guid guid)
       {
             var res = await alert.DeleteByGuidAsync(guid);
+            return Ok(res);
+      }
+
+      [HttpDelete("level/{guid}")]
+      public async Task<IActionResult> DeleteLevelAsync(Guid guid)
+      {
+            var res = await alert.DeleteLevelByGuidAsync(guid);
             return Ok(res);
       }
 

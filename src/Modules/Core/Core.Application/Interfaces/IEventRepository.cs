@@ -26,4 +26,5 @@ public interface IEventRepository : IBaseRepository<EventDto, Event>
       );
 
       Task AddAuditAsync(AuditTrail audit,CancellationToken ct = default);
+      Task<IEnumerable<OptionDto>> GetBaseEventAsync(CancellationToken ct = default);
 }

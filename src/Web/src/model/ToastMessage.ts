@@ -169,6 +169,15 @@ export enum ProcedureToast {
 }
 
 
+export enum AlertToast {
+    CREATE = "Create Alert",
+    CREATE_LEVEL = "Create Alert Level",
+    DELETE = "Delete Alert",
+    DELETE_RANGE = "Delete Alert",
+    UPDATE = "Update Alert",
+    UPDATE_LEVEL = "Update Alert Level"
+}
+
 export enum RoleToast {
     CREATE = "Create Role",
     UPDATE = "Update Role",

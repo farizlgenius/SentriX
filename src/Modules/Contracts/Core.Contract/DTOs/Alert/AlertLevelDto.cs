@@ -5,5 +5,7 @@ namespace Core.Contract.DTOs.Alert;
 public sealed record AlertLevelDto(
       Guid Guid,
       string Name,
-      string ColorCode
+      string ColorCode,
+      bool IsActive,
+      bool IsDefault
 );

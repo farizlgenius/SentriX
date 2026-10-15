@@ -3,7 +3,10 @@ using SharedKernel.Enums;
 namespace Core.Contract.DTOs.Alert;
 
 public sealed record UpdateAlertDto(
-      EntityType Entity,
-      AlertLevelDto Level,
-      string Detail
+      Guid Guid,
+      string Name,
+      string Advice,
+      Guid AlertLevelGuid,
+      List<Guid> BaseEventGuid,
+      Guid LocationGuid
 );

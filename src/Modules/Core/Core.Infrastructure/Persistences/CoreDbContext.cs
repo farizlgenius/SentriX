@@ -66,6 +66,7 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
       public DbSet<AlertBaseEvent> AlertBaseEvents {get; set;}
       public DbSet<Persistences.Entities.BaseEvent> BaseEvents { get; set;}
       public DbSet<AlertEvent> AlertEvents {get; set;} 
+      public DbSet<Persistences.Entities.AlertLevel> AlertLevels {get; set;}
 
       protected override void OnModelCreating(ModelBuilder modelBuilder)
       {
@@ -2129,27 +2130,27 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                          // Door
                          new Entities.BaseEvent{ id = 8, entity = EntityType.Door,event_detail=SharedKernel.Enums.BaseEvent.Online, detail = "Reader online"  },
                          new Entities.BaseEvent{ id = 9, entity = EntityType.Door,event_detail=SharedKernel.Enums.BaseEvent.Offline, detail = "Reader offline" },
-                         new Entities.BaseEvent{ id = 14, entity = EntityType.Door,event_detail=SharedKernel.Enums.BaseEvent.Tamper, detail = "Reader tamper"  },
-                         new Entities.BaseEvent{ id = 10, entity = EntityType.Door,event_detail=SharedKernel.Enums.BaseEvent.CardNoFound, detail = "Card not found"  },
-                         new Entities.BaseEvent{ id = 11, entity = EntityType.Door,event_detail=SharedKernel.Enums.BaseEvent.Grant, detail = "Grant"  },
-                         new Entities.BaseEvent{ id = 12, entity = EntityType.Door,event_detail=SharedKernel.Enums.BaseEvent.Rejected, detail = "Rejected"  },
-                         new Entities.BaseEvent{ id = 13, entity = EntityType.Door,event_detail=SharedKernel.Enums.BaseEvent.Denied, detail = "Denied"  },
-                         new Entities.BaseEvent{ id = 14, entity = EntityType.Door,event_detail=SharedKernel.Enums.BaseEvent.Duress, detail = "Duress"  },
-                          new Entities.BaseEvent{ id = 14, entity = EntityType.Door,event_detail=SharedKernel.Enums.BaseEvent.HeldOpen, detail = "Held open"  },
-                          new Entities.BaseEvent{ id = 14, entity = EntityType.Door,event_detail=SharedKernel.Enums.BaseEvent.ForcedOpen, detail = "Force open"  },
-                          new Entities.BaseEvent{ id = 14, entity = EntityType.Door,event_detail=SharedKernel.Enums.BaseEvent.DoubleCardEvent, detail = "Double card"  },
+                         new Entities.BaseEvent{ id = 10, entity = EntityType.Door,event_detail=SharedKernel.Enums.BaseEvent.Tamper, detail = "Reader tamper"  },
+                         new Entities.BaseEvent{ id = 11, entity = EntityType.Door,event_detail=SharedKernel.Enums.BaseEvent.CardNoFound, detail = "Card not found"  },
+                         new Entities.BaseEvent{ id = 12, entity = EntityType.Door,event_detail=SharedKernel.Enums.BaseEvent.Grant, detail = "Grant"  },
+                         new Entities.BaseEvent{ id = 13, entity = EntityType.Door,event_detail=SharedKernel.Enums.BaseEvent.Rejected, detail = "Rejected"  },
+                         new Entities.BaseEvent{ id = 14, entity = EntityType.Door,event_detail=SharedKernel.Enums.BaseEvent.Denied, detail = "Denied"  },
+                         new Entities.BaseEvent{ id = 15, entity = EntityType.Door,event_detail=SharedKernel.Enums.BaseEvent.Duress, detail = "Duress"  },
+                          new Entities.BaseEvent{ id = 16, entity = EntityType.Door,event_detail=SharedKernel.Enums.BaseEvent.HeldOpen, detail = "Held open"  },
+                          new Entities.BaseEvent{ id = 17, entity = EntityType.Door,event_detail=SharedKernel.Enums.BaseEvent.ForcedOpen, detail = "Force open"  },
+                          new Entities.BaseEvent{ id = 18, entity = EntityType.Door,event_detail=SharedKernel.Enums.BaseEvent.DoubleCardEvent, detail = "Double card"  },
                           // Input
-                          new Entities.BaseEvent{ id = 14, entity = EntityType.Input,event_detail=SharedKernel.Enums.BaseEvent.Active, detail = "Active"  },
-                          new Entities.BaseEvent{ id = 14, entity = EntityType.Input,event_detail=SharedKernel.Enums.BaseEvent.Inactive, detail = "Inactive"  },
-                          new Entities.BaseEvent{ id = 14, entity = EntityType.Input,event_detail=SharedKernel.Enums.BaseEvent.Disconnect, detail = "Disconnected"  },
+                          new Entities.BaseEvent{ id = 19, entity = EntityType.Input,event_detail=SharedKernel.Enums.BaseEvent.Active, detail = "Active"  },
+                          new Entities.BaseEvent{ id = 20, entity = EntityType.Input,event_detail=SharedKernel.Enums.BaseEvent.Inactive, detail = "Inactive"  },
+                          new Entities.BaseEvent{ id = 21, entity = EntityType.Input,event_detail=SharedKernel.Enums.BaseEvent.Disconnect, detail = "Disconnected"  },
                           // Output 
-                          new Entities.BaseEvent{ id = 14, entity = EntityType.Output,event_detail=SharedKernel.Enums.BaseEvent.Active, detail = "Active"  },
-                          new Entities.BaseEvent{ id = 14, entity = EntityType.Output,event_detail=SharedKernel.Enums.BaseEvent.Inactive, detail = "Inactive"  },
-                          new Entities.BaseEvent{ id = 14, entity = EntityType.Output,event_detail=SharedKernel.Enums.BaseEvent.Disconnect, detail = "Disconnected"  },
-                          // Antipassback
-                          new Entities.BaseEvent{ id = 14, entity = EntityType.Door,event_detail=SharedKernel.Enums.BaseEvent.APB, detail = "Antipassback violate"  },
+                          new Entities.BaseEvent{ id = 22, entity = EntityType.Output,event_detail=SharedKernel.Enums.BaseEvent.Active, detail = "Active"  },
+                          new Entities.BaseEvent{ id = 23, entity = EntityType.Output,event_detail=SharedKernel.Enums.BaseEvent.Inactive, detail = "Inactive"  },
+                          new Entities.BaseEvent{ id = 24, entity = EntityType.Output,event_detail=SharedKernel.Enums.BaseEvent.Disconnect, detail = "Disconnected"  },
+                          // Antipassba
+                          new Entities.BaseEvent{ id = 25, entity = EntityType.Door,event_detail=SharedKernel.Enums.BaseEvent.APB, detail = "Antipassback violate"  },
                           // Area
-                          new Entities.BaseEvent{ id = 14, entity = EntityType.Door,event_detail=SharedKernel.Enums.BaseEvent.OccLimit, detail = "Occupancy reached limit"  }
+                          new Entities.BaseEvent{ id = 26, entity = EntityType.Door,event_detail=SharedKernel.Enums.BaseEvent.OccLimit, detail = "Occupancy reached limit"  }
                           
                          
                          
@@ -2157,11 +2158,11 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
 
             modelBuilder.Entity<AlertLevel>()
                   .HasData(
-                        new AlertLevel{id = 1,name="Emergency",color_code="#ff1100"},
-                        new AlertLevel{id = 2,name="Danger",color_code="#c2432d"},
-                        new AlertLevel{id = 3,name="High",color_code="#ff911c"},
-                        new AlertLevel{id = 4,name="Moderate",color_code="#ffbd2d"},
-                        new AlertLevel{id = 5,name="Low",color_code="#989a9c"}
+                        new AlertLevel{id = 1,name="Emergency",color_code="#ff1100",is_default=true},
+                        new AlertLevel{id = 2,name="Danger",color_code="#c2432d",is_default=true},
+                        new AlertLevel{id = 3,name="High",color_code="#ff911c",is_default=true},
+                        new AlertLevel{id = 4,name="Moderate",color_code="#ffbd2d",is_default=true},
+                        new AlertLevel{id = 5,name="Low",color_code="#989a9c",is_default=true}
                   );
 
 

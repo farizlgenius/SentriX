@@ -28,4 +28,6 @@ public interface IEvent : IBase<EventDto, CreateEventDto, UpdateEventDto>
         string? objectName,
         string? diff,
         CancellationToken ct = default);
+
+        Task<IEnumerable<OptionDto>> GetBaseEventAsync();
 }

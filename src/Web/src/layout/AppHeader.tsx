@@ -177,7 +177,7 @@ const AppHeader: React.FC = () => {
               <Select
                 defaultValue={locationGuid}
                 onChange={(e) => {
-                  setLocationGuid(e);
+                  setLocationGuid(e.target.value);
                   setLocationName(
                     locationOption.find((x) => x.value == Number(e))?.label ??
                       "",

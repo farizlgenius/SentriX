@@ -255,6 +255,17 @@ new AdapterEvent(@event)
           );
       }
 
+      public async Task<IEnumerable<OptionDto>> GetBaseEventAsync(CancellationToken ct = default)
+      {
+            return await context.BaseEvents
+              .AsNoTracking()
+              .Select(x => new OptionDto(
+                x.detail,
+                x.event_detail,
+                x.entity.ToString()
+              )).ToArrayAsync();
+      }
+
       public async Task<IEnumerable<EventDto>> GetByLocationAsync(Guid locationGuid, CancellationToken ct = default)
   {
     return await context.Events
