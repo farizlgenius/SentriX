@@ -14,6 +14,13 @@ public class AlertController(IAlert alert) : ControllerBase
             return Ok(res);
       }
 
+      [HttpGet("event/pagination")]
+      public async Task<IActionResult> GetEventPaginationAsync(PaginationParams param)
+      {
+            var res = await alert.GetEventPaginationAsync(param);
+            return Ok(res);
+      }
+
       [HttpGet("{guid}")]
       public async Task<IActionResult> GetAsync(Guid guid)
       {

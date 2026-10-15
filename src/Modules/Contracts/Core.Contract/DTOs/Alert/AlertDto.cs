@@ -4,7 +4,11 @@ namespace Core.Contract.DTOs.Alert;
 
 public sealed record AlertDto(
       Guid Guid,
-      EntityType Entity,
-      AlertLevelDto Level,
-      string Detail
+      string Name,
+      string Advice,
+      Guid LocationGuid,
+      string LocationName,
+      Guid AlertLevelGuid,
+      string AlertLevel,
+      List<BaseEventDto> BaseEventGuids
 );

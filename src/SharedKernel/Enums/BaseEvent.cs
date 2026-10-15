@@ -1,6 +1,6 @@
 namespace SharedKernel.Enums;
 
-public enum EventDetail
+public enum BaseEvent
 {
     Online,
     Offline,
