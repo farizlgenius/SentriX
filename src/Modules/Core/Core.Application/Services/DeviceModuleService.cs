@@ -155,8 +155,8 @@ public sealed class DeviceModuleService(
       {
           var deviceModule = await repo.GetAsync(guid,ct);
 
-          var deviceId = (short)await com.GetExternalIdByMacAndEntityAsync(deviceModule.Mac,EntityType.Device);
-          var moduleId = (short)await com.GetExternalIdByGuidAndEntityAsync(guid,EntityType.DeviceModule);
+          var deviceId = (short)await com.GetExternalIdByMacAndEntityAsync(deviceModule.Mac,EntityType.DEVICE);
+          var moduleId = (short)await com.GetExternalIdByGuidAndEntityAsync(guid,EntityType.DEVICE_MODULE);
 
           await adapter.GetAdapter(Vendor.aero).Module.GetStatusAsync(
             deviceModule.Mac,

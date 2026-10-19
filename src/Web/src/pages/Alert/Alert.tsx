@@ -18,11 +18,11 @@ import { usePagination } from "../../context/PaginationContext";
 import { ActionEndpoint } from "../../endpoint/ActionEndpoint";
 import AlertForm from "./AlertForm";
 import { AlertDto } from "../../model/Alert/AlertDto";
-import { Options } from "../../model/Options";
-import { EventEndpoint } from "../../endpoint/TransactionEndpoint";
+import { TableCell } from "../../components/ui/table";
 
-const HEADERS: string[] = ["Name", "Action"];
-const KEYS: string[] = ["name"];
+
+const HEADERS: string[] = ["Name", "Level", "Enabled", "Action"];
+const KEYS: string[] = ["name", "level"];
 
 export const AlertPage = () => {
   const { toggleToast } = useToast();
@@ -31,8 +31,7 @@ export const AlertPage = () => {
   const [form, setForm] = useState<boolean>(false);
   const [formType, setFormType] = useState<FormType>(FormType.CREATE);
   const [selectedObject, setSelectedObjects] = useState<AlertDto[]>([]);
-  const [alertDto, setAlertDto] = useState<AlertDto[]>([]);
-  const [events,setEvents] = useState<Options[]>([]);
+  const [alertDtos, setAlertDtos] = useState<AlertDto[]>([]);
   const {
     setRemove,
     setConfirmRemove,
@@ -49,13 +48,15 @@ export const AlertPage = () => {
     guid: "",
     name: "",
     advice: "",
-    locationGuid: "",
+    locationGuid: locationGuid,
     locationName: "",
     alertLevelGuid: "",
-    alertLevel: "",
-    baseEventGuids: [],
+    coreEventGuid: "",
     isActive: false,
-    isDefault: false
+    isDefault: false,
+    alertLevelColor: "",
+    coreEntityGuid: "",
+    alertLevelName: ""
   };
   const [dto, setDto] = useState<AlertDto>(defaultDto);
 
@@ -63,7 +64,7 @@ export const AlertPage = () => {
 
   const handleRemove = (data: AlertDto) => {
     setConfirmRemove(() => async () => {
-      const res = await send.delete(ActionEndpoint.DELETE(data.guid));
+      const res = await send.delete(AlertEndpoint.DELETE(data.guid));
       if (
         Helper.handleToastByResCode(res, ProcedureToast.DELETE, toggleToast)
       ) {
@@ -78,12 +79,14 @@ export const AlertPage = () => {
     /* handle Table Action */
   }
   const handleEdit = (data: AlertDto) => {
+    console.log(data)
     setDto(data);
     setFormType(FormType.UPDATE);
     setForm(true);
   };
 
   const handleInfo = (data: AlertDto) => {
+    console.log(data)
     setDto(data);
     setFormType(FormType.INFO);
     setForm(true);
@@ -121,6 +124,7 @@ export const AlertPage = () => {
         break;
       case "create":
         setConfirmCreate(() => async () => {
+          dto.locationGuid = locationGuid;
           const res = await send.post(AlertEndpoint.CREATE, dto);
           if (
             Helper.handleToastByResCode(res, ProcedureToast.CREATE, toggleToast)
@@ -163,8 +167,11 @@ export const AlertPage = () => {
     startDate?: string,
     endDate?: string,
   ) => {
-    const res = await send.get(EventEndpoint.GET_BASE);
-    console.log(res);
+    const res = await send.get(AlertEndpoint.PAGINATION(pageNumber, pageSize, locationGuid, search, startDate, endDate));
+    if (res.data) {
+      setAlertDtos(res.data.data.items);
+      setPagination(res.data.data);
+    }
   };
 
   const tabContent: FormContent[] = [
@@ -177,7 +184,7 @@ export const AlertPage = () => {
           dto={dto}
           setDto={setDto}
           type={formType}
-          handleChange={() => {}}
+          handleChange={() => { }}
         />
 
       ),
@@ -197,7 +204,7 @@ export const AlertPage = () => {
           refresh={refresh}
           keys={KEYS}
           headers={HEADERS}
-          data={alertDto}
+          data={alertDtos}
           onInfo={handleInfo}
           onEdit={handleEdit}
           onRemove={handleRemove}
@@ -207,6 +214,24 @@ export const AlertPage = () => {
           permission={filterPermission(FeatureId.trigger)}
           fetchData={fetchData}
           locationGuid={locationGuid}
+          specialDisplay={[
+            {
+              key: "level",
+              content: (data, i) => (
+                <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+
+                  <label className="relative flex h-9 w-20 shrink-0 cursor-pointer items-center justify-center rounded-md border border-gray-200 shadow-inner dark:border-gray-700">
+                    <div
+                      className="flex h-full w-full items-center justify-center rounded-md text-white transition-transform hover:scale-105"
+                      style={{ backgroundColor: data.alertLevelColor }}
+                    >
+                      {data.alertLevelName}
+                    </div>
+                  </label>
+                </TableCell>
+              ),
+            }
+          ]}
         />
       )}
     </>

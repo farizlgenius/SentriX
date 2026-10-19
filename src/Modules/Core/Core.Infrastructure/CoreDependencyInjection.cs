@@ -3,6 +3,7 @@ using System.Threading.Channels;
 using Core.Application.Interfaces;
 using Core.Application.Services;
 using Core.Application.ValueObjects;
+using Core.Contract.DTOs.Alert;
 using Core.Contract.DTOs.Events.Audit;
 using Core.Contract.DTOs.Events.Event;
 using Core.Contract.Interfaces;
@@ -158,6 +159,7 @@ public static class CoreDependencyInjection
     // ==========================
     services.AddHostedService<AuditTrailWorker>();
     services.AddHostedService<EventWorker>();
+    services.AddHostedService<AlertWorker>();
     services.AddSingleton(
         Channel.CreateBounded<AuditTrailInsert>(
          new BoundedChannelOptions(10_000)
@@ -171,6 +173,17 @@ public static class CoreDependencyInjection
 
      services.AddSingleton(
         Channel.CreateBounded<CreateEventDto>(
+         new BoundedChannelOptions(10_000)
+         {
+           FullMode = BoundedChannelFullMode.DropOldest,
+           SingleReader = true,
+           SingleWriter = false
+         }
+        )
+     );
+
+     services.AddSingleton(
+        Channel.CreateBounded<AlertDetectDto>(
          new BoundedChannelOptions(10_000)
          {
            FullMode = BoundedChannelFullMode.DropOldest,

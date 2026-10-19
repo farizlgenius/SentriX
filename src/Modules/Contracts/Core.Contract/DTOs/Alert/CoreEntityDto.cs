@@ -2,8 +2,7 @@ using SharedKernel.Enums;
 
 namespace Core.Contract.DTOs.Alert;
 
-public sealed record BaseEventDto(
+public sealed record CoreEntityDto(
       Guid Guid,
-      EntityType Type,
-      string Detail
+      EntityType Entity
 );

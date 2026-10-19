@@ -15,7 +15,7 @@ public sealed class DoorIdsMapGuidsByGuidsQueryHandler(IDoorRepository repo) : I
         foreach (var guid in query.Guids)
         {
             if (!await repo.IsAnyGuidAsync(guid, ct))
-                throw new NotFoundException(EntityType.Door.ToString(), guid.ToString());
+                throw new NotFoundException(EntityType.DOOR.ToString(), guid.ToString());
         }
 
 

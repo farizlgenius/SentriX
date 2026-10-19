@@ -54,7 +54,7 @@ public sealed class AuthService(IJwt jwt, ICache redis,Channel<AuditTrailInsert>
     var token = await jwt.GenerateTokenAsync(oper);
 
     var audit = new AuditTrailInsert(
-      EntityType.Auth,
+      EntityType.AUTH,
       SharedKernel.Enums.AuditAction.Login,
       login.Username,
       ip,
@@ -90,7 +90,7 @@ public sealed class AuthService(IJwt jwt, ICache redis,Channel<AuditTrailInsert>
     await jwt.RevokeTokenAsync(refreshToken);
 
     var audit = new AuditTrailInsert(
-      EntityType.Auth,
+      EntityType.AUTH,
       SharedKernel.Enums.AuditAction.Logout,
       username,
       ip,

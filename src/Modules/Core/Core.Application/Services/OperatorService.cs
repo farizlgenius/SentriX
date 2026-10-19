@@ -19,19 +19,19 @@ public sealed class OperatorService(
       public async Task<Guid> CreateAsync(CreateOperatorDto dto, CancellationToken ct = default)
       {
             if (await repo.IsAnyUsernameAsync(dto.Username, ct))
-                  throw new BadRequestException(EntityType.Operator.ToString(), "Username already exists.");
+                  throw new BadRequestException(EntityType.OPERATOR.ToString(), "Username already exists.");
 
             if (await repo.IsAnyEmailAsync(dto.Email, ct))
-                  throw new BadRequestException(EntityType.Operator.ToString(), "Email already exists.");
+                  throw new BadRequestException(EntityType.OPERATOR.ToString(), "Email already exists.");
 
             if (!await bus.QueryAsync(new IsValidRoleByGuidQuery(dto.RoleGuid)))
-                  throw new BadRequestException(EntityType.Operator.ToString(), $"Role Guid {dto.RoleGuid} is not valid.");
+                  throw new BadRequestException(EntityType.OPERATOR.ToString(), $"Role Guid {dto.RoleGuid} is not valid.");
 
             var invalidLoc = await bus.QueryAsync(new IsAnyInvalidLocationsByGuidsQuery(dto.LocationGuids));
             if (invalidLoc.Any())
             {
                   var invalidLocStr = string.Join(", ", invalidLoc);
-                  throw new BadRequestException(EntityType.Operator.ToString(), $"Location Guid(s) {invalidLocStr} is/are not valid.");
+                  throw new BadRequestException(EntityType.OPERATOR.ToString(), $"Location Guid(s) {invalidLocStr} is/are not valid.");
             }
 
             var roleId = await bus.QueryAsync(new RoleIdByGuidQuery(dto.RoleGuid), ct);
@@ -62,7 +62,7 @@ public sealed class OperatorService(
       public async Task<bool> DeleteByGuidAsync(Guid guid, CancellationToken ct = default)
       {
             if (!await repo.IsAnyGuidAsync(guid, ct))
-                  throw new NotFoundException(EntityType.Operator.ToString(), guid.ToString());
+                  throw new NotFoundException(EntityType.OPERATOR.ToString(), guid.ToString());
 
             await repo.DeleteAsync(guid, ct);
 
@@ -72,12 +72,12 @@ public sealed class OperatorService(
       public async Task<IEnumerable<Guid>> DeleteListAsync(IEnumerable<Guid> guids, CancellationToken ct = default)
       {
             if (guids.Count() == 0)
-                  throw new BadRequestException(EntityType.Operator.ToString(), "Guid list is empty.");
+                  throw new BadRequestException(EntityType.OPERATOR.ToString(), "Guid list is empty.");
 
             foreach (var guid in guids)
             {
                   if (!await repo.IsAnyGuidAsync(guid, ct))
-                        throw new NotFoundException(EntityType.Operator.ToString(), guid.ToString());
+                        throw new NotFoundException(EntityType.OPERATOR.ToString(), guid.ToString());
             }
 
             await repo.DeleteRangeAsync(guids, ct);
@@ -88,7 +88,7 @@ public sealed class OperatorService(
       public async Task<bool> DisabledAsync(Guid guid, CancellationToken ct = default)
       {
             if (!await repo.IsAnyGuidAsync(guid, ct))
-                  throw new NotFoundException(EntityType.Operator.ToString(), guid.ToString());
+                  throw new NotFoundException(EntityType.OPERATOR.ToString(), guid.ToString());
 
             await repo.DisableAsync(guid, ct);
 
@@ -98,7 +98,7 @@ public sealed class OperatorService(
       public async Task<bool> EnabledAsync(Guid guid, CancellationToken ct = default)
       {
             if (!await repo.IsAnyGuidAsync(guid, ct))
-                  throw new NotFoundException(EntityType.Operator.ToString(), guid.ToString());
+                  throw new NotFoundException(EntityType.OPERATOR.ToString(), guid.ToString());
 
             await repo.EnableAsync(guid, ct);
 
@@ -108,7 +108,7 @@ public sealed class OperatorService(
       public async Task<OperatorDto> GetByGuidAsync(Guid guid, CancellationToken ct = default)
       {
             if (!await repo.IsAnyGuidAsync(guid, ct))
-                  throw new NotFoundException(EntityType.Operator.ToString(), guid.ToString());
+                  throw new NotFoundException(EntityType.OPERATOR.ToString(), guid.ToString());
 
             return await repo.GetAsync(guid, ct);
       }
@@ -137,22 +137,22 @@ public sealed class OperatorService(
       public async Task<Guid> UpdateAsync(UpdateOperatorDto dto, CancellationToken ct = default)
       {
             if (!await repo.IsAnyGuidAsync(dto.Guid, ct))
-                  throw new NotFoundException(EntityType.Operator.ToString(), dto.Guid.ToString());
+                  throw new NotFoundException(EntityType.OPERATOR.ToString(), dto.Guid.ToString());
 
             if (!await repo.IsAnyUsernameAsync(dto.Username, ct))
-                  throw new BadRequestException(EntityType.Operator.ToString(), "Username already exists.");
+                  throw new BadRequestException(EntityType.OPERATOR.ToString(), "Username already exists.");
 
             if (!await repo.IsAnyEmailAsync(dto.Email, ct))
-                  throw new BadRequestException(EntityType.Operator.ToString(), "Email already exists.");
+                  throw new BadRequestException(EntityType.OPERATOR.ToString(), "Email already exists.");
 
             if (!await bus.QueryAsync(new IsValidRoleByGuidQuery(dto.RoleGuid)))
-                  throw new BadRequestException(EntityType.Operator.ToString(), $"Role Guid {dto.RoleGuid} is not valid.");
+                  throw new BadRequestException(EntityType.OPERATOR.ToString(), $"Role Guid {dto.RoleGuid} is not valid.");
 
             var invalidLoc = await bus.QueryAsync(new IsAnyInvalidLocationsByGuidsQuery(dto.LocationGuids));
             if (invalidLoc.Any())
             {
                   var invalidLocStr = string.Join(", ", invalidLoc);
-                  throw new BadRequestException(EntityType.Operator.ToString(), $"Location Guid(s) {invalidLocStr} is/are not valid.");
+                  throw new BadRequestException(EntityType.OPERATOR.ToString(), $"Location Guid(s) {invalidLocStr} is/are not valid.");
             }
 
             var roleId = await bus.QueryAsync(new RoleIdByGuidQuery(dto.RoleGuid), ct);
@@ -182,7 +182,7 @@ public sealed class OperatorService(
       public async Task<bool> UploadImageAsync(Guid guid, Stream stream, CancellationToken ct = default)
       {
             if (!await repo.IsAnyGuidAsync(guid))
-                  throw new NotFoundException(EntityType.User.ToString(), guid.ToString());
+                  throw new NotFoundException(EntityType.USER.ToString(), guid.ToString());
 
 
             var path = await file.SaveUserAsync(stream, guid.ToString());
@@ -193,7 +193,7 @@ public sealed class OperatorService(
       public async Task<Stream> GetImageByGuidAsync(Guid guid, CancellationToken ct = default)
       {
             if (!await repo.IsAnyGuidAsync(guid))
-                  throw new NotFoundException(EntityType.User.ToString(), guid.ToString());
+                  throw new NotFoundException(EntityType.USER.ToString(), guid.ToString());
 
             return await file.ReadUserAsync(guid.ToString());
       }

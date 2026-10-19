@@ -3,7 +3,9 @@ const CONTROLLER = "event";
 
 export const EventEndpoint = {
     CAPTURE:(time:string) => `/api/${CONTROLLER}/capture/${time}`,
-    GET_BASE:`/api/${CONTROLLER}/base`,
+    GET:`/api/${CONTROLLER}`,
+    GET_ENTITY:`/api/${CONTROLLER}/entity`,
+    GET_EVENT:(guid:string) =>`/api/${CONTROLLER}/event/${guid}`,
     GET_PAGINATION:(pageNumber:number,pageSize:number,locationGuid:string,search?:string,startDate?:string,endDate?:string) => `/api/${CONTROLLER}/pagination?PageNumber=${pageNumber}&PageSize=${pageSize}${search == undefined || search == "" ? "" : `&search=${search}`}${startDate == undefined ? "" : `&startDate=${startDate}`}${endDate == undefined ? "" : `&endDate=${endDate}`}${locationGuid == undefined ? "" : `&locationGuid=${locationGuid}`}`,
     SOURCE: `/api/${CONTROLLER}/source`,
     DEVICE:(source:number) => `/api/${CONTROLLER}/device/${source}`,

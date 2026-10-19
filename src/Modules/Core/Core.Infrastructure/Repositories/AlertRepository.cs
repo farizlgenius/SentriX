@@ -11,7 +11,12 @@ public sealed class AlertRepository(CoreDbContext context) : IAlertRepository
 {
       public async Task AddAsync(Domain.Entities.Alert entity, CancellationToken ct = default)
       {
-            throw new NotImplementedException();
+            await context.Alerts.AddAsync(
+                  new Alert(entity),
+                  ct
+            );
+
+            await context.SaveChangesAsync(ct);
       }
 
       public async Task AddLevelAsync(Domain.Entities.AlertLevel domain, CancellationToken ct = default)
@@ -27,7 +32,7 @@ public sealed class AlertRepository(CoreDbContext context) : IAlertRepository
       {
             var en = await context.Alerts
                   .Where(x => x.guid == guid)
-                  .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.Alert.ToString(),guid.ToString());;
+                  .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.ALERT.ToString(),guid.ToString());;
 
             context.Alerts.Remove(en);
 
@@ -38,7 +43,7 @@ public sealed class AlertRepository(CoreDbContext context) : IAlertRepository
       {
             var en = await context.AlertLevels
                   .Where(x => x.guid == guid)
-                  .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.AlertLevel.ToString(),guid.ToString());;
+                  .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.ALERT_LEVEL.ToString(),guid.ToString());;
 
             context.AlertLevels.Remove(en);
 
@@ -65,14 +70,6 @@ public sealed class AlertRepository(CoreDbContext context) : IAlertRepository
             throw new NotImplementedException();
       }
 
-      public async Task<IEnumerable<int>> GetBaseEventIdsByGuids(IEnumerable<Guid> guids, CancellationToken ct = default)
-      {
-            return await context.BaseEvents
-                  .AsNoTracking()
-                  .Where(x => guids.Contains(x.guid))
-                  .Select(x => x.id)
-                  .ToArrayAsync();
-      }
 
       public async Task<IEnumerable<AlertDto>> GetByLocationAsync(Guid locationGuid, CancellationToken ct = default)
       {
@@ -146,11 +143,11 @@ public sealed class AlertRepository(CoreDbContext context) : IAlertRepository
                         x.name,
                         x.entity,
                         x.base_event,
-                        x.acknowledge,
-                        x.postpone,
+                        x.alert_action,
                         x.comment,
                         x.alert_level,
                         x.level_color,
+                        x.username,
                         x.is_active,
                         x.is_default
                   )).ToListAsync();
@@ -183,9 +180,20 @@ public sealed class AlertRepository(CoreDbContext context) : IAlertRepository
                   .FirstOrDefaultAsync();
 
             if(res == 0)
-                  throw new NotFoundException(EntityType.AlertLevel.ToString(),guid.ToString());
+                  throw new NotFoundException(EntityType.ALERT_LEVEL.ToString(),guid.ToString());
 
             return res;
+      }
+
+      public async Task<IEnumerable<OptionDto>> GetLevelOptionAsync(CancellationToken ct = default)
+      {
+            return await context.AlertLevels
+                  .AsNoTracking()
+                  .Select(x => new OptionDto(
+                        x.name,
+                        x.guid,
+                        x.color_code
+                  )).ToArrayAsync();
       }
 
       public async Task<Pagination<AlertLevelDto>> GetLevelPaginationAsync(PaginationParams param, CancellationToken ct = default)
@@ -263,7 +271,7 @@ public sealed class AlertRepository(CoreDbContext context) : IAlertRepository
                   .AsNoTracking()
                   .Where(x => x.guid == guid)
                   .Select(x => x.name)
-                  .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.AlertLevel.ToString(),guid.ToString());
+                  .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.ALERT_LEVEL.ToString(),guid.ToString());
       }
 
       public async Task<Pagination<AlertDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
@@ -326,12 +334,13 @@ public sealed class AlertRepository(CoreDbContext context) : IAlertRepository
                         x.location.guid,
                         x.location.name,
                         x.alert_level.guid,
+                        x.alert_level.color_code,
                         x.alert_level.name,
-                        x.alert_base_events.Select(a => new BaseEventDto(
-                              a.event_detail.guid,
-                              a.event_detail.entity,
-                              a.event_detail.detail
-                        )).ToList()
+                        x.core_event.entity.guid,
+                        x.core_event.guid,
+                        new List<Guid>(),
+                        x.is_active,
+                        x.is_default
                   )).ToListAsync();
 
             return new Pagination<AlertDto>(
@@ -372,7 +381,7 @@ public sealed class AlertRepository(CoreDbContext context) : IAlertRepository
 
       public async Task<bool> IsAnyRelatedEntitiesAsync(Guid guid, CancellationToken ct = default)
       {
-             throw new NotImplementedException();
+           throw new NotImplementedException();
       }
 
       public async Task<bool> IsDefaultAsync(Guid guid, CancellationToken ct = default)
@@ -389,7 +398,7 @@ public sealed class AlertRepository(CoreDbContext context) : IAlertRepository
       {
             var en = await context.AlertLevels
                   .Where(x => x.guid == domain.Guid)
-                  .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.AlertLevel.ToString(),domain.Guid.ToString());
+                  .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.ALERT_LEVEL.ToString(),domain.Guid.ToString());
 
             en.name = domain.Name;
             en.color_code = domain.ColorCode;

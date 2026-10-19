@@ -32,18 +32,18 @@ new AdapterEvent(@event)
     await context.SaveChangesAsync(ct);
   }
 
-      public async Task AddAuditAsync(Domain.Entities.AuditTrail audit, CancellationToken ct = default)
-      {
-        
-            await context.AuditTrails.AddAsync(
-              new AuditTrail(audit),
-              ct
-            );
+  public async Task AddAuditAsync(Domain.Entities.AuditTrail audit, CancellationToken ct = default)
+  {
 
-            await context.SaveChangesAsync(ct);
-      }
+    await context.AuditTrails.AddAsync(
+      new AuditTrail(audit),
+      ct
+    );
 
-      public async Task AddExceptionAsync(string method,string path, string exception, string innerException, string stackTrace, CancellationToken ct = default)
+    await context.SaveChangesAsync(ct);
+  }
+
+  public async Task AddExceptionAsync(string method, string path, string exception, string innerException, string stackTrace, CancellationToken ct = default)
   {
     await context.ExceptionEvent.AddAsync(
       new Persistences.Entities.ExceptionEvent(
@@ -179,11 +179,11 @@ new AdapterEvent(@event)
     throw new NotImplementedException();
   }
 
-      public async Task<Pagination<AuditTrailDto>> GetAuditPaginationAsync(PaginationParams param, CancellationToken ct = default)
-      {
-            var query = context.AuditTrails
-                  .AsNoTracking()
-                  .AsQueryable();
+  public async Task<Pagination<AuditTrailDto>> GetAuditPaginationAsync(PaginationParams param, CancellationToken ct = default)
+  {
+    var query = context.AuditTrails
+          .AsNoTracking()
+          .AsQueryable();
 
     if (!string.IsNullOrWhiteSpace(param.search))
     {
@@ -199,7 +199,7 @@ new AdapterEvent(@event)
               EF.Functions.ILike(x.entity.ToString(), pattern) ||
               EF.Functions.ILike(x.action.ToString(), pattern) ||
               EF.Functions.ILike(x.username, pattern) ||
-              EF.Functions.ILike(x.ip, pattern) 
+              EF.Functions.ILike(x.ip, pattern)
           );
         }
         else // SQL Server
@@ -208,7 +208,7 @@ new AdapterEvent(@event)
               x.entity.ToString().Contains(search) ||
               x.action.ToString().Contains(search) ||
               x.username.Contains(search) ||
-              x.ip.Contains(search) 
+              x.ip.Contains(search)
           );
         }
 
@@ -253,20 +253,32 @@ new AdapterEvent(@event)
           (int)Math.Ceiling(count / (double)param.pageSize),
           res
           );
-      }
+  }
 
-      public async Task<IEnumerable<OptionDto>> GetBaseEventAsync(CancellationToken ct = default)
-      {
-            return await context.BaseEvents
-              .AsNoTracking()
-              .Select(x => new OptionDto(
-                x.detail,
-                x.event_detail,
-                x.entity.ToString()
-              )).ToArrayAsync();
-      }
+  public async Task<IEnumerable<OptionDto>> GetCoreEventAsync(Guid guid, CancellationToken ct = default)
+  {
+    return await context.CoreEvents
+      .AsNoTracking()
+      .Where(x => x.entity.guid == guid)
+      .Select(x => new OptionDto(
+        x.@event.ToString(),
+        x.guid,
+        string.Empty
+      )).ToArrayAsync();
+  }
 
-      public async Task<IEnumerable<EventDto>> GetByLocationAsync(Guid locationGuid, CancellationToken ct = default)
+  public async Task<IEnumerable<OptionDto>> GetCoreEntityAsync(CancellationToken ct = default)
+  {
+    return await context.CoreEntities
+      .AsNoTracking()
+      .Select(x => new OptionDto(
+        x.entity.ToString(),
+        x.guid,
+        string.Empty
+      )).ToArrayAsync();
+  }
+
+  public async Task<IEnumerable<EventDto>> GetByLocationAsync(Guid locationGuid, CancellationToken ct = default)
   {
     return await context.Events
       .AsNoTracking()
@@ -290,11 +302,11 @@ new AdapterEvent(@event)
       )).ToArrayAsync();
   }
 
-      public async Task<Pagination<ExceptionEventDto>> GetExceptionPaginationAsync(PaginationParams param, CancellationToken ct = default)
-      {
-            var query = context.ExceptionEvent
-                  .AsNoTracking()
-                  .AsQueryable();
+  public async Task<Pagination<ExceptionEventDto>> GetExceptionPaginationAsync(PaginationParams param, CancellationToken ct = default)
+  {
+    var query = context.ExceptionEvent
+          .AsNoTracking()
+          .AsQueryable();
 
     if (!string.IsNullOrWhiteSpace(param.search))
     {
@@ -310,7 +322,7 @@ new AdapterEvent(@event)
               EF.Functions.ILike(x.path, pattern) ||
               EF.Functions.ILike(x.exception, pattern) ||
               EF.Functions.ILike(x.inner_exception, pattern) ||
-              EF.Functions.ILike(x.stack_trace, pattern) 
+              EF.Functions.ILike(x.stack_trace, pattern)
           );
         }
         else // SQL Server
@@ -319,7 +331,7 @@ new AdapterEvent(@event)
               x.path.ToString().Contains(search) ||
               x.exception.Contains(search) ||
               x.inner_exception.Contains(search) ||
-              x.stack_trace.Contains(search) 
+              x.stack_trace.Contains(search)
           );
         }
 
@@ -361,9 +373,9 @@ new AdapterEvent(@event)
           (int)Math.Ceiling(count / (double)param.pageSize),
           res
           );
-      }
+  }
 
-      public Task<Guid> GetGuidByIdAsync(int id, CancellationToken ct = default)
+  public Task<Guid> GetGuidByIdAsync(int id, CancellationToken ct = default)
   {
     throw new NotImplementedException();
   }
@@ -373,12 +385,12 @@ new AdapterEvent(@event)
     throw new NotImplementedException();
   }
 
-      public Task<string> GetNameByGuidAsync(Guid guid, CancellationToken ct = default)
-      {
-            throw new NotImplementedException();
-      }
+  public Task<string> GetNameByGuidAsync(Guid guid, CancellationToken ct = default)
+  {
+    throw new NotImplementedException();
+  }
 
-      public async Task<Pagination<EventDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
+  public async Task<Pagination<EventDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
   {
     var query = context.Events
                   .Where(x => x.location == null || x.location.guid == param.locationGuid)
@@ -514,5 +526,42 @@ new AdapterEvent(@event)
   public async Task UpdateAsync(Domain.Entities.Event entity, CancellationToken ct = default)
   {
     throw new NotImplementedException();
+  }
+
+  public async Task<int> GetCoreEventIdByGuidAsync(Guid guid, CancellationToken ct = default)
+  {
+    var res = await context.CoreEvents
+      .AsNoTracking()
+      .Where(x => x.guid == guid)
+      .Select(x => x.id)
+      .FirstOrDefaultAsync();
+
+    if (res == 0)
+      throw new NotFoundException(EntityType.CORE_EVENT.ToString(), guid.ToString());
+
+    return res;
+  }
+
+  public async Task<int> GetCoreEntityIdByGuidAsync(Guid guid, CancellationToken ct = default)
+  {
+    var res = await context.CoreEntities
+      .AsNoTracking()
+      .Where(x => x.guid == guid)
+      .Select(x => x.id)
+      .FirstOrDefaultAsync();
+
+    if (res == 0)
+      throw new NotFoundException(EntityType.CORE_ENTITY.ToString(), guid.ToString());
+
+    return res;
+  }
+
+  public async Task<EntityType> GetCoreEntityByGuidAsync(Guid guid, CancellationToken ct = default)
+  {
+    return await context.CoreEntities
+      .AsNoTracking()
+      .Where(x => x.guid == guid)
+      .Select(x => x.entity)
+      .FirstOrDefaultAsync(ct);
   }
 }

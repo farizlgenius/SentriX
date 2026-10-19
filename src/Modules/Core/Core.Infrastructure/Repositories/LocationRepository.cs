@@ -50,7 +50,7 @@ public sealed class LocationRepository(CoreDbContext context) : ILocationReposit
 
             ;
 
-            var change = AuditHelper.GetEntityChanges(context.Locations.Remove(entity ?? throw new NotFoundException(EntityType.Location.ToString(), guid.ToString())));
+            var change = AuditHelper.GetEntityChanges(context.Locations.Remove(entity ?? throw new NotFoundException(EntityType.LOCATION.ToString(), guid.ToString())));
 
 
             await context.SaveChangesAsync(ct);
@@ -71,7 +71,7 @@ public sealed class LocationRepository(CoreDbContext context) : ILocationReposit
       {
             var en = await context.Locations
                   .Where(x => x.guid == guid)
-                  .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.Location.ToString(), guid.ToString());
+                  .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.LOCATION.ToString(), guid.ToString());
 
             en.is_active = false;
 
@@ -86,7 +86,7 @@ public sealed class LocationRepository(CoreDbContext context) : ILocationReposit
       {
             var en = await context.Locations
                    .Where(x => x.guid == guid)
-                   .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.Location.ToString(), guid.ToString());
+                   .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.LOCATION.ToString(), guid.ToString());
 
             en.is_active = true;
 
@@ -110,7 +110,7 @@ public sealed class LocationRepository(CoreDbContext context) : ILocationReposit
                         x.country.name,
                         x.is_active,
                         x.is_default
-                  )).FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.Location.ToString(), guid.ToString());
+                  )).FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.LOCATION.ToString(), guid.ToString());
       }
 
 
@@ -155,7 +155,7 @@ public sealed class LocationRepository(CoreDbContext context) : ILocationReposit
                   .FirstOrDefaultAsync();
 
             if (res == 0)
-                  throw new NotFoundException(EntityType.Location.ToString(), guid.ToString());
+                  throw new NotFoundException(EntityType.LOCATION.ToString(), guid.ToString());
 
             return res;
       }
@@ -302,7 +302,7 @@ public sealed class LocationRepository(CoreDbContext context) : ILocationReposit
       {
             var en = await context.Locations
                   .Where(x => x.guid == entity.Guid)
-                  .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.Location.ToString(), entity.Guid.ToString());
+                  .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.LOCATION.ToString(), entity.Guid.ToString());
 
             en.name = entity.Name;
             en.description = entity.Description;

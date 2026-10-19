@@ -33,7 +33,7 @@ public sealed class IntervalService(IIntervalRepository repo, IMessageBus bus) :
     );
 
     if (await repo.IsAnySameDataSetAsync(d.StartTime, d.EndTime, d.Days))
-      throw new DuplicateException(EntityType.Interval.ToString(), "Interval Data");
+      throw new DuplicateException(EntityType.INTERVAL.ToString(), "Interval Data");
 
     // Send command to controller
 
@@ -45,7 +45,7 @@ public sealed class IntervalService(IIntervalRepository repo, IMessageBus bus) :
   public async Task<bool> DeleteByGuidAsync(Guid guid, CancellationToken ct = default)
   {
     if (!await repo.IsAnyGuidAsync(guid))
-      throw new NotFoundException(EntityType.Interval.ToString(), guid.ToString());
+      throw new NotFoundException(EntityType.INTERVAL.ToString(), guid.ToString());
 
     // Check relation
 
@@ -60,13 +60,13 @@ public sealed class IntervalService(IIntervalRepository repo, IMessageBus bus) :
   {
     // Check if guids is empty 
     if (guids.Count() == 0)
-      throw new NotFoundException(EntityType.Role.ToString());
+      throw new NotFoundException(EntityType.ROLE.ToString());
 
     foreach (var guid in guids)
     {
       // Check is any location with guid
       if (!await repo.IsAnyGuidAsync(guid, ct))
-        throw new NotFoundException(EntityType.Role.ToString(), guid.ToString());
+        throw new NotFoundException(EntityType.ROLE.ToString(), guid.ToString());
 
       // Check relate object here
 
@@ -80,7 +80,7 @@ public sealed class IntervalService(IIntervalRepository repo, IMessageBus bus) :
   public async Task<bool> DisabledAsync(Guid guid, CancellationToken ct = default)
   {
     if (!await repo.IsAnyGuidAsync(guid, ct))
-      throw new NotFoundException(EntityType.Role.ToString(), guid.ToString());
+      throw new NotFoundException(EntityType.ROLE.ToString(), guid.ToString());
 
     return await repo.DisableAsync(guid, ct);
   }
@@ -88,7 +88,7 @@ public sealed class IntervalService(IIntervalRepository repo, IMessageBus bus) :
   public async Task<bool> EnabledAsync(Guid guid, CancellationToken ct = default)
   {
     if (!await repo.IsAnyGuidAsync(guid, ct))
-      throw new NotFoundException(EntityType.Role.ToString(), guid.ToString());
+      throw new NotFoundException(EntityType.ROLE.ToString(), guid.ToString());
 
     return await repo.EnableAsync(guid, ct);
   }
@@ -112,7 +112,7 @@ public sealed class IntervalService(IIntervalRepository repo, IMessageBus bus) :
   {
     // Check is any location with guid
     if (!await repo.IsAnyGuidAsync(dto.Guid, ct))
-      throw new NotFoundException(EntityType.TimeZone.ToString(), dto.Guid.ToString());
+      throw new NotFoundException(EntityType.TIMEZONE.ToString(), dto.Guid.ToString());
 
     var locationId = await bus.QueryAsync(new LocationIdByGuidQuery(dto.LocationGuid));
 
@@ -133,7 +133,7 @@ public sealed class IntervalService(IIntervalRepository repo, IMessageBus bus) :
    );
 
     if (await repo.IsAnySameDataSetAsync(d.StartTime, d.EndTime, d.Days))
-      throw new DuplicateException(EntityType.Interval.ToString(), "Interval Data");
+      throw new DuplicateException(EntityType.INTERVAL.ToString(), "Interval Data");
 
     // Send command to controller
 

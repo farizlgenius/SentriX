@@ -2,7 +2,7 @@ import PageBreadcrumb from "../../components/common/PageBreadCrumb";
 import { useLocation } from "../../context/LocationContext";
 import { useEffect, useState } from "react";
 import { PageProp } from "../../model/PageProp";
-import { EventEndpoint } from "../../endpoint/TransactionEndpoint";
+import { EventEndpoint } from "../../endpoint/EventEndpoint";
 import TransactionTable from "../../components/tables/Tables/TransactionTable";
 import { TableCell } from "../../components/ui/table";
 import { send } from "../../api/api";

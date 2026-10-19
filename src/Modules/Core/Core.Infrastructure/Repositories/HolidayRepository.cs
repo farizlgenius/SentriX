@@ -27,7 +27,7 @@ public sealed class HolidayRepository(CoreDbContext context) : IHolidayRepositor
     var entity = await context.Holidays
       .Where(x => x.guid == guid)
       .OrderByDescending(x => x.id)
-      .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.Holiday.ToString(), guid.ToString());
+      .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.HOLIDAY.ToString(), guid.ToString());
 
     context.Holidays.Remove(entity);
 
@@ -49,7 +49,7 @@ public sealed class HolidayRepository(CoreDbContext context) : IHolidayRepositor
   {
     var entity = await context.Holidays
       .OrderByDescending(x => x.id)
-      .FirstOrDefaultAsync(x => x.guid == guid) ?? throw new NotFoundException(EntityType.TimeZone.ToString(), guid.ToString());
+      .FirstOrDefaultAsync(x => x.guid == guid) ?? throw new NotFoundException(EntityType.TIMEZONE.ToString(), guid.ToString());
 
     entity.is_active = false;
 
@@ -63,7 +63,7 @@ public sealed class HolidayRepository(CoreDbContext context) : IHolidayRepositor
   {
     var entity = await context.Holidays
       .OrderByDescending(x => x.id)
-      .FirstOrDefaultAsync(x => x.guid == guid) ?? throw new NotFoundException(EntityType.TimeZone.ToString(), guid.ToString());
+      .FirstOrDefaultAsync(x => x.guid == guid) ?? throw new NotFoundException(EntityType.TIMEZONE.ToString(), guid.ToString());
 
     entity.is_active = true;
 
@@ -88,7 +88,7 @@ public sealed class HolidayRepository(CoreDbContext context) : IHolidayRepositor
           x.is_default,
           x.location.guid
         )
-      ).FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.Holiday.ToString(), guid.ToString());
+      ).FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.HOLIDAY.ToString(), guid.ToString());
   }
 
   public async Task<IEnumerable<HolidayDto>> GetByLocationAsync(Guid locationGuid, CancellationToken ct = default)
@@ -231,7 +231,7 @@ public sealed class HolidayRepository(CoreDbContext context) : IHolidayRepositor
     var en = await context.Holidays
       .Where(x => x.guid == entity.Guid)
       .OrderByDescending(x => x.id)
-      .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.Holiday.ToString(), entity.Guid.ToString());
+      .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.HOLIDAY.ToString(), entity.Guid.ToString());
 
     en.name = entity.Name;
     en.start = entity.Start;

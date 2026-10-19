@@ -10,6 +10,8 @@ namespace Core.Application.Services;
 
 public sealed class AlertService(
       IAlertRepository repo,
+      IEventRepository @event,
+      IDoorRepository door,
       ILocationRepository loc
       ) : IAlert
 {
@@ -17,15 +19,27 @@ public sealed class AlertService(
       {
             var locationId = await loc.GetIdByGuidAsync(dto.LocationGuid,ct);
             var levelId = await repo.GetLevelIdByGuidAsync(dto.AlertLevelGuid,ct);
+            var eventId = await @event.GetCoreEventIdByGuidAsync(dto.CoreEventGuid);
+            var entity = await @event.GetCoreEntityByGuidAsync(dto.CoreEntityGuid);
+            IEnumerable<int> components = new List<int>();
 
-            var baseEvenIds = await repo.GetBaseEventIdsByGuids(dto.BaseEventGuid,ct);
+            switch (entity)
+            {
+                  case EntityType.DOOR:
+                  components = await door.GetIdsByGuidsAsync(dto.Components,ct);
+                  break;
+                  default:
+                  break;
+            }
 
             var d = new Domain.Entities.Alert(
                   dto.Name,
                   dto.Advice,
                   locationId,
                   levelId,
-                  baseEvenIds.ToList()
+                  eventId,
+                  entity,
+                  components.ToList()
             );
 
             await repo.AddAsync(d,ct);
@@ -47,10 +61,7 @@ public sealed class AlertService(
 
       public async Task<bool> DeleteByGuidAsync(Guid guid, CancellationToken ct = default)
       {
-            // check relation
-            if(await repo.IsAnyRelatedEntitiesAsync(guid,ct))
-                  throw new FoundRelateException();
-
+            
             await repo.DeleteAsync(guid,ct);
 
             return true;
@@ -98,6 +109,11 @@ public sealed class AlertService(
             return await repo.GetEventPaginationAsync(param,ct);
       }
 
+      public async Task<IEnumerable<OptionDto>> GetLevelOptionAsync(CancellationToken ct = default)
+      {
+            return await repo.GetLevelOptionAsync();
+      }
+
       public async Task<Pagination<AlertLevelDto>> GetLevelPaginationAsync(PaginationParams param, CancellationToken ct = default)
       {
             return await repo.GetLevelPaginationAsync(param,ct);
@@ -117,7 +133,7 @@ public sealed class AlertService(
       {
             // Check is any Company with guid
             if (!await repo.IsAnyLevelByGuidAsync(dto.Guid, ct))
-                  throw new NotFoundException(EntityType.Company.ToString(), dto.Guid.ToString());
+                  throw new NotFoundException(EntityType.COMPANY.ToString(), dto.Guid.ToString());
 
             var d = new Core.Domain.Entities.AlertLevel(
                   dto.Guid,

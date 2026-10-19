@@ -24,7 +24,7 @@ public sealed class ProcedureRepository(CoreDbContext context) : IProcedureRepos
       {
             var en = await context.Procedures
                   .Where(x => x.guid == guid)
-                  .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.Procedure.ToString(),guid.ToString());
+                  .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.PROCEDURE.ToString(),guid.ToString());
 
             context.Procedures.Remove(en);
 
@@ -46,7 +46,7 @@ public sealed class ProcedureRepository(CoreDbContext context) : IProcedureRepos
       {
             var en = await context.Procedures
                   .Where(x => x.guid == guid)
-                  .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.Procedure.ToString(),guid.ToString());
+                  .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.PROCEDURE.ToString(),guid.ToString());
 
             en.is_active = false;
             en.updated_at = DateTime.UtcNow;
@@ -62,7 +62,7 @@ public sealed class ProcedureRepository(CoreDbContext context) : IProcedureRepos
       {
             var en = await context.Procedures
                   .Where(x => x.guid == guid)
-                  .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.Procedure.ToString(),guid.ToString());
+                  .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.PROCEDURE.ToString(),guid.ToString());
 
             en.is_active = true;
             en.updated_at = DateTime.UtcNow;
@@ -90,7 +90,7 @@ public sealed class ProcedureRepository(CoreDbContext context) : IProcedureRepos
                         ).ToList(),
                         x.is_active,
                         x.is_default
-                  )).FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.Procedure.ToString(),guid.ToString());
+                  )).FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.PROCEDURE.ToString(),guid.ToString());
       }
 
       public async Task<IEnumerable<ProcedureDto>> GetByLocationAsync(Guid locationGuid, CancellationToken ct = default)

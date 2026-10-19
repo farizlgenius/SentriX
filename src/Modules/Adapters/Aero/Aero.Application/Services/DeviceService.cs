@@ -39,7 +39,7 @@ public sealed class DeviceService(
 
       public async Task GetConfigurationAsync(string mac, string ip, CancellationToken ct = default)
       {
-            var externalId = await bus.QueryAsync(new ExternalIdByMacAndEntityQuery(mac, EntityType.Device));
+            var externalId = await bus.QueryAsync(new ExternalIdByMacAndEntityQuery(mac, EntityType.DEVICE));
 
             var res = repo.ScpStructureStatusRead(
                   mac,
@@ -77,14 +77,14 @@ public sealed class DeviceService(
 
       public async Task<Status> GetStatusAsync(string mac, string ip, CancellationToken ct = default)
       {
-            var externalId = await bus.QueryAsync(new ExternalIdByMacAndEntityQuery(mac, EntityType.Device));
+            var externalId = await bus.QueryAsync(new ExternalIdByMacAndEntityQuery(mac, EntityType.DEVICE));
 
             return repo.GetStatus((short)externalId);
       }
 
       public async Task GetTransactionStatusAsync(string mac, string ip, CancellationToken ct = default)
       {
-            var externalId = await bus.QueryAsync(new ExternalIdByMacAndEntityQuery(mac, EntityType.Device));
+            var externalId = await bus.QueryAsync(new ExternalIdByMacAndEntityQuery(mac, EntityType.DEVICE));
             var res = repo.GetTransactionStatus(mac, (short)externalId);
 
             await bus.SendAsync(new AdapterEventCommand(res));
@@ -98,7 +98,7 @@ public sealed class DeviceService(
 
             // var externalId = await mapping.GetExternalIdByMacAndEntityAsync(mac,EntityType.Device);
 
-            var externalId = await bus.QueryAsync(new ExternalIdByMacAndEntityQuery(mac, EntityType.Device));
+            var externalId = await bus.QueryAsync(new ExternalIdByMacAndEntityQuery(mac, EntityType.DEVICE));
 
 
             var res = repo.AccessDatabaseSpecification(
@@ -231,7 +231,7 @@ public sealed class DeviceService(
 
       public async Task RemoveDeviceAsync(string mac, string ip, CancellationToken ct = default)
       {
-            var externalId = await bus.QueryAsync(new ExternalIdByMacAndEntityQuery(mac, EntityType.Device));
+            var externalId = await bus.QueryAsync(new ExternalIdByMacAndEntityQuery(mac, EntityType.DEVICE));
 
             var res = repo.DetachScpFromChannel(mac, (short)externalId);
 
@@ -240,7 +240,7 @@ public sealed class DeviceService(
 
       public async Task ResetAsync(string mac, string ip, CancellationToken ct = default)
       {
-            var externalId = await bus.QueryAsync(new ExternalIdByMacAndEntityQuery(mac, EntityType.Device));
+            var externalId = await bus.QueryAsync(new ExternalIdByMacAndEntityQuery(mac, EntityType.DEVICE));
 
             var res = repo.ScpReset(mac, (short)externalId);
 
@@ -270,7 +270,7 @@ public sealed class DeviceService(
             // 1. Get Device Setting
             var device = await bus.QueryAsync(new DeviceByMacQuery(mac));
             // 2. Get ComponentId
-            var componentId = await bus.QueryAsync(new ExternalIdByMacAndEntityQuery(mac, EntityType.Device));
+            var componentId = await bus.QueryAsync(new ExternalIdByMacAndEntityQuery(mac, EntityType.DEVICE));
             // 3.Json Serialize with Metadata Class 
             var deviceMetadata = JsonHelper.Deserialize<DeviceMetadata>(device.Metadata);
             // 4.Send command driver configuration
@@ -315,7 +315,7 @@ public sealed class DeviceService(
             // 1. Get Device Setting
             var device = await bus.QueryAsync(new DeviceByMacQuery(mac));
             // 2. Get ComponentId
-            var componentId = await bus.QueryAsync(new ExternalIdByMacAndEntityQuery(mac, EntityType.Device));
+            var componentId = await bus.QueryAsync(new ExternalIdByMacAndEntityQuery(mac, EntityType.DEVICE));
             // 3.Json Serialize with Metadata Class 
             var deviceMetadata = JsonHelper.Deserialize<DeviceMetadata>(device.Metadata);
             // 4.Send command driver configuration
@@ -357,7 +357,7 @@ public sealed class DeviceService(
 
             foreach (var tz in tzs)
             {
-                  var tzId = await bus.QueryAsync(new ExternalIdByGuidAndEntityQuery(tz.Guid, EntityType.TimeZone));
+                  var tzId = await bus.QueryAsync(new ExternalIdByGuidAndEntityQuery(tz.Guid, EntityType.TIMEZONE));
 
                   var res = tRepo.ExtendedTimeZoneActSpecification(
                         device.Mac,
@@ -389,7 +389,7 @@ public sealed class DeviceService(
             var cfmts = await bus.QueryAsync(new CardFormatQuery());
             foreach (var cfmt in cfmts)
             {
-                  var cfmtId = await bus.QueryAsync(new ExternalIdByGuidAndEntityQuery(cfmt.Guid, EntityType.CardFormat));
+                  var cfmtId = await bus.QueryAsync(new ExternalIdByGuidAndEntityQuery(cfmt.Guid, EntityType.CARD_FORMAT));
 
                   var res = cfmtRepo.CardFormatterConfiguration(
                         device.Mac,
@@ -422,7 +422,7 @@ public sealed class DeviceService(
                   // Reader Configuation
                   foreach (var reader in d.Readers)
                   {
-                        var moduleId = await bus.QueryAsync(new ExternalIdByGuidAndEntityQuery(reader.DeviceModuleGuid, EntityType.DeviceModule));
+                        var moduleId = await bus.QueryAsync(new ExternalIdByGuidAndEntityQuery(reader.DeviceModuleGuid, EntityType.DEVICE_MODULE));
 
                         var meta = JsonHelper.Deserialize<ReaderMetadata>(reader.Metadata);
                         if (meta == null)
@@ -455,7 +455,7 @@ public sealed class DeviceService(
                   var relayModuleId = -1;
                   if (d.Relay != null)
                   {
-                        relayModuleId = await bus.QueryAsync(new ExternalIdByGuidAndEntityQuery(d.Relay.DeviceModuleGuid, EntityType.DeviceModule));
+                        relayModuleId = await bus.QueryAsync(new ExternalIdByGuidAndEntityQuery(d.Relay.DeviceModuleGuid, EntityType.DEVICE_MODULE));
 
                         var meta = JsonHelper.Deserialize<RelayMetadata>(d.Relay.Metadata);
                         if (meta == null)
@@ -478,7 +478,7 @@ public sealed class DeviceService(
                   var sensorModuleId = -1;
                   if (d.Sensor != null)
                   {
-                        sensorModuleId = await bus.QueryAsync(new ExternalIdByGuidAndEntityQuery(d.Sensor.DeviceModuleGuid, EntityType.DeviceModule));
+                        sensorModuleId = await bus.QueryAsync(new ExternalIdByGuidAndEntityQuery(d.Sensor.DeviceModuleGuid, EntityType.DEVICE_MODULE));
 
                         var meta = JsonHelper.Deserialize<InputMetadata>(d.Sensor.Metadata);
                         if (meta == null)
@@ -506,10 +506,10 @@ public sealed class DeviceService(
                   {
                         if(i == 0)
                         {
-                              rex0ModuleId = await bus.QueryAsync(new ExternalIdByGuidAndEntityQuery(rex.DeviceModuleGuid, EntityType.DeviceModule));
+                              rex0ModuleId = await bus.QueryAsync(new ExternalIdByGuidAndEntityQuery(rex.DeviceModuleGuid, EntityType.DEVICE_MODULE));
                         }else if(i == 1)
                         {
-                              rex1ModuleId = await bus.QueryAsync(new ExternalIdByGuidAndEntityQuery(rex.DeviceModuleGuid, EntityType.DeviceModule));
+                              rex1ModuleId = await bus.QueryAsync(new ExternalIdByGuidAndEntityQuery(rex.DeviceModuleGuid, EntityType.DEVICE_MODULE));
                         }
                         
 
@@ -536,8 +536,8 @@ public sealed class DeviceService(
                   // Buzzer Configuration
                   if (d.Buzzer != null)
                   {
-                        var moduleId = await bus.QueryAsync(new ExternalIdByGuidAndEntityQuery(d.Buzzer.DeviceModuleGuid, EntityType.DeviceModule));
-                        var outputId = await bus.QueryAsync(new ExternalIdByGuidAndEntityQuery(d.Guid, EntityType.Output));
+                        var moduleId = await bus.QueryAsync(new ExternalIdByGuidAndEntityQuery(d.Buzzer.DeviceModuleGuid, EntityType.DEVICE_MODULE));
+                        var outputId = await bus.QueryAsync(new ExternalIdByGuidAndEntityQuery(d.Guid, EntityType.OUTPUT));
 
                         var meta = JsonHelper.Deserialize<OutputMetadata>(d.Buzzer.Metadata);
                         if (meta == null)
@@ -572,8 +572,8 @@ public sealed class DeviceService(
                   // BG Configuration
                   if (d.Bg != null)
                   {
-                        var moduleId = await bus.QueryAsync(new ExternalIdByGuidAndEntityQuery(d.Bg.DeviceModuleGuid, EntityType.DeviceModule));
-                        var inputId = await bus.QueryAsync(new ExternalIdByGuidAndEntityQuery(d.Guid, EntityType.Input));
+                        var moduleId = await bus.QueryAsync(new ExternalIdByGuidAndEntityQuery(d.Bg.DeviceModuleGuid, EntityType.DEVICE_MODULE));
+                        var inputId = await bus.QueryAsync(new ExternalIdByGuidAndEntityQuery(d.Guid, EntityType.INPUT));
 
                         var meta = JsonHelper.Deserialize<BgMetadata>(d.Bg.Metadata);
                         if (meta == null)
@@ -638,7 +638,7 @@ public sealed class DeviceService(
 
                   }
 
-                  var doorIds = await bus.QueryAsync(new ExternalIdsByGuidAndEntityQuery(d.Guid, EntityType.Door),ct);
+                  var doorIds = await bus.QueryAsync(new ExternalIdsByGuidAndEntityQuery(d.Guid, EntityType.DOOR),ct);
 
 
                   RelayMetadata? relayMeta = null;
@@ -668,12 +668,12 @@ public sealed class DeviceService(
                   }
 
                   var readerGuid = d.Readers.Where(x => x.ReaderDirection == ReaderDirection.In).Select(x => x.DeviceModuleGuid).First();
-                  var readerModuleId = (short)(d.Readers.Count == 0 ? -1 : await bus.QueryAsync(new ExternalIdByGuidAndEntityQuery(readerGuid, EntityType.DeviceModule), ct));
+                  var readerModuleId = (short)(d.Readers.Count == 0 ? -1 : await bus.QueryAsync(new ExternalIdByGuidAndEntityQuery(readerGuid, EntityType.DEVICE_MODULE), ct));
                   var readerSlot = (short)(d.Readers.Count == 0 ? -1 : d.Readers.Where(x => x.ReaderDirection == ReaderDirection.In).Select(x => x.SlotNo).First());
 
                   
-                  var mask0Id = d.Rexes.Count == 0 ? 0 : d.Rexes.ElementAt(0).MaskGuid == null || d.Rexes.ElementAt(0).MaskGuid == Guid.Empty ? 0 : await bus.QueryAsync(new ExternalIdByGuidAndEntityQuery(d.Rexes.ElementAt(0).MaskGuid ?? Guid.Empty,EntityType.TimeZone),ct);
-                  var mask1Id = d.Rexes.Count <= 1 ? 0 : d.Rexes.ElementAt(1).MaskGuid == null || d.Rexes.ElementAt(1).MaskGuid == Guid.Empty ? 0 : await bus.QueryAsync(new ExternalIdByGuidAndEntityQuery(d.Rexes.ElementAt(1).MaskGuid ?? Guid.Empty,EntityType.TimeZone),ct);
+                  var mask0Id = d.Rexes.Count == 0 ? 0 : d.Rexes.ElementAt(0).MaskGuid == null || d.Rexes.ElementAt(0).MaskGuid == Guid.Empty ? 0 : await bus.QueryAsync(new ExternalIdByGuidAndEntityQuery(d.Rexes.ElementAt(0).MaskGuid ?? Guid.Empty,EntityType.TIMEZONE),ct);
+                  var mask1Id = d.Rexes.Count <= 1 ? 0 : d.Rexes.ElementAt(1).MaskGuid == null || d.Rexes.ElementAt(1).MaskGuid == Guid.Empty ? 0 : await bus.QueryAsync(new ExternalIdByGuidAndEntityQuery(d.Rexes.ElementAt(1).MaskGuid ?? Guid.Empty,EntityType.TIMEZONE),ct);
 
                   var doorRes = dRepo.AccessControlReaderConfiguration(
                         mac,
@@ -718,7 +718,7 @@ public sealed class DeviceService(
                   if (d.Type == DoorType.Dual)
                   {
                         readerGuid = d.Readers.Where(x => x.ReaderDirection == ReaderDirection.Out).Select(x => x.DeviceModuleGuid).First();
-                        readerModuleId = (short)(d.Readers.Count == 0 ? -1 : await bus.QueryAsync(new ExternalIdByGuidAndEntityQuery(readerGuid, EntityType.DeviceModule), ct));
+                        readerModuleId = (short)(d.Readers.Count == 0 ? -1 : await bus.QueryAsync(new ExternalIdByGuidAndEntityQuery(readerGuid, EntityType.DEVICE_MODULE), ct));
                         readerSlot = (short)(d.Readers.Count == 0 ? -1 : d.Readers.Where(x => x.ReaderDirection == ReaderDirection.Out).Select(x => x.SlotNo).First());
                         
                         var res = dRepo.AccessControlReaderConfiguration(
@@ -769,9 +769,9 @@ public sealed class DeviceService(
                   var gps = await bus.QueryAsync(new GroupByMacQuery(device.Mac),ct);
                   foreach (var g in gps)
                   {
-                        var groupId = await bus.QueryAsync(new ExternalIdByGuidAndEntityQuery(g.Guid, EntityType.Group),ct);
-                        var doorExIds = await bus.QueryAsync(new ExternalIdMapGuidByGuidsAndEntityQuery(g.Components.Select(x => x.Doors),EntityType.Door),ct);
-                        var timeExIds = await bus.QueryAsync(new ExternalIdMapGuidByGuidsAndEntityQuery(g.Components.Select(x => x.TimeZone),EntityType.TimeZone),ct);
+                        var groupId = await bus.QueryAsync(new ExternalIdByGuidAndEntityQuery(g.Guid, EntityType.GROUP),ct);
+                        var doorExIds = await bus.QueryAsync(new ExternalIdMapGuidByGuidsAndEntityQuery(g.Components.Select(x => x.Doors),EntityType.DOOR),ct);
+                        var timeExIds = await bus.QueryAsync(new ExternalIdMapGuidByGuidsAndEntityQuery(g.Components.Select(x => x.TimeZone),EntityType.TIMEZONE),ct);
 
                         var res = gRepo.AddAccessGroup(
                               mac,

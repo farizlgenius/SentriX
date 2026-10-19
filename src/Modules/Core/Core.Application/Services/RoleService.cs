@@ -17,7 +17,7 @@ public sealed class RoleService(
       {
             // Check name is duplicate 
             if (await repo.IsAnyByNameAndLocationIdAsync(dto.Name))
-                  throw new DuplicateException(EntityType.Role.ToString(), dto.Name);
+                  throw new DuplicateException(EntityType.ROLE.ToString(), dto.Name);
 
             var d = new Core.Domain.Entities.Role(
                   dto.Name,
@@ -44,16 +44,16 @@ public sealed class RoleService(
       {
             // Check is any location with guid
             if (!await repo.IsAnyGuidAsync(guid, ct))
-                  throw new NotFoundException(EntityType.Role.ToString(), guid.ToString());
+                  throw new NotFoundException(EntityType.ROLE.ToString(), guid.ToString());
 
             // Check is default location
             if (await repo.IsDefaultAsync(guid, ct))
-                  throw new DefaultRecordException(MethodType.Delete, EntityType.Role.ToString(), guid.ToString());
+                  throw new DefaultRecordException(MethodType.Delete, EntityType.ROLE.ToString(), guid.ToString());
 
             // Check relate object here
 
             if (await repo.IsAnyUserByGuidAsync(guid, ct))
-                  throw new FoundRelateException(EntityType.Operator.ToString(), guid.ToString(), EntityType.User.ToString());
+                  throw new FoundRelateException(EntityType.OPERATOR.ToString(), guid.ToString(), EntityType.USER.ToString());
 
 
             await repo.DeleteAsync(guid, ct);
@@ -65,17 +65,17 @@ public sealed class RoleService(
       {
             // Check if guids is empty 
             if (guids.Count() == 0)
-                  throw new NotFoundException(EntityType.Role.ToString());
+                  throw new NotFoundException(EntityType.ROLE.ToString());
 
             foreach (var guid in guids)
             {
                   // Check is any location with guid
                   if (!await repo.IsAnyGuidAsync(guid, ct))
-                        throw new NotFoundException(EntityType.Role.ToString(), guid.ToString());
+                        throw new NotFoundException(EntityType.ROLE.ToString(), guid.ToString());
 
                   // Check relate object here
                   if (await repo.IsAnyUserByGuidAsync(guid, ct))
-                        throw new FoundRelateException(EntityType.Operator.ToString(), guid.ToString(), EntityType.User.ToString());
+                        throw new FoundRelateException(EntityType.OPERATOR.ToString(), guid.ToString(), EntityType.USER.ToString());
             }
 
             await repo.DeleteRangeAsync(guids);
@@ -87,7 +87,7 @@ public sealed class RoleService(
       {
             // Check is any location with guid
             if (!await repo.IsAnyGuidAsync(guid, ct))
-                  throw new NotFoundException(EntityType.Role.ToString(), guid.ToString());
+                  throw new NotFoundException(EntityType.ROLE.ToString(), guid.ToString());
 
             return await repo.DisableAsync(guid, ct);
       }
@@ -96,7 +96,7 @@ public sealed class RoleService(
       {
             // Check is any location with guid
             if (!await repo.IsAnyGuidAsync(guid, ct))
-                  throw new NotFoundException(EntityType.Role.ToString(), guid.ToString());
+                  throw new NotFoundException(EntityType.ROLE.ToString(), guid.ToString());
 
             return await repo.EnableAsync(guid, ct);
       }
@@ -126,7 +126,7 @@ public sealed class RoleService(
       {
             // Check is any location with guid
             if (!await repo.IsAnyGuidAsync(dto.Guid, ct))
-                  throw new NotFoundException(EntityType.Role.ToString(), dto.Guid.ToString());
+                  throw new NotFoundException(EntityType.ROLE.ToString(), dto.Guid.ToString());
 
 
             var d = new Core.Domain.Entities.Role(

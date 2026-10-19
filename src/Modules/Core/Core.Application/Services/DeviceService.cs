@@ -31,7 +31,7 @@ public sealed class DeviceService(
   public async Task<bool> CommandAsync(string command, CancellationToken ct = default)
   {
     var deviceId = util.GetScpNumberAsync(command,Vendor.aero);
-    var mac = await comm.GetMacByExternalIdAndEntityAndVendorAsync(int.Parse(deviceId),EntityType.Device,Vendor.aero);
+    var mac = await comm.GetMacByExternalIdAndEntityAndVendorAsync(int.Parse(deviceId),EntityType.DEVICE,Vendor.aero);
     await adapter.GetAdapter(Vendor.aero).Device.CommandAsync(mac,string.Empty,short.Parse(deviceId),command, ct);
     return true;
   }
@@ -40,13 +40,13 @@ public sealed class DeviceService(
   {
 
     if (!await bus.QueryAsync(new IsAnyLocationByGuidQuery(dto.LocationGuid), ct))
-      throw new NotFoundException(EntityType.Location.ToString(), dto.LocationGuid.ToString());
+      throw new NotFoundException(EntityType.LOCATION.ToString(), dto.LocationGuid.ToString());
 
     var locationId = await bus.QueryAsync(new LocationIdByGuidQuery(dto.LocationGuid), ct);
 
     // Check name is duplicate
     if (await repo.IsAnyByNameAndLocationIdAsync(dto.Name, locationId, ct))
-      throw new DuplicateException(EntityType.Device.ToString(), dto.Name);
+      throw new DuplicateException(EntityType.DEVICE.ToString(), dto.Name);
 
 
     var deviceModules = dto.DeviceModules.Select(x => new DeviceModule(
@@ -132,7 +132,7 @@ public sealed class DeviceService(
         //await adapter.GetAdapter(d.Vendor).Device.SetExternalIdAsync(d.Mac, d.Ip, tempD.Id, (int)externalId);
         await comm.InsertComponentMappingAsync(
           d.Guid,
-          EntityType.Device,
+          EntityType.DEVICE,
           (short)tempD.Id,
           d.Mac,
           d.Vendor,
@@ -143,7 +143,7 @@ public sealed class DeviceService(
         //await adapter.GetAdapter(d.Vendor).Device.SetExternalIdAsync(d.Mac, d.Ip, tempD.Id, (int)externalId);
         await comm.InsertComponentMappingAsync(
           d.Guid,
-          EntityType.DeviceModule,
+          EntityType.DEVICE_MODULE,
           0,
           d.Mac,
           d.Vendor,
@@ -153,7 +153,7 @@ public sealed class DeviceService(
       }
       else
       {
-        throw new NotFoundException(EntityType.TempDevice.ToString(), d.Mac);
+        throw new NotFoundException(EntityType.TEMP_DEVICE.ToString(), d.Mac);
       }
 
     }
@@ -171,7 +171,7 @@ public sealed class DeviceService(
   public async Task<bool> DeleteByGuidAsync(Guid guid, CancellationToken ct = default)
   {
     if (!await repo.IsAnyGuidAsync(guid, ct))
-      throw new NotFoundException(EntityType.Device.ToString(), guid.ToString());
+      throw new NotFoundException(EntityType.DEVICE.ToString(), guid.ToString());
 
     // Check reference before
 
@@ -192,13 +192,13 @@ public sealed class DeviceService(
   {
     // Check if guids is empty 
     if (guids.Count() == 0)
-      throw new NotFoundException(EntityType.Company.ToString());
+      throw new NotFoundException(EntityType.COMPANY.ToString());
 
     foreach (var guid in guids)
     {
       // Check is any location with guid
       if (!await repo.IsAnyGuidAsync(guid, ct))
-        throw new NotFoundException(EntityType.Company.ToString(), guid.ToString());
+        throw new NotFoundException(EntityType.COMPANY.ToString(), guid.ToString());
 
       // Check relate object here
 
@@ -212,7 +212,7 @@ public sealed class DeviceService(
   public async Task<bool> DisabledAsync(Guid guid, CancellationToken ct = default)
   {
     if (!await repo.IsAnyGuidAsync(guid, ct))
-      throw new NotFoundException(EntityType.Device.ToString(), guid.ToString());
+      throw new NotFoundException(EntityType.DEVICE.ToString(), guid.ToString());
 
     await repo.DisableAsync(guid, ct);
     return true;
@@ -221,7 +221,7 @@ public sealed class DeviceService(
   public async Task<bool> EnabledAsync(Guid guid, CancellationToken ct = default)
   {
     if (!await repo.IsAnyGuidAsync(guid, ct))
-      throw new NotFoundException(EntityType.Device.ToString(), guid.ToString());
+      throw new NotFoundException(EntityType.DEVICE.ToString(), guid.ToString());
 
     await repo.EnableAsync(guid, ct);
     return true;
@@ -336,16 +336,16 @@ public sealed class DeviceService(
   public async Task<Guid> UpdateAsync(UpdateDeviceDto dto, CancellationToken ct = default)
   {
     if (!await repo.IsAnyGuidAsync(dto.Guid, ct))
-      throw new NotFoundException(EntityType.Device.ToString(), dto.Guid.ToString());
+      throw new NotFoundException(EntityType.DEVICE.ToString(), dto.Guid.ToString());
 
     if (!await repo.IsAnyMacAsync(dto.Mac, ct))
-      throw new DuplicateException(EntityType.Device.ToString(), dto.Mac);
+      throw new DuplicateException(EntityType.DEVICE.ToString(), dto.Mac);
 
     var locationId = await bus.QueryAsync(new LocationIdByGuidQuery(dto.LocationGuid));
 
     // Check name is duplicate
     if (await repo.IsAnyByNameAndLocationIdAsync(dto.Name, locationId, ct))
-      throw new DuplicateException(EntityType.Device.ToString(), dto.Name);
+      throw new DuplicateException(EntityType.DEVICE.ToString(), dto.Name);
 
     var d = new Device(
       dto.Guid,

@@ -31,6 +31,13 @@ public class AlertController(IAlert alert) : ControllerBase
             return Ok(res);
       }
 
+      [HttpGet("level")]
+      public async Task<IActionResult> GetLevelOptionAsync()
+      {
+            var res = await alert.GetLevelOptionAsync();
+            return Ok(res);
+      }
+
       [HttpGet("{guid}")]
       public async Task<IActionResult> GetAsync(Guid guid)
       {

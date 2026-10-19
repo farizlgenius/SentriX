@@ -3,7 +3,7 @@ import PageBreadcrumb from "../../components/common/PageBreadCrumb";
 
 import Pagination from "../../components/ui/table/Pagination";
 import { send } from "../../api/api";
-import { EventEndpoint } from "../../endpoint/TransactionEndpoint";
+import { EventEndpoint } from "../../endpoint/EventEndpoint";
 
 import SignalRService from "../../services/SignalRService";
 import DatePicker from "../../components/form/date-picker";

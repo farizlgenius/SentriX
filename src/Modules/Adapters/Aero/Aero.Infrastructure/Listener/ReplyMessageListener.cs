@@ -4,15 +4,20 @@ using Adapter.Contract.Interfaces;
 using Aero.Application.Helpers;
 using Aero.Domain.Entities;
 using Aero.Infrastructure.Helpers;
+using Core.Contract.DTOs.Alert;
 using HID.Aero.ScpdNet.Wrapper;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using SharedKernel.Enums;
 using SharedKernel.Messaging;
 
 namespace Adapter.Aero.Listener;
 
 
-public sealed class ReplyMessageListener(ILogger<ReplyMessageListener> logger, Channel<ReplyMessage> queue, IServiceScopeFactory factory)
+public sealed class ReplyMessageListener(ILogger<ReplyMessageListener> logger, 
+Channel<ReplyMessage> queue,
+Channel<AlertDetectDto> alert,
+ IServiceScopeFactory factory)
 {
       private volatile bool _shutdownFlag;
 
@@ -98,6 +103,13 @@ public sealed class ReplyMessageListener(ILogger<ReplyMessageListener> logger, C
                         break;
                   case (int)enSCPReplyType.enSCPReplyTransaction:
                         TransactionHandlerHelper.SCPReplyTransactionHandler(message, queue, logger);
+                        var d = new AlertDetectDto(
+                              message.SCPId,
+                              EventConverterHelper.SourceTypeToEntityType(message.tran.source_type),
+                              EventConverterHelper.ToBaseEvent(message.tran.tran_type,message.tran.tran_code),
+                              Vendor.aero
+                        );
+                        alert.Writer.TryWrite(d);
                         break;
                   case (int)enSCPReplyType.enSCPReplyCommStatus:
                         switch (message.comm.status)

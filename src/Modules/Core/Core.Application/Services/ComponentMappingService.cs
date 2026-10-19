@@ -26,7 +26,7 @@ public sealed class ComponentMappingService(IComponentMappingRepository repo) : 
             var res = await repo.GetExternalIdByMacAndEntityAsync(mac,entityType);
 
             if(res == 0)
-                  throw new NotFoundException(EntityType.ComponentMapping.ToString(),$"Mac:{mac},Entity:{entityType}");
+                  throw new NotFoundException(EntityType.COMPONENT_MAPPING.ToString(),$"Mac:{mac},Entity:{entityType}");
 
             return res;
       }

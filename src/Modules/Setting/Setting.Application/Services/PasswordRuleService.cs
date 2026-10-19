@@ -29,7 +29,7 @@ public sealed class PasswordRuleService(IPasswordRuleRepository repo) : IPasswor
     );
 
     if (!await repo.IsAnyByGuidAsync(dto.Guid))
-      throw new NotFoundException(EntityType.PasswordRule.ToString(), dto.Guid.ToString());
+      throw new NotFoundException(EntityType.PASSWORD_RULE.ToString(), dto.Guid.ToString());
 
     await repo.UpdateAsync(d, ct);
 

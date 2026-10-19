@@ -3,6 +3,7 @@ using Core.Contract.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SharedKernel.Domain;
+using SharedKernel.Enums;
 
 
 namespace Host.Controllers
@@ -20,10 +21,17 @@ namespace Host.Controllers
 
     }
 
-    [HttpGet("base")]
-    public async Task<IActionResult> GetBaseEventAsync()
+    [HttpGet("entity")]
+    public async Task<IActionResult> GetCoreEntityAsync()
     {
-      var res = await @event.GetBaseEventAsync();
+      var res = await @event.GetCoreEntityAsync();
+      return Ok(res);
+    }
+
+    [HttpGet("event/{guid}")]
+    public async Task<IActionResult> GetCoreEventAsync(Guid guid)
+    {
+      var res = await @event.GetCoreEventAsync(guid);
       return Ok(res);
     }
 

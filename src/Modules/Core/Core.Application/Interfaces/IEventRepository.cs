@@ -26,5 +26,9 @@ public interface IEventRepository : IBaseRepository<EventDto, Event>
       );
 
       Task AddAuditAsync(AuditTrail audit,CancellationToken ct = default);
-      Task<IEnumerable<OptionDto>> GetBaseEventAsync(CancellationToken ct = default);
+      Task<IEnumerable<OptionDto>> GetCoreEventAsync(Guid guid,CancellationToken ct = default);
+      Task<IEnumerable<OptionDto>> GetCoreEntityAsync(CancellationToken ct = default);
+      Task<int> GetCoreEventIdByGuidAsync(Guid guid,CancellationToken ct = default);
+      Task<int> GetCoreEntityIdByGuidAsync(Guid guid,CancellationToken ct = default);
+      Task<EntityType> GetCoreEntityByGuidAsync(Guid guid,CancellationToken ct = default);
 }

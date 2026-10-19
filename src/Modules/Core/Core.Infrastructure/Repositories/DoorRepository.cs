@@ -31,7 +31,7 @@ public sealed class DoorRepository(CoreDbContext context) : IDoorRepository
     var entity = await context.Doors
     .OrderByDescending(x => x.id)
       .Where(x => x.guid == guid)
-      .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.Device.ToString(), guid.ToString());
+      .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.DEVICE.ToString(), guid.ToString());
 
     // Check releation
 
@@ -110,7 +110,7 @@ public sealed class DoorRepository(CoreDbContext context) : IDoorRepository
   {
     var en = await context.Doors
       .Where(x => x.guid == guid)
-      .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.Device.ToString(), guid.ToString());
+      .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.DEVICE.ToString(), guid.ToString());
 
     en.is_active = false;
 
@@ -125,7 +125,7 @@ public sealed class DoorRepository(CoreDbContext context) : IDoorRepository
   {
     var en = await context.Doors
       .Where(x => x.guid == guid)
-      .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.Device.ToString(), guid.ToString());
+      .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.DEVICE.ToString(), guid.ToString());
 
     en.is_active = true;
 
@@ -195,7 +195,7 @@ public sealed class DoorRepository(CoreDbContext context) : IDoorRepository
         x.location.name,
         x.is_active,
         x.is_default
-      )).FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.Device.ToString(), guid.ToString());
+      )).FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.DEVICE.ToString(), guid.ToString());
   }
 
   public async Task<IEnumerable<DoorDto>> GetByLocationAsync(Guid locationGuid, CancellationToken ct = default)
@@ -359,10 +359,19 @@ public sealed class DoorRepository(CoreDbContext context) : IDoorRepository
       .FirstOrDefaultAsync();
 
     if (res == 0)
-      throw new NotFoundException(EntityType.Device.ToString(), guid.ToString());
+      throw new NotFoundException(EntityType.DEVICE.ToString(), guid.ToString());
 
     return res;
   }
+
+      public async Task<IEnumerable<int>> GetIdsByGuidsAsync(IEnumerable<Guid> guids, CancellationToken ct = default)
+      {
+           return await context.Doors
+            .AsNoTracking()
+            .Where(x => guids.Contains(x.guid))
+            .Select(x => x.id)
+            .ToArrayAsync();
+      }
 
       public async Task<string> GetNameByGuidAsync(Guid guid, CancellationToken ct = default)
       {
@@ -519,7 +528,7 @@ public sealed class DoorRepository(CoreDbContext context) : IDoorRepository
     var en = await context.Doors
       .AsNoTracking()
       .Where(x => x.guid == entity.Guid)
-      .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.Device.ToString(), entity.Guid.ToString());
+      .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.DEVICE.ToString(), entity.Guid.ToString());
 
     en.name = entity.Name;
     en.vendor = entity.Vendor;

@@ -183,7 +183,7 @@ namespace Core.Infrastructure.Migrations
                     b.Property<int>("alert_level_id")
                         .HasColumnType("integer");
 
-                    b.Property<int>("alert_levelid")
+                    b.Property<int>("core_event_id")
                         .HasColumnType("integer");
 
                     b.Property<DateTime>("created_at")
@@ -205,9 +205,6 @@ namespace Core.Infrastructure.Migrations
                     b.Property<int>("location_id")
                         .HasColumnType("integer");
 
-                    b.Property<int>("locationid")
-                        .HasColumnType("integer");
-
                     b.Property<string>("name")
                         .IsRequired()
                         .HasColumnType("text");
@@ -219,14 +216,16 @@ namespace Core.Infrastructure.Migrations
 
                     b.HasKey("id");
 
-                    b.HasIndex("alert_levelid");
+                    b.HasIndex("alert_level_id");
 
-                    b.HasIndex("locationid");
+                    b.HasIndex("core_event_id");
+
+                    b.HasIndex("location_id");
 
                     b.ToTable("Alerts", "core");
                 });
 
-            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.AlertBaseEvent", b =>
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.AlertComponent", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -237,16 +236,16 @@ namespace Core.Infrastructure.Migrations
                     b.Property<int>("alert_id")
                         .HasColumnType("integer");
 
-                    b.Property<int>("event_detail_id")
+                    b.Property<int>("door_id")
                         .HasColumnType("integer");
 
                     b.HasKey("id");
 
                     b.HasIndex("alert_id");
 
-                    b.HasIndex("event_detail_id");
+                    b.HasIndex("door_id");
 
-                    b.ToTable("AlertBaseEvents", "core");
+                    b.ToTable("AlertComponents", "core");
                 });
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.AlertEvent", b =>
@@ -257,8 +256,8 @@ namespace Core.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
 
-                    b.Property<bool>("acknowledge")
-                        .HasColumnType("boolean");
+                    b.Property<int>("alert_action")
+                        .HasColumnType("integer");
 
                     b.Property<string>("alert_level")
                         .IsRequired()
@@ -268,7 +267,6 @@ namespace Core.Infrastructure.Migrations
                         .HasColumnType("integer");
 
                     b.Property<string>("comment")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime>("created_at")
@@ -297,15 +295,9 @@ namespace Core.Infrastructure.Migrations
                     b.Property<int?>("location_id")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("locationid")
-                        .HasColumnType("integer");
-
                     b.Property<string>("name")
                         .IsRequired()
                         .HasColumnType("text");
-
-                    b.Property<bool>("postpone")
-                        .HasColumnType("boolean");
 
                     b.Property<DateTime>("timestamp")
                         .HasColumnType("timestamp with time zone");
@@ -315,9 +307,12 @@ namespace Core.Infrastructure.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
 
+                    b.Property<string>("username")
+                        .HasColumnType("text");
+
                     b.HasKey("id");
 
-                    b.HasIndex("locationid");
+                    b.HasIndex("location_id");
 
                     b.ToTable("AlertEvents", "core");
                 });
@@ -371,7 +366,7 @@ namespace Core.Infrastructure.Migrations
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             is_active = true,
-                            is_default = false,
+                            is_default = true,
                             name = "Emergency",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -382,7 +377,7 @@ namespace Core.Infrastructure.Migrations
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             is_active = true,
-                            is_default = false,
+                            is_default = true,
                             name = "Danger",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -393,7 +388,7 @@ namespace Core.Infrastructure.Migrations
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             is_active = true,
-                            is_default = false,
+                            is_default = true,
                             name = "High",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -404,7 +399,7 @@ namespace Core.Infrastructure.Migrations
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             is_active = true,
-                            is_default = false,
+                            is_default = true,
                             name = "Moderate",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -415,7 +410,7 @@ namespace Core.Infrastructure.Migrations
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             is_active = true,
-                            is_default = false,
+                            is_default = true,
                             name = "Low",
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         });
@@ -486,342 +481,6 @@ namespace Core.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("AuditTrails", "core");
-                });
-
-            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.BaseEvent", b =>
-                {
-                    b.Property<int>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
-
-                    b.Property<DateTime>("created_at")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
-                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
-
-                    b.Property<string>("detail")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("entity")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("event_detail")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<Guid>("guid")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasDefaultValueSql("gen_random_uuid()");
-
-                    b.Property<bool>("is_active")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("is_default")
-                        .HasColumnType("boolean");
-
-                    b.Property<DateTime>("updated_at")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
-                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
-
-                    b.HasKey("id");
-
-                    b.ToTable("BaseEvents", "core");
-
-                    b.HasData(
-                        new
-                        {
-                            id = 1,
-                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            detail = "Online",
-                            entity = "Device",
-                            event_detail = "Online",
-                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
-                            is_active = true,
-                            is_default = false,
-                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            id = 2,
-                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            detail = "Offline",
-                            entity = "Device",
-                            event_detail = "Offline",
-                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
-                            is_active = true,
-                            is_default = false,
-                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            id = 5,
-                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            detail = "Online",
-                            entity = "DeviceModule",
-                            event_detail = "Online",
-                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
-                            is_active = true,
-                            is_default = false,
-                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            id = 6,
-                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            detail = "Offline",
-                            entity = "DeviceModule",
-                            event_detail = "Offline",
-                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
-                            is_active = true,
-                            is_default = false,
-                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            id = 7,
-                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            detail = "Disabled",
-                            entity = "DeviceModule",
-                            event_detail = "Disabled",
-                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
-                            is_active = true,
-                            is_default = false,
-                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            id = 8,
-                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            detail = "Reader online",
-                            entity = "Door",
-                            event_detail = "Online",
-                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
-                            is_active = true,
-                            is_default = false,
-                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            id = 9,
-                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            detail = "Reader offline",
-                            entity = "Door",
-                            event_detail = "Offline",
-                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
-                            is_active = true,
-                            is_default = false,
-                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            id = 10,
-                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            detail = "Reader tamper",
-                            entity = "Door",
-                            event_detail = "Tamper",
-                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
-                            is_active = true,
-                            is_default = false,
-                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            id = 11,
-                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            detail = "Card not found",
-                            entity = "Door",
-                            event_detail = "CardNoFound",
-                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
-                            is_active = true,
-                            is_default = false,
-                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            id = 12,
-                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            detail = "Grant",
-                            entity = "Door",
-                            event_detail = "Grant",
-                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
-                            is_active = true,
-                            is_default = false,
-                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            id = 13,
-                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            detail = "Rejected",
-                            entity = "Door",
-                            event_detail = "Rejected",
-                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
-                            is_active = true,
-                            is_default = false,
-                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            id = 14,
-                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            detail = "Denied",
-                            entity = "Door",
-                            event_detail = "Denied",
-                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
-                            is_active = true,
-                            is_default = false,
-                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            id = 15,
-                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            detail = "Duress",
-                            entity = "Door",
-                            event_detail = "Duress",
-                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
-                            is_active = true,
-                            is_default = false,
-                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            id = 16,
-                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            detail = "Held open",
-                            entity = "Door",
-                            event_detail = "HeldOpen",
-                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
-                            is_active = true,
-                            is_default = false,
-                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            id = 17,
-                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            detail = "Force open",
-                            entity = "Door",
-                            event_detail = "ForcedOpen",
-                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
-                            is_active = true,
-                            is_default = false,
-                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            id = 18,
-                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            detail = "Double card",
-                            entity = "Door",
-                            event_detail = "DoubleCardEvent",
-                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
-                            is_active = true,
-                            is_default = false,
-                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            id = 19,
-                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            detail = "Active",
-                            entity = "Input",
-                            event_detail = "Active",
-                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
-                            is_active = true,
-                            is_default = false,
-                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            id = 20,
-                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            detail = "Inactive",
-                            entity = "Input",
-                            event_detail = "Inactive",
-                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
-                            is_active = true,
-                            is_default = false,
-                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            id = 21,
-                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            detail = "Disconnected",
-                            entity = "Input",
-                            event_detail = "Disconnect",
-                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
-                            is_active = true,
-                            is_default = false,
-                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            id = 22,
-                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            detail = "Active",
-                            entity = "Output",
-                            event_detail = "Active",
-                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
-                            is_active = true,
-                            is_default = false,
-                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            id = 23,
-                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            detail = "Inactive",
-                            entity = "Output",
-                            event_detail = "Inactive",
-                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
-                            is_active = true,
-                            is_default = false,
-                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            id = 24,
-                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            detail = "Disconnected",
-                            entity = "Output",
-                            event_detail = "Disconnect",
-                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
-                            is_active = true,
-                            is_default = false,
-                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            id = 25,
-                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            detail = "Antipassback violate",
-                            entity = "Door",
-                            event_detail = "APB",
-                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
-                            is_active = true,
-                            is_default = false,
-                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            id = 26,
-                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            detail = "Occupancy reached limit",
-                            entity = "Door",
-                            event_detail = "OccLimit",
-                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
-                            is_active = true,
-                            is_default = false,
-                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        });
                 });
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.BreakGlass", b =>
@@ -1250,7 +909,7 @@ namespace Core.Infrastructure.Migrations
                         {
                             id = 1,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            entity = "TimeZone",
+                            entity = "TIMEZONE",
                             external_id = 1,
                             guid = new Guid("cff24195-43f8-42ec-a03f-e84857cc958f"),
                             is_active = true,
@@ -1262,7 +921,7 @@ namespace Core.Infrastructure.Migrations
                         {
                             id = 2,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            entity = "TimeZone",
+                            entity = "TIMEZONE",
                             external_id = 2,
                             guid = new Guid("614a766c-1241-4fdc-9d0d-7788291cac2d"),
                             is_active = true,
@@ -1274,7 +933,7 @@ namespace Core.Infrastructure.Migrations
                         {
                             id = 3,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            entity = "CardFormat",
+                            entity = "CARD_FORMAT",
                             external_id = 0,
                             guid = new Guid("356b51d4-5650-4ef9-821b-bf38eb4ec2db"),
                             is_active = true,
@@ -1285,7 +944,7 @@ namespace Core.Infrastructure.Migrations
                         {
                             id = 4,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            entity = "CardFormat",
+                            entity = "CARD_FORMAT",
                             external_id = 1,
                             guid = new Guid("f04c1839-991d-4f13-be52-4a057d30af68"),
                             is_active = true,
@@ -1296,7 +955,7 @@ namespace Core.Infrastructure.Migrations
                         {
                             id = 5,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            entity = "CardFormat",
+                            entity = "CARD_FORMAT",
                             external_id = 2,
                             guid = new Guid("2ec6aa6c-dd76-4b3a-98b3-e8b5ecff0d1e"),
                             is_active = true,
@@ -1307,12 +966,485 @@ namespace Core.Infrastructure.Migrations
                         {
                             id = 6,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            entity = "Group",
+                            entity = "GROUP",
                             external_id = 1,
                             guid = new Guid("895b0301-3d77-4ec7-8917-43260a839643"),
                             is_active = true,
                             is_default = false,
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        });
+                });
+
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.CoreEntity", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<string>("entity")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("guid")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("guid", "id")
+                        .IsUnique();
+
+                    b.ToTable("CoreEntities", "core");
+
+                    b.HasData(
+                        new
+                        {
+                            id = 1,
+                            entity = "AUTH",
+                            guid = new Guid("00000000-0000-0000-0000-000000000000")
+                        },
+                        new
+                        {
+                            id = 2,
+                            entity = "DEVICE",
+                            guid = new Guid("00000000-0000-0000-0000-000000000000")
+                        },
+                        new
+                        {
+                            id = 3,
+                            entity = "TEMP_DEVICE",
+                            guid = new Guid("00000000-0000-0000-0000-000000000000")
+                        },
+                        new
+                        {
+                            id = 4,
+                            entity = "DEVICE_MODULE",
+                            guid = new Guid("00000000-0000-0000-0000-000000000000")
+                        },
+                        new
+                        {
+                            id = 5,
+                            entity = "LOCATION",
+                            guid = new Guid("00000000-0000-0000-0000-000000000000")
+                        },
+                        new
+                        {
+                            id = 6,
+                            entity = "COMPANY",
+                            guid = new Guid("00000000-0000-0000-0000-000000000000")
+                        },
+                        new
+                        {
+                            id = 7,
+                            entity = "DEPARTMENT",
+                            guid = new Guid("00000000-0000-0000-0000-000000000000")
+                        },
+                        new
+                        {
+                            id = 8,
+                            entity = "POSITION",
+                            guid = new Guid("00000000-0000-0000-0000-000000000000")
+                        },
+                        new
+                        {
+                            id = 9,
+                            entity = "USER",
+                            guid = new Guid("00000000-0000-0000-0000-000000000000")
+                        },
+                        new
+                        {
+                            id = 10,
+                            entity = "ROLE",
+                            guid = new Guid("00000000-0000-0000-0000-000000000000")
+                        },
+                        new
+                        {
+                            id = 11,
+                            entity = "OPERATOR",
+                            guid = new Guid("00000000-0000-0000-0000-000000000000")
+                        },
+                        new
+                        {
+                            id = 12,
+                            entity = "PASSWORD_RULE",
+                            guid = new Guid("00000000-0000-0000-0000-000000000000")
+                        },
+                        new
+                        {
+                            id = 13,
+                            entity = "WEAK_PASSWORD",
+                            guid = new Guid("00000000-0000-0000-0000-000000000000")
+                        },
+                        new
+                        {
+                            id = 14,
+                            entity = "TIMEZONE",
+                            guid = new Guid("00000000-0000-0000-0000-000000000000")
+                        },
+                        new
+                        {
+                            id = 15,
+                            entity = "HOLIDAY",
+                            guid = new Guid("00000000-0000-0000-0000-000000000000")
+                        },
+                        new
+                        {
+                            id = 16,
+                            entity = "INTERVAL",
+                            guid = new Guid("00000000-0000-0000-0000-000000000000")
+                        },
+                        new
+                        {
+                            id = 17,
+                            entity = "DOOR",
+                            guid = new Guid("00000000-0000-0000-0000-000000000000")
+                        },
+                        new
+                        {
+                            id = 18,
+                            entity = "TURNSTILE",
+                            guid = new Guid("00000000-0000-0000-0000-000000000000")
+                        },
+                        new
+                        {
+                            id = 19,
+                            entity = "GROUP",
+                            guid = new Guid("00000000-0000-0000-0000-000000000000")
+                        },
+                        new
+                        {
+                            id = 20,
+                            entity = "COMPONENT_MAPPING",
+                            guid = new Guid("00000000-0000-0000-0000-000000000000")
+                        },
+                        new
+                        {
+                            id = 21,
+                            entity = "EVENT",
+                            guid = new Guid("00000000-0000-0000-0000-000000000000")
+                        },
+                        new
+                        {
+                            id = 22,
+                            entity = "ADAPTER_EVENT",
+                            guid = new Guid("00000000-0000-0000-0000-000000000000")
+                        },
+                        new
+                        {
+                            id = 23,
+                            entity = "INPUT",
+                            guid = new Guid("00000000-0000-0000-0000-000000000000")
+                        },
+                        new
+                        {
+                            id = 24,
+                            entity = "OUTPUT",
+                            guid = new Guid("00000000-0000-0000-0000-000000000000")
+                        },
+                        new
+                        {
+                            id = 25,
+                            entity = "PROCEDURE",
+                            guid = new Guid("00000000-0000-0000-0000-000000000000")
+                        },
+                        new
+                        {
+                            id = 26,
+                            entity = "TRIGGER",
+                            guid = new Guid("00000000-0000-0000-0000-000000000000")
+                        },
+                        new
+                        {
+                            id = 27,
+                            entity = "MONITOR_GROUP",
+                            guid = new Guid("00000000-0000-0000-0000-000000000000")
+                        },
+                        new
+                        {
+                            id = 28,
+                            entity = "AREA",
+                            guid = new Guid("00000000-0000-0000-0000-000000000000")
+                        },
+                        new
+                        {
+                            id = 29,
+                            entity = "WEB",
+                            guid = new Guid("00000000-0000-0000-0000-000000000000")
+                        },
+                        new
+                        {
+                            id = 30,
+                            entity = "CARD_FORMAT",
+                            guid = new Guid("00000000-0000-0000-0000-000000000000")
+                        },
+                        new
+                        {
+                            id = 31,
+                            entity = "ACTION",
+                            guid = new Guid("00000000-0000-0000-0000-000000000000")
+                        },
+                        new
+                        {
+                            id = 32,
+                            entity = "ALERT",
+                            guid = new Guid("00000000-0000-0000-0000-000000000000")
+                        },
+                        new
+                        {
+                            id = 33,
+                            entity = "ALERT_LEVEL",
+                            guid = new Guid("00000000-0000-0000-0000-000000000000")
+                        },
+                        new
+                        {
+                            id = 34,
+                            entity = "CORE_EVENT",
+                            guid = new Guid("00000000-0000-0000-0000-000000000000")
+                        });
+                });
+
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.CoreEvent", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<int>("entity_id")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("event")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("guid")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("entity_id");
+
+                    b.HasIndex("guid", "id", "entity_id")
+                        .IsUnique();
+
+                    b.ToTable("CoreEvents", "core");
+
+                    b.HasData(
+                        new
+                        {
+                            id = 1,
+                            entity_id = 2,
+                            @event = "ONLINE",
+                            guid = new Guid("00000000-0000-0000-0000-000000000000")
+                        },
+                        new
+                        {
+                            id = 2,
+                            entity_id = 2,
+                            @event = "OFFLINE",
+                            guid = new Guid("00000000-0000-0000-0000-000000000000")
+                        },
+                        new
+                        {
+                            id = 3,
+                            entity_id = 2,
+                            @event = "TRANSACTION_EXCEED",
+                            guid = new Guid("00000000-0000-0000-0000-000000000000")
+                        },
+                        new
+                        {
+                            id = 4,
+                            entity_id = 4,
+                            @event = "DISABLED",
+                            guid = new Guid("00000000-0000-0000-0000-000000000000")
+                        },
+                        new
+                        {
+                            id = 5,
+                            entity_id = 4,
+                            @event = "ONLINE",
+                            guid = new Guid("00000000-0000-0000-0000-000000000000")
+                        },
+                        new
+                        {
+                            id = 6,
+                            entity_id = 4,
+                            @event = "OFFLINE",
+                            guid = new Guid("00000000-0000-0000-0000-000000000000")
+                        },
+                        new
+                        {
+                            id = 7,
+                            entity_id = 4,
+                            @event = "TIMEOUT",
+                            guid = new Guid("00000000-0000-0000-0000-000000000000")
+                        },
+                        new
+                        {
+                            id = 8,
+                            entity_id = 17,
+                            @event = "INVALID_CARD_FORMAT",
+                            guid = new Guid("00000000-0000-0000-0000-000000000000")
+                        },
+                        new
+                        {
+                            id = 9,
+                            entity_id = 17,
+                            @event = "ACCESS_DENIED",
+                            guid = new Guid("00000000-0000-0000-0000-000000000000")
+                        },
+                        new
+                        {
+                            id = 10,
+                            entity_id = 17,
+                            @event = "ACCESS_GRANT",
+                            guid = new Guid("00000000-0000-0000-0000-000000000000")
+                        },
+                        new
+                        {
+                            id = 11,
+                            entity_id = 17,
+                            @event = "CARD_NOT_FOUND",
+                            guid = new Guid("00000000-0000-0000-0000-000000000000")
+                        },
+                        new
+                        {
+                            id = 12,
+                            entity_id = 17,
+                            @event = "COUNT_EXCEED",
+                            guid = new Guid("00000000-0000-0000-0000-000000000000")
+                        },
+                        new
+                        {
+                            id = 13,
+                            entity_id = 17,
+                            @event = "INTERLOCK",
+                            guid = new Guid("00000000-0000-0000-0000-000000000000")
+                        },
+                        new
+                        {
+                            id = 14,
+                            entity_id = 17,
+                            @event = "ANTIPASSBACK_VIOLATION",
+                            guid = new Guid("00000000-0000-0000-0000-000000000000")
+                        },
+                        new
+                        {
+                            id = 15,
+                            entity_id = 17,
+                            @event = "OCCUPANCY_REACHED_ZERO",
+                            guid = new Guid("00000000-0000-0000-0000-000000000000")
+                        },
+                        new
+                        {
+                            id = 16,
+                            entity_id = 17,
+                            @event = "DOUBLE_CARD_EVENT",
+                            guid = new Guid("00000000-0000-0000-0000-000000000000")
+                        },
+                        new
+                        {
+                            id = 17,
+                            entity_id = 17,
+                            @event = "TAMPER",
+                            guid = new Guid("00000000-0000-0000-0000-000000000000")
+                        },
+                        new
+                        {
+                            id = 18,
+                            entity_id = 17,
+                            @event = "HELD_OPEN",
+                            guid = new Guid("00000000-0000-0000-0000-000000000000")
+                        },
+                        new
+                        {
+                            id = 19,
+                            entity_id = 17,
+                            @event = "FORCE_OPEN",
+                            guid = new Guid("00000000-0000-0000-0000-000000000000")
+                        },
+                        new
+                        {
+                            id = 20,
+                            entity_id = 23,
+                            @event = "DISCONNECTED",
+                            guid = new Guid("00000000-0000-0000-0000-000000000000")
+                        },
+                        new
+                        {
+                            id = 21,
+                            entity_id = 23,
+                            @event = "UNKNOWN",
+                            guid = new Guid("00000000-0000-0000-0000-000000000000")
+                        },
+                        new
+                        {
+                            id = 22,
+                            entity_id = 23,
+                            @event = "OPEN",
+                            guid = new Guid("00000000-0000-0000-0000-000000000000")
+                        },
+                        new
+                        {
+                            id = 23,
+                            entity_id = 23,
+                            @event = "CLOSE",
+                            guid = new Guid("00000000-0000-0000-0000-000000000000")
+                        },
+                        new
+                        {
+                            id = 24,
+                            entity_id = 23,
+                            @event = "FAULT",
+                            guid = new Guid("00000000-0000-0000-0000-000000000000")
+                        },
+                        new
+                        {
+                            id = 25,
+                            entity_id = 24,
+                            @event = "DISCONNECTED",
+                            guid = new Guid("00000000-0000-0000-0000-000000000000")
+                        },
+                        new
+                        {
+                            id = 26,
+                            entity_id = 24,
+                            @event = "UNKNOWN",
+                            guid = new Guid("00000000-0000-0000-0000-000000000000")
+                        },
+                        new
+                        {
+                            id = 27,
+                            entity_id = 24,
+                            @event = "ACTIVE",
+                            guid = new Guid("00000000-0000-0000-0000-000000000000")
+                        },
+                        new
+                        {
+                            id = 28,
+                            entity_id = 24,
+                            @event = "DEACTIVE",
+                            guid = new Guid("00000000-0000-0000-0000-000000000000")
+                        },
+                        new
+                        {
+                            id = 29,
+                            entity_id = 24,
+                            @event = "FAULT",
+                            guid = new Guid("00000000-0000-0000-0000-000000000000")
+                        },
+                        new
+                        {
+                            id = 30,
+                            entity_id = 28,
+                            @event = "OCCUPANCY_LIMIT_REACHED",
+                            guid = new Guid("00000000-0000-0000-0000-000000000000")
                         });
                 });
 
@@ -8343,45 +8475,54 @@ namespace Core.Infrastructure.Migrations
                 {
                     b.HasOne("Core.Infrastructure.Persistences.Entities.AlertLevel", "alert_level")
                         .WithMany("alerts")
-                        .HasForeignKey("alert_levelid")
+                        .HasForeignKey("alert_level_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.CoreEvent", "core_event")
+                        .WithMany("alerts")
+                        .HasForeignKey("core_event_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Core.Infrastructure.Persistences.Entities.Location", "location")
-                        .WithMany()
-                        .HasForeignKey("locationid")
+                        .WithMany("alerts")
+                        .HasForeignKey("location_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("alert_level");
 
+                    b.Navigation("core_event");
+
                     b.Navigation("location");
                 });
 
-            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.AlertBaseEvent", b =>
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.AlertComponent", b =>
                 {
                     b.HasOne("Core.Infrastructure.Persistences.Entities.Alert", "alert")
-                        .WithMany("alert_base_events")
+                        .WithMany("alert_components")
                         .HasForeignKey("alert_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Core.Infrastructure.Persistences.Entities.BaseEvent", "event_detail")
-                        .WithMany("alert_base_events")
-                        .HasForeignKey("event_detail_id")
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.Door", "door")
+                        .WithMany("alert_components")
+                        .HasForeignKey("door_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("alert");
 
-                    b.Navigation("event_detail");
+                    b.Navigation("door");
                 });
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.AlertEvent", b =>
                 {
                     b.HasOne("Core.Infrastructure.Persistences.Entities.Location", "location")
-                        .WithMany()
-                        .HasForeignKey("locationid");
+                        .WithMany("alert_event")
+                        .HasForeignKey("location_id")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("location");
                 });
@@ -8447,6 +8588,17 @@ namespace Core.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("location");
+                });
+
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.CoreEvent", b =>
+                {
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.CoreEntity", "entity")
+                        .WithMany("events")
+                        .HasForeignKey("entity_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("entity");
                 });
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Department", b =>
@@ -9063,17 +9215,12 @@ namespace Core.Infrastructure.Migrations
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Alert", b =>
                 {
-                    b.Navigation("alert_base_events");
+                    b.Navigation("alert_components");
                 });
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.AlertLevel", b =>
                 {
                     b.Navigation("alerts");
-                });
-
-            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.BaseEvent", b =>
-                {
-                    b.Navigation("alert_base_events");
                 });
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Buzzer", b =>
@@ -9087,6 +9234,16 @@ namespace Core.Infrastructure.Migrations
                     b.Navigation("departments");
 
                     b.Navigation("users");
+                });
+
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.CoreEntity", b =>
+                {
+                    b.Navigation("events");
+                });
+
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.CoreEvent", b =>
+                {
+                    b.Navigation("alerts");
                 });
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Country", b =>
@@ -9139,6 +9296,8 @@ namespace Core.Infrastructure.Migrations
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Door", b =>
                 {
+                    b.Navigation("alert_components");
+
                     b.Navigation("bg");
 
                     b.Navigation("group_components");
@@ -9191,6 +9350,10 @@ namespace Core.Infrastructure.Migrations
                     b.Navigation("actions");
 
                     b.Navigation("adapter_events");
+
+                    b.Navigation("alert_event");
+
+                    b.Navigation("alerts");
 
                     b.Navigation("audit_trails");
 

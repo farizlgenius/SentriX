@@ -26,7 +26,7 @@ public sealed class TimeService(
     var locationId = await bus.QueryAsync(new LocationIdByGuidQuery(dto.LocationGuid));
 
     if (await repo.IsAnyByNameAndLocationIdAsync(dto.Name, locationId))
-      throw new DuplicateException(EntityType.TimeZone.ToString(), dto.Name);
+      throw new DuplicateException(EntityType.TIMEZONE.ToString(), dto.Name);
 
     var intervalIds = await bus.QueryAsync(new IntervalIdsByGuidsQuery(dto.IntervalGuids));
 
@@ -42,8 +42,8 @@ public sealed class TimeService(
     var devices = await device.GetByLocationAsync(dto.LocationGuid);
     foreach (var device in devices)
     {
-      var externalId = await com.GetExternalIdByMacAndEntityAsync(device.Mac, EntityType.Device, ct);
-      var tzExternalId = await com.GetFreeIdByEntityAsync(EntityType.TimeZone, 100, null, ct);
+      var externalId = await com.GetExternalIdByMacAndEntityAsync(device.Mac, EntityType.DEVICE, ct);
+      var tzExternalId = await com.GetFreeIdByEntityAsync(EntityType.TIMEZONE, 100, null, ct);
       await adapter.GetAdapter(device.Vendor).Time.TimeZone(
         device.Mac,
         device.Ip,
@@ -61,7 +61,7 @@ public sealed class TimeService(
   public async Task<bool> DeleteByGuidAsync(Guid guid, CancellationToken ct = default)
   {
     if (!await repo.IsAnyGuidAsync(guid))
-      throw new NotFoundException(EntityType.TimeZone.ToString(), guid.ToString());
+      throw new NotFoundException(EntityType.TIMEZONE.ToString(), guid.ToString());
 
     // Check relation
 
@@ -76,13 +76,13 @@ public sealed class TimeService(
   {
     // Check if guids is empty 
     if (guids.Count() == 0)
-      throw new NotFoundException(EntityType.Role.ToString());
+      throw new NotFoundException(EntityType.ROLE.ToString());
 
     foreach (var guid in guids)
     {
       // Check is any location with guid
       if (!await repo.IsAnyGuidAsync(guid, ct))
-        throw new NotFoundException(EntityType.Role.ToString(), guid.ToString());
+        throw new NotFoundException(EntityType.ROLE.ToString(), guid.ToString());
 
       // Check relate object here
 
@@ -96,7 +96,7 @@ public sealed class TimeService(
   public async Task<bool> DisabledAsync(Guid guid, CancellationToken ct = default)
   {
     if (!await repo.IsAnyGuidAsync(guid, ct))
-      throw new NotFoundException(EntityType.Role.ToString(), guid.ToString());
+      throw new NotFoundException(EntityType.ROLE.ToString(), guid.ToString());
 
     return await repo.DisableAsync(guid, ct);
   }
@@ -104,7 +104,7 @@ public sealed class TimeService(
   public async Task<bool> EnabledAsync(Guid guid, CancellationToken ct = default)
   {
     if (!await repo.IsAnyGuidAsync(guid, ct))
-      throw new NotFoundException(EntityType.Role.ToString(), guid.ToString());
+      throw new NotFoundException(EntityType.ROLE.ToString(), guid.ToString());
 
     return await repo.EnableAsync(guid, ct);
   }
@@ -138,12 +138,12 @@ public sealed class TimeService(
   {
     // Check is any location with guid
     if (!await repo.IsAnyGuidAsync(dto.Guid, ct))
-      throw new NotFoundException(EntityType.TimeZone.ToString(), dto.Guid.ToString());
+      throw new NotFoundException(EntityType.TIMEZONE.ToString(), dto.Guid.ToString());
 
     var locationId = await bus.QueryAsync(new LocationIdByGuidQuery(dto.LocationGuid));
 
     if (await repo.IsAnyByNameAndLocationIdAsync(dto.Name, locationId))
-      throw new DuplicateException(EntityType.TimeZone.ToString(), dto.Name);
+      throw new DuplicateException(EntityType.TIMEZONE.ToString(), dto.Name);
 
     var intervalIds = await bus.QueryAsync(new IntervalIdsByGuidsQuery(dto.IntervalGuids));
 
@@ -166,11 +166,11 @@ public sealed class TimeService(
     var d = await device.GetAsync(guid, ct);
     var tzs = await repo.GetByLocationAsync(d.LocationGuid);
 
-    var deviceExternalId = await com.GetExternalIdByMacAndEntityAsync(d.Mac, EntityType.Device, ct);
+    var deviceExternalId = await com.GetExternalIdByMacAndEntityAsync(d.Mac, EntityType.DEVICE, ct);
 
     foreach (var tz in tzs)
     {
-      var tzExternalId = await com.GetExternalIdByGuidAndEntityAsync(tz.Guid, EntityType.TimeZone, ct);
+      var tzExternalId = await com.GetExternalIdByGuidAndEntityAsync(tz.Guid, EntityType.TIMEZONE, ct);
 
       await adapter.GetAdapter(d.Vendor).Time.TimeZone(
         d.Mac,

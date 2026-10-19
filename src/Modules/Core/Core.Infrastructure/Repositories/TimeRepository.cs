@@ -28,7 +28,7 @@ public sealed class TimeRepository(CoreDbContext context) : ITimeRepository
   {
     var entity = await context.TimeZones
       .OrderByDescending(x => x.id)
-      .FirstOrDefaultAsync(x => x.guid == guid) ?? throw new NotFoundException(EntityType.TimeZone.ToString(), guid.ToString());
+      .FirstOrDefaultAsync(x => x.guid == guid) ?? throw new NotFoundException(EntityType.TIMEZONE.ToString(), guid.ToString());
 
     context.TimeZones.Remove(entity);
 
@@ -50,7 +50,7 @@ public sealed class TimeRepository(CoreDbContext context) : ITimeRepository
   {
     var entity = await context.TimeZones
       .OrderByDescending(x => x.id)
-      .FirstOrDefaultAsync(x => x.guid == guid) ?? throw new NotFoundException(EntityType.TimeZone.ToString(), guid.ToString());
+      .FirstOrDefaultAsync(x => x.guid == guid) ?? throw new NotFoundException(EntityType.TIMEZONE.ToString(), guid.ToString());
 
     entity.is_active = false;
 
@@ -64,7 +64,7 @@ public sealed class TimeRepository(CoreDbContext context) : ITimeRepository
   {
     var entity = await context.TimeZones
       .OrderByDescending(x => x.id)
-      .FirstOrDefaultAsync(x => x.guid == guid) ?? throw new NotFoundException(EntityType.TimeZone.ToString(), guid.ToString());
+      .FirstOrDefaultAsync(x => x.guid == guid) ?? throw new NotFoundException(EntityType.TIMEZONE.ToString(), guid.ToString());
 
     entity.is_active = true;
 
@@ -105,7 +105,7 @@ public sealed class TimeRepository(CoreDbContext context) : ITimeRepository
         x.location.guid,
         x.is_active,
         x.is_default
-      )).FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.TimeZone.ToString(), guid.ToString());
+      )).FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.TIMEZONE.ToString(), guid.ToString());
   }
 
   public async Task<IEnumerable<TimeZoneDto>> GetByLocationAsync(Guid locationGuid, CancellationToken ct = default)
@@ -163,7 +163,7 @@ public sealed class TimeRepository(CoreDbContext context) : ITimeRepository
     var remain = total - uploaded;
 
     return new Components(
-        EntityType.TimeZone,
+        EntityType.TIMEZONE,
         total,
         uploaded,
         remain,
@@ -334,7 +334,7 @@ public sealed class TimeRepository(CoreDbContext context) : ITimeRepository
       var en = await context.TimeZones
       .Where(x => x.guid == entity.Guid)
       .OrderByDescending(x => x.id)
-      .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.TimeZone.ToString(), entity.Guid.ToString());
+      .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.TIMEZONE.ToString(), entity.Guid.ToString());
 
       var existingInterval = await context.TimeZoneIntervals.Where(x => x.timezone_id == en.id).ToArrayAsync();
 

@@ -30,7 +30,7 @@ public sealed class OperatorRepository(CoreDbContext context) : IOperatorReposit
   {
     var entity = await context.Operators
       .Where(x => x.guid == guid)
-      .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.Operator.ToString(), guid.ToString());
+      .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.OPERATOR.ToString(), guid.ToString());
 
     context.Operators.Remove(entity);
 
@@ -55,7 +55,7 @@ public sealed class OperatorRepository(CoreDbContext context) : IOperatorReposit
   {
     var entity = await context.Operators
       .Where(x => x.guid == guid)
-      .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.Operator.ToString(), guid.ToString());
+      .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.OPERATOR.ToString(), guid.ToString());
 
     entity.is_active = false;
 
@@ -70,7 +70,7 @@ public sealed class OperatorRepository(CoreDbContext context) : IOperatorReposit
   {
     var entity = await context.Operators
       .Where(x => x.guid == guid)
-      .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.Operator.ToString(), guid.ToString());
+      .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.OPERATOR.ToString(), guid.ToString());
 
     entity.is_active = true;
 
@@ -106,7 +106,7 @@ public sealed class OperatorRepository(CoreDbContext context) : IOperatorReposit
         x.is_active,
         x.is_default
       ))
-      .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.Operator.ToString(), guid.ToString());
+      .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.OPERATOR.ToString(), guid.ToString());
 
 
   }
@@ -147,7 +147,7 @@ public sealed class OperatorRepository(CoreDbContext context) : IOperatorReposit
   {
     var entity = await context.Operators
       .Where(x => x.guid == guid)
-      .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.Operator.ToString(), guid.ToString());
+      .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.OPERATOR.ToString(), guid.ToString());
 
     return entity.id;
   }
@@ -190,7 +190,7 @@ public sealed class OperatorRepository(CoreDbContext context) : IOperatorReposit
         x.is_active,
         x.is_default
       ))
-      .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.Operator.ToString(), username);
+      .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.OPERATOR.ToString(), username);
 
 
   }
@@ -290,7 +290,7 @@ public sealed class OperatorRepository(CoreDbContext context) : IOperatorReposit
       .AsNoTracking()
       .Where(x => x.username.Equals(username))
       .Select(x => x.password)
-      .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.Operator.ToString(), username);
+      .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.OPERATOR.ToString(), username);
 
   }
 
@@ -303,7 +303,7 @@ public sealed class OperatorRepository(CoreDbContext context) : IOperatorReposit
       .FirstOrDefaultAsync(ct);
 
     if (res == Guid.Empty)
-      throw new NotFoundException($"No role available for {EntityType.User}:{username}");
+      throw new NotFoundException($"No role available for {EntityType.USER}:{username}");
 
     return res;
   }
@@ -392,7 +392,7 @@ public sealed class OperatorRepository(CoreDbContext context) : IOperatorReposit
   {
     var existingEntity = await context.Operators
       .Where(x => x.guid == entity.Guid)
-      .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.Operator.ToString(), entity.Guid.ToString());
+      .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.OPERATOR.ToString(), entity.Guid.ToString());
 
     existingEntity.username = entity.Username;
     existingEntity.title = entity.Title;

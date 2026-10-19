@@ -26,7 +26,7 @@ public sealed class TurnstileRepository(CoreDbContext context) : ITurnstileRepos
   {
     var entity = await context.Turnstiles
       .Where(x => x.guid == guid)
-        .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.Turnstile.ToString(), guid.ToString());
+        .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.TURNSTILE.ToString(), guid.ToString());
 
     context.Turnstiles.Remove(entity);
 
@@ -48,7 +48,7 @@ public sealed class TurnstileRepository(CoreDbContext context) : ITurnstileRepos
   {
     var en = await context.Turnstiles
       .Where(x => x.guid == guid)
-      .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.Turnstile.ToString(), guid.ToString());
+      .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.TURNSTILE.ToString(), guid.ToString());
 
     en.is_active = false;
 
@@ -63,7 +63,7 @@ public sealed class TurnstileRepository(CoreDbContext context) : ITurnstileRepos
   {
     var en = await context.Turnstiles
       .Where(x => x.guid == guid)
-      .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.Turnstile.ToString(), guid.ToString());
+      .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.TURNSTILE.ToString(), guid.ToString());
 
     en.is_active = true;
 
@@ -109,7 +109,7 @@ public sealed class TurnstileRepository(CoreDbContext context) : ITurnstileRepos
         x.is_active,
         x.is_default
       ))
-      .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.Turnstile.ToString(), guid.ToString());
+      .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.TURNSTILE.ToString(), guid.ToString());
   }
 
   public async Task<IEnumerable<TurnstileDto>> GetByLocationAsync(Guid locationGuid, CancellationToken ct = default)
@@ -164,7 +164,7 @@ public sealed class TurnstileRepository(CoreDbContext context) : ITurnstileRepos
       .FirstOrDefaultAsync();
 
     if (res == 0)
-      throw new NotFoundException(EntityType.Turnstile.ToString(), guid.ToString());
+      throw new NotFoundException(EntityType.TURNSTILE.ToString(), guid.ToString());
 
     return res;
   }
@@ -295,7 +295,7 @@ public sealed class TurnstileRepository(CoreDbContext context) : ITurnstileRepos
   {
     var en = await context.Turnstiles
       .Where(x => x.guid == entity.Guid)
-      .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.Turnstile.ToString(), entity.Guid.ToString());
+      .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.TURNSTILE.ToString(), entity.Guid.ToString());
 
     en.name = entity.Name;
     context.Lanes.RemoveRange(en.lanes);

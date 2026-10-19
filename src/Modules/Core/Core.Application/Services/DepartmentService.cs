@@ -17,11 +17,11 @@ public sealed class DepartmentService(
       {
             // Check Company Exists
             if (!await com.IsAnyGuidAsync(dto.CompanyGuid))
-                  throw new NotFoundException(EntityType.Company.ToString(), dto.CompanyGuid.ToString());
+                  throw new NotFoundException(EntityType.COMPANY.ToString(), dto.CompanyGuid.ToString());
 
             // Check name is duplicate 
             if (await dep.IsAnyNameByCompanyGuidAsync(dto.Name, dto.CompanyGuid))
-                  throw new DuplicateException(EntityType.Department.ToString(), dto.Name);
+                  throw new DuplicateException(EntityType.DEPARTMENT.ToString(), dto.Name);
 
             var companyId = await com.GetIdByGuidAsync(dto.CompanyGuid, ct);
 
@@ -42,18 +42,18 @@ public sealed class DepartmentService(
       {
             // Check is any location with guid
             if (!await dep.IsAnyGuidAsync(guid, ct))
-                  throw new NotFoundException(EntityType.Company.ToString(), guid.ToString());
+                  throw new NotFoundException(EntityType.COMPANY.ToString(), guid.ToString());
 
             // Check is default location
             if (await dep.IsDefaultAsync(guid, ct))
-                  throw new DefaultRecordException(MethodType.Delete, EntityType.Company.ToString(), guid.ToString());
+                  throw new DefaultRecordException(MethodType.Delete, EntityType.COMPANY.ToString(), guid.ToString());
 
             // Check relate object here
             if (await dep.IsAnyPositionAsync(guid, ct))
-                  throw new FoundRelateException(EntityType.Company.ToString(), guid.ToString(), EntityType.Department.ToString());
+                  throw new FoundRelateException(EntityType.COMPANY.ToString(), guid.ToString(), EntityType.DEPARTMENT.ToString());
 
             if (await dep.IsAnyUserAsync(guid, ct))
-                  throw new FoundRelateException(EntityType.Company.ToString(), guid.ToString(), EntityType.User.ToString());
+                  throw new FoundRelateException(EntityType.COMPANY.ToString(), guid.ToString(), EntityType.USER.ToString());
 
 
             await dep.DeleteAsync(guid, ct);
@@ -65,20 +65,20 @@ public sealed class DepartmentService(
       {
             // Check if guids is empty 
             if (guids.Count() == 0)
-                  throw new NotFoundException(EntityType.Company.ToString());
+                  throw new NotFoundException(EntityType.COMPANY.ToString());
 
             foreach (var guid in guids)
             {
                   // Check is any location with guid
                   if (!await dep.IsAnyGuidAsync(guid, ct))
-                        throw new NotFoundException(EntityType.Company.ToString(), guid.ToString());
+                        throw new NotFoundException(EntityType.COMPANY.ToString(), guid.ToString());
 
                   // Check relate object here
                   if (await dep.IsAnyPositionAsync(guid, ct))
-                        throw new FoundRelateException(EntityType.Company.ToString(), guid.ToString(), EntityType.Department.ToString());
+                        throw new FoundRelateException(EntityType.COMPANY.ToString(), guid.ToString(), EntityType.DEPARTMENT.ToString());
 
                   if (await dep.IsAnyUserAsync(guid, ct))
-                        throw new FoundRelateException(EntityType.Company.ToString(), guid.ToString(), EntityType.User.ToString());
+                        throw new FoundRelateException(EntityType.COMPANY.ToString(), guid.ToString(), EntityType.USER.ToString());
             }
 
             await dep.DeleteRangeAsync(guids);
@@ -90,7 +90,7 @@ public sealed class DepartmentService(
       {
             // Check is any location with guid
             if (!await dep.IsAnyGuidAsync(guid, ct))
-                  throw new NotFoundException(EntityType.Location.ToString(), guid.ToString());
+                  throw new NotFoundException(EntityType.LOCATION.ToString(), guid.ToString());
 
             return await dep.DisableAsync(guid, ct);
       }
@@ -99,7 +99,7 @@ public sealed class DepartmentService(
       {
             // Check is any location with guid
             if (!await dep.IsAnyGuidAsync(guid, ct))
-                  throw new NotFoundException(EntityType.Location.ToString(), guid.ToString());
+                  throw new NotFoundException(EntityType.LOCATION.ToString(), guid.ToString());
 
             return await dep.EnableAsync(guid, ct);
       }
@@ -134,11 +134,11 @@ public sealed class DepartmentService(
       {
             // Check is any location with guid
             if (!await dep.IsAnyGuidAsync(dto.Guid, ct))
-                  throw new NotFoundException(EntityType.Location.ToString(), dto.Guid.ToString());
+                  throw new NotFoundException(EntityType.LOCATION.ToString(), dto.Guid.ToString());
 
             // Check Company Exists
             if (!await com.IsAnyGuidAsync(dto.CompanyGuid))
-                  throw new NotFoundException(EntityType.Company.ToString(), dto.CompanyGuid.ToString());
+                  throw new NotFoundException(EntityType.COMPANY.ToString(), dto.CompanyGuid.ToString());
 
             var companyId = await com.GetIdByGuidAsync(dto.CompanyGuid, ct);
 

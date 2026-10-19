@@ -4,24 +4,30 @@ namespace Core.Domain.Entities;
 
 public sealed class Alert : BaseDomain
 {
-      public string Name { get; set; } = string.Empty;
-      public string Advice {get; set; } = string.Empty;
-      public int LocationId {get; set; } 
-      public int AlertLevelId {get; set;}
-      public List<int> AlertBaseEventIds {get; set;} = default!;
+      public string Name { get; private set; } = string.Empty;
+      public string Advice {get; private set; } = string.Empty;
+      public int LocationId {get; private set; } 
+      public int AlertLevelId {get; private set;}
+      public int CoreEventId {get; private set; }
+      public List<int> ComponentIds {get; private set;} = default!;
+      public EntityType EntityType {get; private set;}
       public Alert(
             string name,
             string advice,
             int locationId,
             int alertLevel,
-            List<int> baseEvent
+            int coreEventId,
+            EntityType type,
+            List<int> componentId
       ) : base(Guid.NewGuid())
       {
             Name = name;
             Advice = advice;
             LocationId = locationId;
             AlertLevelId = alertLevel;
-            AlertBaseEventIds = baseEvent;
+            CoreEventId = coreEventId;
+            ComponentIds = componentId;
+            EntityType = type;
       }
 }
 

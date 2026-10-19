@@ -15,7 +15,7 @@ public sealed class TimeZoneIdsMapGuidsByGuidsQueryHandler(ITimeRepository repo)
         foreach (var guid in query.Guids)
         {
             if (!await repo.IsAnyGuidAsync(guid))
-                throw new NotFoundException(EntityType.TimeZone.ToString(), guid.ToString());
+                throw new NotFoundException(EntityType.TIMEZONE.ToString(), guid.ToString());
         }
 
         return await repo.GetTimeZoneIdsMapGuidsByGuidsAsync(query.Guids, ct);

@@ -29,19 +29,19 @@ public sealed class UserService(
   {
     // Check that username exits
     if (!await repo.IsAnyUsernameAsync(dto.Username))
-      throw new NotFoundException(EntityType.User.ToString(), dto.Username);
+      throw new NotFoundException(EntityType.USER.ToString(), dto.Username);
 
     // Get Password from username
     var hashed = await repo.GetHashByUsernameAsync(dto.Username);
 
     // Check old password is valid or not
     if (!PasswordHasher.VerifyPassword(dto.Old, hashed))
-      throw new BadRequestException(EntityType.User.ToString(), "Password incorrect.");
+      throw new BadRequestException(EntityType.USER.ToString(), "Password incorrect.");
 
     // Validate Password
     var IsValidPassword = await bus.QueryAsync(new ValidatePasswordWithRuleQuery(dto.New));
     if (!string.IsNullOrWhiteSpace(IsValidPassword))
-      throw new BadRequestException(EntityType.User.ToString(), IsValidPassword);
+      throw new BadRequestException(EntityType.USER.ToString(), IsValidPassword);
 
     await repo.ChangePasswordAsync(dto.Username, PasswordHasher.HashPassword(dto.New), ct);
 
@@ -99,10 +99,10 @@ public sealed class UserService(
 
     // Check that if username and identification is already exists
     if (d.Username != null && await repo.IsAnyUsernameAsync(d.Username, ct))
-      throw new DuplicateException(EntityType.User.ToString(), dto.Username);
+      throw new DuplicateException(EntityType.USER.ToString(), dto.Username);
 
     if (await repo.IsAnyIdentificationAsync(dto.Identification,ct))
-      throw new DuplicateException(EntityType.User.ToString(), dto.Username);
+      throw new DuplicateException(EntityType.USER.ToString(), dto.Username);
 
 
 
@@ -116,8 +116,8 @@ public sealed class UserService(
       int i = 0;
       foreach (var c in dto.Cards)
       {
-        var deviceExternalId = await com.GetExternalIdByMacAndEntityAsync(dev.mac, EntityType.Device, ct);
-        var groupExternaIds = await com.GetExternalIdsByGuidsAndEntityAsync(dto.Groups,EntityType.Group,ct);
+        var deviceExternalId = await com.GetExternalIdByMacAndEntityAsync(dev.mac, EntityType.DEVICE, ct);
+        var groupExternaIds = await com.GetExternalIdsByGuidsAndEntityAsync(dto.Groups,EntityType.GROUP,ct);
         await adapter.GetAdapter(dev.vendor).User.AddUserAsync(
           dev.mac,
           dev.ip,
@@ -144,7 +144,7 @@ public sealed class UserService(
   public async Task<bool> DeleteByGuidAsync(Guid guid, CancellationToken ct = default)
   {
     if (!await repo.IsAnyGuidAsync(guid))
-      throw new NotFoundException(EntityType.User.ToString(), guid.ToString());
+      throw new NotFoundException(EntityType.USER.ToString(), guid.ToString());
 
     // Send command to delete user from device
     var user = await repo.GetAsync(guid,ct);
@@ -152,7 +152,7 @@ public sealed class UserService(
 
     foreach (var dev in deviceDetail)
     {
-      var deviceId = await com.GetExternalIdByMacAndEntityAsync(dev.mac,EntityType.Device,ct);
+      var deviceId = await com.GetExternalIdByMacAndEntityAsync(dev.mac,EntityType.DEVICE,ct);
       foreach (var c in user.Cards)
       {
         await adapter.GetAdapter(dev.vendor).User.DeleteUserAsync(
@@ -178,7 +178,7 @@ public sealed class UserService(
   public async Task<bool> DisabledAsync(Guid guid, CancellationToken ct = default)
   {
     if (!await repo.IsAnyGuidAsync(guid))
-      throw new NotFoundException(EntityType.User.ToString(), guid.ToString());
+      throw new NotFoundException(EntityType.USER.ToString(), guid.ToString());
 
     // Send Command to delete user from device
 
@@ -191,7 +191,7 @@ public sealed class UserService(
   public async Task<bool> EnabledAsync(Guid guid, CancellationToken ct = default)
   {
     if (!await repo.IsAnyGuidAsync(guid))
-      throw new NotFoundException(EntityType.User.ToString(), guid.ToString());
+      throw new NotFoundException(EntityType.USER.ToString(), guid.ToString());
 
     // Send Command to add user to device
 
@@ -228,7 +228,7 @@ public sealed class UserService(
   public async Task<Guid> UpdateAsync(UpdateUserDto dto, CancellationToken ct = default)
   {
     if (!await repo.IsAnyGuidAsync(dto.Guid))
-      throw new NotFoundException(EntityType.User.ToString(), dto.Guid.ToString());
+      throw new NotFoundException(EntityType.USER.ToString(), dto.Guid.ToString());
 
     var roleId = dto.RoleGuid == null ? 0 :  await bus.QueryAsync(new RoleIdByGuidQuery(dto.RoleGuid ?? Guid.Empty));
     var companyId = dto.CompanyGuid == null ? 0 : await bus.QueryAsync(new CompanyIdByGuidQuery(dto.CompanyGuid ?? Guid.Empty));
@@ -288,7 +288,7 @@ public sealed class UserService(
       public async Task<bool> UploadImageAsync(Guid guid, Stream stream, CancellationToken ct = default)
   {
     if (!await repo.IsAnyGuidAsync(guid))
-      throw new NotFoundException(EntityType.User.ToString(), guid.ToString());
+      throw new NotFoundException(EntityType.USER.ToString(), guid.ToString());
 
 
     var path = await file.SaveUserAsync(stream, guid.ToString());

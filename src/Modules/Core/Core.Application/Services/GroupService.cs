@@ -49,8 +49,8 @@ public sealed class GroupService(
         );
 
         // Send command here.
-        var doorExternalIds = await com.GetExternalIdMapGuidByGuidsAndEntityAsync(dto.Components.Select(x => x.Doors),EntityType.Door,ct);
-        var timeExternalIds = await com.GetExternalIdMapGuidByGuidsAndEntityAsync(dto.Components.Select(x => x.TimeZone),EntityType.TimeZone,ct);
+        var doorExternalIds = await com.GetExternalIdMapGuidByGuidsAndEntityAsync(dto.Components.Select(x => x.Doors),EntityType.DOOR,ct);
+        var timeExternalIds = await com.GetExternalIdMapGuidByGuidsAndEntityAsync(dto.Components.Select(x => x.TimeZone),EntityType.TIMEZONE,ct);
 
         var uniqueDevice = doorDetails
             .GroupBy(x => x.mac)
@@ -66,8 +66,8 @@ public sealed class GroupService(
 
         foreach(var dev in uniqueDevice) // Each Mac
         {
-            var groupExternalId = await com.GetFreeIdByMacAndEntityAndVendorAsync(dev.Mac,EntityType.Group,dev.Vendor,100,[],ct);
-            var deviceId = await com.GetExternalIdByMacAndEntityAsync(dev.Mac,EntityType.Device,ct);
+            var groupExternalId = await com.GetFreeIdByMacAndEntityAndVendorAsync(dev.Mac,EntityType.GROUP,dev.Vendor,100,[],ct);
+            var deviceId = await com.GetExternalIdByMacAndEntityAsync(dev.Mac,EntityType.DEVICE,ct);
 
             await adapter.GetAdapter(dev.Vendor).Group.AddAccessGroupAsync(
                 dev.Mac,
@@ -88,7 +88,7 @@ public sealed class GroupService(
     public async Task<bool> DeleteByGuidAsync(Guid guid, CancellationToken ct = default)
     {
         if (!await repo.IsAnyGuidAsync(guid, ct))
-            throw new NotFoundException(EntityType.Group.ToString(), guid.ToString());
+            throw new NotFoundException(EntityType.GROUP.ToString(), guid.ToString());
 
         // Check related entities before deleting the group
         if (await repo.IsAnyRelatedEntitiesAsync(guid, ct))
@@ -104,13 +104,13 @@ public sealed class GroupService(
     {
         // Check if guids is empty 
         if (guids.Count() == 0)
-            throw new NotFoundException(EntityType.Door.ToString());
+            throw new NotFoundException(EntityType.DOOR.ToString());
 
         foreach (var guid in guids)
         {
             // Check is any location with guid
             if (!await repo.IsAnyGuidAsync(guid, ct))
-                throw new NotFoundException(EntityType.Door.ToString(), guid.ToString());
+                throw new NotFoundException(EntityType.DOOR.ToString(), guid.ToString());
 
             // Check relate object here
             if (await repo.IsAnyRelatedEntitiesAsync(guid))
@@ -126,7 +126,7 @@ public sealed class GroupService(
     {
         // Check is any location with guid
         if (!await repo.IsAnyGuidAsync(guid, ct))
-            throw new NotFoundException(EntityType.Door.ToString(), guid.ToString());
+            throw new NotFoundException(EntityType.DOOR.ToString(), guid.ToString());
 
         return await repo.DisableAsync(guid, ct);
     }
@@ -135,7 +135,7 @@ public sealed class GroupService(
     {
         // Check is any location with guid
         if (!await repo.IsAnyGuidAsync(guid, ct))
-            throw new NotFoundException(EntityType.Door.ToString(), guid.ToString());
+            throw new NotFoundException(EntityType.DOOR.ToString(), guid.ToString());
 
         return await repo.EnableAsync(guid, ct);
     }
@@ -159,7 +159,7 @@ public sealed class GroupService(
     {
         // Check any location with guid
         if (!await repo.IsAnyGuidAsync(dto.Guid, ct))
-            throw new NotFoundException(EntityType.Group.ToString(), dto.Guid.ToString());
+            throw new NotFoundException(EntityType.GROUP.ToString(), dto.Guid.ToString());
 
         var locationId = await bus.QueryAsync(new LocationIdByGuidQuery(dto.LocationGuid));
 

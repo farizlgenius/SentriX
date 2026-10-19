@@ -27,7 +27,7 @@ public sealed class ActionRepository(CoreDbContext context) : IActionRepository
                   .FirstOrDefaultAsync();
 
             if(en == null)
-                  throw new NotFoundException(EntityType.Action.ToString(),guid.ToString());
+                  throw new NotFoundException(EntityType.ACTION.ToString(),guid.ToString());
 
             context.Action.Remove(en);
 
@@ -49,7 +49,7 @@ public sealed class ActionRepository(CoreDbContext context) : IActionRepository
       {
             var en = await context.Action
                   .Where(x => x.guid == guid)
-                  .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.Action.ToString(), guid.ToString());
+                  .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.ACTION.ToString(), guid.ToString());
 
             en.is_active = false;
 
@@ -64,7 +64,7 @@ public sealed class ActionRepository(CoreDbContext context) : IActionRepository
       {
              var en = await context.Action
                   .Where(x => x.guid == guid)
-                  .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.Action.ToString(), guid.ToString());
+                  .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.ACTION.ToString(), guid.ToString());
 
             en.is_active = true;
 
@@ -87,7 +87,7 @@ public sealed class ActionRepository(CoreDbContext context) : IActionRepository
                         x.metadata,
                         x.is_active,
                         x.is_default
-                  )).FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.Action.ToString(),guid.ToString());
+                  )).FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.ACTION.ToString(),guid.ToString());
       }
 
       public async Task<IEnumerable<ActionDto>> GetByLocationAsync(Guid locationGuid, CancellationToken ct = default)
@@ -115,7 +115,7 @@ public sealed class ActionRepository(CoreDbContext context) : IActionRepository
                   .FirstOrDefaultAsync();
 
             if(res == Guid.Empty)
-                  throw new NotFoundException(EntityType.Action.ToString(),id.ToString());
+                  throw new NotFoundException(EntityType.ACTION.ToString(),id.ToString());
 
             return res;
       }
@@ -129,7 +129,7 @@ public sealed class ActionRepository(CoreDbContext context) : IActionRepository
             .FirstOrDefaultAsync();
 
             if(res == 0)
-                  throw new NotFoundException(EntityType.Action.ToString(),guid.ToString());
+                  throw new NotFoundException(EntityType.ACTION.ToString(),guid.ToString());
 
             return res;
       }
@@ -140,7 +140,7 @@ public sealed class ActionRepository(CoreDbContext context) : IActionRepository
             .AsNoTracking()
             .Where(x => x.guid == guid)
             .Select(x => x.name)
-            .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.Action.ToString(),guid.ToString());
+            .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.ACTION.ToString(),guid.ToString());
       }
 
       public async Task<Pagination<ActionDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)

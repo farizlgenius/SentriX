@@ -6,7 +6,9 @@ public sealed record UpdateAlertDto(
       Guid Guid,
       string Name,
       string Advice,
+      Guid LocationGuid,
       Guid AlertLevelGuid,
-      List<Guid> BaseEventGuid,
-      Guid LocationGuid
+      Guid CoreEntityGuid,
+      Guid CoreEventGuid,
+      List<Guid> Components
 );

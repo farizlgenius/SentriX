@@ -25,6 +25,7 @@ public sealed class Door : BaseEntity,IAuditableEntity
   public int location_id { get; set; }
   public Location location { get; set; } = default!;
   public ICollection<GroupComponent> group_components { get; set; } = default!;
+  public ICollection<AlertComponent> alert_components {get; set; } = default!;
   public Door() { }
 
   public Door(Domain.Entities.Door d) : base(d.Guid)

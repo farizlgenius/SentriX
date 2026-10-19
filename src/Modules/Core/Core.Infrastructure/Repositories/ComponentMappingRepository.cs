@@ -31,7 +31,7 @@ public sealed class ComponentMappingRepository(CoreDbContext context) : ICompone
         .FirstOrDefaultAsync(ct);                       // Don't forget to pass your cancellation token!
 
     if (res == null)
-      throw new NotFoundException(EntityType.ComponentMapping.ToString(), $"Mac:{mac}, Entity:{entity}");
+      throw new NotFoundException(EntityType.COMPONENT_MAPPING.ToString(), $"Mac:{mac}, Entity:{entity}");
 
     return res.Value; // Extract the underlying int value
   }
@@ -157,7 +157,7 @@ public sealed class ComponentMappingRepository(CoreDbContext context) : ICompone
       .FirstOrDefaultAsync();
 
     if (res == null)
-      throw new NotFoundException(EntityType.ComponentMapping.ToString(), guid.ToString());
+      throw new NotFoundException(EntityType.COMPONENT_MAPPING.ToString(), guid.ToString());
 
     return (int)res;
 
@@ -171,7 +171,7 @@ public sealed class ComponentMappingRepository(CoreDbContext context) : ICompone
               .ToArrayAsync(ct);
 
             if(entity.Count() == 0)
-              throw new NotFoundException(EntityType.ComponentMapping.ToString(),guid.ToString());
+              throw new NotFoundException(EntityType.COMPONENT_MAPPING.ToString(),guid.ToString());
 
             context.ComponentMappings.RemoveRange(entity);
 
@@ -188,7 +188,7 @@ public sealed class ComponentMappingRepository(CoreDbContext context) : ICompone
             .FirstOrDefaultAsync();
 
           if(res == Guid.Empty)
-            throw new NotFoundException(EntityType.ComponentMapping.ToString());
+            throw new NotFoundException(EntityType.COMPONENT_MAPPING.ToString());
 
           return res;
       }
@@ -196,12 +196,12 @@ public sealed class ComponentMappingRepository(CoreDbContext context) : ICompone
       public async Task UpdateExternalIdByMacAsync(string mac, short externalId, CancellationToken ct = default)
       {
           var entity = await context.ComponentMappings
-            .Where(x => x.mac != null && x.mac.Equals(mac) && x.entity == EntityType.Device)
+            .Where(x => x.mac != null && x.mac.Equals(mac) && x.entity == EntityType.DEVICE)
             .OrderByDescending(x => x.id)
             .FirstOrDefaultAsync();
 
           if(entity == null)
-            throw new NotFoundException(EntityType.ComponentMapping.ToString(),mac);
+            throw new NotFoundException(EntityType.COMPONENT_MAPPING.ToString(),mac);
 
           entity.external_id = externalId;
 

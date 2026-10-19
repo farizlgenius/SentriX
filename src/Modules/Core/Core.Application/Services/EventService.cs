@@ -20,7 +20,7 @@ public sealed class EventService(
 {
   public async Task<Guid> CreateAsync(CreateEventDto dto, CancellationToken ct = default)
   {
-    var locationId = dto.LocationGuid == Guid.Empty ? 0 : await loc.GetIdByGuidAsync(dto.LocationGuid,ct);
+    var locationId = dto.LocationGuid == Guid.Empty ? 0 : await loc.GetIdByGuidAsync(dto.LocationGuid, ct);
 
     var d = new Event(
       dto.Timestamp,
@@ -36,7 +36,7 @@ public sealed class EventService(
       locationId
     );
 
-    await repo.AddAsync(d,ct);
+    await repo.AddAsync(d, ct);
 
     return d.Guid;
   }
@@ -61,22 +61,18 @@ public sealed class EventService(
     throw new NotImplementedException();
   }
 
-      public async Task<Pagination<AuditTrailDto>> GeAuditPaginationAsync(PaginationParams param, CancellationToken ct = default)
-      {
-            return await repo.GetAuditPaginationAsync(param,ct);
-      }
+  public async Task<Pagination<AuditTrailDto>> GeAuditPaginationAsync(PaginationParams param, CancellationToken ct = default)
+  {
+    return await repo.GetAuditPaginationAsync(param, ct);
+  }
 
-      public async Task<Pagination<AdapterEventDto>> GetAdapterPaginationAsync(PaginationParams param, CancellationToken ct = default)
+  public async Task<Pagination<AdapterEventDto>> GetAdapterPaginationAsync(PaginationParams param, CancellationToken ct = default)
   {
     return await repo.GetAdapterPaginationAsync(param, ct);
   }
 
-      public async Task<IEnumerable<OptionDto>> GetBaseEventAsync()
-      {
-           return await repo.GetBaseEventAsync();
-      }
 
-      public async Task<EventDto> GetByGuidAsync(Guid guid, CancellationToken ct = default)
+  public async Task<EventDto> GetByGuidAsync(Guid guid, CancellationToken ct = default)
   {
     throw new NotImplementedException();
   }
@@ -86,9 +82,19 @@ public sealed class EventService(
     throw new NotImplementedException();
   }
 
-  public async Task<Pagination<ExceptionEventDto>> GetExceptionPaginationAsync(PaginationParams param, CancellationToken ct = default)
+      public async Task<IEnumerable<OptionDto>> GetCoreEntityAsync(CancellationToken ct = default)
+      {
+          return await repo.GetCoreEntityAsync(ct);
+      }
+
+      public async Task<IEnumerable<OptionDto>> GetCoreEventAsync(Guid guid, CancellationToken ct = default)
+      {
+            return await repo.GetCoreEventAsync(guid,ct);
+      }
+
+      public async Task<Pagination<ExceptionEventDto>> GetExceptionPaginationAsync(PaginationParams param, CancellationToken ct = default)
   {
-    return await repo.GetExceptionPaginationAsync(param,ct);
+    return await repo.GetExceptionPaginationAsync(param, ct);
   }
 
   public async Task<Pagination<EventDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
@@ -119,14 +125,14 @@ public sealed class EventService(
     await repo.AddAuditAsync(d, ct);
   }
 
-  public async Task InsertExceptionEventAsync(string method,string path, string exception, string innerException, string stackTrace, CancellationToken ct = default)
+  public async Task InsertExceptionEventAsync(string method, string path, string exception, string innerException, string stackTrace, CancellationToken ct = default)
   {
-    await repo.AddExceptionAsync(method,path,exception,innerException,stackTrace,ct);
+    await repo.AddExceptionAsync(method, path, exception, innerException, stackTrace, ct);
   }
 
-  public async Task UpdateAdapterEventStatusAsync(string mac,int componentId, int tag, CommandStatus status, string reason, CancellationToken ct = default)
+  public async Task UpdateAdapterEventStatusAsync(string mac, int componentId, int tag, CommandStatus status, string reason, CancellationToken ct = default)
   {
-    await repo.UpdateAdapterEventStatusAsync(mac,componentId, tag, status, reason, ct);
+    await repo.UpdateAdapterEventStatusAsync(mac, componentId, tag, status, reason, ct);
   }
 
   public async Task<Guid> UpdateAsync(UpdateEventDto dto, CancellationToken ct = default)

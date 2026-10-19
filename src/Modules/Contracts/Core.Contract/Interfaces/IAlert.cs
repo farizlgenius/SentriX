@@ -10,5 +10,6 @@ public interface IAlert : IBase<AlertDto,CreateAlertDto,UpdateAlertDto>
       Task<bool> DeleteLevelByGuidAsync(Guid guid,CancellationToken ct = default);
       Task<Guid> CreateLevelAsync(CreateAlertLevelDto dto,CancellationToken ct = default);
       Task<Guid> UpdateLevelAsync(UpdateAlertLevelDto dto,CancellationToken ct = default);
+      Task<IEnumerable<OptionDto>> GetLevelOptionAsync(CancellationToken ct = default);
 
 }

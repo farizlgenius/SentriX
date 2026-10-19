@@ -63,10 +63,11 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
       public DbSet<TriggerType> TriggerTypes { get; set; }
       public DbSet<TriggerCode> TriggerCodes { get; set; }
       public DbSet<Alert> Alerts {get; set;}
-      public DbSet<AlertBaseEvent> AlertBaseEvents {get; set;}
-      public DbSet<Persistences.Entities.BaseEvent> BaseEvents { get; set;}
       public DbSet<AlertEvent> AlertEvents {get; set;} 
       public DbSet<Persistences.Entities.AlertLevel> AlertLevels {get; set;}
+      public DbSet<Persistences.Entities.CoreEvent> CoreEvents {get; set;}
+      public DbSet<CoreEntity> CoreEntities {get ; set; }
+      public DbSet<AlertComponent> AlertComponents {get; set ;}
 
       protected override void OnModelCreating(ModelBuilder modelBuilder)
       {
@@ -120,6 +121,16 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   .ValueGeneratedOnAdd();
 
             modelBuilder.Entity<TriggerCode>()
+                  .Property(x => x.guid)
+                  .HasDefaultValueSql(guidSql)
+                  .ValueGeneratedOnAdd();
+
+            modelBuilder.Entity<Persistences.Entities.CoreEvent>()
+                  .Property(x => x.guid)
+                  .HasDefaultValueSql(guidSql)
+                  .ValueGeneratedOnAdd();
+
+            modelBuilder.Entity<CoreEntity>()
                   .Property(x => x.guid)
                   .HasDefaultValueSql(guidSql)
                   .ValueGeneratedOnAdd();
@@ -254,12 +265,18 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
 
             });
 
-            // Alert 
-             modelBuilder.Entity<Persistences.Entities.BaseEvent>(b =>
-           {
-                 b.Property(d => d.entity).HasConversion<string>();
-                 b.Property(d => d.event_detail).HasConversion<string>();
-           });
+            modelBuilder.Entity<Persistences.Entities.CoreEvent>(b =>
+            {
+                  b.Property(x => x.@event).HasConversion<string>();
+
+            });
+
+            modelBuilder.Entity<Persistences.Entities.CoreEntity>(b =>
+            {
+                  b.Property(x => x.entity).HasConversion<string>();
+
+            });
+
 
 
             // Indexing and key setting 
@@ -643,9 +660,26 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                         }
                   ).IsUnique();
 
-            // Alert 
+            // Event
 
-            
+            modelBuilder.Entity<Persistences.Entities.CoreEntity>()
+                  .HasIndex(
+                        x => new
+                        {
+                              x.guid,
+                              x.id
+                        }
+                  ).IsUnique();
+
+            modelBuilder.Entity<Persistences.Entities.CoreEvent>()
+                  .HasIndex(
+                        x => new
+                        {
+                              x.guid,
+                              x.id,
+                              x.entity_id
+                        }
+                  ).IsUnique();
 
             
 
@@ -761,6 +795,19 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   .WithOne(x => x.location)
                   .HasForeignKey(x => x.location_id)
                   .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Location>()
+                  .HasMany(x => x.alerts)
+                  .WithOne(x => x.location)
+                  .HasForeignKey(x => x.location_id)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Location>()
+                  .HasMany(x => x.alert_event)
+                  .WithOne(x => x.location)
+                  .HasForeignKey(x => x.location_id)
+                  .IsRequired(false)
+                  .OnDelete(DeleteBehavior.SetNull);
 
 
 
@@ -1115,19 +1162,42 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   .HasForeignKey(x => x.trigger_type_id)
                   .OnDelete(DeleteBehavior.Cascade);
 
+            
+
             // Alert
 
-            modelBuilder.Entity<Alert>()
-                  .HasMany(x => x.alert_base_events)
+            modelBuilder.Entity<Persistences.Entities.AlertLevel>()
+                  .HasMany(x => x.alerts)
+                  .WithOne(x => x.alert_level)
+                  .HasForeignKey(x => x.alert_level_id)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Persistences.Entities.Alert>()
+                  .HasMany(x => x.alert_components)
                   .WithOne(x => x.alert)
                   .HasForeignKey(x => x.alert_id)
                   .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<Persistences.Entities.BaseEvent>()
-                  .HasMany(x => x.alert_base_events)
-                  .WithOne(x => x.event_detail)
-                  .HasForeignKey(x => x.event_detail_id)
+            modelBuilder.Entity<Persistences.Entities.Door>()
+                  .HasMany(x => x.alert_components)
+                  .WithOne(x => x.door)
+                  .HasForeignKey(x => x.door_id)
                   .OnDelete(DeleteBehavior.Cascade);
+
+            // Event
+
+            modelBuilder.Entity<Persistences.Entities.CoreEntity>()
+                  .HasMany(x => x.events)
+                  .WithOne(x => x.entity)
+                  .HasForeignKey(x => x.entity_id)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Persistences.Entities.CoreEvent>()
+                  .HasMany(x => x.alerts)
+                  .WithOne(x => x.core_event)
+                  .HasForeignKey(x => x.core_event_id)
+                  .OnDelete(DeleteBehavior.Cascade);
+
 
 
             // Seed Default data
@@ -1697,7 +1767,7 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                         {
                               id = 1,
                               guid = new Guid("cff24195-43f8-42ec-a03f-e84857cc958f"),
-                              entity = EntityType.TimeZone,
+                              entity = EntityType.TIMEZONE,
                               external_id = 1,
                               mac = null,
                               vendor = null,
@@ -1708,7 +1778,7 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                         {
                               id = 2,
                               guid = new Guid("614a766c-1241-4fdc-9d0d-7788291cac2d"),
-                              entity = EntityType.TimeZone,
+                              entity = EntityType.TIMEZONE,
                               external_id = 2,
                               mac = null,
                               vendor = null,
@@ -1787,7 +1857,7 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   {
                         id = 3,
                         guid = new Guid("356b51d4-5650-4ef9-821b-bf38eb4ec2db"),
-                        entity = EntityType.CardFormat,
+                        entity = EntityType.CARD_FORMAT,
                         external_id = 0,
                         mac = null,
                         vendor = null
@@ -1796,7 +1866,7 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   {
                         id = 4,
                         guid = new Guid("f04c1839-991d-4f13-be52-4a057d30af68"),
-                        entity = EntityType.CardFormat,
+                        entity = EntityType.CARD_FORMAT,
                         external_id = 1,
                         mac = null,
                         vendor = null
@@ -1805,7 +1875,7 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   {
                         id = 5,
                         guid = new Guid("2ec6aa6c-dd76-4b3a-98b3-e8b5ecff0d1e"),
-                        entity = EntityType.CardFormat,
+                        entity = EntityType.CARD_FORMAT,
                         external_id = 2,
                         mac = null,
                         vendor = null
@@ -1831,7 +1901,7 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                         {
                               id = 6,
                               guid = new Guid("895b0301-3d77-4ec7-8917-43260a839643"),
-                              entity = EntityType.Group,
+                              entity = EntityType.GROUP,
                               external_id = 1,
                               mac = null,
                               vendor = null
@@ -2118,43 +2188,7 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                         new TriggerCode { id = 175, name = "Alarm / Active", value = 4, trigger_type_id = 29 }
                   );
 
-            modelBuilder.Entity<Entities.BaseEvent>()
-                  .HasData(
-                        // device
-                        new Entities.BaseEvent{ id = 1, entity = EntityType.Device,event_detail=SharedKernel.Enums.BaseEvent.Online, detail = "Online"  },
-                        new Entities.BaseEvent{ id = 2, entity = EntityType.Device,event_detail=SharedKernel.Enums.BaseEvent.Offline, detail = "Offline"  },
-                        // module
-                         new Entities.BaseEvent{ id = 5, entity = EntityType.DeviceModule,event_detail=SharedKernel.Enums.BaseEvent.Online, detail = "Online"  },
-                         new Entities.BaseEvent{ id = 6, entity = EntityType.DeviceModule,event_detail=SharedKernel.Enums.BaseEvent.Offline, detail = "Offline" },
-                         new Entities.BaseEvent{ id = 7, entity = EntityType.DeviceModule,event_detail=SharedKernel.Enums.BaseEvent.Disabled, detail = "Disabled"  },
-                         // Door
-                         new Entities.BaseEvent{ id = 8, entity = EntityType.Door,event_detail=SharedKernel.Enums.BaseEvent.Online, detail = "Reader online"  },
-                         new Entities.BaseEvent{ id = 9, entity = EntityType.Door,event_detail=SharedKernel.Enums.BaseEvent.Offline, detail = "Reader offline" },
-                         new Entities.BaseEvent{ id = 10, entity = EntityType.Door,event_detail=SharedKernel.Enums.BaseEvent.Tamper, detail = "Reader tamper"  },
-                         new Entities.BaseEvent{ id = 11, entity = EntityType.Door,event_detail=SharedKernel.Enums.BaseEvent.CardNoFound, detail = "Card not found"  },
-                         new Entities.BaseEvent{ id = 12, entity = EntityType.Door,event_detail=SharedKernel.Enums.BaseEvent.Grant, detail = "Grant"  },
-                         new Entities.BaseEvent{ id = 13, entity = EntityType.Door,event_detail=SharedKernel.Enums.BaseEvent.Rejected, detail = "Rejected"  },
-                         new Entities.BaseEvent{ id = 14, entity = EntityType.Door,event_detail=SharedKernel.Enums.BaseEvent.Denied, detail = "Denied"  },
-                         new Entities.BaseEvent{ id = 15, entity = EntityType.Door,event_detail=SharedKernel.Enums.BaseEvent.Duress, detail = "Duress"  },
-                          new Entities.BaseEvent{ id = 16, entity = EntityType.Door,event_detail=SharedKernel.Enums.BaseEvent.HeldOpen, detail = "Held open"  },
-                          new Entities.BaseEvent{ id = 17, entity = EntityType.Door,event_detail=SharedKernel.Enums.BaseEvent.ForcedOpen, detail = "Force open"  },
-                          new Entities.BaseEvent{ id = 18, entity = EntityType.Door,event_detail=SharedKernel.Enums.BaseEvent.DoubleCardEvent, detail = "Double card"  },
-                          // Input
-                          new Entities.BaseEvent{ id = 19, entity = EntityType.Input,event_detail=SharedKernel.Enums.BaseEvent.Active, detail = "Active"  },
-                          new Entities.BaseEvent{ id = 20, entity = EntityType.Input,event_detail=SharedKernel.Enums.BaseEvent.Inactive, detail = "Inactive"  },
-                          new Entities.BaseEvent{ id = 21, entity = EntityType.Input,event_detail=SharedKernel.Enums.BaseEvent.Disconnect, detail = "Disconnected"  },
-                          // Output 
-                          new Entities.BaseEvent{ id = 22, entity = EntityType.Output,event_detail=SharedKernel.Enums.BaseEvent.Active, detail = "Active"  },
-                          new Entities.BaseEvent{ id = 23, entity = EntityType.Output,event_detail=SharedKernel.Enums.BaseEvent.Inactive, detail = "Inactive"  },
-                          new Entities.BaseEvent{ id = 24, entity = EntityType.Output,event_detail=SharedKernel.Enums.BaseEvent.Disconnect, detail = "Disconnected"  },
-                          // Antipassba
-                          new Entities.BaseEvent{ id = 25, entity = EntityType.Door,event_detail=SharedKernel.Enums.BaseEvent.APB, detail = "Antipassback violate"  },
-                          // Area
-                          new Entities.BaseEvent{ id = 26, entity = EntityType.Door,event_detail=SharedKernel.Enums.BaseEvent.OccLimit, detail = "Occupancy reached limit"  }
-                          
-                         
-                         
-                  );
+            
 
             modelBuilder.Entity<AlertLevel>()
                   .HasData(
@@ -2166,7 +2200,84 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   );
 
 
+            modelBuilder.Entity<CoreEntity>()
+                  .HasData(
+                        new CoreEntity {id = 1, entity = SharedKernel.Enums.EntityType.AUTH },
+                        new CoreEntity {id = 2, entity = SharedKernel.Enums.EntityType.DEVICE },
+                        new CoreEntity {id = 3, entity = SharedKernel.Enums.EntityType.TEMP_DEVICE },
+                        new CoreEntity {id = 4, entity = SharedKernel.Enums.EntityType.DEVICE_MODULE },
+                        new CoreEntity {id = 5, entity = SharedKernel.Enums.EntityType.LOCATION },
+                        new CoreEntity {id = 6, entity = SharedKernel.Enums.EntityType.COMPANY },
+                        new CoreEntity {id = 7, entity = SharedKernel.Enums.EntityType.DEPARTMENT },
+                        new CoreEntity {id = 8, entity = SharedKernel.Enums.EntityType.POSITION },
+                        new CoreEntity {id = 9, entity = SharedKernel.Enums.EntityType.USER },
+                        new CoreEntity {id = 10, entity = SharedKernel.Enums.EntityType.ROLE },
+                        new CoreEntity {id = 11, entity = SharedKernel.Enums.EntityType.OPERATOR },
+                        new CoreEntity {id = 12, entity = SharedKernel.Enums.EntityType.PASSWORD_RULE },
+                        new CoreEntity {id = 13, entity = SharedKernel.Enums.EntityType.WEAK_PASSWORD },
+                        new CoreEntity {id = 14, entity = SharedKernel.Enums.EntityType.TIMEZONE },
+                        new CoreEntity {id = 15, entity = SharedKernel.Enums.EntityType.HOLIDAY },
+                        new CoreEntity {id = 16, entity = SharedKernel.Enums.EntityType.INTERVAL },
+                        new CoreEntity {id = 17, entity = SharedKernel.Enums.EntityType.DOOR },
+                        new CoreEntity {id = 18, entity = SharedKernel.Enums.EntityType.TURNSTILE },
+                        new CoreEntity {id = 19, entity = SharedKernel.Enums.EntityType.GROUP },
+                        new CoreEntity {id = 20, entity = SharedKernel.Enums.EntityType.COMPONENT_MAPPING },
+                        new CoreEntity {id = 21, entity = SharedKernel.Enums.EntityType.EVENT },
+                        new CoreEntity {id = 22, entity = SharedKernel.Enums.EntityType.ADAPTER_EVENT },
+                        new CoreEntity {id = 23, entity = SharedKernel.Enums.EntityType.INPUT },
+                        new CoreEntity {id = 24, entity = SharedKernel.Enums.EntityType.OUTPUT },
+                        new CoreEntity {id = 25, entity = SharedKernel.Enums.EntityType.PROCEDURE },
+                        new CoreEntity {id = 26, entity = SharedKernel.Enums.EntityType.TRIGGER },
+                        new CoreEntity {id = 27, entity = SharedKernel.Enums.EntityType.MONITOR_GROUP },
+                        new CoreEntity {id = 28, entity = SharedKernel.Enums.EntityType.AREA },
+                        new CoreEntity {id = 29, entity = SharedKernel.Enums.EntityType.WEB },
+                        new CoreEntity {id = 30, entity = SharedKernel.Enums.EntityType.CARD_FORMAT },
+                        new CoreEntity {id = 31, entity = SharedKernel.Enums.EntityType.ACTION },
+                        new CoreEntity {id = 32, entity = SharedKernel.Enums.EntityType.ALERT },
+                        new CoreEntity {id = 33, entity = SharedKernel.Enums.EntityType.ALERT_LEVEL },
+                        new CoreEntity {id = 34, entity = SharedKernel.Enums.EntityType.CORE_EVENT }
+                  );
+            
+            modelBuilder.Entity<Persistences.Entities.CoreEvent>()
+                  .HasData(
+                        // Device
+                        new Persistences.Entities.CoreEvent { id = 1, @event = SharedKernel.Enums.CoreEvent.ONLINE , entity_id = 2 },
+                        new Persistences.Entities.CoreEvent { id = 2, @event = SharedKernel.Enums.CoreEvent.OFFLINE , entity_id = 2},
+                        new Persistences.Entities.CoreEvent { id = 3, @event = SharedKernel.Enums.CoreEvent.TRANSACTION_EXCEED , entity_id = 2},
+                        // Module
+                        new Persistences.Entities.CoreEvent { id = 4, @event = SharedKernel.Enums.CoreEvent.DISABLED , entity_id = 4},
+                        new Persistences.Entities.CoreEvent { id = 5, @event = SharedKernel.Enums.CoreEvent.ONLINE , entity_id = 4},
+                        new Persistences.Entities.CoreEvent { id = 6, @event = SharedKernel.Enums.CoreEvent.OFFLINE , entity_id = 4},
+                        new Persistences.Entities.CoreEvent { id = 7, @event = SharedKernel.Enums.CoreEvent.TIMEOUT , entity_id = 4},
+                        // Door
+                        new Persistences.Entities.CoreEvent { id = 8, @event = SharedKernel.Enums.CoreEvent.INVALID_CARD_FORMAT , entity_id = 17},
+                        new Persistences.Entities.CoreEvent { id = 9, @event = SharedKernel.Enums.CoreEvent.ACCESS_DENIED , entity_id = 17},
+                        new Persistences.Entities.CoreEvent { id = 10, @event = SharedKernel.Enums.CoreEvent.ACCESS_GRANT , entity_id = 17},
+                        new Persistences.Entities.CoreEvent { id = 11, @event = SharedKernel.Enums.CoreEvent.CARD_NOT_FOUND , entity_id = 17},
+                        new Persistences.Entities.CoreEvent { id = 12, @event = SharedKernel.Enums.CoreEvent.COUNT_EXCEED , entity_id = 17},
+                        new Persistences.Entities.CoreEvent { id = 13, @event = SharedKernel.Enums.CoreEvent.INTERLOCK , entity_id = 17},
+                        new Persistences.Entities.CoreEvent { id = 14, @event = SharedKernel.Enums.CoreEvent.ANTIPASSBACK_VIOLATION , entity_id = 17},
+                        new Persistences.Entities.CoreEvent { id = 15, @event = SharedKernel.Enums.CoreEvent.OCCUPANCY_REACHED_ZERO , entity_id = 17},
+                        new Persistences.Entities.CoreEvent { id = 16, @event = SharedKernel.Enums.CoreEvent.DOUBLE_CARD_EVENT , entity_id = 17},
+                        new Persistences.Entities.CoreEvent { id = 17, @event = SharedKernel.Enums.CoreEvent.TAMPER , entity_id = 17},
+                        new Persistences.Entities.CoreEvent { id = 18, @event = SharedKernel.Enums.CoreEvent.HELD_OPEN , entity_id = 17},
+                        new Persistences.Entities.CoreEvent { id = 19, @event = SharedKernel.Enums.CoreEvent.FORCE_OPEN , entity_id = 17},
+                        // Input
+                        new Persistences.Entities.CoreEvent { id = 20, @event = SharedKernel.Enums.CoreEvent.DISCONNECTED , entity_id = 23},
+                        new Persistences.Entities.CoreEvent { id = 21, @event = SharedKernel.Enums.CoreEvent.UNKNOWN , entity_id = 23},
+                        new Persistences.Entities.CoreEvent { id = 22, @event = SharedKernel.Enums.CoreEvent.OPEN , entity_id = 23},
+                        new Persistences.Entities.CoreEvent { id = 23, @event = SharedKernel.Enums.CoreEvent.CLOSE , entity_id = 23},
+                        new Persistences.Entities.CoreEvent { id = 24, @event = SharedKernel.Enums.CoreEvent.FAULT , entity_id = 23},
+                        // Output
+                        new Persistences.Entities.CoreEvent { id = 25, @event = SharedKernel.Enums.CoreEvent.DISCONNECTED , entity_id = 24},
+                        new Persistences.Entities.CoreEvent { id = 26, @event = SharedKernel.Enums.CoreEvent.UNKNOWN , entity_id = 24},
+                        new Persistences.Entities.CoreEvent { id = 27, @event = SharedKernel.Enums.CoreEvent.ACTIVE , entity_id = 24},
+                        new Persistences.Entities.CoreEvent { id = 28, @event = SharedKernel.Enums.CoreEvent.DEACTIVE , entity_id = 24},
+                        new Persistences.Entities.CoreEvent { id = 29, @event = SharedKernel.Enums.CoreEvent.FAULT , entity_id = 24},
+                        // AREA
+                        new Persistences.Entities.CoreEvent { id = 30, @event = SharedKernel.Enums.CoreEvent.OCCUPANCY_LIMIT_REACHED , entity_id = 28}
 
-
+                  );
+      
       }
 }

@@ -14,5 +14,5 @@ public interface IAlertRepository : IBaseRepository<AlertDto,Alert>
       Task<bool> IsAnyLevelByGuidAsync(Guid guid,CancellationToken ct = default);
       Task UpdateLevelAsync(AlertLevel domain,CancellationToken ct = default);
       Task<int> GetLevelIdByGuidAsync(Guid guid,CancellationToken ct = default);
-      Task<IEnumerable<int>> GetBaseEventIdsByGuids(IEnumerable<Guid> guids,CancellationToken ct = default);
+      Task<IEnumerable<OptionDto>> GetLevelOptionAsync(CancellationToken ct = default);
 }

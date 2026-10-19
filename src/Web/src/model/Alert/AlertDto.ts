@@ -1,3 +1,4 @@
+
 export interface AlertDto {
       guid:string;
       name:string;
@@ -5,8 +6,10 @@ export interface AlertDto {
       locationGuid:string;
       locationName:string;
       alertLevelGuid:string;
-      alertLevel:string;
-      baseEventGuids:string[]
+      alertLevelColor:string;
+      alertLevelName:string;
+      coreEntityGuid:string;
+      coreEventGuid:string;
       isActive:boolean;
       isDefault:boolean;
 }

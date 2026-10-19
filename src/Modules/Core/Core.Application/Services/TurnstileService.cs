@@ -30,7 +30,7 @@ public sealed class TurnstileService(
     foreach (var guid in dto.Lanes.SelectMany(x => x.Readers.Select(r => r.DeviceModuleGuid)))
     {
       if (!await repo.IsAnyGuidAsync(guid, ct))
-        throw new NotFoundException(EntityType.DeviceModule.ToString(), guid.ToString());
+        throw new NotFoundException(EntityType.DEVICE_MODULE.ToString(), guid.ToString());
     }
 
     var readerDeviceModuleIdMap = await deviceModule.GetDeviceModuleIdsMapGuidsByGuidsAsync(dto.Lanes.SelectMany(x => x.Readers.Select(r => r.DeviceModuleGuid)), ct);
@@ -38,7 +38,7 @@ public sealed class TurnstileService(
     foreach (var guid in dto.Lanes.Where(x => x.Sensor != null).Select(x => x.Sensor.DeviceModuleGuid))
     {
       if (!await repo.IsAnyGuidAsync(guid, ct))
-        throw new NotFoundException(EntityType.DeviceModule.ToString(), guid.ToString());
+        throw new NotFoundException(EntityType.DEVICE_MODULE.ToString(), guid.ToString());
     }
 
     var sensorDeviceModuleIdMap = await deviceModule.GetDeviceModuleIdsMapGuidsByGuidsAsync(dto.Lanes.Where(x => x.Sensor != null).Select(x => x.Sensor.DeviceModuleGuid), ct);
@@ -74,7 +74,7 @@ public sealed class TurnstileService(
   public async Task<bool> DeleteByGuidAsync(Guid guid, CancellationToken ct = default)
   {
     if (!await repo.IsAnyGuidAsync(guid, ct))
-      throw new NotFoundException(EntityType.Turnstile.ToString(), guid.ToString());
+      throw new NotFoundException(EntityType.TURNSTILE.ToString(), guid.ToString());
 
     // Check Relation
 
@@ -92,7 +92,7 @@ public sealed class TurnstileService(
   {
     // Check is any location with guid
     if (!await repo.IsAnyGuidAsync(guid, ct))
-      throw new NotFoundException(EntityType.Door.ToString(), guid.ToString());
+      throw new NotFoundException(EntityType.DOOR.ToString(), guid.ToString());
 
     return await repo.DisableAsync(guid, ct);
   }
@@ -101,7 +101,7 @@ public sealed class TurnstileService(
   {
     // Check is any location with guid
     if (!await repo.IsAnyGuidAsync(guid, ct))
-      throw new NotFoundException(EntityType.Door.ToString(), guid.ToString());
+      throw new NotFoundException(EntityType.DOOR.ToString(), guid.ToString());
 
     return await repo.EnableAsync(guid, ct);
   }
@@ -125,7 +125,7 @@ public sealed class TurnstileService(
   {
     // Check is any location with guid
     if (!await repo.IsAnyGuidAsync(dto.Guid, ct))
-      throw new NotFoundException(EntityType.Turnstile.ToString(), dto.Guid.ToString());
+      throw new NotFoundException(EntityType.TURNSTILE.ToString(), dto.Guid.ToString());
 
     var locationId = await bus.QueryAsync(new LocationIdByGuidQuery(dto.LocationGuid));
 
@@ -138,7 +138,7 @@ public sealed class TurnstileService(
     foreach (var guid in dto.Lanes.SelectMany(x => x.Readers.Select(r => r.DeviceModuleGuid)))
     {
       if (!await repo.IsAnyGuidAsync(guid, ct))
-        throw new NotFoundException(EntityType.DeviceModule.ToString(), guid.ToString());
+        throw new NotFoundException(EntityType.DEVICE_MODULE.ToString(), guid.ToString());
     }
 
     var readerDeviceModuleIdMap = await deviceModule.GetDeviceModuleIdsMapGuidsByGuidsAsync(dto.Lanes.SelectMany(x => x.Readers.Select(r => r.DeviceModuleGuid)), ct);
@@ -146,7 +146,7 @@ public sealed class TurnstileService(
     foreach (var guid in dto.Lanes.Where(x => x.Sensor != null).Select(x => x.Sensor.DeviceModuleGuid))
     {
       if (!await repo.IsAnyGuidAsync(guid, ct))
-        throw new NotFoundException(EntityType.DeviceModule.ToString(), guid.ToString());
+        throw new NotFoundException(EntityType.DEVICE_MODULE.ToString(), guid.ToString());
     }
 
     var sensorDeviceModuleIdMap = await deviceModule.GetDeviceModuleIdsMapGuidsByGuidsAsync(dto.Lanes.Where(x => x.Sensor != null).Select(x => x.Sensor.DeviceModuleGuid), ct);

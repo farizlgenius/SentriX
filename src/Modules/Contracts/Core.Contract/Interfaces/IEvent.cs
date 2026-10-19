@@ -29,5 +29,6 @@ public interface IEvent : IBase<EventDto, CreateEventDto, UpdateEventDto>
         string? diff,
         CancellationToken ct = default);
 
-        Task<IEnumerable<OptionDto>> GetBaseEventAsync();
+        Task<IEnumerable<OptionDto>> GetCoreEntityAsync(CancellationToken ct = default);
+        Task<IEnumerable<OptionDto>> GetCoreEventAsync(Guid guid,CancellationToken ct = default);
 }

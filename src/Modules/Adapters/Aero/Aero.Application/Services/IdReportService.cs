@@ -100,7 +100,7 @@ public sealed class IdReportService(
 
       // var externalId = await mapping.GetExternalIdByMacAndEntityAsync(mac,EntityType.Device);
 
-      var externalId = await bus.QueryAsync(new ExternalIdByMacAndEntityQuery(mac, EntityType.Device));
+      var externalId = await bus.QueryAsync(new ExternalIdByMacAndEntityQuery(mac, EntityType.DEVICE));
 
 
       res = repo.AccessDatabaseSpecification(

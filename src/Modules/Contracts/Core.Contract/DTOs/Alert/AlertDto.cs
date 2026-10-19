@@ -9,6 +9,11 @@ public sealed record AlertDto(
       Guid LocationGuid,
       string LocationName,
       Guid AlertLevelGuid,
-      string AlertLevel,
-      List<BaseEventDto> BaseEventGuids
+      string AlertLevelColor,
+      string AlertLevelName,
+      Guid CoreEntityGuid,
+      Guid CoreEventGuid,
+      List<Guid> Components,
+      bool IsActive,
+      bool IsDefault
 );

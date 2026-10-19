@@ -7,12 +7,12 @@ public sealed record AlertEventDto(
       DateTime Timestamp,
       string Name,
       EntityType Entity,
-      BaseEvent BaseEvent,
-      bool Acknowledge,
-      bool Postpone,
-      string Comment,
+      CoreEvent BaseEvent,
+      AlertAction Action,
+      string? Comment,
       string AlertLevel,
       string LevelColor,
+      string? Username,
       bool IsActive,
       bool IsDefault
 );
