@@ -5,7 +5,7 @@ using SharedKernel.Enums;
 
 namespace Core.Application.Interfaces;
 
-public interface IDeviceRepository : IBaseRepository<DeviceDto, Device>
+public interface IDeviceRepository : IRepository<DeviceDto, Device>
 {
       Task<Guid> GetGuidByMacAsync(string mac, CancellationToken ct = default);
       Task<bool> IsAnyMacAsync(string mac, CancellationToken ct = default);

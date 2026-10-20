@@ -4,7 +4,7 @@ using SharedKernel.Domain;
 
 namespace Core.Application.Interfaces;
 
-public interface ITriggerRepository : IBaseRepository<TriggerDto,Trigger>
+public interface ITriggerRepository : IRepository<TriggerDto,Trigger>
 {
       Task<IEnumerable<OptionDto>> GetSourceAsync(CancellationToken ct = default);
       Task<IEnumerable<OptionDto>> GetTypeAsync(Guid source,CancellationToken ct = default);

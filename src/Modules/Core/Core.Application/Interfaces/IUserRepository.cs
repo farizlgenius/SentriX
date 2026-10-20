@@ -5,7 +5,7 @@ using SharedKernel.Enums;
 
 namespace Core.Application.Interfaces;
 
-public interface IUserRepository : IBaseRepository<UserDto, User>
+public interface IUserRepository : IRepository<UserDto, User>
 {
   Task<bool> IsAnyUsernameAsync(string username, CancellationToken ct = default);
   Task<bool> IsAnyIdentificationAsync(string identification, CancellationToken ct = default);

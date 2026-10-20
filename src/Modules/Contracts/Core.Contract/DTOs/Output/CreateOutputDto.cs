@@ -8,6 +8,7 @@ public sealed record CreateOutputDto(
   OutputMode Mode,
   string Metadata,
   Vendor Vendor,
+  Guid DeviceGuid,
   Guid DeviceModuleGuid,
   Guid LocationGuid
 );

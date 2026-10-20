@@ -4,7 +4,7 @@ using SharedKernel.Domain;
 
 namespace Core.Application.Interfaces;
 
-public interface IDepartmentRepository : IBaseRepository<DepartmentDto, Department>
+public interface IDepartmentRepository : IRepository<DepartmentDto, Department>
 {
       Task<bool> IsAnyPositionAsync(Guid guid, CancellationToken ct = default);
       Task<bool> IsAnyUserAsync(Guid guid, CancellationToken ct = default);

@@ -5,7 +5,7 @@ using SharedKernel.Domain;
 
 namespace Core.Application.Interfaces;
 
-public interface IPositionRepository : IBaseRepository<PositionDto, Position>
+public interface IPositionRepository : IRepository<PositionDto, Position>
 {
       Task<bool> IsAnyUserAsync(Guid guid, CancellationToken ct = default);
       Task<Pagination<PositionDto>> GetPaginationByDepartmentGuidAsync(PaginationParams param, Guid guid, CancellationToken ct = default);

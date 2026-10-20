@@ -5,7 +5,7 @@ using SharedKernel.Enums;
 
 namespace Core.Application.Interfaces;
 
-public interface IDeviceModuleRepository : IBaseRepository<DeviceModuleDto, DeviceModule>
+public interface IDeviceModuleRepository : IRepository<DeviceModuleDto, DeviceModule>
 {
       Task<int> GetDeviceModuleIdByGuidAsync(Guid guid, CancellationToken ct = default);
       Task<Dictionary<Guid, int>> GetDeviceModuleIdsMapGuidsByGuidsAsync(IEnumerable<Guid> guids, CancellationToken ct = default);

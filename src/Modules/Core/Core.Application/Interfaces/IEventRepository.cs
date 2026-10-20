@@ -9,7 +9,7 @@ using SharedKernel.Enums;
 
 namespace Core.Application.Interfaces;
 
-public interface IEventRepository : IBaseRepository<EventDto, Event>
+public interface IEventRepository : IRepository<EventDto, Event>
 {
       Task<Pagination<AdapterEventDto>> GetAdapterPaginationAsync(PaginationParams param,CancellationToken ct = default);
       Task<Pagination<ExceptionEventDto>> GetExceptionPaginationAsync(PaginationParams param,CancellationToken ct = default);

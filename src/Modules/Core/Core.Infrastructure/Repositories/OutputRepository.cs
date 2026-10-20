@@ -2,63 +2,33 @@ using Core.Application.Interfaces;
 using Core.Contract.DTOs.Output;
 using Core.Domain.Entities;
 using Core.Infrastructure.Persistences;
+using Core.Infrastructure.Projections;
+using Microsoft.EntityFrameworkCore;
 using SharedKernel.Domain;
+using SharedKernel.Enums;
+using SharedKernel.Exceptions;
 
 namespace Core.Infrastructure.Repositories;
 
-public sealed class OutputRepository(CoreDbContext context) : IOutputRepository
+public sealed class OutputRepository(CoreDbContext context) : BaseRepository<Persistences.Entities.Output,Domain.Entities.Output,OutputDto>(
+  context,
+  d => new Persistences.Entities.Output(d),
+  (en,dom) =>
+  {
+    en.name = dom.Name;
+    en.slot_no = dom.SlotNo;
+    en.vendor = dom.Vendor;
+    en.metadata = dom.Metadata;
+    en.location_id = dom.LocationId;
+    en.device_module_id = dom.DeviceModuleId;
+    en.updated_at = DateTime.UtcNow;
+  },
+  OutputProjections.ToDto),IOutputRepository
 {
-  public async Task AddAsync(Output entity, CancellationToken ct = default)
-  {
-    throw new NotImplementedException();
-  }
 
-  public async Task DeleteAsync(Guid guid, CancellationToken ct = default)
-  {
-    throw new NotImplementedException();
-  }
 
-  public async Task DeleteRangeAsync(IEnumerable<Guid> guids, CancellationToken ct = default)
-  {
-    throw new NotImplementedException();
-  }
 
-  public async Task<bool> DisableAsync(Guid guid, CancellationToken ct = default)
-  {
-    throw new NotImplementedException();
-  }
-
-  public async Task<bool> EnableAsync(Guid guid, CancellationToken ct = default)
-  {
-    throw new NotImplementedException();
-  }
-
-  public async Task<OutputDto> GetAsync(Guid guid, CancellationToken ct = default)
-  {
-    throw new NotImplementedException();
-  }
-
-  public async Task<IEnumerable<OutputDto>> GetByLocationAsync(Guid locationGuid, CancellationToken ct = default)
-  {
-    throw new NotImplementedException();
-  }
-
-      public Task<Guid> GetGuidByIdAsync(int id, CancellationToken ct = default)
-      {
-            throw new NotImplementedException();
-      }
-
-      public async Task<int> GetIdByGuidAsync(Guid guid, CancellationToken ct = default)
-  {
-    throw new NotImplementedException();
-  }
-
-      public Task<string> GetNameByGuidAsync(Guid guid, CancellationToken ct = default)
-      {
-            throw new NotImplementedException();
-      }
-
-      public async Task<Pagination<OutputDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
+  public async Task<Pagination<OutputDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
   {
     throw new NotImplementedException();
   }
@@ -68,23 +38,11 @@ public sealed class OutputRepository(CoreDbContext context) : IOutputRepository
     throw new NotImplementedException();
   }
 
-  public async Task<bool> IsAnyGuidAsync(Guid guid, CancellationToken ct = default)
-  {
-    throw new NotImplementedException();
-  }
 
   public async Task<bool> IsAnyRelatedEntitiesAsync(Guid guid, CancellationToken ct = default)
   {
     throw new NotImplementedException();
   }
 
-  public async Task<bool> IsDefaultAsync(Guid guid, CancellationToken ct = default)
-  {
-    throw new NotImplementedException();
-  }
 
-  public async Task UpdateAsync(Output entity, CancellationToken ct = default)
-  {
-    throw new NotImplementedException();
-  }
 }

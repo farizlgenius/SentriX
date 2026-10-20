@@ -4,7 +4,7 @@ using SharedKernel.Domain;
 
 namespace Core.Application.Interfaces;
 
-public interface IOperatorRepository : IBaseRepository<OperatorDto, Operator>
+public interface IOperatorRepository : IRepository<OperatorDto, Operator>
 {
       Task<string> GetPassowrdByUsernameAsync(string username, CancellationToken ct = default);
       Task<bool> IsOperatorExistsByUsernameAsync(string username, CancellationToken ct = default);

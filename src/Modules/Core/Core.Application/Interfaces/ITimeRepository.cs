@@ -4,7 +4,7 @@ using SharedKernel.Domain;
 
 namespace Core.Application.Interfaces;
 
-public interface ITimeRepository : IBaseRepository<TimeZoneDto, Domain.Entities.TimeZone>
+public interface ITimeRepository : IRepository<TimeZoneDto, Domain.Entities.TimeZone>
 {
     Task<Dictionary<Guid, int>> GetTimeZoneIdsMapGuidsByGuidsAsync(IEnumerable<Guid> guids, CancellationToken ct = default);
     Task<Components> GetComponentsAsync(Guid locationGuid, DateTime syncedAt, CancellationToken ct = default);

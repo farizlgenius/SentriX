@@ -3,7 +3,7 @@ using Core.Domain.Entities;
 
 namespace Core.Application.Interfaces;
 
-public interface IHolidayRepository : IBaseRepository<HolidayDto, Holiday>
+public interface IHolidayRepository : IRepository<HolidayDto, Holiday>
 {
 
 }

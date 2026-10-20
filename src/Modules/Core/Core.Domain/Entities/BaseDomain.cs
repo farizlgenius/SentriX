@@ -2,7 +2,7 @@ using SharedKernel.Helpers;
 
 namespace Core.Domain.Entities;
 
-public class BaseDomain
+public class BaseDomain 
 {
   public Guid Guid { get; private set; }
 

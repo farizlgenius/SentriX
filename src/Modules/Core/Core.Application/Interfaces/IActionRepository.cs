@@ -3,7 +3,7 @@ using Core.Domain.Entities;
 
 namespace Core.Application.Interfaces;
 
-public interface IActionRepository : IBaseRepository<ActionDto,Actions>
+public interface IActionRepository : IRepository<ActionDto,Actions>
 {
       
 }

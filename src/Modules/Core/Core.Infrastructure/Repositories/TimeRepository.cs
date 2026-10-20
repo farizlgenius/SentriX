@@ -324,7 +324,17 @@ public sealed class TimeRepository(CoreDbContext context) : ITimeRepository
       .AnyAsync(x => x.guid == guid && x.is_default);
   }
 
-  public async Task UpdateAsync(Domain.Entities.TimeZone entity, CancellationToken ct = default)
+      public Task<bool> IsDisabledAsync(Guid guid, CancellationToken ct = default)
+      {
+            throw new NotImplementedException();
+      }
+
+      public Task<bool> IsEnabledAsync(Guid guid, CancellationToken ct = default)
+      {
+            throw new NotImplementedException();
+      }
+
+      public async Task UpdateAsync(Domain.Entities.TimeZone entity, CancellationToken ct = default)
   {
 
     try

@@ -308,8 +308,7 @@ public sealed class LocationRepository(CoreDbContext context) : ILocationReposit
             en.description = entity.Description;
             en.country_id = entity.CountryId;
 
-            var change = AuditHelper.GetEntityChanges(context.Locations.Update(en));
-
+            context.Locations.Update(en);
 
             await context.SaveChangesAsync(ct);
       }

@@ -3,7 +3,7 @@ using Core.Domain.Entities;
 
 namespace Core.Application.Interfaces;
 
-public interface IOutputRepository : IBaseRepository<OutputDto, Output>
+public interface IOutputRepository : IRepository<OutputDto, Output>
 {
 
 }
