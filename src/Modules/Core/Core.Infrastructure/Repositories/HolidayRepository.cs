@@ -200,7 +200,12 @@ public sealed class HolidayRepository(CoreDbContext context) : IHolidayRepositor
           );
   }
 
-  public async Task<bool> IsAnyByNameAndLocationIdAsync(string name, int locationId = 0, CancellationToken ct = default)
+      public Task<bool> IsAnyByNameAndLocationGuidAsync(string name, Guid guid, CancellationToken ct = default)
+      {
+            throw new NotImplementedException();
+      }
+
+      public async Task<bool> IsAnyByNameAndLocationIdAsync(string name, int locationId = 0, CancellationToken ct = default)
   {
     return await context.Holidays
       .AsNoTracking()
@@ -226,7 +231,17 @@ public sealed class HolidayRepository(CoreDbContext context) : IHolidayRepositor
       .AnyAsync(x => x.guid == guid && x.is_default);
   }
 
-  public async Task UpdateAsync(Holiday entity, CancellationToken ct = default)
+      public Task<bool> IsDisabledAsync(Guid guid, CancellationToken ct = default)
+      {
+            throw new NotImplementedException();
+      }
+
+      public Task<bool> IsEnabledAsync(Guid guid, CancellationToken ct = default)
+      {
+            throw new NotImplementedException();
+      }
+
+      public async Task UpdateAsync(Holiday entity, CancellationToken ct = default)
   {
     var en = await context.Holidays
       .Where(x => x.guid == entity.Guid)

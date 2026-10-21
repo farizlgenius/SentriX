@@ -4,7 +4,6 @@ namespace Core.Infrastructure.Persistences.Entities;
 
 public sealed class Location : BaseEntity,IAuditableEntity
 {
-  public string name { get; set; } = string.Empty;
   public string description { get; set; } = string.Empty;
   public int country_id { get; set; }
   public Country country { get; set; } = default!;

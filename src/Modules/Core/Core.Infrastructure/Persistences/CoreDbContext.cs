@@ -306,8 +306,7 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
             {
                   x.guid,
                   x.external_id,
-                  x.mac,
-                  x.vendor
+                  x.device_id
             });
 
             modelBuilder.Entity<Country>()
@@ -419,10 +418,10 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   x => x.guid
             ).IsUnique();
 
-            modelBuilder.Entity<UserAdditional>()
-            .HasIndex(
-                  x => x.guid
-            ).IsUnique();
+            // modelBuilder.Entity<UserAdditional>()
+            // .HasIndex(
+            //       x => x.guid
+            // ).IsUnique();
 
             modelBuilder.Entity<Persistences.Entities.TimeZone>()
             .HasIndex(
@@ -856,6 +855,12 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   .HasForeignKey(x => x.device_id)
                   .OnDelete(DeleteBehavior.Cascade);
 
+            modelBuilder.Entity<Device>()
+                  .HasMany(x => x.component_mappings)
+                  .WithOne(x => x.device)
+                  .HasForeignKey(x => x.device_id)
+                  .OnDelete(DeleteBehavior.Cascade);
+
             // Device Module
             modelBuilder.Entity<DeviceModule>()
                   .HasMany(x => x.readers)
@@ -1204,7 +1209,7 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
 
             modelBuilder.Entity<Location>()
                   .HasData(
-                        new Location { id = 1, guid = new Guid("3a9c9947-d5ca-4bb2-b525-0499a340f1d6"), name = "Main Location", description = "Main location", country_id = 178, is_default = true, is_active = true }
+                        new Location { id = 1, guid = new Guid("3a9c9947-d5ca-4bb2-b525-0499a340f1d6"), name = "All", description = "All location", country_id = 178, is_default = true, is_active = true }
                   );
 
             modelBuilder.Entity<Country>().HasData(
@@ -1769,8 +1774,6 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                               guid = new Guid("cff24195-43f8-42ec-a03f-e84857cc958f"),
                               entity = EntityType.TIMEZONE,
                               external_id = 1,
-                              mac = null,
-                              vendor = null,
                               is_default = true,
                               location_id = 1
                         },
@@ -1780,8 +1783,6 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                               guid = new Guid("614a766c-1241-4fdc-9d0d-7788291cac2d"),
                               entity = EntityType.TIMEZONE,
                               external_id = 2,
-                              mac = null,
-                              vendor = null,
                               is_default = true,
                               location_id = 1
                         }
@@ -1809,6 +1810,7 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                         card_no_loc = 0,
                         issue_code_len = 0,
                         issue_code_loc = -1,
+                        location_id = 1
 
                   },
                   new CardFormat
@@ -1827,7 +1829,8 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                         card_no_len = 32,
                         card_no_loc = 0,
                         issue_code_len = 0,
-                        issue_code_loc = -1
+                        issue_code_loc = -1,
+                        location_id = 1
 
                   },
                   new CardFormat
@@ -1847,6 +1850,7 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                         card_no_loc = 0,
                         issue_code_len = 0,
                         issue_code_loc = -1,
+                        location_id = 1
 
                   }
             );
@@ -1859,8 +1863,7 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                         guid = new Guid("356b51d4-5650-4ef9-821b-bf38eb4ec2db"),
                         entity = EntityType.CARD_FORMAT,
                         external_id = 0,
-                        mac = null,
-                        vendor = null
+                        
                   },
                   new ComponentMapping
                   {
@@ -1868,8 +1871,6 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                         guid = new Guid("f04c1839-991d-4f13-be52-4a057d30af68"),
                         entity = EntityType.CARD_FORMAT,
                         external_id = 1,
-                        mac = null,
-                        vendor = null
                   },
                   new ComponentMapping
                   {
@@ -1877,8 +1878,6 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                         guid = new Guid("2ec6aa6c-dd76-4b3a-98b3-e8b5ecff0d1e"),
                         entity = EntityType.CARD_FORMAT,
                         external_id = 2,
-                        mac = null,
-                        vendor = null
                   }
             );
 
@@ -1903,8 +1902,6 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                               guid = new Guid("895b0301-3d77-4ec7-8917-43260a839643"),
                               entity = EntityType.GROUP,
                               external_id = 1,
-                              mac = null,
-                              vendor = null
                         }
                   );
 

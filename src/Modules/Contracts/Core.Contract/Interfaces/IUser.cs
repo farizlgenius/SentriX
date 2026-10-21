@@ -3,7 +3,7 @@ using SharedKernel.Domain;
 
 namespace Core.Contract.Interfaces;
 
-public interface IUser : IBase<UserDto, CreateUserDto, UpdateUserDto>
+public interface IUser : IService<UserDto, CreateUserDto, UpdateUserDto>
 {
   Task<bool> ChangePasswordAsync(ChangePasswordDto dto, CancellationToken ct = default);
   Task<Stream?> GetImageByGuidAsync(Guid guid, CancellationToken ct = default);

@@ -4,7 +4,6 @@ namespace Core.Infrastructure.Persistences.Entities;
 
 public sealed class Company : BaseEntity,IAuditableEntity
 {
-      public string name { get; set; } = string.Empty;
       public string description { get; set; } = string.Empty;
       public string address { get; set; } = string.Empty;
       public ICollection<User> users { get; set; } = new List<User>();

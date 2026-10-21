@@ -25,7 +25,7 @@ public sealed class TimeService(
   {
     var locationId = await bus.QueryAsync(new LocationIdByGuidQuery(dto.LocationGuid));
 
-    if (await repo.IsAnyByNameAndLocationIdAsync(dto.Name, locationId))
+    if (await repo.IsAnyByNameAndLocationGuidAsync(dto.Name, dto.LocationGuid,ct))
       throw new DuplicateException(EntityType.TIMEZONE.ToString(), dto.Name);
 
     var intervalIds = await bus.QueryAsync(new IntervalIdsByGuidsQuery(dto.IntervalGuids));
@@ -142,7 +142,7 @@ public sealed class TimeService(
 
     var locationId = await bus.QueryAsync(new LocationIdByGuidQuery(dto.LocationGuid));
 
-    if (await repo.IsAnyByNameAndLocationIdAsync(dto.Name, locationId))
+    if (await repo.IsAnyByNameAndLocationGuidAsync(dto.Name, dto.LocationGuid,ct))
       throw new DuplicateException(EntityType.TIMEZONE.ToString(), dto.Name);
 
     var intervalIds = await bus.QueryAsync(new IntervalIdsByGuidsQuery(dto.IntervalGuids));

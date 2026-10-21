@@ -4,8 +4,6 @@ namespace Core.Infrastructure.Persistences.Entities;
 
 public sealed class CardFormat : BaseEntity
 {
-
-      public string name { get; set; } = string.Empty;
       public short fac { get; set; } = -1;
       public short bits { get; set; }
       public short even_parity_len { get; set; }

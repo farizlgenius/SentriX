@@ -4,7 +4,7 @@ using SharedKernel.Domain;
 
 namespace Core.Contract.Interfaces;
 
-public interface ICardFormat : IBase<CardFormatDto,CreateCardFormatDto,UpdateCardFormatDto>
+public interface ICardFormat : IService<CardFormatDto,CreateCardFormatDto,UpdateCardFormatDto>
 {
       
 }

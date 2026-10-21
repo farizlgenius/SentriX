@@ -21,7 +21,7 @@ public sealed class TurnstileService(
   {
     var locationId = await bus.QueryAsync(new LocationIdByGuidQuery(dto.LocationGuid));
 
-    if (await repo.IsAnyByNameAndLocationIdAsync(dto.Name, locationId))
+    if (await repo.IsAnyByNameAndLocationGuidAsync(dto.Name, dto.LocationGuid,ct))
       throw new DuplicateException(nameof(dto.Name), dto.Name);
 
     //var readerDeviceModuleIdMap = await bus.QueryAsync(new DeviceModuleIdsMapGuidsByGuidsQuery(dto.Lanes.SelectMany(x => x.Readers.Select(r => r.DeviceModuleGuid))));
@@ -129,7 +129,7 @@ public sealed class TurnstileService(
 
     var locationId = await bus.QueryAsync(new LocationIdByGuidQuery(dto.LocationGuid));
 
-    if (await repo.IsAnyByNameAndLocationIdAsync(dto.Name, locationId))
+    if (await repo.IsAnyByNameAndLocationGuidAsync(dto.Name, dto.LocationGuid,ct))
       throw new DuplicateException(nameof(dto.Name), dto.Name);
 
     //var readerDeviceModuleIdMap = await bus.QueryAsync(new DeviceModuleIdsMapGuidsByGuidsQuery(dto.Lanes.SelectMany(x => x.Readers.Select(r => r.DeviceModuleGuid))));

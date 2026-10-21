@@ -67,7 +67,7 @@ public sealed class DoorService(
     var rexMapModuleId = await deviceModule.GetDeviceModuleIdsMapGuidsByGuidsAsync(dto.Rexes.Select(x => x.DeviceModuleGuid), ct);
     var bgMapModuleId = dto.Bg == null ? 0 : await deviceModule.GetDeviceModuleIdByGuidAsync(dto.Bg.DeviceModuleGuid);
 
-    if (await repo.IsAnyByNameAndLocationIdAsync(dto.Name, locationId))
+    if (await repo.IsAnyByNameAndLocationGuidAsync(dto.Name, dto.LocationGuid,ct))
       throw new DuplicateException(nameof(dto.Name), dto.Name);
 
     var d = new Door(
@@ -443,7 +443,7 @@ public sealed class DoorService(
     var rexMapModuleId = await deviceModule.GetDeviceModuleIdsMapGuidsByGuidsAsync(dto.Rexes.Select(x => x.DeviceModuleGuid), ct);
     var bgMapModuleId = dto.Bg == null ? 0 : await deviceModule.GetDeviceModuleIdByGuidAsync(dto.Bg.DeviceModuleGuid);
 
-    if (await repo.IsAnyByNameAndLocationIdAsync(dto.Name, locationId))
+    if (await repo.IsAnyByNameAndLocationGuidAsync(dto.Name, dto.LocationGuid,ct))
       throw new DuplicateException(nameof(dto.Name), dto.Name);
 
     var d = new Door(

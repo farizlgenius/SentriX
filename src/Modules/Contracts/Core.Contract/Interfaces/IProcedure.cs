@@ -4,7 +4,7 @@ using SharedKernel.Domain;
 
 namespace Core.Contract.Interfaces;
 
-public interface IProcedure : IBase<ProcedureDto,CreateProcedureDto,UpdateProcedureDto>
+public interface IProcedure : IService<ProcedureDto,CreateProcedureDto,UpdateProcedureDto>
 {
       
 }

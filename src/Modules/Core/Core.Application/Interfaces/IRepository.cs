@@ -16,7 +16,6 @@ public interface IRepository<TDto, TDomain> where TDto : class where TDomain : c
   Task UpdateAsync(TDomain entity, CancellationToken ct = default);
   Task DeleteAsync(Guid guid, CancellationToken ct = default);
   Task DeleteRangeAsync(IEnumerable<Guid> guids, CancellationToken ct = default);
-  Task<bool> IsAnyByNameAndLocationIdAsync(string name, int locationId = default, CancellationToken ct = default);
   Task<bool> IsAnyGuidAsync(Guid guid, CancellationToken ct = default);
   Task<bool> IsDefaultAsync(Guid guid, CancellationToken ct = default);
   Task<bool> EnableAsync(Guid guid, CancellationToken ct = default);
@@ -27,5 +26,6 @@ public interface IRepository<TDto, TDomain> where TDto : class where TDomain : c
   Task<IEnumerable<TDto>> GetByLocationAsync(Guid locationGuid, CancellationToken ct = default);
   Task<bool> IsAnyRelatedEntitiesAsync(Guid guid, CancellationToken ct = default);
   Task<string> GetNameByGuidAsync(Guid guid,CancellationToken ct = default);
+  Task<bool> IsAnyByNameAndLocationGuidAsync(string name,Guid guid,CancellationToken ct = default);
 
 }

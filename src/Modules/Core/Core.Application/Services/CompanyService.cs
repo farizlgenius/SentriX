@@ -25,7 +25,7 @@ public sealed class CompanyService(
     );
 
     // Check name is duplicate 
-    if (await repo.IsAnyByNameAndLocationIdAsync(dto.Name))
+    if (await repo.IsAnyByNameAndLocationGuidAsync(dto.Name,Guid.Empty,ct))
       throw new DuplicateException(EntityType.COMPANY.ToString(), dto.Name);
 
     await repo.AddAsync(d, ct);

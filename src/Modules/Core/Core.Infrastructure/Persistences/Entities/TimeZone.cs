@@ -4,11 +4,8 @@ namespace Core.Infrastructure.Persistences.Entities;
 
 public sealed class TimeZone : BaseEntity,IAuditableEntity
 {
-  public string name { get; set; } = string.Empty;
   public ICollection<TimeZoneInterval> timezone_intervals { get; set; } = default!;
   // Relation
-  public int location_id { get; set; }
-  public Location location { get; set; } = default!;
   public ICollection<GroupComponent> group_components { get; set; } = default!;
   public ICollection<Rex> rexes {get; set; } = default!;
   public TimeZone() { }

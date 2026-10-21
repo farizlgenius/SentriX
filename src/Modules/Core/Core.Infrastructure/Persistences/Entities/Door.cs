@@ -5,7 +5,6 @@ namespace Core.Infrastructure.Persistences.Entities;
 
 public sealed class Door : BaseEntity,IAuditableEntity
 {
-  public string name { get; set; } = string.Empty;
   public Vendor vendor { get; set; } = Vendor.aero;
   public DoorType type { get; set; } = DoorType.Single;
   public string metadata { get; set; } = string.Empty;
@@ -22,8 +21,6 @@ public sealed class Door : BaseEntity,IAuditableEntity
   public BreakGlass? bg { get; set; }
   public int device_id { get; set; }
   public Device device { get; set; } = default!;
-  public int location_id { get; set; }
-  public Location location { get; set; } = default!;
   public ICollection<GroupComponent> group_components { get; set; } = default!;
   public ICollection<AlertComponent> alert_components {get; set; } = default!;
   public Door() { }

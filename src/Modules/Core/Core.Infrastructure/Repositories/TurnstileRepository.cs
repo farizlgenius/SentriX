@@ -265,7 +265,12 @@ public sealed class TurnstileRepository(CoreDbContext context) : ITurnstileRepos
           );
   }
 
-  public async Task<bool> IsAnyByNameAndLocationIdAsync(string name, int locationId = 0, CancellationToken ct = default)
+      public Task<bool> IsAnyByNameAndLocationGuidAsync(string name, Guid guid, CancellationToken ct = default)
+      {
+            throw new NotImplementedException();
+      }
+
+      public async Task<bool> IsAnyByNameAndLocationIdAsync(string name, int locationId = 0, CancellationToken ct = default)
   {
     return await context.Turnstiles
       .AsNoTracking()
@@ -291,7 +296,17 @@ public sealed class TurnstileRepository(CoreDbContext context) : ITurnstileRepos
       .AnyAsync(x => x.is_default);
   }
 
-  public async Task UpdateAsync(Turnstile entity, CancellationToken ct = default)
+      public Task<bool> IsDisabledAsync(Guid guid, CancellationToken ct = default)
+      {
+            throw new NotImplementedException();
+      }
+
+      public Task<bool> IsEnabledAsync(Guid guid, CancellationToken ct = default)
+      {
+            throw new NotImplementedException();
+      }
+
+      public async Task UpdateAsync(Turnstile entity, CancellationToken ct = default)
   {
     var en = await context.Turnstiles
       .Where(x => x.guid == entity.Guid)

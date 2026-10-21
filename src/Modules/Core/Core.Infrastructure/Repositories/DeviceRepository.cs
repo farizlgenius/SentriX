@@ -410,6 +410,14 @@ public sealed class DeviceRepository(CoreDbContext context) : IDeviceRepository
                   );
       }
 
+      public async Task<bool> IsAnyByNameAndLocationGuidAsync(string name, Guid guid, CancellationToken ct = default)
+      {
+            return await context.Devices
+                  .AsNoTracking()
+                  .AnyAsync(x => x.name == name && x.location.guid == guid,ct);
+                  
+      }
+
       public async Task<bool> IsAnyByNameAndLocationIdAsync(string name, int locationId = default, CancellationToken ct = default)
       {
             return await context.Devices
@@ -441,6 +449,16 @@ public sealed class DeviceRepository(CoreDbContext context) : IDeviceRepository
             return await context.Devices
                   .AsNoTracking()
                   .AnyAsync(x => x.guid == guid && x.is_default);
+      }
+
+      public Task<bool> IsDisabledAsync(Guid guid, CancellationToken ct = default)
+      {
+            throw new NotImplementedException();
+      }
+
+      public Task<bool> IsEnabledAsync(Guid guid, CancellationToken ct = default)
+      {
+            throw new NotImplementedException();
       }
 
       public async Task UpdateAsync(Device entity, CancellationToken ct = default)

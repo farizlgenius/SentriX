@@ -33,7 +33,7 @@ public sealed class GroupService(
         //var timeZoneIds = await bus.QueryAsync(new TimeZoneIdsMapGuidsByGuidsQuery(dto.Components.Select(x => x.TimeZone)), ct);
         var timeZoneIds = await time.GetTimeZoneIdsMapGuidsByGuidsAsync(dto.Components.Select(x => x.TimeZone),ct);
 
-        if (await repo.IsAnyByNameAndLocationIdAsync(dto.Name, locationId, ct))
+        if (await repo.IsAnyByNameAndLocationGuidAsync(dto.Name, dto.LocationGuid, ct))
             throw new DuplicateException(nameof(dto.Name), dto.Name);
 
 

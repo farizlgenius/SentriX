@@ -45,7 +45,7 @@ public sealed class DeviceService(
     var locationId = await bus.QueryAsync(new LocationIdByGuidQuery(dto.LocationGuid), ct);
 
     // Check name is duplicate
-    if (await repo.IsAnyByNameAndLocationIdAsync(dto.Name, locationId, ct))
+    if (await repo.IsAnyByNameAndLocationGuidAsync(dto.Name, dto.LocationGuid, ct))
       throw new DuplicateException(EntityType.DEVICE.ToString(), dto.Name);
 
 
@@ -344,7 +344,7 @@ public sealed class DeviceService(
     var locationId = await bus.QueryAsync(new LocationIdByGuidQuery(dto.LocationGuid));
 
     // Check name is duplicate
-    if (await repo.IsAnyByNameAndLocationIdAsync(dto.Name, locationId, ct))
+    if (await repo.IsAnyByNameAndLocationGuidAsync(dto.Name, dto.LocationGuid, ct))
       throw new DuplicateException(EntityType.DEVICE.ToString(), dto.Name);
 
     var d = new Device(

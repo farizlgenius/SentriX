@@ -266,7 +266,12 @@ public sealed class IntervalRepository(CoreDbContext context) : IIntervalReposit
           );
   }
 
-  public async Task<bool> IsAnyByNameAndLocationIdAsync(string name, int locationId = 0, CancellationToken ct = default)
+      public Task<bool> IsAnyByNameAndLocationGuidAsync(string name, Guid guid, CancellationToken ct = default)
+      {
+            throw new NotImplementedException();
+      }
+
+      public async Task<bool> IsAnyByNameAndLocationIdAsync(string name, int locationId = 0, CancellationToken ct = default)
   {
     throw new NotImplementedException();
   }
@@ -308,7 +313,17 @@ public sealed class IntervalRepository(CoreDbContext context) : IIntervalReposit
       .AnyAsync(x => x.guid == guid && x.is_default);
   }
 
-  public async Task UpdateAsync(Interval entity, CancellationToken ct = default)
+      public Task<bool> IsDisabledAsync(Guid guid, CancellationToken ct = default)
+      {
+            throw new NotImplementedException();
+      }
+
+      public Task<bool> IsEnabledAsync(Guid guid, CancellationToken ct = default)
+      {
+            throw new NotImplementedException();
+      }
+
+      public async Task UpdateAsync(Interval entity, CancellationToken ct = default)
   {
     var en = await context.Intervals
       .Include(x => x.day)

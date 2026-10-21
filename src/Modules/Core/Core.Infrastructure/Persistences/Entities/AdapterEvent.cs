@@ -4,7 +4,6 @@ namespace Core.Infrastructure.Persistences.Entities;
 
 public sealed class AdapterEvent : BaseEntity
 {
-  public string name { get; set; } = string.Empty;
   public string mac { get; set; } = string.Empty;
   public int component_id { get; set; }
   public string command { get; set; } = string.Empty;
@@ -17,10 +16,6 @@ public sealed class AdapterEvent : BaseEntity
   public string response { get; set; } = string.Empty;
   public SharedKernel.Enums.Vendor vendor { get; set; } = SharedKernel.Enums.Vendor.aero;
 
-
-  // Relation
-  public int? location_id { get; set; }
-  public Location? location { get; set; }
 
   public AdapterEvent() { }
 

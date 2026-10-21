@@ -3,7 +3,7 @@ using SharedKernel.Domain;
 
 namespace Core.Contract.Interfaces;
 
-public interface IAlert : IBase<AlertDto,CreateAlertDto,UpdateAlertDto>
+public interface IAlert : IService<AlertDto,CreateAlertDto,UpdateAlertDto>
 {
       Task<Pagination<AlertEventDto>> GetEventPaginationAsync(PaginationParams param,CancellationToken ct = default);
       Task<Pagination<AlertLevelDto>> GetLevelPaginationAsync(PaginationParams param,CancellationToken ct = default);

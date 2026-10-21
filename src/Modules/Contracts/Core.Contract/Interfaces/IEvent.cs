@@ -8,7 +8,7 @@ using SharedKernel.Enums;
 
 namespace Core.Contract.Interfaces;
 
-public interface IEvent : IBase<EventDto, CreateEventDto, UpdateEventDto>
+public interface IEvent : IService<EventDto, CreateEventDto, UpdateEventDto>
 {
 
       Task<Pagination<AdapterEventDto>> GetAdapterPaginationAsync(PaginationParams param,CancellationToken ct = default);

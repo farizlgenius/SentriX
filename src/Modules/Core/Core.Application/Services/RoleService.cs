@@ -16,7 +16,7 @@ public sealed class RoleService(
       public async Task<Guid> CreateAsync(CreateRoleDto dto, CancellationToken ct = default)
       {
             // Check name is duplicate 
-            if (await repo.IsAnyByNameAndLocationIdAsync(dto.Name))
+            if (await repo.IsAnyByNameAndLocationGuidAsync(dto.Name,Guid.Empty,ct))
                   throw new DuplicateException(EntityType.ROLE.ToString(), dto.Name);
 
             var d = new Core.Domain.Entities.Role(

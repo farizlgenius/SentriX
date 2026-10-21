@@ -2,7 +2,6 @@ namespace Core.Infrastructure.Persistences.Entities;
 
 public sealed class Position : BaseEntity
 {
-      public string name { get; set; } = string.Empty;
       public string description { get; set; } = string.Empty;
 
       // Relation

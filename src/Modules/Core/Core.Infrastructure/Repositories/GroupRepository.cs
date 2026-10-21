@@ -310,4 +310,19 @@ public sealed class GroupRepository(CoreDbContext context) : IGroupRepository
       {
             throw new NotImplementedException();
       }
+
+      public Task<bool> IsEnabledAsync(Guid guid, CancellationToken ct = default)
+      {
+            throw new NotImplementedException();
+      }
+
+      public Task<bool> IsDisabledAsync(Guid guid, CancellationToken ct = default)
+      {
+            throw new NotImplementedException();
+      }
+
+      public Task<bool> IsAnyByNameAndLocationGuidAsync(string name, Guid guid, CancellationToken ct = default)
+      {
+            throw new NotImplementedException();
+      }
 }

@@ -2,7 +2,7 @@ using Core.Contract.DTOs.Time;
 
 namespace Core.Contract.Interfaces;
 
-public interface IInterval : IBase<IntervalDto, CreateIntervalDto, UpdateIntervalDto>
+public interface IInterval : IService<IntervalDto, CreateIntervalDto, UpdateIntervalDto>
 {
 
 }

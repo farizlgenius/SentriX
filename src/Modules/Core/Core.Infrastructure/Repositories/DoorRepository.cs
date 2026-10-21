@@ -495,8 +495,12 @@ public sealed class DoorRepository(CoreDbContext context) : IDoorRepository
           );
   }
 
+      public Task<bool> IsAnyByNameAndLocationGuidAsync(string name, Guid guid, CancellationToken ct = default)
+      {
+            throw new NotImplementedException();
+      }
 
-  public async Task<bool> IsAnyByNameAndLocationIdAsync(string name, int locationId = 0, CancellationToken ct = default)
+      public async Task<bool> IsAnyByNameAndLocationIdAsync(string name, int locationId = 0, CancellationToken ct = default)
   {
     return await context.Doors
       .AsNoTracking()
@@ -523,7 +527,17 @@ public sealed class DoorRepository(CoreDbContext context) : IDoorRepository
       .AnyAsync(x => x.is_default);
   }
 
-  public async Task UpdateAsync(Door entity, CancellationToken ct = default)
+      public Task<bool> IsDisabledAsync(Guid guid, CancellationToken ct = default)
+      {
+            throw new NotImplementedException();
+      }
+
+      public Task<bool> IsEnabledAsync(Guid guid, CancellationToken ct = default)
+      {
+            throw new NotImplementedException();
+      }
+
+      public async Task UpdateAsync(Door entity, CancellationToken ct = default)
   {
     var en = await context.Doors
       .AsNoTracking()

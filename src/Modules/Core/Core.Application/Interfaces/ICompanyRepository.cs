@@ -5,7 +5,6 @@ namespace Core.Application.Interfaces;
 
 public interface ICompanyRepository : IRepository<CompanyDto, Company>
 {
-  Task<bool> IsAnyDepartmentAsync(Guid guid, CancellationToken ct = default);
   Task<bool> IsAnyUserAsync(Guid guid, CancellationToken ct = default);
   Task<IEnumerable<CompanyDto>> GetAsync();
 }

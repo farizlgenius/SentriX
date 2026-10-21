@@ -5,6 +5,7 @@ namespace Core.Domain.Entities;
 public class BaseDomain 
 {
   public Guid Guid { get; private set; }
+  public int ExternalId { get; private set; }
 
   public BaseDomain()
   {

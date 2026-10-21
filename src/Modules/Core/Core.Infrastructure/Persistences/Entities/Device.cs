@@ -8,7 +8,6 @@ namespace Core.Infrastructure.Persistences.Entities;
 
 public sealed class Device : BaseEntity,IAuditableEntity
 {
-  public string name { get; set; } = string.Empty;
   public string serial_number { get; set; } = string.Empty;
   public string mac { get; set; } = string.Empty;
   public string ip { get; set; } = string.Empty;
@@ -20,12 +19,11 @@ public sealed class Device : BaseEntity,IAuditableEntity
   public string metadata { get; set; } = string.Empty;
 
   // Releation
-  public int location_id { get; set; } = default!;
-  public Location location { get; set; } = default!;
   public ICollection<DeviceModule> device_modules { get; set; } = default!;
   public ICollection<Door> doors {get; set;} = default!;
   public ICollection<Procedure> procedures {get; set;} = default!;
   public ICollection<Persistences.Entities.Action> actions {get; set;} = default!;
+  public ICollection<ComponentMapping> component_mappings {get; set; } = default!;
 
   public Device() { }
   public Device(Core.Domain.Entities.Device domain) : base(domain.Guid)

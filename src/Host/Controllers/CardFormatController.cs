@@ -11,7 +11,7 @@ public class CardFormatController(ICardFormat card) : ControllerBase
       [HttpGet("pagination")]
       public async Task<IActionResult> GetPaginationAsync([FromQuery]PaginationParams param)
       {
-            var res = card.GetPaginationAsync(param);
+            var res = await card.GetPaginationAsync(param);
             return Ok(res);
       }
 }

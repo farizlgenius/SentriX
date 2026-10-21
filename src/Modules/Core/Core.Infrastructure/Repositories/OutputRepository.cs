@@ -10,10 +10,10 @@ using SharedKernel.Exceptions;
 
 namespace Core.Infrastructure.Repositories;
 
-public sealed class OutputRepository(CoreDbContext context) : BaseRepository<Persistences.Entities.Output,Domain.Entities.Output,OutputDto>(
+public sealed class OutputRepository(CoreDbContext context) : BaseRepository<Persistences.Entities.Output, Domain.Entities.Output, OutputDto>(
   context,
   d => new Persistences.Entities.Output(d),
-  (en,dom) =>
+  (en, dom) =>
   {
     en.name = dom.Name;
     en.slot_no = dom.SlotNo;
@@ -23,21 +23,18 @@ public sealed class OutputRepository(CoreDbContext context) : BaseRepository<Per
     en.device_module_id = dom.DeviceModuleId;
     en.updated_at = DateTime.UtcNow;
   },
-  OutputProjections.ToDto),IOutputRepository
+  OutputProjections.ToDto
+  ), IOutputRepository
 {
-
-
-
   public async Task<Pagination<OutputDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
   {
-    throw new NotImplementedException();
+    return await base.GetPaginationAsync(
+      param,
+      x => x.location == null || x.location.guid == param.locationGuid,
+      [x => x.name],
+      ct
+    );
   }
-
-  public async Task<bool> IsAnyByNameAndLocationIdAsync(string name, int locationId = 0, CancellationToken ct = default)
-  {
-    throw new NotImplementedException();
-  }
-
 
   public async Task<bool> IsAnyRelatedEntitiesAsync(Guid guid, CancellationToken ct = default)
   {

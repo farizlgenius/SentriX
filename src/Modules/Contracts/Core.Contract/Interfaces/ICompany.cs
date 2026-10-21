@@ -2,7 +2,7 @@ using Core.Contract.DTOs.Company;
 
 namespace Core.Contract.Interfaces;
 
-public interface ICompany : IBase<CompanyDto, CreateCompanyDto, UpdateCompanyDto>
+public interface ICompany : IService<CompanyDto, CreateCompanyDto, UpdateCompanyDto>
 {
   Task<IEnumerable<CompanyDto>> GetAsync();
 }

@@ -99,6 +99,11 @@ public sealed class TriggerRepository(CoreDbContext context) : ITriggerRepositor
                   )).ToArrayAsync();
       }
 
+      public Task<bool> IsAnyByNameAndLocationGuidAsync(string name, Guid guid, CancellationToken ct = default)
+      {
+            throw new NotImplementedException();
+      }
+
       public Task<bool> IsAnyByNameAndLocationIdAsync(string name, int locationId = 0, CancellationToken ct = default)
       {
             throw new NotImplementedException();
@@ -115,6 +120,16 @@ public sealed class TriggerRepository(CoreDbContext context) : ITriggerRepositor
       }
 
       public Task<bool> IsDefaultAsync(Guid guid, CancellationToken ct = default)
+      {
+            throw new NotImplementedException();
+      }
+
+      public Task<bool> IsDisabledAsync(Guid guid, CancellationToken ct = default)
+      {
+            throw new NotImplementedException();
+      }
+
+      public Task<bool> IsEnabledAsync(Guid guid, CancellationToken ct = default)
       {
             throw new NotImplementedException();
       }

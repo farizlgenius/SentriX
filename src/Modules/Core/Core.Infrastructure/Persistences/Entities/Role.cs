@@ -2,7 +2,6 @@ namespace Core.Infrastructure.Persistences.Entities;
 
 public sealed class Role : BaseEntity
 {
-      public string name { get; set; } = string.Empty;
 
       // Relation
       public ICollection<User> users { get; set; } = default!;

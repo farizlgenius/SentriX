@@ -5,7 +5,7 @@ using SharedKernel.Enums;
 
 namespace Core.Contract.Interfaces;
 
-public interface IDevice : IBase<DeviceDto, CreateDeviceDto, UpdateDeviceDto>
+public interface IDevice : IService<DeviceDto, CreateDeviceDto, UpdateDeviceDto>
 {
       Task<IEnumerable<TempDeviceDto>> GetScanDeviceAsync(CancellationToken ct = default);
       Task<object> GetConfigurationAsync(Guid guid,CancellationToken ct = default);

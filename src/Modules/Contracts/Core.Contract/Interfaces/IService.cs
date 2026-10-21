@@ -2,7 +2,7 @@ using SharedKernel.Domain;
 
 namespace Core.Contract.Interfaces;
 
-public interface IBase<T, CR, UP> where T : class where CR : class where UP : class
+public interface IService<T, CR, UP> where T : class where CR : class where UP : class
 {
   Task<Pagination<T>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default);
   Task<T> GetByGuidAsync(Guid guid, CancellationToken ct = default);

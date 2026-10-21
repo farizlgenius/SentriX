@@ -12,8 +12,6 @@ public sealed class Interval : BaseEntity,IAuditableEntity
   public int day_id { get; set; }
   public DayInWeek day { get; set; } = default!;
   public ICollection<TimeZoneInterval> timezone_intervals { get; set; } = default!;
-  public int location_id { get; set; }
-  public Location location { get; set; } = default!;
   public Interval() { }
   public Interval(
     Domain.Entities.Interval d

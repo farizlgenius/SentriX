@@ -19,7 +19,7 @@ public sealed class HolidayService(
   {
     var locationId = await bus.QueryAsync(new LocationIdByGuidQuery(dto.LocationGuid));
 
-    if (await repo.IsAnyByNameAndLocationIdAsync(dto.Name, locationId))
+    if (await repo.IsAnyByNameAndLocationGuidAsync(dto.Name, dto.LocationGuid,ct))
       throw new DuplicateException(EntityType.TIMEZONE.ToString(), dto.Name);
 
     var d = new Domain.Entities.Holiday(
@@ -110,7 +110,7 @@ public sealed class HolidayService(
 
     var locationId = await bus.QueryAsync(new LocationIdByGuidQuery(dto.LocationGuid));
 
-    if (await repo.IsAnyByNameAndLocationIdAsync(dto.Name, locationId))
+    if (await repo.IsAnyByNameAndLocationGuidAsync(dto.Name, dto.LocationGuid,ct))
       throw new DuplicateException(EntityType.TIMEZONE.ToString(), dto.Name);
 
     var d = new Domain.Entities.Holiday(

@@ -263,6 +263,11 @@ public sealed class LocationRepository(CoreDbContext context) : ILocationReposit
                   );
       }
 
+      public Task<bool> IsAnyByNameAndLocationGuidAsync(string name, Guid guid, CancellationToken ct = default)
+      {
+            throw new NotImplementedException();
+      }
+
       public async Task<bool> IsAnyByNameAndLocationIdAsync(string name, int locationId = default, CancellationToken ct = default)
       {
             return await context.Locations
@@ -296,6 +301,16 @@ public sealed class LocationRepository(CoreDbContext context) : ILocationReposit
             return await context.Locations
                   .AsNoTracking()
                   .AnyAsync(x => x.guid == guid && x.is_default);
+      }
+
+      public Task<bool> IsDisabledAsync(Guid guid, CancellationToken ct = default)
+      {
+            throw new NotImplementedException();
+      }
+
+      public Task<bool> IsEnabledAsync(Guid guid, CancellationToken ct = default)
+      {
+            throw new NotImplementedException();
       }
 
       public async Task UpdateAsync(Core.Domain.Entities.Location entity, CancellationToken ct = default)

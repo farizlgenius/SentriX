@@ -1,5 +1,7 @@
 using Core.Application.Interfaces;
 using Core.Contract.DTOs.Alert;
+using Core.Infrastructure.Projections;
+using Core.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel.Domain;
 using SharedKernel.Enums;
@@ -7,81 +9,51 @@ using SharedKernel.Exceptions;
 
 namespace Core.Infrastructure.Persistences.Entities;
 
-public sealed class AlertRepository(CoreDbContext context) : IAlertRepository
-{
-      public async Task AddAsync(Domain.Entities.Alert entity, CancellationToken ct = default)
+public sealed class AlertRepository(CoreDbContext context) : BaseRepository<Persistences.Entities.Alert,Domain.Entities.Alert,AlertDto>(
+      context,
+      d => new Persistences.Entities.Alert(d),
+      (en,dom) =>
       {
-            await context.Alerts.AddAsync(
-                  new Alert(entity),
-                  ct
-            );
+            
+      },
+      AlertProjections.ToDto
+),IAlertRepository
+{
 
-            await context.SaveChangesAsync(ct);
-      }
 
       public async Task AddLevelAsync(Domain.Entities.AlertLevel domain, CancellationToken ct = default)
       {
-            await context.AlertLevels.AddAsync(
+            await Context.AlertLevels.AddAsync(
                   new AlertLevel(domain)
                   ,ct);
 
-            await context.SaveChangesAsync(ct);
+            await Context.SaveChangesAsync(ct);
       }
 
-      public async Task DeleteAsync(Guid guid, CancellationToken ct = default)
-      {
-            var en = await context.Alerts
-                  .Where(x => x.guid == guid)
-                  .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.ALERT.ToString(),guid.ToString());;
 
-            context.Alerts.Remove(en);
-
-            await context.SaveChangesAsync(ct);
-      }
 
       public async Task DeleteLevelAsync(Guid guid, CancellationToken ct = default)
       {
-            var en = await context.AlertLevels
+            var en = await Context.AlertLevels
                   .Where(x => x.guid == guid)
                   .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.ALERT_LEVEL.ToString(),guid.ToString());;
 
-            context.AlertLevels.Remove(en);
+            Context.AlertLevels.Remove(en);
 
-            await context.SaveChangesAsync(ct);
+            await Context.SaveChangesAsync(ct);
       }
 
-      public async Task DeleteRangeAsync(IEnumerable<Guid> guids, CancellationToken ct = default)
-      {
-            throw new NotImplementedException();
-      }
-
-      public async Task<bool> DisableAsync(Guid guid, CancellationToken ct = default)
-      {
-            throw new NotImplementedException();
-      }
-
-      public async Task<bool> EnableAsync(Guid guid, CancellationToken ct = default)
-      {
-            throw new NotImplementedException();
-      }
-
-      public async Task<AlertDto> GetAsync(Guid guid, CancellationToken ct = default)
-      {
-            throw new NotImplementedException();
-      }
-
-
-      public async Task<IEnumerable<AlertDto>> GetByLocationAsync(Guid locationGuid, CancellationToken ct = default)
-      {
-            throw new NotImplementedException();
-      }
 
       public async Task<Pagination<AlertEventDto>> GetEventPaginationAsync(PaginationParams param, CancellationToken ct = default)
       {
-            var query = context.AlertEvents
-                  .Where(x => x.location == null || x.location.guid == param.locationGuid)
-                  .AsNoTracking()
-                  .AsQueryable();
+            var specialLocationGuid = new Guid("3a9c9947-d5ca-4bb2-b525-0499a340f1d6");
+
+            var query = Context.AlertEvents.AsNoTracking().AsQueryable();
+
+            if (param.locationGuid != specialLocationGuid)
+            {
+                  query = query.Where(x => x.location.guid == param.locationGuid);
+            }
 
             if (!string.IsNullOrWhiteSpace(param.search))
             {
@@ -89,7 +61,7 @@ public sealed class AlertRepository(CoreDbContext context) : IAlertRepository
                   {
                         var search = param.search.Trim();
 
-                        if (context.Database.IsNpgsql())
+                        if (Context.Database.IsNpgsql())
                         {
                               var pattern = $"%{search}%";
 
@@ -97,7 +69,6 @@ public sealed class AlertRepository(CoreDbContext context) : IAlertRepository
                                   EF.Functions.ILike(x.name, pattern) ||
                                   EF.Functions.ILike(x.entity.ToString(), pattern) ||
                                   EF.Functions.ILike(x.base_event.ToString(), pattern) ||
-                                  EF.Functions.ILike(x.comment.ToString(), pattern) ||
                                   EF.Functions.ILike(x.alert_level.ToString(), pattern) ||
                                   EF.Functions.ILike(x.level_color.ToString(), pattern)
                               );
@@ -108,7 +79,6 @@ public sealed class AlertRepository(CoreDbContext context) : IAlertRepository
                                   x.name.Contains(search) ||
                                   x.entity.ToString().Contains(search) ||
                                   x.base_event.ToString().Contains(search) ||
-                                  x.comment.ToString().Contains(search) ||
                                   x.alert_level.ToString().Contains(search) ||
                                    x.level_color.ToString().Contains(search)
                               );
@@ -161,19 +131,10 @@ public sealed class AlertRepository(CoreDbContext context) : IAlertRepository
                   );
       }
 
-      public async Task<Guid> GetGuidByIdAsync(int id, CancellationToken ct = default)
-      {
-            throw new NotImplementedException();
-      }
-
-      public async Task<int> GetIdByGuidAsync(Guid guid, CancellationToken ct = default)
-      {
-            throw new NotImplementedException();
-      }
 
       public async Task<int> GetLevelIdByGuidAsync(Guid guid, CancellationToken ct = default)
       {
-            var res = await context.AlertLevels
+            var res = await Context.AlertLevels
                   .AsNoTracking()
                   .Where(x => x.guid == guid)
                   .Select(x => x.id)
@@ -187,7 +148,7 @@ public sealed class AlertRepository(CoreDbContext context) : IAlertRepository
 
       public async Task<IEnumerable<OptionDto>> GetLevelOptionAsync(CancellationToken ct = default)
       {
-            return await context.AlertLevels
+            return await Context.AlertLevels
                   .AsNoTracking()
                   .Select(x => new OptionDto(
                         x.name,
@@ -198,9 +159,14 @@ public sealed class AlertRepository(CoreDbContext context) : IAlertRepository
 
       public async Task<Pagination<AlertLevelDto>> GetLevelPaginationAsync(PaginationParams param, CancellationToken ct = default)
       {
-            var query = context.AlertLevels
-                  .AsNoTracking()
-                  .AsQueryable();
+            var specialLocationGuid = new Guid("3a9c9947-d5ca-4bb2-b525-0499a340f1d6");
+
+            var query = Context.AlertLevels.AsNoTracking().AsQueryable();
+
+            if (param.locationGuid != specialLocationGuid)
+            {
+                  query = query.Where(x => x.location.guid == param.locationGuid);
+            }
 
             if (!string.IsNullOrWhiteSpace(param.search))
             {
@@ -208,7 +174,7 @@ public sealed class AlertRepository(CoreDbContext context) : IAlertRepository
                   {
                         var search = param.search.Trim();
 
-                        if (context.Database.IsNpgsql())
+                        if (Context.Database.IsNpgsql())
                         {
                               var pattern = $"%{search}%";
 
@@ -265,108 +231,22 @@ public sealed class AlertRepository(CoreDbContext context) : IAlertRepository
                   );
       }
 
-      public async Task<string> GetNameByGuidAsync(Guid guid, CancellationToken ct = default)
-      {
-            return await context.AlertLevels
-                  .AsNoTracking()
-                  .Where(x => x.guid == guid)
-                  .Select(x => x.name)
-                  .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.ALERT_LEVEL.ToString(),guid.ToString());
-      }
 
       public async Task<Pagination<AlertDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
       {
-            var query = context.Alerts
-                  .Where(x => x.location.guid == param.locationGuid)
-                  .AsNoTracking()
-                  .AsQueryable();
-
-            if (!string.IsNullOrWhiteSpace(param.search))
-            {
-                  if (!string.IsNullOrWhiteSpace(param.search))
-                  {
-                        var search = param.search.Trim();
-
-                        if (context.Database.IsNpgsql())
-                        {
-                              var pattern = $"%{search}%";
-
-                              query = query.Where(x =>
-                                  EF.Functions.ILike(x.name, pattern) ||
-                                  EF.Functions.ILike(x.advice.ToString(), pattern) 
-                              );
-                        }
-                        else // SQL Server
-                        {
-                              query = query.Where(x =>
-                                  x.name.Contains(search) ||
-                                  x.advice.ToString().Contains(search) 
-                              );
-                        }
-
-                  }
-            }
-
-
-            if (param.startDate != null)
-            {
-                  var startUtc = DateTime.SpecifyKind(param.startDate.Value, DateTimeKind.Utc);
-                  query = query.Where(x => x.created_at >= startUtc);
-            }
-
-            if (param.endDate != null)
-            {
-                  var endUtc = DateTime.SpecifyKind(param.endDate.Value, DateTimeKind.Utc);
-                  query = query.Where(x => x.created_at <= endUtc);
-            }
-
-            var count = await query.CountAsync();
-
-            var res = await query
-                  .AsNoTracking()
-                  .OrderByDescending(e => e.created_at)
-                  .Skip((param.pageNumber - 1) * param.pageSize)
-                  .Take(param.pageSize)
-                  .Select(x => new AlertDto(
-                        x.guid,
-                        x.name,
-                        x.advice,
-                        x.location.guid,
-                        x.location.name,
-                        x.alert_level.guid,
-                        x.alert_level.color_code,
-                        x.alert_level.name,
-                        x.core_event.entity.guid,
-                        x.core_event.guid,
-                        new List<Guid>(),
-                        x.is_active,
-                        x.is_default
-                  )).ToListAsync();
-
-            return new Pagination<AlertDto>(
-                  param.pageNumber,
-                  param.pageSize,
-                  count,
-                  (int)Math.Ceiling(count / (double)param.pageSize),
-                  res
-                  );
+            return await base.GetPaginationAsync(
+                  param,
+                  param.locationGuid != new Guid("3a9c9947-d5ca-4bb2-b525-0499a340f1d6") ? x => x.location.guid == param.locationGuid : null,
+                  [x => x.name,x => x.advice],
+                  ct
+            );
       }
 
-      public async Task<bool> IsAnyByNameAndLocationIdAsync(string name, int locationId = 0, CancellationToken ct = default)
-      {
-            throw new NotImplementedException();
-      }
 
-      public async Task<bool> IsAnyGuidAsync(Guid guid, CancellationToken ct = default)
-      {
-            return await context.Alerts
-                  .AsNoTracking()
-                  .AnyAsync(x => x.guid == guid,ct);
-      }
 
       public async Task<bool> IsAnyLevelByGuidAsync(Guid guid, CancellationToken ct = default)
       {
-            return await context.AlertLevels
+            return await Context.AlertLevels
                   .AsNoTracking()
                   .AnyAsync(x => x.guid == guid,ct);
                   
@@ -374,7 +254,7 @@ public sealed class AlertRepository(CoreDbContext context) : IAlertRepository
 
       public async Task<bool> IsAnyLevelRelatedEntitiesAsync(Guid guid, CancellationToken ct = default)
       {
-            return await context.AlertLevels
+            return await Context.AlertLevels
                   .AsNoTracking()
                   .AnyAsync(x => x.guid == guid && x.alerts.Any());
       }
@@ -384,19 +264,10 @@ public sealed class AlertRepository(CoreDbContext context) : IAlertRepository
            throw new NotImplementedException();
       }
 
-      public async Task<bool> IsDefaultAsync(Guid guid, CancellationToken ct = default)
-      {
-            throw new NotImplementedException();
-      }
-
-      public async Task UpdateAsync(Domain.Entities.Alert entity, CancellationToken ct = default)
-      {
-            throw new NotImplementedException();
-      }
 
       public async Task UpdateLevelAsync(Domain.Entities.AlertLevel domain, CancellationToken ct = default)
       {
-            var en = await context.AlertLevels
+            var en = await Context.AlertLevels
                   .Where(x => x.guid == domain.Guid)
                   .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.ALERT_LEVEL.ToString(),domain.Guid.ToString());
 
@@ -404,8 +275,8 @@ public sealed class AlertRepository(CoreDbContext context) : IAlertRepository
             en.color_code = domain.ColorCode;
             en.updated_at = DateTime.UtcNow;
 
-            context.AlertLevels.Update(en);
+            Context.AlertLevels.Update(en);
 
-            await context.SaveChangesAsync(ct);
+            await Context.SaveChangesAsync(ct);
       }
 }

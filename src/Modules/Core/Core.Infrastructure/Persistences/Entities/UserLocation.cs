@@ -1,7 +1,11 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace Core.Infrastructure.Persistences.Entities;
 
-public sealed class UserLocation : BaseEntity
+public sealed class UserLocation 
 {
+  [Key]
+  public int id {get; set; }
   public int user_id { get; set; }
   public User user { get; set; } = default!;
   public int location_id { get; set; }
@@ -12,7 +16,7 @@ public sealed class UserLocation : BaseEntity
   public UserLocation(
     int user,
     int loc
-  ) : base(Guid.NewGuid())
+  ) 
   {
     if(user == 0)
     {

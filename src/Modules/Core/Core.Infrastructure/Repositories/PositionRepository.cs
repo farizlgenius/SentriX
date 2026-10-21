@@ -264,6 +264,11 @@ public sealed class PositionRepository(CoreDbContext context) : IPositionReposit
                   );
       }
 
+      public Task<bool> IsAnyByNameAndLocationGuidAsync(string name, Guid guid, CancellationToken ct = default)
+      {
+            throw new NotImplementedException();
+      }
+
       public async Task<bool> IsAnyByNameAndLocationIdAsync(string name, Guid locationGuid = default, CancellationToken ct = default)
       {
             return await context.Positions
@@ -307,6 +312,16 @@ public sealed class PositionRepository(CoreDbContext context) : IPositionReposit
             return await context.Positions
                           .AsNoTracking()
                           .AnyAsync(x => x.guid == guid && x.is_default);
+      }
+
+      public Task<bool> IsDisabledAsync(Guid guid, CancellationToken ct = default)
+      {
+            throw new NotImplementedException();
+      }
+
+      public Task<bool> IsEnabledAsync(Guid guid, CancellationToken ct = default)
+      {
+            throw new NotImplementedException();
       }
 
       public async Task UpdateAsync(Position entity, CancellationToken ct = default)

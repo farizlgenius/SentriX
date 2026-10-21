@@ -17,8 +17,6 @@ public sealed class Event : BaseEntity
   public SharedKernel.Enums.Vendor vendor { get; set; } = SharedKernel.Enums.Vendor.aero;
 
   // releation
-  public int? location_id { get; set; }
-  public Location? location { get; set; } = default!;
 
   public Event() { }
 

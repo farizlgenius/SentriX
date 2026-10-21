@@ -13,7 +13,7 @@ public sealed class OutputService(
       IDeviceModuleRepository module,
       IAdapterFactory adapter,
       IComponentMappingRepository com,
-      ILocationRepository loc) : IOutput
+      ILocationRepository loc) : BaseService<OutputDto,Domain.Entities.Output>(repo),IOutput
 {
       public async Task<Guid> CreateAsync(CreateOutputDto dto, CancellationToken ct = default)
       {
@@ -147,20 +147,20 @@ public sealed class OutputService(
             return true;
       }
 
-      public async Task<OutputDto> GetByGuidAsync(Guid guid, CancellationToken ct = default)
-      {
-            throw new NotImplementedException();
-      }
+      // public async Task<OutputDto> GetByGuidAsync(Guid guid, CancellationToken ct = default)
+      // {
+      //       return await repo.GetAsync(guid,ct);
+      // }
 
-      public async Task<IEnumerable<OutputDto>> GetByLocationAsync(Guid guid, CancellationToken ct = default)
-      {
-            throw new NotImplementedException();
-      }
+      // public async Task<IEnumerable<OutputDto>> GetByLocationAsync(Guid guid, CancellationToken ct = default)
+      // {
+      //       return await repo.GetByLocationAsync(guid,ct);
+      // }
 
-      public async Task<Pagination<OutputDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
-      {
-            throw new NotImplementedException();
-      }
+      // public async Task<Pagination<OutputDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
+      // {
+      //      return await repo.GetPaginationAsync(param,ct);
+      // }
 
       public async Task<Guid> UpdateAsync(UpdateOutputDto dto, CancellationToken ct = default)
       {

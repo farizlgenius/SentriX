@@ -4,7 +4,7 @@ using SharedKernel.Domain;
 
 namespace Core.Contract.Interfaces;
 
-public interface ITrigger : IBase<TriggerDto,CreateTriggerDto,UpdateTriggerDto>
+public interface ITrigger : IService<TriggerDto,CreateTriggerDto,UpdateTriggerDto>
 {
       Task<IEnumerable<OptionDto>> GetSourceAsync(CancellationToken ct = default);
       Task<IEnumerable<OptionDto>> GetTypeAsync(Guid source,CancellationToken ct =default);

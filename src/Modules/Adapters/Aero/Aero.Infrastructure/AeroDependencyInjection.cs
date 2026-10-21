@@ -71,9 +71,11 @@ public static class AeroDependencyInjection
     services.AddScoped<IModuleAdapter,ModuleService>();
 
     // Output 
+    services.AddScoped<IOutputAdapter,OutputService>();
     services.AddScoped<IOutputRepository,OutputRepository>();
 
     // Input
+    services.AddScoped<IInputAdapter,InputService>();
     services.AddScoped<IInputRepository,InputRepository>();
 
     // Time

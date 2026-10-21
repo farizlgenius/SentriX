@@ -25,7 +25,7 @@ public sealed class LocationService(
     );
 
     // Check name is duplicate 
-    if (await repo.IsAnyByNameAndLocationIdAsync(dto.Name))
+    if (await repo.IsAnyByNameAndLocationGuidAsync(dto.Name,Guid.Empty,ct))
       throw new DuplicateException(EntityType.LOCATION.ToString(), dto.Name);
 
     await repo.AddAsync(d, ct);

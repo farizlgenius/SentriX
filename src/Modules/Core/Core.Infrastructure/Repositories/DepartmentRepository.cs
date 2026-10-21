@@ -2,6 +2,7 @@ using Core.Application.Interfaces;
 using Core.Contract.DTOs.Department;
 using Core.Domain.Entities;
 using Core.Infrastructure.Persistences;
+using Core.Infrastructure.Projections;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel.Constants;
 using SharedKernel.Domain;
@@ -10,88 +11,27 @@ using SharedKernel.Exceptions;
 
 namespace Core.Infrastructure.Repositories;
 
-public sealed class DepartmentRepository(CoreDbContext context) : IDepartmentRepository
+public sealed class DepartmentRepository(CoreDbContext context) : BaseRepository<Persistences.Entities.Department,Domain.Entities.Department,DepartmentDto>(
+  context,
+  d => new Persistences.Entities.Department(d),
+  (en, dom) =>
+  {
+    en.name = dom.Name;
+    en.description = dom.Description;
+    en.company_id = dom.CompanyId;
+    en.updated_at = DateTime.UtcNow;
+  },
+  DepartmentProjections.ToDto
+),IDepartmentRepository
 {
-  public async Task AddAsync(Department entity, CancellationToken ct = default)
-  {
-    await context.Departments.AddAsync(
-      new Persistences.Entities.Department(entity), ct
-    );
 
-    await context.SaveChangesAsync(ct);
-  }
 
-  public async Task DeleteAsync(Guid guid, CancellationToken ct = default)
-  {
-    var entity = await context.Departments
-      .Where(x => x.guid == guid)
-      .FirstOrDefaultAsync(ct);
 
-    context.Departments.Remove(entity ?? throw new NotFoundException(EntityType.DEPARTMENT.ToString(), guid.ToString()));
 
-    await context.SaveChangesAsync(ct);
-  }
-
-  public async Task DeleteRangeAsync(IEnumerable<Guid> guids, CancellationToken ct = default)
-  {
-    var entities = await context.Departments
-                  .Where(x => guids.Contains(x.guid) && x.is_default == false)
-                  .ToArrayAsync(ct);
-
-    context.Departments.RemoveRange(entities);
-
-    await context.SaveChangesAsync(ct);
-  }
-
-  public async Task<bool> DisableAsync(Guid guid, CancellationToken ct = default)
-  {
-    var en = await context.Departments
-      .Where(x => x.guid == guid)
-      .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.LOCATION.ToString(), guid.ToString());
-
-    en.is_active = false;
-
-    context.Departments.Update(en);
-
-    await context.SaveChangesAsync(ct);
-
-    return true;
-  }
-
-  public async Task<bool> EnableAsync(Guid guid, CancellationToken ct = default)
-  {
-    var en = await context.Departments
-      .Where(x => x.guid == guid)
-      .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.LOCATION.ToString(), guid.ToString());
-
-    en.is_active = true;
-
-    context.Departments.Update(en);
-
-    await context.SaveChangesAsync(ct);
-
-    return true;
-  }
-
-  public async Task<DepartmentDto> GetAsync(Guid guid, CancellationToken ct = default)
-  {
-    return await context.Departments
-                  .AsNoTracking()
-                  .Where(x => x.guid == guid)
-                  .Select(x => new DepartmentDto(
-                    x.guid,
-                    x.name,
-                    x.description,
-                    x.company.guid,
-                    x.company.name,
-                    x.is_active,
-                    x.is_default
-                  )).FirstOrDefaultAsync() ?? throw new NotFoundException(nameof(Location), guid.ToString());
-  }
 
   public async Task<IEnumerable<DepartmentDto>> GetByCompanyAsync(Guid guid, CancellationToken ct = default)
   {
-    return await context.Departments
+    return await Context.Departments
       .AsNoTracking()
       .Where(x => x.company.guid == guid)
       .OrderByDescending(x => x.id)
@@ -103,235 +43,56 @@ public sealed class DepartmentRepository(CoreDbContext context) : IDepartmentRep
         x.company.name,
         x.is_active,
         x.is_default
-      )).ToArrayAsync();
+      )).ToArrayAsync(cancellationToken: ct);
   }
 
-  public Task<IEnumerable<DepartmentDto>> GetByLocationAsync(Guid locationGuid,CancellationToken ct = default)
-  {
-    throw new NotImplementedException();
-  }
 
-      public Task<Guid> GetGuidByIdAsync(int id, CancellationToken ct = default)
-      {
-            throw new NotImplementedException();
-      }
-
-      public async Task<int> GetIdByGuidAsync(Guid guid, CancellationToken ct = default)
-  {
-    return await context.Departments
-      .AsNoTracking()
-      .Where(x => x.guid == guid)
-      .OrderByDescending(x => x.id)
-      .Select(x => x.id)
-      .FirstOrDefaultAsync();
-  }
-
-      public Task<string> GetNameByGuidAsync(Guid guid, CancellationToken ct = default)
-      {
-            throw new NotImplementedException();
-      }
 
       public async Task<Pagination<DepartmentDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
   {
-    var query = context.Departments
-                  .AsNoTracking()
-                  .AsQueryable();
-
-    if (!string.IsNullOrWhiteSpace(param.search))
-    {
-      if (!string.IsNullOrWhiteSpace(param.search))
-      {
-        var search = param.search.Trim();
-
-        if (context.Database.IsNpgsql())
-        {
-          var pattern = $"%{search}%";
-
-          query = query.Where(x =>
-              EF.Functions.ILike(x.name, pattern) ||
-              EF.Functions.ILike(x.description, pattern)
-          );
-        }
-        else // SQL Server
-        {
-          query = query.Where(x =>
-              x.name.Contains(search) ||
-              x.description.Contains(search)
-          );
-        }
-
-      }
-    }
-
-
-    if (param.startDate != null)
-    {
-      var startUtc = DateTime.SpecifyKind(param.startDate.Value, DateTimeKind.Utc);
-      query = query.Where(x => x.created_at >= startUtc);
-    }
-
-    if (param.endDate != null)
-    {
-      var endUtc = DateTime.SpecifyKind(param.endDate.Value, DateTimeKind.Utc);
-      query = query.Where(x => x.created_at <= endUtc);
-    }
-
-    var count = await query.CountAsync();
-
-    var res = await query
-          .AsNoTracking()
-          .OrderByDescending(e => e.created_at)
-          .Skip((param.pageNumber - 1) * param.pageSize)
-          .Take(param.pageSize)
-          .Select(e => new DepartmentDto(
-                e.guid,
-                e.name,
-                e.description,
-                e.company.guid,
-                e.company.name,
-                e.is_active,
-                e.is_default
-          )).ToListAsync();
-
-    return new Pagination<DepartmentDto>(
-          param.pageNumber,
-          param.pageSize,
-          count,
-          (int)Math.Ceiling(count / (double)param.pageSize),
-          res
-          );
+    throw new NotImplementedException();
   }
 
   public async Task<Pagination<DepartmentDto>> GetPaginationByCompanyGuidAsync(PaginationParams param, Guid companyGuid, CancellationToken ct = default)
   {
-    var query = context.Departments
-                  .AsNoTracking()
-                  .Where(x => x.company.guid == companyGuid)
-                  .AsQueryable();
-
-    if (!string.IsNullOrWhiteSpace(param.search))
-    {
-      if (!string.IsNullOrWhiteSpace(param.search))
-      {
-        var search = param.search.Trim();
-
-        if (context.Database.IsNpgsql())
-        {
-          var pattern = $"%{search}%";
-
-          query = query.Where(x =>
-              EF.Functions.ILike(x.name, pattern) ||
-              EF.Functions.ILike(x.description, pattern)
-          );
-        }
-        else // SQL Server
-        {
-          query = query.Where(x =>
-              x.name.Contains(search) ||
-              x.description.Contains(search)
-          );
-        }
-
-      }
-    }
-
-
-    if (param.startDate != null)
-    {
-      var startUtc = DateTime.SpecifyKind(param.startDate.Value, DateTimeKind.Utc);
-      query = query.Where(x => x.created_at >= startUtc);
-    }
-
-    if (param.endDate != null)
-    {
-      var endUtc = DateTime.SpecifyKind(param.endDate.Value, DateTimeKind.Utc);
-      query = query.Where(x => x.created_at <= endUtc);
-    }
-
-    var count = await query.CountAsync();
-
-    var res = await query
-          .AsNoTracking()
-          .OrderByDescending(e => e.created_at)
-          .Skip((param.pageNumber - 1) * param.pageSize)
-          .Take(param.pageSize)
-          .Select(e => new DepartmentDto(
-                e.guid,
-                e.name,
-                e.description,
-                e.company.guid,
-                e.company.name,
-                e.is_active,
-                e.is_default
-          )).ToListAsync();
-
-    return new Pagination<DepartmentDto>(
-          param.pageNumber,
-          param.pageSize,
-          count,
-          (int)Math.Ceiling(count / (double)param.pageSize),
-          res
-          );
+    return await base.GetPaginationAsync(
+      param,
+      x => x.company.guid == companyGuid,
+      [x => x.name,x => x.description],
+      ct
+    );
   }
 
-  public async Task<bool> IsAnyByNameAndLocationIdAsync(string name, int locationId = default, CancellationToken ct = default)
+
+      public async Task<bool> IsAnyByNameAndLocationIdAsync(string name, int locationId = default, CancellationToken ct = default)
   {
-    return await context.Departments
+    return await Context.Departments
       .AsNoTracking()
-      .AnyAsync(x => x.name.Equals(name));
+      .AnyAsync(x => x.name.Equals(name), cancellationToken: ct);
   }
 
-  public async Task<bool> IsAnyGuidAsync(Guid guid, CancellationToken ct = default)
-  {
-    return await context.Departments
-                  .AsNoTracking()
-                  .AnyAsync(x => x.guid == guid);
-  }
 
   public async Task<bool> IsAnyNameByCompanyGuidAsync(string name, Guid guid, CancellationToken ct = default)
   {
-    return await context.Departments
+    return await Context.Departments
       .AsNoTracking()
-      .AnyAsync(x => x.name.Equals(name) && x.company.guid == guid);
+      .AnyAsync(x => x.name.Equals(name) && x.company.guid == guid, cancellationToken: ct);
   }
 
-  public async Task<bool> IsAnyPositionAsync(Guid guid, CancellationToken ct = default)
-  {
-    return await context.Departments
-      .AsNoTracking()
-      .AnyAsync(x => x.guid == guid && x.positions.Any());
-  }
 
-  public Task<bool> IsAnyRelatedEntitiesAsync(Guid guid, CancellationToken ct = default)
+  public async Task<bool> IsAnyRelatedEntitiesAsync(Guid guid, CancellationToken ct = default)
   {
-    throw new NotImplementedException();
+    return await Context.Departments
+      .AsNoTracking()
+      .AnyAsync(x => x.guid == guid && x.positions.Any(), cancellationToken: ct);
   }
 
   public async Task<bool> IsAnyUserAsync(Guid guid, CancellationToken ct = default)
   {
-    return await context.Companies
+    return await Context.Companies
       .AsNoTracking()
-      .AnyAsync(x => x.guid == guid && x.users.Any());
+      .AnyAsync(x => x.guid == guid && x.users.Any(), cancellationToken: ct);
   }
 
-  public async Task<bool> IsDefaultAsync(Guid guid, CancellationToken ct = default)
-  {
-    return await context.Companies
-                  .AsNoTracking()
-                  .AnyAsync(x => x.guid == guid && x.is_default);
-  }
 
-  public async Task UpdateAsync(Department entity, CancellationToken ct = default)
-  {
-    var en = await context.Departments
-                  .Where(x => x.guid == entity.Guid)
-                  .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.LOCATION.ToString(), entity.Guid.ToString());
-
-    en.name = entity.Name;
-    en.description = entity.Description;
-
-    context.Departments.Update(en);
-
-    await context.SaveChangesAsync(ct);
-  }
 }

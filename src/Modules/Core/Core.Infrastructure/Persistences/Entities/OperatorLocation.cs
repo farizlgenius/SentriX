@@ -1,7 +1,11 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace Core.Infrastructure.Persistences.Entities;
 
-public sealed class OperatorLocation : BaseEntity
+public sealed class OperatorLocation 
 {
+      [Key]
+      public int id {get; set; }
       public int operator_id {get; set;}
       public Operator @operator {get; set;} = default!;
       public int location_id {get; set;}

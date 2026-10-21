@@ -308,7 +308,12 @@ public sealed class OperatorRepository(CoreDbContext context) : IOperatorReposit
     return res;
   }
 
-  public async Task<bool> IsAnyByNameAndLocationIdAsync(string name, int locationId = 0, CancellationToken ct = default)
+      public Task<bool> IsAnyByNameAndLocationGuidAsync(string name, Guid guid, CancellationToken ct = default)
+      {
+            throw new NotImplementedException();
+      }
+
+      public async Task<bool> IsAnyByNameAndLocationIdAsync(string name, int locationId = 0, CancellationToken ct = default)
   {
     throw new NotImplementedException();
   }
@@ -353,7 +358,17 @@ public sealed class OperatorRepository(CoreDbContext context) : IOperatorReposit
       .AnyAsync(x => x.guid == guid && x.is_default, ct);
   }
 
-  public async Task<bool> IsLocationIdsValidAsync(List<int> LocationIds, CancellationToken ct = default)
+      public Task<bool> IsDisabledAsync(Guid guid, CancellationToken ct = default)
+      {
+            throw new NotImplementedException();
+      }
+
+      public Task<bool> IsEnabledAsync(Guid guid, CancellationToken ct = default)
+      {
+            throw new NotImplementedException();
+      }
+
+      public async Task<bool> IsLocationIdsValidAsync(List<int> LocationIds, CancellationToken ct = default)
   {
     return await context.Locations
       .AsNoTracking()

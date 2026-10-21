@@ -14,11 +14,11 @@ public static class OutputProjections
             x.metadata,
             x.vendor,
             x.device_module.device.guid,
-            x.device_module.device.name,
+            x.device_module.device.name ?? string.Empty,
             x.device_module.guid,
-            x.device_module.name,
-            x.location.guid,
-            x.location.name,
+            x.device_module.name ?? string.Empty,
+            x.location == null ? Guid.Empty : x.location.guid,
+            x.location == null ? string.Empty : x.location.name ?? string.Empty,
             x.is_active,
             x.is_default
         );

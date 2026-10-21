@@ -298,7 +298,12 @@ public sealed class TimeRepository(CoreDbContext context) : ITimeRepository
       .ToDictionaryAsync(x => x.guid, x => x.id, ct);
   }
 
-  public async Task<bool> IsAnyByNameAndLocationIdAsync(string name, int locationId = 0, CancellationToken ct = default)
+      public Task<bool> IsAnyByNameAndLocationGuidAsync(string name, Guid guid, CancellationToken ct = default)
+      {
+            throw new NotImplementedException();
+      }
+
+      public async Task<bool> IsAnyByNameAndLocationIdAsync(string name, int locationId = 0, CancellationToken ct = default)
   {
     return await context.TimeZones
       .AsNoTracking()
