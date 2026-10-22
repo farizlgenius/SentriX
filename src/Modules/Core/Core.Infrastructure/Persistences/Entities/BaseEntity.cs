@@ -15,6 +15,7 @@ public class BaseEntity : IBaseEntity
   public bool is_default { get; set; } = false;
   public int location_id {get; set; } = 1;
   public Location location {get; set;} = default!;
+  public short? external_id {get; set; } 
 
 
   public BaseEntity()

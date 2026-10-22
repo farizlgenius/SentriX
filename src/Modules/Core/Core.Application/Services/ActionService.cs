@@ -11,7 +11,9 @@ public sealed class ActionService(
       IActionRepository repo,
       IDeviceRepository device,
       ILocationRepository loc
-      ) : IAction
+      ) : BaseService<ActionDto,Domain.Entities.Actions>(
+            repo
+      ),IAction
 {
       public async Task<Guid> CreateAsync(CreateActionDto dto, CancellationToken ct = default)
       {
@@ -58,20 +60,6 @@ public sealed class ActionService(
             throw new NotImplementedException();
       }
 
-      public async Task<ActionDto> GetByGuidAsync(Guid guid, CancellationToken ct = default)
-      {
-            throw new NotImplementedException();
-      }
-
-      public async Task<IEnumerable<ActionDto>> GetByLocationAsync(Guid guid, CancellationToken ct = default)
-      {
-            throw new NotImplementedException();
-      }
-
-      public async Task<Pagination<ActionDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
-      {
-            return await repo.GetPaginationAsync(param,ct);
-      }
 
       public Task<Guid> UpdateAsync(UpdateActionDto dto, CancellationToken ct = default)
       {

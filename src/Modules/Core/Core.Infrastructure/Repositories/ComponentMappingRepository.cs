@@ -1,263 +1,263 @@
-using Core.Application.Interfaces;
-using Core.Contract.DTOs.Device;
-using Core.Domain.Entities;
-using Core.Infrastructure.Persistences;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.EntityFrameworkCore;
-using SharedKernel.Constants;
-using SharedKernel.Enums;
-using SharedKernel.Exceptions;
+// using Core.Application.Interfaces;
+// using Core.Contract.DTOs.Device;
+// using Core.Domain.Entities;
+// using Core.Infrastructure.Persistences;
+// using Microsoft.AspNetCore.Http.HttpResults;
+// using Microsoft.EntityFrameworkCore;
+// using SharedKernel.Constants;
+// using SharedKernel.Enums;
+// using SharedKernel.Exceptions;
 
-namespace Core.Infrastructure.Repositories;
+// namespace Core.Infrastructure.Repositories;
 
-public sealed class ComponentMappingRepository(CoreDbContext context) : IComponentMappingRepository
-{
-  public async Task InsertAsync(ComponentMappping entity, CancellationToken ct = default)
-  {
-    await context.ComponentMappings.AddAsync(
-      new Persistences.Entities.ComponentMapping(entity)
-    );
+// public sealed class ComponentMappingRepository(CoreDbContext context) : IComponentMappingRepository
+// {
+//   public async Task InsertAsync(ComponentMappping entity, CancellationToken ct = default)
+//   {
+//     await context.ComponentMappings.AddAsync(
+//       new Persistences.Entities.ComponentMapping(entity)
+//     );
 
-    await context.SaveChangesAsync(ct);
-  }
+//     await context.SaveChangesAsync(ct);
+//   }
 
-  public async Task<int> GetExternalIdByMacAndEntityAsync(string mac, EntityType entity, CancellationToken ct = default)
-  {
-    var res = await context.ComponentMappings
-        .AsNoTracking()
-        .Where(x => x.mac == mac && x.entity == entity) // Use == for better SQL translation
-        .OrderByDescending(x => x.id)
-        .Select(x => (int?)x.external_id)               // Cast to int? so it returns null if not found
-        .FirstOrDefaultAsync(ct);                       // Don't forget to pass your cancellation token!
+//   public async Task<int> GetExternalIdByMacAndEntityAsync(string mac, EntityType entity, CancellationToken ct = default)
+//   {
+//     var res = await context.ComponentMappings
+//         .AsNoTracking()
+//         .Where(x => x.mac == mac && x.entity == entity) // Use == for better SQL translation
+//         .OrderByDescending(x => x.id)
+//         .Select(x => (int?)x.external_id)               // Cast to int? so it returns null if not found
+//         .FirstOrDefaultAsync(ct);                       // Don't forget to pass your cancellation token!
 
-    if (res == null)
-      throw new NotFoundException(EntityType.COMPONENT_MAPPING.ToString(), $"Mac:{mac}, Entity:{entity}");
+//     if (res == null)
+//       throw new NotFoundException(EntityType.COMPONENT_MAPPING.ToString(), $"Mac:{mac}, Entity:{entity}");
 
-    return res.Value; // Extract the underlying int value
-  }
-
-
-
-  public async Task<IEnumerable<int?>> GetExternalIdsByEntityAndVendorAsync(EntityType entity, Vendor vendor, CancellationToken ct = default)
-  {
-    return await context.ComponentMappings
-      .AsNoTracking()
-      .Where(x => x.entity == entity && x.vendor == vendor)
-      .Select(x => x.external_id)
-      .ToArrayAsync();
-  }
-
-  public async Task<int> GetFreeIdByEntityAsync(EntityType entity, int max, IEnumerable<int>? exception = default, CancellationToken ct = default)
-  {
-    // 1. Fetch only non-null IDs directly from the database to save memory
-    var existingIds = await context.ComponentMappings
-        .AsNoTracking()
-        .Where(x => x.entity == entity && x.external_id != null)
-        .Select(x => x.external_id!.Value) // '!' removes the warning because database filter guarantees non-null
-        .ToListAsync(ct); // Pass the CancellationToken here for production safety
-
-    // 2. Convert to a HashSet for O(1) lightning-fast lookups
-    var existIds = existingIds.ToHashSet();
-
-    // 3. FIX: Concat returns a new sequence, it does not modify the original set. 
-    // We must use UnionWith to actually add the exceptions to the HashSet.
-    if (exception != null)
-    {
-      existIds.UnionWith(exception);
-    }
-
-    for (var id = 1; id < max; id++)
-    {
-      if (!existIds.Contains(id))
-        return id;
-    }
-
-    throw new ExceedException(entity.ToString());
-  }
-
-  public async Task<int> GetFreeIdByMacAndEntityAndVendorAsync(string mac, EntityType entity, Vendor vendor, int max, IEnumerable<int>? exception = default, CancellationToken ct = default)
-  {
-    // 1. Fetch only non-null IDs directly from the database to save memory
-    var existingIds = await context.ComponentMappings
-        .AsNoTracking()
-        .Where(x => x.entity == entity && x.vendor == vendor && x.mac == mac && x.external_id != null)
-        .Select(x => x.external_id!.Value) // '!' removes the warning because database filter guarantees non-null
-        .ToListAsync(ct); // Pass the CancellationToken here for production safety
-
-    // 2. Convert to a HashSet for O(1) lightning-fast lookups
-    var existIds = existingIds.ToHashSet();
-
-    // 3. FIX: Concat returns a new sequence, it does not modify the original set. 
-    // We must use UnionWith to actually add the exceptions to the HashSet.
-    if (exception != null)
-    {
-      existIds.UnionWith(exception);
-    }
-
-    for (var id = 1; id < max; id++)
-    {
-      if (!existIds.Contains(id))
-        return id;
-    }
-
-    throw new ExceedException(entity.ToString());
-  }
-
-  public async Task<int> GetFreeIdByEntityAndVendorAsync(EntityType entity, Vendor vendor, int max, IEnumerable<int>? exception = default, CancellationToken ct = default)
-  {
-    // 1. Fetch only non-null IDs directly from the database to save memory
-    var existingIds = await context.ComponentMappings
-        .AsNoTracking()
-        .Where(x => x.entity == entity && x.vendor == vendor && x.external_id != null)
-        .Select(x => x.external_id!.Value) // '!' removes the warning because database filter guarantees non-null
-        .ToListAsync(ct); // Pass the CancellationToken here for production safety
-
-    // 2. Convert to a HashSet for O(1) lightning-fast lookups
-    var existIds = existingIds.ToHashSet();
-
-    // 3. FIX: Concat returns a new sequence, it does not modify the original set. 
-    // We must use UnionWith to actually add the exceptions to the HashSet.
-    if (exception != null)
-    {
-      existIds.UnionWith(exception);
-    }
-
-    for (var id = 1; id < max; id++)
-    {
-      if (!existIds.Contains(id))
-        return id;
-    }
-
-    throw new ExceedException(entity.ToString());
-  }
-
-  public async Task<string> GetMacByExternalIdAndEntityAndVendorAsync(
-    int externalId,
-    EntityType entity,
-    Vendor vendor,
-    CancellationToken ct = default)
-  {
-    var res = await context.ComponentMappings
-      .AsNoTracking()
-      .Where(x => x.external_id == externalId && x.entity == entity && x.vendor == vendor)
-      .OrderByDescending(x => x.id)
-      .Select(x => x.mac)
-      .FirstOrDefaultAsync();
-
-    return res ?? string.Empty;
-  }
-
-  public async Task<int> GetExternalIdByGuidAndEntityAsync(Guid guid, EntityType entity, CancellationToken ct = default)
-  {
-    var res = await context.ComponentMappings
-      .AsNoTracking()
-      .Where(x => x.entity == entity && x.guid == guid)
-      .OrderByDescending(x => x.id)
-      .Select(x => x.external_id)
-      .FirstOrDefaultAsync();
-
-    if (res == null)
-      throw new NotFoundException(EntityType.COMPONENT_MAPPING.ToString(), guid.ToString());
-
-    return (int)res;
-
-  }
-
-      public async Task DeleteAsync(Guid guid, CancellationToken ct = default)
-      {
-            var entity = await context.ComponentMappings
-              .Where(x => x.guid == guid)
-              .OrderByDescending(x => x.id)
-              .ToArrayAsync(ct);
-
-            if(entity.Count() == 0)
-              throw new NotFoundException(EntityType.COMPONENT_MAPPING.ToString(),guid.ToString());
-
-            context.ComponentMappings.RemoveRange(entity);
-
-            await context.SaveChangesAsync(ct);
-      }
-
-      public async Task<Guid> GetGuidByExternalIdAndEntityAndVendorAsync(short externalId, EntityType entity, Vendor vendor, CancellationToken ct = default)
-      {
-          var res =  await context.ComponentMappings
-            .AsNoTracking()
-            .OrderByDescending(x => x.id)
-            .Where(x => x.external_id == externalId && x.entity == entity && x.vendor == vendor)
-            .Select(x => x.guid)
-            .FirstOrDefaultAsync();
-
-          if(res == Guid.Empty)
-            throw new NotFoundException(EntityType.COMPONENT_MAPPING.ToString());
-
-          return res;
-      }
-
-      public async Task UpdateExternalIdByMacAsync(string mac, short externalId, CancellationToken ct = default)
-      {
-          var entity = await context.ComponentMappings
-            .Where(x => x.mac != null && x.mac.Equals(mac) && x.entity == EntityType.DEVICE)
-            .OrderByDescending(x => x.id)
-            .FirstOrDefaultAsync();
-
-          if(entity == null)
-            throw new NotFoundException(EntityType.COMPONENT_MAPPING.ToString(),mac);
-
-          entity.external_id = externalId;
-
-          context.ComponentMappings.Update(entity);
-
-          await context.SaveChangesAsync(ct);
-      }
-
-      public async Task<DeviceComponentDto> GetComponentByGuidAsync(Guid guid, CancellationToken ct = default)
-      {
-            throw new NotImplementedException();
-      }
-
-      // 1. Changed return type to a single Dictionary<Guid, int>
-public async Task<Dictionary<Guid, int>> GetExternalIdMapGuidByGuidsAndEntityAsync(IEnumerable<Guid> guids, EntityType type, CancellationToken ct = default)
-{
-    // 2. Fetch the data from the database into memory first
-    var res = await context.ComponentMappings
-        .AsNoTracking()
-        .Where(x => guids.Contains(x.guid) && x.entity == type)
-        .Select(x => new { x.guid, x.external_id })
-        .ToArrayAsync(ct);
+//     return res.Value; // Extract the underlying int value
+//   }
 
 
-    return res.ToDictionary(
-        keySelector: x => x.guid, 
-        elementSelector: x => x.external_id ?? 0
-    );
 
-}
+//   public async Task<IEnumerable<int?>> GetExternalIdsByEntityAndVendorAsync(EntityType entity, Vendor vendor, CancellationToken ct = default)
+//   {
+//     return await context.ComponentMappings
+//       .AsNoTracking()
+//       .Where(x => x.entity == entity && x.vendor == vendor)
+//       .Select(x => x.external_id)
+//       .ToArrayAsync();
+//   }
 
-  public async Task<IEnumerable<int>> GetExternalIdsByGuidAndEntityAsync(Guid guid, EntityType entity, CancellationToken ct = default)
-  {
-    return await context.ComponentMappings
-      .AsNoTracking()
-      .Where(x => x.entity == entity && x.guid == guid && x.external_id != null)
-      .OrderByDescending(x => x.external_id)
-      .Select(x => x.external_id!.Value)
-      .ToArrayAsync(ct);
-  }
+//   public async Task<int> GetFreeIdByEntityAsync(EntityType entity, int max, IEnumerable<int>? exception = default, CancellationToken ct = default)
+//   {
+//     // 1. Fetch only non-null IDs directly from the database to save memory
+//     var existingIds = await context.ComponentMappings
+//         .AsNoTracking()
+//         .Where(x => x.entity == entity && x.external_id != null)
+//         .Select(x => x.external_id!.Value) // '!' removes the warning because database filter guarantees non-null
+//         .ToListAsync(ct); // Pass the CancellationToken here for production safety
 
-      public async Task<IEnumerable<int>> GetExternalIdsByGuidsAndEntityAsync(IEnumerable<Guid> guids, EntityType entity, CancellationToken ct = default)
-      {
-           return await context.ComponentMappings
-            .AsNoTracking()
-            .Where(x => guids.Contains(x.guid) && x.entity == entity && x.external_id != null)
-            .Select(x => x.external_id!.Value)
-            .ToArrayAsync();
-      }
+//     // 2. Convert to a HashSet for O(1) lightning-fast lookups
+//     var existIds = existingIds.ToHashSet();
 
-      public async Task<Guid> GuidByExternalIdAndMacAndEntityAndVendorQuery(short externalId, string mac, EntityType type, Vendor vendor, CancellationToken ct = default)
-      {
-          return await context.ComponentMappings
-            .AsNoTracking()
-            .Where(x => x.external_id == externalId && x.mac == mac && x.entity == type && x.vendor == vendor)
-            .Select(x => x.guid)
-            .FirstOrDefaultAsync();
-      }
-}
+//     // 3. FIX: Concat returns a new sequence, it does not modify the original set. 
+//     // We must use UnionWith to actually add the exceptions to the HashSet.
+//     if (exception != null)
+//     {
+//       existIds.UnionWith(exception);
+//     }
+
+//     for (var id = 1; id < max; id++)
+//     {
+//       if (!existIds.Contains(id))
+//         return id;
+//     }
+
+//     throw new ExceedException(entity.ToString());
+//   }
+
+//   public async Task<int> GetFreeIdByMacAndEntityAndVendorAsync(string mac, EntityType entity, Vendor vendor, int max, IEnumerable<int>? exception = default, CancellationToken ct = default)
+//   {
+//     // 1. Fetch only non-null IDs directly from the database to save memory
+//     var existingIds = await context.ComponentMappings
+//         .AsNoTracking()
+//         .Where(x => x.entity == entity && x.vendor == vendor && x.mac == mac && x.external_id != null)
+//         .Select(x => x.external_id!.Value) // '!' removes the warning because database filter guarantees non-null
+//         .ToListAsync(ct); // Pass the CancellationToken here for production safety
+
+//     // 2. Convert to a HashSet for O(1) lightning-fast lookups
+//     var existIds = existingIds.ToHashSet();
+
+//     // 3. FIX: Concat returns a new sequence, it does not modify the original set. 
+//     // We must use UnionWith to actually add the exceptions to the HashSet.
+//     if (exception != null)
+//     {
+//       existIds.UnionWith(exception);
+//     }
+
+//     for (var id = 1; id < max; id++)
+//     {
+//       if (!existIds.Contains(id))
+//         return id;
+//     }
+
+//     throw new ExceedException(entity.ToString());
+//   }
+
+//   public async Task<int> GetFreeIdByEntityAndVendorAsync(EntityType entity, Vendor vendor, int max, IEnumerable<int>? exception = default, CancellationToken ct = default)
+//   {
+//     // 1. Fetch only non-null IDs directly from the database to save memory
+//     var existingIds = await context.ComponentMappings
+//         .AsNoTracking()
+//         .Where(x => x.entity == entity && x.vendor == vendor && x.external_id != null)
+//         .Select(x => x.external_id!.Value) // '!' removes the warning because database filter guarantees non-null
+//         .ToListAsync(ct); // Pass the CancellationToken here for production safety
+
+//     // 2. Convert to a HashSet for O(1) lightning-fast lookups
+//     var existIds = existingIds.ToHashSet();
+
+//     // 3. FIX: Concat returns a new sequence, it does not modify the original set. 
+//     // We must use UnionWith to actually add the exceptions to the HashSet.
+//     if (exception != null)
+//     {
+//       existIds.UnionWith(exception);
+//     }
+
+//     for (var id = 1; id < max; id++)
+//     {
+//       if (!existIds.Contains(id))
+//         return id;
+//     }
+
+//     throw new ExceedException(entity.ToString());
+//   }
+
+//   public async Task<string> GetMacByExternalIdAndEntityAndVendorAsync(
+//     int externalId,
+//     EntityType entity,
+//     Vendor vendor,
+//     CancellationToken ct = default)
+//   {
+//     var res = await context.ComponentMappings
+//       .AsNoTracking()
+//       .Where(x => x.external_id == externalId && x.entity == entity && x.vendor == vendor)
+//       .OrderByDescending(x => x.id)
+//       .Select(x => x.mac)
+//       .FirstOrDefaultAsync();
+
+//     return res ?? string.Empty;
+//   }
+
+//   public async Task<int> GetExternalIdByGuidAndEntityAsync(Guid guid, EntityType entity, CancellationToken ct = default)
+//   {
+//     var res = await context.ComponentMappings
+//       .AsNoTracking()
+//       .Where(x => x.entity == entity && x.guid == guid)
+//       .OrderByDescending(x => x.id)
+//       .Select(x => x.external_id)
+//       .FirstOrDefaultAsync();
+
+//     if (res == null)
+//       throw new NotFoundException(EntityType.COMPONENT_MAPPING.ToString(), guid.ToString());
+
+//     return (int)res;
+
+//   }
+
+//       public async Task DeleteAsync(Guid guid, CancellationToken ct = default)
+//       {
+//             var entity = await context.ComponentMappings
+//               .Where(x => x.guid == guid)
+//               .OrderByDescending(x => x.id)
+//               .ToArrayAsync(ct);
+
+//             if(entity.Count() == 0)
+//               throw new NotFoundException(EntityType.COMPONENT_MAPPING.ToString(),guid.ToString());
+
+//             context.ComponentMappings.RemoveRange(entity);
+
+//             await context.SaveChangesAsync(ct);
+//       }
+
+//       public async Task<Guid> GetGuidByExternalIdAndEntityAndVendorAsync(short externalId, EntityType entity, Vendor vendor, CancellationToken ct = default)
+//       {
+//           var res =  await context.ComponentMappings
+//             .AsNoTracking()
+//             .OrderByDescending(x => x.id)
+//             .Where(x => x.external_id == externalId && x.entity == entity && x.vendor == vendor)
+//             .Select(x => x.guid)
+//             .FirstOrDefaultAsync();
+
+//           if(res == Guid.Empty)
+//             throw new NotFoundException(EntityType.COMPONENT_MAPPING.ToString());
+
+//           return res;
+//       }
+
+//       public async Task UpdateExternalIdByMacAsync(string mac, short externalId, CancellationToken ct = default)
+//       {
+//           var entity = await context.ComponentMappings
+//             .Where(x => x.mac != null && x.mac.Equals(mac) && x.entity == EntityType.DEVICE)
+//             .OrderByDescending(x => x.id)
+//             .FirstOrDefaultAsync();
+
+//           if(entity == null)
+//             throw new NotFoundException(EntityType.COMPONENT_MAPPING.ToString(),mac);
+
+//           entity.external_id = externalId;
+
+//           context.ComponentMappings.Update(entity);
+
+//           await context.SaveChangesAsync(ct);
+//       }
+
+//       public async Task<DeviceComponentDto> GetComponentByGuidAsync(Guid guid, CancellationToken ct = default)
+//       {
+//             throw new NotImplementedException();
+//       }
+
+//       // 1. Changed return type to a single Dictionary<Guid, int>
+// public async Task<Dictionary<Guid, int>> GetExternalIdMapGuidByGuidsAndEntityAsync(IEnumerable<Guid> guids, EntityType type, CancellationToken ct = default)
+// {
+//     // 2. Fetch the data from the database into memory first
+//     var res = await context.ComponentMappings
+//         .AsNoTracking()
+//         .Where(x => guids.Contains(x.guid) && x.entity == type)
+//         .Select(x => new { x.guid, x.external_id })
+//         .ToArrayAsync(ct);
+
+
+//     return res.ToDictionary(
+//         keySelector: x => x.guid, 
+//         elementSelector: x => x.external_id ?? 0
+//     );
+
+// }
+
+//   public async Task<IEnumerable<int>> GetExternalIdsByGuidAndEntityAsync(Guid guid, EntityType entity, CancellationToken ct = default)
+//   {
+//     return await context.ComponentMappings
+//       .AsNoTracking()
+//       .Where(x => x.entity == entity && x.guid == guid && x.external_id != null)
+//       .OrderByDescending(x => x.external_id)
+//       .Select(x => x.external_id!.Value)
+//       .ToArrayAsync(ct);
+//   }
+
+//       public async Task<IEnumerable<int>> GetExternalIdsByGuidsAndEntityAsync(IEnumerable<Guid> guids, EntityType entity, CancellationToken ct = default)
+//       {
+//            return await context.ComponentMappings
+//             .AsNoTracking()
+//             .Where(x => guids.Contains(x.guid) && x.entity == entity && x.external_id != null)
+//             .Select(x => x.external_id!.Value)
+//             .ToArrayAsync();
+//       }
+
+//       public async Task<Guid> GuidByExternalIdAndMacAndEntityAndVendorQuery(short externalId, string mac, EntityType type, Vendor vendor, CancellationToken ct = default)
+//       {
+//           return await context.ComponentMappings
+//             .AsNoTracking()
+//             .Where(x => x.external_id == externalId && x.mac == mac && x.entity == type && x.vendor == vendor)
+//             .Select(x => x.guid)
+//             .FirstOrDefaultAsync();
+//       }
+// }

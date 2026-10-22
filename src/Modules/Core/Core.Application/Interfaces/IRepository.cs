@@ -1,5 +1,7 @@
 
 
+using Core.Contract.DTOs;
+using Core.Contract.DTOs.DeviceModule;
 using Core.Domain.Entities;
 using SharedKernel.Domain;
 using SharedKernel.Enums;
@@ -27,5 +29,8 @@ public interface IRepository<TDto, TDomain> where TDto : class where TDomain : c
   Task<bool> IsAnyRelatedEntitiesAsync(Guid guid, CancellationToken ct = default);
   Task<string> GetNameByGuidAsync(Guid guid,CancellationToken ct = default);
   Task<bool> IsAnyByNameAndLocationGuidAsync(string name,Guid guid,CancellationToken ct = default);
+  Task<bool> IsAnyByNameAsync(string name,CancellationToken ct = default);
+  Task<short> GetFreeExeternalIdAsync(int max,IEnumerable<short>? exception = default,CancellationToken ct = default);
+  Task<CommandDetailDto> GetCommandDetailAsync(Guid guid,CancellationToken ct = default);
 
 }

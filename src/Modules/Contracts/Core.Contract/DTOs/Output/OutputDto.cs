@@ -8,12 +8,6 @@ public sealed record OutputDto(
   int SlotNo,
   string Metadata,
   Vendor Vendor,
-  Guid DeviceGuid,
-  string DeviceName,
-  Guid DeviceModuleGuid,
-  string DeviceModuleName,
-  Guid LocationGuid,
-  string LocationName,
   bool IsActive,
   bool IsDefault
 );

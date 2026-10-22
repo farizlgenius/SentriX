@@ -29,7 +29,6 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
       public DbSet<Role> Roles { get; set; }
       public DbSet<Module> Modules { get; set; }
       public DbSet<UserLocation> UserLocations { get; set; }
-      public DbSet<ComponentMapping> ComponentMappings { get; set; }
       public DbSet<Group> Groups { get; set; }
       public DbSet<UserGroup> UserGroups { get; set; }
       public DbSet<Operator> Operators { get; set; }
@@ -62,12 +61,12 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
       public DbSet<TriggerSource> TriggerSources { get; set; }
       public DbSet<TriggerType> TriggerTypes { get; set; }
       public DbSet<TriggerCode> TriggerCodes { get; set; }
-      public DbSet<Alert> Alerts {get; set;}
-      public DbSet<AlertEvent> AlertEvents {get; set;} 
-      public DbSet<Persistences.Entities.AlertLevel> AlertLevels {get; set;}
-      public DbSet<Persistences.Entities.CoreEvent> CoreEvents {get; set;}
-      public DbSet<CoreEntity> CoreEntities {get ; set; }
-      public DbSet<AlertComponent> AlertComponents {get; set ;}
+      public DbSet<Alert> Alerts { get; set; }
+      public DbSet<AlertEvent> AlertEvents { get; set; }
+      public DbSet<Persistences.Entities.AlertLevel> AlertLevels { get; set; }
+      public DbSet<Persistences.Entities.CoreEvent> CoreEvents { get; set; }
+      public DbSet<CoreEntity> CoreEntities { get; set; }
+      public DbSet<AlertComponent> AlertComponents { get; set; }
 
       protected override void OnModelCreating(ModelBuilder modelBuilder)
       {
@@ -192,9 +191,6 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
             .Property(o => o.action)
             .HasConversion<string>();
 
-            modelBuilder.Entity<ComponentMapping>()
-            .Property(o => o.entity)
-            .HasConversion<string>();
 
             modelBuilder.Entity<AuditTrail>()
             .Property(o => o.entity)
@@ -301,13 +297,6 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   x => x.guid
             ).IsUnique();
 
-            modelBuilder.Entity<ComponentMapping>()
-            .HasIndex(x => new
-            {
-                  x.guid,
-                  x.external_id,
-                  x.device_id
-            });
 
             modelBuilder.Entity<Country>()
             .HasIndex(
@@ -680,7 +669,7 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                         }
                   ).IsUnique();
 
-            
+
 
             // Configure relationships 
 
@@ -1167,7 +1156,7 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   .HasForeignKey(x => x.trigger_type_id)
                   .OnDelete(DeleteBehavior.Cascade);
 
-            
+
 
             // Alert
 
@@ -1751,6 +1740,7 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                               name = "Always",
                               location_id = 1,
                               is_default = true,
+                              external_id = 1
                         },
                         new Core.Infrastructure.Persistences.Entities.TimeZone
                         {
@@ -1758,35 +1748,11 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                               guid = new Guid("614a766c-1241-4fdc-9d0d-7788291cac2d"),
                               name = "Never",
                               location_id = 1,
-                              is_default = true
+                              is_default = true,
+                              external_id = 2
                         }
                   );
 
-
-
-            // Map Timezone
-
-            modelBuilder.Entity<Core.Infrastructure.Persistences.Entities.ComponentMapping>()
-                  .HasData(
-                        new Core.Infrastructure.Persistences.Entities.ComponentMapping
-                        {
-                              id = 1,
-                              guid = new Guid("cff24195-43f8-42ec-a03f-e84857cc958f"),
-                              entity = EntityType.TIMEZONE,
-                              external_id = 1,
-                              is_default = true,
-                              location_id = 1
-                        },
-                        new Core.Infrastructure.Persistences.Entities.ComponentMapping
-                        {
-                              id = 2,
-                              guid = new Guid("614a766c-1241-4fdc-9d0d-7788291cac2d"),
-                              entity = EntityType.TIMEZONE,
-                              external_id = 2,
-                              is_default = true,
-                              location_id = 1
-                        }
-                  );
 
 
             // Card Format
@@ -1810,7 +1776,8 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                         card_no_loc = 0,
                         issue_code_len = 0,
                         issue_code_loc = -1,
-                        location_id = 1
+                        location_id = 1,
+                        external_id = 0
 
                   },
                   new CardFormat
@@ -1830,7 +1797,8 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                         card_no_loc = 0,
                         issue_code_len = 0,
                         issue_code_loc = -1,
-                        location_id = 1
+                        location_id = 1,
+                        external_id = 1
 
                   },
                   new CardFormat
@@ -1850,34 +1818,9 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                         card_no_loc = 0,
                         issue_code_len = 0,
                         issue_code_loc = -1,
-                        location_id = 1
+                        location_id = 1,
+                        external_id = 2
 
-                  }
-            );
-
-            modelBuilder.Entity<ComponentMapping>()
-            .HasData(
-                  new ComponentMapping
-                  {
-                        id = 3,
-                        guid = new Guid("356b51d4-5650-4ef9-821b-bf38eb4ec2db"),
-                        entity = EntityType.CARD_FORMAT,
-                        external_id = 0,
-                        
-                  },
-                  new ComponentMapping
-                  {
-                        id = 4,
-                        guid = new Guid("f04c1839-991d-4f13-be52-4a057d30af68"),
-                        entity = EntityType.CARD_FORMAT,
-                        external_id = 1,
-                  },
-                  new ComponentMapping
-                  {
-                        id = 5,
-                        guid = new Guid("2ec6aa6c-dd76-4b3a-98b3-e8b5ecff0d1e"),
-                        entity = EntityType.CARD_FORMAT,
-                        external_id = 2,
                   }
             );
 
@@ -1890,18 +1833,8 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                               id = 1,
                               name = "All Door",
                               guid = new Guid("895b0301-3d77-4ec7-8917-43260a839643"),
-                              is_default = true
-                        }
-                  );
-
-            modelBuilder.Entity<ComponentMapping>()
-                  .HasData(
-                        new ComponentMapping
-                        {
-                              id = 6,
-                              guid = new Guid("895b0301-3d77-4ec7-8917-43260a839643"),
-                              entity = EntityType.GROUP,
-                              external_id = 1,
+                              is_default = true,
+                              external_id = 1
                         }
                   );
 
@@ -2185,96 +2118,96 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                         new TriggerCode { id = 175, name = "Alarm / Active", value = 4, trigger_type_id = 29 }
                   );
 
-            
+
 
             modelBuilder.Entity<AlertLevel>()
                   .HasData(
-                        new AlertLevel{id = 1,name="Emergency",color_code="#ff1100",is_default=true},
-                        new AlertLevel{id = 2,name="Danger",color_code="#c2432d",is_default=true},
-                        new AlertLevel{id = 3,name="High",color_code="#ff911c",is_default=true},
-                        new AlertLevel{id = 4,name="Moderate",color_code="#ffbd2d",is_default=true},
-                        new AlertLevel{id = 5,name="Low",color_code="#989a9c",is_default=true}
+                        new AlertLevel { id = 1, name = "Emergency", color_code = "#ff1100", is_default = true },
+                        new AlertLevel { id = 2, name = "Danger", color_code = "#c2432d", is_default = true },
+                        new AlertLevel { id = 3, name = "High", color_code = "#ff911c", is_default = true },
+                        new AlertLevel { id = 4, name = "Moderate", color_code = "#ffbd2d", is_default = true },
+                        new AlertLevel { id = 5, name = "Low", color_code = "#989a9c", is_default = true }
                   );
 
 
             modelBuilder.Entity<CoreEntity>()
                   .HasData(
-                        new CoreEntity {id = 1, entity = SharedKernel.Enums.EntityType.AUTH },
-                        new CoreEntity {id = 2, entity = SharedKernel.Enums.EntityType.DEVICE },
-                        new CoreEntity {id = 3, entity = SharedKernel.Enums.EntityType.TEMP_DEVICE },
-                        new CoreEntity {id = 4, entity = SharedKernel.Enums.EntityType.DEVICE_MODULE },
-                        new CoreEntity {id = 5, entity = SharedKernel.Enums.EntityType.LOCATION },
-                        new CoreEntity {id = 6, entity = SharedKernel.Enums.EntityType.COMPANY },
-                        new CoreEntity {id = 7, entity = SharedKernel.Enums.EntityType.DEPARTMENT },
-                        new CoreEntity {id = 8, entity = SharedKernel.Enums.EntityType.POSITION },
-                        new CoreEntity {id = 9, entity = SharedKernel.Enums.EntityType.USER },
-                        new CoreEntity {id = 10, entity = SharedKernel.Enums.EntityType.ROLE },
-                        new CoreEntity {id = 11, entity = SharedKernel.Enums.EntityType.OPERATOR },
-                        new CoreEntity {id = 12, entity = SharedKernel.Enums.EntityType.PASSWORD_RULE },
-                        new CoreEntity {id = 13, entity = SharedKernel.Enums.EntityType.WEAK_PASSWORD },
-                        new CoreEntity {id = 14, entity = SharedKernel.Enums.EntityType.TIMEZONE },
-                        new CoreEntity {id = 15, entity = SharedKernel.Enums.EntityType.HOLIDAY },
-                        new CoreEntity {id = 16, entity = SharedKernel.Enums.EntityType.INTERVAL },
-                        new CoreEntity {id = 17, entity = SharedKernel.Enums.EntityType.DOOR },
-                        new CoreEntity {id = 18, entity = SharedKernel.Enums.EntityType.TURNSTILE },
-                        new CoreEntity {id = 19, entity = SharedKernel.Enums.EntityType.GROUP },
-                        new CoreEntity {id = 20, entity = SharedKernel.Enums.EntityType.COMPONENT_MAPPING },
-                        new CoreEntity {id = 21, entity = SharedKernel.Enums.EntityType.EVENT },
-                        new CoreEntity {id = 22, entity = SharedKernel.Enums.EntityType.ADAPTER_EVENT },
-                        new CoreEntity {id = 23, entity = SharedKernel.Enums.EntityType.INPUT },
-                        new CoreEntity {id = 24, entity = SharedKernel.Enums.EntityType.OUTPUT },
-                        new CoreEntity {id = 25, entity = SharedKernel.Enums.EntityType.PROCEDURE },
-                        new CoreEntity {id = 26, entity = SharedKernel.Enums.EntityType.TRIGGER },
-                        new CoreEntity {id = 27, entity = SharedKernel.Enums.EntityType.MONITOR_GROUP },
-                        new CoreEntity {id = 28, entity = SharedKernel.Enums.EntityType.AREA },
-                        new CoreEntity {id = 29, entity = SharedKernel.Enums.EntityType.WEB },
-                        new CoreEntity {id = 30, entity = SharedKernel.Enums.EntityType.CARD_FORMAT },
-                        new CoreEntity {id = 31, entity = SharedKernel.Enums.EntityType.ACTION },
-                        new CoreEntity {id = 32, entity = SharedKernel.Enums.EntityType.ALERT },
-                        new CoreEntity {id = 33, entity = SharedKernel.Enums.EntityType.ALERT_LEVEL },
-                        new CoreEntity {id = 34, entity = SharedKernel.Enums.EntityType.CORE_EVENT }
+                        new CoreEntity { id = 1, entity = SharedKernel.Enums.EntityType.AUTH },
+                        new CoreEntity { id = 2, entity = SharedKernel.Enums.EntityType.DEVICE },
+                        new CoreEntity { id = 3, entity = SharedKernel.Enums.EntityType.TEMP_DEVICE },
+                        new CoreEntity { id = 4, entity = SharedKernel.Enums.EntityType.DEVICE_MODULE },
+                        new CoreEntity { id = 5, entity = SharedKernel.Enums.EntityType.LOCATION },
+                        new CoreEntity { id = 6, entity = SharedKernel.Enums.EntityType.COMPANY },
+                        new CoreEntity { id = 7, entity = SharedKernel.Enums.EntityType.DEPARTMENT },
+                        new CoreEntity { id = 8, entity = SharedKernel.Enums.EntityType.POSITION },
+                        new CoreEntity { id = 9, entity = SharedKernel.Enums.EntityType.USER },
+                        new CoreEntity { id = 10, entity = SharedKernel.Enums.EntityType.ROLE },
+                        new CoreEntity { id = 11, entity = SharedKernel.Enums.EntityType.OPERATOR },
+                        new CoreEntity { id = 12, entity = SharedKernel.Enums.EntityType.PASSWORD_RULE },
+                        new CoreEntity { id = 13, entity = SharedKernel.Enums.EntityType.WEAK_PASSWORD },
+                        new CoreEntity { id = 14, entity = SharedKernel.Enums.EntityType.TIMEZONE },
+                        new CoreEntity { id = 15, entity = SharedKernel.Enums.EntityType.HOLIDAY },
+                        new CoreEntity { id = 16, entity = SharedKernel.Enums.EntityType.INTERVAL },
+                        new CoreEntity { id = 17, entity = SharedKernel.Enums.EntityType.DOOR },
+                        new CoreEntity { id = 18, entity = SharedKernel.Enums.EntityType.TURNSTILE },
+                        new CoreEntity { id = 19, entity = SharedKernel.Enums.EntityType.GROUP },
+                        //new CoreEntity { id = 20, entity = SharedKernel.Enums.EntityType.COMPONENT_MAPPING },
+                        new CoreEntity { id = 20, entity = SharedKernel.Enums.EntityType.EVENT },
+                        new CoreEntity { id = 21, entity = SharedKernel.Enums.EntityType.ADAPTER_EVENT },
+                        new CoreEntity { id = 22, entity = SharedKernel.Enums.EntityType.INPUT },
+                        new CoreEntity { id = 23, entity = SharedKernel.Enums.EntityType.OUTPUT },
+                        new CoreEntity { id = 24, entity = SharedKernel.Enums.EntityType.PROCEDURE },
+                        new CoreEntity { id = 25, entity = SharedKernel.Enums.EntityType.TRIGGER },
+                        new CoreEntity { id = 26, entity = SharedKernel.Enums.EntityType.MONITOR_GROUP },
+                        new CoreEntity { id = 27, entity = SharedKernel.Enums.EntityType.AREA },
+                        new CoreEntity { id = 28, entity = SharedKernel.Enums.EntityType.WEB },
+                        new CoreEntity { id = 29, entity = SharedKernel.Enums.EntityType.CARD_FORMAT },
+                        new CoreEntity { id = 30, entity = SharedKernel.Enums.EntityType.ACTION },
+                        new CoreEntity { id = 31, entity = SharedKernel.Enums.EntityType.ALERT },
+                        new CoreEntity { id = 32, entity = SharedKernel.Enums.EntityType.ALERT_LEVEL },
+                        new CoreEntity { id = 33, entity = SharedKernel.Enums.EntityType.CORE_EVENT }
                   );
-            
+
             modelBuilder.Entity<Persistences.Entities.CoreEvent>()
                   .HasData(
                         // Device
-                        new Persistences.Entities.CoreEvent { id = 1, @event = SharedKernel.Enums.CoreEvent.ONLINE , entity_id = 2 },
-                        new Persistences.Entities.CoreEvent { id = 2, @event = SharedKernel.Enums.CoreEvent.OFFLINE , entity_id = 2},
-                        new Persistences.Entities.CoreEvent { id = 3, @event = SharedKernel.Enums.CoreEvent.TRANSACTION_EXCEED , entity_id = 2},
+                        new Persistences.Entities.CoreEvent { id = 1, @event = SharedKernel.Enums.CoreEvent.ONLINE, entity_id = 2 },
+                        new Persistences.Entities.CoreEvent { id = 2, @event = SharedKernel.Enums.CoreEvent.OFFLINE, entity_id = 2 },
+                        new Persistences.Entities.CoreEvent { id = 3, @event = SharedKernel.Enums.CoreEvent.TRANSACTION_EXCEED, entity_id = 2 },
                         // Module
-                        new Persistences.Entities.CoreEvent { id = 4, @event = SharedKernel.Enums.CoreEvent.DISABLED , entity_id = 4},
-                        new Persistences.Entities.CoreEvent { id = 5, @event = SharedKernel.Enums.CoreEvent.ONLINE , entity_id = 4},
-                        new Persistences.Entities.CoreEvent { id = 6, @event = SharedKernel.Enums.CoreEvent.OFFLINE , entity_id = 4},
-                        new Persistences.Entities.CoreEvent { id = 7, @event = SharedKernel.Enums.CoreEvent.TIMEOUT , entity_id = 4},
+                        new Persistences.Entities.CoreEvent { id = 4, @event = SharedKernel.Enums.CoreEvent.DISABLED, entity_id = 4 },
+                        new Persistences.Entities.CoreEvent { id = 5, @event = SharedKernel.Enums.CoreEvent.ONLINE, entity_id = 4 },
+                        new Persistences.Entities.CoreEvent { id = 6, @event = SharedKernel.Enums.CoreEvent.OFFLINE, entity_id = 4 },
+                        new Persistences.Entities.CoreEvent { id = 7, @event = SharedKernel.Enums.CoreEvent.TIMEOUT, entity_id = 4 },
                         // Door
-                        new Persistences.Entities.CoreEvent { id = 8, @event = SharedKernel.Enums.CoreEvent.INVALID_CARD_FORMAT , entity_id = 17},
-                        new Persistences.Entities.CoreEvent { id = 9, @event = SharedKernel.Enums.CoreEvent.ACCESS_DENIED , entity_id = 17},
-                        new Persistences.Entities.CoreEvent { id = 10, @event = SharedKernel.Enums.CoreEvent.ACCESS_GRANT , entity_id = 17},
-                        new Persistences.Entities.CoreEvent { id = 11, @event = SharedKernel.Enums.CoreEvent.CARD_NOT_FOUND , entity_id = 17},
-                        new Persistences.Entities.CoreEvent { id = 12, @event = SharedKernel.Enums.CoreEvent.COUNT_EXCEED , entity_id = 17},
-                        new Persistences.Entities.CoreEvent { id = 13, @event = SharedKernel.Enums.CoreEvent.INTERLOCK , entity_id = 17},
-                        new Persistences.Entities.CoreEvent { id = 14, @event = SharedKernel.Enums.CoreEvent.ANTIPASSBACK_VIOLATION , entity_id = 17},
-                        new Persistences.Entities.CoreEvent { id = 15, @event = SharedKernel.Enums.CoreEvent.OCCUPANCY_REACHED_ZERO , entity_id = 17},
-                        new Persistences.Entities.CoreEvent { id = 16, @event = SharedKernel.Enums.CoreEvent.DOUBLE_CARD_EVENT , entity_id = 17},
-                        new Persistences.Entities.CoreEvent { id = 17, @event = SharedKernel.Enums.CoreEvent.TAMPER , entity_id = 17},
-                        new Persistences.Entities.CoreEvent { id = 18, @event = SharedKernel.Enums.CoreEvent.HELD_OPEN , entity_id = 17},
-                        new Persistences.Entities.CoreEvent { id = 19, @event = SharedKernel.Enums.CoreEvent.FORCE_OPEN , entity_id = 17},
+                        new Persistences.Entities.CoreEvent { id = 8, @event = SharedKernel.Enums.CoreEvent.INVALID_CARD_FORMAT, entity_id = 17 },
+                        new Persistences.Entities.CoreEvent { id = 9, @event = SharedKernel.Enums.CoreEvent.ACCESS_DENIED, entity_id = 17 },
+                        new Persistences.Entities.CoreEvent { id = 10, @event = SharedKernel.Enums.CoreEvent.ACCESS_GRANT, entity_id = 17 },
+                        new Persistences.Entities.CoreEvent { id = 11, @event = SharedKernel.Enums.CoreEvent.CARD_NOT_FOUND, entity_id = 17 },
+                        new Persistences.Entities.CoreEvent { id = 12, @event = SharedKernel.Enums.CoreEvent.COUNT_EXCEED, entity_id = 17 },
+                        new Persistences.Entities.CoreEvent { id = 13, @event = SharedKernel.Enums.CoreEvent.INTERLOCK, entity_id = 17 },
+                        new Persistences.Entities.CoreEvent { id = 14, @event = SharedKernel.Enums.CoreEvent.ANTIPASSBACK_VIOLATION, entity_id = 17 },
+                        new Persistences.Entities.CoreEvent { id = 15, @event = SharedKernel.Enums.CoreEvent.OCCUPANCY_REACHED_ZERO, entity_id = 17 },
+                        new Persistences.Entities.CoreEvent { id = 16, @event = SharedKernel.Enums.CoreEvent.DOUBLE_CARD_EVENT, entity_id = 17 },
+                        new Persistences.Entities.CoreEvent { id = 17, @event = SharedKernel.Enums.CoreEvent.TAMPER, entity_id = 17 },
+                        new Persistences.Entities.CoreEvent { id = 18, @event = SharedKernel.Enums.CoreEvent.HELD_OPEN, entity_id = 17 },
+                        new Persistences.Entities.CoreEvent { id = 19, @event = SharedKernel.Enums.CoreEvent.FORCE_OPEN, entity_id = 17 },
                         // Input
-                        new Persistences.Entities.CoreEvent { id = 20, @event = SharedKernel.Enums.CoreEvent.DISCONNECTED , entity_id = 23},
-                        new Persistences.Entities.CoreEvent { id = 21, @event = SharedKernel.Enums.CoreEvent.UNKNOWN , entity_id = 23},
-                        new Persistences.Entities.CoreEvent { id = 22, @event = SharedKernel.Enums.CoreEvent.OPEN , entity_id = 23},
-                        new Persistences.Entities.CoreEvent { id = 23, @event = SharedKernel.Enums.CoreEvent.CLOSE , entity_id = 23},
-                        new Persistences.Entities.CoreEvent { id = 24, @event = SharedKernel.Enums.CoreEvent.FAULT , entity_id = 23},
+                        new Persistences.Entities.CoreEvent { id = 20, @event = SharedKernel.Enums.CoreEvent.DISCONNECTED, entity_id = 23 },
+                        new Persistences.Entities.CoreEvent { id = 21, @event = SharedKernel.Enums.CoreEvent.UNKNOWN, entity_id = 23 },
+                        new Persistences.Entities.CoreEvent { id = 22, @event = SharedKernel.Enums.CoreEvent.OPEN, entity_id = 23 },
+                        new Persistences.Entities.CoreEvent { id = 23, @event = SharedKernel.Enums.CoreEvent.CLOSE, entity_id = 23 },
+                        new Persistences.Entities.CoreEvent { id = 24, @event = SharedKernel.Enums.CoreEvent.FAULT, entity_id = 23 },
                         // Output
-                        new Persistences.Entities.CoreEvent { id = 25, @event = SharedKernel.Enums.CoreEvent.DISCONNECTED , entity_id = 24},
-                        new Persistences.Entities.CoreEvent { id = 26, @event = SharedKernel.Enums.CoreEvent.UNKNOWN , entity_id = 24},
-                        new Persistences.Entities.CoreEvent { id = 27, @event = SharedKernel.Enums.CoreEvent.ACTIVE , entity_id = 24},
-                        new Persistences.Entities.CoreEvent { id = 28, @event = SharedKernel.Enums.CoreEvent.DEACTIVE , entity_id = 24},
-                        new Persistences.Entities.CoreEvent { id = 29, @event = SharedKernel.Enums.CoreEvent.FAULT , entity_id = 24},
+                        new Persistences.Entities.CoreEvent { id = 25, @event = SharedKernel.Enums.CoreEvent.DISCONNECTED, entity_id = 24 },
+                        new Persistences.Entities.CoreEvent { id = 26, @event = SharedKernel.Enums.CoreEvent.UNKNOWN, entity_id = 24 },
+                        new Persistences.Entities.CoreEvent { id = 27, @event = SharedKernel.Enums.CoreEvent.ACTIVE, entity_id = 24 },
+                        new Persistences.Entities.CoreEvent { id = 28, @event = SharedKernel.Enums.CoreEvent.DEACTIVE, entity_id = 24 },
+                        new Persistences.Entities.CoreEvent { id = 29, @event = SharedKernel.Enums.CoreEvent.FAULT, entity_id = 24 },
                         // AREA
-                        new Persistences.Entities.CoreEvent { id = 30, @event = SharedKernel.Enums.CoreEvent.OCCUPANCY_LIMIT_REACHED , entity_id = 28}
+                        new Persistences.Entities.CoreEvent { id = 30, @event = SharedKernel.Enums.CoreEvent.OCCUPANCY_LIMIT_REACHED, entity_id = 28 }
 
                   );
-      
+
       }
 }

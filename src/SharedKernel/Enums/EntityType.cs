@@ -21,7 +21,6 @@ public enum EntityType
       DOOR,
       TURNSTILE,
       GROUP,
-      COMPONENT_MAPPING,
       EVENT,
       ADAPTER_EVENT,
       INPUT,

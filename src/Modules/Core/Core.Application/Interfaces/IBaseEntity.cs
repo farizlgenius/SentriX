@@ -7,5 +7,6 @@ public interface IBaseEntity
       DateTime created_at {set;}
       DateTime updated_at {set;}
       bool is_active {set;}
-      bool is_default {get;}     
+      bool is_default {get;} 
+      short? external_id {get;}
 }

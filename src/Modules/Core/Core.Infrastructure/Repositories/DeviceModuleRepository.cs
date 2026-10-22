@@ -91,13 +91,31 @@ public sealed class DeviceModuleRepository(CoreDbContext context) : BaseReposito
                   )).ToArrayAsync();
       }
 
+      public async Task<CommandDetailDto> GetCommandDetailAsync(Guid guid, CancellationToken ct = default)
+      {
+            return await Context.DeviceModules
+                  .AsNoTracking()
+                  .Where(x => x.guid == guid)
+                  .Select(x => new CommandDetailDto(
+                        x.device_id,
+                        x.device.external_id!.Value,
+                        x.device.mac,
+                        x.device.ip,
+                        x.id,
+                        x.external_id!.Value,
+                        x.location_id,
+                        null,
+                        null
+                  )).FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.DEVICE_MODULE.ToString(), guid.ToString());
+      }
+
       public async Task<int> GetDeviceModuleIdByGuidAsync(Guid guid, CancellationToken ct = default)
       {
             var res = await Context.DeviceModules
              .AsNoTracking()
              .Where(x => x.guid == guid)
              .Select(x => x.id)
-             .FirstOrDefaultAsync();
+             .FirstOrDefaultAsync(ct);
 
             if (res == 0)
                   throw new NotFoundException(EntityType.DEVICE_MODULE.ToString(), guid.ToString());

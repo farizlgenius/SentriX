@@ -1,4 +1,5 @@
 using System.Linq.Expressions;
+using Core.Contract.DTOs;
 using Core.Domain.Entities;
 using SharedKernel.Domain;
 
@@ -28,4 +29,7 @@ public interface IBaseRepository<TEntity,TDomain,TDto> where TEntity : IBaseEnti
             Expression<Func<TEntity, string>>[]? searchFields = null,
             CancellationToken ct = default
       );
+      Task<short> GetFreeExeternalIdAsync(int max,IEnumerable<short>? exception = default,CancellationToken ct = default);
+      Task<CommandDetailDto> GetCommandDetailAsync(Guid guid,CancellationToken ct = default);
+      Task<bool> IsAnyByNameAsync(string name,CancellationToken ct = default);
 }

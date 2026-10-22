@@ -4,71 +4,69 @@ using Core.Contract.DTOs.Output;
 using Core.Contract.Interfaces;
 using Core.Domain.Entities;
 using SharedKernel.Domain;
+using SharedKernel.Enums;
+using SharedKernel.Exceptions;
 
 namespace Core.Application.Services;
 
 public sealed class OutputService(
       IOutputRepository repo,
-      IDeviceRepository device,
       IDeviceModuleRepository module,
-      IAdapterFactory adapter,
-      IComponentMappingRepository com,
-      ILocationRepository loc) : BaseService<OutputDto,Domain.Entities.Output>(repo),IOutput
+      IAdapterFactory adapter) : BaseService<OutputDto, Domain.Entities.Output>(
+            repo
+            ), IOutput
 {
       public async Task<Guid> CreateAsync(CreateOutputDto dto, CancellationToken ct = default)
       {
-            var dev = await device.GetAsync(dto.DeviceGuid,ct);
-            var deviceModuleId = await module.GetIdByGuidAsync(dto.DeviceModuleGuid,ct);
-            var locationId = await loc.GetIdByGuidAsync(dto.LocationGuid,ct);
+
+            var dev = await module.GetCommandDetailAsync(dto.DeviceModuleGuid, ct);
+
+            if (await repo.IsAnyByNameAsync(dto.Name, ct))
+                  throw new DuplicateException(EntityType.OUTPUT.ToString(), nameof(dto.Name));
 
             var d = new Output(
                   dto.Name,
                   dto.SlotNo,
                   dto.Metadata,
                   dto.Vendor,
-                  deviceModuleId,
-                  locationId
+                  dev.ModuleId,
+                  dev.LocationId ?? 1
             );
 
-            var deviceExternalId = await com.GetExternalIdByGuidAndEntityAsync(dto.DeviceGuid,SharedKernel.Enums.EntityType.DEVICE,ct);
-            var moduleExternalId = await com.GetExternalIdByGuidAndEntityAsync(dto.DeviceModuleGuid,SharedKernel.Enums.EntityType.DEVICE_MODULE,ct);
-            var controlExternalId = await com.GetFreeIdByMacAndEntityAndVendorAsync(dev.Mac,SharedKernel.Enums.EntityType.OUTPUT,SharedKernel.Enums.Vendor.aero,100,[],ct);
+            var controlExternalId = await repo.GetFreeExeternalIdAsync(100, [], ct);
 
             // Send command to create output 
             await adapter.GetAdapter(dto.Vendor).Output.CreateControlPointAsync(
-                  dev.Mac,
-                  dev.Ip,
-                  (short)deviceExternalId,
-                  (short)moduleExternalId,
+                  dev.DeviceMac,
+                  dev.DeviceIp,
+                  dev.DeviceExternalId,
+                  dev.ModuleExternalId,
                   (short)dto.SlotNo,
                   (short)controlExternalId,
                   dto.Metadata,
                   ct
                   );
 
-            await repo.AddAsync(d,ct);
+            await repo.AddAsync(d, ct);
 
             return d.Guid;
       }
 
       public async Task<bool> DeleteByGuidAsync(Guid guid, CancellationToken ct = default)
       {
-            var output = await repo.GetAsync(guid,ct);
-            var dev = await device.GetAsync(output.DeviceGuid,ct);
+            var dev = await repo.GetCommandDetailAsync(guid, ct);
+            var output = await repo.GetAsync(guid, ct);
 
-            var deviceExternalId = await com.GetExternalIdByGuidAndEntityAsync(output.DeviceGuid,SharedKernel.Enums.EntityType.DEVICE,ct);
-            var controlExternalId = await com.GetExternalIdByGuidAndEntityAsync(guid,SharedKernel.Enums.EntityType.DEVICE_MODULE,ct);
-
-            await adapter.GetAdapter(output.Vendor).Output.DeleteControlPointAsync(
-                  dev.Mac,
-                  dev.Ip,
-                  (short)deviceExternalId,
+            await adapter.GetAdapter(dev.Vendor).Output.DeleteControlPointAsync(
+                  dev.DeviceMac,
+                  dev.DeviceIp,
+                  dev.DeviceExternalId,
                   (short)output.SlotNo,
-                  (short)controlExternalId,
+                  dev.ComponentExternalId ?? -1,
                   ct
             );
 
-            await repo.DeleteAsync(guid,ct);
+            await repo.DeleteAsync(guid, ct);
 
             return true;
       }
@@ -77,94 +75,104 @@ public sealed class OutputService(
       {
             foreach (var guid in guids)
             {
-                  var output = await repo.GetAsync(guid,ct);
-                  var dev = await device.GetAsync(output.DeviceGuid,ct);
+                  var dev = await repo.GetCommandDetailAsync(guid, ct);
+                  var output = await repo.GetAsync(guid, ct);
 
-                  var deviceExternalId = await com.GetExternalIdByGuidAndEntityAsync(output.DeviceGuid, SharedKernel.Enums.EntityType.DEVICE, ct);
-                  var controlExternalId = await com.GetExternalIdByGuidAndEntityAsync(guid, SharedKernel.Enums.EntityType.DEVICE_MODULE, ct);
-
-                  await adapter.GetAdapter(output.Vendor).Output.DeleteControlPointAsync(
-                        dev.Mac,
-                        dev.Ip,
-                        (short)deviceExternalId,
+                  await adapter.GetAdapter(dev.Vendor).Output.DeleteControlPointAsync(
+                        dev.DeviceMac,
+                        dev.DeviceIp,
+                        dev.DeviceExternalId,
                         (short)output.SlotNo,
-                        (short)controlExternalId,
+                        dev.ComponentExternalId ?? -1,
                         ct
                   );
             }
 
-            await repo.DeleteRangeAsync(guids,ct);
+            await repo.DeleteRangeAsync(guids, ct);
 
             return guids;
       }
 
       public async Task<bool> DisabledAsync(Guid guid, CancellationToken ct = default)
       {
-            var output = await repo.GetAsync(guid,ct);
-            var dev = await device.GetAsync(output.DeviceGuid,ct);
+            if (await repo.IsDisabledAsync(guid, ct))
+                  return true;
 
-            var deviceExternalId = await com.GetExternalIdByGuidAndEntityAsync(output.DeviceGuid,SharedKernel.Enums.EntityType.DEVICE,ct);
-            var controlExternalId = await com.GetExternalIdByGuidAndEntityAsync(guid,SharedKernel.Enums.EntityType.DEVICE_MODULE,ct);
+            var dev = await repo.GetCommandDetailAsync(guid, ct);
+            var output = await repo.GetAsync(guid, ct);
 
-            await adapter.GetAdapter(output.Vendor).Output.DeleteControlPointAsync(
-                  dev.Mac,
-                  dev.Ip,
-                  (short)deviceExternalId,
+            await adapter.GetAdapter(dev.Vendor).Output.DeleteControlPointAsync(
+                  dev.DeviceMac,
+                  dev.DeviceIp,
+                  dev.DeviceExternalId,
                   (short)output.SlotNo,
-                  (short)controlExternalId,
+                  dev.ComponentExternalId ?? -1,
                   ct
             );
 
-            await repo.DisableAsync(guid,ct);
+            await repo.DisableAsync(guid, ct);
 
             return true;
       }
 
       public async Task<bool> EnabledAsync(Guid guid, CancellationToken ct = default)
       {
-            var output = await repo.GetAsync(guid,ct);
-            var dev = await device.GetAsync(output.DeviceGuid,ct);
+            if (await repo.IsDisabledAsync(guid, ct))
+                  return true;
 
 
-            var deviceExternalId = await com.GetExternalIdByGuidAndEntityAsync(output.DeviceGuid,SharedKernel.Enums.EntityType.DEVICE,ct);
-            var moduleExternalId = await com.GetExternalIdByGuidAndEntityAsync(output.DeviceModuleGuid,SharedKernel.Enums.EntityType.DEVICE_MODULE,ct);
-            var controlExternalId = await com.GetExternalIdByGuidAndEntityAsync(guid,SharedKernel.Enums.EntityType.DEVICE_MODULE,ct);
+            var dev = await repo.GetCommandDetailAsync(guid, ct);
+            var output = await repo.GetAsync(guid, ct);
 
-            // Send command to create output 
+
             await adapter.GetAdapter(output.Vendor).Output.CreateControlPointAsync(
-                  dev.Mac,
-                  dev.Ip,
-                  (short)deviceExternalId,
-                  (short)moduleExternalId,
+                  dev.DeviceMac,
+                  dev.DeviceIp,
+                  dev.DeviceExternalId,
+                  dev.ModuleExternalId,
                   (short)output.SlotNo,
-                  (short)controlExternalId,
+                  dev.ComponentExternalId ?? -1,
                   output.Metadata,
                   ct
                   );
 
-            await repo.EnableAsync(guid,ct);
+            await repo.EnableAsync(guid, ct);
 
             return true;
       }
 
-      // public async Task<OutputDto> GetByGuidAsync(Guid guid, CancellationToken ct = default)
-      // {
-      //       return await repo.GetAsync(guid,ct);
-      // }
 
-      // public async Task<IEnumerable<OutputDto>> GetByLocationAsync(Guid guid, CancellationToken ct = default)
-      // {
-      //       return await repo.GetByLocationAsync(guid,ct);
-      // }
-
-      // public async Task<Pagination<OutputDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
-      // {
-      //      return await repo.GetPaginationAsync(param,ct);
-      // }
 
       public async Task<Guid> UpdateAsync(UpdateOutputDto dto, CancellationToken ct = default)
       {
-            throw new NotImplementedException();
+
+            var dev = await repo.GetCommandDetailAsync(dto.Guid, ct);
+
+            var d = new Output(
+                  dto.Guid,
+                  dto.Name,
+                  dto.SlotNo,
+                  dto.Metadata,
+                  dto.Vendor,
+                  dev.ModuleId,
+                  dev.LocationId ?? 1
+            );
+
+            // Send command to create output 
+            await adapter.GetAdapter(dto.Vendor).Output.CreateControlPointAsync(
+                  dev.DeviceMac,
+                  dev.DeviceIp,
+                  dev.DeviceExternalId,
+                  dev.ModuleExternalId,
+                  (short)dto.SlotNo,
+                  dev.ComponentExternalId ?? -1,
+                  dto.Metadata,
+                  ct
+                  );
+
+            await repo.UpdateAsync(d, ct);
+
+            return d.Guid;
       }
 
       public async Task UploadAsync(CancellationToken ct = default)

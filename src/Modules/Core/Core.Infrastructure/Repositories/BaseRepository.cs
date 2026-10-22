@@ -1,5 +1,6 @@
 using System.Linq.Expressions;
 using Core.Application.Interfaces;
+using Core.Contract.DTOs;
 using Core.Domain.Entities;
 using Core.Infrastructure.Extensions;
 using Core.Infrastructure.Persistences;
@@ -14,7 +15,8 @@ public abstract class BaseRepository<TEntity, TDomain, TDto>(
       CoreDbContext context,
       Func<TDomain, TEntity> toEntity,
       Action<TEntity, TDomain> updateEntity,
-      Expression<Func<TEntity, TDto>> toDto
+      Expression<Func<TEntity, TDto>> toDto,
+      Expression<Func<TEntity,CommandDetailDto>> toCommand
       ) : IBaseRepository<TEntity, TDomain, TDto> where TEntity : BaseEntity where TDto : class where TDomain : BaseDomain
 {
       protected readonly CoreDbContext Context = context;
@@ -266,7 +268,44 @@ public abstract class BaseRepository<TEntity, TDomain, TDto>(
             return Expression.Lambda<Func<TEntity, bool>>(combinedBody!, parameter);
       }
 
+      public async Task<short> GetFreeExeternalIdAsync(int max, IEnumerable<short>? exception = null, CancellationToken ct = default)
+      {
+            var existingIds = await Context.Set<TEntity>()
+                  .AsNoTracking()
+                  .Select(x => x.external_id!.Value)
+                  .ToArrayAsync(ct);
 
+            var existIdsHash = existingIds.ToHashSet();
+
+            if (exception != null)
+            {
+                  existIdsHash.UnionWith(exception);
+            }
+
+            for (short id = 1; id < max; id++)
+            {
+                  if (!existIdsHash.Contains(id))
+                        return id;
+            }
+
+            throw new ExceedException(typeof(TEntity).Name);
+      }
+
+      public async Task<CommandDetailDto> GetCommandDetailAsync(Guid guid, CancellationToken ct = default)
+      {
+            return await Context.Set<TEntity>()
+                  .AsNoTracking()
+                  .Where(x => x.guid == guid)
+                  .Select(toCommand)
+                  .FirstOrDefaultAsync() ?? throw new NotFoundException(typeof(TEntity).Name, guid.ToString());
+      }
+
+      public async Task<bool> IsAnyByNameAsync(string name, CancellationToken ct = default)
+      {
+             return await Context.Set<TEntity>()
+                  .AsNoTracking()
+                  .AnyAsync(x => x.name == name,ct);
+      }
 }
 
 // Utility class to rebind lambda expressions to a single root parameter

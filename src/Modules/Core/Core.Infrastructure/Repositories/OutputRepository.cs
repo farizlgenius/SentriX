@@ -1,4 +1,5 @@
 using Core.Application.Interfaces;
+using Core.Contract.DTOs;
 using Core.Contract.DTOs.Output;
 using Core.Domain.Entities;
 using Core.Infrastructure.Persistences;
@@ -23,7 +24,8 @@ public sealed class OutputRepository(CoreDbContext context) : BaseRepository<Per
     en.device_module_id = dom.DeviceModuleId;
     en.updated_at = DateTime.UtcNow;
   },
-  OutputProjections.ToDto
+  OutputProjections.ToDto,
+  OutputProjections.ToCommand
   ), IOutputRepository
 {
   public async Task<Pagination<OutputDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
@@ -40,6 +42,5 @@ public sealed class OutputRepository(CoreDbContext context) : BaseRepository<Per
   {
     throw new NotImplementedException();
   }
-
 
 }

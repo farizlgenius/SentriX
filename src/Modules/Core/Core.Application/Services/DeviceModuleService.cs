@@ -11,7 +11,6 @@ using SharedKernel.Messaging;
 namespace Core.Application.Services;
 
 public sealed class DeviceModuleService(
-  IComponentMappingRepository com,
   IDeviceModuleRepository repo,
   IAdapterFactory adapter, 
   IMessageBus bus

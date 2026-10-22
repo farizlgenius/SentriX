@@ -20,7 +20,6 @@ public sealed class UserService(
   ICompanyRepository company,
   IGroupRepository group,
   IAdapterFactory adapter,
-  IComponentMappingRepository com,
   IStorage file,
   IMessageBus bus
   ) : IUser

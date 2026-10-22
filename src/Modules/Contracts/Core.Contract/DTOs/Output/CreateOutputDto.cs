@@ -7,7 +7,5 @@ public sealed record CreateOutputDto(
   int SlotNo,
   string Metadata,
   Vendor Vendor,
-  Guid DeviceGuid,
-  Guid DeviceModuleGuid,
-  Guid LocationGuid
+  Guid DeviceModuleGuid
 );

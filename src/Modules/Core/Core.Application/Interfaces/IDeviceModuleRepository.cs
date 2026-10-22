@@ -1,3 +1,4 @@
+using Core.Contract.DTOs;
 using Core.Contract.DTOs.DeviceModule;
 using Core.Domain.Entities;
 using SharedKernel.Domain;

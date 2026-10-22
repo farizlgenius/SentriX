@@ -18,7 +18,6 @@ public sealed class GroupService(
     ILocationRepository loc,
     ITimeRepository time,
     IAdapterFactory adapter,
-    IComponentMappingRepository com,
     IMessageBus bus) : IGroup
 {
     public async Task<Guid> CreateAsync(CreateGroupDto dto, CancellationToken ct = default)

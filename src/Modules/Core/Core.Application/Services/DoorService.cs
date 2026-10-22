@@ -17,7 +17,6 @@ public sealed class DoorService(
   IMessageBus bus,
   IDeviceRepository device,
   IDeviceModuleRepository deviceModule,
-  IComponentMappingRepository com,
   ILocationRepository loc,
   IAdapterFactory adapter
   ) : IDoor
