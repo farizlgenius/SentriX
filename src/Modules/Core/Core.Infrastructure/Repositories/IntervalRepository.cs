@@ -2,6 +2,7 @@ using Core.Application.Interfaces;
 using Core.Contract.DTOs.Time;
 using Core.Domain.Entities;
 using Core.Infrastructure.Persistences;
+using Core.Infrastructure.Projections;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel.Constants;
 using SharedKernel.Domain;
@@ -10,99 +11,38 @@ using SharedKernel.Exceptions;
 
 namespace Core.Infrastructure.Repositories;
 
-public sealed class IntervalRepository(CoreDbContext context) : IIntervalRepository
+public sealed class IntervalRepository(CoreDbContext context) : BaseRepository<Persistences.Entities.Interval,Domain.Entities.Interval,IntervalDto>(
+  context,
+  d => new Persistences.Entities.Interval(d),
+  (en,dom) =>
+  {
+    if (en.day is not null)
+    {
+      en.day.sunday = dom.Days.Sunday;
+      en.day.monday = dom.Days.Monday;
+      en.day.tuesday = dom.Days.Tuesday;
+      en.day.wednesday = dom.Days.Wednesday;
+      en.day.thursday = dom.Days.Thursday;
+      en.day.friday = dom.Days.Friday;
+      en.day.saturday = dom.Days.Saturday;
+    }
+    en.start_time = dom.StartTime;
+    en.end_time = dom.EndTime;
+    en.location_id = dom.LocationId;
+    en.updated_at = DateTime.UtcNow;
+  },
+  IntervalProjections.ToDto,
+  IntervalProjections.ToCommand
+),IIntervalRepository
 {
-  public async Task AddAsync(Interval entity, CancellationToken ct = default)
-  {
-    await context.Intervals.AddAsync(
-      new Persistences.Entities.Interval(entity)
-      , ct
-    );
 
-    await context.SaveChangesAsync(ct);
-  }
 
-  public async Task DeleteAsync(Guid guid, CancellationToken ct = default)
-  {
-    var entity = await context.Intervals
-      .Where(x => x.guid == guid)
-      .OrderByDescending(x => x.id)
-      .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.INTERVAL.ToString(), guid.ToString());
 
-    context.Intervals.Remove(entity);
 
-    await context.SaveChangesAsync(ct);
-  }
-
-  public async Task DeleteRangeAsync(IEnumerable<Guid> guids, CancellationToken ct = default)
-  {
-    var entities = await context.Intervals
-      .Where(x => guids.Contains(x.guid))
-      .ToArrayAsync();
-
-    context.Intervals.RemoveRange(entities);
-
-    await context.SaveChangesAsync(ct);
-  }
-
-  public async Task<bool> DisableAsync(Guid guid, CancellationToken ct = default)
-  {
-    var entity = await context.Intervals
-      .OrderByDescending(x => x.id)
-      .FirstOrDefaultAsync(x => x.guid == guid) ?? throw new NotFoundException(EntityType.TIMEZONE.ToString(), guid.ToString());
-
-    entity.is_active = false;
-
-    context.Intervals.Update(entity);
-    await context.SaveChangesAsync(ct);
-
-    return true;
-  }
-
-  public async Task<bool> EnableAsync(Guid guid, CancellationToken ct = default)
-  {
-    var entity = await context.Intervals
-      .OrderByDescending(x => x.id)
-      .FirstOrDefaultAsync(x => x.guid == guid) ?? throw new NotFoundException(EntityType.TIMEZONE.ToString(), guid.ToString());
-
-    entity.is_active = true;
-
-    context.Intervals.Update(entity);
-    await context.SaveChangesAsync(ct);
-
-    return true;
-  }
-
-  public async Task<IntervalDto> GetAsync(Guid guid, CancellationToken ct = default)
-  {
-    return await context.Intervals
-      .AsNoTracking()
-      .Where(x => x.guid == guid)
-      .Select(
-        x => new IntervalDto(
-          x.guid,
-          x.day == null ?
-            new DayInWeekDto() :
-            new DayInWeekDto(
-              x.day.sunday,
-              x.day.monday,
-              x.day.tuesday,
-              x.day.wednesday,
-              x.day.thursday,
-              x.day.friday,
-              x.day.saturday
-            ),
-          x.start_time,
-          x.end_time,
-          x.is_active,
-          x.is_default
-        )
-      ).FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.INTERVAL.ToString(), guid.ToString());
-  }
-
+ 
   public async Task<IEnumerable<IntervalDto>> GetByGuidsAsync(IEnumerable<Guid> guids, CancellationToken ct = default)
   {
-    return await context.Intervals
+    return await Context.Intervals
      .AsNoTracking()
      .OrderByDescending(x => x.id)
      .Where(x => guids.Contains(x.guid))
@@ -125,163 +65,34 @@ public sealed class IntervalRepository(CoreDbContext context) : IIntervalReposit
    x.is_active,
    x.is_default
  )
-).ToArrayAsync();
+).ToArrayAsync(cancellationToken: ct);
   }
 
-  public async Task<IEnumerable<IntervalDto>> GetByLocationAsync(Guid locationGuid, CancellationToken ct = default)
-  {
-    return await context.Intervals
-      .AsNoTracking()
-      .Where(x => x.location.guid == locationGuid)
-      .Select(
-        x => new IntervalDto(
-          x.guid,
-          x.day == null ?
-            new DayInWeekDto() :
-            new DayInWeekDto(
-              x.day.sunday,
-              x.day.monday,
-              x.day.tuesday,
-              x.day.wednesday,
-              x.day.thursday,
-              x.day.friday,
-              x.day.saturday
-            ),
-          x.start_time,
-          x.end_time,
-          x.is_active,
-          x.is_default
-        )
-      ).ToArrayAsync();
-  }
-
-      public Task<Guid> GetGuidByIdAsync(int id, CancellationToken ct = default)
-      {
-            throw new NotImplementedException();
-      }
-
-      public async Task<int> GetIdByGuidAsync(Guid guid, CancellationToken ct = default)
-  {
-    return await context.Intervals
-      .AsNoTracking()
-      .Where(x => x.guid == guid)
-      .Select(x => x.id)
-      .FirstOrDefaultAsync();
-  }
+ 
 
   public async Task<IEnumerable<int>> GetIdsByGuidsAsync(IEnumerable<Guid> guids, CancellationToken ct = default)
   {
-    return await context.Intervals
+    return await Context.Intervals
       .AsNoTracking()
       .Where(x => guids.Contains(x.guid))
       .Select(x => x.id)
-      .ToArrayAsync();
+      .ToArrayAsync(cancellationToken: ct);
   }
 
-      public Task<string> GetNameByGuidAsync(Guid guid, CancellationToken ct = default)
-      {
-            throw new NotImplementedException();
-      }
+    
 
       public async Task<Pagination<IntervalDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
   {
-    var query = context.Intervals
-                  .AsNoTracking()
-                  .Where(x => x.location.guid == param.locationGuid)
-                  .AsQueryable();
-
-    if (!string.IsNullOrWhiteSpace(param.search))
-    {
-      if (!string.IsNullOrWhiteSpace(param.search))
-      {
-        var search = param.search.Trim();
-
-        if (context.Database.IsNpgsql())
-        {
-          var pattern = $"%{search}%";
-
-          query = query.Where(x =>
-              EF.Functions.ILike(x.start_time.ToString(), pattern) ||
-              EF.Functions.ILike(x.end_time.ToString(), pattern)
-          );
-        }
-        else // SQL Server
-        {
-          query = query.Where(x =>
-              x.start_time.ToString().Contains(search) ||
-              x.end_time.ToString().Contains(search)
-          );
-        }
-
-      }
-    }
-
-
-    if (param.startDate != null)
-    {
-      var startUtc = DateTime.SpecifyKind(param.startDate.Value, DateTimeKind.Utc);
-      query = query.Where(x => x.created_at >= startUtc);
-    }
-
-    if (param.endDate != null)
-    {
-      var endUtc = DateTime.SpecifyKind(param.endDate.Value, DateTimeKind.Utc);
-      query = query.Where(x => x.created_at <= endUtc);
-    }
-
-    var count = await query.CountAsync(ct);
-
-    var res = await query
-          .AsNoTracking()
-          .OrderByDescending(e => e.created_at)
-          .Skip((param.pageNumber - 1) * param.pageSize)
-          .Take(param.pageSize)
-          .Select(
-        x => new IntervalDto(
-          x.guid,
-          x.day == null ?
-            new DayInWeekDto() :
-            new DayInWeekDto(
-              x.day.sunday,
-              x.day.monday,
-              x.day.tuesday,
-              x.day.wednesday,
-              x.day.thursday,
-              x.day.friday,
-              x.day.saturday
-            ),
-          x.start_time,
-          x.end_time,
-          x.is_active,
-          x.is_default
-        )
-      ).ToListAsync(ct);
-
-    return new Pagination<IntervalDto>(
-          param.pageNumber,
-          param.pageSize,
-          count,
-          (int)Math.Ceiling(count / (double)param.pageSize),
-          res
-          );
+     return await base.GetPaginationAsync(
+      param,
+      param.locationGuid != new Guid("3a9c9947-d5ca-4bb2-b525-0499a340f1d6") ? x => x.location.guid == param.locationGuid : null,
+      [x => x.start_time.ToString(),x => x.end_time.ToString()]
+     );
   }
 
-      public Task<bool> IsAnyByNameAndLocationGuidAsync(string name, Guid guid, CancellationToken ct = default)
-      {
-            throw new NotImplementedException();
-      }
 
-      public async Task<bool> IsAnyByNameAndLocationIdAsync(string name, int locationId = 0, CancellationToken ct = default)
-  {
-    throw new NotImplementedException();
-  }
 
-  public async Task<bool> IsAnyGuidAsync(Guid guid, CancellationToken ct = default)
-  {
-    return await context.Intervals
-      .AsNoTracking()
-      .AnyAsync(x => x.guid == guid);
-  }
+
 
   public Task<bool> IsAnyRelatedEntitiesAsync(Guid guid, CancellationToken ct = default)
   {
@@ -290,10 +101,9 @@ public sealed class IntervalRepository(CoreDbContext context) : IIntervalReposit
 
   public async Task<bool> IsAnySameDataSetAsync(TimeOnly start, TimeOnly end, DayInWeek day, CancellationToken ct = default)
   {
-    return await context.Intervals
+    return await Context.Intervals
       .AsNoTracking()
-      .AnyAsync(
-        x =>
+      .AnyAsync(x =>
           x.start_time == start &&
           x.end_time == end &&
           x.day.sunday == day.Sunday &&
@@ -303,50 +113,8 @@ public sealed class IntervalRepository(CoreDbContext context) : IIntervalReposit
           x.day.thursday == day.Thursday &&
           x.day.friday == day.Friday &&
           x.day.saturday == day.Saturday
-      );
+, cancellationToken: ct);
   }
 
-  public async Task<bool> IsDefaultAsync(Guid guid, CancellationToken ct = default)
-  {
-    return await context.Intervals
-      .AsNoTracking()
-      .AnyAsync(x => x.guid == guid && x.is_default);
-  }
-
-      public Task<bool> IsDisabledAsync(Guid guid, CancellationToken ct = default)
-      {
-            throw new NotImplementedException();
-      }
-
-      public Task<bool> IsEnabledAsync(Guid guid, CancellationToken ct = default)
-      {
-            throw new NotImplementedException();
-      }
-
-      public async Task UpdateAsync(Interval entity, CancellationToken ct = default)
-  {
-    var en = await context.Intervals
-      .Include(x => x.day)
-      .Where(x => x.guid == entity.Guid)
-      .OrderByDescending(x => x.id)
-      .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.INTERVAL.ToString(), entity.Guid.ToString());
-
-    if (en.day is not null)
-    {
-      en.day.sunday = entity.Days.Sunday;
-      en.day.monday = entity.Days.Monday;
-      en.day.tuesday = entity.Days.Tuesday;
-      en.day.wednesday = entity.Days.Wednesday;
-      en.day.thursday = entity.Days.Thursday;
-      en.day.friday = entity.Days.Friday;
-      en.day.saturday = entity.Days.Saturday;
-    }
-    en.start_time = entity.StartTime;
-    en.end_time = entity.EndTime;
-    en.location_id = entity.LocationId;
-
-    context.Intervals.Update(en);
-
-    await context.SaveChangesAsync(ct);
-  }
+ 
 }

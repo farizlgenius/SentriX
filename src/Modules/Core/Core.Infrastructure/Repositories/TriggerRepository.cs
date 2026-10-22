@@ -1,4 +1,5 @@
 using Core.Application.Interfaces;
+using Core.Contract.DTOs;
 using Core.Contract.DTOs.Trigger;
 using Core.Domain.Entities;
 using Core.Infrastructure.Persistences;
@@ -56,6 +57,16 @@ public sealed class TriggerRepository(CoreDbContext context) : ITriggerRepositor
                   )).ToArrayAsync();
       }
 
+      public Task<CommandDetailDto> GetCommandDetailAsync(Guid guid, CancellationToken ct = default)
+      {
+            throw new NotImplementedException();
+      }
+
+      public Task<short> GetFreeExeternalIdAsync(int max, IEnumerable<short>? exception = null, CancellationToken ct = default)
+      {
+            throw new NotImplementedException();
+      }
+
       public Task<Guid> GetGuidByIdAsync(int id, CancellationToken ct = default)
       {
             throw new NotImplementedException();
@@ -105,6 +116,11 @@ public sealed class TriggerRepository(CoreDbContext context) : ITriggerRepositor
       }
 
       public Task<bool> IsAnyByNameAndLocationIdAsync(string name, int locationId = 0, CancellationToken ct = default)
+      {
+            throw new NotImplementedException();
+      }
+
+      public Task<bool> IsAnyByNameAsync(string name, CancellationToken ct = default)
       {
             throw new NotImplementedException();
       }

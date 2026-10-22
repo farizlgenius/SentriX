@@ -14,9 +14,14 @@ public sealed class AlertRepository(CoreDbContext context) : BaseRepository<Pers
       d => new Persistences.Entities.Alert(d),
       (en,dom) =>
       {
-            
+            en.advice = dom.Advice;
+            en.alert_level_id = dom.AlertLevelId;
+            en.core_event_id = dom.CoreEventId;
+            en.updated_at = DateTime.UtcNow;
       },
-      AlertProjections.ToDto
+      AlertProjections.ToDto,
+      AlertProjections.ToCommand
+
 ),IAlertRepository
 {
 

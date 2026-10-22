@@ -21,7 +21,8 @@ public sealed class ActionRepository(CoreDbContext context) : BaseRepository<Per
             en.metadata = dom.Metadata;
             en.updated_at = DateTime.UtcNow;
       },
-      ActionProjections.ToDto
+      ActionProjections.ToDto,
+      ActionProjections.ToCommand
 ),IActionRepository
 {
     

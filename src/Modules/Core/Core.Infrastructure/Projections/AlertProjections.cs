@@ -1,4 +1,5 @@
 using System.Linq.Expressions;
+using Core.Contract.DTOs;
 using Core.Contract.DTOs.Alert;
 
 namespace Core.Infrastructure.Projections;
@@ -21,4 +22,7 @@ public static class AlertProjections
             x.is_active,
             x.is_default
       );
+
+      public static readonly Expression<Func<Persistences.Entities.Alert,CommandDetailDto>> ToCommand = 
+    x => new CommandDetailDto();
 }

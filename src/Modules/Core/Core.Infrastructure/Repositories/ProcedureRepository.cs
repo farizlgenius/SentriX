@@ -2,6 +2,8 @@ using Core.Application.Interfaces;
 using Core.Contract.DTOs.Procedure;
 using Core.Domain.Entities;
 using Core.Infrastructure.Persistences;
+using Core.Infrastructure.Persistences.Entities;
+using Core.Infrastructure.Projections;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel.Domain;
 using SharedKernel.Enums;
@@ -9,166 +11,34 @@ using SharedKernel.Exceptions;
 
 namespace Core.Infrastructure.Repositories;
 
-public sealed class ProcedureRepository(CoreDbContext context) : IProcedureRepository
+public sealed class ProcedureRepository(CoreDbContext context) : BaseRepository<Persistences.Entities.Procedure,Domain.Entities.Procedure,ProcedureDto>(
+      context,
+      d => new Persistences.Entities.Procedure(d),
+      (en,dom) =>
+      {
+            en.device_id = dom.DeviceId;
+            en.procedure_actions = dom.ActionIds.Select(x => new ProcedureAction(x)).ToList();
+            en.updated_at = DateTime.UtcNow;
+      },
+      ProcedureProjections.ToDto,
+      ProcedureProjections.ToCommand
+),IProcedureRepository
 {
-      public async Task AddAsync(Procedure entity, CancellationToken ct = default)
-      {
-            await context.Procedures.AddAsync(
-                  new Persistences.Entities.Procedure(entity)
-            );
 
-            await context.SaveChangesAsync(ct);
+      public async Task<Pagination<ProcedureDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
+      {
+            return await base.GetPaginationAsync(
+                  param,
+                  param.locationGuid != new Guid("3a9c9947-d5ca-4bb2-b525-0499a340f1d6") ? x => x.location.guid == param.locationGuid : null,
+                  [x => x.name],
+                  ct);
       }
 
-      public async Task DeleteAsync(Guid guid, CancellationToken ct = default)
-      {
-            var en = await context.Procedures
-                  .Where(x => x.guid == guid)
-                  .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.PROCEDURE.ToString(),guid.ToString());
-
-            context.Procedures.Remove(en);
-
-            await context.SaveChangesAsync(ct);
-      }
-
-      public async Task DeleteRangeAsync(IEnumerable<Guid> guids, CancellationToken ct = default)
-      {
-            var entities = await context.Procedures
-                  .Where(x => guids.Contains(x.guid))
-                  .ToArrayAsync(ct);
-
-            context.Procedures.RemoveRange(entities);
-
-            await context.SaveChangesAsync(ct);
-      }
-
-      public async Task<bool> DisableAsync(Guid guid, CancellationToken ct = default)
-      {
-            var en = await context.Procedures
-                  .Where(x => x.guid == guid)
-                  .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.PROCEDURE.ToString(),guid.ToString());
-
-            en.is_active = false;
-            en.updated_at = DateTime.UtcNow;
-
-            context.Procedures.Update(en);
-
-            await context.SaveChangesAsync(ct);
-
-            return true;
-      }
-
-      public async Task<bool> EnableAsync(Guid guid, CancellationToken ct = default)
-      {
-            var en = await context.Procedures
-                  .Where(x => x.guid == guid)
-                  .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.PROCEDURE.ToString(),guid.ToString());
-
-            en.is_active = true;
-            en.updated_at = DateTime.UtcNow;
-
-            context.Procedures.Update(en);
-
-            await context.SaveChangesAsync(ct);
-
-            return true;
-      }
-
-      public async Task<ProcedureDto> GetAsync(Guid guid, CancellationToken ct = default)
-      {
-            return await context.Procedures
-                  .AsNoTracking()
-                  .Where(x => x.guid == guid)
-                  .Select(x => new ProcedureDto(
-                        x.guid,
-                        x.name,
-                        x.procedure_actions.Select(
-                              a => new ActionDto(
-                                    a.action.guid,
-                                    a.action.metadata
-                              )
-                        ).ToList(),
-                        x.is_active,
-                        x.is_default
-                  )).FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.PROCEDURE.ToString(),guid.ToString());
-      }
-
-      public async Task<IEnumerable<ProcedureDto>> GetByLocationAsync(Guid locationGuid, CancellationToken ct = default)
-      {
-            return await context.Procedures
-                  .AsNoTracking()
-                  .Where(x => x.location.guid == locationGuid)
-                  .Select(x => new ProcedureDto(
-                        x.guid,
-                        x.name,
-                        x.procedure_actions.Select(
-                              a => new ActionDto(
-                                    a.action.guid,
-                                    a.action.metadata
-                              )
-                        ).ToList(),
-                        x.is_active,
-                        x.is_default
-                  )).ToArrayAsync();
-      }
-
-      public Task<Guid> GetGuidByIdAsync(int id, CancellationToken ct = default)
-      {
-            throw new NotImplementedException();
-      }
-
-      public Task<int> GetIdByGuidAsync(Guid guid, CancellationToken ct = default)
-      {
-            throw new NotImplementedException();
-      }
-
-      public Task<string> GetNameByGuidAsync(Guid guid, CancellationToken ct = default)
-      {
-            throw new NotImplementedException();
-      }
-
-      public Task<Pagination<ProcedureDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
-      {
-            throw new NotImplementedException();
-      }
-
-      public Task<bool> IsAnyByNameAndLocationGuidAsync(string name, Guid guid, CancellationToken ct = default)
-      {
-            throw new NotImplementedException();
-      }
-
-      public Task<bool> IsAnyByNameAndLocationIdAsync(string name, int locationId = 0, CancellationToken ct = default)
-      {
-            throw new NotImplementedException();
-      }
-
-      public Task<bool> IsAnyGuidAsync(Guid guid, CancellationToken ct = default)
-      {
-            throw new NotImplementedException();
-      }
 
       public Task<bool> IsAnyRelatedEntitiesAsync(Guid guid, CancellationToken ct = default)
       {
             throw new NotImplementedException();
       }
 
-      public Task<bool> IsDefaultAsync(Guid guid, CancellationToken ct = default)
-      {
-            throw new NotImplementedException();
-      }
 
-      public Task<bool> IsDisabledAsync(Guid guid, CancellationToken ct = default)
-      {
-            throw new NotImplementedException();
-      }
-
-      public Task<bool> IsEnabledAsync(Guid guid, CancellationToken ct = default)
-      {
-            throw new NotImplementedException();
-      }
-
-      public Task UpdateAsync(Procedure entity, CancellationToken ct = default)
-      {
-            throw new NotImplementedException();
-      }
 }

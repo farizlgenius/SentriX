@@ -2,6 +2,7 @@ using Core.Application.Interfaces;
 using Core.Contract.DTOs.Role;
 using Core.Domain.Entities;
 using Core.Infrastructure.Persistences;
+using Core.Infrastructure.Projections;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel.Constants;
 using SharedKernel.Domain;
@@ -10,98 +11,19 @@ using SharedKernel.Exceptions;
 
 namespace Core.Infrastructure.Repositories;
 
-public sealed class RoleRepository(CoreDbContext context) : IRoleRepository
+public sealed class RoleRepository(CoreDbContext context) : BaseRepository<Persistences.Entities.Role,Domain.Entities.Role,RoleDto>(
+      context,
+      d => new Persistences.Entities.Role(d),
+      (en,dom) => {},
+      RoleProjections.ToDto,
+      RoleProjections.ToCommand
+),IRoleRepository
 {
-      public async Task AddAsync(Role entity, CancellationToken ct = default)
-      {
-            await context.Roles.AddAsync(
-                  new Persistences.Entities.Role(entity), ct
-            );
-
-            await context.SaveChangesAsync(ct);
-      }
-
-      public async Task DeleteAsync(Guid guid, CancellationToken ct = default)
-      {
-            var entity = await context.Roles
-                  .Where(x => x.guid == guid)
-                  .FirstOrDefaultAsync();
-
-            context.Roles.Remove(entity ?? throw new NotFoundException(EntityType.ROLE.ToString(), guid.ToString()));
-
-            await context.SaveChangesAsync(ct);
-      }
-
-      public async Task DeleteRangeAsync(IEnumerable<Guid> guids, CancellationToken ct = default)
-      {
-            var entities = await context.Roles
-                  .Where(x => guids.Contains(x.guid) && x.is_default == false)
-                  .ToArrayAsync(ct);
-
-            context.Roles.RemoveRange(entities);
-
-            await context.SaveChangesAsync(ct);
-      }
-
-      public async Task<bool> DisableAsync(Guid guid, CancellationToken ct = default)
-      {
-            var en = await context.Roles
-                  .Where(x => x.guid == guid)
-                  .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.ROLE.ToString(), guid.ToString());
-
-            en.is_active = false;
-
-            context.Roles.Update(en);
-
-            await context.SaveChangesAsync(ct);
-
-            return true;
-      }
-
-      public async Task<bool> EnableAsync(Guid guid, CancellationToken ct = default)
-      {
-            var en = await context.Roles
-                  .Where(x => x.guid == guid)
-                  .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.ROLE.ToString(), guid.ToString());
-
-            en.is_active = true;
-
-            context.Roles.Update(en);
-
-            await context.SaveChangesAsync(ct);
-
-            return true;
-      }
-
-      public async Task<RoleDto> GetAsync(Guid guid, CancellationToken ct = default)
-      {
-            return await context.Roles
-                  .AsNoTracking()
-                  .Where(x => x.guid == guid)
-                  .Select(e => new RoleDto(
-                        e.guid,
-                        e.name,
-                        e.module_permission.Select(x => new ModulePermissionDto(
-                              x.module_id,
-                              x.module.name,
-                              x.is_enabled,
-                              x.feature_permissions.Select(f => new FeaturePermissionDto(
-                                    f.feature_id,
-                                    f.feature.name,
-                                    f.is_enabled,
-                                    f.is_created,
-                                    f.is_updated,
-                                    f.is_deleted
-                                    )).ToList()
-                        )).ToList(),
-                        e.is_active,
-                        e.is_default
-                  )).FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.ROLE.ToString(), guid.ToString());
-      }
+    
 
       public async Task<IEnumerable<RoleDto>> GetAsync(CancellationToken ct = default)
       {
-            return await context.Roles
+            return await Context.Roles
                   .AsNoTracking()
                   .Select(e => new RoleDto(
                         e.guid,
@@ -109,137 +31,25 @@ public sealed class RoleRepository(CoreDbContext context) : IRoleRepository
                         new List<ModulePermissionDto>(),
                         e.is_active,
                         e.is_default
-                  )).ToArrayAsync();
+                  )).ToArrayAsync(cancellationToken: ct);
       }
 
 
-      public async Task<IEnumerable<RoleDto>> GetByLocationAsync(Guid locationGuid, CancellationToken ct = default)
-      {
-            return await context.Roles
-                  .AsNoTracking()
-                  .Select(e => new RoleDto(
-                        e.guid,
-                        e.name,
-                        e.module_permission.Select(x => new ModulePermissionDto(
-                              x.module_id,
-                              x.module.name,
-                              x.is_enabled,
-                              x.feature_permissions.Select(f => new FeaturePermissionDto(
-                                    f.feature_id,
-                                    f.feature.name,
-                                    f.is_enabled,
-                                    f.is_created,
-                                    f.is_updated,
-                                    f.is_deleted
-                                    )).ToList()
-                        )).ToList(),
-                        e.is_active,
-                        e.is_default
-                  )).ToArrayAsync();
-      }
-
-      public Task<Guid> GetGuidByIdAsync(int id, CancellationToken ct = default)
-      {
-            throw new NotImplementedException();
-      }
-
-      public async Task<int> GetIdByGuidAsync(Guid guid, CancellationToken ct = default)
-      {
-            return await context.Roles
-             .AsNoTracking()
-             .Where(x => x.guid == guid)
-             .OrderByDescending(x => x.id)
-             .Select(x => x.id)
-             .FirstOrDefaultAsync();
-      }
-
-      public Task<string> GetNameByGuidAsync(Guid guid, CancellationToken ct = default)
-      {
-            throw new NotImplementedException();
-      }
+    
 
       public async Task<Pagination<RoleDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
       {
-            var query = context.Roles
-                  .AsNoTracking()
-                  .AsQueryable();
-
-            if (!string.IsNullOrWhiteSpace(param.search))
-            {
-                  if (!string.IsNullOrWhiteSpace(param.search))
-                  {
-                        var search = param.search.Trim();
-
-                        if (context.Database.IsNpgsql())
-                        {
-                              var pattern = $"%{search}%";
-
-                              query = query.Where(x =>
-                                  EF.Functions.ILike(x.name, pattern)
-                              );
-                        }
-                        else // SQL Server
-                        {
-                              query = query.Where(x =>
-                                  x.name.Contains(search)
-                              );
-                        }
-
-                  }
-            }
-
-
-            if (param.startDate != null)
-            {
-                  var startUtc = DateTime.SpecifyKind(param.startDate.Value, DateTimeKind.Utc);
-                  query = query.Where(x => x.created_at >= startUtc);
-            }
-
-            if (param.endDate != null)
-            {
-                  var endUtc = DateTime.SpecifyKind(param.endDate.Value, DateTimeKind.Utc);
-                  query = query.Where(x => x.created_at <= endUtc);
-            }
-
-            var count = await query.CountAsync();
-
-            var res = await query
-                  .AsNoTracking()
-                  .OrderByDescending(e => e.created_at)
-                  .Skip((param.pageNumber - 1) * param.pageSize)
-                  .Take(param.pageSize)
-                  .Select(e => new RoleDto(
-                        e.guid,
-                        e.name,
-                        e.module_permission.Select(x => new ModulePermissionDto(
-                              x.module_id,
-                        x.module.name,
-                        x.is_enabled,
-                        x.feature_permissions.Select(x => new FeaturePermissionDto(
-                              x.feature_id,
-                              x.feature.name,
-                              x.is_enabled,
-                              x.is_created,
-                              x.is_updated,
-                              x.is_deleted
-                        )).ToList()
-                  )).ToList(),
-                        e.is_active,
-                        e.is_default
-                  )).ToListAsync();
-
-            return new Pagination<RoleDto>(
-                  param.pageNumber,
-                  param.pageSize,
-                  count,
-                  (int)Math.Ceiling(count / (double)param.pageSize),
-                  res
-                  );
+            return await base.GetPaginationAsync(
+                  param,
+                  param.locationGuid != new Guid("3a9c9947-d5ca-4bb2-b525-0499a340f1d6") ? x => x.location.guid == param.locationGuid : null,
+                  [x => x.name],
+                  ct
+            );
       }
 
       public async Task<IEnumerable<ModulePermissionDto>> GetPermissionByRoleIdAsync(int id, CancellationToken ct = default)
       {
-            return await context.ModulePermissions
+            return await Context.ModulePermissions
                   .AsNoTracking()
                   .Where(x => x.role_id == id)
                   .Select(x => new ModulePermissionDto(
@@ -254,33 +64,24 @@ public sealed class RoleRepository(CoreDbContext context) : IRoleRepository
                               x.is_updated,
                               x.is_deleted
                         )).ToList()
-                  )).ToArrayAsync();
+                  )).ToArrayAsync(cancellationToken: ct);
       }
 
-      public Task<bool> IsAnyByNameAndLocationGuidAsync(string name, Guid guid, CancellationToken ct = default)
-      {
-            throw new NotImplementedException();
-      }
-
+    
       public async Task<bool> IsAnyByNameAndLocationIdAsync(string name, int locationId = default, CancellationToken ct = default)
       {
-            return await context.Roles
+            return await Context.Roles
                   .AsNoTracking()
-                  .AnyAsync(x => x.name.Equals(name));
+                  .AnyAsync(x => x.name.Equals(name), cancellationToken: ct);
       }
 
-      public async Task<bool> IsAnyGuidAsync(Guid guid, CancellationToken ct = default)
-      {
-            return await context.Roles
-                  .AsNoTracking()
-                  .AnyAsync(x => x.guid == guid);
-      }
+     
 
       public async Task<bool> IsAnyNameAsync(string Name, Guid locationGuid = default, CancellationToken ct = default)
       {
-            return await context.Roles
+            return await Context.Roles
                   .AsNoTracking()
-                  .AnyAsync(x => x.name.Equals(Name));
+                  .AnyAsync(x => x.name.Equals(Name), cancellationToken: ct);
       }
 
       public Task<bool> IsAnyRelatedEntitiesAsync(Guid guid, CancellationToken ct = default)
@@ -290,58 +91,43 @@ public sealed class RoleRepository(CoreDbContext context) : IRoleRepository
 
       public async Task<bool> IsAnyUserByGuidAsync(Guid guid, CancellationToken ct = default)
       {
-            return await context.Roles
+            return await Context.Roles
                   .AsNoTracking()
-                  .AnyAsync(x => x.guid == guid && x.users.Any());
+                  .AnyAsync(x => x.guid == guid && x.users.Any(), cancellationToken: ct);
 
       }
 
-      public async Task<bool> IsDefaultAsync(Guid guid, CancellationToken ct = default)
-      {
-            return await context.Roles
-                  .AsNoTracking()
-                  .AnyAsync(x => x.guid == guid && x.is_default);
-      }
 
-      public Task<bool> IsDisabledAsync(Guid guid, CancellationToken ct = default)
-      {
-            throw new NotImplementedException();
-      }
 
-      public Task<bool> IsEnabledAsync(Guid guid, CancellationToken ct = default)
+      public override async Task UpdateAsync(Role entity, CancellationToken ct = default)
       {
-            throw new NotImplementedException();
-      }
-
-      public async Task UpdateAsync(Role entity, CancellationToken ct = default)
-      {
-            await context.Database.BeginTransactionAsync(ct);
+            await Context.Database.BeginTransactionAsync(ct);
 
             try
             {
-                  var en = await context.Roles
+                  var en = await Context.Roles
                   .Include(x => x.module_permission)
                   .ThenInclude(x => x.feature_permissions)
                   .Where(x => x.guid == entity.Guid)
-                  .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.ROLE.ToString(), entity.Guid.ToString());
+                  .FirstOrDefaultAsync(cancellationToken: ct) ?? throw new NotFoundException(EntityType.ROLE.ToString(), entity.Guid.ToString());
 
                   // Delete old permission
-                  context.ModulePermissions.RemoveRange(en.module_permission);
+                  Context.ModulePermissions.RemoveRange(en.module_permission);
 
                   en.name = entity.Name;
                   en.module_permission = entity.ModulePermissions.Select(x => new Core.Infrastructure.Persistences.Entities.ModulePermission(
                         x
                   )).ToList();
 
-                  context.Roles.Update(en);
+                  Context.Roles.Update(en);
 
-                  await context.SaveChangesAsync(ct);
+                  await Context.SaveChangesAsync(ct);
 
-                  await context.Database.CommitTransactionAsync(ct);
+                  await Context.Database.CommitTransactionAsync(ct);
             }
             catch
             {
-                  await context.Database.RollbackTransactionAsync(ct);
+                  await Context.Database.RollbackTransactionAsync(ct);
                   throw;
             }
 

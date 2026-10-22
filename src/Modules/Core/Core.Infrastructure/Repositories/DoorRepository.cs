@@ -2,6 +2,7 @@ using Core.Application.Interfaces;
 using Core.Contract.DTOs.Door;
 using Core.Domain.Entities;
 using Core.Infrastructure.Persistences;
+using Core.Infrastructure.Projections;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel.Constants;
 using SharedKernel.Domain;
@@ -10,258 +11,60 @@ using SharedKernel.Exceptions;
 
 namespace Core.Infrastructure.Repositories;
 
-public sealed class DoorRepository(CoreDbContext context) : IDoorRepository
-{
-  public async Task AddAsync(Door entity, CancellationToken ct = default)
+public sealed class DoorRepository(CoreDbContext context) : BaseRepository<Persistences.Entities.Door, Domain.Entities.Door, DoorDto>(
+  context,
+  d => new Persistences.Entities.Door(d),
+  (en, dom) =>
   {
-    await context.Doors.AddAsync(
-      new Persistences.Entities.Door(entity)
-      , ct);
+    en.name = dom.Name;
+    en.vendor = dom.Vendor;
+    en.type = dom.Type;
+    en.metadata = dom.Metadata;
+    en.sensor = dom.Sensor == null ? null : new Persistences.Entities.Sensor(dom.Sensor);
+    en.relay = dom.Relay == null ? null : new Persistences.Entities.Relay(dom.Relay);
+    en.buzzer = dom.Buzzer == null ? null : new Persistences.Entities.Buzzer(dom.Buzzer);
 
-    await context.SaveChangesAsync(ct);
-  }
+    // 1 : N Handler
+
+    context.Readers.RemoveRange(en.readers);
+    en.readers.Clear();
+
+    foreach (var reader in dom.Readers)
+    {
+      en.readers.Add(
+        new Persistences.Entities.Reader(reader)
+      );
+    }
+
+    context.Rexes.RemoveRange(en.rexes);
+    en.rexes.Clear();
+
+    foreach (var rex in dom.Rexes)
+    {
+      en.rexes.Add(
+        new Persistences.Entities.Rex(rex)
+      );
+    }
+  },
+  DoorProjections.ToDto,
+  DoorProjections.ToCommand
+), IDoorRepository
+{
+
 
   public async Task<bool> CheckRelationAsync(Guid guid, CancellationToken ct = default)
   {
     throw new NotImplementedException();
   }
 
-  public async Task DeleteAsync(Guid guid, CancellationToken ct = default)
-  {
-    var entity = await context.Doors
-    .OrderByDescending(x => x.id)
-      .Where(x => x.guid == guid)
-      .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.DEVICE.ToString(), guid.ToString());
-
-    // Check releation
 
 
-    context.Doors.Remove(entity);
 
-    // // Reader
-    // var reader = await context.Readers
-    //   .Where(x => x.door_id == entity.id)
-    //   .ToArrayAsync();
 
-    // if(reader.Count() > 0)
-    //   context.Readers.RemoveRange(reader);
-
-    // // Sensor
-    // var sensor = await context.Sensors
-    //   .Where(x => x.door_id == entity.id)
-    //   .OrderByDescending(x => x.id)
-    //   .FirstOrDefaultAsync();
-
-    // if(sensor != null)
-    //   context.Sensors.Remove(sensor);
-
-    // // Relay
-    // var relay = await context.Relays
-    //   .Where(x => x.door_id == entity.id)
-    //   .OrderByDescending(x => x.id)
-    //   .FirstOrDefaultAsync();
-
-    // if(relay != null)
-    //   context.Relays.Remove(relay);
-
-    // // Buzzer
-    // var buzzer = await context.Buzzers
-    //   .Where(x => x.door_id == entity.id)
-    //   .OrderByDescending(x => x.id)
-    //   .FirstOrDefaultAsync();
-
-    // if(buzzer != null)
-    //   context.Buzzers.Remove(buzzer);
-
-    // // Rex
-
-    // var rexes = await context.Rexes
-    //   .Where(x => x.door_id == entity.id)
-    //   .ToArrayAsync();
-
-    // if(rexes.Count() > 0)
-    //   context.Rexes.RemoveRange(rexes);
-
-    // // BG
-    // var bg = await context.BreakGlasses
-    //   .Where(x => x.door_id == entity.id)
-    //   .OrderByDescending(x => x.id)
-    //   .FirstOrDefaultAsync();
-
-    // if(bg != null)
-    //   context.BreakGlasses.Remove(bg);
-
-    await context.SaveChangesAsync(ct);
-
-  }
-
-  public async Task DeleteRangeAsync(IEnumerable<Guid> guids, CancellationToken ct = default)
-  {
-    var entities = await context.Doors
-      .Where(x => guids.Contains(x.guid))
-      .ToArrayAsync();
-
-    context.Doors.RemoveRange(entities);
-
-    await context.SaveChangesAsync(ct);
-  }
-
-  public async Task<bool> DisableAsync(Guid guid, CancellationToken ct = default)
-  {
-    var en = await context.Doors
-      .Where(x => x.guid == guid)
-      .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.DEVICE.ToString(), guid.ToString());
-
-    en.is_active = false;
-
-    context.Doors.Update(en);
-
-    await context.SaveChangesAsync(ct);
-
-    return true;
-  }
-
-  public async Task<bool> EnableAsync(Guid guid, CancellationToken ct = default)
-  {
-    var en = await context.Doors
-      .Where(x => x.guid == guid)
-      .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.DEVICE.ToString(), guid.ToString());
-
-    en.is_active = true;
-
-    context.Doors.Update(en);
-
-    await context.SaveChangesAsync(ct);
-
-    return true;
-  }
-
-  public async Task<DoorDto> GetAsync(Guid guid, CancellationToken ct = default)
-  {
-
-    return await context.Doors
-      .AsNoTracking()
-      .Where(x => x.guid == guid)
-      .Select(x => new DoorDto(
-        x.guid,
-        x.name,
-        x.vendor,
-        x.type,
-        x.device.guid,
-        x.device.name,
-        x.metadata,
-        x.readers.Select(
-          r => new ReaderDto(
-            r.slot_no,
-            r.mode,
-            r.metadata,
-            r.vendor,
-            r.reader_direction,
-            r.device_module.guid
-          )
-        ).ToList(),
-        x.buzzer == null ? null : new BuzzerDto(
-          x.buzzer.slot_no,
-          x.buzzer.metadata,
-          x.buzzer.vendor,
-          x.buzzer.device_module.guid
-        ),
-        x.rexes.Select(x => new RexDto(
-          x.slot_no,
-          x.metadata,
-          x.vendor,
-          x.device_module.guid,
-           x.timezone == null ? default : x.timezone.guid
-        )).ToList(),
-        x.sensor == null ? null : new SensorDto(
-          x.sensor.slot_no,
-          x.sensor.metadata,
-          x.sensor.vendor,
-          x.sensor.device_module.guid
-        ),
-        x.relay == null ? null : new RelayDto(
-          x.relay.slot_no,
-          x.relay.metadata,
-          x.relay.vendor,
-          x.relay.device_module.guid
-        ),
-        x.bg == null ? null : new BGDto(
-          x.bg.slot_no,
-          x.bg.metadata,
-          x.bg.vendor,
-          x.bg.device_module.guid
-        ),
-        x.location.guid,
-        x.location.name,
-        x.is_active,
-        x.is_default
-      )).FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.DEVICE.ToString(), guid.ToString());
-  }
-
-  public async Task<IEnumerable<DoorDto>> GetByLocationAsync(Guid locationGuid, CancellationToken ct = default)
-  {
-    return await context.Doors
-      .AsNoTracking()
-      .Where(x => x.location.guid == locationGuid)
-      .Select(x => new DoorDto(
-        x.guid,
-        x.name,
-        x.vendor,
-        x.type,
-         x.device.guid,
-        x.device.name,
-        x.metadata,
-        x.readers.Select(
-          r => new ReaderDto(
-            r.slot_no,
-            r.mode,
-            r.metadata,
-            r.vendor,
-            r.reader_direction,
-            r.device_module.guid
-          )
-        ).ToList(),
-        x.buzzer == null ? null : new BuzzerDto(
-          x.buzzer.slot_no,
-          x.buzzer.metadata,
-          x.buzzer.vendor,
-          x.buzzer.device_module.guid
-        ),
-        x.rexes.Select(x => new RexDto(
-          x.slot_no,
-          x.metadata,
-          x.vendor,
-          x.device_module.guid,
-           x.timezone == null ? default : x.timezone.guid
-        )).ToList(),
-        x.sensor == null ? null : new SensorDto(
-          x.sensor.slot_no,
-          x.sensor.metadata,
-          x.sensor.vendor,
-          x.sensor.device_module.guid
-        ),
-        x.relay == null ? null : new RelayDto(
-          x.relay.slot_no,
-          x.relay.metadata,
-          x.relay.vendor,
-          x.relay.device_module.guid
-        ),
-         x.bg == null ? null : new BGDto(
-          x.bg.slot_no,
-          x.metadata,
-          x.bg.vendor,
-          x.bg.device_module.guid
-        ),
-        x.location.guid,
-        x.location.name,
-        x.is_active,
-        x.is_default
-      )).ToArrayAsync(ct);
-  }
 
   public async Task<IEnumerable<DoorDto>> GetByMacAsync(string mac, CancellationToken ct = default)
   {
-    return await context.Doors
+    return await Context.Doors
       .AsNoTracking()
       .Where(x => x.device.mac == mac)
       .Select(x => new DoorDto(
@@ -322,7 +125,7 @@ public sealed class DoorRepository(CoreDbContext context) : IDoorRepository
 
   public async Task<IEnumerable<(Guid guid, int id, string mac, string ip, Vendor vendor)>> GetDetailsByGuidAsync(IEnumerable<Guid> guids, CancellationToken ct = default)
   {
-    var res = await context.Doors
+    var res = await Context.Doors
       .AsNoTracking()
       .Where(x => guids.Contains(x.guid))
       .Select(x => new
@@ -332,251 +135,46 @@ public sealed class DoorRepository(CoreDbContext context) : IDoorRepository
         x.device.mac,
         x.device.ip,
         x.device.vendor
-      }).ToArrayAsync();
+      }).ToArrayAsync(cancellationToken: ct);
 
     return res.Select(x => (x.guid, x.id, x.mac, x.ip, x.vendor)).ToArray();
   }
 
   public async Task<Dictionary<Guid, int>> GetDoorIdsMapGuidsAsync(IEnumerable<Guid> guids, CancellationToken ct = default)
   {
-    return await context.Doors
+    return await Context.Doors
       .AsNoTracking()
       .Where(x => guids.Contains(x.guid))
       .ToDictionaryAsync(x => x.guid, x => x.id, ct);
   }
 
-  public Task<Guid> GetGuidByIdAsync(int id, CancellationToken ct = default)
+
+
+  public async Task<IEnumerable<int>> GetIdsByGuidsAsync(IEnumerable<Guid> guids, CancellationToken ct = default)
   {
-    throw new NotImplementedException();
+    return await Context.Doors
+     .AsNoTracking()
+     .Where(x => guids.Contains(x.guid))
+     .Select(x => x.id)
+     .ToArrayAsync(cancellationToken: ct);
   }
 
-  public async Task<int> GetIdByGuidAsync(Guid guid, CancellationToken ct = default)
+
+  public async Task<Pagination<DoorDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
   {
-    var res = await context.Doors
-      .AsNoTracking()
-      .Where(x => x.guid == guid)
-      .Select(x => x.id)
-      .FirstOrDefaultAsync();
-
-    if (res == 0)
-      throw new NotFoundException(EntityType.DEVICE.ToString(), guid.ToString());
-
-    return res;
+    return await base.GetPaginationAsync(
+      param,
+      param.locationGuid != new Guid("3a9c9947-d5ca-4bb2-b525-0499a340f1d6") ? x => x.location.guid == param.locationGuid : null,
+                  [x => x.name],
+                  ct
+    );
   }
 
-      public async Task<IEnumerable<int>> GetIdsByGuidsAsync(IEnumerable<Guid> guids, CancellationToken ct = default)
-      {
-           return await context.Doors
-            .AsNoTracking()
-            .Where(x => guids.Contains(x.guid))
-            .Select(x => x.id)
-            .ToArrayAsync();
-      }
-
-      public async Task<string> GetNameByGuidAsync(Guid guid, CancellationToken ct = default)
-      {
-           return await context.Doors
-            .AsNoTracking()
-            .Where(x => x.guid == guid)
-            .Select(x => x.name)
-            .FirstOrDefaultAsync() ?? string.Empty;
-      }
-
-      public async Task<Pagination<DoorDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
-  {
-    var query = context.Doors
-                  .Where(x => x.location.guid == param.locationGuid)
-                  .AsNoTracking()
-                  .AsQueryable();
-
-    if (!string.IsNullOrWhiteSpace(param.search))
-    {
-      var search = param.search.Trim();
-
-      if (context.Database.IsNpgsql())
-      {
-        var pattern = $"%{search}%";
-
-        query = query.Where(x =>
-            EF.Functions.ILike(x.name, pattern)
-        );
-      }
-      else // SQL Server
-      {
-        query = query.Where(x =>
-            x.name.Contains(search)
-        );
-      }
-
-    }
 
 
-    if (param.startDate != null)
-    {
-      var startUtc = DateTime.SpecifyKind(param.startDate.Value, DateTimeKind.Utc);
-      query = query.Where(x => x.created_at >= startUtc);
-    }
-
-    if (param.endDate != null)
-    {
-      var endUtc = DateTime.SpecifyKind(param.endDate.Value, DateTimeKind.Utc);
-      query = query.Where(x => x.created_at <= endUtc);
-    }
-
-    var count = await query.CountAsync();
-
-    var res = await query
-          .AsNoTracking()
-          .OrderByDescending(e => e.created_at)
-          .Skip((param.pageNumber - 1) * param.pageSize)
-          .Take(param.pageSize)
-         .Select(x => new DoorDto(
-                      x.guid,
-                      x.name,
-                      x.vendor,
-        x.type,
-         x.device.guid,
-        x.device.name,
-                      x.metadata,
-
-                      x.readers.Select(
-                        r => new ReaderDto(
-                          r.slot_no,
-                          r.mode,
-                          r.metadata,
-                          r.vendor,
-                          r.reader_direction,
-                          r.device_module.guid
-                        )
-                      ).ToList(),
-                      x.buzzer == null ? null : new BuzzerDto(
-                        x.buzzer.slot_no,
-                        x.buzzer.metadata,
-                        x.buzzer.vendor,
-                        x.buzzer.device_module.guid
-                      ),
-                      x.rexes.Select(x => new RexDto(
-          x.slot_no,
-          x.metadata,
-          x.vendor,
-          x.device_module.guid,
-           x.timezone == null ? default : x.timezone.guid
-        )).ToList(),
-                      x.sensor == null ? null : new SensorDto(
-                        x.sensor.slot_no,
-                        x.sensor.metadata,
-                        x.sensor.vendor,
-                        x.sensor.device_module.guid
-                      ),
-                      x.relay == null ? null : new RelayDto(
-                        x.relay.slot_no,
-                        x.relay.metadata,
-                        x.relay.vendor,
-                        x.relay.device_module.guid
-                      ),
-                       x.bg == null ? null : new BGDto(
-          x.bg.slot_no,
-          x.metadata,
-          x.bg.vendor,
-          x.bg.device_module.guid
-        ),
-                      x.location.guid,
-                      x.location.name,
-                      x.is_active,
-                      x.is_default
-                    )).ToListAsync();
-
-    return new Pagination<DoorDto>(
-          param.pageNumber,
-          param.pageSize,
-          count,
-          (int)Math.Ceiling(count / (double)param.pageSize),
-          res
-          );
-  }
-
-      public Task<bool> IsAnyByNameAndLocationGuidAsync(string name, Guid guid, CancellationToken ct = default)
-      {
-            throw new NotImplementedException();
-      }
-
-      public async Task<bool> IsAnyByNameAndLocationIdAsync(string name, int locationId = 0, CancellationToken ct = default)
-  {
-    return await context.Doors
-      .AsNoTracking()
-      .AnyAsync(x => x.name.Equals(name) && x.location_id == locationId);
-
-  }
-
-  public async Task<bool> IsAnyGuidAsync(Guid guid, CancellationToken ct = default)
-  {
-    return await context.Doors
-      .AsNoTracking()
-      .AnyAsync(x => x.guid == guid);
-  }
 
   public Task<bool> IsAnyRelatedEntitiesAsync(Guid guid, CancellationToken ct = default)
   {
     throw new NotImplementedException();
-  }
-
-  public async Task<bool> IsDefaultAsync(Guid guid, CancellationToken ct = default)
-  {
-    return await context.Doors
-      .AsNoTracking()
-      .AnyAsync(x => x.is_default);
-  }
-
-      public Task<bool> IsDisabledAsync(Guid guid, CancellationToken ct = default)
-      {
-            throw new NotImplementedException();
-      }
-
-      public Task<bool> IsEnabledAsync(Guid guid, CancellationToken ct = default)
-      {
-            throw new NotImplementedException();
-      }
-
-      public async Task UpdateAsync(Door entity, CancellationToken ct = default)
-  {
-    var en = await context.Doors
-      .AsNoTracking()
-      .Where(x => x.guid == entity.Guid)
-      .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.DEVICE.ToString(), entity.Guid.ToString());
-
-    en.name = entity.Name;
-    en.vendor = entity.Vendor;
-    en.type = entity.Type;
-    en.metadata = entity.Metadata;
-    en.sensor = entity.Sensor == null ? null : new Persistences.Entities.Sensor(entity.Sensor);
-    en.relay = entity.Relay == null ? null : new Persistences.Entities.Relay(entity.Relay);
-    en.buzzer = entity.Buzzer == null ? null : new Persistences.Entities.Buzzer(entity.Buzzer);
-
-    // 1 : N Handler
-
-    context.Readers.RemoveRange(en.readers);
-    en.readers.Clear();
-
-    foreach (var reader in entity.Readers)
-    {
-      en.readers.Add(
-        new Persistences.Entities.Reader(reader)
-      );
-    }
-
-    context.Rexes.RemoveRange(en.rexes);
-    en.rexes.Clear();
-
-    foreach (var rex in entity.Rexes)
-    {
-      en.rexes.Add(
-        new Persistences.Entities.Rex(rex)
-      );
-    }
-
-
-    context.Doors.Update(en);
-
-    await context.SaveChangesAsync(ct);
   }
 }

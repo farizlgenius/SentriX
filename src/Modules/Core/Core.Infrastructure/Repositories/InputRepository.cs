@@ -19,14 +19,15 @@ public sealed class InputRepository(CoreDbContext context) : BaseRepository<Pers
         en.device_module_id = dom.DeviceModuleId;
         en.updated_at = DateTime.UtcNow;
   },
-  InputProjections.ToDto
+  InputProjections.ToDto,
+  InputProjections.ToCommand
   ), IInputRepository
 {
       public async Task<Pagination<InputDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
       {
             return await base.GetPaginationAsync(
       param,
-      x => x.location.guid == param.locationGuid,
+      param.locationGuid != new Guid("3a9c9947-d5ca-4bb2-b525-0499a340f1d6") ? x => x.location.guid == param.locationGuid : null,
       [x => x.name],
       ct
     );

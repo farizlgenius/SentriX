@@ -21,7 +21,8 @@ public sealed class DepartmentRepository(CoreDbContext context) : BaseRepository
     en.company_id = dom.CompanyId;
     en.updated_at = DateTime.UtcNow;
   },
-  DepartmentProjections.ToDto
+  DepartmentProjections.ToDto,
+  DepartmentProjections.ToCommand
 ),IDepartmentRepository
 {
 

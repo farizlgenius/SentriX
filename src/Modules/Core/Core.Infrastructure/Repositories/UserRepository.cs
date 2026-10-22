@@ -2,6 +2,7 @@ using Core.Application.Interfaces;
 using Core.Contract.DTOs.User;
 using Core.Domain.Entities;
 using Core.Infrastructure.Persistences;
+using Core.Infrastructure.Projections;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel.Constants;
 using SharedKernel.Domain;
@@ -10,135 +11,40 @@ using SharedKernel.Exceptions;
 
 namespace Core.Infrastructure.Repositories;
 
-public sealed class UserRepository(CoreDbContext context) : IUserRepository
+public sealed class UserRepository(CoreDbContext context) : BaseRepository<Persistences.Entities.User,Domain.Entities.User,UserDto>(
+  context,
+  d => new Persistences.Entities.User(d),
+  (en,dom) =>{},
+  UserProjections.ToDto,
+  UserProjections.ToCommand
+),IUserRepository
 {
-  public async Task AddAsync(User entity, CancellationToken ct = default)
-  {
-    await context.Users.AddAsync(
-      new Persistences.Entities.User(entity), ct
-    );
 
-    await context.SaveChangesAsync(ct);
-  }
 
   public async Task ChangePasswordAsync(string username, string hashed, CancellationToken ct = default)
   {
-    var entity = await context.Users
-      .Where(x => x.username.Equals(username))
-      .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.USER.ToString(), username);
+    var entity = await Context.Users
+      .Where(x => x.username != null && x.username.Equals(username))
+      .FirstOrDefaultAsync(cancellationToken: ct) ?? throw new NotFoundException(EntityType.USER.ToString(), username);
 
     entity.password = hashed;
     entity.updated_at = DateTime.UtcNow;
 
-    context.Users.Update(entity);
+    Context.Users.Update(entity);
 
-    await context.SaveChangesAsync(ct);
-  }
-
-  public async Task DeleteAsync(Guid guid, CancellationToken ct = default)
-  {
-    var entity = await context.Users
-      .Where(x => x.guid == guid)
-      .FirstOrDefaultAsync(ct);
-
-    context.Users.Remove(entity ?? throw new NotFoundException(EntityType.USER.ToString(), guid.ToString()));
-
-    await context.SaveChangesAsync(ct);
-  }
-
-  public async Task DeleteRangeAsync(IEnumerable<Guid> guids, CancellationToken ct = default)
-  {
-    var entities = await context.Users
-                  .Where(x => guids.Contains(x.guid) && x.is_default == false)
-                  .ToArrayAsync(ct);
-
-    context.Users.RemoveRange(entities);
-
-    await context.SaveChangesAsync(ct);
-  }
-
-  public async Task<bool> DisableAsync(Guid guid, CancellationToken ct = default)
-  {
-    var en = await context.Users
-          .Where(x => x.guid == guid)
-          .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.USER.ToString(), guid.ToString());
-
-    en.is_active = false;
-    en.updated_at = DateTime.UtcNow;
-
-    context.Users.Update(en);
-
-    await context.SaveChangesAsync(ct);
-
-    return true;
-  }
-
-  public async Task<bool> EnableAsync(Guid guid, CancellationToken ct = default)
-  {
-    var en = await context.Users
-           .Where(x => x.guid == guid)
-           .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.USER.ToString(), guid.ToString());
-
-    en.is_active = true;
-    en.updated_at = DateTime.UtcNow;
-
-    context.Users.Update(en);
-
-    await context.SaveChangesAsync(ct);
-
-    return true;
-  }
-
-  public async Task<UserDto> GetAsync(Guid guid, CancellationToken ct = default)
-  {
-    return await context.Users
-      .AsNoTracking()
-      .Where(x => x.guid == guid)
-      .Select(x => new UserDto(
-        x.guid,
-        x.user_code,
-        x.username,
-        x.identification,
-        x.title,
-        x.firstname,
-        x.middlename,
-        x.lastname,
-        x.gender,
-        x.date_of_birth,
-        x.email,
-        x.phone,
-        x.role == null ? string.Empty : x.role.name,
-        x.company == null ? string.Empty : x.company.name,
-        x.department == null ? string.Empty : x.department.name,
-        x.position == null ? string.Empty : x.position.name,
-        x.address,
-        x.active_time,
-        x.expire_time,
-        x.additionals.Select(x => x.additional).ToList(),
-        x.user_groups.Select(x => x.group.name).ToList(),
-        x.cards.Select(c => new CardDto(
-          c.bits,
-          c.fac,
-          c.card_number
-        )).ToList(),
-        new LicensePlateDto(x.license_plate == null ? string.Empty : x.license_plate.license_plate),
-        new PinDto(x.pin == null ? string.Empty : x.pin.pin),
-        new QrCodeDto(x.qr_code == null ? string.Empty : x.qr_code.qr_code),
-        x.user_locations.Select(x => x.location.name).ToList(),
-        x.metadata
-      )).FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.USER.ToString(), guid.ToString());
+    await Context.SaveChangesAsync(ct);
   }
 
   public async Task<UserDto> GetByUsernameAsync(string username, CancellationToken ct = default)
   {
-    return await context.Users
+    return await Context.Users
       .AsNoTracking()
       .OrderByDescending(x => x.id)
-      .Where(x => x.username.Equals(username))
+      .Where(x => x.username != null && x.username.Equals(username))
       .Select(x => new UserDto(
         x.guid,
         x.user_code,
-        x.username,
+        x.username ?? string.Empty,
         x.identification,
         x.title,
         x.firstname,
@@ -167,7 +73,7 @@ public sealed class UserRepository(CoreDbContext context) : IUserRepository
         new QrCodeDto(x.qr_code == null ? string.Empty : x.qr_code.qr_code),
         x.user_locations.Select(x => x.location.name).ToList(),
         x.metadata
-      )).FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.USER.ToString(), username);
+      )).FirstOrDefaultAsync(cancellationToken: ct) ?? throw new NotFoundException(EntityType.USER.ToString(), username);
   }
 
   public async Task<Guid> GetDefaultLocationGuidAsync()
@@ -177,36 +83,28 @@ public sealed class UserRepository(CoreDbContext context) : IUserRepository
 
   public async Task<string> GetHashByUsernameAsync(string username, CancellationToken ct = default)
   {
-    return await context.Users
+    return await Context.Users
       .AsNoTracking()
-      .Where(x => x.username.Equals(username))
+      .Where(x => x.username != null && x.username.Equals(username))
       .Select(x => x.password)
-      .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.OPERATOR.ToString(), username);
+      .FirstOrDefaultAsync(cancellationToken: ct) ?? throw new NotFoundException(EntityType.OPERATOR.ToString(), username);
   }
 
-  public async Task<int> GetIdByGuidAsync(Guid guid, CancellationToken ct = default)
-  {
-    return await context.Users
-      .AsNoTracking()
-      .Where(x => x.guid == guid)
-      .OrderByDescending(x => x.id)
-      .Select(x => x.id)
-      .FirstOrDefaultAsync();
-  }
+
 
   public async Task<IEnumerable<Guid>> GetLocationGuidByUsernameAsync(string username, CancellationToken ct = default)
   {
-    return await context.Users
+    return await Context.Users
       .AsNoTracking()
-      .Where(x => x.username.Equals(username))
+      .Where(x => x.username != null && x.username.Equals(username))
       .SelectMany(x => x.user_locations.Select(x => x.location.guid))
-      .ToArrayAsync();
+      .ToArrayAsync(cancellationToken: ct);
   }
 
 
   public async Task<Pagination<UserDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
   {
-    var query = context.Users
+    var query = Context.Users
                   .AsNoTracking()
                   .Where(x => x.user_locations.Any(x => x.location.guid == param.locationGuid))
                   .AsQueryable();
@@ -217,12 +115,12 @@ public sealed class UserRepository(CoreDbContext context) : IUserRepository
       {
         var search = param.search.Trim();
 
-        if (context.Database.IsNpgsql())
+        if (Context.Database.IsNpgsql())
         {
           var pattern = $"%{search}%";
 
           query = query.Where(x =>
-              EF.Functions.ILike(x.username, pattern) ||
+              (x.username != null ? EF.Functions.ILike(x.username, pattern) : false) ||
               EF.Functions.ILike(x.user_code, pattern) ||
               EF.Functions.ILike(x.identification, pattern) ||
               EF.Functions.ILike(x.title.ToString(), pattern) ||
@@ -232,16 +130,16 @@ public sealed class UserRepository(CoreDbContext context) : IUserRepository
               EF.Functions.ILike(x.gender.ToString(), pattern) ||
               EF.Functions.ILike(x.email, pattern) ||
               EF.Functions.ILike(x.phone, pattern) ||
-              (x.company != null ? EF.Functions.ILike(x.company.name, pattern) : false) ||
-              (x.department != null ? EF.Functions.ILike(x.department.name, pattern) : false) ||
-              (x.position != null ? EF.Functions.ILike(x.position.name, pattern) : false) ||
+              (x.company != null && EF.Functions.ILike(x.company.name, pattern)) ||
+              (x.department != null && EF.Functions.ILike(x.department.name, pattern)) ||
+              (x.position != null && EF.Functions.ILike(x.position.name, pattern)) ||
               EF.Functions.ILike(x.address, pattern)
           );
         }
         else // SQL Server
         {
           query = query.Where(x =>
-              x.username.Contains(search) ||
+              (x.username != null && x.username.Contains(search)) ||
               x.user_code.Contains(search) ||
               x.identification.Contains(search) ||
               x.title.ToString().Contains(search) ||
@@ -251,9 +149,9 @@ public sealed class UserRepository(CoreDbContext context) : IUserRepository
               x.gender.ToString().Contains(search) ||
               x.email.Contains(search) ||
               x.phone.Contains(search) ||
-              (x.company != null ? x.company.name.Contains(search) : false) ||
-              (x.department != null ? x.department.name.Contains(search) : false) ||
-              (x.position != null ? x.position.name.Contains(search) : false) ||
+              (x.company != null && x.company.name.Contains(search)) ||
+              (x.department != null && x.department.name.Contains(search)) ||
+              (x.position != null && x.position.name.Contains(search)) ||
               x.address.Contains(search)
           );
         }
@@ -284,7 +182,7 @@ public sealed class UserRepository(CoreDbContext context) : IUserRepository
           .Select(e => new UserDto(
             e.guid,
             e.user_code,
-            e.username,
+            e.username ?? string.Empty,
             e.identification,
             e.title,
             e.firstname,
@@ -329,35 +227,26 @@ public sealed class UserRepository(CoreDbContext context) : IUserRepository
     throw new NotImplementedException();
   }
 
-  public async Task<bool> IsAnyGuidAsync(Guid guid, CancellationToken ct = default)
-  {
-    return await context.Users.AsNoTracking()
-      .AnyAsync(x => x.guid == guid);
-  }
+ 
 
   public async Task<bool> IsAnyUsernameAsync(string username, CancellationToken ct = default)
   {
-    return await context.Users
+    return await Context.Users
       .AsNoTracking()
-      .AnyAsync(x => x.username.Equals(username));
+      .AnyAsync(x => x.username != null && x.username.Equals(username), cancellationToken: ct);
   }
 
-  public async Task<bool> IsDefaultAsync(Guid guid, CancellationToken ct = default)
-  {
-    return await context.Users
-      .AsNoTracking()
-      .AnyAsync(x => x.guid.Equals(guid) && x.is_default);
-  }
 
-  public async Task UpdateAsync(User user, CancellationToken ct = default)
+
+  public override async Task UpdateAsync(User user, CancellationToken ct = default)
   {
 
 
     try
     {
-      await context.Database.BeginTransactionAsync(ct);
+      await Context.Database.BeginTransactionAsync(ct);
 
-      var entity = await context.Users
+      var entity = await Context.Users
       .Where(x => x.guid == user.Guid)
       .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.USER.ToString(), user.Guid.ToString());
 
@@ -386,7 +275,7 @@ public sealed class UserRepository(CoreDbContext context) : IUserRepository
 
       // Additional
 
-      var existingAdditionals = await context.UserAdditionals
+      var existingAdditionals = await Context.UserAdditionals
         .Where(x => x.user_id == entity.id)
         .ToListAsync(ct);
 
@@ -396,7 +285,7 @@ public sealed class UserRepository(CoreDbContext context) : IUserRepository
       {
         if (!incomingAdditionals.Contains(item.additional.ToLower()))
         {
-          context.UserAdditionals.Remove(item);
+          Context.UserAdditionals.Remove(item);
         }
       }
 
@@ -408,7 +297,7 @@ public sealed class UserRepository(CoreDbContext context) : IUserRepository
         if (!existingValueAdditional.Contains(additional.ToLower()))
         {
 
-          context.UserAdditionals.Add(
+          Context.UserAdditionals.Add(
               new Persistences.Entities.UserAdditional
               {
                 user_id = entity.id,
@@ -419,7 +308,7 @@ public sealed class UserRepository(CoreDbContext context) : IUserRepository
 
       // Card 
 
-      var existingCards = await context.Cards
+      var existingCards = await Context.Cards
         .Where(x => x.user_id == entity.id)
         .ToListAsync(ct);
 
@@ -429,7 +318,7 @@ public sealed class UserRepository(CoreDbContext context) : IUserRepository
       {
         if (!incomingCards.Any(c => c.Bits == item.bits && c.Fac == item.fac && c.CardNumber == item.card_number))
         {
-          context.Cards.Remove(item);
+          Context.Cards.Remove(item);
         }
       }
 
@@ -439,7 +328,7 @@ public sealed class UserRepository(CoreDbContext context) : IUserRepository
       {
         if (!existingValueCards.Any(c => c.Bits == card.Bits && c.Fac == card.Fac && c.CardNumber == card.CardNumber))
         {
-          context.Cards.Add(
+          Context.Cards.Add(
               new Persistences.Entities.Card(card)
               {
                 user_id = entity.id,
@@ -455,7 +344,7 @@ public sealed class UserRepository(CoreDbContext context) : IUserRepository
       entity.qr_code = user.QrCode is null ? null : new Persistences.Entities.QrCode(user.QrCode);
 
       // User Locations
-      var existingUserLocations = await context.UserLocations
+      var existingUserLocations = await Context.UserLocations
         .Where(x => x.user_id == entity.id)
         .ToListAsync(ct);
 
@@ -468,7 +357,7 @@ public sealed class UserRepository(CoreDbContext context) : IUserRepository
       {
         if (!incomingUserLocationIds.Contains(existingLocation.location_id))
         {
-          context.UserLocations.Remove(existingLocation);
+          Context.UserLocations.Remove(existingLocation);
         }
       }
 
@@ -477,7 +366,7 @@ public sealed class UserRepository(CoreDbContext context) : IUserRepository
       {
         if (!existingUserLocationIds.Contains(incomingLocationId))
         {
-          context.UserLocations.Add(
+          Context.UserLocations.Add(
               new Persistences.Entities.UserLocation
               {
                 user_id = entity.id,
@@ -488,7 +377,7 @@ public sealed class UserRepository(CoreDbContext context) : IUserRepository
 
       // User Groups
 
-      var existingUserGroups = await context.UserGroups
+      var existingUserGroups = await Context.UserGroups
         .Where(x => x.user_id == entity.id)
         .ToListAsync(ct);
 
@@ -501,7 +390,7 @@ public sealed class UserRepository(CoreDbContext context) : IUserRepository
       {
         if (!incomingUserGroupIds.Contains(existingGroup.group_id))
         {
-          context.UserGroups.Remove(existingGroup);
+          Context.UserGroups.Remove(existingGroup);
         }
       }
 
@@ -510,7 +399,7 @@ public sealed class UserRepository(CoreDbContext context) : IUserRepository
       {
         if (!existingUserGroupIds.Contains(incomingGroupId))
         {
-          context.UserGroups.Add(
+          Context.UserGroups.Add(
               new Persistences.Entities.UserGroup
               {
                 user_id = entity.id,
@@ -519,88 +408,42 @@ public sealed class UserRepository(CoreDbContext context) : IUserRepository
         }
       }
 
-      context.Users.Update(entity);
+      Context.Users.Update(entity);
 
-      await context.SaveChangesAsync(ct);
+      await Context.SaveChangesAsync(ct);
 
-      await context.Database.CommitTransactionAsync(ct);
+      await Context.Database.CommitTransactionAsync(ct);
     }
     catch
     {
-      await context.Database.RollbackTransactionAsync(ct);
+      await Context.Database.RollbackTransactionAsync(ct);
       throw;
     }
 
   }
 
-  public async Task<Guid> GetRoleGuidByUsernameAsync(string username, CancellationToken ct = default)
-  {
-    return await context.Users
-      .AsNoTracking()
-      .Where(x => x.username.Equals(username))
-      .OrderByDescending(x => x.id)
-      .Select(x => x.role == null ? Guid.Empty : x.role.guid)
-      .FirstOrDefaultAsync(ct);
-  }
 
-  public async Task<IEnumerable<UserDto>> GetByLocationAsync(Guid locationGuid, CancellationToken ct = default)
-  {
-    return await context.Users
-      .AsNoTracking()
-      .Where(x => x.user_locations.Any(x => x.location.guid == locationGuid))
-      .Select(e => new UserDto(
-            e.guid,
-            e.user_code,
-            e.username,
-            e.identification,
-            e.title,
-            e.firstname,
-            e.middlename,
-            e.lastname,
-            e.gender,
-            e.date_of_birth,
-            e.email,
-            e.phone,
-            e.role != null ? e.role.name : string.Empty,
-            e.company != null ? e.company.name : string.Empty,
-            e.department != null ? e.department.name : string.Empty,
-            e.position != null ? e.position.name : string.Empty,
-            e.address,
-            e.active_time,
-            e.expire_time,
-            e.additionals.Select(x => x.additional).ToList(),
-            e.user_groups.Select(x => x.group.name).ToList(),
-            e.cards.Select(x => new CardDto(
-              x.bits,
-              x.fac,
-              x.card_number
-            )).ToList(),
-            new LicensePlateDto(e.license_plate == null ? string.Empty : e.license_plate.license_plate),
-        new PinDto(e.pin == null ? string.Empty : e.pin.pin),
-        new QrCodeDto(e.qr_code == null ? string.Empty : e.qr_code.qr_code),
-            e.user_locations.Select(x => x.location.name).ToList(),
-            e.metadata
-          )).ToListAsync();
-  }
+
+  
 
   public async Task<bool> IsAnyIdentificationAsync(string identification, CancellationToken ct = default)
   {
-    return await context.Users
+    return await Context.Users
       .AsNoTracking()
-      .AnyAsync(x => x.identification.Equals(identification));
+      .AnyAsync(x => x.identification.Equals(identification), cancellationToken: ct);
   }
 
 
   public async Task UpdateImagePathAsync(Guid guid, CancellationToken ct = default)
   {
-    var entity = await context.Users
+    var entity = await Context.Users
       .Where(x => x.guid == guid)
       .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.USER.ToString(), guid.ToString());
 
     entity.face = new Persistences.Entities.Face(guid);
 
-    context.Users.Update(entity);
-    await context.SaveChangesAsync(ct);
+    Context.Users.Update(entity);
+    await Context.SaveChangesAsync(ct);
 
   }
 
@@ -609,14 +452,11 @@ public sealed class UserRepository(CoreDbContext context) : IUserRepository
     throw new NotImplementedException();
   }
 
-      public Task<Guid> GetGuidByIdAsync(int id, CancellationToken ct = default)
-      {
-            throw new NotImplementedException();
-      }
+
 
       public async Task<IEnumerable<(string mac, string ip, Vendor vendor)>> GetDetailsByUserGuidAsync(Guid guid, CancellationToken ct = default)
       {
-            var res = await context.Users
+            var res = await Context.Users
               .AsNoTracking()
               .Where(x => x.guid == guid)
               .SelectMany(
@@ -632,22 +472,7 @@ public sealed class UserRepository(CoreDbContext context) : IUserRepository
             return res.Select(x => (x.mac,x.ip,x.vendor)).ToArray();
       }
 
-      public Task<string> GetNameByGuidAsync(Guid guid, CancellationToken ct = default)
-      {
-            throw new NotImplementedException();
-      }
-
-      public Task<bool> IsEnabledAsync(Guid guid, CancellationToken ct = default)
-      {
-            throw new NotImplementedException();
-      }
-
-      public Task<bool> IsDisabledAsync(Guid guid, CancellationToken ct = default)
-      {
-            throw new NotImplementedException();
-      }
-
-      public Task<bool> IsAnyByNameAndLocationGuidAsync(string name, Guid guid, CancellationToken ct = default)
+      public Task<Guid> GetRoleGuidByUsernameAsync(string username, CancellationToken ct = default)
       {
             throw new NotImplementedException();
       }

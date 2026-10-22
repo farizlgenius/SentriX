@@ -1,4 +1,5 @@
 using Core.Application.Interfaces;
+using Core.Contract.DTOs;
 using Core.Contract.DTOs.DeviceModule;
 using Core.Domain.Entities;
 using Core.Infrastructure.Persistences;
@@ -28,7 +29,8 @@ public sealed class DeviceModuleRepository(CoreDbContext context) : BaseReposito
             en.output_slot = dom.OutputSlot;
             en.updated_at = DateTime.UtcNow;
       },
-      DeviceModuleProjections.ToDto
+      DeviceModuleProjections.ToDto,
+      DeviceModuleProjections.ToCommand
 ),IDeviceModuleRepository
 {
      
@@ -91,23 +93,6 @@ public sealed class DeviceModuleRepository(CoreDbContext context) : BaseReposito
                   )).ToArrayAsync();
       }
 
-      public async Task<CommandDetailDto> GetCommandDetailAsync(Guid guid, CancellationToken ct = default)
-      {
-            return await Context.DeviceModules
-                  .AsNoTracking()
-                  .Where(x => x.guid == guid)
-                  .Select(x => new CommandDetailDto(
-                        x.device_id,
-                        x.device.external_id!.Value,
-                        x.device.mac,
-                        x.device.ip,
-                        x.id,
-                        x.external_id!.Value,
-                        x.location_id,
-                        null,
-                        null
-                  )).FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.DEVICE_MODULE.ToString(), guid.ToString());
-      }
 
       public async Task<int> GetDeviceModuleIdByGuidAsync(Guid guid, CancellationToken ct = default)
       {

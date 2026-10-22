@@ -4,6 +4,8 @@ using Core.Contract.DTOs.Events.Audit;
 using Core.Contract.DTOs.Events.Event;
 using Core.Contract.DTOs.Events.ExceptionEvent;
 using Core.Contract.Interfaces;
+using Core.Infrastructure.Projections;
+using Core.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel.Constants;
 using SharedKernel.Domain;
@@ -12,40 +14,40 @@ using SharedKernel.Exceptions;
 
 namespace Core.Infrastructure.Persistences.Entities;
 
-public sealed class EventRepostory(CoreDbContext context) : IEventRepository
+public sealed class EventRepostory(CoreDbContext context) : BaseRepository<Persistences.Entities.Event, Domain.Entities.Event, EventDto>(
+  context,
+  d => new Persistences.Entities.Event(d),
+  (en, dom) => { },
+  EventProjections.ToDto,
+  EventProjections.ToCommand
+),
+IEventRepository
 {
   public async Task AddAdapterAsync(Domain.Entities.AdapterEvent @event, CancellationToken ct = default)
   {
-    await context.AdapterEvents.AddAsync(
+    await Context.AdapterEvents.AddAsync(
 new AdapterEvent(@event)
 , ct);
 
-    await context.SaveChangesAsync(ct);
+    await Context.SaveChangesAsync(ct);
   }
 
-  public async Task AddAsync(Domain.Entities.Event entity, CancellationToken ct = default)
-  {
-    await context.Events.AddAsync(
-      new Event(entity)
-      , ct);
 
-    await context.SaveChangesAsync(ct);
-  }
 
   public async Task AddAuditAsync(Domain.Entities.AuditTrail audit, CancellationToken ct = default)
   {
 
-    await context.AuditTrails.AddAsync(
+    await Context.AuditTrails.AddAsync(
       new AuditTrail(audit),
       ct
     );
 
-    await context.SaveChangesAsync(ct);
+    await Context.SaveChangesAsync(ct);
   }
 
   public async Task AddExceptionAsync(string method, string path, string exception, string innerException, string stackTrace, CancellationToken ct = default)
   {
-    await context.ExceptionEvent.AddAsync(
+    await Context.ExceptionEvent.AddAsync(
       new Persistences.Entities.ExceptionEvent(
         method,
         path,
@@ -56,32 +58,12 @@ new AdapterEvent(@event)
       ct
     );
 
-    await context.SaveChangesAsync(ct);
-  }
-
-  public async Task DeleteAsync(Guid guid, CancellationToken ct = default)
-  {
-    throw new NotImplementedException();
-  }
-
-  public async Task DeleteRangeAsync(IEnumerable<Guid> guids, CancellationToken ct = default)
-  {
-    throw new NotImplementedException();
-  }
-
-  public async Task<bool> DisableAsync(Guid guid, CancellationToken ct = default)
-  {
-    throw new NotImplementedException();
-  }
-
-  public async Task<bool> EnableAsync(Guid guid, CancellationToken ct = default)
-  {
-    throw new NotImplementedException();
+    await Context.SaveChangesAsync(ct);
   }
 
   public async Task<Pagination<AdapterEventDto>> GetAdapterPaginationAsync(PaginationParams param, CancellationToken ct = default)
   {
-    var query = context.AdapterEvents
+    var query = Context.AdapterEvents
                   .Where(x => x.location == null || x.location.guid == param.locationGuid)
                   .AsNoTracking()
                   .AsQueryable();
@@ -92,7 +74,7 @@ new AdapterEvent(@event)
       {
         var search = param.search.Trim();
 
-        if (context.Database.IsNpgsql())
+        if (Context.Database.IsNpgsql())
         {
           var pattern = $"%{search}%";
 
@@ -174,14 +156,11 @@ new AdapterEvent(@event)
           );
   }
 
-  public async Task<EventDto> GetAsync(Guid guid, CancellationToken ct = default)
-  {
-    throw new NotImplementedException();
-  }
+
 
   public async Task<Pagination<AuditTrailDto>> GetAuditPaginationAsync(PaginationParams param, CancellationToken ct = default)
   {
-    var query = context.AuditTrails
+    var query = Context.AuditTrails
           .AsNoTracking()
           .AsQueryable();
 
@@ -191,7 +170,7 @@ new AdapterEvent(@event)
       {
         var search = param.search.Trim();
 
-        if (context.Database.IsNpgsql())
+        if (Context.Database.IsNpgsql())
         {
           var pattern = $"%{search}%";
 
@@ -257,7 +236,7 @@ new AdapterEvent(@event)
 
   public async Task<IEnumerable<OptionDto>> GetCoreEventAsync(Guid guid, CancellationToken ct = default)
   {
-    return await context.CoreEvents
+    return await Context.CoreEvents
       .AsNoTracking()
       .Where(x => x.entity.guid == guid)
       .Select(x => new OptionDto(
@@ -269,7 +248,7 @@ new AdapterEvent(@event)
 
   public async Task<IEnumerable<OptionDto>> GetCoreEntityAsync(CancellationToken ct = default)
   {
-    return await context.CoreEntities
+    return await Context.CoreEntities
       .AsNoTracking()
       .Select(x => new OptionDto(
         x.entity.ToString(),
@@ -278,33 +257,10 @@ new AdapterEvent(@event)
       )).ToArrayAsync();
   }
 
-  public async Task<IEnumerable<EventDto>> GetByLocationAsync(Guid locationGuid, CancellationToken ct = default)
-  {
-    return await context.Events
-      .AsNoTracking()
-      .Where(x => x.location == null || x.location.guid == locationGuid)
-      .Select(x => new EventDto(
-        x.guid,
-        x.timestamp,
-        x.actor,
-        x.module,
-        x.event_type,
-        x.image_name,
-        x.mac,
-        x.component_name,
-        x.event_code,
-        x.remarks,
-        x.capture_image_name,
-        x.vendor,
-        x.location == null ? Guid.Empty : x.location.guid,
-        x.is_active,
-        x.is_default
-      )).ToArrayAsync();
-  }
 
   public async Task<Pagination<ExceptionEventDto>> GetExceptionPaginationAsync(PaginationParams param, CancellationToken ct = default)
   {
-    var query = context.ExceptionEvent
+    var query = Context.ExceptionEvent
           .AsNoTracking()
           .AsQueryable();
 
@@ -314,7 +270,7 @@ new AdapterEvent(@event)
       {
         var search = param.search.Trim();
 
-        if (context.Database.IsNpgsql())
+        if (Context.Database.IsNpgsql())
         {
           var pattern = $"%{search}%";
 
@@ -375,137 +331,46 @@ new AdapterEvent(@event)
           );
   }
 
-  public Task<Guid> GetGuidByIdAsync(int id, CancellationToken ct = default)
-  {
-    throw new NotImplementedException();
-  }
-
-  public async Task<int> GetIdByGuidAsync(Guid guid, CancellationToken ct = default)
-  {
-    throw new NotImplementedException();
-  }
-
-  public Task<string> GetNameByGuidAsync(Guid guid, CancellationToken ct = default)
-  {
-    throw new NotImplementedException();
-  }
 
   public async Task<Pagination<EventDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
   {
-    var query = context.Events
-                  .Where(x => x.location == null || x.location.guid == param.locationGuid)
-                  .AsNoTracking()
-                  .AsQueryable();
-
-    if (!string.IsNullOrWhiteSpace(param.search))
-    {
-      if (!string.IsNullOrWhiteSpace(param.search))
-      {
-        var search = param.search.Trim();
-
-        if (context.Database.IsNpgsql())
-        {
-          var pattern = $"%{search}%";
-
-          query = query.Where(x =>
-              EF.Functions.ILike(x.timestamp.ToString(), pattern) ||
-              EF.Functions.ILike(x.actor, pattern) ||
-              EF.Functions.ILike(x.module, pattern) ||
-              EF.Functions.ILike(x.event_type, pattern) ||
-              EF.Functions.ILike(x.mac, pattern) ||
-              EF.Functions.ILike(x.component_name, pattern) ||
-              EF.Functions.ILike(x.event_code, pattern) ||
-              EF.Functions.ILike(x.remarks, pattern) ||
-              EF.Functions.ILike(x.vendor.ToString(), pattern)
-          );
-        }
-        else // SQL Server
-        {
-          query = query.Where(x =>
-              x.timestamp.ToString().Contains(search) ||
-              x.module.Contains(search) ||
-              x.event_type.Contains(search) ||
-              x.mac.Contains(search) ||
-              x.component_name.Contains(search) ||
-              x.event_code.Contains(search) ||
-              x.remarks.Contains(search) ||
-              x.vendor.ToString().Contains(search)
-          );
-        }
-
-      }
-    }
-
-
-    if (param.startDate != null)
-    {
-      var startUtc = DateTime.SpecifyKind(param.startDate.Value, DateTimeKind.Utc);
-      query = query.Where(x => x.created_at >= startUtc);
-    }
-
-    if (param.endDate != null)
-    {
-      var endUtc = DateTime.SpecifyKind(param.endDate.Value, DateTimeKind.Utc);
-      query = query.Where(x => x.created_at <= endUtc);
-    }
-
-    var count = await query.CountAsync();
-
-    var res = await query
-          .AsNoTracking()
-          .OrderByDescending(e => e.created_at)
-          .Skip((param.pageNumber - 1) * param.pageSize)
-          .Take(param.pageSize)
-         .Select(x => new EventDto(
-        x.guid,
-        x.timestamp,
-        x.actor,
-        x.module,
-        x.event_type,
-        x.image_name,
-        x.mac,
-        x.component_name,
-        x.event_code,
-        x.remarks,
-        x.capture_image_name,
-        x.vendor,
-        x.location == null ? Guid.Empty : x.location.guid,
-        x.is_active,
-        x.is_default
-      )).ToListAsync();
-
-    return new Pagination<EventDto>(
-          param.pageNumber,
-          param.pageSize,
-          count,
-          (int)Math.Ceiling(count / (double)param.pageSize),
-          res
-          );
+    return await base.GetPaginationAsync(
+      param,
+      param.locationGuid != new Guid("3a9c9947-d5ca-4bb2-b525-0499a340f1d6") ? x => x.location.guid == param.locationGuid : null,
+      [
+        x => x.timestamp.ToString(),
+        x => x.actor,
+        x => x.module,
+        x => x.event_type,
+        x => x.mac,
+        x => x.component_name,
+        x => x.event_code,
+        x => x.remarks,
+        x => x.vendor.ToString()
+      ]
+    );
   }
+
+
+
+ 
 
   public async Task<bool> IsAnyByNameAndLocationIdAsync(string name, int locationId = 0, CancellationToken ct = default)
   {
     throw new NotImplementedException();
   }
 
-  public async Task<bool> IsAnyGuidAsync(Guid guid, CancellationToken ct = default)
-  {
-    throw new NotImplementedException();
-  }
+
 
   public async Task<bool> IsAnyRelatedEntitiesAsync(Guid guid, CancellationToken ct = default)
   {
     throw new NotImplementedException();
   }
 
-  public async Task<bool> IsDefaultAsync(Guid guid, CancellationToken ct = default)
-  {
-    throw new NotImplementedException();
-  }
 
   public async Task UpdateAdapterEventStatusAsync(string mac, int componentId, int tag, CommandStatus status, string reason, CancellationToken ct = default)
   {
-    var entities = await context.AdapterEvents
+    var entities = await Context.AdapterEvents
       .Where(x => x.mac == mac && x.component_id == componentId && x.tag == tag && x.created_at <= x.updated_at)
       .OrderByDescending(x => x.created_at)
       .ToArrayAsync();
@@ -517,20 +382,15 @@ new AdapterEvent(@event)
       entity.received_at = DateTime.UtcNow;
     }
 
-    context.AdapterEvents.UpdateRange(entities);
+    Context.AdapterEvents.UpdateRange(entities);
 
-    await context.SaveChangesAsync(ct);
+    await Context.SaveChangesAsync(ct);
 
-  }
-
-  public async Task UpdateAsync(Domain.Entities.Event entity, CancellationToken ct = default)
-  {
-    throw new NotImplementedException();
   }
 
   public async Task<int> GetCoreEventIdByGuidAsync(Guid guid, CancellationToken ct = default)
   {
-    var res = await context.CoreEvents
+    var res = await Context.CoreEvents
       .AsNoTracking()
       .Where(x => x.guid == guid)
       .Select(x => x.id)
@@ -544,7 +404,7 @@ new AdapterEvent(@event)
 
   public async Task<int> GetCoreEntityIdByGuidAsync(Guid guid, CancellationToken ct = default)
   {
-    var res = await context.CoreEntities
+    var res = await Context.CoreEntities
       .AsNoTracking()
       .Where(x => x.guid == guid)
       .Select(x => x.id)
@@ -558,25 +418,12 @@ new AdapterEvent(@event)
 
   public async Task<EntityType> GetCoreEntityByGuidAsync(Guid guid, CancellationToken ct = default)
   {
-    return await context.CoreEntities
+    return await Context.CoreEntities
       .AsNoTracking()
       .Where(x => x.guid == guid)
       .Select(x => x.entity)
       .FirstOrDefaultAsync(ct);
   }
 
-      public Task<bool> IsEnabledAsync(Guid guid, CancellationToken ct = default)
-      {
-            throw new NotImplementedException();
-      }
 
-      public Task<bool> IsDisabledAsync(Guid guid, CancellationToken ct = default)
-      {
-            throw new NotImplementedException();
-      }
-
-      public Task<bool> IsAnyByNameAndLocationGuidAsync(string name, Guid guid, CancellationToken ct = default)
-      {
-            throw new NotImplementedException();
-      }
 }

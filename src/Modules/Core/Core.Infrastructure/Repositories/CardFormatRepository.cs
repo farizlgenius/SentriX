@@ -28,7 +28,8 @@ d => new Persistences.Entities.CardFormat(d),
     en.issue_code_loc = dom.IssueCodeLoc;
     en.updated_at = DateTime.UtcNow;  
 },
-CardFormatProjections.ToDto
+CardFormatProjections.ToDto,
+CardFormatProjections.ToCommand
 ),ICardFormatRepository
 {
 

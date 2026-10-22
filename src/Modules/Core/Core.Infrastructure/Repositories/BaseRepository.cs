@@ -26,7 +26,7 @@ public abstract class BaseRepository<TEntity, TDomain, TDto>(
       // protected readonly Expression<Func<TEntity, bool>>? Filter = filter;
 
 
-      public async Task AddAsync(TDomain domain, CancellationToken ct = default)
+      public virtual async Task AddAsync(TDomain domain, CancellationToken ct = default)
       {
             await Context.Set<TEntity>()
                   .AddAsync(
@@ -214,7 +214,7 @@ public abstract class BaseRepository<TEntity, TDomain, TDto>(
                    .AnyAsync(x => x.guid == guid && x.is_active == true, ct);
       }
 
-      public async Task UpdateAsync(TDomain domain, CancellationToken ct = default)
+      public virtual async Task UpdateAsync(TDomain domain, CancellationToken ct = default)
       {
             var en = await Context.Set<TEntity>()
                   .Where(x => x.guid == domain.Guid)

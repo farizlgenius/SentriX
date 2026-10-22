@@ -1,4 +1,5 @@
 using System.Linq.Expressions;
+using Core.Contract.DTOs;
 using Core.Contract.DTOs.CardFormat;
 
 namespace Core.Infrastructure.Projections;
@@ -25,4 +26,18 @@ public static class CardFormatProjections
             x.is_active,
             x.is_default
         );
+
+        public static readonly Expression<Func<Persistences.Entities.CardFormat,CommandDetailDto>> ToCommand = 
+    x => new CommandDetailDto(
+        -1,
+        -1,
+        string.Empty,
+        string.Empty,
+        -1,
+        -1,
+        SharedKernel.Enums.Vendor.aero,
+        x.location_id,
+        x.id,
+        x.external_id        
+    );
 }

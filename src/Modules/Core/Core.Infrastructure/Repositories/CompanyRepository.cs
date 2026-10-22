@@ -22,7 +22,8 @@ public sealed class CompanyRepository(CoreDbContext context) : BaseRepository<Pe
     en.updated_at = DateTime.UtcNow;
     en.location_id = dom.LocationId;
   },
-  CompanyProjections.ToDto
+  CompanyProjections.ToDto,
+  CompanyProjections.ToCommand
 ), ICompanyRepository
 {
 

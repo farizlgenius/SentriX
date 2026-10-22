@@ -1,4 +1,5 @@
 using System.Linq.Expressions;
+using Core.Contract.DTOs;
 using Core.Contract.DTOs.Company;
 using Core.Contract.DTOs.Department;
 
@@ -16,4 +17,7 @@ public static class DepartmentProjections
             x.is_active,
             x.is_default
       );
+
+      public static readonly Expression<Func<Persistences.Entities.Department,CommandDetailDto>> ToCommand = 
+    x => new CommandDetailDto();
 }

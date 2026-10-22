@@ -1,4 +1,5 @@
 using System.Linq.Expressions;
+using Core.Contract.DTOs;
 using Core.Contract.DTOs.Company;
 using Core.Contract.DTOs.Department;
 using Core.Contract.DTOs.DeviceModule;
@@ -27,4 +28,18 @@ public static class DeviceModuleProjections
                         x.is_active,
                         x.is_default
       );
+
+      public static readonly Expression<Func<Persistences.Entities.DeviceModule,CommandDetailDto>> ToCommand = 
+    x => new CommandDetailDto(
+        x.device_id,
+        x.device.external_id ?? -1,
+        x.device.mac,
+        x.device.ip,
+        x.id,
+        x.external_id ?? -1,
+        x.device.vendor,
+        x.location_id,
+        x.id,
+        x.external_id
+    );
 }
