@@ -18,7 +18,7 @@ public sealed class TimeService(
   ITimeRepository repo,
   IAdapterFactory adapter,
   IDeviceRepository device,
-  IComponentMapping com,
+  ITimeRepository time,
   IMessageBus bus) : ITime
 {
   public async Task<Guid> CreateAsync(CreateTimeZoneDto dto, CancellationToken ct = default)
@@ -40,16 +40,16 @@ public sealed class TimeService(
 
     // Send command to all controller and device
     var devices = await device.GetByLocationAsync(dto.LocationGuid);
-    foreach (var device in devices)
+    foreach (var devic in devices)
     {
-      var externalId = await com.GetExternalIdByMacAndEntityAsync(device.Mac, EntityType.DEVICE, ct);
-      var tzExternalId = await com.GetFreeIdByEntityAsync(EntityType.TIMEZONE, 100, null, ct);
-      await adapter.GetAdapter(device.Vendor).Time.TimeZone(
-        device.Mac,
-        device.Ip,
-        (short)externalId,
-        (short)tzExternalId,
-        intervalDtos.ToList(),
+      var dev = await device.GetCommandDetailAsync(devic.Guid, ct);
+      var tzExternalId = await time.GetFreeExeternalIdAsync(100,[],ct);
+      await adapter.GetAdapter(devic.Vendor).Time.TimeZone(
+        devic.Mac,
+        devic.Ip,
+        dev.DeviceExternalId,
+        tzExternalId,
+        [.. intervalDtos],
         ct);
     }
 
@@ -164,19 +164,18 @@ public sealed class TimeService(
   public async Task UploadAsync(Guid guid, CancellationToken ct = default)
   {
     var d = await device.GetAsync(guid, ct);
-    var tzs = await repo.GetByLocationAsync(d.LocationGuid);
-
-    var deviceExternalId = await com.GetExternalIdByMacAndEntityAsync(d.Mac, EntityType.DEVICE, ct);
+    var tzs = await repo.GetByLocationAsync(d.LocationGuid,ct);
+    var dev = await device.GetCommandDetailAsync(guid,ct);
 
     foreach (var tz in tzs)
     {
-      var tzExternalId = await com.GetExternalIdByGuidAndEntityAsync(tz.Guid, EntityType.TIMEZONE, ct);
+      var tzExternalId = await repo.GetExternalIdByGuidAsync(tz.Guid, ct);
 
       await adapter.GetAdapter(d.Vendor).Time.TimeZone(
         d.Mac,
         d.Ip,
-        (short)deviceExternalId,
-        (short)tzExternalId,
+        dev.DeviceExternalId,
+        tzExternalId,
         tz.Intervals,
         ct
       );

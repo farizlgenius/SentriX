@@ -25,6 +25,16 @@ public abstract class BaseRepository<TEntity, TDomain, TDto>(
       // protected readonly Action<TEntity, TDomain> UpdateEntityDelegate = updateEntity;
       // protected readonly Expression<Func<TEntity, bool>>? Filter = filter;
 
+      public async Task<(int,short)> GetIdAndExternalIdByGuidAsync(Guid guid,CancellationToken ct = default)
+      {
+            var res = await Context.Set<TEntity>()
+                  .AsNoTracking()
+                  .Where(x => x.guid == guid)
+                  .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(typeof(TEntity).Name, guid.ToString());
+
+            return (res.id,res.external_id ?? -1);
+      }
+
 
       public virtual async Task AddAsync(TDomain domain, CancellationToken ct = default)
       {
@@ -57,6 +67,14 @@ public abstract class BaseRepository<TEntity, TDomain, TDto>(
             Context.Set<TEntity>().RemoveRange(ens);
 
             await Context.SaveChangesAsync(ct);
+      }
+
+      public async Task<Dictionary<Guid,short>> GetExternalIdMapGuidByGuidsAsync(IEnumerable<Guid> guids,CancellationToken ct = default)
+      {
+            return await Context.Set<TEntity>()
+                  .AsNoTracking()
+                  .Where(x => guids.Contains(x.guid))
+                  .ToDictionaryAsync(x => x.guid, x => x.external_id!.Value, cancellationToken: ct);
       }
 
       public async Task<bool> DisableAsync(Guid guid, CancellationToken ct = default)
@@ -306,6 +324,25 @@ public abstract class BaseRepository<TEntity, TDomain, TDto>(
                   .AsNoTracking()
                   .AnyAsync(x => x.name == name,ct);
       }
+
+      public async Task<short> GetExternalIdByGuidAsync(Guid guid, CancellationToken ct = default)
+      {
+            return await Context.Set<TEntity>()
+                  .AsNoTracking()
+                  .Where(x => x.guid == guid)
+                  .Select(x => x.external_id)
+                  .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(typeof(TEntity).Name, guid.ToString());
+      }
+
+      public async Task<IEnumerable<short>> GetRangeExernalIdByGuidsAsync(IEnumerable<Guid> guids,CancellationToken ct = default)
+      {
+            return await Context.Set<TEntity>()
+                  .AsNoTracking()
+                  .Where(x => guids.Contains(x.guid))
+                  .Select(x => x.external_id!.Value)
+                  .ToArrayAsync();
+      }
+
 }
 
 // Utility class to rebind lambda expressions to a single root parameter

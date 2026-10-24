@@ -12,5 +12,6 @@ public sealed record CommandDetailDto(
       Vendor Vendor=Vendor.aero,
       int? LocationId=-1,
       int? ComponentId=-1,
-      short? ComponentExternalId=-1
+      short? ComponentExternalId=-1,
+      short? AltrComponentExternalId=-1
 );

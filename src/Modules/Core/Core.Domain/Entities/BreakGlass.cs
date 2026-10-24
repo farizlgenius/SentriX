@@ -12,8 +12,9 @@ public sealed class BreakGlass : BaseDomain
     int slotNo,
     Vendor vendor,
     string metadata,
-    int deviceModuleId
-  ) : base(Guid.NewGuid())
+    int deviceModuleId,
+    short externalId
+  ) : base(Guid.NewGuid(),externalId)
   {
     SlotNo = slotNo;
     Vendor = vendor;
@@ -26,8 +27,9 @@ public sealed class BreakGlass : BaseDomain
     int slotNo,
     Vendor vendor,
      string metadata,
-    int deviceModuleId
-  ) : base(guid)
+    int deviceModuleId,
+     short externalId
+  ) : base(guid,externalId)
   {
     SlotNo = slotNo;
     Vendor = vendor;

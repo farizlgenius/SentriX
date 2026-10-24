@@ -48,8 +48,8 @@ public sealed class GroupService(
         );
 
         // Send command here.
-        var doorExternalIds = await com.GetExternalIdMapGuidByGuidsAndEntityAsync(dto.Components.Select(x => x.Doors),EntityType.DOOR,ct);
-        var timeExternalIds = await com.GetExternalIdMapGuidByGuidsAndEntityAsync(dto.Components.Select(x => x.TimeZone),EntityType.TIMEZONE,ct);
+        var doorExternalIds = await door.GetExternalIdMapGuidByGuidsAsync(dto.Components.Select(x => x.Doors),ct);
+        var timeExternalIds = await time.GetExternalIdMapGuidByGuidsAsync(dto.Components.Select(x => x.TimeZone),ct);
 
         var uniqueDevice = doorDetails
             .GroupBy(x => x.mac)
@@ -59,20 +59,20 @@ public sealed class GroupService(
                 Vendor=x.First().vendor,
                 Ip = x.First().ip,
                 Guids=x.Select(x => x.guid).ToList(),
+                ExternalId = x.First().external_id
             } )
             .ToList();
 
 
         foreach(var dev in uniqueDevice) // Each Mac
         {
-            var groupExternalId = await com.GetFreeIdByMacAndEntityAndVendorAsync(dev.Mac,EntityType.GROUP,dev.Vendor,100,[],ct);
-            var deviceId = await com.GetExternalIdByMacAndEntityAsync(dev.Mac,EntityType.DEVICE,ct);
+            var groupExternalId = await repo.GetFreeExeternalIdAsync(100,[],ct);
 
             await adapter.GetAdapter(dev.Vendor).Group.AddAccessGroupAsync(
                 dev.Mac,
                 dev.Ip,
-                (short)deviceId,
-                (short)groupExternalId,
+                dev.ExternalId,
+                groupExternalId,
                 dto.Components.Where(x => dev.Guids.Contains(x.Doors)).Select(x => ((short)doorExternalIds[x.Doors], (short)timeExternalIds[x.TimeZone])).ToList()
             );
         }

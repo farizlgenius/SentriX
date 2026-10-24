@@ -12,8 +12,9 @@ public sealed class Buzzer : BaseDomain
     int slotNo,
     string metadata,
     Vendor vendor,
-    int deviceModuleId
-  ) : base(Guid.NewGuid())
+    int deviceModuleId,
+    short externalId 
+  ) : base(Guid.NewGuid(),externalId)
   {
     SlotNo = slotNo;
     Metadata = metadata;
@@ -26,8 +27,9 @@ public sealed class Buzzer : BaseDomain
     int slotNo,
     string metadata,
     Vendor vendor,
-    int deviceModuleId
-  ) : base(guid)
+    int deviceModuleId,
+    short externalId
+  ) : base(guid,externalId)
   {
     SlotNo = slotNo;
     Metadata = metadata;

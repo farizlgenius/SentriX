@@ -64,7 +64,7 @@ public sealed class GroupRepository(CoreDbContext context) : BaseRepository<Pers
                   .ToListAsync(cancellationToken: ct);
       }
 
-      public async Task<IEnumerable<(string mac, string ip, Vendor vendor)>> GetDetailsByGroupGuidsAsync(IEnumerable<Guid> guids, CancellationToken ct = default)
+      public async Task<IEnumerable<(Guid guid,string mac, string ip, Vendor vendor)>> GetDetailsByGroupGuidsAsync(IEnumerable<Guid> guids, CancellationToken ct = default)
 {
     var res = await Context.Groups
         .AsNoTracking()
@@ -72,6 +72,7 @@ public sealed class GroupRepository(CoreDbContext context) : BaseRepository<Pers
         .SelectMany(a => a.components.Select(
             b => new
             {
+                b.door.device.guid,
                 b.door.device.mac,
                 b.door.device.ip,
                 b.door.device.vendor
@@ -83,7 +84,7 @@ public sealed class GroupRepository(CoreDbContext context) : BaseRepository<Pers
         .Select(g => g.FirstOrDefault()) 
         .ToArrayAsync(ct);
 
-    return res.Select(x => (x.mac, x.ip, x.vendor));
+    return res.Select(x => (x.guid,x.mac, x.ip, x.vendor));
 }
 
       public async Task<Pagination<GroupDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
@@ -130,6 +131,27 @@ public sealed class GroupRepository(CoreDbContext context) : BaseRepository<Pers
             throw new NotImplementedException();
       }
 
+      public async Task<short> GetFreeExeternalIdByMacAsync(string mac, int max, IEnumerable<short>? exception = null, CancellationToken ct = default)
+      {
+            var existingIds = await Context.Inputs
+                  .AsNoTracking()
+                  .Where(x => x.device_module.device.mac == mac)
+                  .Select(x => x.external_id!.Value)
+                  .ToArrayAsync(ct);
 
-    
+            var existIdsHash = existingIds.ToHashSet();
+
+            if (exception != null)
+            {
+                  existIdsHash.UnionWith(exception);
+            }
+
+            for (short id = 1; id < max; id++)
+            {
+                  if (!existIdsHash.Contains(id))
+                        return id;
+            }
+
+            throw new ExceedException(typeof(Persistences.Entities.Group).Name);
+      }
 }

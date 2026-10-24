@@ -23,10 +23,9 @@ public sealed class Device : BaseEntity,IAuditableEntity
   public ICollection<Door> doors {get; set;} = default!;
   public ICollection<Procedure> procedures {get; set;} = default!;
   public ICollection<Persistences.Entities.Action> actions {get; set;} = default!;
-  public ICollection<ComponentMapping> component_mappings {get; set; } = default!;
 
   public Device() { }
-  public Device(Core.Domain.Entities.Device domain) : base(domain.Guid)
+  public Device(Core.Domain.Entities.Device domain) : base(domain.Guid,domain.ExternalId,domain.AltrExternalId)
   {
     this.name = domain.Name;
     this.serial_number = domain.SerialNumber;

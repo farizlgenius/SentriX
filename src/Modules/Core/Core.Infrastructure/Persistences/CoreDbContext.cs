@@ -711,19 +711,6 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   .HasForeignKey(x => x.location_id)
                   .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<Location>()
-                  .HasMany(x => x.component_mappings)
-                  .WithOne(x => x.location)
-                  .HasForeignKey(x => x.location_id)
-                  .IsRequired(false)
-                  .OnDelete(DeleteBehavior.SetNull);
-
-            modelBuilder.Entity<Location>()
-                  .HasMany(x => x.component_mappings)
-                  .WithOne(x => x.location)
-                  .HasForeignKey(x => x.location_id)
-                  .OnDelete(DeleteBehavior.Cascade);
-
             modelBuilder.Entity<UserLocation>()
                   .HasOne(x => x.user)
                   .WithMany(x => x.user_locations)
@@ -843,13 +830,7 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   .WithOne(x => x.device)
                   .HasForeignKey(x => x.device_id)
                   .OnDelete(DeleteBehavior.Cascade);
-
-            modelBuilder.Entity<Device>()
-                  .HasMany(x => x.component_mappings)
-                  .WithOne(x => x.device)
-                  .HasForeignKey(x => x.device_id)
-                  .OnDelete(DeleteBehavior.Cascade);
-
+                  
             // Device Module
             modelBuilder.Entity<DeviceModule>()
                   .HasMany(x => x.readers)

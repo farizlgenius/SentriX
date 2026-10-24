@@ -58,12 +58,11 @@ public sealed class ReplyWorker(Channel<ReplyMessage> queue, ILogger<ReplyWorker
               // define mac , name , actor , image
               var bus = scope.ServiceProvider.GetRequiredService<IMessageBus>();
               var idevice = scope.ServiceProvider.GetRequiredService<IDevice>();
-              var imap = scope.ServiceProvider.GetRequiredService<IComponentMapping>();
-              var mac = await imap.GetMacByExternalIdAndEntityAndVendorAsync(message.SCPId, EntityType.DEVICE, Vendor.aero, ct);
-              var hw = await idevice.GetByMacAsync(mac, ct);
+              var dev = await bus.QueryAsync(new DeviceByExternalIdAndVendorQuery((short)message.SCPId,Vendor.aero));
+              var mac = dev.Mac;
               var name = string.Empty;
               var actor = string.Empty;
-              var locationGuid = hw.LocationGuid;
+              var locationGuid = dev.LocationGuid;
               var image = string.Empty;
               switch (message.tran.tran_type)
               {
@@ -319,15 +318,14 @@ public sealed class ReplyWorker(Channel<ReplyMessage> queue, ILogger<ReplyWorker
 
               break;
             case (int)enSCPReplyType.enSCPReplyTranStatus:
+              bus = scope.ServiceProvider.GetRequiredService<IMessageBus>();
               idevice = scope.ServiceProvider.GetRequiredService<IDevice>();
               noti = scope.ServiceProvider.GetRequiredService<INotifier>();
-              imap = scope.ServiceProvider.GetRequiredService<IComponentMapping>();
-              mac = await imap.GetMacByExternalIdAndEntityAndVendorAsync(message.SCPId, EntityType.DEVICE, Vendor.aero, ct);
-              hw = await idevice.GetByMacAsync(mac, ct);
+              dev = await bus.QueryAsync(new DeviceByExternalIdAndVendorQuery((short)message.SCPId,Vendor.aero));
               Console.WriteLine(message.tran_sts.disabled == 0 ? true : false);
               await noti.SendToTopic(DeviceNotifierTopic.DEVICE_EVENT_STATUS, new
               {
-                guid = hw.Guid,
+                guid = dev.Guid,
                 isEnabled = message.tran_sts.disabled == 0 ? true : false
               });
               // TranStatus t = new TranStatus(
@@ -392,16 +390,15 @@ public sealed class ReplyWorker(Channel<ReplyMessage> queue, ILogger<ReplyWorker
               break;
             case (int)enSCPReplyType.enSCPReplyStrStatus:
               noti = scope.ServiceProvider.GetRequiredService<INotifier>();
-              var mapping = scope.ServiceProvider.GetRequiredService<IComponentMapping>();
               var device = scope.ServiceProvider.GetRequiredService<IDeviceAdapter>();
               var repo = scope.ServiceProvider.GetRequiredService<IDeviceRepository>();
               bus = scope.ServiceProvider.GetRequiredService<IMessageBus>();
-              mac = await mapping.GetMacByExternalIdAndEntityAndVendorAsync(message.SCPId, EntityType.DEVICE, Vendor.aero, ct);
+              dev = await bus.QueryAsync(new DeviceByExternalIdAndVendorQuery((short)message.SCPId,Vendor.aero));
               var spec = await bus.QueryAsync(new AeroDriverSettingQuery(), ct);
               var data = ReplyMessageHelper.BuildStructureStatus(message.str_sts, spec);
               await noti.SendToTopic(DeviceNotifierTopic.CONFIG, data, ct);
-              if (await repo.VerifyMemoryAllocateAsync(mac, data, ct))
-                await device.UploadAllConfigurationAsync(mac, string.Empty, ct);
+              if (await repo.VerifyMemoryAllocateAsync(dev.Mac, data, ct))
+                await device.UploadAllConfigurationAsync(dev.Mac, string.Empty, ct);
               break;
             case (int)enSCPReplyType.enSCPReplyCmndStatus:
               @event = scope.ServiceProvider.GetRequiredService<Core.Contract.Interfaces.IEvent>();

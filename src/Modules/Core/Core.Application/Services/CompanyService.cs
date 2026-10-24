@@ -12,16 +12,18 @@ namespace Core.Application.Services;
 
 public sealed class CompanyService(
   ICompanyRepository repo,
-  IMessageBus bus
+  ILocationRepository loc
   ) : ICompany
 {
   public async Task<Guid> CreateAsync(CreateCompanyDto dto, CancellationToken ct = default)
   {
+    var locationId = await loc.GetIdByGuidAsync(dto.LocationGuid,ct);
 
     var d = new Core.Domain.Entities.Company(
       dto.Name,
       dto.Description,
-      dto.Address
+      dto.Address,
+      locationId
     );
 
     // Check name is duplicate 
@@ -45,7 +47,7 @@ public sealed class CompanyService(
       throw new DefaultRecordException(MethodType.Delete, EntityType.COMPANY.ToString(), guid.ToString());
 
     // Check relate object here
-    if (await repo.IsAnyDepartmentAsync(guid, ct))
+    if (await repo.IsAnyRelatedEntitiesAsync(guid, ct))
       throw new FoundRelateException(EntityType.COMPANY.ToString(), guid.ToString(), EntityType.DEPARTMENT.ToString());
 
     if (await repo.IsAnyUserAsync(guid, ct))
@@ -70,7 +72,7 @@ public sealed class CompanyService(
         throw new NotFoundException(EntityType.COMPANY.ToString(), guid.ToString());
 
       // Check relate object here
-      if (await repo.IsAnyDepartmentAsync(guid, ct))
+      if (await repo.IsAnyRelatedEntitiesAsync(guid, ct))
         throw new FoundRelateException(EntityType.COMPANY.ToString(), guid.ToString(), EntityType.DEPARTMENT.ToString());
 
       if (await repo.IsAnyUserAsync(guid, ct))
@@ -126,11 +128,14 @@ public sealed class CompanyService(
     if (!await repo.IsAnyGuidAsync(dto.Guid, ct))
       throw new NotFoundException(EntityType.COMPANY.ToString(), dto.Guid.ToString());
 
+    var locationId = await loc.GetIdByGuidAsync(dto.LocationGuid,ct);
+
     var d = new Core.Domain.Entities.Company(
       dto.Guid,
       dto.Name,
       dto.Description,
-      dto.Address
+      dto.Address,
+      locationId
     );
 
     await repo.UpdateAsync(d);

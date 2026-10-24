@@ -49,7 +49,7 @@ public sealed class DepartmentService(
                   throw new DefaultRecordException(MethodType.Delete, EntityType.COMPANY.ToString(), guid.ToString());
 
             // Check relate object here
-            if (await dep.IsAnyPositionAsync(guid, ct))
+            if (await dep.IsAnyRelatedEntitiesAsync(guid, ct))
                   throw new FoundRelateException(EntityType.COMPANY.ToString(), guid.ToString(), EntityType.DEPARTMENT.ToString());
 
             if (await dep.IsAnyUserAsync(guid, ct))
@@ -74,7 +74,7 @@ public sealed class DepartmentService(
                         throw new NotFoundException(EntityType.COMPANY.ToString(), guid.ToString());
 
                   // Check relate object here
-                  if (await dep.IsAnyPositionAsync(guid, ct))
+                  if (await dep.IsAnyRelatedEntitiesAsync(guid, ct))
                         throw new FoundRelateException(EntityType.COMPANY.ToString(), guid.ToString(), EntityType.DEPARTMENT.ToString());
 
                   if (await dep.IsAnyUserAsync(guid, ct))

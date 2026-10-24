@@ -20,6 +20,7 @@ public sealed class UserService(
   ICompanyRepository company,
   IGroupRepository group,
   IAdapterFactory adapter,
+  IDeviceRepository device,
   IStorage file,
   IMessageBus bus
   ) : IUser
@@ -113,17 +114,20 @@ public sealed class UserService(
     {
       // Send card detail
       int i = 0;
+      var devs = await device.GetCommandDetailAsync(dev.guid,ct);
       foreach (var c in dto.Cards)
       {
-        var deviceExternalId = await com.GetExternalIdByMacAndEntityAsync(dev.mac, EntityType.DEVICE, ct);
-        var groupExternaIds = await com.GetExternalIdsByGuidsAndEntityAsync(dto.Groups,EntityType.GROUP,ct);
+        
+        var deviceExternalId = await device.GetExternalIdByGuidAsync(dev.guid,ct);
+        var groupExternaIds = await group.GetRangeExernalIdByGuidsAsync(dto.Groups,ct);
+        
         await adapter.GetAdapter(dev.vendor).User.AddUserAsync(
           dev.mac,
           dev.ip,
           (short)deviceExternalId,
           c.CardNumber,
           i == 0 && dto.Pin != null ? dto.Pin.Pin : string.Empty,
-          groupExternaIds.Select(x => (short)x).ToList(),
+          [.. groupExternaIds.Select(x => x)],
           dto.JoinedDate,
           dto.ExpiredDate,
           dto.Metadata,
@@ -151,13 +155,13 @@ public sealed class UserService(
 
     foreach (var dev in deviceDetail)
     {
-      var deviceId = await com.GetExternalIdByMacAndEntityAsync(dev.mac,EntityType.DEVICE,ct);
+
       foreach (var c in user.Cards)
       {
         await adapter.GetAdapter(dev.vendor).User.DeleteUserAsync(
         dev.mac,
         dev.ip,
-        (short)deviceId,
+        dev.externalId,
         c.CardNumber,
         ct);
       }

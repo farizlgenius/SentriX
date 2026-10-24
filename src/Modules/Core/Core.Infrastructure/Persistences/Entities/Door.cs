@@ -25,7 +25,7 @@ public sealed class Door : BaseEntity,IAuditableEntity
   public ICollection<AlertComponent> alert_components {get; set; } = default!;
   public Door() { }
 
-  public Door(Domain.Entities.Door d) : base(d.Guid)
+  public Door(Domain.Entities.Door d) : base(d.Guid,d.ExternalId,d.AltrExternalId)
   {
     name = d.Name;
     vendor = d.Vendor;

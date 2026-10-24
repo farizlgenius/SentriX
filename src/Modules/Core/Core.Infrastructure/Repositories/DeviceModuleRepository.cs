@@ -94,19 +94,6 @@ public sealed class DeviceModuleRepository(CoreDbContext context) : BaseReposito
       }
 
 
-      public async Task<int> GetDeviceModuleIdByGuidAsync(Guid guid, CancellationToken ct = default)
-      {
-            var res = await Context.DeviceModules
-             .AsNoTracking()
-             .Where(x => x.guid == guid)
-             .Select(x => x.id)
-             .FirstOrDefaultAsync(ct);
-
-            if (res == 0)
-                  throw new NotFoundException(EntityType.DEVICE_MODULE.ToString(), guid.ToString());
-
-            return res;
-      }
 
       public async Task<Dictionary<Guid, int>> GetDeviceModuleIdsMapGuidsByGuidsAsync(IEnumerable<Guid> guids, CancellationToken ct = default)
       {

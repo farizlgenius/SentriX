@@ -2,7 +2,9 @@ using Core.Application.Interfaces;
 using Core.Contract.DTOs.Input;
 using Core.Infrastructure.Persistences;
 using Core.Infrastructure.Projections;
+using Microsoft.EntityFrameworkCore;
 using SharedKernel.Domain;
+using SharedKernel.Exceptions;
 
 namespace Core.Infrastructure.Repositories;
 
@@ -36,5 +38,29 @@ public sealed class InputRepository(CoreDbContext context) : BaseRepository<Pers
       public Task<bool> IsAnyRelatedEntitiesAsync(Guid guid, CancellationToken ct = default)
       {
             throw new NotImplementedException();
+      }
+
+      public async Task<short> GetFreeExeternalIdByMacAsync(string mac,int max, IEnumerable<short>? exception = null, CancellationToken ct = default)
+      {
+            var existingIds = await Context.Inputs
+                  .AsNoTracking()
+                  .Where(x => x.device_module.device.mac == mac)
+                  .Select(x => x.external_id!.Value)
+                  .ToArrayAsync(ct);
+
+            var existIdsHash = existingIds.ToHashSet();
+
+            if (exception != null)
+            {
+                  existIdsHash.UnionWith(exception);
+            }
+
+            for (short id = 1; id < max; id++)
+            {
+                  if (!existIdsHash.Contains(id))
+                        return id;
+            }
+
+            throw new ExceedException(typeof(Persistences.Entities.Input).Name);
       }
 }

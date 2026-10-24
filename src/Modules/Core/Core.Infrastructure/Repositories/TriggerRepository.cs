@@ -62,12 +62,27 @@ public sealed class TriggerRepository(CoreDbContext context) : ITriggerRepositor
             throw new NotImplementedException();
       }
 
+      public Task<short> GetExternalIdByGuidAsync(Guid guid, CancellationToken ct = default)
+      {
+            throw new NotImplementedException();
+      }
+
+      public Task<Dictionary<Guid, short>> GetExternalIdMapGuidByGuidsAsync(IEnumerable<Guid> guids, CancellationToken ct = default)
+      {
+            throw new NotImplementedException();
+      }
+
       public Task<short> GetFreeExeternalIdAsync(int max, IEnumerable<short>? exception = null, CancellationToken ct = default)
       {
             throw new NotImplementedException();
       }
 
       public Task<Guid> GetGuidByIdAsync(int id, CancellationToken ct = default)
+      {
+            throw new NotImplementedException();
+      }
+
+      public Task<(int, short)> GetIdAndExternalIdByGuidAsync(Guid guid, CancellationToken ct = default)
       {
             throw new NotImplementedException();
       }
@@ -83,6 +98,11 @@ public sealed class TriggerRepository(CoreDbContext context) : ITriggerRepositor
       }
 
       public Task<Pagination<TriggerDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
+      {
+            throw new NotImplementedException();
+      }
+
+      public Task<IEnumerable<short>> GetRangeExernalIdByGuidsAsync(IEnumerable<Guid> guids, CancellationToken ct = default)
       {
             throw new NotImplementedException();
       }

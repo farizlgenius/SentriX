@@ -10,7 +10,7 @@ public interface IGroupRepository : IRepository<GroupDto, Core.Domain.Entities.G
       Task InsertGroupComponentAsync(Core.Domain.Entities.GroupComponent group,CancellationToken ct = default);
       Task RemoveGroupComponentAsync(Core.Domain.Entities.GroupComponent group,CancellationToken ct = default);
       Task<IEnumerable<GroupDto>> GetByMacAsync(string mac,CancellationToken ct = default);
-      Task<IEnumerable<(string mac,string ip,Vendor vendor)>> GetDetailsByGroupGuidsAsync(IEnumerable<Guid> guids,CancellationToken ct = default);
-
+      Task<IEnumerable<(Guid guid,string mac,string ip,Vendor vendor)>> GetDetailsByGroupGuidsAsync(IEnumerable<Guid> guids,CancellationToken ct = default);
+      Task<short> GetFreeExeternalIdByMacAsync(string mac,int max, IEnumerable<short>? exception = null, CancellationToken ct = default);
       
 }

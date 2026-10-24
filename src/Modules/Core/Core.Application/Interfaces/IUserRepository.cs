@@ -16,6 +16,6 @@ public interface IUserRepository : IRepository<UserDto, User>
   Task<UserDto> GetByUsernameAsync(string username, CancellationToken ct = default);
   Task<Guid> GetDefaultLocationGuidAsync();
   Task UpdateImagePathAsync(Guid guid, CancellationToken ct = default);
- Task<IEnumerable<(string mac, string ip, Vendor vendor)>> GetDetailsByUserGuidAsync(Guid guid, CancellationToken ct = default);
+ Task<IEnumerable<(string mac, string ip, Vendor vendor,short externalId)>> GetDetailsByUserGuidAsync(Guid guid, CancellationToken ct = default);
 
 }

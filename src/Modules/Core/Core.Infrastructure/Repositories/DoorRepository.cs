@@ -57,11 +57,6 @@ public sealed class DoorRepository(CoreDbContext context) : BaseRepository<Persi
     throw new NotImplementedException();
   }
 
-
-
-
-
-
   public async Task<IEnumerable<DoorDto>> GetByMacAsync(string mac, CancellationToken ct = default)
   {
     return await Context.Doors
@@ -123,7 +118,7 @@ public sealed class DoorRepository(CoreDbContext context) : BaseRepository<Persi
 )).ToArrayAsync(ct);
   }
 
-  public async Task<IEnumerable<(Guid guid, int id, string mac, string ip, Vendor vendor)>> GetDetailsByGuidAsync(IEnumerable<Guid> guids, CancellationToken ct = default)
+  public async Task<IEnumerable<(Guid guid, int id, string mac, string ip, Vendor vendor,short external_id)>> GetDetailsByGuidAsync(IEnumerable<Guid> guids, CancellationToken ct = default)
   {
     var res = await Context.Doors
       .AsNoTracking()
@@ -134,10 +129,11 @@ public sealed class DoorRepository(CoreDbContext context) : BaseRepository<Persi
         x.id,
         x.device.mac,
         x.device.ip,
-        x.device.vendor
+        x.device.vendor,
+        x.device.external_id
       }).ToArrayAsync(cancellationToken: ct);
 
-    return res.Select(x => (x.guid, x.id, x.mac, x.ip, x.vendor)).ToArray();
+    return [.. res.Select(x => (x.guid, x.id, x.mac, x.ip, x.vendor,x.external_id ?? -1))];
   }
 
   public async Task<Dictionary<Guid, int>> GetDoorIdsMapGuidsAsync(IEnumerable<Guid> guids, CancellationToken ct = default)
@@ -148,9 +144,31 @@ public sealed class DoorRepository(CoreDbContext context) : BaseRepository<Persi
       .ToDictionaryAsync(x => x.guid, x => x.id, ct);
   }
 
+      public async Task<short> GetFreeExeternalIdByMacAsync(string mac,int max, IEnumerable<short>? exception = null, CancellationToken ct = default)
+      {
+            var existingIds = await Context.Doors
+                  .AsNoTracking()
+                  .Where(x => x.device.mac == mac)
+                  .Select(x => x.external_id!.Value)
+                  .ToArrayAsync(ct);
 
+            var existIdsHash = existingIds.ToHashSet();
 
-  public async Task<IEnumerable<int>> GetIdsByGuidsAsync(IEnumerable<Guid> guids, CancellationToken ct = default)
+            if (exception != null)
+            {
+                  existIdsHash.UnionWith(exception);
+            }
+
+            for (short id = 1; id < max; id++)
+            {
+                  if (!existIdsHash.Contains(id))
+                        return id;
+            }
+
+            throw new ExceedException(typeof(Persistences.Entities.Door).Name);
+      }
+
+      public async Task<IEnumerable<int>> GetIdsByGuidsAsync(IEnumerable<Guid> guids, CancellationToken ct = default)
   {
     return await Context.Doors
      .AsNoTracking()

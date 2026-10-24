@@ -25,8 +25,7 @@ public sealed class ScpService(
       IScpCommand scpCommand,
       IIdReportService idReport,
       IModuleCommand sioWriter,
-      IInputCommand mpWriter,
-      IComponentMapping com
+      IInputCommand mpWriter
       ) : IScpService
 {
 

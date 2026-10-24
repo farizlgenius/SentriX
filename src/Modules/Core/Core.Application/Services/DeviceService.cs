@@ -14,7 +14,6 @@ namespace Core.Application.Services;
 
 public sealed class DeviceService(
   IDeviceRepository repo,
-  IComponentMapping comm,
   IMessageBus bus,
   ITempDevice temp,
   IAdapterFactory adapter,
@@ -31,7 +30,7 @@ public sealed class DeviceService(
   public async Task<bool> CommandAsync(string command, CancellationToken ct = default)
   {
     var deviceId = util.GetScpNumberAsync(command,Vendor.aero);
-    var mac = await comm.GetMacByExternalIdAndEntityAndVendorAsync(int.Parse(deviceId),EntityType.DEVICE,Vendor.aero);
+    var mac = await repo.GetMacByExternalIdAndVendorAsync(short.Parse(deviceId),Vendor.aero,ct);
     await adapter.GetAdapter(Vendor.aero).Device.CommandAsync(mac,string.Empty,short.Parse(deviceId),command, ct);
     return true;
   }
@@ -108,6 +107,7 @@ public sealed class DeviceService(
         break;
       case SharedKernel.Enums.Vendor.aero:
         await repo.AddAsync(d, ct);
+        deviceModules.ForEach(async x => await module.AddAsync(x,ct));
         break;
       default:
         throw new BadRequestException("Vendor Type Invalid.");
@@ -123,40 +123,6 @@ public sealed class DeviceService(
     //   100, // Limit by License
     //   exceptionId, ct);
 
-
-    if (d.Vendor == Vendor.aero)
-    {
-
-      if (temp.TryGet(d.Mac, out var tempD))
-      {
-        //await adapter.GetAdapter(d.Vendor).Device.SetExternalIdAsync(d.Mac, d.Ip, tempD.Id, (int)externalId);
-        await comm.InsertComponentMappingAsync(
-          d.Guid,
-          EntityType.DEVICE,
-          (short)tempD.Id,
-          d.Mac,
-          d.Vendor,
-          locationId,
-          ct
-        );
-
-        //await adapter.GetAdapter(d.Vendor).Device.SetExternalIdAsync(d.Mac, d.Ip, tempD.Id, (int)externalId);
-        await comm.InsertComponentMappingAsync(
-          d.Guid,
-          EntityType.DEVICE_MODULE,
-          0,
-          d.Mac,
-          d.Vendor,
-          locationId,
-          ct
-        );
-      }
-      else
-      {
-        throw new NotFoundException(EntityType.TEMP_DEVICE.ToString(), d.Mac);
-      }
-
-    }
 
 
 
@@ -174,6 +140,8 @@ public sealed class DeviceService(
       throw new NotFoundException(EntityType.DEVICE.ToString(), guid.ToString());
 
     // Check reference before
+    if(!await repo.IsAnyRelatedEntitiesAsync(guid,ct))
+      throw new FoundRelateException();
 
     // Send Comand
 
@@ -182,8 +150,6 @@ public sealed class DeviceService(
     await adapter.GetAdapter(device.Vendor).Device.RemoveDeviceAsync(device.Mac, device.Ip, ct);
 
     await repo.DeleteAsync(guid, ct);
-
-    await comm.DeleteComponentMappingAsync(guid, ct);
 
     return true;
   }

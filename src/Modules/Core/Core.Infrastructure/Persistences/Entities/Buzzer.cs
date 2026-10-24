@@ -17,7 +17,7 @@ public sealed class Buzzer : BaseEntity
   public Buzzer() { }
   public Buzzer(
   Domain.Entities.Buzzer d
-)
+) : base(Guid.NewGuid(),d.ExternalId,-1)
   {
     slot_no = d.SlotNo;
     metadata = d.Metadata;

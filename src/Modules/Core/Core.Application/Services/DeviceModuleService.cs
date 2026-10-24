@@ -152,16 +152,14 @@ public sealed class DeviceModuleService(
 
       public async Task<bool> GetStatusAsync(Guid guid, CancellationToken ct = default)
       {
-          var deviceModule = await repo.GetAsync(guid,ct);
 
-          var deviceId = (short)await com.GetExternalIdByMacAndEntityAsync(deviceModule.Mac,EntityType.DEVICE);
-          var moduleId = (short)await com.GetExternalIdByGuidAndEntityAsync(guid,EntityType.DEVICE_MODULE);
+          var dev = await repo.GetCommandDetailAsync(guid,ct);
 
           await adapter.GetAdapter(Vendor.aero).Module.GetStatusAsync(
-            deviceModule.Mac,
-            string.Empty,
-            deviceId,
-            moduleId,
+            dev.DeviceMac,
+            dev.DeviceIp,
+            dev.DeviceExternalId,
+            dev.ModuleExternalId,
             ct
           );
 

@@ -16,5 +16,7 @@ public interface IDeviceRepository : IRepository<DeviceDto, Device>
       Task<IEnumerable<OptionDto>> GetOptionByVendorAndLocationAsync(Vendor vendor,Guid guid,CancellationToken ct  = default);
       Task<IEnumerable<OptionDto>> GetOptionByLocationAsync(Guid location,CancellationToken ct = default);
       Task<string> GetMacByGuidAsync(Guid guid, CancellationToken ct = default);
+      Task<string> GetMacByExternalIdAndVendorAsync(short externalId,Vendor vendor,CancellationToken ct = default);
+      Task<DeviceDto> GetByExternalIdAndVendorAsync(short externalId,Vendor vendor,CancellationToken ct = default);
      
 }

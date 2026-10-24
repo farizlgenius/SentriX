@@ -16,7 +16,6 @@ public sealed class Location : BaseEntity,IAuditableEntity
   public ICollection<Holiday> holidays { get; set; } = default!;
   public ICollection<UserLocation> user_locations { get; set; } = default!;
   public ICollection<OperatorLocation> operator_locations { get; set; } = default!;
-  public ICollection<ComponentMapping> component_mappings { get; set; } = default!;
   public ICollection<Interval> intervals { get; set; } = default!;
   public ICollection<Door> doors { get; set; } = default!;
   public ICollection<Group> groups { get; set; } = default!;

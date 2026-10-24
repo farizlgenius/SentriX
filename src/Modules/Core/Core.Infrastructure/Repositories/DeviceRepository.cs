@@ -1,3 +1,4 @@
+using System.IO.Compression;
 using Core.Application.Interfaces;
 using Core.Contract.DTOs.Device;
 using Core.Contract.DTOs.DeviceModule;
@@ -182,9 +183,11 @@ public sealed class DeviceRepository(CoreDbContext context) : BaseRepository<Per
                   .AnyAsync(x => x.mac.Equals(mac), cancellationToken: ct);
       }
 
-      public Task<bool> IsAnyRelatedEntitiesAsync(Guid guid, CancellationToken ct = default)
+      public async Task<bool> IsAnyRelatedEntitiesAsync(Guid guid, CancellationToken ct = default)
       {
-            throw new NotImplementedException();
+            return await Context.Devices
+                  .AsNoTracking()
+                  .AnyAsync(x => x.device_modules.Any() || x.doors.Any() || x.procedures.Any() || x.actions.Any(),ct);
       }
 
 
@@ -207,5 +210,24 @@ public sealed class DeviceRepository(CoreDbContext context) : BaseRepository<Per
 
             Context.Devices.Update(entity);
             await Context.SaveChangesAsync(ct);
+      }
+
+      public async Task<string> GetMacByExternalIdAndVendorAsync(short externalId,Vendor vendor,CancellationToken ct = default)
+      {
+            return await Context.Devices
+                  .AsNoTracking()
+                  .Where(x => x.external_id == externalId && x.vendor == vendor)
+                  .Select(x => x.mac)
+                  .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.DEVICE.ToString());
+      }
+
+      public async Task<DeviceDto> GetByExternalIdAndVendorAsync(short externalId, Vendor vendor, CancellationToken ct = default)
+      {
+           return await Context.Devices
+            .AsNoTracking()
+            .Where(x => x.external_id == externalId && x.vendor == vendor)
+            .Select(DeviceProjections.ToDto)
+            .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.DEVICE.ToString());
+
       }
 }

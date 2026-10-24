@@ -22,7 +22,6 @@ namespace Aero.Application.Services;
 public sealed class IdReportService(
   IMessageBus bus,
   ISetting setting,
-  IComponentMapping mapping,
   IDeviceRepository repo,
   IDeviceModuleRepository module,
   ITempDevice temp,

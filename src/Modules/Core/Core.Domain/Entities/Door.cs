@@ -17,6 +17,7 @@ public sealed class Door : BaseDomain
   public List<Rex> Rexes { get; private set; } = default!;
   public BreakGlass? BG {get; private set;}
   public int LocationId { get; private set; }
+  public short ExternalIdTwo {get; private set;}
   public Door(
     string name,
     Vendor vendor,
@@ -29,8 +30,10 @@ public sealed class Door : BaseDomain
     Buzzer? buzzer,
      List<Rex> rexes,
     BreakGlass? bg,
-    int locationId
-  ) : base(Guid.NewGuid())
+    int locationId,
+    short externalId,
+    short externalIdTwo
+  ) : base(Guid.NewGuid(),externalId,externalIdTwo)
   {
     Name = name;
     Vendor = vendor;
@@ -44,6 +47,7 @@ public sealed class Door : BaseDomain
     Rexes = rexes;
     BG = bg;
     LocationId = locationId;
+    ExternalIdTwo = externalIdTwo;
   }
   public Door(
     Guid guid,
@@ -58,8 +62,10 @@ public sealed class Door : BaseDomain
     Buzzer? buzzer,
     List<Rex> rexes,
     BreakGlass? bg,
-    int locationId
-  ) : base(guid)
+    int locationId,
+     short externalId,
+     short externalIdTwo
+  ) : base(guid,externalId,externalIdTwo)
   {
     ValidationHelper.Name(name);
     ValidationHelper.Vendor(vendor);
@@ -76,5 +82,6 @@ public sealed class Door : BaseDomain
    Rexes = rexes;
     BG = bg;
     LocationId = locationId;
+    ExternalIdTwo = externalIdTwo;
   }
 }

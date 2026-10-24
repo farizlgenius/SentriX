@@ -454,7 +454,7 @@ public sealed class UserRepository(CoreDbContext context) : BaseRepository<Persi
 
 
 
-      public async Task<IEnumerable<(string mac, string ip, Vendor vendor)>> GetDetailsByUserGuidAsync(Guid guid, CancellationToken ct = default)
+      public async Task<IEnumerable<(string mac, string ip, Vendor vendor,short externalId)>> GetDetailsByUserGuidAsync(Guid guid, CancellationToken ct = default)
       {
             var res = await Context.Users
               .AsNoTracking()
@@ -465,11 +465,12 @@ public sealed class UserRepository(CoreDbContext context) : BaseRepository<Persi
                 {
                     c.door.device.mac,
                     c.door.device.ip,
-                    c.door.device.vendor
+                    c.door.device.vendor,
+                    c.door.device.external_id
                 })
               )).ToArrayAsync(ct);
 
-            return res.Select(x => (x.mac,x.ip,x.vendor)).ToArray();
+            return [.. res.Select(x => (x.mac,x.ip,x.vendor,x.external_id ?? -1))];
       }
 
       public Task<Guid> GetRoleGuidByUsernameAsync(string username, CancellationToken ct = default)

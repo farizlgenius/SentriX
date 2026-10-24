@@ -28,7 +28,31 @@ public sealed class OutputRepository(CoreDbContext context) : BaseRepository<Per
   OutputProjections.ToCommand
   ), IOutputRepository
 {
-  public async Task<Pagination<OutputDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
+      public async Task<short> GetFreeExeternalIdByMacAsync(string mac,int max, IEnumerable<short>? exception = null, CancellationToken ct = default)
+      {
+            var existingIds = await Context.Outputs
+                  .AsNoTracking()
+                  .Where(x => x.device_module.device.mac == mac)
+                  .Select(x => x.external_id!.Value)
+                  .ToArrayAsync(ct);
+
+            var existIdsHash = existingIds.ToHashSet();
+
+            if (exception != null)
+            {
+                  existIdsHash.UnionWith(exception);
+            }
+
+            for (short id = 1; id < max; id++)
+            {
+                  if (!existIdsHash.Contains(id))
+                        return id;
+            }
+
+            throw new ExceedException(typeof(Persistences.Entities.Output).Name);
+      }
+
+      public async Task<Pagination<OutputDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
   {
     return await base.GetPaginationAsync(
       param,

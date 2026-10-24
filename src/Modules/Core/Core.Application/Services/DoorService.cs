@@ -12,68 +12,90 @@ using SharedKernel.Messaging;
 namespace Core.Application.Services;
 
 public sealed class DoorService(
-  IDoorRepository repo, 
-  IGroupRepository group,
-  IMessageBus bus,
+  IDoorRepository repo,
   IDeviceRepository device,
-  IDeviceModuleRepository deviceModule,
-  ILocationRepository loc,
+  IDeviceModuleRepository module,
+  ITimeRepository time,
+  IOutputRepository output,
+  IInputRepository input,
   IAdapterFactory adapter
-  ) : IDoor
+  ) : BaseService<DoorDto,Domain.Entities.Door>(repo), IDoor
 {
-      public async Task<bool> ChangeDoorModeAsync(ChangeDoorModeDto dto, CancellationToken ct = default)
-      {
-          var door = await repo.GetAsync(dto.Guid,ct);
-          var dev = await device.GetAsync(door.DeviceGuid,ct);
-          var deviceExternalId = (short)await com.GetExternalIdByGuidAndEntityAsync(dev.Guid,EntityType.DEVICE);
-          var doorExternalId = (short)await com.GetExternalIdByGuidAndEntityAsync(dto.Guid,EntityType.DOOR);
-
-            await adapter.GetAdapter(door.Vendor).Door.ChangeDoorModeAsync(
-              dev.Mac,
-              dev.Ip,
-              deviceExternalId,
-              doorExternalId,
-              dto.Mode,
-              ct
-            );
-
-            return true;
-      }
-
-      public async Task<Guid> CreateAsync(CreateDoorDto dto, CancellationToken ct = default)
+  public async Task<bool> ChangeDoorModeAsync(ChangeDoorModeDto dto, CancellationToken ct = default)
   {
+    
+    var dev = await repo.GetCommandDetailAsync(dto.Guid, ct);
+
+    await adapter.GetAdapter(dev.Vendor).Door.ChangeDoorModeAsync(
+      dev.DeviceMac,
+      dev.DeviceIp,
+      dev.DeviceExternalId,
+      dev.ComponentExternalId ?? -1,
+      dto.Mode,
+      ct
+    );
+
+    return true;
+  }
+
+  public async Task<Guid> CreateAsync(CreateDoorDto dto, CancellationToken ct = default)
+  {
+    Output o = null;
+    Input i = null;
 
     // Actually it need to check that 
-    //var locationId = await bus.QueryAsync(new LocationIdByGuidQuery(dto.LocationGuid));
-    var deviceId = await device.GetIdByGuidAsync(dto.DeviceGuid);
-    var dev = await device.GetAsync(dto.DeviceGuid, ct);
-    var locationId = await loc.GetIdByGuidAsync(dto.LocationGuid);
+    var dev = await device.GetCommandDetailAsync(dto.DeviceGuid, ct);
 
     foreach (var reader in dto.Readers)
     {
-      if(!await deviceModule.IsAnyGuidAsync(reader.DeviceModuleGuid, ct))
+      if (!await module.IsAnyGuidAsync(reader.DeviceModuleGuid, ct))
         throw new NotFoundException(EntityType.DEVICE_MODULE.ToString(), reader.DeviceModuleGuid.ToString());
     }
 
-    var readerMapModuleId = await deviceModule.GetDeviceModuleIdsMapGuidsByGuidsAsync(dto.Readers.Select(x => x.DeviceModuleGuid), ct);
+    var readerMapModuleId = await module.GetDeviceModuleIdsMapGuidsByGuidsAsync(dto.Readers.Select(x => x.DeviceModuleGuid), ct);
 
     //var readerMapModuleId = await bus.QueryAsync(new DeviceModuleIdsMapGuidsByGuidsQuery(dto.Readers.Select(x => x.DeviceModuleGuid)));
 
-    var sensorMapModuleId = dto.Sensor == null ? 0 : await deviceModule.GetDeviceModuleIdByGuidAsync(dto.Sensor.DeviceModuleGuid);
+    var sensorMapModuleId = dto.Sensor == null ? 0 : await module.GetIdByGuidAsync(dto.Sensor.DeviceModuleGuid, ct);
 
-    var relayMapModuleId = dto.Relay == null ? 0 : await deviceModule.GetDeviceModuleIdByGuidAsync(dto.Relay.DeviceModuleGuid);
-    var buzzerMapModuleId = dto.Buzzer == null ? 0 : await deviceModule.GetDeviceModuleIdByGuidAsync(dto.Buzzer.DeviceModuleGuid);
-    var rexMapModuleId = await deviceModule.GetDeviceModuleIdsMapGuidsByGuidsAsync(dto.Rexes.Select(x => x.DeviceModuleGuid), ct);
-    var bgMapModuleId = dto.Bg == null ? 0 : await deviceModule.GetDeviceModuleIdByGuidAsync(dto.Bg.DeviceModuleGuid);
+    var relayMapModuleId = dto.Relay == null ? 0 : await module.GetIdByGuidAsync(dto.Relay.DeviceModuleGuid, ct);
+    var buzzerMapModuleId = dto.Buzzer == null ? (-1,(short)-1) : await module.GetIdAndExternalIdByGuidAsync(dto.Buzzer.DeviceModuleGuid, ct);
+    var rexMapModuleId = await module.GetDeviceModuleIdsMapGuidsByGuidsAsync(dto.Rexes.Select(x => x.DeviceModuleGuid), ct);
+    var bgMapModuleId = dto.Bg == null ? (-1,(short)-1) : await module.GetIdAndExternalIdByGuidAsync(dto.Bg.DeviceModuleGuid, ct);
 
-    if (await repo.IsAnyByNameAndLocationGuidAsync(dto.Name, dto.LocationGuid,ct))
+    if (await repo.IsAnyByNameAndLocationGuidAsync(dto.Name, dto.LocationGuid, ct))
       throw new DuplicateException(nameof(dto.Name), dto.Name);
+
+    // Get Component ExternalId
+    var doorExternalIds = new List<short>();
+
+    var doorId1 = await repo.GetFreeExeternalIdByMacAsync(dev.DeviceMac, 100, [], ct);
+    doorExternalIds.Add(doorId1);
+
+    if (dto.Type == DoorType.Dual)
+    {
+      var doorId2 = await repo.GetFreeExeternalIdByMacAsync(dev.DeviceMac, 100, [doorId1], ct);
+      doorExternalIds.Add(doorId2);
+    }
+
+    short BuzzerExternalId = 0;
+    short BgExternalId = 0;
+
+    if (dto.Buzzer != null)
+    {
+      BuzzerExternalId = await output.GetFreeExeternalIdByMacAsync(dev.DeviceMac, 100, [], ct);
+    }
+
+    if (dto.Bg != null)
+    {
+      BgExternalId = await input.GetFreeExeternalIdByMacAsync(dev.DeviceMac, 100, [], ct);
+    }
 
     var d = new Door(
       dto.Name,
       dto.Vendor,
       dto.Type,
-      deviceId,
+      dev.DeviceId,
       dto.Metadata,
       dto.Readers.Select(x => new Reader(
         x.SlotNo,
@@ -99,7 +121,9 @@ public sealed class DoorService(
           dto.Buzzer.SlotNo,
           dto.Buzzer.Metadata,
           dto.Buzzer.Vendor,
-          buzzerMapModuleId
+          buzzerMapModuleId.Item1,
+          BuzzerExternalId
+
         ),
         dto.Rexes.Select(x => new Rex(
         x.SlotNo,
@@ -111,170 +135,154 @@ public sealed class DoorService(
           dto.Bg.SlotNo,
           dto.Bg.Vendor,
           dto.Bg.Metadata,
-          bgMapModuleId
+          bgMapModuleId.Item1,
+          BgExternalId
         ),
-        locationId
+        dev.LocationId ?? 1,
+        doorExternalIds.Count > 0 ? doorExternalIds.ElementAt(0) : (short)-1,
+        doorExternalIds.Count > 1 ? doorExternalIds.ElementAt(1) : (short)-1
     );
 
-
-    // Get Component ExternalId
-    var deviceExternalId = await com.GetExternalIdByMacAndEntityAsync(dev.Mac, EntityType.DEVICE);
-    var doorExternalIds = new List<short>();
-    
-    var doorId1 = await com.GetFreeIdByMacAndEntityAndVendorAsync(dev.Mac,EntityType.DOOR,dto.Vendor,100);
-    doorExternalIds.Add((short)doorId1);
-
-    if(dto.Type == DoorType.Dual)
+    if(d.Buzzer != null)
     {
-      var doorId2 = await com.GetFreeIdByMacAndEntityAndVendorAsync(dev.Mac,EntityType.DOOR,dto.Vendor,100,[doorId1],ct);
-      doorExternalIds.Add((short)doorId2);
+      o = new Output(
+      $"{dto.Name} - Buzzer",
+      d.Buzzer.SlotNo,
+      d.Buzzer.Metadata,
+      d.Vendor,
+      buzzerMapModuleId.Item1,
+      d.LocationId
+      );
+      
+    }
+
+    if(d.BG != null)
+    {
+      i = new Input(
+        $"{dto.Name} - Break Glass",
+        d.BG.SlotNo,
+        d.BG.Metadata,
+        d.BG.Vendor,
+        bgMapModuleId.Item1,
+        d.LocationId
+      );
     }
 
 
+  
     // Send command to controller
     var readers = new List<(short SlotNo, ReaderMode ReaderMode, ReaderDirection ReaderDirection, string Metadata, short ExternalId)>();
 
     foreach (var x in dto.Readers)
     {
-        var externalId = (short)await com.GetExternalIdByGuidAndEntityAsync(x.DeviceModuleGuid, EntityType.DEVICE_MODULE, ct);
-        
-        readers.Add((
-            (short)x.SlotNo,
-            x.Mode,
-            x.ReaderDirection,
-            x.Metadata,
-            externalId
-        ));
+      var externalId = await module.GetExternalIdByGuidAsync(x.DeviceModuleGuid, ct);
+
+      readers.Add((
+          (short)x.SlotNo,
+          x.Mode,
+          x.ReaderDirection,
+          x.Metadata,
+          externalId
+      ));
     }
 
-    var rexes = new List<(short SlotNo, string Metadata, short ExternalId,short TzExternalId)>();
+    var rexes = new List<(short SlotNo, string Metadata, short ExternalId, short TzExternalId)>();
 
     foreach (var x in dto.Rexes)
     {
-        var externalId = (short)await com.GetExternalIdByGuidAndEntityAsync(x.DeviceModuleGuid, EntityType.DEVICE_MODULE, ct);
-        var tzExternalId = x.MaskGuid == null ? (short)0 : (short)await com.GetExternalIdByGuidAndEntityAsync(x.MaskGuid ?? Guid.Empty,EntityType.TIMEZONE,ct);
-        
-        rexes.Add((
-            (short)x.SlotNo,
-            x.Metadata,
-            externalId,
-            tzExternalId
-        ));
-    }
+      var externalId = await module.GetExternalIdByGuidAsync(x.DeviceModuleGuid, ct);
+      var tzExternalId = x.MaskGuid == null ? (short)0 : await time.GetExternalIdByGuidAsync(x.MaskGuid ?? Guid.Empty, ct);
 
-    short BuzzerExternalId = 0;
-    short BgExternalId = 0;
+      rexes.Add((
+          (short)x.SlotNo,
+          x.Metadata,
+          externalId,
+          tzExternalId
+      ));
+    }
 
     if(d.Buzzer != null)
     {
-      BuzzerExternalId = (short)await com.GetFreeIdByMacAndEntityAndVendorAsync(dev.Mac,EntityType.OUTPUT,Vendor.aero,100,[],ct);
+      await adapter.GetAdapter(d.Vendor).Output.CreateControlPointAsync(
+        dev.DeviceMac,
+        dev.DeviceIp,
+        dev.DeviceExternalId,
+        buzzerMapModuleId.Item2,
+        (short)d.Buzzer.SlotNo,
+        d.Buzzer.ExternalId,
+        d.Buzzer.Metadata,
+        ct
+      );
     }
 
     if(d.BG != null)
     {
-      BgExternalId = (short)await com.GetFreeIdByMacAndEntityAndVendorAsync(dev.Mac,EntityType.INPUT,Vendor.aero,100,[],ct);
+      await adapter.GetAdapter(d.Vendor).Input.MonitorPoint(
+        dev.DeviceMac,
+        dev.DeviceIp,
+        ct
+      );
     }
 
+  
     await adapter.GetAdapter(d.Vendor).Door.AddDoorsAsync(
-      dev.Mac,
-      dev.Ip,
+      dev.DeviceMac,
+      dev.DeviceIp,
       d.Type,
-      (short)deviceExternalId,
+      dev.DeviceExternalId,
       doorExternalIds,
       d.Metadata,
       readers,
-      d.Buzzer == null || dto.Buzzer == null ? 
-      null : 
+      d.Buzzer == null || dto.Buzzer == null ?
+      null :
       (
         (short)d.Buzzer.SlotNo,
         d.Buzzer.Metadata,
-        (short)await com.GetExternalIdByGuidAndEntityAsync(dto.Buzzer.DeviceModuleGuid,EntityType.DEVICE_MODULE,ct),
+        await module.GetExternalIdByGuidAsync(dto.Buzzer.DeviceModuleGuid, ct),
         BuzzerExternalId
       ),
       rexes,
-      d.BG == null || dto.Bg == null ? 
-      null : 
+      d.BG == null || dto.Bg == null ?
+      null :
       (
         (short)d.BG.SlotNo,
         d.BG.Metadata,
-        (short)await com.GetExternalIdByGuidAndEntityAsync(dto.Bg.DeviceModuleGuid,EntityType.DEVICE_MODULE,ct),
+        await module.GetExternalIdByGuidAsync(dto.Bg.DeviceModuleGuid, ct),
         BgExternalId
       ),
-      d.Sensor == null || dto.Sensor == null ? 
-      null : 
+      d.Sensor == null || dto.Sensor == null ?
+      null :
       (
         (short)d.Sensor.SlotNo,
         d.Sensor.Metadata,
-        (short)await com.GetExternalIdByGuidAndEntityAsync(dto.Sensor.DeviceModuleGuid,EntityType.DEVICE_MODULE,ct)
+        await module.GetExternalIdByGuidAsync(dto.Sensor.DeviceModuleGuid, ct)
       ),
-      d.Relay == null || dto.Relay == null ? 
+      d.Relay == null || dto.Relay == null ?
       null :
       (
         (short)d.Relay.SlotNo,
         d.Relay.Metadata,
-        (short)await com.GetExternalIdByGuidAndEntityAsync(dto.Relay.DeviceModuleGuid,EntityType.DEVICE_MODULE,ct)
+        await module.GetExternalIdByGuidAsync(dto.Relay.DeviceModuleGuid, ct)
       ),
       ct
     );
 
-    await com.InsertAsync(
-      new ComponentMappping(
-        d.Guid,
-        EntityType.DOOR,
-        doorExternalIds.Count == 0 ? -1 : doorExternalIds.ElementAt(0),
-        dev.Mac,
-        d.LocationId,
-        d.Vendor
-      ),
-      ct
-    );
-
-    if (d.BG != null)
-    {
-      await com.InsertAsync(
-      new ComponentMappping(
-        d.Guid,
-        EntityType.INPUT,
-        BgExternalId,
-        dev.Mac,
-        d.LocationId,
-        d.Vendor
-      ),
-      ct
-    );
-    }
-
-     if (d.Buzzer != null)
-    {
-      await com.InsertAsync(
-      new ComponentMappping(
-        d.Guid,
-        EntityType.OUTPUT,
-        BuzzerExternalId,
-        dev.Mac,
-        d.LocationId,
-        d.Vendor
-      ),
-      ct
-    );
-    }
-
-    if (d.Type == DoorType.Dual)
-    {
-      await com.InsertAsync(
-      new ComponentMappping(
-        d.Guid,
-        EntityType.DOOR,
-        doorExternalIds.Count <= 1 ? -1 : doorExternalIds.ElementAt(1),
-        dev.Mac,
-        d.LocationId,
-        d.Vendor
-      ),
-      ct
-    );
-    }
-
+    // Add Door
     await repo.AddAsync(d, ct);
+
+    // Add Buzzer
+    if(o != null)
+    {
+      await output.AddAsync(o,ct);
+    }
+    
+
+    // Add Break 
+    if(i != null)
+    {
+      await input.AddAsync(i,ct);
+    }
+    
 
     return d.Guid;
   }
@@ -282,41 +290,45 @@ public sealed class DoorService(
   public async Task<Guid> CreateTemplateAsync(CreateTemplateDto dto, CancellationToken ct = default)
   {
     throw new NotImplementedException();
-    
+
   }
 
 
 
-      public async Task<bool> DeleteByGuidAsync(Guid guid, CancellationToken ct = default)
+  public async Task<bool> DeleteByGuidAsync(Guid guid, CancellationToken ct = default)
   {
     var door = await repo.GetAsync(guid,ct);
-          var dev = await device.GetAsync(door.DeviceGuid,ct);
-          var deviceExternalId = (short)await com.GetExternalIdByGuidAndEntityAsync(dev.Guid,EntityType.DEVICE);
-          var doorExternalId = (short)await com.GetExternalIdByGuidAndEntityAsync(guid,EntityType.DOOR);
+    var dev = await repo.GetCommandDetailAsync(guid,ct);
 
     // Check relation here 
-    // if (await repo.IsAnyRelatedEntitiesAsync(guid))
-    //   throw new FoundRelateException();
+    if (await repo.IsAnyRelatedEntitiesAsync(guid,ct))
+      throw new FoundRelateException();
 
-    
-    // Send Command 
-    // await adapter.GetAdapter(door.Vendor).Door.DeleteDoorsAsync(
-    //   dev.Mac,
-    //   dev.Ip,
-    //   door.Type,
-    //   deviceExternalId,
-    //   doorExternalId,
-    //   buzz
-    //   );
 
-    
+    //Send Command 
+    await adapter.GetAdapter(dev.Vendor).Door.DeleteDoorsAsync(
+      dev.DeviceMac,
+      dev.DeviceIp,
+      door.Type,
+      dev.DeviceExternalId,
+      [dev.ComponentExternalId ?? -1,dev.AltrComponentExternalId ?? -1],
+      door.Buzzer == null ? (short)-1 : await output.GetExternalIdByGuidAsync(door.Buzzer.Guid!.Value,ct),
+      door.Bg == null ? (short)-1 : await input.GetExternalIdByGuidAsync(door.Bg.Guid!.Value,ct),
+      ct);
+
+
     // Delete Door
 
-    await repo.DeleteAsync(guid);
+    await repo.DeleteAsync(guid,ct);
 
+    // Delete Output
 
-    // Delete ComponentMapping
-    await com.DeleteAsync(guid,ct);
+    if(door.Buzzer != null)
+      await output.DeleteAsync(door.Buzzer.Guid!.Value,ct);
+
+    // Delete Input
+    if(door.Bg != null)
+      await input.DeleteAsync(door.Bg.Guid!.Value,ct);
 
     return true;
 
@@ -362,94 +374,84 @@ public sealed class DoorService(
     return await repo.EnableAsync(guid, ct);
   }
 
-  public async Task<DoorDto> GetByGuidAsync(Guid guid, CancellationToken ct = default)
+
+  public async Task<bool> GetStatusAsync(Guid guid, CancellationToken ct = default)
   {
-    return await repo.GetAsync(guid, ct);
+    var door = await repo.GetAsync(guid, ct);
+
+    var dev = await repo.GetCommandDetailAsync(guid,ct);
+
+    await adapter.GetAdapter(door.Vendor).Door.StatusAsync(
+      dev.DeviceMac,
+      dev.DeviceIp,
+      dev.DeviceExternalId,
+      dev.ComponentExternalId ?? -1
+      );
+
+    return true;
   }
 
-  public async Task<IEnumerable<DoorDto>> GetByLocationAsync(Guid guid, CancellationToken ct = default)
+  public async Task<bool> UnlockAsync(Guid guid, CancellationToken ct = default)
   {
-    return await repo.GetByLocationAsync(guid, ct);
+    var door = await repo.GetAsync(guid, ct);
+    var dev = await repo.GetCommandDetailAsync(guid,ct);
+
+    await adapter.GetAdapter(door.Vendor).Door.UnlockAsync(
+      dev.DeviceMac,
+      dev.DeviceIp,
+      dev.DeviceExternalId,
+      dev.ComponentExternalId ?? -1,
+      ct
+    );
+
+    return true;
   }
 
-  public async Task<Pagination<DoorDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
-  {
-    return await repo.GetPaginationAsync(param, ct);
-  }
-
-      public async Task<bool> GetStatusAsync(Guid guid, CancellationToken ct = default)
-      {
-          var door = await repo.GetAsync(guid,ct);
-
-          var deviceExternalId = (short)await com.GetExternalIdByGuidAndEntityAsync(door.DeviceGuid,EntityType.DEVICE,ct);
-
-          var doorExternalId = (short)await com.GetExternalIdByGuidAndEntityAsync(guid,EntityType.DOOR);
-
-          var dev = await device.GetAsync(door.DeviceGuid,ct);
-
-          await adapter.GetAdapter(door.Vendor).Door.StatusAsync(
-            dev.Mac,
-            dev.Ip,
-            deviceExternalId,
-            doorExternalId
-            );
-
-            return true;
-      }
-
-      public async Task<bool> UnlockAsync(Guid guid, CancellationToken ct = default)
-      {
-            var door = await repo.GetAsync(guid,ct);
-          var dev = await device.GetAsync(door.DeviceGuid,ct);
-          var deviceExternalId = (short)await com.GetExternalIdByGuidAndEntityAsync(dev.Guid,EntityType.DEVICE);
-          var doorExternalId = (short)await com.GetExternalIdByGuidAndEntityAsync(guid,EntityType.DOOR);
-
-            await adapter.GetAdapter(door.Vendor).Door.UnlockAsync(
-              dev.Mac,
-              dev.Ip,
-              deviceExternalId,
-              doorExternalId,
-              ct
-            );
-
-            return true;
-      }
-
-      public async Task<Guid> UpdateAsync(UpdateDoorDto dto, CancellationToken ct = default)
+  public async Task<Guid> UpdateAsync(UpdateDoorDto dto, CancellationToken ct = default)
   {
     // Check is any location with guid
     if (!await repo.IsAnyGuidAsync(dto.Guid, ct))
       throw new NotFoundException(EntityType.DOOR.ToString(), dto.Guid.ToString());
 
-    var deviceId = await device.GetIdByGuidAsync(dto.DeviceGuid);
 
-    var locationId = await bus.QueryAsync(new LocationIdByGuidQuery(dto.LocationGuid));
+    var dev = await device.GetCommandDetailAsync(dto.Guid,ct);
 
     //var readerMapModuleId = await bus.QueryAsync(new DeviceModuleIdsMapGuidsByGuidsQuery(dto.Readers.Select(x => x.DeviceModuleGuid)));
 
-     foreach (var reader in dto.Readers)
+    foreach (var reader in dto.Readers)
     {
       if (!await repo.IsAnyGuidAsync(reader.DeviceModuleGuid, ct))
         throw new NotFoundException(EntityType.DEVICE_MODULE.ToString(), reader.DeviceModuleGuid.ToString());
     }
 
-    var readerMapModuleId = await deviceModule.GetDeviceModuleIdsMapGuidsByGuidsAsync(dto.Readers.Select(x => x.DeviceModuleGuid), ct);
+    var readerMapModuleId = await module.GetDeviceModuleIdsMapGuidsByGuidsAsync(dto.Readers.Select(x => x.DeviceModuleGuid), ct);
 
-    var sensorMapModuleId = dto.Sensor == null ? 0 : await deviceModule.GetDeviceModuleIdByGuidAsync(dto.Sensor.DeviceModuleGuid);
+    var sensorMapModuleId = dto.Sensor == null ? 0 : await module.GetIdByGuidAsync(dto.Sensor.DeviceModuleGuid,ct);
 
-    var relayMapModuleId = dto.Relay == null ? 0 : await deviceModule.GetDeviceModuleIdByGuidAsync(dto.Relay.DeviceModuleGuid);
-    var buzzerMapModuleId = dto.Buzzer == null ? 0 : await deviceModule.GetDeviceModuleIdByGuidAsync(dto.Buzzer.DeviceModuleGuid);
-    var rexMapModuleId = await deviceModule.GetDeviceModuleIdsMapGuidsByGuidsAsync(dto.Rexes.Select(x => x.DeviceModuleGuid), ct);
-    var bgMapModuleId = dto.Bg == null ? 0 : await deviceModule.GetDeviceModuleIdByGuidAsync(dto.Bg.DeviceModuleGuid);
+    var relayMapModuleId = dto.Relay == null ? 0 : await module.GetIdByGuidAsync(dto.Relay.DeviceModuleGuid,ct);
+    var buzzerMapModuleId = dto.Buzzer == null ? 0 : await module.GetIdByGuidAsync(dto.Buzzer.DeviceModuleGuid,ct);
+    var rexMapModuleId = await module.GetDeviceModuleIdsMapGuidsByGuidsAsync(dto.Rexes.Select(x => x.DeviceModuleGuid), ct);
+    var bgMapModuleId = dto.Bg == null ? 0 : await module.GetIdByGuidAsync(dto.Bg.DeviceModuleGuid,ct);
 
-    if (await repo.IsAnyByNameAndLocationGuidAsync(dto.Name, dto.LocationGuid,ct))
-      throw new DuplicateException(nameof(dto.Name), dto.Name);
+    
+    short BuzzerExternalId = 0;
+    short BgExternalId = 0;
+
+    if (dto.Buzzer != null)
+    {
+      BuzzerExternalId = await output.GetFreeExeternalIdByMacAsync(dev.DeviceMac, 100, [], ct);
+    }
+
+    if (dto.Bg != null)
+    {
+      BgExternalId = await input.GetFreeExeternalIdByMacAsync(dev.DeviceMac, 100, [], ct);
+    }
 
     var d = new Door(
       dto.Name,
       dto.Vendor,
       dto.Type,
-      deviceId,
+      dev.DeviceId,
       dto.Metadata,
       dto.Readers.Select(x => new Reader(
         x.SlotNo,
@@ -475,7 +477,8 @@ public sealed class DoorService(
           dto.Buzzer.SlotNo,
           dto.Buzzer.Metadata,
           dto.Buzzer.Vendor,
-          buzzerMapModuleId
+          buzzerMapModuleId,
+          BuzzerExternalId
         ),
        dto.Rexes.Select(x => new Rex(
         x.SlotNo,
@@ -487,9 +490,12 @@ public sealed class DoorService(
           dto.Bg.SlotNo,
           dto.Bg.Vendor,
           dto.Bg.Metadata,
-          bgMapModuleId
+          bgMapModuleId,
+          BgExternalId
         ),
-        locationId
+        dev.LocationId ?? -1,
+        dev.ComponentExternalId ?? -1,
+        dev.AltrComponentExternalId ?? -1
     );
 
     await repo.UpdateAsync(d);
@@ -497,8 +503,8 @@ public sealed class DoorService(
     return d.Guid;
   }
 
-      public Task UploadAsync(CancellationToken ct = default)
-      {
-            throw new NotImplementedException();
-      }
+  public Task UploadAsync(CancellationToken ct = default)
+  {
+    throw new NotImplementedException();
+  }
 }

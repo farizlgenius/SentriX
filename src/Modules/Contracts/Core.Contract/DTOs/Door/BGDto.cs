@@ -6,5 +6,6 @@ public sealed record BGDto(
   int SlotNo,
   string Metadata,
   Vendor Vendor,
-  Guid DeviceModuleGuid
+  Guid DeviceModuleGuid,
+  Guid? Guid = null
 );

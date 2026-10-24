@@ -30,6 +30,11 @@ public interface IBaseRepository<TEntity,TDomain,TDto> where TEntity : IBaseEnti
             CancellationToken ct = default
       );
       Task<short> GetFreeExeternalIdAsync(int max,IEnumerable<short>? exception = default,CancellationToken ct = default);
+      Task<short> GetExternalIdByGuidAsync(Guid guid,CancellationToken ct = default);
       Task<CommandDetailDto> GetCommandDetailAsync(Guid guid,CancellationToken ct = default);
       Task<bool> IsAnyByNameAsync(string name,CancellationToken ct = default);
+      Task<IEnumerable<short>> GetRangeExernalIdByGuidsAsync(IEnumerable<Guid> guids,CancellationToken ct = default);
+      Task<Dictionary<Guid,short>> GetExternalIdMapGuidByGuidsAsync(IEnumerable<Guid> guids,CancellationToken ct = default);
+      Task<(int,short)> GetIdAndExternalIdByGuidAsync(Guid guid,CancellationToken ct = default);
+      
 }
