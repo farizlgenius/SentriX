@@ -5,6 +5,7 @@ import {
   useNavigate,
 } from "react-router";
 import { SignIn } from "./pages/AuthPages/SignIn";
+import Register from "./pages/AuthPages/Register";
 import NotFound from "./pages/OtherPage/NotFound";
 import UserProfiles from "./pages/UserProfiles";
 import Images from "./pages/UiElements/Images";
@@ -292,6 +293,7 @@ export default function App() {
             path="/login"
             element={<SignIn handleClick={handleClick} setDto={setLoginDto} />}
           />
+          <Route path="/register" element={<Register />} />
           <Route path="/License" element={<License />} />
           {/* Fallback Route */}
           <Route path="*" element={<NotFound />} />

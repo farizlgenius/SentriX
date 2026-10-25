@@ -1,3 +1,5 @@
+using SharedKernel.Enums;
+
 namespace Adapter.Contract.Interfaces;
 
 public interface IOutputAdapter
@@ -13,5 +15,16 @@ public interface IOutputAdapter
       );
 
       Task DeleteControlPointAsync(string mac, string ip, short deviceId,short outputNo,short controlNo, CancellationToken ct = default);
+      Task ControlPointCommandAsync(
+            string mac,
+            string ip,
+            short deviceId,
+            short controlId,
+            OutputCommand command,
+            short onTime,
+            short offTime,
+            short repeat,
+            CancellationToken ct = default
+      );
       
 }

@@ -15,4 +15,6 @@ public interface IDeviceModuleRepository : IRepository<DeviceModuleDto, DeviceMo
       Task<(int TotalSlots, List<int> OccupiedSlots)?> GetReaderSlotAsync(Guid guid,CancellationToken ct = default);
       Task<(int TotalSlots, List<int> InputSlots,List<int> RexSlots,List<int> SensorSlots,List<int> BreakGlassSlots)?> GetInputSlotAsync(Guid guid, CancellationToken ct = default);
       Task<(int TotalSlots, List<int> OutputSlots,List<int> BuzzerSlots,List<int> RelaySlots)?> GetOutputSlotAsync(Guid guid,CancellationToken ct = default);
+       Task<Guid> GetGuidByExternalIdAndDeviceExternalIdAndVendorAsync(short externalId,short deviceExternalId,Vendor vendor,CancellationToken ct = default);
+     
 }

@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Core.Application.Interfaces;
 using SharedKernel.Interfaces;
 namespace Core.Infrastructure.Persistences.Entities;
 
@@ -29,9 +30,15 @@ public sealed class Location : BaseEntity,IAuditableEntity
   public ICollection<Persistences.Entities.Action> actions { get; set; } = default!;
   public ICollection<Persistences.Entities.Alert> alerts {get ;set; } = default!;
   public ICollection<AlertEvent> alert_event {get; set;} = default!;
-  public Location() { }
-  public Location(Core.Domain.Entities.Location d) : base(d.Guid)
+  public ICollection<AlertLevel> alert_levels {get; set; } = default!;
+  public ICollection<CardFormat> card_formats {get; set; }  = default!;
+
+  public short? external_id => throw new NotImplementedException();
+
+      public Location() { }
+  public Location(Core.Domain.Entities.Location d) 
   {
+    guid = d.Guid;
     this.name = d.Name;
     this.description = d.Description;
     this.country_id = d.CountryId;

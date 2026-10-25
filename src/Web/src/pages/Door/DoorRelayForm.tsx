@@ -254,11 +254,11 @@ const DoorRelayForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps>>
             },
             {
               label: "Deactivate Open",
-              value: StrikeMode.DeactOpen
+              value: StrikeMode.DeactivateOnOpen
             },
             {
               label: "Deactivate Close",
-              value: StrikeMode.DeactClose
+              value: StrikeMode.DeactivateOnClose
             },
             {
               label: "Tailgate",

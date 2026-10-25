@@ -187,12 +187,7 @@ const OutputForm: React.FC<PropsWithChildren<FormProp<OutputDto>>> = ({
 
   return (
     <>
-      <FormSection
-        title="Control Point Details"
-        description="Name the location, assign its country, and add a short description."
-        className="pb-10 mb-5"
-      >
-        <div className="grid gap-5 grid-cols-2 md:grid-cols-2 gap-x-10 gap-y-6 mb-8 p-5">
+    <div className="grid gap-5 grid-cols-2 md:grid-cols-2 gap-x-10 gap-y-6 mb-8 p-5">
           <FormField>
             <Label htmlFor="name">Control Point Name</Label>
             <Input
@@ -281,6 +276,12 @@ const OutputForm: React.FC<PropsWithChildren<FormProp<OutputDto>>> = ({
             />
           </FormField>
         </div>
+      {/* <FormSection
+        title="Control Point Details"
+        description="Name the location, assign its country, and add a short description."
+        className="pb-10 mb-5"
+      >
+        
       </FormSection>
       <FormActions
         // disabled={isReadOnly}
@@ -289,7 +290,7 @@ const OutputForm: React.FC<PropsWithChildren<FormProp<OutputDto>>> = ({
         cancelName="close"
         submitName={type == FormType.UPDATE ? "update" : "create"}
         typeLabel={type == FormType.UPDATE ? "Update" : "Create"}
-      />
+      /> */}
     </>
   );
 };

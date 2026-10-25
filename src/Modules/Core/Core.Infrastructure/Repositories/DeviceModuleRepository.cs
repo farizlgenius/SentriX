@@ -90,7 +90,7 @@ public sealed class DeviceModuleRepository(CoreDbContext context) : BaseReposito
                         x.location.name,
                         x.is_active,
                         x.is_default
-                  )).ToArrayAsync();
+                  )).ToArrayAsync(ct);
       }
 
 
@@ -103,7 +103,14 @@ public sealed class DeviceModuleRepository(CoreDbContext context) : BaseReposito
                   .ToDictionaryAsync(x => x.guid, x => x.id, ct);
       }
 
-    
+      public async Task<Guid> GetGuidByExternalIdAndDeviceExternalIdAndVendorAsync(short externalId, short deviceExternalId, Vendor vendor, CancellationToken ct = default)
+      {
+           return await Context.DeviceModules
+            .AsNoTracking()
+            .Where(x => x.external_id == externalId && x.device.external_id == externalId && x.device.vendor == vendor)
+            .Select(x => x.guid)
+            .FirstOrDefaultAsync(ct);
+      }
 
       public async Task<(int TotalSlots, List<int> InputSlots,List<int> RexSlots,List<int> SensorSlots,List<int> BreakGlassSlots)?> GetInputSlotAsync(Guid guid, CancellationToken ct = default)
       {
@@ -117,7 +124,7 @@ public sealed class DeviceModuleRepository(CoreDbContext context) : BaseReposito
                         RexSlots = x.rexes.Select(x => x.slot_no).ToList(),
                         SensorSlots = x.sensors.Select(x => x.slot_no).ToList(),
                         BreakGlassSlots = x.break_glasses.Select(x => x.slot_no).ToList()
-                  }).FirstOrDefaultAsync();
+                  }).FirstOrDefaultAsync(ct);
 
             if(res == null)
                   return null;
@@ -139,7 +146,7 @@ public sealed class DeviceModuleRepository(CoreDbContext context) : BaseReposito
                   x.mac,
                   null,
                   false
-            )).ToArrayAsync();
+            )).ToArrayAsync(ct);
       }
 
       public async Task<(int TotalSlots, List<int> OutputSlots,List<int> BuzzerSlots,List<int> RelaySlots)?> GetOutputSlotAsync(Guid guid,CancellationToken ct = default)
@@ -181,7 +188,7 @@ public sealed class DeviceModuleRepository(CoreDbContext context) : BaseReposito
                   {
                         TotalSlots = x.reader_slot,
                         OccupiedSlots = x.readers.Select(x => x.slot_no).ToList()
-                  }).FirstOrDefaultAsync();
+                  }).FirstOrDefaultAsync(ct);
 
             if(res == null)
                   return null;

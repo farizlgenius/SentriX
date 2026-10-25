@@ -15,29 +15,32 @@ export const SignInForm: React.FC<PropsWithChildren<SignInFormProp>> = ({ setDto
   const [showPassword, setShowPassword] = useState(false);
   return (
     <div className="flex flex-col flex-1">
-      <div className="flex flex-col justify-center flex-1 w-full max-w-md mx-auto">
+      <div className="flex w-full flex-col justify-center">
         <div>
-          <div className="mb-5 sm:mb-8">
-            <h1 className="mb-2 font-semibold text-gray-800 text-title-sm dark:text-white/90 sm:text-title-md">
-              Sign In
+          <div className="mb-7">
+            <p className="mb-2 text-xs font-semibold uppercase tracking-[0.18em] text-brand-600 dark:text-brand-400">
+              Welcome back
+            </p>
+            <h1 className="mb-2 text-2xl font-semibold text-gray-800 dark:text-white/90 sm:text-3xl">
+              Sign in to SentriX
             </h1>
-            <p className="text-sm text-gray-500 dark:text-gray-400">
-              Enter your username and password to sign in!
+            <p className="text-sm leading-6 text-gray-500 dark:text-gray-400">
+              Enter your credentials to access your workspace.
             </p>
           </div>
           <div>
 
             <div>
-              <div className="space-y-6">
+              <div className="space-y-5">
                 <div>
                   <Label>
-                    Username <span className="text-error-500">*</span>{" "}
+                    Username <span className="text-error-500">*</span>
                   </Label>
-                  <Input placeholder="info@gmail.com / admin" onChange={(e) => setDto(prev => ({ ...prev, username: e.target.value }))} />
+                  <Input placeholder="Enter your username" onChange={(e) => setDto(prev => ({ ...prev, username: e.target.value }))} />
                 </div>
                 <div>
                   <Label>
-                    Password <span className="text-error-500">*</span>{" "}
+                    Password <span className="text-error-500">*</span>
                   </Label>
                   <div className="relative">
                     <Input
@@ -45,16 +48,18 @@ export const SignInForm: React.FC<PropsWithChildren<SignInFormProp>> = ({ setDto
                       placeholder="Enter your password"
                       onChange={(e) => setDto(prev => ({ ...prev, password: e.target.value }))}
                     />
-                    <span
+                    <button
+                      type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute z-30 -translate-y-1/2 cursor-pointer right-4 top-1/2"
+                      aria-label={showPassword ? "Hide password" : "Show password"}
+                      className="absolute right-4 top-1/2 z-30 -translate-y-1/2 cursor-pointer"
                     >
                       {showPassword ? (
                         <EyeIcon className="fill-gray-500 dark:fill-gray-400 size-5" />
                       ) : (
                         <EyeCloseIcon className="fill-gray-500 dark:fill-gray-400 size-5" />
                       )}
-                    </span>
+                    </button>
                   </div>
                 </div>
                 <div className="flex items-center justify-between">
@@ -66,10 +71,19 @@ export const SignInForm: React.FC<PropsWithChildren<SignInFormProp>> = ({ setDto
                   </Link>
                 </div>
                 <div>
-                  <Button name="login" onClickWithEvent={handleClick} className="w-full" size="sm">
+                  <Button name="login" onClickWithEvent={handleClick} className="w-full rounded-xl" size="md">
                     Sign in
                   </Button>
                 </div>
+                <p className="pt-1 text-center text-sm text-gray-500 dark:text-gray-400">
+                  Need an account?{" "}
+                  <Link
+                    to="/register"
+                    className="font-semibold text-brand-600 hover:text-brand-700 dark:text-brand-400 dark:hover:text-brand-300"
+                  >
+                    Register
+                  </Link>
+                </p>
               </div>
             </div>
           </div>

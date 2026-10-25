@@ -48,8 +48,8 @@ public sealed class GroupService(
         );
 
         // Send command here.
-        var doorExternalIds = await door.GetExternalIdMapGuidByGuidsAsync(dto.Components.Select(x => x.Doors),ct);
-        var timeExternalIds = await time.GetExternalIdMapGuidByGuidsAsync(dto.Components.Select(x => x.TimeZone),ct);
+        var doorExternalIds = await door.GetExternalIdMapGuidByGuidRangeAsync(dto.Components.Select(x => x.Doors),ct);
+        var timeExternalIds = await time.GetExternalIdMapGuidByGuidRangeAsync(dto.Components.Select(x => x.TimeZone),ct);
 
         var uniqueDevice = doorDetails
             .GroupBy(x => x.mac)

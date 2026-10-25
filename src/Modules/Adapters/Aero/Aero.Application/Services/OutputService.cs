@@ -2,6 +2,7 @@ using Adapter.Contract.Interfaces;
 using Aero.Application.Interfaces;
 using Aero.Application.Metadata.Device;
 using Core.Contract.Commands.Events;
+using SharedKernel.Enums;
 using SharedKernel.Helpers;
 using SharedKernel.Messaging;
 
@@ -12,6 +13,21 @@ public sealed class OutputService(
       IMessageBus bus
 ) : IOutputAdapter
 {
+      public async Task ControlPointCommandAsync(string mac, string ip, short deviceId, short controlId, OutputCommand command, short onTime, short offTime, short repeat,CancellationToken ct = default)
+      {
+            var res = repo.ControlPointCommand(
+                  mac,
+                  deviceId,
+                  controlId,
+                  command,
+                  onTime,
+                  offTime,
+                  repeat
+            );
+
+            await bus.SendAsync(new AdapterEventCommand(res),ct);
+      }
+
       public async Task CreateControlPointAsync(
             string mac, 
             string ip, 

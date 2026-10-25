@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using System.Text.RegularExpressions;
 using System.Threading.Channels;
 using Core.Contract.DTOs.Events.Audit;
 using Microsoft.AspNetCore.Http;
@@ -45,7 +46,7 @@ public sealed class AuditSaveChangesInterceptor(Channel<AuditTrailInsert> channe
                   string diffJson = AuditHelper.GetEntityChangesJson(entry);
 
                   Guid entityGuid = entry.Properties
-                        .FirstOrDefault(p => p.Metadata.Name == "guid")?.CurrentValue as Guid? 
+                        .FirstOrDefault(p => p.Metadata.Name == "guid")?.CurrentValue as Guid?
                         ?? Guid.Empty;
 
 
@@ -53,14 +54,21 @@ public sealed class AuditSaveChangesInterceptor(Channel<AuditTrailInsert> channe
                         .FirstOrDefault(p => p.Metadata.Name == "name")?.CurrentValue?.ToString() ?? "";
 
 
+                  // Convert PascalCase (e.g., "DeviceModule") to SCREAMING_SNAKE_CASE (e.g., "DEVICE_MODULE")
+                  var entityTypeName = Regex.Replace(entry.Entity.GetType().Name, "(?<!^)([A-Z])", "_$1").ToUpperInvariant();
+
+                  var entityType = Enum.TryParse<EntityType>(entityTypeName, out var parsedType)
+                      ? parsedType
+                      : EntityType.UNKNOWN;
+
                   var auditMessage = new AuditTrailInsert(
-                        Enum.Parse<EntityType>(entry.Entity.GetType().Name,ignoreCase:true),
-                        MapEntityState(entry.State),
-                        username,
-                        clientIp,
-                        entityGuid, 
-                        entityName,
-                        diffJson
+                      entityType,
+                      MapEntityState(entry.State),
+                      username,
+                      clientIp,
+                      entityGuid,
+                      entityName,
+                      diffJson
                   );
 
                   // 4. Non-blocking write to in-memory channel (< 1ms execution time)

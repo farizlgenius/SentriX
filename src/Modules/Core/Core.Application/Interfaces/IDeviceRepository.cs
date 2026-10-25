@@ -18,5 +18,7 @@ public interface IDeviceRepository : IRepository<DeviceDto, Device>
       Task<string> GetMacByGuidAsync(Guid guid, CancellationToken ct = default);
       Task<string> GetMacByExternalIdAndVendorAsync(short externalId,Vendor vendor,CancellationToken ct = default);
       Task<DeviceDto> GetByExternalIdAndVendorAsync(short externalId,Vendor vendor,CancellationToken ct = default);
+      Task<short> GetExternalIdByMacAsync(string mac,CancellationToken ct = default);
+      Task<Guid> GetGuidByExternalAndVendorAsync(short externalId,Vendor vendor,CancellationToken ct = default);
      
 }

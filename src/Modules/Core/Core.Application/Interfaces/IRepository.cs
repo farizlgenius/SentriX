@@ -36,7 +36,8 @@ public interface IRepository<TDto, TDomain> where TDto : class where TDomain : c
   Task<CommandDetailDto> GetCommandDetailAsync(Guid guid,CancellationToken ct = default);
   Task<short> GetExternalIdByGuidAsync(Guid guid, CancellationToken ct = default);
   Task<IEnumerable<short>> GetRangeExernalIdByGuidsAsync(IEnumerable<Guid> guids,CancellationToken ct = default);
-  Task<Dictionary<Guid,short>> GetExternalIdMapGuidByGuidsAsync(IEnumerable<Guid> guids,CancellationToken ct = default);
+  Task<Dictionary<Guid,short>> GetExternalIdMapGuidByGuidRangeAsync(IEnumerable<Guid> guids,CancellationToken ct = default);
+  
   
 
 }

@@ -3,7 +3,6 @@ using Aero.Application.Helpers;
 using Aero.Application.Interfaces;
 using Core.Contract.Commands.Events;
 using Core.Contract.DTOs.Time;
-using Core.Contract.Queries.ComponentMapping;
 using SharedKernel.Constants;
 using SharedKernel.Messaging;
 

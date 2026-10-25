@@ -141,7 +141,25 @@ public sealed class OutputService(
             return true;
       }
 
+      public async Task<bool> OutputCommandAsync(OutputCommandDto command, CancellationToken ct = default)
+      {
+            var output = await Repo.GetAsync(command.Guid,ct);
 
+            var dev = await Repo.GetCommandDetailAsync(command.Guid,ct);
+            
+            await adapter.GetAdapter(output.Vendor).Output.ControlPointCommandAsync(
+                  dev.DeviceMac,
+                  dev.DeviceIp,
+                  dev.DeviceExternalId,
+                  dev.ComponentExternalId ?? -1,
+                  command.Command,
+                  command.OnTime,
+                  command.OffTime,
+                  command.Repeat
+            );
+
+            return true;
+      }
 
       public async Task<Guid> UpdateAsync(UpdateOutputDto dto, CancellationToken ct = default)
       {

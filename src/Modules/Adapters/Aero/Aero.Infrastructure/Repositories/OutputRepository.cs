@@ -14,6 +14,55 @@ public sealed class OutputRepository(
       ILogger<OutputRepository> logger
       ) : IOutputRepository
 {
+      public CommandResponse ControlPointCommand(string mac, short scpId, short cpNo, OutputCommand command, short onTime, short offTime, short repeat)
+      {
+            CC_CPCTL c = new CC_CPCTL();
+            c.scp_number = scpId;
+            c.cp_number = cpNo;
+            c.command = (short)command;
+            c.on_time = onTime;
+            c.off_time = offTime;
+            c.repeat = repeat;
+            var result = repo.Send((short)enCfgCmnd.enCcCpCtl, c);
+            if (result)
+            {
+                  logger.LogInformation(LogMessageHelper.CommandSuccess(Command.ControlPointCommand, scpId));
+
+                  return new CommandResponse(
+                        mac,
+                        scpId,
+                        Command.ControlPointCommand,
+                        SCPDLL.scpGetTagLastPosted(scpId),
+                        DateTime.UtcNow,
+                        DateTime.UtcNow,
+                       ObjectHelper.ToAsciiString(c),
+                        CommandStatus.PENDING,
+                        string.Empty,
+                        Vendor.aero,
+                        true
+                        );
+
+            }
+            else
+            {
+                  logger.LogError(LogMessageHelper.CommandUnsuccess(Command.ControlPointCommand, scpId));
+                  return new CommandResponse(
+                        mac,
+                       scpId,
+                       Command.ControlPointCommand,
+                       -1,
+                       DateTime.UtcNow,
+                       DateTime.UtcNow,
+                       ObjectHelper.ToAsciiString(c),
+                       CommandStatus.FAILED,
+                       string.Empty,
+                       Vendor.aero,
+                       false
+                       );
+
+            }
+      }
+
       public CommandResponse ControlPointConfiguration(string mac, short scpId, short sioNo, short cpNo, short outputNo, short defaultPulse)
       {
             CC_CP c = new CC_CP();

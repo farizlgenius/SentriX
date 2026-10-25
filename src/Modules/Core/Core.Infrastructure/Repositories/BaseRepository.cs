@@ -69,7 +69,7 @@ public abstract class BaseRepository<TEntity, TDomain, TDto>(
             await Context.SaveChangesAsync(ct);
       }
 
-      public async Task<Dictionary<Guid,short>> GetExternalIdMapGuidByGuidsAsync(IEnumerable<Guid> guids,CancellationToken ct = default)
+      public async Task<Dictionary<Guid,short>> GetExternalIdMapGuidByGuidRangeAsync(IEnumerable<Guid> guids,CancellationToken ct = default)
       {
             return await Context.Set<TEntity>()
                   .AsNoTracking()
@@ -342,6 +342,7 @@ public abstract class BaseRepository<TEntity, TDomain, TDto>(
                   .Select(x => x.external_id!.Value)
                   .ToArrayAsync();
       }
+
 
 }
 

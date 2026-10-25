@@ -40,6 +40,7 @@ public static class Command
   public static string ActionSpecification = "118 : Action Specification";
   public static string TriggerSpecification = "117 : Trigger Specification";
 
+
 }
 
 

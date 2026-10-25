@@ -28,8 +28,9 @@ public sealed class Device : BaseDomain
    string Metadata,
    DeviceConfigurationStatus status,
    int LocationId,
-   List<DeviceModule> deviceModules
-   ) : base(Guid.NewGuid())
+   List<DeviceModule> deviceModules,
+   short externalId
+   ) : base(Guid.NewGuid(),externalId)
   {
     ValidationHelper.Name(Name);
     ValidationHelper.NotMinus(LocationId, nameof(LocationId));
@@ -58,8 +59,9 @@ public sealed class Device : BaseDomain
    string Fw,
    Vendor Vendor,
    string Metadata,
-   DeviceConfigurationStatus status
-   ) : base(Guid.NewGuid())
+   DeviceConfigurationStatus status,
+   short externalId
+   ) : base(Guid.NewGuid(),externalId)
   {
     ValidationHelper.Name(Name);
     ValidationHelper.IsNullOrEmpty(SerialNumber, nameof(SerialNumber));

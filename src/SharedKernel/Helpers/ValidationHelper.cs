@@ -16,8 +16,8 @@ public static partial class ValidationHelper
   [GeneratedRegex(@"^[0-9]*$")]
   private static partial Regex DigitRegex();
 
-  [GeneratedRegex(@"^[\p{L}\p{M}\p{N} ()]+$")]
-  private static partial Regex NameRegex();
+  [GeneratedRegex(@"^[\p{L}\p{M}\p{N} ()-]+$")]
+private static partial Regex NameRegex();
 
 
 

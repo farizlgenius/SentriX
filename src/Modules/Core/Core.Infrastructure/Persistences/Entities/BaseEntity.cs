@@ -13,8 +13,8 @@ public class BaseEntity : IBaseEntity
   public DateTime updated_at { get; set; }
   public bool is_active { get; set; } = true;
   public bool is_default { get; set; } = false;
-  public int location_id {get; set; } = 1;
-  public Location location {get; set;} = default!;
+  public int? location_id {get; set; }
+  public Location? location {get; set;}
   public short? external_id {get; set; } 
   public short? altr_external_id { get; set; }
 

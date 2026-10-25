@@ -7,7 +7,7 @@ using Core.Contract.Commands.Events;
 using Core.Contract.DTOs.Device;
 using Core.Contract.Interfaces;
 using Core.Contract.Queries;
-using Core.Contract.Queries.ComponentMapping;
+using Core.Contract.Queries.Device;
 using Microsoft.Extensions.Logging;
 using Setting.Contract.Interfaces;
 using Setting.Contract.Queries;
@@ -99,7 +99,7 @@ public sealed class IdReportService(
 
       // var externalId = await mapping.GetExternalIdByMacAndEntityAsync(mac,EntityType.Device);
 
-      var externalId = await bus.QueryAsync(new ExternalIdByMacAndEntityQuery(mac, EntityType.DEVICE));
+      var externalId = await bus.QueryAsync(new DeviceExternalIdByMacQuery(mac),ct);
 
 
       res = repo.AccessDatabaseSpecification(

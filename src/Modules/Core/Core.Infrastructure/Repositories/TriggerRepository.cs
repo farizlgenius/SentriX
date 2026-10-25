@@ -67,7 +67,7 @@ public sealed class TriggerRepository(CoreDbContext context) : ITriggerRepositor
             throw new NotImplementedException();
       }
 
-      public Task<Dictionary<Guid, short>> GetExternalIdMapGuidByGuidsAsync(IEnumerable<Guid> guids, CancellationToken ct = default)
+      public Task<Dictionary<Guid, short>> GetExternalIdMapGuidByGuidRangeAsync(IEnumerable<Guid> guids, CancellationToken ct = default)
       {
             throw new NotImplementedException();
       }

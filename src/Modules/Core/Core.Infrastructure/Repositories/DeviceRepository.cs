@@ -122,7 +122,7 @@ public sealed class DeviceRepository(CoreDbContext context) : BaseRepository<Per
                   .Select(x => new { x.name, x.location_id })
                   .FirstOrDefaultAsync(cancellationToken: ct);
 
-            return res == null ? (string.Empty,0) : (res.name,res.location_id);
+            return res == null ? (string.Empty,0) : (res.name,res.location_id!.Value);
       }
 
 
@@ -227,7 +227,27 @@ public sealed class DeviceRepository(CoreDbContext context) : BaseRepository<Per
             .AsNoTracking()
             .Where(x => x.external_id == externalId && x.vendor == vendor)
             .Select(DeviceProjections.ToDto)
-            .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.DEVICE.ToString());
+            .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.DEVICE.ToString());
 
       }
+
+      public async Task<short> GetExternalIdByMacAsync(string mac, CancellationToken ct = default)
+      {
+            return await Context.Devices
+                  .AsNoTracking()
+                  .Where(x => x.mac == mac)
+                  .Select(x => x.external_id!.Value)
+                  .FirstOrDefaultAsync(ct);
+      }
+
+      public async Task<Guid> GetGuidByExternalAndVendorAsync(short externalId, Vendor vendor, CancellationToken ct = default)
+      {
+            return await Context.Devices
+                  .AsNoTracking()
+                  .Where(x => x.external_id == externalId && x.vendor == vendor)
+                  .Select(x => x.guid)
+                  .FirstOrDefaultAsync(ct);
+      }
+
+
 }

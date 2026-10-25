@@ -36,7 +36,7 @@ public sealed class Device : BaseEntity,IAuditableEntity
     this.vendor = domain.Vendor;
     this.metadata = domain.Metadata;
     location_id = domain.LocationId;
-    device_modules = domain.DeviceModules.Select(x => new DeviceModule(x)).ToArray();
+    device_modules = [.. domain.DeviceModules.Select(x => new DeviceModule(x))];
   }
 
 

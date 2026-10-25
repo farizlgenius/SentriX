@@ -28,28 +28,28 @@ public sealed class LocationRepository(CoreDbContext context) :BaseRepository<Pe
 {
       public override async Task AddAsync(Core.Domain.Entities.Location entity, CancellationToken ct = default)
       {
-            await context.Database.BeginTransactionAsync(ct);
+            await Context.Database.BeginTransactionAsync(ct);
             try
             {
                   var location = new Persistences.Entities.Location(entity);
 
                   location.operator_locations = new List<OperatorLocation>
                   {
-                        new OperatorLocation(1,0)
+                        new(1,0)
                   };
 
 
-                  var change = AuditHelper.GetEntityChanges(await context.Locations.AddAsync(location, ct));
+                  var change = AuditHelper.GetEntityChanges(await Context.Locations.AddAsync(location, ct));
 
 
 
-                  await context.SaveChangesAsync(ct);
+                  await Context.SaveChangesAsync(ct);
 
-                  await context.Database.CommitTransactionAsync(ct);
+                  await Context.Database.CommitTransactionAsync(ct);
             }
             catch
             {
-                  await context.Database.RollbackTransactionAsync(ct);
+                  await Context.Database.RollbackTransactionAsync(ct);
                   throw;
             }
 
@@ -58,31 +58,31 @@ public sealed class LocationRepository(CoreDbContext context) :BaseRepository<Pe
      
       public async Task<IEnumerable<CountryDto>> GetCountriesAsync(CancellationToken ct = default)
       {
-            return await context.Countries
+            return await Context.Countries
                   .AsNoTracking()
                   .Select(x => new CountryDto(
                         x.id,
                         x.name,
                         x.code
                   ))
-                  .ToArrayAsync();
+                  .ToArrayAsync(ct);
       }
 
     
 
       public async Task<IEnumerable<int>> GetIdsByGuidsAsync(IEnumerable<Guid> guids, CancellationToken ct = default)
       {
-            return await context.Locations
+            return await Context.Locations
                   .AsNoTracking()
                   .Where(x => guids.Contains(x.guid))
                   .OrderByDescending(x => x.id)
                   .Select(x => x.id)
-                  .ToListAsync();
+                  .ToListAsync(ct);
       }
 
       public async Task<IEnumerable<LocationDto>> GetListAsync(IEnumerable<Guid> guids, CancellationToken ct = default)
       {
-            return await context.Locations
+            return await Context.Locations
                   .AsNoTracking()
                   .Where(x => guids.Contains(x.guid))
                   .OrderBy(x => x.id)
@@ -94,7 +94,7 @@ public sealed class LocationRepository(CoreDbContext context) :BaseRepository<Pe
                         e.country.name,
                         e.is_active,
                         e.is_default
-                  )).ToListAsync();
+                  )).ToListAsync(ct);
       }
 
    
@@ -103,7 +103,8 @@ public sealed class LocationRepository(CoreDbContext context) :BaseRepository<Pe
            return await base.GetPaginationAsync(
             param,
             param.locationGuid != new Guid("3a9c9947-d5ca-4bb2-b525-0499a340f1d6") ? x => x.guid == param.locationGuid : null,
-            [x => x.name,x => x.description]
+            [x => x.name,x => x.description],
+            ct
            );
       }
 
@@ -111,11 +112,11 @@ public sealed class LocationRepository(CoreDbContext context) :BaseRepository<Pe
 
       public async Task<IEnumerable<Guid>> IsAnyInvalidGuidsAsync(IEnumerable<Guid> guids, CancellationToken ct = default)
       {
-            return await context.Locations
+            return await Context.Locations
                   .AsNoTracking()
                   .Where(x => !guids.Contains(x.guid))
                   .Select(x => x.guid)
-                  .ToListAsync();
+                  .ToListAsync(ct);
       }
 
       public Task<bool> IsAnyRelatedEntitiesAsync(Guid guid, CancellationToken ct = default)

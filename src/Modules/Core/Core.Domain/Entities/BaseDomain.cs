@@ -22,12 +22,8 @@ public class BaseDomain
     ValidationHelper.GuidEmpty(Guid, nameof(Guid));
     this.Guid = Guid;
     this.ExternalId = ExternalId;
+    this.AltrExternalId = AltrExternalId;
   }
 
-  public void SetGuid(Guid guid)
-  {
-    ValidationHelper.GuidEmpty(guid,nameof(Guid));
-    Guid = guid;
-  }
 
 }

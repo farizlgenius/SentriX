@@ -51,13 +51,31 @@ public sealed class DoorRepository(CoreDbContext context) : BaseRepository<Persi
 ), IDoorRepository
 {
 
+  public async Task<Guid> GetGuidByExternalIdAndDeviceExternalIdAndVendorAsync(short externalId, short deviceExternalId, Vendor vendor, CancellationToken ct = default)
+      {
+           return await Context.Doors
+            .AsNoTracking()
+            .Where(x => x.external_id == externalId && x.device.external_id == externalId && x.device.vendor == vendor)
+            .Select(x => x.guid)
+            .FirstOrDefaultAsync(ct);
+      }
+
 
   public async Task<bool> CheckRelationAsync(Guid guid, CancellationToken ct = default)
   {
     throw new NotImplementedException();
   }
 
-  public async Task<IEnumerable<DoorDto>> GetByMacAsync(string mac, CancellationToken ct = default)
+      public async Task<string> GetNameByExternalIdAndMacAndVendorQuery(short externalId, string mac, Vendor vendor,CancellationToken ct= default)
+      {
+           return await Context.Doors
+            .AsNoTracking()
+            .Where(x => x.external_id == externalId && x.device.mac == mac && x.vendor == vendor)
+            .Select(x => x.name)
+            .FirstOrDefaultAsync() ?? string.Empty;
+      }
+
+      public async Task<IEnumerable<DoorDto>> GetByMacAsync(string mac, CancellationToken ct = default)
   {
     return await Context.Doors
       .AsNoTracking()
@@ -143,6 +161,19 @@ public sealed class DoorRepository(CoreDbContext context) : BaseRepository<Persi
       .Where(x => guids.Contains(x.guid))
       .ToDictionaryAsync(x => x.guid, x => x.id, ct);
   }
+
+      public async Task<IEnumerable<short>> GetExternalIdRangeByGuidAsync(Guid guid, CancellationToken ct = default)
+      {
+            var result = await Context.Doors
+                .AsNoTracking()
+                .Where(x => x.guid == guid)
+                .Select(x => new { x.external_id, x.altr_external_id })
+                .FirstOrDefaultAsync();
+
+            return result is not null 
+                    ? new[] { result.external_id!.Value, result.altr_external_id!.Value } 
+                    : Array.Empty<short>(); // Replace string with your column's data type
+      }
 
       public async Task<short> GetFreeExeternalIdByMacAsync(string mac,int max, IEnumerable<short>? exception = null, CancellationToken ct = default)
       {

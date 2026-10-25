@@ -1,6 +1,6 @@
 export enum StrikeMode {
       None,
-      DeactOpen,
-      DeactClose,
+      DeactivateOnOpen,
+      DeactivateOnClose,
       Tailgate=16
 }

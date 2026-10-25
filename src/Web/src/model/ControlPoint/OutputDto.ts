@@ -1,19 +1,13 @@
+import { Vendor } from "../../enum/Vendor";
 
 export interface OutputDto 
 {
-    id:number;
+    guid:string;
     name:string;
-    mac:string;
-    componentId:number;
-    deviceComponentId:number;
-    moduleComponentId:number;
-    outputNo:number;
-    model:string;
-    offlineMode:number;
-    driveMode:number;
-    locationId:number;
-    defaultPulse:number;
-    type:string;
+    slotNo:number;
+    metadata:string;
+    vendor:Vendor;
     isActive:boolean;
+    isDefault:boolean;
 }
 

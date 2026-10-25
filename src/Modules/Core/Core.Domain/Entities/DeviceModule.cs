@@ -27,8 +27,9 @@ public sealed class DeviceModule : BaseDomain
     int readerSlot,
     int outputSlot,
     int inputSlot,
-    int locationId
-  ) : base(Guid.NewGuid())
+    int locationId,
+    short externalId
+  ) : base(Guid.NewGuid(),externalId)
   {
     Name = name;
     SerialNumber = serialNumber;

@@ -1,7 +1,12 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace Core.Infrastructure.Persistences.Entities;
 
-public sealed class FeaturePermission : BaseEntity
+public sealed class FeaturePermission 
 {
+      [Key]
+      public int id {get; set; }
+      public Guid guid {get; set; }
       public int feature_id { get; set; } = default!;
       public Feature feature { get; set; } = default!;
       public int module_permission_id { get; set; }
@@ -14,8 +19,9 @@ public sealed class FeaturePermission : BaseEntity
       public FeaturePermission() { }
       public FeaturePermission(
             Core.Domain.Entities.FeaturePermission d
-      ) : base(d.Guid)
+      ) 
       {
+            guid = d.Guid;
             this.feature_id = d.FeatureId;
             this.is_enabled = d.IsEnabled;
             this.is_deleted = d.IsEnabled;

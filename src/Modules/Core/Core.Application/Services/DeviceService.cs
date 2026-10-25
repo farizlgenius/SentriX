@@ -47,28 +47,12 @@ public sealed class DeviceService(
     if (await repo.IsAnyByNameAndLocationGuidAsync(dto.Name, dto.LocationGuid, ct))
       throw new DuplicateException(EntityType.DEVICE.ToString(), dto.Name);
 
-
-    var deviceModules = dto.DeviceModules.Select(x => new DeviceModule(
-        x.Name,
-        x.SerialNumber,
-        x.Firmware,
-        x.Mac,
-        x.Address,
-        x.Port,
-        x.Model,
-        AeroModuleModelHelper.nReaderByModel(x.Model),
-        AeroModuleModelHelper.nOutputByModel(x.Model),
-        AeroModuleModelHelper.nInputByModel(x.Model),
-        locationId
-        )).ToList();
-
-
-    // Add Internal
-
     var model = dto.Vendor == SharedKernel.Enums.Vendor.aero ? SharedKernel.Enums.DeviceModuleModel.x1100 : SharedKernel.Enums.DeviceModuleModel.amico;
 
-    deviceModules.Add(
-       new DeviceModule(
+
+    var deviceModules = new List<DeviceModule>()
+    {
+      new DeviceModule(
         $"{dto.Name} - Internal",
         dto.SerialNumber,
         dto.Firmware,
@@ -79,11 +63,15 @@ public sealed class DeviceService(
         AeroModuleModelHelper.nReaderByModel(model),
         AeroModuleModelHelper.nOutputByModel(model),
         AeroModuleModelHelper.nInputByModel(model),
-        locationId
+        locationId,
+        0
         )
-    );
+    };
 
+    temp.TryGet(dto.Mac,out var dev);
 
+    if(dev == null)
+      throw new NotFoundException("Temp Device",dto.Mac);
 
     var d = new Core.Domain.Entities.Device(
       dto.Name,
@@ -96,7 +84,8 @@ public sealed class DeviceService(
       dto.Metadata,
       SharedKernel.Enums.DeviceConfigurationStatus.pending,
       locationId,
-      deviceModules
+      deviceModules,
+      (short)dev.Id
     );
 
     // Handle how device is create on each device
@@ -107,7 +96,6 @@ public sealed class DeviceService(
         break;
       case SharedKernel.Enums.Vendor.aero:
         await repo.AddAsync(d, ct);
-        deviceModules.ForEach(async x => await module.AddAsync(x,ct));
         break;
       default:
         throw new BadRequestException("Vendor Type Invalid.");
@@ -140,7 +128,7 @@ public sealed class DeviceService(
       throw new NotFoundException(EntityType.DEVICE.ToString(), guid.ToString());
 
     // Check reference before
-    if(!await repo.IsAnyRelatedEntitiesAsync(guid,ct))
+    if(await repo.IsAnyRelatedEntitiesAsync(guid,ct))
       throw new FoundRelateException();
 
     // Send Comand
@@ -325,7 +313,8 @@ public sealed class DeviceService(
       dto.Metadata,
       SharedKernel.Enums.DeviceConfigurationStatus.pending,
       locationId,
-      dto.DeviceModules.Select(x => new DeviceModule(
+      [.. dto.DeviceModules.Select(x => new DeviceModule(
+        x.Guid,
         x.Name,
         x.SerialNumber,
         x.Firmware,
@@ -337,7 +326,7 @@ public sealed class DeviceService(
         AeroModuleModelHelper.nOutputByModel(x.Model),
         AeroModuleModelHelper.nInputByModel(x.Model),
         locationId
-        )).ToList()
+        ))]
     );
 
     await repo.UpdateAsync(d, ct);

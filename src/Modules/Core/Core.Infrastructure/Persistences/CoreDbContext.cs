@@ -134,6 +134,21 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   .HasDefaultValueSql(guidSql)
                   .ValueGeneratedOnAdd();
 
+            modelBuilder.Entity<Country>()
+                  .Property(x => x.guid)
+                  .HasDefaultValueSql(guidSql)
+                  .ValueGeneratedOnAdd();
+
+            modelBuilder.Entity<FeaturePermission>()
+                  .Property(x => x.guid)
+                  .HasDefaultValueSql(guidSql)
+                  .ValueGeneratedOnAdd();
+
+            modelBuilder.Entity<Feature>()
+                  .Property(x => x.guid)
+                  .HasDefaultValueSql(guidSql)
+                  .ValueGeneratedOnAdd();
+
             foreach (var entityType in modelBuilder.Model.GetEntityTypes())
             {
 
@@ -314,7 +329,8 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   {
                         x.guid,
                         x.mac,
-                        x.vendor
+                        x.vendor,
+                        x.location_id
                   }
             ).IsUnique();
 
@@ -669,6 +685,49 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                         }
                   ).IsUnique();
 
+            // Card Format 
+            modelBuilder.Entity<Persistences.Entities.CardFormat>()
+                  .HasIndex(
+                        x => new
+                        {
+                              x.guid,
+                              x.id,
+                              x.location_id
+                        }
+                  ).IsUnique();
+
+            // Alert 
+            modelBuilder.Entity<Persistences.Entities.AlertLevel>()
+                  .HasIndex(
+                        x => new
+                        {
+                              x.guid,
+                              x.id,
+                              x.location_id
+                        }
+                  ).IsUnique();
+
+          
+            modelBuilder.Entity<Persistences.Entities.AlertEvent>()
+                  .HasIndex(
+                        x => new
+                        {
+                              x.guid,
+                              x.id,
+                              x.location_id
+                        }
+                  ).IsUnique();
+
+            modelBuilder.Entity<Persistences.Entities.Alert>()
+                  .HasIndex(
+                        x => new
+                        {
+                              x.guid,
+                              x.id,
+                              x.location_id
+                        }
+                  ).IsUnique();
+
 
 
             // Configure relationships 
@@ -778,7 +837,20 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Location>()
+                  .HasMany(x => x.card_formats)
+                  .WithOne(x => x.location)
+                  .HasForeignKey(x => x.location_id)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Location>()
                   .HasMany(x => x.alert_event)
+                  .WithOne(x => x.location)
+                  .HasForeignKey(x => x.location_id)
+                  .IsRequired(false)
+                  .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<Location>()
+                  .HasMany(x => x.alert_levels)
                   .WithOne(x => x.location)
                   .HasForeignKey(x => x.location_id)
                   .IsRequired(false)
