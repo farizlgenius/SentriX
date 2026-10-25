@@ -151,7 +151,8 @@ public sealed class DoorService(
       d.Buzzer.Metadata,
       d.Vendor,
       buzzerMapModuleId.Item1,
-      d.LocationId
+      d.LocationId,
+      BuzzerExternalId
       );
       
     }
@@ -164,7 +165,8 @@ public sealed class DoorService(
         d.BG.Metadata,
         d.BG.Vendor,
         bgMapModuleId.Item1,
-        d.LocationId
+        d.LocationId,
+        BgExternalId
       );
     }
 

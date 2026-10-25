@@ -6,6 +6,7 @@ export const ModuleEndpoint = {
   GET_BY_VENDOR: (guid: string, vendor: Vendor) =>
     `/api/${CONTROLLER}/location/${guid}/vendor/${vendor}`,
   GET_BY_GUID: (guid: string) => `/api/${CONTROLLER}/device/${guid}`,
+  GET_OPTION:(guid:string) => `/api/${CONTROLLER}/option/${guid}`,
   PAGINATION: (
     pageNumber: number,
     pageSize: number,
@@ -17,8 +18,8 @@ export const ModuleEndpoint = {
     `/api${locationId == 0 || locationId == undefined ? "" : `/${locationId}`}/${CONTROLLER}/pagination?PageNumber=${pageNumber}&PageSize=${pageSize}${search == undefined || search == "" ? "" : `&search=${search}`}${startDate == undefined ? "" : `&startDate=${startDate}`}${endDate == undefined ? "" : `&startDate=${endDate}`}`,
   CREATE: `/api/${CONTROLLER}`,
   GET_ID: (id: number) => `/api/${CONTROLLER}/${id}`,
-  GET_BY_DEVICE_ID: (deviceId: number) =>
-    `/api/${CONTROLLER}/option/${deviceId}`,
+  GET_BY_DEVICE: (guid: string) =>
+    `/api/${CONTROLLER}/option/${guid}`,
   STATUS: (guid: string) => `/api/${CONTROLLER}/status/${guid}`,
   BAUDRATE: `/api/${CONTROLLER}/baudrate`,
   PROTOCOL: `/api/${CONTROLLER}/protocol`,

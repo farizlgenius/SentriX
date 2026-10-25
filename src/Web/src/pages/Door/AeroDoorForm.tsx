@@ -508,7 +508,7 @@ const AeroDoorForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({
   }
   const [moduleOption, setModuleOption] = useState<Options[]>([]);
   const fetchModule = async (value: number) => {
-    const res = await send.get(ModuleEndpoint.GET_BY_DEVICE_ID(value));
+    const res = await send.get(ModuleEndpoint.GET_BY_DEVICE(value));
     if (res && res.data) {
       res.data.map((a: Options) => {
         setModuleOption((prev) => [

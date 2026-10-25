@@ -32,8 +32,7 @@ public sealed class Location : BaseEntity,IAuditableEntity
   public ICollection<AlertEvent> alert_event {get; set;} = default!;
   public ICollection<AlertLevel> alert_levels {get; set; } = default!;
   public ICollection<CardFormat> card_formats {get; set; }  = default!;
-
-  public short? external_id => throw new NotImplementedException();
+  public ICollection<Area> areas {get; set; }  = default!;
 
       public Location() { }
   public Location(Core.Domain.Entities.Location d) 

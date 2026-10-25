@@ -222,8 +222,8 @@ public sealed class DoorRepository(CoreDbContext context) : BaseRepository<Persi
 
 
 
-  public Task<bool> IsAnyRelatedEntitiesAsync(Guid guid, CancellationToken ct = default)
+  public async Task<bool> IsAnyRelatedEntitiesAsync(Guid guid, CancellationToken ct = default)
   {
-    throw new NotImplementedException();
+    return false;
   }
 }

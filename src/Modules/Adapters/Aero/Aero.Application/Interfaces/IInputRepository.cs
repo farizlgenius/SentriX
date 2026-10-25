@@ -25,4 +25,13 @@ public interface IInputRepository
             short delayEntry,
             short delayExit
       );
+
+      CommandResponse MonitorPointMask(
+            string mac,
+            short scpId,
+            short mpNo,
+            short setClear
+      );
+
+      CommandResponse MonitorPointStatusRequest(string mac, short scpId,short mpId, short count);
 }

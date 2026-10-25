@@ -19,12 +19,13 @@ namespace Host.Controllers
       return Ok(res);
     }
 
-    [HttpGet("option/location/{guid}")]
+    [HttpGet("option/{guid}")]
     public async Task<IActionResult> GetOptionByLocationAsync(Guid guid)
     {
       var res = await device.GetOptionByLocationAsync(guid);
       return Ok(res);
     }
+
 
     [HttpGet("pagination")]
     public async Task<IActionResult> GetPaginationAsync([FromQuery] PaginationParams param)
@@ -89,14 +90,10 @@ namespace Host.Controllers
       return Ok(res);
     }
 
-
-
   
     [HttpPost]
     public async Task<IActionResult> CreateAsync([FromBody] CreateDeviceDto dto)
     {
-      
-            
       var res = await device.CreateAsync(dto);
       return Ok(res);
     }

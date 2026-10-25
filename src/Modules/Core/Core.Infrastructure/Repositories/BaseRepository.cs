@@ -343,7 +343,17 @@ public abstract class BaseRepository<TEntity, TDomain, TDto>(
                   .ToArrayAsync();
       }
 
-
+      public virtual async Task<IEnumerable<OptionDto>> GetOptionByLocationAsync(Guid guid, CancellationToken ct = default)
+      {
+           return await Context.Set<TEntity>()
+                  .AsNoTracking()
+                  .Where(x => x.guid == guid)
+                  .Select(x => new OptionDto(
+                        x.name,
+                        x.guid,
+                        string.Empty
+                  )).ToArrayAsync();
+      }
 }
 
 // Utility class to rebind lambda expressions to a single root parameter

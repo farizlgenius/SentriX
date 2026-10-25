@@ -67,6 +67,7 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
       public DbSet<Persistences.Entities.CoreEvent> CoreEvents { get; set; }
       public DbSet<CoreEntity> CoreEntities { get; set; }
       public DbSet<AlertComponent> AlertComponents { get; set; }
+      public DbSet<Area> Areas {get; set; }
 
       protected override void OnModelCreating(ModelBuilder modelBuilder)
       {
@@ -728,6 +729,18 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                         }
                   ).IsUnique();
 
+             modelBuilder.Entity<Persistences.Entities.Area>()
+                  .HasIndex(
+                        x => new
+                        {
+                              x.guid,
+                              x.id,
+                              x.location_id
+                        }
+                  ).IsUnique();
+
+            
+
 
 
             // Configure relationships 
@@ -843,6 +856,12 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Location>()
+                  .HasMany(x => x.areas)
+                  .WithOne(x => x.location)
+                  .HasForeignKey(x => x.location_id)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Location>()
                   .HasMany(x => x.alert_event)
                   .WithOne(x => x.location)
                   .HasForeignKey(x => x.location_id)
@@ -899,6 +918,18 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
 
             modelBuilder.Entity<Device>()
                   .HasMany(x => x.actions)
+                  .WithOne(x => x.device)
+                  .HasForeignKey(x => x.device_id)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Device>()
+                  .HasMany(x => x.areas)
+                  .WithOne(x => x.device)
+                  .HasForeignKey(x => x.device_id)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Device>()
+                  .HasMany(x => x.monitor_groups)
                   .WithOne(x => x.device)
                   .HasForeignKey(x => x.device_id)
                   .OnDelete(DeleteBehavior.Cascade);
@@ -1111,6 +1142,19 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   .HasForeignKey(x => x.door_id)
                   .OnDelete(DeleteBehavior.Cascade);
 
+            modelBuilder.Entity<Persistences.Entities.Door>()
+                  .HasMany(x => x.areas_in)
+                  .WithOne(x => x.door)
+                  .HasForeignKey(x => x.door_id)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Persistences.Entities.Door>()
+                  .HasMany(x => x.areas_out)
+                  .WithOne(x => x.door)
+                  .HasForeignKey(x => x.door_id)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+
 
             // Sensor configuration
             modelBuilder.Entity<Door>()
@@ -1244,6 +1288,42 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   .WithOne(x => x.core_event)
                   .HasForeignKey(x => x.core_event_id)
                   .OnDelete(DeleteBehavior.Cascade);
+
+            // Area
+
+            modelBuilder.Entity<Persistences.Entities.Area>()
+                  .HasMany(x => x.doors_in)
+                  .WithOne(x => x.area)
+                  .HasForeignKey(x => x.area_id)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Persistences.Entities.Area>()
+                  .HasMany(x => x.doors_out)
+                  .WithOne(x => x.area)
+                  .HasForeignKey(x => x.area_id)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            // Monitor Group
+
+             modelBuilder.Entity<Persistences.Entities.MonitorGroup>()
+                  .HasMany(x => x.components)
+                  .WithOne(x => x.monitor_group)
+                  .HasForeignKey(x => x.monitor_group_id)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Persistences.Entities.Door>()
+                  .HasOne(x => x.monitor_group_component)
+                  .WithOne(x => x.door)
+                  .HasForeignKey<MonitorGroupComponent>(x => x.door_id)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Persistences.Entities.Input>()
+                  .HasOne(x => x.monitor_group_component)
+                  .WithOne(x => x.input)
+                  .HasForeignKey<MonitorGroupComponent>(x => x.input_id)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+
 
 
 

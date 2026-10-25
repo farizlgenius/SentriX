@@ -27,15 +27,14 @@ import { SignalRTopic } from "../../constants/signalr-constant";
 import { Vendor } from "../../enum/Vendor";
 import { Status } from "../../enum/Status";
 import { InputStatus } from "../../enum/InputStatus";
-import { OutputCommandDto } from "../../model/ControlPoint/OutputCommandDto";
 import { OutputCommand } from "../../enum/OutputCommand";
 import { OutputRepeatCommand } from "../../model/ControlPoint/OutputRepeatCommand";
-import { Modal } from "../../components/ui/modal";
 import Modals from "../UiElements/Modals";
 import Label from "../../components/form/Label";
 import { FormField } from "../../components/form/template/FormTemplate";
 import Input from "../../components/form/input/InputField";
 import Button from "../../components/ui/button/Button";
+import { AeroOutputMetadata } from "../../model/ControlPoint/AeroOutputMetadata";
 
 // Define Global Variable
 
@@ -43,6 +42,7 @@ export const OUTPUT_TABLE_HEADER: string[] = [
   "Name",
   "Pulse Time",
   "Status",
+  "Enabled",
   "Action",
 ];
 export const OUTPUT_KEY: string[] = ["name", "defaultPulse"];
@@ -51,7 +51,7 @@ const Output = () => {
   const { toggleToast } = useToast();
   const { token } = useAuth();
   const { setPagination } = usePagination();
-  const { locationGuid: locationId } = useLocation();
+  const { locationGuid } = useLocation();
   const { filterPermission } = useAuth();
   const {
     setCreate,
@@ -103,10 +103,15 @@ const Output = () => {
   const defaultOutputDto: OutputDto = {
     guid: "",
     name: "",
-    slotNo: 0,
-    metadata: "",
-    vendor: Vendor.aero,
-    isActive: false,
+    slotNo: -1,
+    metadata: {
+      defaultPulse:1,
+      offlineMode:0,
+      driveMode:0
+    },
+    deviceModuleGuid:"",
+    vendor: Vendor.unknown,
+    isActive: true,
     isDefault: false
   };
   const defaultRepeatCommand: OutputRepeatCommand = {
@@ -138,10 +143,18 @@ const Output = () => {
         endDate,
       ),
     );
-    console.log(res);
     if (res && res.data) {
       console.log(res.data);
-      setOutputsDto(res.data.data.items);
+      res.data.data.items.forEach((a:OutputDto) => {
+        setOutputsDto(prev => ([
+          ...prev,
+          {
+            ...a,
+            metadata:JSON.parse(a.metadata as string)
+          }
+        ]))
+      })
+      //setOutputsDto(res.data.data.items);
       setPagination(res.data.data);
 
       // Batch set state
@@ -156,7 +169,7 @@ const Output = () => {
       setStatus((prev) => [...prev, ...newStatuses]);
 
       // Fetch status for each
-      res.data.item.forEach((a: OutputDto) => {
+      res.data.data.item.forEach((a: OutputDto) => {
         fetchStatus(a.guid);
       });
     }
@@ -245,6 +258,7 @@ const Output = () => {
       case "create":
         console.log(controlPointDto);
         setConfirmCreate(() => async () => {
+          controlPointDto.metadata = JSON.stringify(controlPointDto.metadata);
           const res = await send.post(OutputEndpoint.CREATE, controlPointDto);
           if (
             Helper.handleToastByResCode(
@@ -444,7 +458,7 @@ const Output = () => {
       )}
       {form ? (
         <>
-          <BaseForm tabContent={formContent} header={""} desc={""} type={FormType.CREATE} />
+          <BaseForm handleClick={handleClick} tabContent={formContent} header={"Control Point"} desc={""} type={FormType.CREATE} />
         </>
       ) : (
         <BaseTable<OutputDto>
@@ -462,8 +476,16 @@ const Output = () => {
           action={action}
           onInfo={handleInfo}
           fetchData={fetchData}
-          locationGuid={locationId}
+          locationGuid={locationGuid}
           refresh={refresh}
+          specialDisplay={[
+            {
+              key:"defaultPulse",
+              content:(data, i)  => <TableCell key={i} className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                    {(data.metadata as AeroOutputMetadata).defaultPulse ?? 0}
+                  </TableCell>,
+            }
+          ]}
         />
       )}
     </>

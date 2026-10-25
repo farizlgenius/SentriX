@@ -274,27 +274,24 @@ public sealed class UtilitiesHelper
 
   public static short FinalizeOutputMode(short Drive,short Offline)
       {
-            switch (Drive)
+            return Drive switch
             {
-                  case 0:
-                        return Offline switch
-                        {
-                              0 => 0,
-                              1 => 16,
-                              2 => 32,
-                              _ => 0    
-                        };
-                  case 1:
-                        return Offline switch
-                        {
-                              0 => 1,
-                              1 => 17,
-                              3 => 33,
-                              _ => 0
-                        };
-                  default:
-                        return 0;
-            }
+                  0 => Offline switch
+                  {
+                        0 => 0,
+                        1 => 16,
+                        2 => 32,
+                        _ => 0
+                  },
+                  1 => Offline switch
+                  {
+                        0 => 1,
+                        1 => 17,
+                        2 => 33,
+                        _ => 0
+                  },
+                  _ => 0,
+            };
       }
 
 }

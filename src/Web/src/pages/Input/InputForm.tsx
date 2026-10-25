@@ -51,7 +51,7 @@ const InputForm: React.FC<PropsWithChildren<FormProp<InputDto>>> = ({
       case "deviceId":
         setDto((prev) => ({ ...prev, scpId: Number(value) }));
         const res1 = await send.get(
-          ModuleEndpoint.GET_BY_DEVICE_ID(Number(value)),
+          ModuleEndpoint.GET_BY_DEVICE(Number(value)),
         );
         if (res1.data) {
           res1.data.map((a: Options) => {

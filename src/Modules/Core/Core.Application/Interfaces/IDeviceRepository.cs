@@ -14,11 +14,11 @@ public interface IDeviceRepository : IRepository<DeviceDto, Device>
       Task<DeviceDto> GetByMacAsync(string mac,CancellationToken ct = default);
       Task UpdateConfigurationStatusByMacAsync(string mac, bool isSync,bool isUploaded, CancellationToken ct = default);
       Task<IEnumerable<OptionDto>> GetOptionByVendorAndLocationAsync(Vendor vendor,Guid guid,CancellationToken ct  = default);
-      Task<IEnumerable<OptionDto>> GetOptionByLocationAsync(Guid location,CancellationToken ct = default);
       Task<string> GetMacByGuidAsync(Guid guid, CancellationToken ct = default);
       Task<string> GetMacByExternalIdAndVendorAsync(short externalId,Vendor vendor,CancellationToken ct = default);
       Task<DeviceDto> GetByExternalIdAndVendorAsync(short externalId,Vendor vendor,CancellationToken ct = default);
       Task<short> GetExternalIdByMacAsync(string mac,CancellationToken ct = default);
       Task<Guid> GetGuidByExternalAndVendorAsync(short externalId,Vendor vendor,CancellationToken ct = default);
+      Task<IEnumerable<OptionDto>> GetOptionByLocationAsync(Guid guid, CancellationToken ct = default);
      
 }

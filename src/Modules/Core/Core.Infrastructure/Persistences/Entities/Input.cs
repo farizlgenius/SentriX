@@ -12,6 +12,7 @@ public sealed class Input : BaseEntity,IAuditableEntity
   // Relation
   public int device_module_id { get; set; }
   public DeviceModule device_module { get; set; } = default!;
+  public MonitorGroupComponent? monitor_group_component {get; set; }
   public Input() { }
   public Input(Domain.Entities.Input d) : base(d.Guid)
   {

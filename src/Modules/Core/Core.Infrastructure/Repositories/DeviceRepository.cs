@@ -126,16 +126,16 @@ public sealed class DeviceRepository(CoreDbContext context) : BaseRepository<Per
       }
 
 
-      public async Task<IEnumerable<OptionDto>> GetOptionByLocationAsync(Guid guid, CancellationToken ct = default)
+      public override async Task<IEnumerable<OptionDto>> GetOptionByLocationAsync(Guid guid, CancellationToken ct = default)
       {
             return await Context.Devices
                   .AsNoTracking()
-                  .Where(x => x.location.guid == guid)
+                  .Where(x => x.location == null || x.location.guid == guid)
                   .OrderByDescending(x => x.id)
                   .Select(x => new OptionDto(
                         x.name,
                         x.guid,
-                        x.mac,
+                        x.vendor,
                         null,
                         false
                   )).ToArrayAsync(ct);

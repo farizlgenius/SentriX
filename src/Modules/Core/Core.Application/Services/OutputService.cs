@@ -24,17 +24,19 @@ public sealed class OutputService(
             if (await repo.IsAnyByNameAsync(dto.Name, ct))
                   throw new DuplicateException(EntityType.OUTPUT.ToString(), nameof(dto.Name));
 
+            var controlExternalId = await repo.GetFreeExeternalIdAsync(100, [], ct);
+
             var d = new Output(
                   dto.Name,
                   dto.SlotNo,
                   dto.Metadata,
                   dto.Vendor,
                   dev.ModuleId,
-                  dev.LocationId ?? 1
+                  dev.LocationId ?? 1,
+                  controlExternalId
             );
 
-            var controlExternalId = await repo.GetFreeExeternalIdAsync(100, [], ct);
-
+            
             // Send command to create output 
             await adapter.GetAdapter(dto.Vendor).Output.CreateControlPointAsync(
                   dev.DeviceMac,

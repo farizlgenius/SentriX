@@ -39,6 +39,12 @@ public static class Command
   public static string CardDelete = "3305 : Card Delete";
   public static string ActionSpecification = "118 : Action Specification";
   public static string TriggerSpecification = "117 : Trigger Specification";
+  public static string ConfigureAccessArea = "1121 : Configure Access Area";
+  public static string ModifyAccessAreaConfiguration = "332 : Modify Access Area Configuration";
+  public static string AreaStatusRequest = "412 : enCcAreaSrq";
+  public static string MonitorPointGroupArmDisarmCommand = "321 : Monitor Point Group Arm/Disarm Command";
+  public static string MonitorGroupStatusRequest = "411 : enCcMpgSrq";
+  public static string MonitorPointStatusRequest = "405: enCcMpSrq";
 
 
 }

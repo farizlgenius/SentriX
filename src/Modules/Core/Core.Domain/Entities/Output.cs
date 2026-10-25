@@ -18,8 +18,9 @@ public sealed class Output : BaseDomain
     string metadata,
     Vendor vendor,
     int deviceModuleId,
-    int locationId
-  ) : base(Guid.NewGuid())
+    int locationId,
+    short externalId
+  ) : base(Guid.NewGuid(),externalId)
   {
     ValidationHelper.Name(name);
     ValidationHelper.Vendor(vendor);

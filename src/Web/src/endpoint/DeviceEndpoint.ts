@@ -4,6 +4,7 @@ const CONTROLLER = `device`;
 
 export const DeviceEndpoint = {
   GET_LOCATION:(location:string) => `/api/${CONTROLLER}/location/${location}`,
+  GET_OPTION:(location:string) => `/api/${CONTROLLER}/option/${location}`,
   GET: (locationId: number | string, type: string) =>
     `/api/${CONTROLLER}/option/${type}/${locationId}`,
   GET_OPTION_BY_TYPE: (locationId: number | string, type: string) =>

@@ -114,4 +114,100 @@ public sealed class InputRepository(
 
             }
       }
+
+      public CommandResponse MonitorPointMask(string mac, short scpId, short mpNo, short setClear)
+      {
+            CC_MPMASK c = new CC_MPMASK
+            {
+              scp_number = scpId,
+              mp_number = mpNo,
+              set_clear = setClear    
+            };
+            var result = repo.Send((short)enCfgCmnd.enCcMpMask, c);
+            if (result)
+            {
+                  logger.LogInformation(LogMessageHelper.CommandSuccess(Command.MonitorPointMask, scpId));
+
+                  return new CommandResponse(
+                        mac,
+                        scpId,
+                        Command.MonitorPointMask,
+                        SCPDLL.scpGetTagLastPosted(scpId),
+                        DateTime.UtcNow,
+                        DateTime.UtcNow,
+                         ObjectHelper.ToAsciiString(c),
+                        CommandStatus.PENDING,
+                        string.Empty,
+                        Vendor.aero,
+                        true
+                        );
+
+            }
+            else
+            {
+                  logger.LogError(LogMessageHelper.CommandUnsuccess(Command.MonitorPointMask, scpId));
+                  return new CommandResponse(
+                        mac,
+                       scpId,
+                       Command.MonitorPointMask,
+                       -1,
+                       DateTime.UtcNow,
+                       DateTime.UtcNow,
+                        ObjectHelper.ToAsciiString(c),
+                       CommandStatus.FAILED,
+                       string.Empty,
+                       Vendor.aero,
+                       false
+                       );
+
+            }
+      }
+
+      public CommandResponse MonitorPointStatusRequest(string mac, short scpId,short mpId, short count)
+      {
+            CC_MPSRQ c = new CC_MPSRQ
+            {
+                  scp_number = scpId,
+                  first = mpId,
+                  count = count
+            };
+            var result = repo.Send((short)enCfgCmnd.enCcMpMask, c);
+            if (result)
+            {
+                  logger.LogInformation(LogMessageHelper.CommandSuccess(Command.MonitorPointStatusRequest, scpId));
+
+                  return new CommandResponse(
+                        mac,
+                        scpId,
+                        Command.MonitorPointStatusRequest,
+                        SCPDLL.scpGetTagLastPosted(scpId),
+                        DateTime.UtcNow,
+                        DateTime.UtcNow,
+                         ObjectHelper.ToAsciiString(c),
+                        CommandStatus.PENDING,
+                        string.Empty,
+                        Vendor.aero,
+                        true
+                        );
+
+            }
+            else
+            {
+                  logger.LogError(LogMessageHelper.CommandUnsuccess(Command.MonitorPointStatusRequest, scpId));
+                  return new CommandResponse(
+                        mac,
+                       scpId,
+                       Command.MonitorPointStatusRequest,
+                       -1,
+                       DateTime.UtcNow,
+                       DateTime.UtcNow,
+                        ObjectHelper.ToAsciiString(c),
+                       CommandStatus.FAILED,
+                       string.Empty,
+                       Vendor.aero,
+                       false
+                       );
+
+            }
+      }
 }

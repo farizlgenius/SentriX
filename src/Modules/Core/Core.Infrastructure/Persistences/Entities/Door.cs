@@ -23,6 +23,9 @@ public sealed class Door : BaseEntity,IAuditableEntity
   public Device device { get; set; } = default!;
   public ICollection<GroupComponent> group_components { get; set; } = default!;
   public ICollection<AlertComponent> alert_components {get; set; } = default!;
+  public ICollection<AreaDoorIn> areas_in {get; set; } = default!;
+  public ICollection<AreaDoorOut> areas_out {get; set; } = default!;
+  public MonitorGroupComponent? monitor_group_component {get; set; }
   public Door() { }
 
   public Door(Domain.Entities.Door d) : base(d.Guid,d.ExternalId,d.AltrExternalId)
