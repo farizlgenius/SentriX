@@ -19640,3 +19640,52 @@ Begin - SCP Driver DLL (64-bit) version 4.7.1.43
 22841.318 0(0), enCcACR: 0115 0 1 1 1 -1 -1 -1 -1 -1 1 5 0 -1 -1 1 -1 -1 -1 -1 0 0 -1 -1 0 255 0 -1 1 0 0 1 1 0 0 0 5 1 0 0 0 0 0
 34020.384 Shutting down debug Thread...
 File closed Sun Oct 25 20:13:40 2026
+Debug file SCPDEBUG.txt <SCPDEBUGc.txt> <SCPDEBUG.TXT> opened Sun Oct 25 22:06:34 2026
+Begin - SCP Driver DLL (64-bit) version 4.7.1.43
+40794.955 WSAStartup ok
+40794.961 RNG_X931A24 Initialized
+40794.962 1, enCcSystem: 011 1 1024 0 0 1
+40795.101 1, enCcCreateChannel: 0012 1 7 3333 0 3000 0 "" 0
+40795.467 listen(lsock) created socket=3416 on port 3333
+40795.467 Listen Successful, port: 3333
+40807.101 0(0), enCcTranSrq: 0402 1
+40810.959 0(0), enCcTranSrq: 0402 1
+40817.737 0(0), enCcTranSrq: 0402 1
+40828.346 0(0), enCcTranSrq: 0402 1
+40851.234 0(0), enCcTranSrq: 0402 1
+40856.215 0(0), enCcTranSrq: 0402 1
+40939.704 0(0), enCcTranSrq: 0402 1
+40958.360 0(0), enCcTranSrq: 0402 1
+40964.093 0(0), enCcTranSrq: 0402 1
+40981.917 0(0), enCcTranSrq: 0402 1
+40987.343 0(0), enCcTranSrq: 0402 1
+40992.244 0(0), enCcTranSrq: 0402 1
+40994.869 0(0), enCcTranSrq: 0402 1
+41011.558 0(0), enCcTranSrq: 0402 1
+41013.945 0(0), enCcTranSrq: 0402 1
+41023.167 0(0), enCcTranSrq: 0402 1
+41026.768 0(0), enCcTranSrq: 0402 1
+41188.887 0(0), enCcTranSrq: 0402 1
+41313.409 0(0), enCcTranSrq: 0402 1
+41336.335 0(0), enCcTranSrq: 0402 1
+41359.358 0(0), enCcTranSrq: 0402 1
+41539.596 0(0), enCcTranSrq: 0402 1
+41565.693 0(0), enCcTranSrq: 0402 1
+41574.613 0(0), enCcTranSrq: 0402 1
+41620.113 0(0), enCcTranSrq: 0402 1
+41793.580 0(0), enCcTranSrq: 0402 1
+41875.780 0(0), enCcTranSrq: 0402 1
+41895.381 0(0), enCcTranSrq: 0402 1
+42107.321 0(0), enCcTranSrq: 0402 1
+42133.697 0(0), enCcTranSrq: 0402 1
+42162.828 0(0), enCcTranSrq: 0402 1
+42211.476 0(0), enCcTranSrq: 0402 1
+42216.407 0(0), enCcTranSrq: 0402 1
+42238.588 0(0), enCcTranSrq: 0402 1
+42245.059 0(0), enCcTranSrq: 0402 1
+42247.732 0(0), enCcTranSrq: 0402 1
+42291.762 0(0), enCcTranSrq: 0402 1
+42305.087 0(0), enCcTranSrq: 0402 1
+42308.536 0(0), enCcTranSrq: 0402 1
+42312.336 Shutting down debug Thread...
+File closed Sun Oct 25 22:31:52 2026

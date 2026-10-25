@@ -7,12 +7,14 @@ import {
 } from "../../components/ui/table";
 import Search from "../../components/ui/table/Search";
 import { TableProp } from "../../model/TableProp";
-import { EditIcon, Info2Icon, TrashBinIcon } from "../../icons";
-import { useEffect, useMemo, useState } from "react";
+import { AddIcon, EditIcon, TrashBinIcon } from "../../icons";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Pagination from "../../components/ui/table/Pagination";
 import { usePagination } from "../../context/PaginationContext";
 import React from "react";
 import Switch from "../../components/form/switch/Switch";
+import { createPortal } from "react-dom";
+import { useTheme } from "../../context/ThemeContext";
 
 export const BaseTable = <
   T extends { guid: string; isDefault: boolean; isActive: boolean },
@@ -37,11 +39,16 @@ export const BaseTable = <
   locationGuid,
   onInfo
 }: TableProp<T>) => {
+  const { accentColor } = useTheme();
   const { search, startDate, endDate, pageSize, pagination, setPageSize } =
     usePagination();
   const [show, setShow] = useState<number>(-1);
   const [sortKey, setSortKey] = useState<string>(keys?.[0] ?? "");
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
+  const addButtonRef = useRef<HTMLButtonElement | null>(null);
+  const selectedCount = select.length;
+  const hasMoreActions = Boolean(permission?.isEnabled);
+  const showActionIsland = Boolean(permission?.isCreated || selectedCount > 0);
 
   const toSortableValue = (value: unknown): number | string => {
     if (value === null || value === undefined) return "";
@@ -152,17 +159,42 @@ export const BaseTable = <
     }
   }, [refresh, pageSize, search, startDate, endDate, locationGuid]);
 
+  useEffect(() => {
+    if (!permission?.isCreated || selectedCount > 0) return;
+
+    const handleAddShortcut = (event: KeyboardEvent) => {
+      const target = event.target;
+      if (
+        event.defaultPrevented ||
+        event.altKey ||
+        event.ctrlKey ||
+        event.metaKey ||
+        (target instanceof HTMLElement &&
+          (target.isContentEditable ||
+            ["INPUT", "TEXTAREA", "SELECT"].includes(target.tagName)))
+      ) {
+        return;
+      }
+
+      if (event.key.toLowerCase() === "a" || event.key === "+") {
+        event.preventDefault();
+        addButtonRef.current?.click();
+      }
+    };
+
+    window.addEventListener("keydown", handleAddShortcut);
+    return () => window.removeEventListener("keydown", handleAddShortcut);
+  }, [permission?.isCreated, selectedCount]);
+
   return (
     <>
-      <div className="overflow-visible rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
-        <div className="max-w-full overflow-x-auto">
-          <Search
-            locationGuid={locationGuid}
-            action={action}
-            altrAction={altrAction}
-            onClick={handleClick}
-            permission={permission}
-          />
+      <div className="flex flex-col gap-4">
+        <Search
+          altrAction={altrAction}
+          onClick={handleClick}
+        />
+        <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-theme-xs dark:border-white/[0.05] dark:bg-white/[0.03]">
+          <div className="max-w-full overflow-x-auto">
           <div className="max-h-[70vh] overflow-y-auto hidden-scroll">
             <Table>
               {/* Table Header */}
@@ -349,8 +381,125 @@ export const BaseTable = <
             onClickNext={handleClickNext}
           />
           {/* <PaginationNew /> */}
+          </div>
         </div>
       </div>
+      {showActionIsland &&
+        typeof document !== "undefined" &&
+        createPortal(
+          <div
+            className={`fixed bottom-6 left-1/2 z-[10000] -translate-x-1/2 transition-[width,transform] duration-300 ease-out ${
+              selectedCount > 0
+                ? "w-[min(720px,calc(100vw-1.5rem))]"
+                : "w-[168px]"
+            }`}
+          >
+            <div
+              className="rounded-full border border-gray-200 bg-[var(--app-panel-bg)]/95 p-2.5 shadow-[0_20px_70px_rgba(0,0,0,0.3)] backdrop-blur-md dark:border-gray-700 dark:bg-gray-900/95"
+              style={{
+                boxShadow: `0 20px 70px rgba(0,0,0,0.3), 0 0 28px color-mix(in srgb, ${accentColor} 10%, transparent)`,
+              }}
+            >
+              {selectedCount === 0 ? (
+                <div className="group relative">
+                  <button
+                    ref={addButtonRef}
+                    type="button"
+                    name="add"
+                    onClick={handleClick}
+                    disabled={!locationGuid}
+                    className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-brand-500 px-5 py-3 text-sm font-semibold text-white shadow-lg transition duration-200 hover:bg-brand-600 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
+                    style={{
+                      boxShadow: `0 0 18px color-mix(in srgb, ${accentColor} 25%, transparent)`,
+                    }}
+                  >
+                    <AddIcon />
+                    Add Point
+                  </button>
+                  <span
+                    aria-hidden="true"
+                    className="pointer-events-none absolute bottom-full left-1/2 mb-3 -translate-x-1/2 whitespace-nowrap rounded-lg border border-gray-700 bg-gray-900 px-3 py-1.5 text-xs text-gray-300 opacity-0 shadow-lg transition-opacity group-hover:opacity-100 group-focus-within:opacity-100"
+                  >
+                    Press A or +
+                  </span>
+                </div>
+              ) : (
+                <div className="flex min-w-0 items-center gap-2 overflow-x-auto whitespace-nowrap rounded-full border border-brand-500/30 bg-[var(--app-panel-bg)] px-2 py-1.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                  <span
+                    aria-live="polite"
+                    className="inline-flex shrink-0 items-center gap-2 rounded-full bg-brand-500/10 px-3 py-2 text-xs font-semibold text-brand-700 dark:text-brand-300"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      className="h-4 w-4"
+                      viewBox="0 0 20 20"
+                      fill="none"
+                    >
+                      <path
+                        d="m4.5 10.5 3.5 3.5 7.5-8"
+                        stroke="currentColor"
+                        strokeWidth="1.8"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                    {selectedCount} Selected
+                  </span>
+                  <span aria-hidden="true" className="h-7 w-px shrink-0 bg-gray-200 dark:bg-white/15" />
+
+                  {permission?.isDeleted && (
+                    <button
+                      type="button"
+                      name="delete"
+                      onClick={handleClick}
+                      className="inline-flex shrink-0 items-center gap-2 rounded-xl border border-red-500/20 bg-red-500/10 px-3 py-2 text-xs font-medium text-red-300 transition hover:border-red-500/40 hover:bg-red-600/30 hover:text-red-200"
+                    >
+                      <TrashBinIcon className="h-4 w-4" />
+                      Delete
+                    </button>
+                  )}
+
+                  {hasMoreActions &&
+                    action?.map((item) => (
+                      <button
+                        key={item.lable}
+                        type="button"
+                        name={item.lable}
+                        onClick={handleClick}
+                        className="inline-flex shrink-0 items-center gap-2 rounded-xl border border-gray-200 bg-[var(--app-panel-bg)] px-3 py-2 text-xs font-medium text-gray-700 transition hover:border-brand-300 hover:bg-brand-50 hover:text-brand-700 dark:border-gray-700 dark:text-gray-300 dark:hover:border-brand-500/40 dark:hover:bg-brand-500/10 dark:hover:text-brand-300"
+                      >
+                        {item.icon}
+                        {item.buttonName}
+                      </button>
+                    ))
+                  }
+
+                  <button
+                    type="button"
+                    onClick={() => setSelect([])}
+                    className="inline-flex shrink-0 items-center gap-2 rounded-xl px-3 py-2 text-xs font-medium text-gray-600 transition hover:bg-brand-500/10 hover:text-brand-700 dark:text-gray-300 dark:hover:text-brand-300"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      className="h-4 w-4"
+                      viewBox="0 0 20 20"
+                      fill="none"
+                    >
+                      <path
+                        d="m5 5 10 10M15 5 5 15"
+                        stroke="currentColor"
+                        strokeWidth="1.6"
+                        strokeLinecap="round"
+                      />
+                    </svg>
+                    Deselect
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>,
+          document.body,
+        )}
     </>
   );
 };

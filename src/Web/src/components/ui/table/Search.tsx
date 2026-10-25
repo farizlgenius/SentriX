@@ -1,192 +1,41 @@
-import React, { PropsWithChildren, useEffect, useRef, useState } from "react";
-import { AddIcon, MoreDotIcon, TrashBinIcon } from "../../../icons";
+import React, { PropsWithChildren } from "react";
 import { ActionButton } from "../../../model/ActionButton";
 import { usePagination } from "../../../context/PaginationContext";
-import { createPortal } from "react-dom";
-import { FeaturePermissionDto } from "../../../model/Role/FeaturePermissionDto";
-import Button from "../button/Button";
 
 interface SearchProp {
   onClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
-  permission?: FeaturePermissionDto;
-  action?: ActionButton[];
-  altrAction?:ActionButton[];
-  locationGuid?: string;
+  altrAction?: ActionButton[];
 }
 
 const Search: React.FC<PropsWithChildren<SearchProp>> = ({
   onClick,
-  permission,
-  action,
-  locationGuid,
-  altrAction
+  altrAction,
 }) => {
   const { setSearch } = usePagination();
-  const [isMoreOpen, setIsMoreOpen] = useState(false);
-  const [menuPosition, setMenuPosition] = useState({ top: 0, left: 0 });
-  const moreBtnRef = useRef<HTMLButtonElement | null>(null);
-  const menuRef = useRef<HTMLDivElement | null>(null);
-
-  const hasMoreActions = Boolean(
-    (permission?.isEnabled && action?.length) || permission?.isEnabled,
-  );
-
-  const updateMenuPosition = () => {
-    if (!moreBtnRef.current) return;
-    const rect = moreBtnRef.current.getBoundingClientRect();
-    const menuWidth = 224;
-    setMenuPosition({
-      top: rect.bottom + 8,
-      left: Math.max(12, rect.right - menuWidth),
-    });
-  };
-
-  useEffect(() => {
-    if (!isMoreOpen) return;
-
-    updateMenuPosition();
-    const handleOutside = (event: MouseEvent) => {
-      const target = event.target as Node;
-      if (menuRef.current?.contains(target)) return;
-      if (moreBtnRef.current?.contains(target)) return;
-      setIsMoreOpen(false);
-    };
-
-    const handleLayout = () => updateMenuPosition();
-
-    document.addEventListener("mousedown", handleOutside);
-    window.addEventListener("resize", handleLayout);
-    window.addEventListener("scroll", handleLayout, true);
-
-    return () => {
-      document.removeEventListener("mousedown", handleOutside);
-      window.removeEventListener("resize", handleLayout);
-      window.removeEventListener("scroll", handleLayout, true);
-    };
-  }, [isMoreOpen]);
-
-  const handleMoreClick = (
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-  ) => {
-    if (onClick) {
-      onClick(e);
-    }
-    setIsMoreOpen(false);
-  };
 
   return (
-    <div className="flex flex-col gap-2 px-4 py-4 border border-b-0 border-gray-100 dark:border-white/[0.05] rounded-t-xl sm:flex-row sm:items-center sm:justify-between">
-      <div className="flex items-center gap-3">
-        <div className="inline-flex items-center gap-2">
-          {permission?.isCreated && (
+    <div className="flex flex-col gap-4 py-1 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-wrap items-center gap-2">
+        <div className="inline-flex flex-wrap items-center gap-2">
+          {altrAction?.map((item) => (
             <button
+              key={item.lable}
               onClick={onClick}
-              disabled={!locationGuid}
-              name="add"
+              name={item.lable}
               type="button"
-              className="inline-flex items-center gap-2 rounded-lg bg-brand-500 px-4 py-2.5 text-sm font-medium text-white shadow-theme-xs transition hover:bg-brand-600 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-brand-500"
+              className="inline-flex items-center gap-2 rounded-lg border border-gray-200 bg-[var(--app-panel-bg)] px-3.5 py-2.5 text-sm font-medium text-gray-700 shadow-theme-xs transition hover:border-brand-300 hover:bg-brand-50 hover:text-brand-700 dark:border-gray-700 dark:text-gray-300 dark:hover:border-brand-500/40 dark:hover:bg-brand-500/10 dark:hover:text-brand-300"
             >
-              <AddIcon />
-              Add
+              {item.icon}
+              {item.buttonName}
             </button>
-          )}
-
-          {permission?.isDeleted && (
-            <button
-              onClick={onClick}
-              name="delete"
-              type="button"
-              className="inline-flex items-center gap-2 rounded-lg bg-error-500 px-4 py-2.5 text-sm font-medium text-white shadow-theme-xs transition hover:bg-error-600"
-            >
-              <TrashBinIcon />
-              Delete
-            </button>
-          )}
-
-          {
-            altrAction?.map(x => (
-              <button
-              onClick={onClick}
-              name={x.lable}
-              type="button"
-              className="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-3.5 py-2.5 text-sm font-medium text-gray-700 shadow-theme-xs transition hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-white/[0.03]"
-            >
-              {x.icon}
-              {x.buttonName}
-            </button>
-            ))
-          }
-
-          {hasMoreActions && (
-            <div className="relative inline-block">
-              <button
-                ref={moreBtnRef}
-                type="button"
-                onClick={() => setIsMoreOpen(!isMoreOpen)}
-                className="dropdown-toggle inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-3.5 py-2.5 text-sm font-medium text-gray-700 shadow-theme-xs transition hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-white/[0.03]"
-              >
-                More
-                <MoreDotIcon className="size-5" />
-              </button>
-              {isMoreOpen &&
-                createPortal(
-                  <div
-                    ref={menuRef}
-                    style={{ top: menuPosition.top, left: menuPosition.left }}
-                    className="fixed z-[100001] w-56 rounded-xl border border-gray-200 bg-white p-2 shadow-theme-lg dark:border-gray-800 dark:bg-gray-dark"
-                  >
-                    {permission?.isEnabled &&
-                      action?.map((a, i) => (
-                        <button
-                          key={i}
-                          onClick={handleMoreClick}
-                          name={a.lable}
-                          type="button"
-                          className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm text-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-white/[0.05] dark:hover:text-white"
-                        >
-                          {a.icon}
-                          {a.buttonName}
-                        </button>
-                      ))}
-                    {permission?.isEnabled && (
-                      <button
-                        onClick={handleMoreClick}
-                        name="download"
-                        type="button"
-                        className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm text-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-white/[0.05] dark:hover:text-white"
-                      >
-                        <svg
-                          className="fill-current"
-                          width="18"
-                          height="18"
-                          viewBox="0 0 20 20"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            clipRule="evenodd"
-                            d="M10.0018 14.083C9.7866 14.083 9.59255 13.9924 9.45578 13.8472L5.61586 10.0097C5.32288 9.71688 5.32272 9.242 5.61552 8.94902C5.90832 8.65603 6.3832 8.65588 6.67618 8.94868L9.25182 11.5227L9.25182 3.33301C9.25182 2.91879 9.5876 2.58301 10.0018 2.58301C10.416 2.58301 10.7518 2.91879 10.7518 3.33301L10.7518 11.5193L13.3242 8.94866C13.6172 8.65587 14.0921 8.65604 14.3849 8.94903C14.6777 9.24203 14.6775 9.7169 14.3845 10.0097L10.5761 13.8154C10.4385 13.979 10.2323 14.083 10.0018 14.083ZM4.0835 13.333C4.0835 12.9188 3.74771 12.583 3.3335 12.583C2.91928 12.583 2.5835 12.9188 2.5835 13.333V15.1663C2.5835 16.409 3.59086 17.4163 4.8335 17.4163H15.1676C16.4102 17.4163 17.4176 16.409 17.4176 15.1663V13.333C17.4176 12.9188 17.0818 12.583 16.6676 12.583C16.2533 12.583 15.9176 12.9188 15.9176 13.333V15.1663C15.9176 15.5806 15.5818 15.9163 15.1676 15.9163H4.8335C4.41928 15.9163 4.0835 15.5806 4.0835 15.1663V13.333Z"
-                            fill="currentColor"
-                          />
-                        </svg>
-                        Download
-                      </button>
-                    )}
-                  </div>,
-                  document.body,
-                )}
-            </div>
-          )}
+          ))}
         </div>
       </div>
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-        <div className="relative">
-          <button className="absolute text-gray-500 -translate-y-1/2 left-4 top-1/2 dark:text-gray-400">
+        <div className="relative w-full sm:w-auto">
+          <span aria-hidden="true" className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500">
             <svg
-              className="fill-current"
-              width="20"
-              height="20"
+              className="h-[18px] w-[18px] fill-current"
               viewBox="0 0 20 20"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
@@ -198,11 +47,11 @@ const Search: React.FC<PropsWithChildren<SearchProp>> = ({
                 fill=""
               ></path>
             </svg>
-          </button>
+          </span>
           <input
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search..."
-            className="dark:bg-dark-900 h-11 w-full rounded-lg border border-gray-300 bg-transparent py-2.5 pl-11 pr-4 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800 xl:w-[300px]"
+            className="h-10 w-full rounded-lg border border-gray-200 bg-transparent py-2 pl-10 pr-3.5 text-sm text-gray-800 shadow-none placeholder:text-gray-400 transition-colors focus:border-brand-400 focus:outline-hidden focus:ring-2 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-transparent dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-500 sm:w-[260px] xl:w-[300px]"
             type="text"
           />
         </div>
