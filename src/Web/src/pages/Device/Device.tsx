@@ -677,9 +677,7 @@ const Device = () => {
             </Table>
         } />
       }
-      <div className="flex flex-col gap-5">
-
-        {form && formType !== FormType.INFO && (
+      {form && formType !== FormType.INFO && (
           <FormSection
             overall="Device setup"
             title="Choose device type"
@@ -825,7 +823,6 @@ const Device = () => {
             ]}
           />
         )}
-      </div>
     </>
   );
 };

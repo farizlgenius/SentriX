@@ -19640,3 +19640,38 @@ Begin - SCP Driver DLL (64-bit) version 4.7.1.43
 22841.318 0(0), enCcACR: 0115 0 1 1 1 -1 -1 -1 -1 -1 1 5 0 -1 -1 1 -1 -1 -1 -1 0 0 -1 -1 0 255 0 -1 1 0 0 1 1 0 0 0 5 1 0 0 0 0 0
 34020.384 Shutting down debug Thread...
 File closed Sun Oct 25 20:13:40 2026
+Debug file SCPDEBUG.txt <SCPDEBUGc.txt> <SCPDEBUG.TXT> opened Sun Oct 25 22:34:36 2026
+Begin - SCP Driver DLL (64-bit) version 4.7.1.43
+42476.196 WSAStartup ok
+42476.201 RNG_X931A24 Initialized
+42476.201 1, enCcSystem: 011 1 1024 0 0 1
+42476.278 1, enCcCreateChannel: 0012 1 7 3333 0 3000 0 "" 0
+42476.365 listen(lsock) created socket=3356 on port 3333
+42476.365 Listen Successful, port: 3333
+42546.061 0(0), enCcTranSrq: 0402 1
+42676.099 0(0), enCcTranSrq: 0402 1
+42682.229 0(0), enCcTranSrq: 0402 1
+42819.059 0(0), enCcTranSrq: 0402 1
+42854.526 0(0), enCcTranSrq: 0402 1
+42870.866 0(0), enCcTranSrq: 0402 1
+42902.519 0(0), enCcTranSrq: 0402 1
+42917.553 0(0), enCcTranSrq: 0402 1
+42920.130 0(0), enCcTranSrq: 0402 1
+42925.527 0(0), enCcTranSrq: 0402 1
+42931.516 0(0), enCcTranSrq: 0402 1
+42942.497 0(0), enCcTranSrq: 0402 1
+42949.559 0(0), enCcTranSrq: 0402 1
+42957.277 0(0), enCcTranSrq: 0402 1
+42979.157 0(0), enCcTranSrq: 0402 1
+42987.543 0(0), enCcTranSrq: 0402 1
+42991.496 0(0), enCcTranSrq: 0402 1
+43003.499 0(0), enCcTranSrq: 0402 1
+43006.237 0(0), enCcTranSrq: 0402 1
+43051.975 0(0), enCcTranSrq: 0402 1
+43230.332 0(0), enCcTranSrq: 0402 1
+44110.533 0(0), enCcTranSrq: 0402 1
+44197.341 0(0), enCcTranSrq: 0402 1
+44228.817 0(0), enCcTranSrq: 0402 1
+44323.641 0(0), enCcTranSrq: 0402 1
+44396.672 Shutting down debug Thread...
+File closed Sun Oct 25 23:06:36 2026

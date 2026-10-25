@@ -154,15 +154,22 @@ export const BaseTable = <
 
   return (
     <>
-      <div className="overflow-visible rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
+      <Search
+        locationGuid={locationGuid}
+        action={action}
+        altrAction={altrAction}
+        onClick={handleClick}
+        permission={permission}
+      />
+      <div className="overflow-visible rounded-l border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
         <div className="max-w-full overflow-x-auto">
-          <Search
+          {/* <Search
             locationGuid={locationGuid}
             action={action}
             altrAction={altrAction}
             onClick={handleClick}
             permission={permission}
-          />
+          /> */}
           <div className="max-h-[70vh] overflow-y-auto hidden-scroll">
             <Table>
               {/* Table Header */}
@@ -292,7 +299,7 @@ export const BaseTable = <
                             !data.isDefault &&
 
                             <div className="flex gap-2">
-                               <button
+                              <button
                                 type="button"
                                 onClick={(e) => {
                                   e.stopPropagation();
@@ -324,7 +331,7 @@ export const BaseTable = <
                               >
                                 <TrashBinIcon className="h-5 w-5" />
                               </button>
-                              
+
                             </div>
 
                           }
