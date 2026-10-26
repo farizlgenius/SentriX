@@ -85,6 +85,7 @@ public static class AeroDependencyInjection
     // CardFormat
     services.AddScoped<ICardFormatRepository,CardFormatRepository>();
 
+
     // Group
     services.AddScoped<IGroupAdapter,GroupService>();
     services.AddScoped<IGroupRepository,GroupRepository>();
@@ -92,6 +93,22 @@ public static class AeroDependencyInjection
     // User
     services.AddScoped<IUserAdapter,UserService>();
     services.AddScoped<IUserRepository,UserRepository>();
+
+    // Area 
+    services.AddScoped<IAreaAdapter,AreaService>();
+    services.AddScoped<IAreaRepository,AreaRepository>();
+
+    // Monitor Group
+    services.AddScoped<IMonitorGroupAdapter,MonitorGroupService>();
+    services.AddScoped<IMonitorGroupRepository,MonitorGroupRepository>();
+
+    // Trigger 
+    services.AddScoped<ITriggerAdapter,TriggerService>();
+    services.AddScoped<ITriggerRepository,TriggerRepository>();
+
+    // Procedure
+    services.AddScoped<IProcedureAdapter,ProcedureService>();
+    services.AddScoped<IProcedureRepository,ProcedureRepository>();
 
 
     // Utility

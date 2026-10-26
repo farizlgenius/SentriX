@@ -191,8 +191,7 @@ export const Location = () => {
           type={formType}
           dto={locationDto}
           setDto={setLocationDto}
-          handleClick={handleClickWithEvent}
-        />
+          handleClick={handleClickWithEvent} handleChange={()=>{}}        />
       ),
     },
   ];
@@ -209,8 +208,7 @@ export const Location = () => {
           type={formType}
         />
       ) : (
-        <div className="space-y-6">
-          <BaseTable<LocationDto>
+        <BaseTable<LocationDto>
             headers={LOCATION_HEADER}
             keys={LOCATION_KEY}
             data={locationsDto}
@@ -225,7 +223,6 @@ export const Location = () => {
             refresh={refresh}
             locationGuid={locationGuid}
           />
-        </div>
       )}
     </>
   );

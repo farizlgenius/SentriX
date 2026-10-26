@@ -197,8 +197,7 @@ export const Company = () => {
       {form ? (
         <BaseForm tabContent={tabContent} header={""} desc={""} type={formType} />
       ) : (
-        <div className="space-y-6">
-          <BaseTable<CompanyDto>
+        <BaseTable<CompanyDto>
             headers={HEADER}
             keys={KEY}
             data={dtos}
@@ -213,7 +212,6 @@ export const Company = () => {
             refresh={refresh}
             locationGuid={locationGuid}
           />
-        </div>
       )}
     </>
   );

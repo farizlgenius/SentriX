@@ -16,5 +16,9 @@ public interface IAdapter
       IDoorAdapter Door {get;}
       IGroupAdapter Group {get;}
       IUserAdapter User {get;}
+      IAreaAdapter Area {get; }
+      IMonitorGroupAdapter MonitorGroup {get; }
+      ITriggerAdapter Trigger {get; }
+      IProcedureAdapter Procedure {get; }
       // ISettingAdapter Setting {get;}
 }

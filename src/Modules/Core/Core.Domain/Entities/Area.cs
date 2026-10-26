@@ -2,7 +2,7 @@ using SharedKernel.Enums;
 
 namespace Core.Domain.Entities;
 
-public sealed class Domain : BaseDomain
+public sealed class Area : BaseDomain
 {
       public string Name { get; private set; } = string.Empty;
       public AreaMultiOccMode MultiOccMode {get; private set; }
@@ -12,7 +12,9 @@ public sealed class Domain : BaseDomain
       public short OccUp {get; private set; }
       public string Metadata {get; private set;} = string.Empty;
       public int DeviceId {get; private set; } = 0;
-      public Domain(
+      public List<int> AreaInDoors {get; private set; } = default!;
+      public List<int> AreaOutDoors {get; private set; } =default!;
+      public Area(
             string name,
             AreaMultiOccMode multiMode,
             AreaMode mode,
@@ -20,6 +22,8 @@ public sealed class Domain : BaseDomain
             short occDown,
             short occUp,
             string metadata,
+            List<int> areaInDoors,
+            List<int> areaOutDoots,
             int deviceId,
             short externalId
       ) : base(Guid.NewGuid(),externalId)
@@ -32,9 +36,11 @@ public sealed class Domain : BaseDomain
             OccUp = occUp;
             Metadata = metadata;
             DeviceId = deviceId;
+            AreaInDoors = areaInDoors;
+            AreaOutDoors = areaOutDoots;
       }
 
-      public Domain(
+      public Area(
             Guid guid,
             string name,
             AreaMultiOccMode multiMode,
@@ -42,7 +48,9 @@ public sealed class Domain : BaseDomain
             short occMax,
             short occDown,
             short occUp,
-            string metadata
+            string metadata,
+            List<int> areaInDoors,
+            List<int> areaOutDoots
             ) : base(guid)
       {
             Name = name;
@@ -52,5 +60,7 @@ public sealed class Domain : BaseDomain
             OccDown = occDown;
             OccUp = occUp;
             Metadata = metadata;
+            AreaInDoors = areaInDoors;
+            AreaOutDoors = areaOutDoots;
       }
 }

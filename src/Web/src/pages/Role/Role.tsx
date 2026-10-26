@@ -418,8 +418,7 @@ export const Role = () => {
           type={formType}
         />
       ) : (
-        <div className="space-y-6">
-          <BaseTable<RoleDto>
+        <BaseTable<RoleDto>
             headers={LOCATION_HEADER}
             keys={LOCATION_KEY}
             data={rolesDto}
@@ -434,7 +433,6 @@ export const Role = () => {
             locationGuid={locationId}
             refresh={refresh}
           />
-        </div>
       )}
     </>
   );

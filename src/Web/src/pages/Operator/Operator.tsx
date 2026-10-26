@@ -227,8 +227,7 @@ export const Operator = () => {
           desc={""}
         />
       ) : (
-        <div className="space-y-6">
-          <BaseTable<OperatorDto>
+         <BaseTable<OperatorDto>
             refresh={refresh}
             headers={HEADER}
             keys={KEY}
@@ -243,7 +242,6 @@ export const Operator = () => {
             fetchData={fetchData}
             locationGuid={locationId}
           />
-        </div>
       )}
     </>
   );

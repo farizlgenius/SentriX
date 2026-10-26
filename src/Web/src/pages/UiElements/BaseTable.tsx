@@ -242,7 +242,7 @@ export const BaseTable = <
                     <React.Fragment key={i}>
                       <TableRow
                         key={i}
-                        className="cursor-pointer hover:bg-gray-900 active:bg-gray-800"
+                        className="cursor-pointer active:bg-gray-800 hover:bg-gray-50 dark:hover:bg-white/[0.02]"
                         onClickWithEvent={() => {
                           console.log(data);
                           onInfo(data);

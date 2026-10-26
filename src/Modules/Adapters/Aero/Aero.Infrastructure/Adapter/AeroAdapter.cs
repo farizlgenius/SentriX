@@ -22,10 +22,12 @@ public sealed class AeroAdapter : IAdapter
 
       public IGroupAdapter Group { get; }
 
-      // public IGroupAdapter Group { get; }
 
       public IUserAdapter User { get; }
-      // public ISettingAdapter Setting { get; }
+      public IAreaAdapter Area {get; }
+      public IMonitorGroupAdapter MonitorGroup {get; }
+      public ITriggerAdapter Trigger {get;}
+      public IProcedureAdapter Procedure {get; }
 
       public AeroAdapter(
             IDeviceAdapter devices,
@@ -36,7 +38,11 @@ public sealed class AeroAdapter : IAdapter
             ITimeAdapter time,
             IDoorAdapter door,
             IGroupAdapter group,
-            IUserAdapter user
+            IUserAdapter user,
+            IAreaAdapter area,
+            IMonitorGroupAdapter monitorGroup,
+            ITriggerAdapter trigger,
+            IProcedureAdapter procedure
             // IAeroSettingAdapter setting
       )
       {
@@ -49,6 +55,10 @@ public sealed class AeroAdapter : IAdapter
             Door = door;
             Group = group;
             User = user;
+            Area = area;
+            MonitorGroup = monitorGroup;
+            Trigger = trigger;
+            Procedure = procedure;
             // Setting = setting;
       }
 }

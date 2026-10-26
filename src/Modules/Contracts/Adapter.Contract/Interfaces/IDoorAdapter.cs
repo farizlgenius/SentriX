@@ -24,6 +24,8 @@ public interface IDoorAdapter
             (short inputNo,string metadata,short deviceModuleId,short bgId)? bg,
             (short inputNo,string metadata,short deviceModuleId)? sensor,
             (short outputNo,string metadata,short deviceModuleId)? relay,
+            short areaFrom=-1,
+            short areaTo=1,
             CancellationToken ct = default
       );
 

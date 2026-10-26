@@ -1,6 +1,7 @@
 using Aero.Application.Constants;
 using Aero.Application.Enums;
 using Aero.Application.Interfaces;
+using Aero.Application.Metadata.Area;
 using Aero.Application.Metadata.Device;
 using Aero.Application.Metadata.Door;
 using Aero.Application.Metadata.User;

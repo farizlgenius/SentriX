@@ -266,6 +266,8 @@ public sealed class DoorService(
         d.Relay.Metadata,
         await module.GetExternalIdByGuidAsync(dto.Relay.DeviceModuleGuid, ct)
       ),
+      -1,
+      1,
       ct
     );
 

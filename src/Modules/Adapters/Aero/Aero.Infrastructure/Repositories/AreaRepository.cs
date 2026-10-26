@@ -9,7 +9,7 @@ using SharedKernel.Model;
 namespace Aero.Infrastructure.Repositories;
 
 public sealed class AreaRepository(
-      BaseRepository repo,
+      IBaseRepository repo,
       ILogger<AreaRepository> logger
       ) : IAreaRepository
 {

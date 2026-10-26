@@ -105,7 +105,6 @@ export const BaseForm: React.FC<PropsWithChildren<FormProp>> = ({
                       </div>
                       <div className="flex gap-3">
                         <Button
-                          variant="danger"
                           onClickWithEvent={handleClick}
                           name="close"
                           className="min-w-[120px]"

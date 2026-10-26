@@ -125,7 +125,7 @@ const AlertForm: React.FC<PropsWithChildren<FormProp<AlertDto>>> = ({
         <Label>Level</Label>
         <Select
           disabled={isReadOnly}
-          icon={renderColorBadge(selectedLevelColor)}
+          icon={renderColorBadge(selectedLevelColor as string)}
           isString={true}
           name=""
           options={levels}
@@ -134,7 +134,7 @@ const AlertForm: React.FC<PropsWithChildren<FormProp<AlertDto>>> = ({
             setDto((prev) => ({
               ...prev,
               alertLevelGuid: e.target.value,
-              alertLevelColor:selectedLevelColor ?? "",
+              alertLevelColor:(selectedLevelColor as string) ?? "",
               alertLevelName:levels.find(x => x.value == e.target.value)?.label ?? ""
             }))
           }

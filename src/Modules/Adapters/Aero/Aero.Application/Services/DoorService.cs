@@ -50,6 +50,8 @@ public sealed class DoorService(
             (short inputNo, string metadata, short deviceModuleId, short bgId)? bg,
             (short inputNo, string metadata, short deviceModuleId)? sensor,
             (short outputNo, string metadata, short deviceModuleId)? relay,
+            short areaFrom=-1,
+            short areaTo=1,
             CancellationToken ct = default
             )
       {
@@ -274,8 +276,8 @@ public sealed class DoorService(
                         0,
                         255,
                         0,
-                        -1,
-                        1,
+                        areaFrom,
+                        areaTo,
                         spare,
                         accessFlag,
                         doorMetadata.OfflineMode,
@@ -351,8 +353,8 @@ public sealed class DoorService(
                   0,
                   255,
                   0,
-                  -1,
-                  1,
+                  areaFrom,
+                  areaTo,
                   spare,
                   accessFlag,
                   doorMetadata.OfflineMode,

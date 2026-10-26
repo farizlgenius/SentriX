@@ -9,7 +9,7 @@ using SharedKernel.Model;
 namespace Aero.Infrastructure.Repositories;
 
 
-public sealed class MonitorGroupRepository(BaseRepository repo, ILogger<MonitorGroupRepository> logger) : IMonitorGroupRepository
+public sealed class MonitorGroupRepository(IBaseRepository repo, ILogger<MonitorGroupRepository> logger) : IMonitorGroupRepository
 {
       public CommandResponse ConfigureMonitorPointGroup(string mac, short scpId, short mpgId, short mpgCount, IEnumerable<(MonitorType, short)> mpgList)
       {

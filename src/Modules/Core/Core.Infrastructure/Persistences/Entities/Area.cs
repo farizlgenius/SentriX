@@ -19,7 +19,7 @@ public sealed class Area : BaseEntity,IAuditableEntity
       public Device device {get; set; } = default!;
 
       public Area(){}
-      public Area(Domain.Entities.Domain d) : base(d.Guid,d.ExternalId)
+      public Area(Domain.Entities.Area d) : base(d.Guid,d.ExternalId)
       {
             name = d.Name;
             multi_occ_mode = d.MultiOccMode;
@@ -27,6 +27,8 @@ public sealed class Area : BaseEntity,IAuditableEntity
             occ_max = d.OccMax;
             occ_down = d.OccDown;
             occ_up = d.OccUp;
+            doors_in = [.. d.AreaInDoors.Select(x => new AreaDoorIn(x))];
+            doors_out = [.. d.AreaOutDoors.Select(x => new AreaDoorOut(x))];
             metadata = d.Metadata;
             if(d.DeviceId != 0)
                   device_id = d.DeviceId;

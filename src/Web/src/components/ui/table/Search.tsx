@@ -79,28 +79,45 @@ const Search: React.FC<PropsWithChildren<SearchProp>> = ({
       <div className="flex items-center gap-3">
         <div className="inline-flex items-center gap-2">
           {permission?.isCreated && (
-            <button
-              onClick={onClick}
-              disabled={!locationGuid}
-              name="add"
-              type="button"
-              className="inline-flex items-center gap-2 rounded-lg bg-brand-500 px-4 py-2.5 text-sm font-medium text-white shadow-theme-xs transition hover:bg-brand-600 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-brand-500"
+            // <button
+            //   onClick={onClick}
+            //   disabled={!locationGuid}
+            //   name="add"
+            //   type="button"
+            //   className="inline-flex items-center gap-2 rounded-lg bg-brand-500 px-4 py-2.5 text-sm font-medium text-white shadow-theme-xs transition hover:bg-brand-600 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-brand-500"
+            // >
+            //   <AddIcon />
+            //   Add
+            // </button>
+            <Button
+            onClick={onClick}
+            disabled={!locationGuid}
+            size="sm"
+            name="add"
             >
-              <AddIcon />
+              <AddIcon/>
               Add
-            </button>
+            </Button>
           )}
 
           {permission?.isDeleted && (
-            <button
-              onClick={onClick}
-              name="delete"
-              type="button"
-              className="inline-flex items-center gap-2 rounded-lg bg-error-500 px-4 py-2.5 text-sm font-medium text-white shadow-theme-xs transition hover:bg-error-600"
+            // <button
+            //   onClick={onClick}
+            //   name="delete"
+            //   type="button"
+            //   className="inline-flex items-center gap-2 rounded-lg bg-error-500 px-4 py-2.5 text-sm font-medium text-white shadow-theme-xs transition hover:bg-error-600"
+            // >
+            //   <TrashBinIcon />
+            //   Delete
+            // </button>
+             <Button
+            onClick={onClick}
+            size="sm"
+            name="delete"
             >
-              <TrashBinIcon />
-              Delete
-            </button>
+              <TrashBinIcon/>
+              Add
+            </Button>
           )}
 
           {

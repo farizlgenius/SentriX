@@ -284,20 +284,20 @@ const Device = () => {
         setForm(true);
         setDeviceDto(defaultDto);
         break;
-      case "report":
-        if (select.length === 0) {
-          setMessage("Please select object");
-          setInfo(true);
-        } else {
-          select.forEach((item: DeviceDto) =>
-            fetchSetTran({
-              deviceGuid: item.guid,
-              vendor: item.vendor,
-              isEnable: true,
-            }),
-          );
-        }
-        break;
+      // case "report":
+      //   if (select.length === 0) {
+      //     setMessage("Please select object");
+      //     setInfo(true);
+      //   } else {
+      //     select.forEach((item: DeviceDto) =>
+      //       fetchSetTran({
+      //         deviceGuid: item.guid,
+      //         vendor: item.vendor,
+      //         isEnable: true,
+      //       }),
+      //     );
+      //   }
+      //   break;
       case "delete":
         if (select.length === 0) {
           setMessage("Please select object");
@@ -464,11 +464,11 @@ const Device = () => {
       lable: "transfer",
       icon: <TransferIcon />,
     },
-    {
-      buttonName: "Report Toggle",
-      lable: "report",
-      icon: <ToggleTranIcon />,
-    },
+    // {
+    //   buttonName: "Report Toggle",
+    //   lable: "report",
+    //   icon: <ToggleTranIcon />,
+    // },
 
   ];
 

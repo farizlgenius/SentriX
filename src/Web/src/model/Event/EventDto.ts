@@ -16,4 +16,5 @@ export interface EventDto{
     locationGuid:string;
     isActive:boolean;
     isDefault:boolean;
+    status:number;
 }

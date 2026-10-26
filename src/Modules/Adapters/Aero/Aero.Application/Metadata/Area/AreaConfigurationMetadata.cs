@@ -1,6 +1,6 @@
 using SharedKernel.Enums;
 
-namespace Aero.Application.Metadata.Device;
+namespace Aero.Application.Metadata.Area;
 
 public sealed class AreaConfigurationMetadata
 {
