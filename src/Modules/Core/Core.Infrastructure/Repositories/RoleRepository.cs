@@ -101,10 +101,11 @@ public sealed class RoleRepository(CoreDbContext context) : BaseRepository<Persi
 
       public override async Task UpdateAsync(Role entity, CancellationToken ct = default)
       {
-            await Context.Database.BeginTransactionAsync(ct);
-
+            
             try
             {
+                  await Context.Database.BeginTransactionAsync(ct);
+
                   var en = await Context.Roles
                   .Include(x => x.module_permission)
                   .ThenInclude(x => x.feature_permissions)

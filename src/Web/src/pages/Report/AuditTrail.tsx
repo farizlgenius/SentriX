@@ -206,7 +206,7 @@ export const AuditTrail = () => {
                   }
                   <div className="flex flex-col gap-5">
 
-                        <FormSection overall="Sentrix" title="Audit Trail" description="Please select template for generate report" className="flex flex-col gap-5 border border-gray-200 p-6 dark:border-gray-800 border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
+                        <FormSection overall="Sentrix" title="Audit Trail" description="Please select template for generate report" className="flex flex-col gap-5 border border-gray-200 p-6 dark:border-gray-800 border border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900">
                               <div className="grid grid-cols-2 gap-5">
                                     <div className="grid grid-cols-2 gap-5">
                                           <FormField>
@@ -308,7 +308,7 @@ export const AuditTrail = () => {
                               </div>
 
                         </FormSection>
-                        <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
+                        <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-gray-900">
                               <div className="max-w-full overflow-x-auto">
                                     {/* Header */}
                                     <div className="flex flex-col gap-2 px-4 py-4 border border-b-0 border-gray-100 dark:border-white/[0.05] rounded-t-xl sm:flex-row sm:items-center sm:justify-between">

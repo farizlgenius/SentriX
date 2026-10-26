@@ -10,7 +10,7 @@ public sealed record CreateAreaDto(
       short OccDown,
       short OccUp,
       string Metadata,
-      List<Guid> AreaInDoors,
-      List<Guid> AreaOutDoors,
+      List<DoorAreaDto> AreaInDoors,
+      List<DoorAreaDto> AreaOutDoors,
       Guid DeviceGuid
 );

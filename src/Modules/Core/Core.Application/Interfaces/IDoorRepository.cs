@@ -1,3 +1,4 @@
+using Core.Contract.DTOs.Area;
 using Core.Contract.DTOs.Door;
 using Core.Domain.Entities;
 using SharedKernel.Domain;
@@ -16,5 +17,6 @@ public interface IDoorRepository : IRepository<DoorDto, Door>
       Task<IEnumerable<short>> GetExternalIdRangeByGuidAsync(Guid guid,CancellationToken ct = default);
       Task<string> GetNameByExternalIdAndMacAndVendorQuery(short externalId,string mac,Vendor vendor,CancellationToken ct = default);
       Task<Guid> GetGuidByExternalIdAndDeviceExternalIdAndVendorAsync(short externalId,short deviceExternalId,Vendor vendor,CancellationToken ct = default);
+      Task UpdateAreaAndAntipassbackAsync(DoorAreaDto dto,int toArea,int fromArea,CancellationToken ct =default);
 
 }

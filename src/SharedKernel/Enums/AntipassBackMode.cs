@@ -1,0 +1,19 @@
+namespace SharedKernel.Enums;
+
+public enum AntipassBackMode
+{
+      NONE,
+      SOFT,
+      HARD,
+      READER_BASED_LAST_USED_SECOND,
+      READER_BASED_SECOND,
+      TIMED_BASED_SECOND,
+      READER_BASED_LAST_USED_MINUTE,
+      READER_BASED_MINUTE,
+      TIMED_BASED_MINUTE
+
+
+
+
+      
+}

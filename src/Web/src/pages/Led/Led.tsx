@@ -317,7 +317,7 @@ export const Led = () => {
     <>
       <PageBreadcrumb pageTitle="LED Reader" />
       <div className="flex flex-col gap-5">
-        <div className="flex justify-center items-center rounded-xl border border-gray-200 p-6 dark:border-gray-800 border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03] ">
+        <div className="flex justify-center items-center rounded-xl border border-gray-200 p-6 dark:border-gray-800 border border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900 ">
           <Select
             name={"ledmode"}
             options={LedModeTable}
@@ -325,7 +325,7 @@ export const Led = () => {
             onChange={(e) => setSelectedMode(Number(e))}
           />
         </div>
-        <div className="rounded-xl border border-gray-200 p-6 dark:border-gray-800 border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03] ">
+        <div className="rounded-xl border border-gray-200 p-6 dark:border-gray-800 border border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900 ">
           <div className="mb-10">
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
               LED Settings

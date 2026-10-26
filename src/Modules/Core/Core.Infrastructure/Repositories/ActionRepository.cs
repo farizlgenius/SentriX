@@ -31,7 +31,7 @@ public sealed class ActionRepository(CoreDbContext context) : BaseRepository<Per
       {
           return await base.GetPaginationAsync(
             param,
-            param.locationGuid != new Guid("3a9c9947-d5ca-4bb2-b525-0499a340f1d6") ? x => x.location.guid == param.locationGuid : null,
+            param.locationGuid != new Guid("3a9c9947-d5ca-4bb2-b525-0499a340f1d6") ? x => x.location == null || x.location.guid == param.locationGuid : null,
             [x => x.name,x => x.type.ToString()],
             ct
           );

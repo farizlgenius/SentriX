@@ -46,7 +46,7 @@ public sealed class AreaService(
             deviceId,
             areaId,
             (short)multi,
-            (short)AreaCommand.Enable,
+            (short)AreaCommand.Enabled,
             0,
             0,
             occMax,
@@ -56,5 +56,31 @@ public sealed class AreaService(
            );
 
            await bus.SendAsync(new AdapterEventCommand(res),ct);
+      }
+
+      public async Task DisableAreaAsync(string mac, string ip, short deviceId, short areaId, CancellationToken ct = default)
+      {
+            var res = repo.ModifyAccessAreaConfiguration(
+                  mac,
+                  deviceId,
+                  areaId,
+                  (short)AreaCommand.Disabled,
+                  0
+            );
+
+            await bus.SendAsync(new AdapterEventCommand(res),ct);
+      }
+
+      public async Task EnabledAreaAsync(string mac, string ip, short deviceId, short areaId, CancellationToken ct = default)
+      {
+            var res = repo.ModifyAccessAreaConfiguration(
+                  mac,
+                  deviceId,
+                  areaId,
+                  (short)AreaCommand.Enabled,
+                  0
+            );
+
+            await bus.SendAsync(new AdapterEventCommand(res),ct);
       }
 }

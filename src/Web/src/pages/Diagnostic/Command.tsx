@@ -34,7 +34,7 @@ export const Command = () => {
 
                   <div className="flex flex-col gap-3">
                         <div className="flex flex-col gap-2">
-                              <div className="grid grid-cols-3 p-10 gap-4 rounded-xl border border-gray-200 p-6 dark:border-gray-800 border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03] " >
+                              <div className="grid grid-cols-3 p-10 gap-4 rounded-xl border border-gray-200 p-6 dark:border-gray-800 border border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900 " >
 
                                     <div className="flex flex-col gap-2 col-span-2">
                                           <Label>ASCII Command</Label>
@@ -54,7 +54,7 @@ export const Command = () => {
                         </div>
                         <div className="flex flex-col gap-2">
                                <ConsoleUI />
-                              {/* <div className="grid grid-cols-3 p-10 gap-4 rounded-xl border border-gray-200 p-6 dark:border-gray-800 border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03] " >
+                              {/* <div className="grid grid-cols-3 p-10 gap-4 rounded-xl border border-gray-200 p-6 dark:border-gray-800 border border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900 " >
                                     <div className="col-span-3">
                                           <ConsoleUI />
                                     </div>

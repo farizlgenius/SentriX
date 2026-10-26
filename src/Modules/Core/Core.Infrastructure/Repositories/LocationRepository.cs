@@ -28,9 +28,11 @@ public sealed class LocationRepository(CoreDbContext context) :BaseRepository<Pe
 {
       public override async Task AddAsync(Core.Domain.Entities.Location entity, CancellationToken ct = default)
       {
-            await Context.Database.BeginTransactionAsync(ct);
+            
             try
             {
+                  await Context.Database.BeginTransactionAsync(ct);
+                  
                   var location = new Persistences.Entities.Location(entity);
 
                   location.operator_locations = new List<OperatorLocation>

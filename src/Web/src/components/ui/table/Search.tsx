@@ -116,7 +116,7 @@ const Search: React.FC<PropsWithChildren<SearchProp>> = ({
             name="delete"
             >
               <TrashBinIcon/>
-              Add
+              Delete
             </Button>
           )}
 

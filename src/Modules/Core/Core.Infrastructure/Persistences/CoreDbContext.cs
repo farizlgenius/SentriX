@@ -1143,18 +1143,18 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Persistences.Entities.Door>()
-                  .HasMany(x => x.areas_in)
-                  .WithOne(x => x.door)
-                  .HasForeignKey(x => x.door_id)
-                  .OnDelete(DeleteBehavior.Cascade);
+                  .HasOne(x => x.from_area)
+                  .WithMany(x => x.doors_in)
+                  .HasForeignKey(x => x.from_area_id)
+                  .IsRequired(false)
+                  .OnDelete(DeleteBehavior.SetNull);
 
             modelBuilder.Entity<Persistences.Entities.Door>()
-                  .HasMany(x => x.areas_out)
-                  .WithOne(x => x.door)
-                  .HasForeignKey(x => x.door_id)
-                  .OnDelete(DeleteBehavior.Cascade);
-
-
+                  .HasOne(x => x.to_area)
+                  .WithMany(x => x.doors_out)
+                  .HasForeignKey(x => x.to_area_id)
+                   .IsRequired(false)
+                  .OnDelete(DeleteBehavior.SetNull);
 
             // Sensor configuration
             modelBuilder.Entity<Door>()
@@ -1291,17 +1291,6 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
 
             // Area
 
-            modelBuilder.Entity<Persistences.Entities.Area>()
-                  .HasMany(x => x.doors_in)
-                  .WithOne(x => x.area)
-                  .HasForeignKey(x => x.area_id)
-                  .OnDelete(DeleteBehavior.Cascade);
-
-            modelBuilder.Entity<Persistences.Entities.Area>()
-                  .HasMany(x => x.doors_out)
-                  .WithOne(x => x.area)
-                  .HasForeignKey(x => x.area_id)
-                  .OnDelete(DeleteBehavior.Cascade);
 
             // Monitor Group
 

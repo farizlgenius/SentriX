@@ -200,7 +200,7 @@ export const Reports = () => {
       <PageBreadcrumb pageTitle="Events Report" />
       <div className="flex flex-col gap-2">
         {/* Filter */}
-        <div className="grid grid-cols-3 p-10 gap-4 rounded-xl border border-gray-200 p-6 dark:border-gray-800 border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03] ">
+        <div className="grid grid-cols-3 p-10 gap-4 rounded-xl border border-gray-200 p-6 dark:border-gray-800 border border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900 ">
           <div className="flex flex-col">
             <Label>Date Time</Label>
             <div className="flex gap-3">
@@ -283,7 +283,7 @@ export const Reports = () => {
           </div>
         </div>
         {/* Header Edit */}
-        <div className="rounded-xl border border-gray-200 p-6 dark:border-gray-800 border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03] ">
+        <div className="rounded-xl border border-gray-200 p-6 dark:border-gray-800 border border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900 ">
           <div className="flex items-center gap-3">
             <MultiSelect
               label="Report Header Template"
@@ -311,7 +311,7 @@ export const Reports = () => {
         </div>
         {/* Table Below */}
         <div className="space-y-6">
-          <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
+          <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-gray-900">
             <div className="max-w-full overflow-x-auto">
               {/* Header */}
               <div className="flex flex-col gap-2 px-4 py-4 border border-b-0 border-gray-100 dark:border-white/[0.05] rounded-t-xl sm:flex-row sm:items-center sm:justify-between">

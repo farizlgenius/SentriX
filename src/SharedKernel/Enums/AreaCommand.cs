@@ -2,8 +2,8 @@ namespace SharedKernel.Enums;
 
 public enum AreaCommand
 {
-      Diable=1,
-      Enable,
+      Disabled=1,
+      Enabled,
       SetOcc,
       ClearOccCount=5,
       DisableMultiOcc,

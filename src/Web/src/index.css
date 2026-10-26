@@ -212,7 +212,8 @@
   --app-panel-border: #303844;
   --app-header-bg: rgba(22, 25, 31, 0.88);
   --app-sidebar-bg: linear-gradient(180deg, #11161d 0%, #0b0f14 100%);
-  --app-sidebar-surface: rgba(255, 255, 255, 0.04);
+  /* --app-sidebar-surface: rgba(255, 255, 255, 0.04); */
+  --app-sidebar-surface: rgba(22, 25, 31, 0.88);
   --app-sidebar-border: rgba(255, 255, 255, 0.07);
   --app-sidebar-text: #f2f4f7;
   --app-sidebar-muted: #a7b1be;
@@ -221,7 +222,8 @@
   --app-sidebar-active: linear-gradient(90deg, color-mix(in srgb, var(--color-brand-500) 26%, transparent) 0%, color-mix(in srgb, var(--color-brand-500) 12%, transparent) 100%);
   --app-sidebar-active-border: var(--color-brand-400);
   --app-sidebar-active-text: var(--color-brand-100);
-  --app-sidebar-section-bg: rgba(255, 255, 255, 0.03);
+  /* --app-sidebar-section-bg: rgba(255, 255, 255, 0.03); */
+  --app-sidebar-section-bg:rgba(22, 25, 31, 0.88);
 }
 
 /*
@@ -247,14 +249,14 @@
   body {
     @apply relative font-normal font-outfit z-1 text-gray-800 antialiased;
     background:
-      radial-gradient(circle at top left, rgba(236, 114, 17, 0.08), transparent 26%),
-      linear-gradient(180deg, #f7f8fa 0%, var(--app-shell-bg) 100%);
+      radial-gradient(circle at top left, color-mix(in srgb, var(--color-brand-500) 8%, transparent), transparent 26%),
+      linear-gradient(180deg, var(--app-panel-muted) 0%, var(--app-shell-bg) 100%);
     min-height: 100vh;
   }
   html.dark body {
     background:
-      radial-gradient(circle at top left, rgba(236, 114, 17, 0.1), transparent 24%),
-      linear-gradient(180deg, #11161d 0%, var(--app-shell-bg) 100%);
+      radial-gradient(circle at top left, color-mix(in srgb, var(--color-brand-500) 8%, transparent), transparent 24%),
+      linear-gradient(180deg, color-mix(in srgb, var(--app-shell-bg) 75%, black) 0%, var(--app-shell-bg) 100%);
     color: rgba(255, 255, 255, 0.92);
   }
 }
@@ -703,7 +705,7 @@ span.flatpickr-weekday,
   @apply p-2;
 }
 .fc .fc-daygrid-day.fc-day-today .fc-scrollgrid-sync-inner {
-  @apply rounded-sm bg-gray-100 dark:bg-white/[0.03];
+  @apply rounded-sm bg-gray-100 dark:bg-gray-900;
 }
 .fc .fc-daygrid-day-number {
   @apply !p-3 text-sm font-medium text-gray-700 dark:text-gray-400;

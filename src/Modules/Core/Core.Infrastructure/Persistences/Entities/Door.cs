@@ -23,9 +23,13 @@ public sealed class Door : BaseEntity,IAuditableEntity
   public Device device { get; set; } = default!;
   public ICollection<GroupComponent> group_components { get; set; } = default!;
   public ICollection<AlertComponent> alert_components {get; set; } = default!;
-  public ICollection<AreaDoorIn> areas_in {get; set; } = default!;
-  public ICollection<AreaDoorOut> areas_out {get; set; } = default!;
   public MonitorGroupComponent? monitor_group_component {get; set; }
+  public int? from_area_id {get; set; }
+  public Area? from_area {get; set; }
+  public int? to_area_id {get; set; }
+  public Area? to_area {get; set; }
+  public AntipassBackMode antipassback_in {get; set; } = AntipassBackMode.NONE;
+  public AntipassBackMode antipassback_out {get; set; }= AntipassBackMode.NONE;
   public Door() { }
 
   public Door(Domain.Entities.Door d) : base(d.Guid,d.ExternalId,d.AltrExternalId)
@@ -44,7 +48,7 @@ public sealed class Door : BaseEntity,IAuditableEntity
     location_id = d.LocationId;
     group_components = new List<GroupComponent>
     {
-      new GroupComponent(1,1)
+      new(1,1)
     };
   }
 

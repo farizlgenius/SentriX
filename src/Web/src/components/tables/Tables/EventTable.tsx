@@ -195,7 +195,7 @@ export const EventTable = < T extends {guid:string,status:number} >({
           </button>
         </div>
       </div>
-      <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
+      <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-gray-900">
         <div className="max-w-full overflow-x-auto">
 
           <div className="max-h-[70vh] overflow-auto scrollbar-thin scrollbar-transparent">

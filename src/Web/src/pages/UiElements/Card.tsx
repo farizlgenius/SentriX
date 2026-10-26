@@ -15,7 +15,7 @@ export const Card: React.FC<PropsWithChildren<CardProp>> = ({ data, handleCardCl
           //onClick={() => handleCardClick(data)}
           onClick={handleCardClick}
           className={data.active ? "cursor-pointer w-full h-full rounded-xl border border-blue-400 bg-blue-50 p-5 dark:border-blue-500 dark:bg-blue-500/20 flex items-center justify-center transition shadow-lg hover:shadow-xl ring-2 ring-blue-300"
- : "cursor-pointer w-full h-full rounded-xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] flex items-center justify-center transition hover:shadow-md active:bg-red-300"} 
+ : "cursor-pointer w-full h-full rounded-xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-gray-900 flex items-center justify-center transition hover:shadow-md active:bg-red-300"}
         >
           <h4 className="text-theme-xl font-medium text-gray-800 dark:text-white/90">
             {data.num}

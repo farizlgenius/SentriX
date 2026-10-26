@@ -49,7 +49,7 @@ export const PasswordRule = () => {
     return (
         <>
             <PageBreadcrumb pageTitle="Password Rule Setting" />
-            <div className="rounded-xl border border-gray-200 p-6 dark:border-gray-800 border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]" >
+            <div className="rounded-xl border border-gray-200 p-6 dark:border-gray-800 border border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900" >
                 <div className="flex flex-col gap-5 justify-center p-5 border border-gray-200 rounded-2xl dark:border-gray-800 lg:p-6">
                     <div className="flex gap-3 flex-col">
                         <Label>Password Len</Label>

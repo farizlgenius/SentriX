@@ -17,4 +17,14 @@ public interface IAreaAdapter
             string metadata,
             CancellationToken ct = default
       );
+
+      Task DisableAreaAsync(
+            string mac,
+            string ip,
+            short deviceId,
+            short areaId,
+            CancellationToken ct = default
+      );
+
+      Task EnabledAreaAsync(string mac, string ip, short deviceId, short areaId, CancellationToken ct = default);
 }

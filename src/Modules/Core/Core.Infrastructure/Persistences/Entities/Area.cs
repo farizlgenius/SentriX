@@ -13,10 +13,10 @@ public sealed class Area : BaseEntity,IAuditableEntity
       public string metadata {get; set; } = string.Empty;
 
       // Relation
-      public ICollection<AreaDoorIn> doors_in {get; set ;} = default!;
-      public ICollection<AreaDoorOut> doors_out {get; set; }= default!;
       public int device_id {get; set; }
       public Device device {get; set; } = default!;
+      public ICollection<Door> doors_in {get; set; } = default!;
+      public ICollection<Door> doors_out {get; set; } = default!;
 
       public Area(){}
       public Area(Domain.Entities.Area d) : base(d.Guid,d.ExternalId)
@@ -27,8 +27,6 @@ public sealed class Area : BaseEntity,IAuditableEntity
             occ_max = d.OccMax;
             occ_down = d.OccDown;
             occ_up = d.OccUp;
-            doors_in = [.. d.AreaInDoors.Select(x => new AreaDoorIn(x))];
-            doors_out = [.. d.AreaOutDoors.Select(x => new AreaDoorOut(x))];
             metadata = d.Metadata;
             if(d.DeviceId != 0)
                   device_id = d.DeviceId;

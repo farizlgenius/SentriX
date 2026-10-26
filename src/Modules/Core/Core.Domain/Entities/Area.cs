@@ -12,8 +12,8 @@ public sealed class Area : BaseDomain
       public short OccUp {get; private set; }
       public string Metadata {get; private set;} = string.Empty;
       public int DeviceId {get; private set; } = 0;
-      public List<int> AreaInDoors {get; private set; } = default!;
-      public List<int> AreaOutDoors {get; private set; } =default!;
+      public List<(int,AntipassBackMode)> AreaInDoors {get; private set; } = default!;
+      public List<(int,AntipassBackMode)> AreaOutDoors {get; private set; } =default!;
       public Area(
             string name,
             AreaMultiOccMode multiMode,
@@ -22,8 +22,8 @@ public sealed class Area : BaseDomain
             short occDown,
             short occUp,
             string metadata,
-            List<int> areaInDoors,
-            List<int> areaOutDoots,
+            List<(int,AntipassBackMode)> areaInDoors,
+            List<(int,AntipassBackMode)> areaOutDoots,
             int deviceId,
             short externalId
       ) : base(Guid.NewGuid(),externalId)
@@ -49,8 +49,8 @@ public sealed class Area : BaseDomain
             short occDown,
             short occUp,
             string metadata,
-            List<int> areaInDoors,
-            List<int> areaOutDoots
+            List<(int,AntipassBackMode)> areaInDoors,
+            List<(int,AntipassBackMode)> areaOutDoots
             ) : base(guid)
       {
             Name = name;

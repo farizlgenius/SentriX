@@ -210,7 +210,7 @@ export const MonitorGroupForm: React.FC<
               {dto.nMpList.map((s, i) => (
                 <div
                   key={i}
-                  className={`cursor-pointer flex flex-col rounded-2xl border border-gray-200 hover:dark:bg-white/[0.01] hover:bg-gray-200 ${selected.includes(s) ? "bg-gray-200 dark:bg-white/[0.01]" : "dark:bg-white/[0.03] bg-white"} p-5 dark:border-gray-800  md:p-6`}
+                  className={`cursor-pointer flex flex-col rounded-2xl border border-gray-200 hover:dark:bg-white/[0.01] hover:bg-gray-200 ${selected.includes(s) ? "bg-gray-200 dark:bg-white/[0.01]" : "dark:bg-gray-900 bg-white"} p-5 dark:border-gray-800  md:p-6`}
                 >
                   <div className="flex flex-col justify-center items-center gap-2">
                     <div className="flex items-center justify-center w-12 h-12 bg-gray-100 rounded-xl dark:bg-gray-800">

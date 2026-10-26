@@ -1,4 +1,5 @@
 using Core.Application.Interfaces;
+using Core.Contract.DTOs.Area;
 using Core.Contract.DTOs.Door;
 using Core.Domain.Entities;
 using Core.Infrastructure.Persistences;
@@ -226,4 +227,21 @@ public sealed class DoorRepository(CoreDbContext context) : BaseRepository<Persi
   {
     return false;
   }
+
+      public async Task UpdateAreaAndAntipassbackAsync(DoorAreaDto dto,int toArea,int fromArea, CancellationToken ct = default)
+      {
+            // var en = await Context.Doors
+            //   .Where(x => x.guid == dto.DoorGuid)
+            //   .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.DOOR.ToString(),dto.DoorGuid.ToString());
+
+            // en.antipassback_in = dto.Antipassback;
+            // en.antipassback_out = dto.AntipassbackOut;
+            // en.to_area_id = toArea;
+            // en.from_area_id = fromArea;
+
+            // Context.Doors.Update(en);
+
+            // await Context.SaveChangesAsync(ct);
+            throw new NotImplementedException();
+      }
 }

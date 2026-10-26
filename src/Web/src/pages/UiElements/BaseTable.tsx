@@ -161,7 +161,7 @@ export const BaseTable = <
         onClick={handleClick}
         permission={permission}
       />
-      <div className="overflow-visible rounded-l border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
+      <div className="overflow-visible rounded-l border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-gray-900">
         <div className="max-w-full overflow-x-auto">
           {/* <Search
             locationGuid={locationGuid}
