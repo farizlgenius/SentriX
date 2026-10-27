@@ -11,9 +11,8 @@ public sealed record AreaDto(
       short OccDown,
       short OccUp,
       string Metadata,
-      List<DoorAreaDto> AreaInDoors,
-      List<DoorAreaDto> AreaOutDoors,
-      Guid DeviceGuid,
+      List<DoorAreaDto> Doors,
+      Guid LocationGuid,
       bool IsActive,
       bool IsDefault
 );

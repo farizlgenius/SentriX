@@ -19,16 +19,23 @@ public class DoorController(IDoor door) : ControllerBase
 
 
   [HttpGet("{guid}")]
-  public async Task<IActionResult> GetByGuidAsync([FromQuery] Guid guid)
+  public async Task<IActionResult> GetByGuidAsync(Guid guid)
   {
     var res = await door.GetByGuidAsync(guid);
     return Ok(res);
   }
 
   [HttpGet("location/{guid}")]
-  public async Task<IActionResult> GetByLocationAsync([FromQuery] Guid guid)
+  public async Task<IActionResult> GetByLocationAsync(Guid guid)
   {
     var res = await door.GetByLocationAsync(guid);
+    return Ok(res);
+  }
+
+  [HttpGet("option/location/{guid}")]
+  public async Task<IActionResult> GetOptionByLocationAsync(Guid guid)
+  {
+    var res = await door.GetOptionByLocationAsync(guid);
     return Ok(res);
   }
 

@@ -4,5 +4,9 @@ namespace Core.Contract.DTOs.Area;
 
 public sealed record DoorAreaDto(
       Guid DoorGuid,
-      AntipassBackMode Antipassback
+      AntipassBackMode AntipassbackFrom,
+      Guid AreaFromGuid,
+      AntipassBackMode AntipassbackTo,
+      Guid? AreaToGuid,
+      DoorType Type
 );

@@ -347,12 +347,21 @@ public abstract class BaseRepository<TEntity, TDomain, TDto>(
       {
            return await Context.Set<TEntity>()
                   .AsNoTracking()
-                  .Where(x => x.guid == guid)
+                  .Where(x => x.location == null || x.location.guid == guid)
                   .Select(x => new OptionDto(
                         x.name,
                         x.guid,
                         string.Empty
                   )).ToArrayAsync();
+      }
+
+      public async Task<IEnumerable<CommandDetailDto>> GetCommandDetailByLocationGuidAsync(Guid guid, CancellationToken ct = default)
+      {
+            return await Context.Set<TEntity>()
+                  .AsNoTracking()
+                  .Where(x => x.location == null || x.location.guid == guid)
+                  .Select(toCommand)
+                  .ToArrayAsync(ct);
       }
 }
 

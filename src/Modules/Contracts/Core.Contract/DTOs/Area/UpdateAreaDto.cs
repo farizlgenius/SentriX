@@ -11,7 +11,6 @@ public sealed record UpdateAreaDto(
       short OccDown,
       short OccUp,
       string Metadata,
-      List<DoorAreaDto> AreaInDoors,
-      List<DoorAreaDto> AreaOutDoors,
-      Guid DeviceGuid
+      List<DoorAreaDto> Doors,
+      Guid LocationGuid
 );

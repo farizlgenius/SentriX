@@ -26,6 +26,8 @@ public interface IDoorAdapter
             (short outputNo,string metadata,short deviceModuleId)? relay,
             short areaFrom=-1,
             short areaTo=1,
+            AntipassBackMode apbModeFrom = AntipassBackMode.NONE,
+            AntipassBackMode apbModeTo = AntipassBackMode.NONE,
             CancellationToken ct = default
       );
 

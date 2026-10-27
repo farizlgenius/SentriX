@@ -1,14 +1,18 @@
-import { BaseDto } from "../BaseDto";
+import { AreaMode } from "../../enum/AreaMode";
+import { AreaMultiOccMode } from "../../enum/AreaMultiOccMode";
+import { DoorAreaDto } from "./DoorAreaDto";
 
-export interface AreaDto extends BaseDto {
-    scpId:number;
-    areaId:number;
-    multiOccupancy:number;
-    accessControl:number;
-    occControl:number;
-    occSet:number;
+
+export interface AreaDto {
+    guid:string;
+    name:string;
+    multiMode:AreaMultiOccMode;
+    mode:AreaMode;
     occMax:number;
-    occUp:number;
     occDown:number;
-    areaFlag:number;
+    occUp:number;
+    doors:DoorAreaDto[];
+    deviceGuid:string;
+    isActive:boolean;
+    isDefault:boolean;
 }

@@ -26,10 +26,10 @@ public sealed class Door : BaseEntity,IAuditableEntity
   public MonitorGroupComponent? monitor_group_component {get; set; }
   public int? from_area_id {get; set; }
   public Area? from_area {get; set; }
+  public AntipassBackMode antipassback_from {get; set; } = AntipassBackMode.NONE;
   public int? to_area_id {get; set; }
   public Area? to_area {get; set; }
-  public AntipassBackMode antipassback_in {get; set; } = AntipassBackMode.NONE;
-  public AntipassBackMode antipassback_out {get; set; }= AntipassBackMode.NONE;
+  public AntipassBackMode antipassback_to {get; set; }= AntipassBackMode.NONE;
   public Door() { }
 
   public Door(Domain.Entities.Door d) : base(d.Guid,d.ExternalId,d.AltrExternalId)

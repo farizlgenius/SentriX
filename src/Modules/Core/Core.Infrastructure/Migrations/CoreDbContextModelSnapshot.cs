@@ -460,6 +460,82 @@ namespace Core.Infrastructure.Migrations
                         });
                 });
 
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Area", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<int?>("Deviceid")
+                        .HasColumnType("integer");
+
+                    b.Property<short?>("altr_external_id")
+                        .HasColumnType("smallint");
+
+                    b.Property<int>("area_mode")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("created_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.Property<short?>("external_id")
+                        .HasColumnType("smallint");
+
+                    b.Property<Guid>("guid")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<bool>("is_active")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("is_default")
+                        .HasColumnType("boolean");
+
+                    b.Property<int?>("location_id")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("metadata")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("multi_occ_mode")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<short>("occ_down")
+                        .HasColumnType("smallint");
+
+                    b.Property<short>("occ_max")
+                        .HasColumnType("smallint");
+
+                    b.Property<short>("occ_up")
+                        .HasColumnType("smallint");
+
+                    b.Property<DateTime>("updated_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("Deviceid");
+
+                    b.HasIndex("location_id");
+
+                    b.HasIndex("guid", "id", "location_id")
+                        .IsUnique();
+
+                    b.ToTable("Areas", "core");
+                });
+
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.AuditTrail", b =>
                 {
                     b.Property<int>("id")
@@ -2915,7 +2991,7 @@ namespace Core.Infrastructure.Migrations
 
                     b.HasIndex("location_id");
 
-                    b.HasIndex("guid", "mac", "vendor")
+                    b.HasIndex("guid", "mac", "vendor", "location_id")
                         .IsUnique();
 
                     b.ToTable("Devices", "core");
@@ -3018,6 +3094,12 @@ namespace Core.Infrastructure.Migrations
                     b.Property<short?>("altr_external_id")
                         .HasColumnType("smallint");
 
+                    b.Property<int>("antipassback_from")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("antipassback_to")
+                        .HasColumnType("integer");
+
                     b.Property<int?>("bg_id")
                         .HasColumnType("integer");
 
@@ -3034,6 +3116,9 @@ namespace Core.Infrastructure.Migrations
 
                     b.Property<short?>("external_id")
                         .HasColumnType("smallint");
+
+                    b.Property<int?>("from_area_id")
+                        .HasColumnType("integer");
 
                     b.Property<Guid>("guid")
                         .ValueGeneratedOnAdd()
@@ -3063,6 +3148,9 @@ namespace Core.Infrastructure.Migrations
                     b.Property<int?>("sensor_id")
                         .HasColumnType("integer");
 
+                    b.Property<int?>("to_area_id")
+                        .HasColumnType("integer");
+
                     b.Property<string>("type")
                         .IsRequired()
                         .HasColumnType("text");
@@ -3083,7 +3171,11 @@ namespace Core.Infrastructure.Migrations
 
                     b.HasIndex("device_id");
 
+                    b.HasIndex("from_area_id");
+
                     b.HasIndex("location_id");
+
+                    b.HasIndex("to_area_id");
 
                     b.HasIndex("guid", "id", "device_id")
                         .IsUnique();
@@ -4565,6 +4657,96 @@ namespace Core.Infrastructure.Migrations
                             role_id = 1,
                             updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         });
+                });
+
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.MonitorGroup", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<short?>("altr_external_id")
+                        .HasColumnType("smallint");
+
+                    b.Property<DateTime>("created_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.Property<int>("device_id")
+                        .HasColumnType("integer");
+
+                    b.Property<short?>("external_id")
+                        .HasColumnType("smallint");
+
+                    b.Property<Guid>("guid")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<bool>("is_active")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("is_default")
+                        .HasColumnType("boolean");
+
+                    b.Property<int?>("location_id")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("locationid")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("updated_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("device_id");
+
+                    b.HasIndex("locationid");
+
+                    b.ToTable("MonitorGroup", "core");
+                });
+
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.MonitorGroupComponent", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<int?>("door_id")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("input_id")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("monitor_group_id")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("type")
+                        .HasColumnType("integer");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("door_id")
+                        .IsUnique();
+
+                    b.HasIndex("input_id")
+                        .IsUnique();
+
+                    b.HasIndex("monitor_group_id");
+
+                    b.ToTable("MonitorGroupComponent", "core");
                 });
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Operator", b =>
@@ -7973,6 +8155,20 @@ namespace Core.Infrastructure.Migrations
                     b.Navigation("location");
                 });
 
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Area", b =>
+                {
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.Device", null)
+                        .WithMany("areas")
+                        .HasForeignKey("Deviceid");
+
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.Location", "location")
+                        .WithMany("areas")
+                        .HasForeignKey("location_id")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("location");
+                });
+
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.AuditTrail", b =>
                 {
                     b.HasOne("Core.Infrastructure.Persistences.Entities.Location", "location")
@@ -8127,16 +8323,30 @@ namespace Core.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.Area", "from_area")
+                        .WithMany("doors_to")
+                        .HasForeignKey("from_area_id")
+                        .OnDelete(DeleteBehavior.SetNull);
+
                     b.HasOne("Core.Infrastructure.Persistences.Entities.Location", "location")
                         .WithMany("doors")
                         .HasForeignKey("location_id")
                         .OnDelete(DeleteBehavior.Cascade);
 
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.Area", "to_area")
+                        .WithMany("doors_from")
+                        .HasForeignKey("to_area_id")
+                        .OnDelete(DeleteBehavior.SetNull);
+
                     b.Navigation("buzzer");
 
                     b.Navigation("device");
 
+                    b.Navigation("from_area");
+
                     b.Navigation("location");
+
+                    b.Navigation("to_area");
                 });
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Event", b =>
@@ -8377,6 +8587,48 @@ namespace Core.Infrastructure.Migrations
                     b.Navigation("module");
 
                     b.Navigation("role");
+                });
+
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.MonitorGroup", b =>
+                {
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.Device", "device")
+                        .WithMany("monitor_groups")
+                        .HasForeignKey("device_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.Location", "location")
+                        .WithMany()
+                        .HasForeignKey("locationid");
+
+                    b.Navigation("device");
+
+                    b.Navigation("location");
+                });
+
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.MonitorGroupComponent", b =>
+                {
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.Door", "door")
+                        .WithOne("monitor_group_component")
+                        .HasForeignKey("Core.Infrastructure.Persistences.Entities.MonitorGroupComponent", "door_id")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.Input", "input")
+                        .WithOne("monitor_group_component")
+                        .HasForeignKey("Core.Infrastructure.Persistences.Entities.MonitorGroupComponent", "input_id")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.MonitorGroup", "monitor_group")
+                        .WithMany("components")
+                        .HasForeignKey("monitor_group_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("door");
+
+                    b.Navigation("input");
+
+                    b.Navigation("monitor_group");
                 });
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Operator", b =>
@@ -8819,6 +9071,13 @@ namespace Core.Infrastructure.Migrations
                     b.Navigation("alerts");
                 });
 
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Area", b =>
+                {
+                    b.Navigation("doors_from");
+
+                    b.Navigation("doors_to");
+                });
+
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Buzzer", b =>
                 {
                     b.Navigation("door")
@@ -8864,9 +9123,13 @@ namespace Core.Infrastructure.Migrations
                 {
                     b.Navigation("actions");
 
+                    b.Navigation("areas");
+
                     b.Navigation("device_modules");
 
                     b.Navigation("doors");
+
+                    b.Navigation("monitor_groups");
 
                     b.Navigation("procedures");
                 });
@@ -8898,6 +9161,8 @@ namespace Core.Infrastructure.Migrations
 
                     b.Navigation("group_components");
 
+                    b.Navigation("monitor_group_component");
+
                     b.Navigation("readers");
 
                     b.Navigation("relay");
@@ -8923,6 +9188,11 @@ namespace Core.Infrastructure.Migrations
                     b.Navigation("components");
 
                     b.Navigation("user_groups");
+                });
+
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Input", b =>
+                {
+                    b.Navigation("monitor_group_component");
                 });
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Interval", b =>
@@ -8952,6 +9222,8 @@ namespace Core.Infrastructure.Migrations
                     b.Navigation("alert_levels");
 
                     b.Navigation("alerts");
+
+                    b.Navigation("areas");
 
                     b.Navigation("audit_trails");
 
@@ -9002,6 +9274,11 @@ namespace Core.Infrastructure.Migrations
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.ModulePermission", b =>
                 {
                     b.Navigation("feature_permissions");
+                });
+
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.MonitorGroup", b =>
+                {
+                    b.Navigation("components");
                 });
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Operator", b =>

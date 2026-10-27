@@ -6,7 +6,6 @@ import PageBreadcrumb from "../../components/common/PageBreadCrumb";
 import { AddIcon, AreaIcon } from "../../icons";
 import { BaseForm } from "../UiElements/BaseForm";
 import { FormContent } from "../../model/Form/FormContent";
-import { AreaForm } from "../../components/form/area/AreaForm";
 import { BaseTable } from "../UiElements/BaseTable";
 import { send } from "../../api/api";
 import { useAuth } from "../../context/AuthContext";
@@ -17,13 +16,16 @@ import { FormType } from "../../model/Form/FormProp";
 import { usePopup } from "../../context/PopupContext";
 import { AccessAreaToast } from "../../model/ToastMessage";
 import { AreaEndpoint } from "../../endpoint/AreaEndpoint";
+import { AreaMode } from "../../enum/AreaMode";
+import { AreaMultiOccMode } from "../../enum/AreaMultiOccMode";
+import { AreaForm } from "../../components/form/Area/AreaForm";
 
 const AREA_HEADERS = ["Name", "Action"];
 const AREA_KEY = ["name"];
 
 export const Area = () => {
   const { toggleToast } = useToast();
-  const { locationGuid: locationId } = useLocation();
+  const { locationGuid } = useLocation();
   const { setPagination } = usePagination();
   const {
     setRemove,
@@ -39,21 +41,17 @@ export const Area = () => {
   const [refresh, setRefresh] = useState(false);
   const toggleRefresh = () => setRefresh(!refresh);
   var defaultDto: AreaDto = {
-    // base
+    guid: "",
     name: "",
-    multiOccupancy: -1,
-    accessControl: -1,
-    occControl: -1,
-    occSet: 0,
+    multiMode: AreaMultiOccMode.TWO_MORE_NOT_REQUIRE,
+    mode: AreaMode.ENABLED,
     occMax: 0,
-    occUp: 0,
     occDown: 0,
-    areaFlag: 0x00,
-    locationId: locationId,
+    occUp: 0,
+    doors: [],
+    deviceGuid: "",
     isActive: true,
-    scpId: 0,
-    areaId: 0,
-    id: 0,
+    isDefault: false
   };
   const [areaDto, setAreaDto] = useState<AreaDto>(defaultDto);
   {
@@ -75,9 +73,9 @@ export const Area = () => {
           setInfo(true);
         }
         setConfirmRemove(() => async () => {
-          var data: number[] = [];
+          var data: string[] = [];
           selectedObjects.map(async (a: AreaDto) => {
-            data.push(a.id);
+            data.push(a.guid);
           });
           var res = await send.post(AreaEndpoint.DELETE_RANGE, data);
           if (
@@ -139,7 +137,7 @@ export const Area = () => {
 
   const handleRemove = (data: AreaDto) => {
     setConfirmRemove(() => async () => {
-      const res = await send.delete(AreaEndpoint.DELETE(data.id));
+      const res = await send.delete(AreaEndpoint.DELETE(data.guid));
       if (
         Helper.handleToastByResCode(res, AccessAreaToast.DELETE, toggleToast)
       ) {
@@ -172,7 +170,7 @@ export const Area = () => {
   const fetchData = async (
     pageNumber: number,
     pageSize: number,
-    locationId?: number,
+    locationGuid?: string,
     search?: string,
     startDate?: string,
     endDate?: string,
@@ -181,7 +179,7 @@ export const Area = () => {
       AreaEndpoint.PAGINATION(
         pageNumber,
         pageSize,
-        locationId,
+        locationGuid,
         search,
         startDate,
         endDate,
@@ -190,8 +188,8 @@ export const Area = () => {
     console.log(res?.data.data);
     if (res && res.data.data) {
       console.log(res.data.data);
-      setAreasDto(res.data.data.data);
-      setPagination(res.data.data.page);
+      setAreasDto(res.data.data.items);
+      setPagination(res.data.data);
     }
   };
 
@@ -213,6 +211,7 @@ export const Area = () => {
           setDto={setAreaDto}
           handleClick={handleClick}
           type={formType}
+          handleChange={() => { }}
         />
       ),
     },
@@ -222,7 +221,7 @@ export const Area = () => {
     <>
       <PageBreadcrumb pageTitle="Access Area" />
       {form ? (
-        <BaseForm tabContent={createContent} />
+        <BaseForm handleClick={handleClick} tabContent={createContent} type={formType} />
       ) : (
         <div className="space-y-6">
           <BaseTable<AreaDto>
@@ -237,7 +236,7 @@ export const Area = () => {
             onClick={handleClick}
             permission={filterPermission(FeatureId.area)}
             fetchData={fetchData}
-            locationGuid={locationId}
+            locationGuid={locationGuid}
           />
         </div>
       )}

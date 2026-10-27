@@ -268,6 +268,8 @@ public sealed class DoorService(
       ),
       -1,
       1,
+      AntipassBackMode.NONE,
+      AntipassBackMode.NONE,
       ct
     );
 
@@ -378,8 +380,12 @@ public sealed class DoorService(
     return await repo.EnableAsync(guid, ct);
   }
 
+      public async Task<IEnumerable<OptionDto>> GetOptionByLocationAsync(Guid guid, CancellationToken ct = default)
+      {
+            return await repo.GetOptionByLocationAsync(guid,ct);
+      }
 
-  public async Task<bool> GetStatusAsync(Guid guid, CancellationToken ct = default)
+      public async Task<bool> GetStatusAsync(Guid guid, CancellationToken ct = default)
   {
     var door = await repo.GetAsync(guid, ct);
 

@@ -923,12 +923,6 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Device>()
-                  .HasMany(x => x.areas)
-                  .WithOne(x => x.device)
-                  .HasForeignKey(x => x.device_id)
-                  .OnDelete(DeleteBehavior.Cascade);
-
-            modelBuilder.Entity<Device>()
                   .HasMany(x => x.monitor_groups)
                   .WithOne(x => x.device)
                   .HasForeignKey(x => x.device_id)
@@ -1144,14 +1138,14 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
 
             modelBuilder.Entity<Persistences.Entities.Door>()
                   .HasOne(x => x.from_area)
-                  .WithMany(x => x.doors_in)
+                  .WithMany(x => x.doors_to)
                   .HasForeignKey(x => x.from_area_id)
                   .IsRequired(false)
                   .OnDelete(DeleteBehavior.SetNull);
 
             modelBuilder.Entity<Persistences.Entities.Door>()
                   .HasOne(x => x.to_area)
-                  .WithMany(x => x.doors_out)
+                  .WithMany(x => x.doors_from)
                   .HasForeignKey(x => x.to_area_id)
                    .IsRequired(false)
                   .OnDelete(DeleteBehavior.SetNull);

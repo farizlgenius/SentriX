@@ -62,6 +62,11 @@ public sealed class TriggerRepository(CoreDbContext context) : ITriggerRepositor
             throw new NotImplementedException();
       }
 
+      public Task<IEnumerable<CommandDetailDto>> GetCommandDetailByLocationGuidAsync(Guid guid, CancellationToken ct = default)
+      {
+            throw new NotImplementedException();
+      }
+
       public Task<short> GetExternalIdByGuidAsync(Guid guid, CancellationToken ct = default)
       {
             throw new NotImplementedException();

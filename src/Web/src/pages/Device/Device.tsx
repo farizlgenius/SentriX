@@ -38,7 +38,6 @@ import { usePagination } from "../../context/PaginationContext";
 import { useIdReport } from "../../context/IdReportContext";
 import { SignalRTopic } from "../../constants/signalr-constant";
 import AeroDeviceForm from "../../components/form/device/AeroDeviceForm";
-import { CreateDeviceStrMetadataDto } from "../../model/Device/CreateDeviceStrMetadataDto";
 import { Vendor } from "../../enum/Vendor";
 import { AeroMetadata } from "../../model/Device/AeroMetadata";
 import { AmicoMetadata } from "../../model/Device/AmicoMetadata";

@@ -1,10 +1,10 @@
-const CONTROLLER = `AccessArea`;
+const CONTROLLER = `area`;
 
 export const AreaEndpoint = {
-    GET:(locationId:number) => `/api/${locationId}/${CONTROLLER}`, 
-    PAGINATION:(pageNumber:number,pageSize:number,locationId?:number | undefined,search?:string | undefined,startDate?:string | undefined,endDate?:string | undefined) => `/api${locationId == 0 || locationId == undefined ?  "" : `/${locationId}` }/${CONTROLLER}/pagination?PageNumber=${pageNumber}&PageSize=${pageSize}${search == undefined || search == "" ? "" : `&search=${search}`}${startDate == undefined ? "" : `&startDate=${startDate}`}${endDate == undefined ? "" : `&startDate=${endDate}`}`,
+    GET:(locationGuid:number) => `/api/${locationGuid}/${CONTROLLER}`, 
+    PAGINATION:(pageNumber:number,pageSize:number,locationGuid?:string | undefined,search?:string | undefined,startDate?:string | undefined,endDate?:string | undefined) => `/api/${CONTROLLER}/pagination?PageNumber=${pageNumber}&PageSize=${pageSize}${search == undefined || search == "" ? "" : `&search=${search}`}${startDate == undefined ? "" : `&startDate=${startDate}`}${endDate == undefined ? "" : `&startDate=${endDate}`}${locationGuid == "" || locationGuid == undefined ?  "" : `&locationGuid=${locationGuid}` }`,
     CREATE:`/api/${CONTROLLER}`,
-    DELETE:(component:number) => `/api/${CONTROLLER}/${component}`,
+    DELETE:(guid:string) => `/api/${CONTROLLER}/${guid}`,
     DELETE_RANGE: `/api/${CONTROLLER}`,
     UPDATE:`/api/${CONTROLLER}`,
     GET_ACCESS_CONTROL:`/api/${CONTROLLER}/access`,

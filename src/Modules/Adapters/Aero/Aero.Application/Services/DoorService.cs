@@ -52,6 +52,8 @@ public sealed class DoorService(
             (short outputNo, string metadata, short deviceModuleId)? relay,
             short areaFrom=-1,
             short areaTo=1,
+            AntipassBackMode apbModeFrom = AntipassBackMode.NONE,
+            AntipassBackMode apbModeTo = AntipassBackMode.NONE,
             CancellationToken ct = default
             )
       {
@@ -275,7 +277,7 @@ public sealed class DoorService(
                         -1,
                         0,
                         255,
-                        0,
+                        (short)apbModeTo,
                         areaFrom,
                         areaTo,
                         spare,
@@ -352,7 +354,7 @@ public sealed class DoorService(
                   -1,
                   0,
                   255,
-                  0,
+                  (short)apbModeFrom,
                   areaFrom,
                   areaTo,
                   spare,

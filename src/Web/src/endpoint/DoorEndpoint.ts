@@ -2,7 +2,8 @@ const CONTROLLER = `door`;
 
 export const DoorEndpoint = {
   GET: (location: number) => `/api/${location}/${CONTROLLER}`,
-  GET_OPTION: (location: number) => `/api/${CONTROLLER}/option/${location}`,
+  GET_BY_LOCATION: (guid: string) => `/api/${CONTROLLER}/location/${guid}`,
+  GET_OPTION: (guid: string) => `/api/${CONTROLLER}/option/location/${guid}`,
   PAGINATION: (
     pageNumber: number,
     pageSize: number,

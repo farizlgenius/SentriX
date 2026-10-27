@@ -151,6 +151,10 @@ public static class CoreDependencyInjection
     services.AddScoped<IAlert,AlertService>();
     services.AddScoped<IAlertRepository,AlertRepository>();
 
+    // alert
+    services.AddScoped<IArea,AreaService>();
+    services.AddScoped<IAreaRepository,AreaRepository>();
+
     // Utility
     services.AddScoped<IUtility,UtilityService>();
 

@@ -20154,3 +20154,86 @@ WebConfigNetwork: SCP-1, Method2 = 0, IP Address2: 0.0.0.0, Subnet Mask2: 0.0.0.
 31194.646 Did not find any SCPs to delete on detach, clear pending delete flag
 32082.157 Shutting down debug Thread...
 File closed Mon Oct 26 23:28:02 2026
+Debug file SCPDEBUG.txt <SCPDEBUGc.txt> <SCPDEBUG.TXT> opened Tue Oct 27 18:38:11 2026
+Begin - SCP Driver DLL (64-bit) version 4.7.1.43
+01091.654 WSAStartup ok
+01091.658 RNG_X931A24 Initialized
+01091.658 1, enCcSystem: 011 1 1024 0 0 1
+01091.764 1, enCcCreateChannel: 0012 1 7 3333 0 3000 0 "" 0
+01092.014 listen(lsock) created socket=3400 on port 3333
+01092.014 Listen Successful, port: 3333
+03977.133 0(0), enCcTranSrq: 0402 1
+05182.905 0(0), enCcTranSrq: 0402 1
+10795.791 Shutting down debug Thread...
+File closed Tue Oct 27 21:19:55 2026
+Debug file SCPDEBUG.txt <SCPDEBUGc.txt> <SCPDEBUG.TXT> opened Tue Oct 27 21:31:34 2026
+Begin - SCP Driver DLL (64-bit) version 4.7.1.43
+11494.409 WSAStartup ok
+11494.415 RNG_X931A24 Initialized
+11494.415 1, enCcSystem: 011 1 1024 0 0 1
+11494.481 1, enCcCreateChannel: 0012 1 7 3333 0 3000 0 "" 0
+11494.555 listen(lsock) created socket=3380 on port 3333
+11494.555 Listen Successful, port: 3333
+12067.040 Shutting down debug Thread...
+File closed Tue Oct 27 21:41:07 2026
+Debug file SCPDEBUG.txt <SCPDEBUGc.txt> <SCPDEBUG.TXT> opened Tue Oct 27 21:41:59 2026
+Begin - SCP Driver DLL (64-bit) version 4.7.1.43
+12119.882 WSAStartup ok
+12119.887 RNG_X931A24 Initialized
+12119.887 1, enCcSystem: 011 1 1024 0 0 1
+12120.054 1, enCcCreateChannel: 0012 1 7 3333 0 3000 0 "" 0
+12120.265 listen(lsock) created socket=3384 on port 3333
+12120.265 Listen Successful, port: 3333
+12182.878 0(0), enCcTranSrq: 0402 1
+12190.276 0(0), enCcTranSrq: 0402 1
+12287.783 0(0), enCcReader: 0112 0 1 0 0 1 2 7 1 0
+12287.800 0(0), enCcOutput: 0111 0 1 0 0 0
+12287.828 0(0), enCcInput: 0110 0 1 0 0 1 4 0
+12287.843 0(0), enCcInput: 0110 0 1 0 1 1 2 0
+12287.894 0(0), enCcACR: 0115 0 1 1 0 -1 0 0 0 0 1 5 0 0 0 1 0 1 -1 -1 0 0 -1 -1 0 255 0 -1 1 256 0 2 5 0 0 0 5 1 0 0 0 0 0
+12289.119 0(0), enCcAcrSrq: 0407 1 1 1
+12293.161 0(0), enCcAcrSrq: 0407 1 1 1
+12331.211 0(0), enCcReader: 0112 0 1 0 1 1 2 7 1 0
+12331.219 0(0), enCcOutput: 0111 0 1 0 2 0
+12331.236 0(0), enCcInput: 0110 0 1 0 2 1 4 0
+12331.256 0(0), enCcInput: 0110 0 1 0 3 1 2 0
+12331.271 0(0), enCcACR: 0115 0 1 2 0 -1 0 1 0 2 1 5 0 0 2 1 0 3 -1 -1 0 0 -1 -1 0 255 0 -1 1 256 0 2 5 0 0 0 5 1 0 0 0 0 0
+12331.409 0(0), enCcAcrSrq: 0407 1 2 1
+12331.409 0(0), enCcAcrSrq: 0407 1 1 1
+12350.629 0(0), enCcTranSrq: 0402 1
+12389.051 0(0), enCcAcrSrq: 0407 1 2 1
+12389.051 0(0), enCcAcrSrq: 0407 1 1 1
+15275.815 Shutting down debug Thread...
+File closed Tue Oct 27 22:34:35 2026
+Debug file SCPDEBUG.txt <SCPDEBUGc.txt> <SCPDEBUG.TXT> opened Tue Oct 27 22:36:00 2026
+Begin - SCP Driver DLL (64-bit) version 4.7.1.43
+15360.179 WSAStartup ok
+15360.184 RNG_X931A24 Initialized
+15360.184 1, enCcSystem: 011 1 1024 0 0 1
+15360.251 1, enCcCreateChannel: 0012 1 7 3333 0 3000 0 "" 0
+15360.492 listen(lsock) created socket=3392 on port 3333
+15360.492 Listen Successful, port: 3333
+15523.040 0(0), enCcAcrSrq: 0407 1 1 1
+15523.040 0(0), enCcAcrSrq: 0407 1 2 1
+15585.300 0(0), enCcAcrSrq: 0407 1 1 1
+15585.301 0(0), enCcAcrSrq: 0407 1 2 1
+15590.774 0(0), enCcACR: 0115 0 1 1 0 -1 -1 -1 -1 -1 1 5 0 -1 -1 1 -1 -1 -1 -1 0 0 -1 -1 0 255 0 -1 1 0 0 1 1 0 0 0 5 1 0 0 0 0 0
+15591.235 0(0), enCcAcrSrq: 0407 1 2 1
+15592.567 0(0), enCcACR: 0115 0 1 2 0 -1 -1 -1 -1 -1 1 5 0 -1 -1 1 -1 -1 -1 -1 0 0 -1 -1 0 255 0 -1 1 0 0 1 1 0 0 0 5 1 0 0 0 0 0
+15630.355 0(0), enCcReader: 0112 0 1 0 0 1 2 1 0 0
+15630.366 0(0), enCcReader: 0112 0 1 0 1 1 2 1 0 0
+15630.380 0(0), enCcOutput: 0111 0 1 0 0 0
+15630.395 0(0), enCcInput: 0110 0 1 0 0 1 4 0
+15630.416 0(0), enCcACR: 0115 0 1 2 2 1 0 1 -1 -1 1 5 0 -1 -1 1 -1 -1 -1 -1 0 0 -1 -1 0 255 0 -1 1 384 0 2 5 0 0 0 5 1 0 0 0 0 0
+15630.436 0(0), enCcACR: 0115 0 1 1 1 2 0 0 0 0 1 5 0 0 0 1 -1 -1 -1 -1 0 0 -1 -1 0 255 0 -1 1 384 0 2 5 0 0 0 5 1 0 0 0 0 0
+15630.949 0(0), enCcAcrSrq: 0407 1 1 1
+15659.968 0(0), enCcReader: 0112 0 1 0 2 1 2 1 0 0
+15659.976 0(0), enCcReader: 0112 0 1 0 3 1 2 1 0 0
+15659.990 0(0), enCcOutput: 0111 0 1 0 2 0
+15660.005 0(0), enCcInput: 0110 0 1 0 2 1 4 0
+15660.018 0(0), enCcACR: 0115 0 1 3 2 2 0 3 -1 -1 1 5 0 -1 -1 1 -1 -1 -1 -1 0 0 -1 -1 0 255 0 -1 1 384 0 2 5 0 0 0 5 1 0 0 0 0 0
+15660.040 0(0), enCcACR: 0115 0 1 2 1 3 0 2 0 2 1 5 0 0 2 1 -1 -1 -1 -1 0 0 -1 -1 0 255 0 -1 1 384 0 2 5 0 0 0 5 1 0 0 0 0 0
+15660.166 0(0), enCcAcrSrq: 0407 1 1 1
+15660.171 0(0), enCcAcrSrq: 0407 1 2 1
+15704.446 Shutting down debug Thread...
+File closed Tue Oct 27 22:41:44 2026

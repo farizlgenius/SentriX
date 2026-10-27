@@ -10,4 +10,5 @@ public interface IDoor : IService<DoorDto, CreateDoorDto, UpdateDoorDto>
       Task<bool> GetStatusAsync(Guid guid,CancellationToken ct = default);
       Task<bool> ChangeDoorModeAsync(ChangeDoorModeDto guid,CancellationToken ct = default);
       Task<bool> UnlockAsync(Guid guid,CancellationToken ct = default);
+      Task<IEnumerable<OptionDto>> GetOptionByLocationAsync(Guid guid,CancellationToken ct = default);
 }

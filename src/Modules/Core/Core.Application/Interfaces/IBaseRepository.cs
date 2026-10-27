@@ -37,6 +37,7 @@ public interface IBaseRepository<TEntity,TDomain,TDto> where TEntity : IBaseEnti
       Task<Dictionary<Guid,short>> GetExternalIdMapGuidByGuidRangeAsync(IEnumerable<Guid> guids,CancellationToken ct = default);
       Task<(int,short)> GetIdAndExternalIdByGuidAsync(Guid guid,CancellationToken ct = default);
       Task<IEnumerable<OptionDto>> GetOptionByLocationAsync(Guid guid,CancellationToken ct = default);
+      Task<IEnumerable<CommandDetailDto>> GetCommandDetailByLocationGuidAsync(Guid guid, CancellationToken ct = default);
       
       
 }
