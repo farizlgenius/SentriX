@@ -18,9 +18,11 @@ import { AntipassBackMode } from "../../../enum/AntipassbackMode";
 import { DoorType } from "../../../enum/DoorType";
 import { DoorDto } from "../../../model/Door/DoorDto";
 import { AreaEndpoint } from "../../../endpoint/AreaEndpoint";
+import Switch from "../switch/Switch";
+import { AeroAreaMetadata } from "../../../model/Area/AeroAreaMetadata";
 
 
-export const AreaForm: React.FC<PropsWithChildren<FormProp<AreaDto>>> = ({ handleClick: handleClickWithEvent, setDto, dto, type }) => {
+export const AreaForm: React.FC<PropsWithChildren<FormProp<AreaDto>>> = ({ setDto, dto, type }) => {
   const { locationGuid } = useLocation();
   const isReadOnly = type == FormType.INFO;
   const [doors, setDoors] = useState<DoorDto[]>([]);
@@ -156,6 +158,24 @@ export const AreaForm: React.FC<PropsWithChildren<FormProp<AreaDto>>> = ({ handl
           occDown: Number(e.target.value)
         }))} />
       </FormField>
+      <FormField>
+        <Switch defaultChecked={(dto.metadata as AeroAreaMetadata).airLock} disabled={isReadOnly} label={"Interlock"} onChange={e => setDto(prev => ({
+          ...prev,
+          metadata:{
+            ...(prev.metadata as AeroAreaMetadata),
+            airLock:e
+          }
+        }))}/>
+      </FormField>
+      <FormField>
+        <Switch disabled={isReadOnly} defaultChecked={(dto.metadata as AeroAreaMetadata).onlyOneDoor} label={"Only One Door"} onChange={e => setDto(prev => ({
+          ...prev,
+          metadata:{
+            airLock:e,
+            onlyOneDoor:e
+          }
+        }))}/>
+      </FormField>
       <FormField className="col-span-3">
         <Label>
           Doors
@@ -181,7 +201,7 @@ export const AreaForm: React.FC<PropsWithChildren<FormProp<AreaDto>>> = ({ handl
                   antipassbackFrom: AntipassBackMode.NONE,
                   areaFromGuid: "",
                   antipassbackTo: AntipassBackMode.NONE,
-                  areaToGuid: "",
+                  areaToGuid: null,
                 }],
               });
             setSelectedDoor("");
@@ -202,78 +222,54 @@ export const AreaForm: React.FC<PropsWithChildren<FormProp<AreaDto>>> = ({ handl
             return (
               <section
                 key={door.doorGuid}
-                className="overflow-hidden rounded-2xl border border-[var(--app-panel-border)] bg-[var(--app-panel-bg)] shadow-theme-xs"
+                className="flex overflow-hidden rounded-2xl border border-[var(--app-panel-border)] bg-[var(--app-panel-bg)] shadow-theme-xs transition-shadow hover:shadow-theme-md"
               >
-                <header className="flex items-center justify-between gap-4 border-b border-[var(--app-panel-border)] px-5 py-4">
-                  <div className="flex min-w-0 items-center gap-3">
-                    <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-brand-50 text-brand-500 dark:bg-brand-500/10 dark:text-brand-300">
-                      <DoorIcon className="size-6" />
-                    </span>
+                <aside className="flex w-24 shrink-0 flex-col items-center justify-center gap-3 border-r border-brand-100 bg-gradient-to-b from-brand-50 to-white px-2 py-6 text-brand-600 dark:border-brand-500/20 dark:from-brand-500/10 dark:to-gray-900 dark:text-brand-300 sm:w-32">
+                  <span className="flex size-16 items-center justify-center rounded-2xl bg-white text-brand-500 shadow-theme-sm ring-1 ring-brand-100 dark:bg-gray-800 dark:text-brand-300 dark:ring-brand-500/20 sm:size-20">
+                    <DoorIcon className="size-10 sm:size-12" />
+                  </span>
+                  <span className="rounded-full bg-white/80 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-brand-700 dark:bg-gray-800/80 dark:text-brand-300">
+                    {DoorType[doorType] ?? "Door"}
+                  </span>
+                </aside>
+                <div className="min-w-0 flex-1">
+                  <header className="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--app-panel-border)] px-4 py-4 sm:px-5">
                     <div className="min-w-0">
-                      <h3 className="truncate text-sm font-semibold text-gray-900 dark:text-white">{title}</h3>
+                      <h3 className="truncate text-base font-semibold text-gray-900 dark:text-white">{title}</h3>
                       <span className="text-xs text-gray-500 dark:text-gray-400">
-                        {DoorType[doorType] ?? "Door"} door
+                        {isDual ? "Two-way access" : "Single direction access"}
                       </span>
                     </div>
-                  </div>
-                  <div className="flex shrink-0 items-center gap-3">
-                    <div className="flex items-center gap-2" aria-label={`${isDual ? "In and out" : "In"} direction`}>
-                      <span className="inline-flex items-center gap-1 rounded-full bg-success-50 px-2.5 py-1 text-xs font-medium text-success-700 dark:bg-success-500/10 dark:text-success-400">
-                        <DoorInIcon className="size-4" /> In
-                      </span>
-                      {isDual && (
-                        <span className="inline-flex items-center gap-1 rounded-full bg-blue-light-50 px-2.5 py-1 text-xs font-medium text-blue-light-700 dark:bg-blue-light-500/10 dark:text-blue-light-400">
-                          <DoorOutIcon className="size-4" /> Out
+                    <div className="flex shrink-0 items-center gap-3">
+                      <div className="flex items-center gap-2" aria-label={`${isDual ? "In and out" : "In"} direction`}>
+                        <span className="inline-flex items-center gap-1 rounded-full bg-success-50 px-2.5 py-1 text-xs font-medium text-success-700 dark:bg-success-500/10 dark:text-success-400">
+                          <DoorInIcon className="size-4" /> In
                         </span>
+                        {isDual && (
+                          <span className="inline-flex items-center gap-1 rounded-full bg-blue-light-50 px-2.5 py-1 text-xs font-medium text-blue-light-700 dark:bg-blue-light-500/10 dark:text-blue-light-400">
+                            <DoorOutIcon className="size-4" /> Out
+                          </span>
+                        )}
+                      </div>
+                      {!isReadOnly && (
+                        <button
+                          type="button"
+                          aria-label={`Remove ${title}`}
+                          onClick={() => setDto(prev => ({
+                            ...prev,
+                            doors: prev.doors.filter((_, doorIndex) => doorIndex !== index),
+                          }))}
+                          className="rounded-lg p-2 text-gray-400 transition-colors hover:bg-error-50 hover:text-error-500 dark:hover:bg-error-500/10"
+                        >
+                          <TrashBinIcon className="size-4" />
+                        </button>
                       )}
                     </div>
-                    {!isReadOnly && (
-                      <button
-                        type="button"
-                        aria-label={`Remove ${title}`}
-                        onClick={() => setDto(prev => ({
-                          ...prev,
-                          doors: prev.doors.filter((_, doorIndex) => doorIndex !== index),
-                        }))}
-                        className="rounded-lg p-2 text-gray-400 transition-colors hover:bg-error-50 hover:text-error-500 dark:hover:bg-error-500/10"
-                      >
-                        <TrashBinIcon className="size-4" />
-                      </button>
-                    )}
-                  </div>
-                </header>
-                <div className={`grid gap-4 p-5 ${isDual ? "md:grid-cols-2" : "md:grid-cols-1"}`}>
-                  <div className="space-y-3">
-                    <div className="flex items-center gap-2 text-sm font-semibold text-gray-800 dark:text-white/90">
-                      <DoorInIcon className="size-4 text-success-600" /> In direction
-                    </div>
-                    <div>
-                      <Label>Anti-passback</Label>
-                      <Select
-                        disabled={isReadOnly}
-                        isString={false}
-                        options={antipassbackOptions}
-                        defaultValue={door.antipassbackFrom}
-                        onChange={e => updateDoor(index, { antipassbackFrom: Number(e.target.value) })}
-                        name={`antipassback-from-${door.doorGuid}`}
-                      />
-                    </div>
-                    <div>
-                      <Label>Area from</Label>
-                      <Select
-                        disabled={isReadOnly}
-                        isString
-                        options={areaOptionsFor(door.areaFromGuid)}
-                        defaultValue={door.areaFromGuid}
-                        onChange={e => updateDoor(index, { areaFromGuid: e.target.value })}
-                        name={`area-from-${door.doorGuid}`}
-                      />
-                    </div>
-                  </div>
-                  {isDual && (
+                  </header>
+                  <div className={`grid gap-4 p-4 sm:p-5 ${isDual ? "md:grid-cols-2" : "md:grid-cols-1"}`}>
                     <div className="space-y-3">
                       <div className="flex items-center gap-2 text-sm font-semibold text-gray-800 dark:text-white/90">
-                        <DoorOutIcon className="size-4 text-blue-light-600" /> Out direction
+                        <DoorInIcon className="size-4 text-success-600" /> In direction
                       </div>
                       <div>
                         <Label>Anti-passback</Label>
@@ -281,24 +277,50 @@ export const AreaForm: React.FC<PropsWithChildren<FormProp<AreaDto>>> = ({ handl
                           disabled={isReadOnly}
                           isString={false}
                           options={antipassbackOptions}
-                          defaultValue={door.antipassbackTo}
-                          onChange={e => updateDoor(index, { antipassbackTo: Number(e.target.value) })}
-                          name={`antipassback-to-${door.doorGuid}`}
+                          defaultValue={door.antipassbackFrom}
+                          onChange={e => updateDoor(index, { antipassbackFrom: Number(e.target.value) })}
+                          name={`antipassback-from-${door.doorGuid}`}
                         />
                       </div>
                       <div>
-                        <Label>Area to</Label>
+                        <Label>Area from</Label>
                         <Select
                           disabled={isReadOnly}
                           isString
-                          options={areaOptionsFor(door.areaToGuid ?? "")}
-                          defaultValue={door.areaToGuid ?? ""}
-                          onChange={e => updateDoor(index, { areaToGuid: e.target.value })}
-                          name={`area-to-${door.doorGuid}`}
+                          options={areaOptionsFor(door.areaFromGuid)}
+                          defaultValue={door.areaFromGuid}
+                          onChange={e => updateDoor(index, { areaFromGuid: e.target.value })}
+                          name={`area-from-${door.doorGuid}`}
                         />
                       </div>
                     </div>
-                  )}
+                    {isDual && (
+                      <div className="space-y-3">
+                        <div className="flex items-center gap-2 text-sm font-semibold text-gray-800 dark:text-white/90">
+                          <DoorOutIcon className="size-4 text-blue-light-600" /> Out direction
+                        </div>
+                        <div>
+                          <Label>Anti-passback</Label>
+                          <Select
+                            disabled={isReadOnly}
+                            isString={false}
+                            options={antipassbackOptions}
+                            defaultValue={door.antipassbackTo}
+                            onChange={e => updateDoor(index, { antipassbackTo: Number(e.target.value) })}
+                            name={`antipassback-to-${door.doorGuid}`}
+                          />
+                        </div>
+                        <div>
+                          <Label>Area to</Label>
+                          <Input
+                            disabled={true}
+                            type="text"
+                            value={dto.name}
+                          />
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </section>
             );

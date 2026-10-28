@@ -2325,5 +2325,23 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
 
                   );
 
+            modelBuilder.Entity<Persistences.Entities.Area>()
+                  .HasData(
+                        new Area
+                        {
+                              id = 1,
+                              name="Outside",
+                              multi_occ_mode=AreaMultiOccMode.TWO_MORE_NOT_REQUIRE,
+                              area_mode=AreaMode.NOP,
+                              occ_max=0,
+                              occ_down=0,
+                              occ_up=0,
+                              location_id =1,
+                              external_id=1,
+                              is_active=true,
+                              is_default=true
+                        }
+                  );
+
       }
 }

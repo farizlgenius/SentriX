@@ -1,5 +1,6 @@
 import { AreaMode } from "../../enum/AreaMode";
 import { AreaMultiOccMode } from "../../enum/AreaMultiOccMode";
+import { AeroAreaMetadata } from "./AeroAreaMetadata";
 import { DoorAreaDto } from "./DoorAreaDto";
 
 
@@ -12,7 +13,8 @@ export interface AreaDto {
     occDown:number;
     occUp:number;
     doors:DoorAreaDto[];
-    deviceGuid:string;
+    metadata:string | AeroAreaMetadata;
+    locationGuid:string;
     isActive:boolean;
     isDefault:boolean;
 }

@@ -181,10 +181,18 @@ public sealed class DoorRepository(CoreDbContext context) : BaseRepository<Persi
             var existingIds = await Context.Doors
                   .AsNoTracking()
                   .Where(x => x.device.mac == mac)
-                  .Select(x => x.external_id!.Value)
+                  .Select(x => new 
+                    { 
+                        First = x.external_id!.Value, 
+                        Second = x.altr_external_id!.Value 
+                    })
                   .ToArrayAsync(ct);
 
-            var existIdsHash = existingIds.ToHashSet();
+            short[] existingIdss = existingIds
+                .SelectMany(x => new[] { x.First, x.Second })
+                .ToArray();
+
+            var existIdsHash = existingIdss.ToHashSet();
 
             if (exception != null)
             {

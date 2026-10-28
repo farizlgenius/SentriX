@@ -75,6 +75,7 @@ public static class DoorProjections
         x.vendor,
         x.location_id,
         x.id,
-        x.external_id
+        x.external_id,
+        x.altr_external_id
     );
 }

@@ -49,7 +49,11 @@ export const Area = () => {
     occDown: 0,
     occUp: 0,
     doors: [],
-    deviceGuid: "",
+    locationGuid:locationGuid,
+    metadata: {
+      airLock:false,
+      onlyOneDoor:false
+    },
     isActive: true,
     isDefault: false
   };
@@ -93,7 +97,13 @@ export const Area = () => {
         break;
       case "create":
         setConfirmCreate(() => async () => {
-          const res = await send.post(AreaEndpoint.CREATE, areaDto);
+          const req = {
+            ...areaDto,
+            locationGuid:locationGuid,
+            metadata: JSON.stringify(areaDto.metadata),
+          };
+          console.log(req);
+          const res = await send.post(AreaEndpoint.CREATE, req);
           if (
             Helper.handleToastByResCode(
               res,

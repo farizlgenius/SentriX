@@ -534,6 +534,26 @@ namespace Core.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("Areas", "core");
+
+                    b.HasData(
+                        new
+                        {
+                            id = 1,
+                            area_mode = 0,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            external_id = (short)1,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = true,
+                            location_id = 1,
+                            metadata = "",
+                            multi_occ_mode = 0,
+                            name = "Outside",
+                            occ_down = (short)0,
+                            occ_max = (short)0,
+                            occ_up = (short)0,
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        });
                 });
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.AuditTrail", b =>

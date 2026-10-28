@@ -14,56 +14,71 @@ public sealed class AreaRepository(CoreDbContext context) : BaseRepository<Persi
       d => new Persistences.Entities.Area(d),
       (en, dom) =>
       {
-en.name = dom.Name;
-en.multi_occ_mode = dom.MultiOccMode;
-en.area_mode = dom.AreaMode;
-en.occ_max = dom.OccMax;
-en.occ_down = dom.OccDown;
-en.occ_up = dom.OccUp;
-en.metadata = dom.Metadata;
-en.updated_at = DateTime.UtcNow;
-},
+            en.name = dom.Name;
+            en.multi_occ_mode = dom.MultiOccMode;
+            en.area_mode = dom.AreaMode;
+            en.occ_max = dom.OccMax;
+            en.occ_down = dom.OccDown;
+            en.occ_up = dom.OccUp;
+            en.metadata = dom.Metadata;
+            en.updated_at = DateTime.UtcNow;
+      },
       AreaProjections.ToDto,
       AreaProjections.ToCommand
 ), IAreaRepository
 {
       public override async Task AddAsync(Domain.Entities.Area domain, CancellationToken ct = default)
       {
+            await using var transaction = await Context.Database.BeginTransactionAsync(ct);
             try
             {
-                  await Context.Database.BeginTransactionAsync(ct);
-
-                  var entity = await Context.Areas.AddAsync(
-                        new Persistences.Entities.Area(domain),ct
-                  );
-
-                  foreach(var (doorId, antipassback, area, direction, type) in domain.DoorsIn)
-                  {
-                        var en = await Context.Doors.Where(x => x.id == doorId).FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.DOOR.ToString());
-
-                        en.from_area_id = area;
-                        en.antipassback_from = antipassback;
-                        en.updated_at = DateTime.UtcNow;
-
-                        Context.Doors.Update(en);
-
-                  }
-
-                  foreach(var (doorId, antipassback, area, direction, type) in domain.DoorsOut)
-                  {
-                        var en = await Context.Doors.Where(x => x.id == doorId).FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.DOOR.ToString());
-
-                        en.to_area_id = entity.Entity.id;
-                        en.antipassback_to = antipassback;
-                        en.updated_at = DateTime.UtcNow;
-
-                        Context.Doors.Update(en);
-
-                  }
-
+                  // 1. Persist the new Area first so that entity.Entity.id is generated
+                  var entity = await Context.Areas.AddAsync(new Persistences.Entities.Area(domain), ct);
                   await Context.SaveChangesAsync(ct);
 
-                  await Context.Database.CommitTransactionAsync(ct);
+                  var newAreaId = entity.Entity.id;
+
+                  // 2. Pre-fetch all involved doors in a single round-trip to avoid N+1 queries and tracking issues
+                  var inDoorIds = domain.DoorsIn.Select(d => d.doorId).ToList();
+                  var outDoorIds = domain.DoorsOut.Select(d => d.doorId).ToList();
+                  var allDoorIds = inDoorIds.Concat(outDoorIds).Distinct().ToList();
+
+                  var existingDoors = await Context.Doors
+                      .Where(x => allDoorIds.Contains(x.id))
+                      .ToDictionaryAsync(x => x.id, ct);
+
+                  // 3. Process Doors entering the area
+                  foreach (var (doorId, antipassback, fromAreaId, direction, type) in domain.DoorsIn)
+                  {
+                        if (!existingDoors.TryGetValue(doorId, out var door))
+                              throw new NotFoundException(EntityType.DOOR.ToString());
+
+                        // Door enters the new area:
+                        door.from_area_id = fromAreaId;      // Verify fromAreaId exists or is nullable
+                        door.to_area_id = newAreaId;         // Target is the new area
+                        door.antipassback_from = antipassback;
+                        door.updated_at = DateTime.UtcNow;
+                  }
+
+                  // 4. Process Doors leaving the area
+                  foreach (var (doorId, antipassback, toAreaId, direction, type) in domain.DoorsOut)
+                  {
+                        if (!existingDoors.TryGetValue(doorId, out var door))
+                              throw new NotFoundException(EntityType.DOOR.ToString());
+
+                        // Door exits the new area:
+                        if(door.type != DoorType.Dual)
+                        {
+                              door.from_area_id = newAreaId;       // Origin is the new area
+                              door.to_area_id = entity.Entity.id;          // Destination area
+                        }
+                        door.antipassback_to = antipassback;
+                        door.updated_at = DateTime.UtcNow;
+                  }
+
+                  // 5. Commit updates
+                  await Context.SaveChangesAsync(ct);
+                  await transaction.CommitAsync(ct);
             }
             catch
             {
@@ -71,6 +86,15 @@ en.updated_at = DateTime.UtcNow;
                   throw;
             }
       }
+
+      public async Task<Dictionary<Guid, int>> GetAreaIdMapGuidByGuidsAsync(IEnumerable<Guid> guids, CancellationToken ct = default)
+      {
+            return await Context.Areas
+                  .AsNoTracking()
+                  .Where(x => guids.Contains(x.guid))
+                  .ToDictionaryAsync(x => x.guid, x => x.id, ct);
+      }
+
       public async Task<Pagination<AreaDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
       {
             return await base.GetPaginationAsync(
@@ -88,11 +112,11 @@ en.updated_at = DateTime.UtcNow;
 
       public override async Task UpdateAsync(Domain.Entities.Area dom, CancellationToken ct = default)
       {
+            await using var transaction = await Context.Database.BeginTransactionAsync(ct);
             try
             {
-                  await Context.Database.BeginTransactionAsync(ct);
 
-                  var entity = await Context.Areas.Where(x => x.guid == dom.Guid).FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.AREA.ToString(),dom.Guid.ToString());
+                  var entity = await Context.Areas.Where(x => x.guid == dom.Guid).FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.AREA.ToString(), dom.Guid.ToString());
 
                   entity.name = dom.Name;
                   entity.multi_occ_mode = dom.MultiOccMode;
@@ -105,33 +129,44 @@ en.updated_at = DateTime.UtcNow;
 
                   Context.Areas.Update(entity);
 
-                  foreach(var (doorId, antipassback, area, direction, type) in dom.DoorsIn)
+                  // 2. Pre-fetch all involved doors in a single round-trip to avoid N+1 queries and tracking issues
+                  var inDoorIds = dom.DoorsIn.Select(d => d.doorId).ToList();
+                  var outDoorIds = dom.DoorsOut.Select(d => d.doorId).ToList();
+                  var allDoorIds = inDoorIds.Concat(outDoorIds).Distinct().ToList();
+
+                  var existingDoors = await Context.Doors
+                      .Where(x => allDoorIds.Contains(x.id))
+                      .ToDictionaryAsync(x => x.id, ct);
+
+                  // 3. Process Doors entering the area
+                  foreach (var (doorId, antipassback, fromAreaId, direction, type) in dom.DoorsIn)
                   {
-                        var en = await Context.Doors.Where(x => x.id == doorId).FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.DOOR.ToString());
+                        if (!existingDoors.TryGetValue(doorId, out var door))
+                              throw new NotFoundException(EntityType.DOOR.ToString());
 
-                        en.from_area_id = area;
-                        en.antipassback_from = antipassback;
-                        en.updated_at = DateTime.UtcNow;
-
-                        Context.Doors.Update(en);
-
+                        // Door enters the new area:
+                        door.from_area_id = fromAreaId;      // Verify fromAreaId exists or is nullable
+                        door.to_area_id = entity.id;         // Target is the new area
+                        door.antipassback_from = antipassback;
+                        door.updated_at = DateTime.UtcNow;
                   }
 
-                  foreach(var (doorId, antipassback, area, direction, type) in dom.DoorsOut)
+                  // 4. Process Doors leaving the area
+                  foreach (var (doorId, antipassback, toAreaId, direction, type) in dom.DoorsOut)
                   {
-                        var en = await Context.Doors.Where(x => x.id == doorId).FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.DOOR.ToString());
+                        if (!existingDoors.TryGetValue(doorId, out var door))
+                              throw new NotFoundException(EntityType.DOOR.ToString());
 
-                        en.to_area_id = area;
-                        en.antipassback_to = antipassback;
-                        en.updated_at = DateTime.UtcNow;
-
-                        Context.Doors.Update(en);
-
+                        // Door exits the new area:
+                        door.from_area_id = entity.id;       // Origin is the new area
+                        door.to_area_id = toAreaId;          // Destination area
+                        door.antipassback_to = antipassback;
+                        door.updated_at = DateTime.UtcNow;
                   }
 
+                  // 5. Commit updates
                   await Context.SaveChangesAsync(ct);
-
-                  await Context.Database.CommitTransactionAsync(ct);
+                  await transaction.CommitAsync(ct);
             }
             catch
             {
