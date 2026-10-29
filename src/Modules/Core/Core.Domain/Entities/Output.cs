@@ -6,7 +6,7 @@ namespace Core.Domain.Entities;
 public sealed class Output : BaseDomain
 {
   public string Name { get; set; } = string.Empty;
-  public int SlotNo { get; set; }
+  public short SlotNo { get; set; }
   public string Metadata { get; set; } = string.Empty;
   public Vendor Vendor { get; set; } = Vendor.aero;
   public int DeviceModuleId { get; set; }
@@ -14,7 +14,7 @@ public sealed class Output : BaseDomain
 
   public Output(
     string name,
-    int slotNo,
+    short slotNo,
     string metadata,
     Vendor vendor,
     int deviceModuleId,
@@ -35,7 +35,7 @@ public sealed class Output : BaseDomain
   public Output(
     Guid guid,
     string name,
-    int slotNo,
+    short slotNo,
     string metadata,
     Vendor vendor,
     int deviceModuleId,

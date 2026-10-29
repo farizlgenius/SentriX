@@ -130,7 +130,7 @@ public sealed class DoorRepository(CoreDbContext context) : BaseRepository<Persi
     x.bg.vendor,
     x.bg.device_module.guid
   ),
-  x.location.guid,
+   x.location.guid,
   x.location.name,
   x.is_active,
   x.is_default
@@ -183,13 +183,13 @@ public sealed class DoorRepository(CoreDbContext context) : BaseRepository<Persi
                   .Where(x => x.device.mac == mac)
                   .Select(x => new 
                     { 
-                        First = x.external_id!.Value, 
-                        Second = x.altr_external_id!.Value 
+                        First = x.external_id, 
+                        Second = x.altr_external_id 
                     })
                   .ToArrayAsync(ct);
 
             short[] existingIdss = existingIds
-                .SelectMany(x => new[] { x.First, x.Second })
+                .SelectMany(x => new[] { x.First ?? 0, x.Second ?? 0 })
                 .ToArray();
 
             var existIdsHash = existingIdss.ToHashSet();

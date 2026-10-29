@@ -25,3 +25,4 @@ public sealed record StatusDto(
       InputStatus PowerMonitor=InputStatus.Unknown
 );
 
+

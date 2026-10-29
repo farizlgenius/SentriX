@@ -3,11 +3,11 @@ using SharedKernel.Enums;
 namespace Core.Contract.DTOs.Input;
 
 public sealed record UpdateInputDto(
+  Guid Guid,
   string Name,
-  int SlotNo,
+  short SlotNo,
   string Metadata,
   Vendor Vendor,
-  Guid DeviceGuid,
   Guid DeviceModuleGuid,
   Guid LocationGuid
 );

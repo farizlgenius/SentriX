@@ -131,9 +131,9 @@ public sealed class DoorService(
             // Rex Configuration
             foreach (var rex in rexes)
             {
-                  var meta = JsonHelper.Deserialize<InputMetadata>(rex.metadata);
+                  var meta = JsonHelper.Deserialize<RexMetadata>(rex.metadata);
                   if (meta == null)
-                        throw new Exception(MessageHelper.Common.DeserializeFailed("InputMetadata"));
+                        throw new Exception(MessageHelper.Common.DeserializeFailed("RexMetadata"));
 
                   var res = input.InputPointSpecification(
                         mac,
@@ -310,24 +310,6 @@ public sealed class DoorService(
             }
 
 
-
-            RexMetadata? rexMeta0 = null;
-            RexMetadata? rexMeta1 = null;
-            if (rexes.Count() == 1)
-            {
-                  rexMeta0 = JsonHelper.Deserialize<RexMetadata>(rexes.ElementAt(0).metadata);
-                  if (rexMeta0 == null)
-                        throw new Exception(MessageHelper.Common.DeserializeFailed("RexMetadata"));
-            }
-
-            if (rexes.Count() == 2)
-            {
-                  rexMeta1 = JsonHelper.Deserialize<RexMetadata>(rexes.ElementAt(1).metadata);
-                  if (rexMeta1 == null)
-                        throw new Exception(MessageHelper.Common.DeserializeFailed("RexMetadata"));
-            }
-
-
             var doorRes = door.AccessControlReaderConfiguration(
                   mac,
                   deviceId,
@@ -348,8 +330,8 @@ public sealed class DoorService(
                   (short)(rexes.Count() == 0 ? -1 : rexes.ElementAt(0).inputNo),
                   (short)(rexes.Count() <= 1 ? -1 : rexes.ElementAt(1).deviceModuleId),
                   (short)(rexes.Count() <= 1 ? -1 : rexes.ElementAt(1).inputNo),
-                  (short)(rexes.Count() == 0 ? 0 : rexes.ElementAt(0).maskId),
-                  (short)(rexes.Count() <= 1 ? 0 : rexes.ElementAt(1).maskId),
+                  (short)(rexes.Count == 0 ? 0 : rexes.ElementAt(0).maskId),
+                  (short)(rexes.Count <= 1 ? 0 : rexes.ElementAt(1).maskId),
                   -1,
                   -1,
                   0,
@@ -366,7 +348,7 @@ public sealed class DoorService(
                   0
             );
 
-            await bus.SendAsync(new AdapterEventCommand(doorRes));
+            await bus.SendAsync(new AdapterEventCommand(doorRes), ct);
 
 
 
@@ -376,14 +358,14 @@ public sealed class DoorService(
       {
             var res = door.EnCcAcrSrq(mac, deviceId, doorId);
 
-            await bus.SendAsync(new AdapterEventCommand(res));
+            await bus.SendAsync(new AdapterEventCommand(res), ct);
       }
 
       public async Task UnlockAsync(string mac, string ip, short deviceId, short acrId, CancellationToken ct = default)
       {
             var res = door.MomentaryUnlock(mac, deviceId, acrId);
 
-            await bus.SendAsync(new AdapterEventCommand(res));
+            await bus.SendAsync(new AdapterEventCommand(res), ct);
       }
 
       public async Task DeleteDoorsAsync(string mac, string ip, DoorType type, short deviceId, List<short> doorId, short? buzzerId = 0, short? bgId = 0, CancellationToken ct = default)

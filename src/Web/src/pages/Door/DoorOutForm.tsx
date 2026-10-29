@@ -125,14 +125,14 @@ const DoorOutForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps>> =
             },
           ]}
           placeholder="Select Option"
-           onChange={(value) => {
-            setReaderType(Number(value));
+           onChange={(e) => {
+            setReaderType(Number(e.target.value));
             setDto((prev) => ({
               ...prev,
               readers:prev.readers.map((reader) => 
               reader.readerDirection == ReaderDirection.Out ? {
                 ...reader,
-                mode:Number(value)
+                mode:Number(e.target.value)
               } : reader
               )
             }))

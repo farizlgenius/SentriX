@@ -219,9 +219,14 @@ public sealed class DoorService(
 
     if(d.BG != null)
     {
-      await adapter.GetAdapter(d.Vendor).Input.MonitorPoint(
+      await adapter.GetAdapter(d.Vendor).Input.MonitorPointAsync(
         dev.DeviceMac,
         dev.DeviceIp,
+        dev.DeviceExternalId,
+        bgMapModuleId.Item2,
+        BgExternalId,
+        d.BG.SlotNo,
+        d.BG.Metadata,
         ct
       );
     }

@@ -76,7 +76,7 @@ public sealed class DeviceModuleService(
             return Array.Empty<OptionDto>();
 
         // 2. Apply business logic: Calculate free slots
-        var allPossibleSlots = Enumerable.Range(0, slotData.Value.TotalSlots);
+        var allPossibleSlots = Enumerable.Range(0, slotData.Value.TotalSlots).Select(x => (short)x);
 
         var occupiedSlots = slotData.Value.InputSlots.Concat(slotData.Value.RexSlots).Concat(slotData.Value.SensorSlots).Concat(slotData.Value.BreakGlassSlots).Distinct();
         
@@ -106,7 +106,7 @@ public sealed class DeviceModuleService(
             return Array.Empty<OptionDto>();
 
         // 2. Apply business logic: Calculate free slots
-        var allPossibleSlots = Enumerable.Range(0, slotData.Value.TotalSlots);
+        var allPossibleSlots = Enumerable.Range(0, slotData.Value.TotalSlots).Select(x => (short)x);
 
         var occupiedSlots = slotData.Value.RelaySlots.Concat(slotData.Value.BuzzerSlots).Concat(slotData.Value.OutputSlots).Distinct();
         
@@ -135,7 +135,7 @@ public sealed class DeviceModuleService(
             return Array.Empty<OptionDto>();
 
         // 2. Apply business logic: Calculate free slots
-        var allPossibleSlots = Enumerable.Range(0, slotData.Value.TotalSlots);
+        var allPossibleSlots = Enumerable.Range(0, slotData.Value.TotalSlots).Select(x => (short)x);
 
         var occupiedSlots = slotData.Value.OccupiedSlots.Distinct();
         

@@ -11,9 +11,9 @@ public sealed class DeviceModule : BaseDomain
   public string Mac { get; private set; } = string.Empty;
   public int Address { get; private set; }
   public DeviceModuleModel Model { get; private set; } = DeviceModuleModel.x100;
-  public int ReaderSlot {get; private set;}
-  public int OutputSlot {get; private set;}
-  public int InputSlot {get; private set;}
+  public short ReaderSlot {get; private set;}
+  public short OutputSlot {get; private set;}
+  public short InputSlot {get; private set;}
   public int LocationId { get; private set; }
 
   public DeviceModule(
@@ -24,9 +24,9 @@ public sealed class DeviceModule : BaseDomain
     int address,
     int port,
     DeviceModuleModel model,
-    int readerSlot,
-    int outputSlot,
-    int inputSlot,
+    short readerSlot,
+    short outputSlot,
+    short inputSlot,
     int locationId,
     short externalId
   ) : base(Guid.NewGuid(),externalId)
@@ -53,9 +53,9 @@ public sealed class DeviceModule : BaseDomain
     int address,
     int port,
     DeviceModuleModel model,
-    int readerSlot,
-    int outputSlot,
-    int inputSlot,
+    short readerSlot,
+    short outputSlot,
+    short inputSlot,
     int locationId
   ) : base(guid)
   {

@@ -6,6 +6,7 @@ public sealed record GroupDto(
     Guid Guid,
     string Name,
     List<GroupComponentDto> Components,
-    bool IsActive,
-    bool IsDefault
+    Guid LocationGuid,
+    bool IsActive=true,
+    bool IsDefault=false
 );

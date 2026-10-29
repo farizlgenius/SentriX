@@ -83,4 +83,16 @@ public sealed class AreaService(
 
             await bus.SendAsync(new AdapterEventCommand(res),ct);
       }
+
+      public async Task GetStatusAsync(string mac, string ip, short deviceId, short areaId,CancellationToken ct = default)
+      {
+            var res = repo.AccessAreaStatusRequest(
+                  mac,
+                  deviceId,
+                  areaId,
+                  1
+            );
+
+            await bus.SendAsync(new AdapterEventCommand(res),ct);
+      }
 }

@@ -4,12 +4,12 @@ namespace Core.Domain.Entities;
 
 public sealed class Rex : BaseDomain
 {
-  public int SlotNo { get; private set; }
+  public short SlotNo { get; private set; }
   public string Metadata { get; private set; } = string.Empty;
   public Vendor Vendor { get; private set; } = Vendor.aero;
   public int DeviceModuleId { get; private set; }
   public Rex(
-    int slotNo,
+    short slotNo,
     string metadata,
     Vendor vendor,
     int deviceModuleId
@@ -23,7 +23,7 @@ public sealed class Rex : BaseDomain
 
   public Rex(
     Guid guid,
-    int slotNo,
+    short slotNo,
     string metadata,
     Vendor vendor,
     int deviceModuleId

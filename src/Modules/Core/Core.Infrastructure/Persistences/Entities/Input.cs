@@ -5,7 +5,7 @@ namespace Core.Infrastructure.Persistences.Entities;
 
 public sealed class Input : BaseEntity,IAuditableEntity
 {
-  public int slot_no { get; set; }
+  public short slot_no { get; set; }
   public Vendor vendor { get; set; } = Vendor.aero;
   public string metadata { get; set; } = string.Empty;
 

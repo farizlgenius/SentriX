@@ -32,4 +32,5 @@ public interface IAreaRepository
             short first,
             short count
       );
+
 }

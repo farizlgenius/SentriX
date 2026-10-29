@@ -15,6 +15,8 @@ public sealed class Area : BaseEntity,IAuditableEntity
       // Relation
       public ICollection<Door> doors_to {get; set; } = default!;
       public ICollection<Door> doors_from {get; set; } = default!;
+      public int? device_id {get; set; } 
+      public Device? device {get; set; }
 
       public Area(){}
       public Area(Domain.Entities.Area d) : base(d.Guid,d.ExternalId)
@@ -26,5 +28,7 @@ public sealed class Area : BaseEntity,IAuditableEntity
             occ_down = d.OccDown;
             occ_up = d.OccUp;
             metadata = d.Metadata;
+            if(device_id >= 0)
+                  device_id = d.DeviceId;
       }
 }

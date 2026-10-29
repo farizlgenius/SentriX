@@ -16,8 +16,36 @@ public sealed class InputController(IInput input) : ControllerBase
             return Ok(res);
       }
 
+      [HttpGet("{guid}")]
+      public async Task<IActionResult> GetAsync(Guid guid)
+      {
+            var res = await input.GetByGuidAsync(guid);
+            return Ok(res);
+      }
+
+      [HttpGet("status/{guid}")]
+      public async Task<IActionResult> GetStatusAsync(Guid guid)
+      {
+            var res = await input.GetStatusAsync(guid);
+            return Ok(res);
+      }
+
+      [HttpPost("mask/{guid}")]
+      public async Task<IActionResult> MaskAsync(Guid guid)
+      {
+            var res = await input.MaskAsync(guid);
+            return Ok(res);
+      }
+
+      [HttpPost("unmask/{guid}")]
+      public async Task<IActionResult> UnmaskAsync(Guid guid)
+      {
+            var res = await input.UnmaskAsync(guid);
+            return Ok(res);
+      }
+
       [HttpPost]
-      public async Task<IActionResult> Create([FromBody] CreateInputDto dto)
+      public async Task<IActionResult> CreateAsync([FromBody] CreateInputDto dto)
       {
             var res = await input.CreateAsync(dto);
             return Ok(res);
@@ -30,6 +58,13 @@ public sealed class InputController(IInput input) : ControllerBase
             return Ok(res);
       }
 
+      [HttpDelete("range")]
+      public async Task<IActionResult> DeleteRangeAsync([FromBody]IEnumerable<Guid> guids)
+      {
+            var res = await input.DeleteListAsync(guids);
+            return Ok(res);
+      }
+
       [HttpPut]
       public async Task<IActionResult> UpdateAsync([FromBody]UpdateInputDto dto)
       {
@@ -37,21 +72,6 @@ public sealed class InputController(IInput input) : ControllerBase
             return Ok(res);
       }
 
-      // [HttpPost("mask/{id}")]
-      // public async Task<IActionResult> SetMaskAsync(int id,[FromBody]MaskDto dto)
-      // {
-      //       await input.InputMaskAsync(id,dto.IsMask);
-      //       return Ok();
-      // }
-
-      // [HttpGet("input/{id}")]
-      // public async Task<IActionResult> GetAvailalbleInputByModuleIdAsync(int id)
-      // {
-      //             var res = await input.GetAvailalbleInputByModuleIdAsync(id);
-      //             return Ok(res);
-      // }
-
-      
 
       
 }

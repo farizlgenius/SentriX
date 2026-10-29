@@ -1,26 +1,12 @@
 using System.Linq.Expressions;
 using Core.Contract.Dtos.Group;
 using Core.Contract.DTOs;
-using Core.Contract.DTOs.Group;
-using Core.Contract.DTOs.Output;
 using SharedKernel.Enums;
 
 namespace Core.Infrastructure.Projections;
 
 public static class GroupProjections
 {
-      // Reusable projection expression for EF Core queries
-      public static readonly Expression<Func<Persistences.Entities.Group, GroupDto>> ToDto =
-          x => new GroupDto(
-                          x.guid,
-                          x.name,
-                          x.components.Select(c => new GroupComponentDto(
-                                c.door.guid,
-                                c.timezone.guid
-                          )).ToList(),
-                          x.is_active,
-                          x.is_default
-                    );
 
       public static readonly Expression<Func<Persistences.Entities.Group, CommandDetailDto>> ToCommand =
       x => new CommandDetailDto(
@@ -35,4 +21,14 @@ public static class GroupProjections
           x.id,
           x.external_id
       );
+
+      public static readonly Expression<Func<Persistences.Entities.Group, Core.Contract.DTOs.Group.GroupDto>> ToDto =
+          x => new Core.Contract.DTOs.Group.GroupDto(
+            x.guid,
+            x.name,
+            new List<GroupComponentDto>(),
+            x.location == null ? Guid.Empty : x.location.guid,
+            x.is_active,
+            x.is_default
+            );
 }

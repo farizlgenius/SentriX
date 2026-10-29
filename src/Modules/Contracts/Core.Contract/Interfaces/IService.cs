@@ -13,4 +13,5 @@ public interface IService<T, CR, UP> where T : class where CR : class where UP :
   Task<bool> EnabledAsync(Guid guid, CancellationToken ct = default);
   Task<bool> DisabledAsync(Guid guid, CancellationToken ct = default);
   Task<IEnumerable<T>> GetByLocationAsync(Guid guid, CancellationToken ct = default);
+  
 }

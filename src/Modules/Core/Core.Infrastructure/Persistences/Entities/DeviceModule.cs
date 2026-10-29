@@ -13,9 +13,9 @@ public sealed class DeviceModule : BaseEntity,IAuditableEntity
   public int port { get; set; }
   public int address { get; set; }
   public DeviceModuleModel model { get; set; } = DeviceModuleModel.x100;
-  public int reader_slot { get; set; }
-  public int output_slot { get; set; }
-  public int input_slot { get; set; }
+  public short reader_slot { get; set; }
+  public short output_slot { get; set; }
+  public short input_slot { get; set; }
 
   // Relation
 

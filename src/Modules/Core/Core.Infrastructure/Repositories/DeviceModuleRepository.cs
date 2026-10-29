@@ -35,10 +35,6 @@ public sealed class DeviceModuleRepository(CoreDbContext context) : BaseReposito
 {
      
 
-
-
-    
-
       public async Task<IEnumerable<DeviceModuleDto>> GetByDeviceAsync(Guid guid, CancellationToken ct = default)
       {
            return await Context.DeviceModules
@@ -112,7 +108,7 @@ public sealed class DeviceModuleRepository(CoreDbContext context) : BaseReposito
             .FirstOrDefaultAsync(ct);
       }
 
-      public async Task<(int TotalSlots, List<int> InputSlots,List<int> RexSlots,List<int> SensorSlots,List<int> BreakGlassSlots)?> GetInputSlotAsync(Guid guid, CancellationToken ct = default)
+      public async Task<(short TotalSlots, List<short> InputSlots,List<short> RexSlots,List<short> SensorSlots,List<short> BreakGlassSlots)?> GetInputSlotAsync(Guid guid, CancellationToken ct = default)
       {
             var res = await Context.DeviceModules
                   .AsNoTracking()
@@ -149,7 +145,7 @@ public sealed class DeviceModuleRepository(CoreDbContext context) : BaseReposito
             )).ToArrayAsync(ct);
       }
 
-      public async Task<(int TotalSlots, List<int> OutputSlots,List<int> BuzzerSlots,List<int> RelaySlots)?> GetOutputSlotAsync(Guid guid,CancellationToken ct = default)
+      public async Task<(short TotalSlots, List<short> OutputSlots,List<short> BuzzerSlots,List<short> RelaySlots)?> GetOutputSlotAsync(Guid guid,CancellationToken ct = default)
       {
             var res = await Context.DeviceModules
                   .AsNoTracking()
@@ -179,7 +175,7 @@ public sealed class DeviceModuleRepository(CoreDbContext context) : BaseReposito
          
       }
 
-      public async Task<(int TotalSlots, List<int> OccupiedSlots)?> GetReaderSlotAsync(Guid guid, CancellationToken ct = default)
+      public async Task<(short TotalSlots, List<short> OccupiedSlots)?> GetReaderSlotAsync(Guid guid, CancellationToken ct = default)
       {
             var res = await Context.DeviceModules
                   .AsNoTracking()

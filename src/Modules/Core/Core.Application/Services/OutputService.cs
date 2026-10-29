@@ -24,7 +24,7 @@ public sealed class OutputService(
             if (await repo.IsAnyByNameAsync(dto.Name, ct))
                   throw new DuplicateException(EntityType.OUTPUT.ToString(), nameof(dto.Name));
 
-            var controlExternalId = await repo.GetFreeExeternalIdAsync(100, [], ct);
+            var controlExternalId = await repo.GetFreeExeternalIdByMacAsync(dev.DeviceMac,100, [], ct);
 
             var d = new Output(
                   dto.Name,

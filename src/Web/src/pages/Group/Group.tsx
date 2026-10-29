@@ -39,13 +39,11 @@ const Group = () => {
     setMessage,
   } = usePopup();
   const defaultDto: GroupDto = {
-    id: 0,
-    componentId: 0,
+    guid: "",
     name: "",
-    doors: [],
-    locationId: locationId,
-    isActive: true,
-    isDefault: false,
+    components: [],
+    isActive: false,
+    isDefault: false
   };
   const [dto, setDto] = useState<GroupDto>(defaultDto);
   const [groups, setGroups] = useState<GroupDto[]>([]);

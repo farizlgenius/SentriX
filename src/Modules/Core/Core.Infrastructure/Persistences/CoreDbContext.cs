@@ -927,6 +927,12 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   .WithOne(x => x.device)
                   .HasForeignKey(x => x.device_id)
                   .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Device>()
+                  .HasMany(x => x.areas)
+                  .WithOne(x => x.device)
+                  .HasForeignKey(x => x.device_id)
+                  .OnDelete(DeleteBehavior.Cascade);
                   
             // Device Module
             modelBuilder.Entity<DeviceModule>()

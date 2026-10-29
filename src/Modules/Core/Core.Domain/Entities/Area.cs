@@ -13,6 +13,7 @@ public sealed class Area : BaseDomain
       public string Metadata {get; private set;} = string.Empty;
       public List<(int doorId,AntipassBackMode antipassback,int area,DoorDirection direction,DoorType type)> DoorsIn {get; private set; } = default!;
       public List<(int doorId,AntipassBackMode antipassback,int area,DoorDirection direction,DoorType type)> DoorsOut {get; private set; } = default!;
+      public int DeviceId {get; private set;}
       public Area(
             string name,
             AreaMultiOccMode multiMode,
@@ -23,7 +24,8 @@ public sealed class Area : BaseDomain
             string metadata,
             List<(int doorId,AntipassBackMode antipassback,int area,DoorDirection direction,DoorType type)> doorsIn,
             List<(int doorId,AntipassBackMode antipassback,int area,DoorDirection direction,DoorType type)> doorsOut,
-            short externalId
+            short externalId,
+            int deviceId
       ) : base(Guid.NewGuid(),externalId)
       {
             Name = name;
@@ -35,6 +37,7 @@ public sealed class Area : BaseDomain
             Metadata = metadata;
             DoorsIn = doorsIn;
             DoorsOut = doorsOut;
+            DeviceId = deviceId;
       }
 
       public Area(

@@ -4,10 +4,9 @@ namespace Core.Contract.DTOs.Input;
 
 public sealed record CreateInputDto(
   string Name,
-  int SlotNo,
+  short SlotNo,
   string Metadata,
   Vendor Vendor,
-  Guid DeviceGuid,
   Guid DeviceModuleGuid,
   Guid LocationGuid
 );

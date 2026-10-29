@@ -11,5 +11,6 @@ public sealed record CreateAreaDto(
       short OccUp,
       string Metadata,
       List<DoorAreaDto> Doors,
+      Guid DeviceGuid,
       Guid LocationGuid
 );

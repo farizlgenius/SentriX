@@ -24,7 +24,7 @@ public sealed class AreaService(
 {
       public async Task<Guid> CreateAsync(CreateAreaDto dto, CancellationToken ct = default)
       {
-            var devs = await device.GetCommandDetailByLocationGuidAsync(dto.LocationGuid, ct);
+            var dev = await device.GetCommandDetailAsync(dto.DeviceGuid, ct);
 
             var areaId = await Repo.GetFreeExeternalIdAsync(100, [], ct);
 
@@ -46,12 +46,11 @@ public sealed class AreaService(
                   dto.Metadata,
                   [.. dto.Doors.Select(x => (doorIds[x.DoorGuid], x.AntipassbackFrom, areaFromId[x.AreaFromGuid], DoorDirection.IN, x.Type))],
                   [.. dto.Doors.Where(x => x.Type == DoorType.Dual).Select(x => (doorIds[x.DoorGuid], x.AntipassbackTo, 0, DoorDirection.OUT, x.Type))],
-                  areaId
+                  areaId,
+                  dev.DeviceId
             );
 
-            foreach (var dev in devs)
-            {
-                  await adapter.GetAdapter(dev.Vendor).Area.AddAreaAsync(
+            await adapter.GetAdapter(dev.Vendor).Area.AddAreaAsync(
                         dev.DeviceMac,
                         dev.DeviceIp,
                         dev.DeviceExternalId,
@@ -64,8 +63,6 @@ public sealed class AreaService(
                         dto.Metadata,
                         ct
                   );
-
-            }
 
 
 
@@ -91,7 +88,7 @@ public sealed class AreaService(
                         doorDto.Metadata,
                         [.. doorDto.Readers.Select(x => ((short)x.SlotNo, x.Mode, x.ReaderDirection, x.Metadata, readerModuleId[x.DeviceModuleGuid]))],
                         doorDto.Buzzer == null ? null : ((short)doorDto.Buzzer.SlotNo, doorDto.Buzzer.Metadata, await module.GetExternalIdByGuidAsync(doorDto.Buzzer.DeviceModuleGuid, ct), await output.GetExternalIdByGuidAsync(doorDto.Buzzer.Guid ?? Guid.Empty, ct)),
-                        [.. doorDto.Rexes.Select(x => ((short)x.SlotNo, x.Metadata, rexesModuleId[x.DeviceModuleGuid], timeExternalId[x.MaskGuid ?? Guid.Empty]))],
+                        [.. doorDto.Rexes.Select(x => ((short)x.SlotNo, x.Metadata, rexesModuleId[x.DeviceModuleGuid], x.MaskGuid == Guid.Empty || x.MaskGuid == null ? (short)0 : timeExternalId[x.MaskGuid ?? Guid.Empty]))],
                         doorDto.Bg == null ? null : ((short)doorDto.Bg.SlotNo, doorDto.Bg.Metadata, await module.GetExternalIdByGuidAsync(doorDto.Bg.DeviceModuleGuid, ct), await input.GetExternalIdByGuidAsync(doorDto.Bg.Guid ?? Guid.Empty, ct)),
                         doorDto.Sensor == null ? null : ((short)doorDto.Sensor.SlotNo, doorDto.Sensor.Metadata, await module.GetExternalIdByGuidAsync(doorDto.Sensor.DeviceModuleGuid, ct)),
                         doorDto.Relay == null ? null : ((short)doorDto.Relay.SlotNo, doorDto.Relay.Metadata, await module.GetExternalIdByGuidAsync(doorDto.Relay.DeviceModuleGuid, ct)),
@@ -171,9 +168,25 @@ public sealed class AreaService(
             return true;
       }
 
+      public async Task<bool> GetStatusAsync(Guid guid, CancellationToken ct = default)
+      {
+           var dev = await repo.GetCommandDetailAsync(guid,ct);
+
+           await adapter.GetAdapter(dev.Vendor).Area.GetStatusAsync(
+            dev.DeviceMac,
+            dev.DeviceIp,
+            dev.DeviceExternalId,
+            dev.ComponentExternalId ?? -1,
+            ct
+           );
+
+           return true;
+
+      }
+
       public async Task<Guid> UpdateAsync(UpdateAreaDto dto, CancellationToken ct = default)
       {
-            var devs = await Repo.GetCommandDetailByLocationGuidAsync(dto.LocationGuid, ct);
+            var dev = await repo.GetCommandDetailAsync(dto.Guid, ct);
 
             var doors = await door.GetExternalIdMapGuidByGuidRangeAsync(dto.Doors.Select(x => x.DoorGuid), ct);
 
@@ -191,12 +204,11 @@ public sealed class AreaService(
                   dto.Metadata,
                   [.. dto.Doors.Select(x => (doors[x.DoorGuid], x.AntipassbackFrom, areaFrom[x.AreaFromGuid], DoorDirection.IN, x.Type))],
                   [.. dto.Doors.Where(x => x.Type == DoorType.Dual).Select(x => (doors[x.DoorGuid], x.AntipassbackTo, areaTo[x.AreaToGuid ?? Guid.Empty], DoorDirection.OUT, x.Type))],
-                  devs.ElementAt(0).ComponentExternalId ?? -1
+                  dev.ComponentExternalId ?? -1,
+                  dev.DeviceId
             );
 
-            foreach (var dev in devs)
-            {
-                  // Command 
+            // Command 
                   await adapter.GetAdapter(dev.Vendor).Area.AddAreaAsync(
                         dev.DeviceMac,
                         dev.DeviceIp,
@@ -210,7 +222,6 @@ public sealed class AreaService(
                         dto.Metadata,
                         ct
                   );
-            }
 
 
 

@@ -363,6 +363,22 @@ public abstract class BaseRepository<TEntity, TDomain, TDto>(
                   .Select(toCommand)
                   .ToArrayAsync(ct);
       }
+
+      public async Task<Dictionary<Guid,(int id,short externalId)>> GetIdAndExternalIdMapGuidByGuidRangeAsync(IEnumerable<Guid> guids,CancellationToken ct = default)
+      {
+            var res = await Context.Set<TEntity>()
+                  .AsNoTracking()
+                  .Where(x => guids.Contains(x.guid))
+                  .Select(x => new
+                  {
+                        guid=x.guid,
+                        externalId=x.external_id,
+                        id=x.id
+                  })
+                  .ToArrayAsync(cancellationToken: ct); 
+
+            return res.ToDictionary(x => x.guid,x => (id:x.id,externalId:x.externalId ?? -1));
+      }
 }
 
 // Utility class to rebind lambda expressions to a single root parameter

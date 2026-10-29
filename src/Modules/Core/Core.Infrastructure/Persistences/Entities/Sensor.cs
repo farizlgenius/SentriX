@@ -4,7 +4,7 @@ namespace Core.Infrastructure.Persistences.Entities;
 
 public sealed class Sensor : BaseEntity
 {
-  public int slot_no { get; set; }
+  public short slot_no { get; set; }
   public string metadata { get; set; } = string.Empty;
   public Vendor vendor { get; set; } = Vendor.aero;
   // Relation

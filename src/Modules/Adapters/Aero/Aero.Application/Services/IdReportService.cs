@@ -130,7 +130,7 @@ public sealed class IdReportService(
        (short)scpDevice.MultiCardTimeout
       );
 
-      await bus.SendAsync(new AdapterEventCommand(res));
+      await bus.SendAsync(new AdapterEventCommand(res),ct);
       
 
       res = repo.ElevatorAccessLevelSpecification(
@@ -140,14 +140,14 @@ public sealed class IdReportService(
         (short)scpDevice.MaxFloorPerAcr
       );
 
-      await bus.SendAsync(new AdapterEventCommand(res));
+      await bus.SendAsync(new AdapterEventCommand(res),ct);
 
 
       res = repo.TimeSet(
         mac,
         (short)externalId);
 
-      await bus.SendAsync(new AdapterEventCommand(res));
+      await bus.SendAsync(new AdapterEventCommand(res),ct);
 
       
 
@@ -162,7 +162,7 @@ public sealed class IdReportService(
             0
       );
 
-      await bus.SendAsync(new AdapterEventCommand(res));
+      await bus.SendAsync(new AdapterEventCommand(res),ct);
 
       res = module.SioPanelConfiguration(
             mac,
@@ -182,7 +182,7 @@ public sealed class IdReportService(
            -1
       );
 
-      await bus.SendAsync(new AdapterEventCommand(res));
+      await bus.SendAsync(new AdapterEventCommand(res),ct);
 
       // Call memory allocate to check
 
@@ -193,7 +193,7 @@ public sealed class IdReportService(
             true
             );
 
-      await bus.SendAsync(new AdapterEventCommand(res));
+      await bus.SendAsync(new AdapterEventCommand(res),ct);
 
       res = repo.ScpStructureStatusRead(
             mac,
@@ -226,7 +226,7 @@ public sealed class IdReportService(
             ]
       );
 
-      await bus.SendAsync(new AdapterEventCommand(res));
+      await bus.SendAsync(new AdapterEventCommand(res),ct);
 
 
       // And Other Device

@@ -5,7 +5,7 @@ namespace Core.Contract.DTOs.Input;
 public sealed record InputDto(
       Guid Guid,
   string Name,
-  int SlotNo,
+  short SlotNo,
   string Metadata,
   Vendor Vendor,
   Guid DeviceGuid,

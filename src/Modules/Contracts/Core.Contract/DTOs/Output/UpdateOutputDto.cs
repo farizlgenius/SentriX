@@ -5,7 +5,7 @@ namespace Core.Contract.DTOs.Output;
 public sealed record UpdateOutputDto(
   Guid Guid,
   string Name,
-  int SlotNo,
+  short SlotNo,
   string Metadata,
   Vendor Vendor,
   Guid DeviceModuleGuid

@@ -16,7 +16,7 @@ export interface TableProp<T extends { guid: string }> {
   setSelect: React.Dispatch<React.SetStateAction<T[]>>;
   renderOptionalComponent?: (
     data: any,
-    statusDto: StatusDto[],
+    statusDto: any[],
     index: number,
   ) => JSX.Element[];
   specialDisplay?: TableSpecialDisplay<T>[];

@@ -27,4 +27,5 @@ public interface IAreaAdapter
       );
 
       Task EnabledAreaAsync(string mac, string ip, short deviceId, short areaId, CancellationToken ct = default);
+      Task GetStatusAsync(string mac, string ip, short deviceId, short areaId,CancellationToken ct = default);
 }

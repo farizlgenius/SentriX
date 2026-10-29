@@ -23,6 +23,13 @@ public class AreaController(IArea area) : ControllerBase
             return Ok(res);
       }
 
+      [HttpGet("status/{guid}")]
+      public async Task<IActionResult> GetStatusAsync(Guid guid)
+      {
+            var res = await area.GetStatusAsync(guid);
+            return Ok(res);
+      }
+
       [HttpPost]
       public async Task<IActionResult> CreateAsync([FromBody]CreateAreaDto dto)
       {

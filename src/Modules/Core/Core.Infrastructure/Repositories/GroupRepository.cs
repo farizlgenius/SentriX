@@ -46,6 +46,7 @@ public sealed class GroupRepository(CoreDbContext context) : BaseRepository<Pers
                               c.door.guid,
                               c.timezone.guid
                         )).ToList(),
+                        x.location == null ? Guid.Empty : x.location.guid,
                         x.is_active,
                         x.is_default
                   ))
@@ -91,7 +92,7 @@ public sealed class GroupRepository(CoreDbContext context) : BaseRepository<Pers
       {
             return await base.GetPaginationAsync(
                   param,
-                  param.locationGuid != new Guid("3a9c9947-d5ca-4bb2-b525-0499a340f1d6") ? x => x.location.guid == param.locationGuid : null,
+                  param.locationGuid != new Guid("3a9c9947-d5ca-4bb2-b525-0499a340f1d6") ? x => x.location == null || x.location.guid == param.locationGuid : null,
                   [x => x.name],
                   ct
             );
