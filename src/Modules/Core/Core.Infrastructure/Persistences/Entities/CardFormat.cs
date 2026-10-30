@@ -22,7 +22,7 @@ public sealed class CardFormat : BaseEntity
       {
       }
 
-      public CardFormat(Domain.Entities.CardFormat domain) : base(domain.Guid)
+      public CardFormat(Domain.Entities.CardFormat domain) : base(domain.Guid,domain.ExternalId)
       {
             this.name = domain.Name;
             this.fac = domain.Fac;

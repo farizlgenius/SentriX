@@ -27,7 +27,7 @@ public sealed class DoorService(
                   mode
                   );
 
-            await bus.SendAsync(new AdapterEventCommand(res));
+            await bus.SendAsync(new AdapterEventCommand(res),ct);
       }
 
       public async Task AddDoorsAsync
@@ -82,7 +82,7 @@ public sealed class DoorService(
                         osdpFlag
                   );
 
-                  await bus.SendAsync(new AdapterEventCommand(res));
+                  await bus.SendAsync(new AdapterEventCommand(res),ct);
 
             }
 
@@ -103,7 +103,7 @@ public sealed class DoorService(
                         meta.DriveMode
                   );
 
-                  await bus.SendAsync(new AdapterEventCommand(res));
+                  await bus.SendAsync(new AdapterEventCommand(res),ct);
 
             }
 
@@ -124,7 +124,7 @@ public sealed class DoorService(
                         meta.HoldTime
                   );
 
-                  await bus.SendAsync(new AdapterEventCommand(res));
+                  await bus.SendAsync(new AdapterEventCommand(res),ct);
 
             }
 
@@ -145,7 +145,7 @@ public sealed class DoorService(
                         meta.HoldTime
                   );
 
-                  await bus.SendAsync(new AdapterEventCommand(res));
+                  await bus.SendAsync(new AdapterEventCommand(res),ct);
             }
 
 
@@ -165,7 +165,7 @@ public sealed class DoorService(
                         meta.DefaultMode
                   );
 
-                  await bus.SendAsync(new AdapterEventCommand(res));
+                  await bus.SendAsync(new AdapterEventCommand(res),ct);
 
                   res = output.ControlPointConfiguration(
                         mac,
@@ -176,7 +176,7 @@ public sealed class DoorService(
                         1
                   );
 
-                  await bus.SendAsync(new AdapterEventCommand(res));
+                  await bus.SendAsync(new AdapterEventCommand(res),ct);
 
             }
 
@@ -199,7 +199,7 @@ public sealed class DoorService(
                         meta.HoldTime
                   );
 
-                  await bus.SendAsync(new AdapterEventCommand(res));
+                  await bus.SendAsync(new AdapterEventCommand(res),ct);
 
                   res = input.MonitorPointConfiguration(
                         mac,
@@ -213,7 +213,7 @@ public sealed class DoorService(
                         0
                   );
 
-                  await bus.SendAsync(new AdapterEventCommand(res));
+                  await bus.SendAsync(new AdapterEventCommand(res),ct);
 
             }
 
@@ -289,7 +289,7 @@ public sealed class DoorService(
                         0
                   );
 
-                  await bus.SendAsync(new AdapterEventCommand(res));
+                  await bus.SendAsync(new AdapterEventCommand(res),ct);
 
             }
 
@@ -411,7 +411,7 @@ public sealed class DoorService(
                         0
                   );
 
-                  await bus.SendAsync(new AdapterEventCommand(res));
+                  await bus.SendAsync(new AdapterEventCommand(res),ct);
 
             }
 

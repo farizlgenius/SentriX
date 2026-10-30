@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import PageBreadcrumb from "../../components/common/PageBreadCrumb";
-import { ControlIcon, OffIcon, OnIcon, ToggleIcon } from "../../icons";
+import { ActiveIcon, ControlIcon, DelayIcon, DisableIcon, DisconnectIcon, ErrorIcon, InactiveIcon, LocalMaskIcon, MaskIcon, NoAttachIcon, OffIcon, OnIcon, ToggleIcon } from "../../icons";
 import OutputForm from "./OutputForm";
 import Logger from "../../utility/Logger";
 import { OutputDto } from "../../model/ControlPoint/OutputDto";
@@ -26,7 +26,6 @@ import { usePagination } from "../../context/PaginationContext";
 import { SignalRTopic } from "../../constants/signalr-constant";
 import { Vendor } from "../../enum/Vendor";
 import { Status } from "../../enum/Status";
-import { InputStatus } from "../../enum/InputStatus";
 import { OutputCommand } from "../../enum/OutputCommand";
 import { OutputRepeatCommand } from "../../model/ControlPoint/OutputRepeatCommand";
 import Modals from "../UiElements/Modals";
@@ -35,6 +34,11 @@ import { FormField } from "../../components/form/template/FormTemplate";
 import Input from "../../components/form/input/InputField";
 import Button from "../../components/ui/button/Button";
 import { AeroOutputMetadata } from "../../model/ControlPoint/AeroOutputMetadata";
+import { InputStatus } from "../../model/Status/InputStatus";
+import { OutputStatus } from "../../model/Status/OutputStatus";
+import { ChangeOfState } from "../../enum/ChangeOfState";
+import { StatusHelper } from "../../helper/StatusHelper";
+import { ChangeOfStateEncode } from "../../enum/ChangeOfStateEncode";
 
 // Define Global Variable
 
@@ -42,6 +46,7 @@ export const OUTPUT_TABLE_HEADER: string[] = [
   "Name",
   "Pulse Time",
   "Status",
+  "Flags",
   "Enabled",
   "Action",
 ];
@@ -105,11 +110,11 @@ const Output = () => {
     name: "",
     slotNo: -1,
     metadata: {
-      defaultPulse:1,
-      offlineMode:0,
-      driveMode:0
+      defaultPulse: 1,
+      offlineMode: 0,
+      driveMode: 0
     },
-    deviceModuleGuid:"",
+    deviceModuleGuid: "",
     vendor: Vendor.unknown,
     isActive: true,
     isDefault: false
@@ -124,7 +129,7 @@ const Output = () => {
   const [repeat, setRepeat] = useState<OutputRepeatCommand>(defaultRepeatCommand);
   //const [onTime,setOnTime] = useState<number>(1);
   const [outputsDto, setOutputsDto] = useState<OutputDto[]>([]);
-  const [status, setStatus] = useState<StatusDto[]>([]);
+  const [status, setStatus] = useState<OutputStatus[]>([]);
   const fetchData = async (
     pageNumber: number,
     pageSize: number,
@@ -144,13 +149,17 @@ const Output = () => {
       ),
     );
     if (res && res.data) {
-      console.log(res.data);
-      res.data.data.items.forEach((a:OutputDto) => {
-        setOutputsDto(prev => ([
+      res.data.data.items.forEach((a: OutputDto) => {
+        setOutputsDto(prev => (
+          prev.some(x => x.guid == a.guid) ? 
+          [...prev]
+          :
+          [
+          
           ...prev,
           {
             ...a,
-            metadata:JSON.parse(a.metadata as string)
+            metadata: JSON.parse(a.metadata as string)
           }
         ]))
       })
@@ -158,18 +167,26 @@ const Output = () => {
       setPagination(res.data.data);
 
       // Batch set state
-      const newStatuses = res.data.data.items.map((a: OutputDto) => ({
-        guid: a.guid,
-        status: Status.Unknown,
-        outputStatus: InputStatus.Unknown
-      }));
+      const newStatuses = res.data.data.items.map((a: OutputDto) => {
+        const status: OutputStatus = {
+          guid: a.guid,
+          code: ChangeOfState.Unknown,
+          offline: false,
+          mask: false,
+          localMask: false,
+          entryDelayInProgress: false,
+          notAttached: false,
+          status: ChangeOfStateEncode.Unknown
+        }
+        return status;
+      });
 
       console.log(newStatuses);
 
       setStatus((prev) => [...prev, ...newStatuses]);
 
       // Fetch status for each
-      res.data.data.item.forEach((a: OutputDto) => {
+      res.data.data.items.forEach((a: OutputDto) => {
         fetchStatus(a.guid);
       });
     }
@@ -191,12 +208,27 @@ const Output = () => {
       const connection = SignalRService.getConnection();
       if (!connection) return;
 
-      connection.on(SignalRTopic.CP_STATUS, (status: StatusDto) => {
-        // setIdReports(reports);
+      connection.on(SignalRTopic.OUTPUT_STATUS, (status: OutputStatus) => {
+        console.log(status)
+        setStatus((prev) =>
+          prev.map((item) =>
+            item.guid === status.guid
+              ? {
+                ...item,
+                code: status.code,
+                offline: status.offline,
+                mask: status.mask,
+                localMask: status.localMask,
+                entryDelayInProgress: status.entryDelayInProgress,
+                notAttached: status.notAttached
+              }
+              : item,
+          ),
+        );
       });
 
       try {
-        await SignalRService.joinGroup(SignalRTopic.CP_STATUS);
+        await SignalRService.joinGroup(SignalRTopic.OUTPUT_STATUS);
       } catch (err) {
         console.error("Subscribe error:", err);
       }
@@ -206,7 +238,7 @@ const Output = () => {
 
     return () => {
       const connection = SignalRService.getConnection();
-      connection?.off(SignalRTopic.CP_STATUS);
+      connection?.off(SignalRTopic.OUTPUT_STATUS);
     };
   }, []);
 
@@ -378,21 +410,82 @@ const Output = () => {
     },
   ];
 
-  const renderOptionalComponent = (data: OutputDto, statusDto: StatusDto[]) => {
+  const renderOptionalComponent = (data: OutputDto) => {
+    // 1. Look up the matched record once
+    const matchedItem = status.find((b) => b.guid === data.guid);
+    const currentChangeState = matchedItem?.code ?? ChangeOfState.Unknown;
+    const currentChangeEncode = matchedItem?.status ?? ChangeOfStateEncode.Unknown;
+
+    // 2. Resolve icon configuration cleanly
+    const iconConfig = StatusHelper.ChangeOfStateIcon(currentChangeState);
+    const iconCos = StatusHelper.ChangeOfStateIconEncode(currentChangeEncode);
+
+
     return [
-      <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-        <Badge
-          size="sm"
-          color={
-            statusDto.find((b) => b.guid == data.guid)?.status == Status.Active
-              ? "success"
-              : statusDto.find((b) => b.guid == data.guid)?.status == Status.Inactive
-                ? "error"
-                : "warning"
-          }
-        >
-          {Status[statusDto.find((b) => b.guid == data.guid)?.status ?? Status.Unknown]}
-        </Badge>
+      <TableCell
+        key={`status-icon-${data.guid}`}
+        className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400"
+      >
+        {iconConfig && (
+
+          <span title={iconConfig.label} className="flex gap-1 items-center">
+            <iconConfig.Icon className={`text-lg ${iconConfig.colorClass}`} />
+            <Badge>
+              {iconConfig.label}
+            </Badge>
+          </span>
+
+        )}
+
+      </TableCell>,
+
+      <TableCell
+        key={`status-badge-${data.guid}`}
+        className="flex px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400 gap-2"
+      >
+        {
+          iconCos && (
+            <span title={iconCos.label} className="inline-flex items-center">
+              <iconCos.Icon className={`text-lg ${iconCos.colorClass}`} />
+            </span>
+          )
+        }
+        {
+          matchedItem?.entryDelayInProgress && (
+            <span title="EntryDelayInProgress" className="inline-flex items-center">
+              <DelayIcon className={`text-lg ${"text-brand-500"}`} />
+            </span>
+          )
+
+        }
+        {
+          (matchedItem?.localMask || matchedItem?.mask) && (
+            <span title="LocalMask" className="inline-flex items-center">
+              <LocalMaskIcon className={`text-lg ${"text-yellow-500"}`} />
+            </span>
+          )
+        }
+        {
+          (matchedItem?.mask) && (
+            <span title="Mask" className="inline-flex items-center">
+              <MaskIcon className={`text-lg ${"text-yellow-500"}`} />
+            </span>
+          )
+        }
+        {
+          matchedItem?.notAttached && (
+            <span title="NoAttach" className="inline-flex items-center">
+              <NoAttachIcon className={`text-lg ${"text-red-500"}`} />
+            </span>
+          )
+        }
+        {
+          matchedItem?.offline && (
+            <span title="Offline" className="inline-flex items-center">
+              <ErrorIcon className={`text-lg ${"text-red-500"}`} />
+            </span>
+          )
+        }
       </TableCell>,
     ];
   };
@@ -464,7 +557,6 @@ const Output = () => {
         <BaseTable<OutputDto>
           headers={OUTPUT_TABLE_HEADER}
           keys={OUTPUT_KEY}
-          status={status}
           data={outputsDto}
           onEdit={handleEdit}
           onRemove={handleRemove}
@@ -480,10 +572,10 @@ const Output = () => {
           refresh={refresh}
           specialDisplay={[
             {
-              key:"defaultPulse",
-              content:(data, i)  => <TableCell key={i} className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {(data.metadata as AeroOutputMetadata).defaultPulse ?? 0}
-                  </TableCell>,
+              key: "defaultPulse",
+              content: (data, i) => <TableCell key={i} className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                {(data.metadata as AeroOutputMetadata).defaultPulse ?? 0}
+              </TableCell>,
             }
           ]}
         />

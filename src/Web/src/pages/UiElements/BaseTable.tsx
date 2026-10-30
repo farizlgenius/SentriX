@@ -28,7 +28,6 @@ export const BaseTable = <
   onClick: handleClick,
   permission,
   action,
-  status,
   select,
   subTable,
   fetchData,
@@ -274,9 +273,9 @@ export const BaseTable = <
                               </TableCell>
                             ),
                           )}
-                        {status &&
-                          renderOptionalComponent &&
-                          renderOptionalComponent(data, status, i)}
+                        {
+                          renderOptionalComponent  &&
+                          renderOptionalComponent(data, i)}
 
                         {/* Status */}
                         <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">

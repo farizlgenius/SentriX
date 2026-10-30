@@ -10,10 +10,10 @@ public sealed class Group : BaseEntity,IAuditableEntity
   public Group() { }
   public Group(
     Domain.Entities.Group d
-  ) : base(d.Guid)
+  ) : base(d.Guid,d.ExternalId,d.AltrExternalId)
   {
     name = d.Name;
-    components = d.Components.Select(x => new GroupComponent(x)).ToArray();
+    components = [.. d.Components.Select(x => new GroupComponent(x))];
     if(d.LocationId != 0)
       location_id = d.LocationId;
   }

@@ -16,12 +16,10 @@ export interface TableProp<T extends { guid: string }> {
   setSelect: React.Dispatch<React.SetStateAction<T[]>>;
   renderOptionalComponent?: (
     data: any,
-    statusDto: any[],
     index: number,
   ) => JSX.Element[];
   specialDisplay?: TableSpecialDisplay<T>[];
   permission?: FeaturePermissionDto;
-  status?: StatusDto[];
   action?: ActionButton[];
   altrAction?:ActionButton[];
   subTable?: (index: number) => JSX.Element;

@@ -107,6 +107,30 @@ import { ReactComponent as VisitorIcon } from "./visitor.svg?react";
 import { ReactComponent as GuardIcon } from "./guard.svg?react";
 import { ReactComponent as TAIcon } from "./ta.svg?react";
 
+//#region Status
+import { ReactComponent as DisconnectIcon } from "./status/disconnect.svg?react";
+import { ReactComponent as UnknownIcon } from "./status/unknown.svg?react";
+import { ReactComponent as AlarmIcon } from "./status/alarm.svg?react";
+import { ReactComponent as OfflineIcon } from "./status/offline.svg?react";
+import { ReactComponent as FaultIcon } from "./status/fault.svg?react";
+import { ReactComponent as SecureIcon } from "./status/secure.svg?react";
+import { ReactComponent as DelayIcon } from "./status/delay.svg?react";
+
+import { ReactComponent as ActiveIcon } from "./status/active.svg?react";
+import { ReactComponent as InactiveIcon } from "./status/inactive.svg?react";
+import { ReactComponent as GroundIcon } from "./status/ground.svg?react";
+import { ReactComponent as ShortIcon } from "./status/short.svg?react";
+import { ReactComponent as OpenIcon } from "./status/open.svg?react";
+import { ReactComponent as VoltageIcon } from "./status/voltage.svg?react";
+import { ReactComponent as ErrorStatusIcon } from "./status/error.svg?react";
+import { ReactComponent as SuperIcon } from "./status/super.svg?react";
+import { ReactComponent as NoAttachIcon } from "./status/noattach.svg?react";
+import { ReactComponent as LocalMaskIcon } from "./status/localmask.svg?react";
+import { ReactComponent as NoneIcon } from "./status/none.svg?react";
+
+
+//#endregion
+
 export {
   ErrorHexaIcon,
   AlertHexaIcon,
@@ -215,4 +239,23 @@ export {
   VisitorIcon,
   GuardIcon,
   TAIcon,
+  // Status
+  ActiveIcon,
+  InactiveIcon,
+  DisconnectIcon,
+  UnknownIcon,
+  AlarmIcon,
+  OfflineIcon,
+  FaultIcon,
+  SecureIcon,
+  DelayIcon,
+  GroundIcon,
+  ShortIcon,
+  OpenIcon,
+  VoltageIcon,
+  ErrorStatusIcon,
+  SuperIcon,
+  NoAttachIcon,
+  LocalMaskIcon,
+  NoneIcon
 };

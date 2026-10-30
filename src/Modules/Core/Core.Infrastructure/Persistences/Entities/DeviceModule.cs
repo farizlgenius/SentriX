@@ -32,7 +32,7 @@ public sealed class DeviceModule : BaseEntity,IAuditableEntity
   public ICollection<BreakGlass> break_glasses { get; set; } = default!;
 
   public DeviceModule() { }
-  public DeviceModule(Core.Domain.Entities.DeviceModule d) : base(d.Guid)
+  public DeviceModule(Core.Domain.Entities.DeviceModule d) : base(d.Guid,d.ExternalId,d.AltrExternalId)
   {
     name = d.Name;
     serial_number = d.SerialNumber;

@@ -12,7 +12,7 @@ public sealed class GroupService(
       IMessageBus bus
       ) : IGroupAdapter
 {
-      public async Task AddAccessGroupAsync(string mac, string ip,short deviceId,short groupId, List<(short doorId, short timeZoneId)> datas)
+      public async Task CreateAccessGroupAsync(string mac, string ip,short deviceId,short groupId, List<(short doorId, short timeZoneId)> datas,CancellationToken ct = default)
       {
                         
             var res = repo.AddAccessGroup(
@@ -23,6 +23,6 @@ public sealed class GroupService(
                   datas
                   );
 
-            await bus.SendAsync(new AdapterEventCommand(res));
+            await bus.SendAsync(new AdapterEventCommand(res),ct);
       }
 }

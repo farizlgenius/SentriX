@@ -44,7 +44,7 @@ public sealed class TimeService(
                         )).ToList()
             );
 
-            await bus.SendAsync(new AdapterEventCommand(res));
+            await bus.SendAsync(new AdapterEventCommand(res),ct);
       }
 }
 

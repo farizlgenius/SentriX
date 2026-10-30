@@ -68,7 +68,7 @@ public sealed class GroupService(
         {
             var groupExternalId = await repo.GetFreeExeternalIdAsync(100,[],ct);
 
-            await adapter.GetAdapter(dev.Vendor).Group.AddAccessGroupAsync(
+            await adapter.GetAdapter(dev.Vendor).Group.CreateAccessGroupAsync(
                 dev.Mac,
                 dev.Ip,
                 dev.ExternalId,

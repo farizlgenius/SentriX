@@ -1,15 +1,18 @@
+import { Vendor } from "../../enum/Vendor";
 
 export interface InputDto
 {
-    id:number;
-    componentId:number;
+    guid:string;
     name:string;
-    mac:string;
-    deviceComponentId:number;
-    moduleComponentId:number;
-    inputNo:number;
+    slotNo:number;
     metadata:string;
-    type:string;
-    locationId:number;
+    vendor:Vendor;
+    deviceGuid:string;
+    deviceName:string;
+    deviceModuleGuid:string;
+    deviceModuleName:string;
+    locationGuid:string;
+    locationName:string;
     isActive:boolean;
+    isDefault:boolean;
 }

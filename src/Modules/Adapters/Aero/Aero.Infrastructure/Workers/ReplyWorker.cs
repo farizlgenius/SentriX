@@ -12,6 +12,7 @@ using Core.Contract.Queries;
 using Core.Contract.Queries.Device;
 using Core.Contract.Queries.DeviceModule;
 using Core.Contract.Queries.Door;
+using Core.Contract.Queries.Output;
 using HID.Aero.ScpdNet.Wrapper;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -25,6 +26,7 @@ using SharedKernel.Domain;
 using SharedKernel.Enums;
 using SharedKernel.Helpers;
 using SharedKernel.Messaging;
+using SharedKernel.Model.Status;
 
 namespace Aero.Infrastructure.Workers;
 
@@ -176,8 +178,10 @@ public sealed class ReplyWorker(Channel<ReplyMessage> queue, ILogger<ReplyWorker
 
                       break;
                     case (short)tranSrc.tranSrcCP:
-                      // var cp = new CpStatus(message.ScpId, message.tran.source_number, DecodeHelper.TypeCosStatusDecode(message.tran.cos.status));
-                      // await publisher.CpNotifyStatus(cp);
+                      bus = scope.ServiceProvider.GetRequiredService<IMessageBus>();
+                      var notifiers = scope.ServiceProvider.GetRequiredService<INotifier>();
+                      var guids = await bus.QueryAsync(new OutputGuidByExternalIdAndDeviceExternalIdAndVendorQuery(message.tran.source_number,(short)message.SCPId,Vendor.aero),ct);
+                      await notifiers.SendToTopic(NotifierTopic.OUTPUT_STATUS,StatusHelper.ParseOutputStatus(guids,message.tran.tran_code,message.tran.cos.status),ct);
                       break;
                     default:
                       break;
@@ -352,8 +356,10 @@ public sealed class ReplyWorker(Channel<ReplyMessage> queue, ILogger<ReplyWorker
               // await publisher.MpNotifyStatus(mpstatus);
               break;
             case (int)enSCPReplyType.enSCPReplySrCp:
-              // var cpstatus = new CpStatus(message.ScpId, message.sts_cp.first, DecodeHelper.TypeCosStatusDecode(Convert.ToByte(message.sts_cp.status[0])));
-              // await publisher.CpNotifyStatus(cpstatus);
+              bus = scope.ServiceProvider.GetRequiredService<IMessageBus>();
+              notifier = notifier = scope.ServiceProvider.GetRequiredService<INotifier>();
+              guid = await bus.QueryAsync(new OutputGuidByExternalIdAndDeviceExternalIdAndVendorQuery(message.sts_cp.first,(short)message.SCPId,Vendor.aero),ct);
+              await notifier.SendToTopic(NotifierTopic.OUTPUT_STATUS,StatusHelper.ParseOutputStatus(guid,message.tran.tran_code,message.sts_cp.status[0]),ct);
               break;
             case (int)enSCPReplyType.enSCPReplySrAcr:
               bus = scope.ServiceProvider.GetRequiredService<IMessageBus>();

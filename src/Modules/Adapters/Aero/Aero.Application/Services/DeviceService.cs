@@ -74,7 +74,7 @@ public sealed class DeviceService(
                   ]
             );
 
-            await bus.SendAsync(new AdapterEventCommand(res));
+            await bus.SendAsync(new AdapterEventCommand(res),ct);
       }
 
       public async Task<Status> GetStatusAsync(string mac, string ip, CancellationToken ct = default)
@@ -89,7 +89,7 @@ public sealed class DeviceService(
             var externalId = await bus.QueryAsync(new DeviceExternalIdByMacQuery(mac),ct);
             var res = repo.GetTransactionStatus(mac, (short)externalId);
 
-            await bus.SendAsync(new AdapterEventCommand(res));
+            await bus.SendAsync(new AdapterEventCommand(res),ct);
       }
 
       public async Task InititalDeviceAsync(string mac, string Ip = "", CancellationToken ct = default)
@@ -131,7 +131,7 @@ public sealed class DeviceService(
              (short)scpDevice.MultiCardTimeout
             );
 
-            await bus.SendAsync(new AdapterEventCommand(res));
+            await bus.SendAsync(new AdapterEventCommand(res),ct);
 
             res = repo.ElevatorAccessLevelSpecification(
                   mac,
@@ -140,13 +140,13 @@ public sealed class DeviceService(
                   (short)scpDevice.MaxFloorPerAcr
                   );
 
-            await bus.SendAsync(new AdapterEventCommand(res));
+            await bus.SendAsync(new AdapterEventCommand(res),ct);
 
             res = repo.TimeSet(
               mac,
               (short)externalId);
 
-            await bus.SendAsync(new AdapterEventCommand(res));
+            await bus.SendAsync(new AdapterEventCommand(res),ct);
 
 
 
@@ -161,7 +161,7 @@ public sealed class DeviceService(
                   0
             );
 
-            await bus.SendAsync(new AdapterEventCommand(res));
+            await bus.SendAsync(new AdapterEventCommand(res),ct);
 
             res = module.SioPanelConfiguration(
                   mac,
@@ -181,7 +181,7 @@ public sealed class DeviceService(
                  -1
             );
 
-            await bus.SendAsync(new AdapterEventCommand(res));
+            await bus.SendAsync(new AdapterEventCommand(res),ct);
 
             // Transaction index 
             res = repo.SetTransactionLogIndex(
@@ -190,7 +190,7 @@ public sealed class DeviceService(
                   true
                   );
 
-            await bus.SendAsync(new AdapterEventCommand(res));
+            await bus.SendAsync(new AdapterEventCommand(res),ct);
 
             // Call memory allocate to check
 
@@ -225,7 +225,7 @@ public sealed class DeviceService(
                   ]
             );
 
-            await bus.SendAsync(new AdapterEventCommand(res));
+            await bus.SendAsync(new AdapterEventCommand(res),ct);
 
 
 
@@ -237,7 +237,7 @@ public sealed class DeviceService(
 
             var res = repo.DetachScpFromChannel(mac, (short)externalId);
 
-            await bus.SendAsync(new AdapterEventCommand(res));
+            await bus.SendAsync(new AdapterEventCommand(res),ct);
       }
 
       public async Task ResetAsync(string mac, string ip, CancellationToken ct = default)
@@ -246,7 +246,7 @@ public sealed class DeviceService(
 
             var res = repo.ScpReset(mac, (short)externalId);
 
-            await bus.SendAsync(new AdapterEventCommand(res));
+            await bus.SendAsync(new AdapterEventCommand(res),ct);
       }
 
 
@@ -259,7 +259,7 @@ public sealed class DeviceService(
                   (short)to
                   );
 
-            await bus.SendAsync(new AdapterEventCommand(res));
+            await bus.SendAsync(new AdapterEventCommand(res),ct);
       }
 
       public async Task UploadAsync(
@@ -289,7 +289,7 @@ public sealed class DeviceService(
                         0
                   );
 
-                  await bus.SendAsync(new AdapterEventCommand(res));
+                  await bus.SendAsync(new AdapterEventCommand(res),ct);
             }
 
             if (deviceMetadata.PortTwo)
@@ -305,7 +305,7 @@ public sealed class DeviceService(
                         0
                   );
 
-                  await bus.SendAsync(new AdapterEventCommand(res));
+                  await bus.SendAsync(new AdapterEventCommand(res),ct);
             }
       }
 
@@ -334,7 +334,7 @@ public sealed class DeviceService(
                         0
                   );
 
-                  await bus.SendAsync(new AdapterEventCommand(res));
+                  await bus.SendAsync(new AdapterEventCommand(res),ct);
             }
 
             if (deviceMetadata.PortTwo)
@@ -350,7 +350,7 @@ public sealed class DeviceService(
                         0
                   );
 
-                  await bus.SendAsync(new AdapterEventCommand(res));
+                  await bus.SendAsync(new AdapterEventCommand(res),ct);
             }
 
             // Time 
@@ -382,7 +382,7 @@ public sealed class DeviceService(
                         )).ToList()
                   );
 
-                  await bus.SendAsync(new AdapterEventCommand(res));
+                  await bus.SendAsync(new AdapterEventCommand(res),ct);
             }
 
 
@@ -414,7 +414,7 @@ public sealed class DeviceService(
                         cfmt.IssueCodeLoc
                   );
 
-                  await bus.SendAsync(new AdapterEventCommand(res));
+                  await bus.SendAsync(new AdapterEventCommand(res),ct);
             }
 
             // Door
@@ -448,7 +448,7 @@ public sealed class DeviceService(
                               osdpFlag
                         );
 
-                        await bus.SendAsync(new AdapterEventCommand(res));
+                        await bus.SendAsync(new AdapterEventCommand(res),ct);
 
                   }
 
@@ -472,7 +472,7 @@ public sealed class DeviceService(
                               meta.DriveMode
                         );
 
-                        await bus.SendAsync(new AdapterEventCommand(res));
+                        await bus.SendAsync(new AdapterEventCommand(res),ct);
 
                   }
 
@@ -496,7 +496,7 @@ public sealed class DeviceService(
                               meta.HoldTime
                         );
 
-                        await bus.SendAsync(new AdapterEventCommand(res));
+                        await bus.SendAsync(new AdapterEventCommand(res),ct);
 
                   }
 
@@ -529,7 +529,7 @@ public sealed class DeviceService(
                               meta.HoldTime
                         );
 
-                        await bus.SendAsync(new AdapterEventCommand(res));
+                        await bus.SendAsync(new AdapterEventCommand(res),ct);
 
                         i++;
                   }
@@ -554,7 +554,7 @@ public sealed class DeviceService(
                               meta.DefaultMode
                         );
 
-                        await bus.SendAsync(new AdapterEventCommand(res));
+                        await bus.SendAsync(new AdapterEventCommand(res),ct);
 
                         res = oRepo.ControlPointConfiguration(
                               mac,
@@ -565,7 +565,7 @@ public sealed class DeviceService(
                               1
                         );
 
-                        await bus.SendAsync(new AdapterEventCommand(res));
+                        await bus.SendAsync(new AdapterEventCommand(res),ct);
 
                   }
 
@@ -591,7 +591,7 @@ public sealed class DeviceService(
                               meta.HoldTime
                         );
 
-                        await bus.SendAsync(new AdapterEventCommand(res));
+                        await bus.SendAsync(new AdapterEventCommand(res),ct);
 
                         res = iRepo.MonitorPointConfiguration(
                               mac,
@@ -605,7 +605,7 @@ public sealed class DeviceService(
                               0
                         );
 
-                        await bus.SendAsync(new AdapterEventCommand(res));
+                        await bus.SendAsync(new AdapterEventCommand(res),ct);
 
                   }
 
@@ -783,7 +783,7 @@ public sealed class DeviceService(
                               g.Components.Select(x => ((short)doorExIds[x.Doors],(short)timeExIds[x.TimeZone])).ToList()
                         );
 
-                        await bus.SendAsync(new AdapterEventCommand(res));
+                        await bus.SendAsync(new AdapterEventCommand(res),ct);
                   }
 
 
@@ -798,6 +798,6 @@ public sealed class DeviceService(
       {
             var res = repo.AsciiCommandAsync(mac, scpId, command);
 
-            await bus.SendAsync(new AdapterEventCommand(res));
+            await bus.SendAsync(new AdapterEventCommand(res),ct);
       }
 }

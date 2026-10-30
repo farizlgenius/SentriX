@@ -483,7 +483,6 @@ const Device = () => {
 
   const renderOptional = (
     item: DeviceDto,
-    statusDto: StatusDto[],
     index: number,
   ) => {
     return [
@@ -494,13 +493,13 @@ const Device = () => {
         <Badge
           size="sm"
           color={
-            statusDto.find((statusItem) => statusItem.guid === item.guid)
+            status.find((statusItem) => statusItem.guid === item.guid)
               ?.status == Status.Online
               ? "success"
               : "error"
           }
         >
-          {statusDto.find((statusItem) => statusItem.guid === item.guid)?.status == Status.Online
+          {status.find((statusItem) => statusItem.guid === item.guid)?.status == Status.Online
             ? "Online"
             : "Offline"}
         </Badge>
@@ -754,7 +753,6 @@ const Device = () => {
             action={actionBtn}
             altrAction={altrBtn}
             renderOptionalComponent={renderOptional}
-            status={status}
             locationGuid={locationGuid}
             fetchData={fetchData}
             specialDisplay={[

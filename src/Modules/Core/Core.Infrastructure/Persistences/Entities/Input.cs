@@ -14,7 +14,7 @@ public sealed class Input : BaseEntity,IAuditableEntity
   public DeviceModule device_module { get; set; } = default!;
   public MonitorGroupComponent? monitor_group_component {get; set; }
   public Input() { }
-  public Input(Domain.Entities.Input d) : base(d.Guid)
+  public Input(Domain.Entities.Input d) : base(d.Guid,d.ExternalId)
   {
     name = d.Name;
     slot_no = d.SlotNo;

@@ -67,4 +67,12 @@ public sealed class OutputRepository(CoreDbContext context) : BaseRepository<Per
     throw new NotImplementedException();
   }
 
+      public async Task<Guid> OutputGuidByExternalIdAndDeviceExternalIdAndVendorAsync(short externalId, short deviceExternalId, Vendor vendor, CancellationToken ct = default)
+      {
+            return await Context.Outputs
+              .AsNoTracking()
+              .Where(x => x.external_id == externalId && x.device_module.device.external_id == deviceExternalId && x.vendor == vendor)
+              .Select(x => x.guid)
+              .FirstOrDefaultAsync(ct);
+      }
 }

@@ -22,7 +22,7 @@ public sealed class ModuleService(
                   moduleId
                   );
 
-            await bus.SendAsync(new AdapterEventCommand(res));
+            await bus.SendAsync(new AdapterEventCommand(res),ct);
 
       }
 }

@@ -24,6 +24,10 @@ import { usePopup } from "../../context/PopupContext";
 import { FormType } from "../../model/Form/FormProp";
 import { MpStatus } from "../../model/MonitorPoint/MpStatus";
 import { usePagination } from "../../context/PaginationContext";
+import { Vendor } from "../../enum/Vendor";
+import { InputStatus } from "../../model/Status/InputStatus";
+import { ChangeOfState } from "../../enum/ChangeOfState";
+import { SignalRTopic } from "../../constants/signalr-constant";
 
 // Define Global Variable
 export const MP_TABLE_HEADER: string[] = [
@@ -46,9 +50,9 @@ export const MP_KEY: string[] = [
 ];
 
 const Input = () => {
-  const { filterPermission } = useAuth();
+  const { filterPermission, token } = useAuth();
   const { toggleToast } = useToast();
-  const { locationGuid: locationId } = useLocation();
+  const { locationGuid } = useLocation();
   const { setPagination } = usePagination();
   const {
     setCreate,
@@ -85,7 +89,7 @@ const Input = () => {
 
   const handleRemove = (data: InputDto) => {
     setConfirmRemove(() => async () => {
-      const res = await send.delete(MonitorPointEndpoint.DELETE(data.id));
+      const res = await send.delete(MonitorPointEndpoint.DELETE(data.guid));
       if (
         Helper.handleToastByResCode(res, MonitorPointToast.DELETE, toggleToast)
       ) {
@@ -108,9 +112,9 @@ const Input = () => {
           setInfo(true);
         }
         setConfirmRemove(() => async () => {
-          var data: number[] = [];
+          var data: string[] = [];
           selectedObjects.map(async (a: InputDto) => {
-            data.push(a.id);
+            data.push(a.guid);
           });
           var res = await send.post(MonitorPointEndpoint.DELETE_RANGE, data);
           if (
@@ -207,35 +211,27 @@ const Input = () => {
     /* input Data */
   }
   const defaultDto: InputDto = {
+    guid: "",
     name: "",
-    mpId: -1,
-    moduleId: -1,
-    inputNo: -1,
-    inputMode: -1,
-    debouce: -1,
-    holdTime: -1,
-    logFunction: -1,
-    monitorPointMode: -1,
-    delayEntry: 0,
-    delayExit: 0,
-    isMask: false,
-    locationId: locationId,
+    slotNo: 0,
+    metadata: "",
+    vendor: Vendor.unknown,
+    deviceGuid: "",
+    deviceName: "",
+    deviceModuleGuid: "",
+    deviceModuleName: "",
+    locationGuid: "",
+    locationName: "",
     isActive: false,
-    inputModeDescription: "",
-    logFunctionDescription: "",
-    monitorPointModeDescription: "",
-    moduleDescription: "",
-    id: 0,
-    scpId: -1,
-    moduleDriverId: -1,
+    isDefault: false
   };
   const [monitorPointsDto, setMonitorPointsDto] = useState<InputDto[]>([]);
   const [monitorPointDto, setMonitorPointDto] = useState<InputDto>(defaultDto);
-  const [status, setStatus] = useState<StatusDto[]>([]);
+  const [status, setStatus] = useState<InputStatus[]>([]);
   const fetchData = async (
     pageNumber: number,
     pageSize: number,
-    locationId?: number,
+    locationGuid?: string,
     search?: string,
     startDate?: string,
     endDate?: string,
@@ -244,7 +240,7 @@ const Input = () => {
       MonitorPointEndpoint.PAGINATION(
         pageNumber,
         pageSize,
-        locationId,
+        locationGuid,
         search,
         startDate,
         endDate,
@@ -256,11 +252,19 @@ const Input = () => {
       setPagination(res.data.data.page);
 
       // Batch set state
-      const newStatuses = res.data.data.data.map((a: InputDto) => ({
-        driverId: a.mpId,
-        deviceId: a.scpId,
-        status: 0,
-      }));
+      const newStatuses = res.data.data.data.map((a: InputDto) => {
+        const status: InputStatus = {
+          guid: a.guid,
+          status: ChangeOfState.Unknown,
+          offline: false,
+          mask: false,
+          localMask: false,
+          entryDelayInProgress: false,
+          notAttached: false
+        }
+        return status;
+      }
+      );
 
       console.log(newStatuses);
 
@@ -268,12 +272,12 @@ const Input = () => {
 
       // Fetch status for each
       res.data.data.data.forEach((a: InputDto) => {
-        fetchStatus(a.id);
+        fetchStatus(a.guid);
       });
     }
   };
-  const fetchStatus = async (mpNo: number) => {
-    const res = await send.get(MonitorPointEndpoint.GET_MP_STATUS(mpNo));
+  const fetchStatus = async (guid: string) => {
+    const res = await send.get(MonitorPointEndpoint.GET_MP_STATUS(guid));
     Logger.info(res);
   };
 
@@ -286,51 +290,87 @@ const Input = () => {
     /* UseEffect */
   }
   useEffect(() => {
-    // Initialize SignalR as soon as app starts
-    var connection = SignalRService.getConnection();
-    connection.on("MP.STATUS", (status: MpStatus) => {
-      setStatus((prev) =>
-        prev.map((a) =>
-          a.componentId == status.deviceId && a.guid == status.first
-            ? {
-                ...a,
-                status: status.status,
-              }
-            : {
-                // scpIp:ScpIp,
-                // cpNumber:first,
-                // status:status[0]
-                ...a,
-              },
-        ),
-      );
-      toggleRefresh();
-    });
-    return () => {
-      //SignalRService.stopConnection()
-    };
-  }, []);
+    const initSignalR = async () => {
+      if (!token) return;
 
-  const renderOptionalComponent = (data: any, statusDto: StatusDto[]) => {
+      await SignalRService.startConnection();
+      const connection = SignalRService.getConnection();
+      if (!connection) return;
+
+      connection.on(SignalRTopic.INPUT_STATUS, (status: InputStatus) => {
+        setStatus((prev) =>
+          prev.map((item) =>
+            item.guid === status.guid
+              ? {
+                ...item,
+                status: status.status,
+                offline: status.offline,
+                mask: status.mask,
+                localMask: status.localMask,
+                entryDelayInProgress: status.entryDelayInProgress,
+                notAttached: status.notAttached
+              }
+              : item,
+          ),
+        );
+      });
+
+
+
+      try {
+        await SignalRService.joinGroup(SignalRTopic.DOOR_STATUS);
+      } catch (err) {
+        console.error("Subscribe error:", err);
+      }
+
+    };
+
+    initSignalR();
+
+    return () => {
+      const connection = SignalRService.getConnection();
+      connection?.off(SignalRTopic.DOOR_STATUS);
+    };
+  }, [refresh, locationGuid, token]);
+
+  const renderOptionalComponent = (data: any) => {
     return [
       <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
         <Badge
           size="sm"
           color={
-            statusDto.find((b) => b.componentId == data.deviceId)?.status ==
-            "Active"
+            status.find((b) => b.guid == data.guid)?.status ==
+              "Active"
               ? "success"
-              : statusDto.find((b) => b.componentId == data.deviceId)?.status ==
-                  "Inactive"
+              : status.find((b) => b.guid == data.guid)?.status ==
+                "Inactive"
                 ? "error"
                 : "warning"
           }
         >
-          {statusDto.find((b) => b.componentId == data.deviceId)?.status == ""
+          {status.find((b) => b.guid == data.guid)?.status == ""
             ? "Error"
-            : statusDto.find((b) => b.componentId == data.deviceId)?.status}
+            : status.find((b) => b.guid == data.guid)?.status}
         </Badge>
       </TableCell>,
+      <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+        <Badge
+          size="sm"
+          color={
+            status.find((b) => b.guid == data.guid)?.status ==
+              "Active"
+              ? "success"
+              : status.find((b) => b.guid == data.guid)?.status ==
+                "Inactive"
+                ? "error"
+                : "warning"
+          }
+        >
+          {status.find((b) => b.guid == data.guid)?.status == ""
+            ? "Error"
+            : status.find((b) => b.guid == data.guid)?.status}
+        </Badge>
+      </TableCell>
     ];
   };
 
@@ -356,8 +396,7 @@ const Input = () => {
           handleClick={handleClick}
           dto={monitorPointDto}
           setDto={setMonitorPointDto}
-          type={formType}
-        />
+          type={formType} handleChange={() => { }} />
       ),
     },
   ];
@@ -366,7 +405,7 @@ const Input = () => {
     <>
       <PageBreadcrumb pageTitle="Monitor Point" />
       {form ? (
-        <BaseForm tabContent={tabContent} />
+        <BaseForm tabContent={tabContent} handleClick={handleClick} type={formType} />
       ) : (
         <BaseTable<InputDto>
           headers={MP_TABLE_HEADER}

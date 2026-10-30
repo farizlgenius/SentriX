@@ -634,30 +634,30 @@ const Door = () => {
       : []),
   ];
 
-  const renderOptional = (item: DoorDto, statusDto: StatusDto[], i: number) => {
+  const renderOptional = (item: DoorDto,i: number) => {
     return [
       <React.Fragment key={i + 1}>
         <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
           <>
             <Badge size="sm" color="dark">
-              {DoorMode[statusDto.find((b) => b.guid == item.guid)?.altr1 as DoorMode] ?? "Unknown"}
+              {DoorMode[status.find((b) => b.guid == item.guid)?.altr1 as DoorMode] ?? "Unknown"}
             </Badge>
           </>
         </TableCell>
         <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
           <>
-            {statusDto.find((b) => b.guid == item.guid)?.status === DoorStatus.Secure ? (
+            {status.find((b) => b.guid == item.guid)?.status === DoorStatus.Secure ? (
               <Badge size="sm" color="success">
                 {DoorStatus[DoorStatus.Secure]}
               </Badge>
-            ) : statusDto.find((b) => b.guid == item.guid)?.status === DoorStatus.Forced ||
-              statusDto.find((b) => b.guid == item.guid)?.status === DoorStatus.Locked ? (
+            ) : status.find((b) => b.guid == item.guid)?.status === DoorStatus.Forced ||
+              status.find((b) => b.guid == item.guid)?.status === DoorStatus.Locked ? (
               <Badge size="sm" color="error">
-                {statusDto.find((b) => b.guid == item.guid)?.status == DoorStatus.Forced ? DoorStatus[DoorStatus.Forced] : DoorStatus[DoorStatus.Locked] ?? "Unknown"}
+                {status.find((b) => b.guid == item.guid)?.status == DoorStatus.Forced ? DoorStatus[DoorStatus.Forced] : DoorStatus[DoorStatus.Locked] ?? "Unknown"}
               </Badge>
             ) : (
               <Badge size="sm" color="warning">
-                {DoorStatus[statusDto.find((b) => b.guid == item.guid)?.status as DoorStatus] ?? "Unknown"}
+                {DoorStatus[status.find((b) => b.guid == item.guid)?.status as DoorStatus] ?? "Unknown"}
               </Badge>
             )}
           </>
@@ -934,7 +934,6 @@ const Door = () => {
           onEdit={handleEdit}
           onRemove={handleRemove}
           data={doorsDto}
-          status={status}
           action={action}
           permission={filterPermission(FeatureId.acr)}
           renderOptionalComponent={renderOptional}

@@ -22,11 +22,5 @@ public interface IMonitorGroupAdapter
             CancellationToken ct = default
       );
 
-      Task MonitorGroupCommandAsync(
-            string mac,
-            string ip,
-            short command,
-            short argument,
-            CancellationToken ct = default
-      );
+      Task MonitorGroupCommandAsync(string mac, string ip,short deviceExternalId,short monitorGroupExternalId,short command, short argument, CancellationToken ct = default);
 }

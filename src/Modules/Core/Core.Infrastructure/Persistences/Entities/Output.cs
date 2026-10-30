@@ -14,7 +14,7 @@ public sealed class Output : BaseEntity,IAuditableEntity
   public int device_module_id { get; set; }
   public DeviceModule device_module { get; set; } = default!;
   public Output() { }
-  public Output(Domain.Entities.Output d) : base(d.Guid)
+  public Output(Domain.Entities.Output d) : base(d.Guid,d.ExternalId)
   {
     name = d.Name;
     slot_no = d.SlotNo;
