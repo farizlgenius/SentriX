@@ -28,6 +28,15 @@ public sealed class OutputRepository(CoreDbContext context) : BaseRepository<Per
   OutputProjections.ToCommand
   ), IOutputRepository
 {
+      public async Task<IEnumerable<OutputDto>> GetByDeviceAsync(Guid guid, CancellationToken ct = default)
+      {
+            return await Context.Outputs
+                  .AsNoTracking()
+                  .Where(x => x.device_module.device.guid == guid)
+                  .Select(OutputProjections.ToDto)
+                  .ToArrayAsync(ct);
+      }
+
       public async Task<short> GetFreeExeternalIdByMacAsync(string mac,int max, IEnumerable<short>? exception = null, CancellationToken ct = default)
       {
             var existingIds = await Context.Outputs
@@ -59,6 +68,19 @@ public sealed class OutputRepository(CoreDbContext context) : BaseRepository<Per
               .Where(x => x.external_id == externalId && x.device_module.device.mac == mac && x.vendor == vendor)
               .Select(x => x.name)
               .FirstOrDefaultAsync(ct) ?? "Unknown";
+      }
+
+      public async Task<IEnumerable<OptionDto>> GetOptionByDeviceAsync(Guid guid, CancellationToken ct = default)
+      {
+           return await Context.Outputs
+              .AsNoTracking()
+              .Where(x => x.device_module.device.guid == guid)
+              .Select(x => new OptionDto(
+                x.name,
+                x.guid,
+                x.device_module.device.mac
+              ))
+              .ToArrayAsync(ct);
       }
 
       public async Task<Pagination<OutputDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)

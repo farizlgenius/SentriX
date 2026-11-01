@@ -1,6 +1,6 @@
 using System.Threading.Channels;
-using Adapter.Aero.Listener;
 using Aero.Domain.Entities;
+using Aero.Infrastructure.Listener;
 using HID.Aero.ScpdNet.Wrapper;
 using Microsoft.Extensions.Logging;
 

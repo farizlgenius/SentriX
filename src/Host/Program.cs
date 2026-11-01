@@ -2,8 +2,6 @@
 using System.Net;
 using System.Text;
 using Adapter.Contract.Interfaces;
-using Adapter.Aero;
-using Adapter.Aero.Listener;
 using Adapter.Amico;
 using Auth.Infrastructure;
 using Cache.Infrastructure;
@@ -29,6 +27,7 @@ using Storage;
 using Adapter.Contract;
 using Aero.Infrastructure;
 using Aero.Application.Interfaces;
+using Aero.Infrastructure.Listener;
 
 
 namespace Host;

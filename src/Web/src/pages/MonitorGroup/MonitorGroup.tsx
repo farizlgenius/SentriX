@@ -242,7 +242,7 @@ export const MonitorGroup = () => {
   const handleRemove = (data: MonitorGroupDto) => {
     setConfirmRemove(() => async () => {
       const res = await send.delete(
-        MonitorGroupEndpoint.DELETE(data.mac, data.componentId),
+        MonitorGroupEndpoint.DELETE(data.guid),
       );
       if (
         Helper.handleToastByResCode(res, MonitorGroupToast.DELETE, toggleToast)

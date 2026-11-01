@@ -27,7 +27,7 @@
 </PropertyGroup>
 
 <ItemGroup Condition="'$(SdkLibPath)' != ''">
-  <None Include="..\Modules\Adapters\Adapter.Aero\Libs\$(SdkLibPath)\**\*">
+  <None Include="..\Modules\Adapters\Aero\Aero.Infrastructure\Libs\$(SdkLibPath)\**\*">
     <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     <TargetPath>%(Filename)%(Extension)</TargetPath>
   </None>

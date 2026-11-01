@@ -12,4 +12,5 @@ public interface IInputRepository : IRepository<InputDto, Input>
       Task<Guid> GuidByExternalIdAndDeviceExternalIdAndVendorAsync(short externalId,short deviceExternalId,Vendor vendor,CancellationToken ct = default);
 
       Task<IEnumerable<OptionDto>> GetOptionByDeviceAsync(Guid guid, CancellationToken ct = default);
+      Task<IEnumerable<InputDto>> GetByDeviceAsync(Guid guid, CancellationToken ct = default);
 }

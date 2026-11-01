@@ -60,6 +60,13 @@ public class MonitorGroupController(IMonitorGroup group) : ControllerBase
             return Ok(res);
       }
 
+      [HttpDelete("{guid}")]
+      public async Task<IActionResult> DeleteAsync(Guid guid)
+      {
+            var res = await group.DeleteByGuidAsync(guid);
+            return Ok(res);
+      }
+
       [HttpPut]
       public async Task<IActionResult> UpdateAsync([FromBody]UpdateMonitorGroupDto dto)
       {

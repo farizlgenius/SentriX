@@ -4,17 +4,21 @@ using Aero.Application.Enums;
 using Aero.Application.Helpers;
 using Aero.Application.Interfaces;
 using Aero.Application.Metadata;
+using Aero.Application.Metadata.Area;
 using Aero.Application.Metadata.Device;
 using Aero.Application.Metadata.Door;
 using Core.Contract.Commands.Device;
 using Core.Contract.Commands.Events;
 using Core.Contract.Interfaces;
 using Core.Contract.Queries;
+using Core.Contract.Queries.Area;
 using Core.Contract.Queries.CardFormat;
 using Core.Contract.Queries.Device;
 using Core.Contract.Queries.DeviceModule;
 using Core.Contract.Queries.Door;
 using Core.Contract.Queries.Group;
+using Core.Contract.Queries.Input;
+using Core.Contract.Queries.MonitorGroup;
 using Core.Contract.Queries.Output;
 using Core.Contract.Queries.Time;
 using Setting.Contract.Interfaces;
@@ -27,12 +31,14 @@ namespace Aero.Application.Services;
 
 public sealed class DeviceService(
       IDeviceRepository repo,
-      IOutputRepository oRepo,
-      IInputRepository iRepo,
-      IGroupRepository gRepo,
-      IDoorRepository dRepo,
-      ITimeRepository tRepo,
-      ICardFormatRepository cfmtRepo,
+      IOutputRepository output,
+      IInputRepository input,
+      IMonitorGroupRepository mpgg,
+      IAreaRepository areaa,
+      IGroupRepository group,
+      IDoorRepository door,
+      ITimeRepository time,
+      ICardFormatRepository cfmtt,
       IDeviceModuleRepository module,
       IMessageBus bus
       ) : IDeviceAdapter
@@ -270,9 +276,9 @@ public sealed class DeviceService(
       {
             // Start with Upload Scp Driver 
             // 1. Get Device Setting
-            var device = await bus.QueryAsync(new DeviceByMacQuery(mac));
+            var device = await bus.QueryAsync(new DeviceByMacQuery(mac),ct);
             // 2. Get ComponentId
-            var componentId = await bus.QueryAsync(new DeviceExternalIdByMacQuery(mac),ct);
+            var deviceExternalId = await bus.QueryAsync(new DeviceExternalIdByMacQuery(mac),ct);
             // 3.Json Serialize with Metadata Class 
             var deviceMetadata = JsonHelper.Deserialize<DeviceMetadata>(device.Metadata);
             // 4.Send command driver configuration
@@ -280,7 +286,7 @@ public sealed class DeviceService(
             {
                   var res = repo.DriverConfiguration(
                         device.Mac,
-                        (short)componentId,
+                        (short)deviceExternalId,
                         1,
                         1,
                         deviceMetadata.BaudRateOne,
@@ -296,7 +302,7 @@ public sealed class DeviceService(
             {
                   var res = repo.DriverConfiguration(
                         device.Mac,
-                        (short)componentId,
+                        (short)deviceExternalId,
                         2,
                         2,
                         deviceMetadata.BaudRateTwo,
@@ -317,7 +323,7 @@ public sealed class DeviceService(
             // 1. Get Device Setting
             var device = await bus.QueryAsync(new DeviceByMacQuery(mac), ct);
             // 2. Get ComponentId
-            var componentId = await bus.QueryAsync(new DeviceExternalIdByMacQuery(mac),ct);
+            var deviceExternalId = await bus.QueryAsync(new DeviceExternalIdByMacQuery(mac),ct);
             // 3.Json Serialize with Metadata Class 
             var deviceMetadata = JsonHelper.Deserialize<DeviceMetadata>(device.Metadata);
             // 4.Send command driver configuration
@@ -325,7 +331,7 @@ public sealed class DeviceService(
             {
                   var res = repo.DriverConfiguration(
                         device.Mac,
-                        (short)componentId,
+                        (short)deviceExternalId,
                         1,
                         1,
                         deviceMetadata.BaudRateOne,
@@ -341,7 +347,7 @@ public sealed class DeviceService(
             {
                   var res = repo.DriverConfiguration(
                         device.Mac,
-                        (short)componentId,
+                        (short)deviceExternalId,
                         2,
                         2,
                         deviceMetadata.BaudRateTwo,
@@ -361,9 +367,9 @@ public sealed class DeviceService(
             {
                   var tzId = await bus.QueryAsync(new TimeExternalIdByGuidQuery(tz.Guid),ct);
 
-                  var res = tRepo.ExtendedTimeZoneActSpecification(
+                  var res = time.ExtendedTimeZoneActSpecification(
                         device.Mac,
-                        (short)componentId,
+                        (short)deviceExternalId,
                         (short)tzId,
                         tz.Name.Equals("Always") ? (short)1 : tz.Name.Equals("Never") ? (short)0 : (short)2,
                         tz.Intervals.Select(x =>
@@ -388,14 +394,14 @@ public sealed class DeviceService(
 
             // CardFormat
 
-            var cfmts = await bus.QueryAsync(new CardFormatQuery());
+            var cfmts = await bus.QueryAsync(new CardFormatQuery(),ct);
             foreach (var cfmt in cfmts)
             {
                   var cfmtId = await bus.QueryAsync(new CardFormatExternalIdByGuidQuery(cfmt.Guid),ct);
 
-                  var res = cfmtRepo.CardFormatterConfiguration(
+                  var res = cfmtt.CardFormatterConfiguration(
                         device.Mac,
-                        (short)componentId,
+                        (short)deviceExternalId,
                         (short)cfmtId,
                         cfmt.Fac,
                         0,
@@ -440,9 +446,9 @@ public sealed class DeviceService(
                               osdpFlag |= meta.SecureChannel;
                         }
 
-                        var res = dRepo.ReaderSpecification(
+                        var res = door.ReaderSpecification(
                               mac,
-                              (short)componentId,
+                              (short)deviceExternalId,
                               (short)moduleId,
                               (short)reader.SlotNo,
                               osdpFlag
@@ -463,9 +469,9 @@ public sealed class DeviceService(
                         if (meta == null)
                               throw new Exception(MessageHelper.Common.DeserializeFailed("RelayMetadata"));
 
-                        var res = oRepo.OutputPointSpecification(
+                        var res = output.OutputPointSpecification(
                               mac,
-                             (short)componentId,
+                             (short)deviceExternalId,
                               (short)relayModuleId,
                               (short)d.Relay.SlotNo,
                               meta.OfflineMode,
@@ -486,9 +492,9 @@ public sealed class DeviceService(
                         if (meta == null)
                               throw new Exception(MessageHelper.Common.DeserializeFailed("InputMetadata"));
 
-                        var res = iRepo.InputPointSpecification(
+                        var res = input.InputPointSpecification(
                               mac,
-                              (short)componentId,
+                              (short)deviceExternalId,
                               (short)sensorModuleId,
                               (short)d.Sensor.SlotNo,
                               meta.Mode,
@@ -519,9 +525,9 @@ public sealed class DeviceService(
                         if (meta == null)
                               throw new Exception(MessageHelper.Common.DeserializeFailed("InputMetadata"));
 
-                        var res = iRepo.InputPointSpecification(
+                        var res = input.InputPointSpecification(
                               mac,
-                              (short)componentId,
+                              (short)deviceExternalId,
                               (short)(i == 0 ? rex0ModuleId : rex1ModuleId),
                               (short)rex.SlotNo,
                               meta.Mode,
@@ -545,9 +551,9 @@ public sealed class DeviceService(
                         if (meta == null)
                               throw new Exception(MessageHelper.Common.DeserializeFailed("OutputMetadata"));
 
-                        var res = oRepo.OutputPointSpecification(
+                        var res = output.OutputPointSpecification(
                               mac,
-                              (short)componentId,
+                              (short)deviceExternalId,
                               (short)moduleId,
                               (short)d.Buzzer.SlotNo,
                               meta.OfflineMode,
@@ -556,9 +562,9 @@ public sealed class DeviceService(
 
                         await bus.SendAsync(new AdapterEventCommand(res),ct);
 
-                        res = oRepo.ControlPointConfiguration(
+                        res = output.ControlPointConfiguration(
                               mac,
-                              (short)componentId,
+                              (short)deviceExternalId,
                               (short)moduleId,
                               (short)outputId,
                               (short)d.Buzzer.SlotNo,
@@ -581,9 +587,9 @@ public sealed class DeviceService(
                         if (meta == null)
                               throw new Exception(MessageHelper.Common.DeserializeFailed("BgMetadata"));
 
-                        var res = iRepo.InputPointSpecification(
+                        var res = input.InputPointSpecification(
                               mac,
-                              (short)componentId,
+                              (short)deviceExternalId,
                               (short)moduleId,
                               (short)d.Bg.SlotNo,
                               meta.Mode,
@@ -593,9 +599,9 @@ public sealed class DeviceService(
 
                         await bus.SendAsync(new AdapterEventCommand(res),ct);
 
-                        res = iRepo.MonitorPointConfiguration(
+                        res = input.MonitorPointConfiguration(
                               mac,
-                              (short)componentId,
+                              (short)deviceExternalId,
                               (short)inputId,
                               (short)moduleId,
                               (short)d.Bg.SlotNo,
@@ -677,9 +683,9 @@ public sealed class DeviceService(
                   var mask0Id = d.Rexes.Count == 0 ? 0 : d.Rexes.ElementAt(0).MaskGuid == null || d.Rexes.ElementAt(0).MaskGuid == Guid.Empty ? 0 : await bus.QueryAsync(new TimeExternalIdByGuidQuery(d.Rexes.ElementAt(0).MaskGuid ?? Guid.Empty),ct);
                   var mask1Id = d.Rexes.Count <= 1 ? 0 : d.Rexes.ElementAt(1).MaskGuid == null || d.Rexes.ElementAt(1).MaskGuid == Guid.Empty ? 0 : await bus.QueryAsync(new TimeExternalIdByGuidQuery(d.Rexes.ElementAt(1).MaskGuid ?? Guid.Empty),ct);
 
-                  var doorRes = dRepo.AccessControlReaderConfiguration(
+                  var doorRes = door.AccessControlReaderConfiguration(
                         mac,
-                        (short)componentId,
+                        (short)deviceExternalId,
                         (short)doorIds.Min(),
                         (short)(d.Type == DoorType.Single ? 0 : 1),
                         d.Type == DoorType.Single && doorIds.Count() <= 1 ? (short)-1 : (short)doorIds.Max(),
@@ -723,9 +729,9 @@ public sealed class DeviceService(
                         readerModuleId = (short)(d.Readers.Count == 0 ? -1 : await bus.QueryAsync(new DeviceModuleExternalIdByGuidQuery(readerGuid), ct));
                         readerSlot = (short)(d.Readers.Count == 0 ? -1 : d.Readers.Where(x => x.ReaderDirection == ReaderDirection.Out).Select(x => x.SlotNo).First());
                         
-                        var res = dRepo.AccessControlReaderConfiguration(
+                        var res = door.AccessControlReaderConfiguration(
                               mac,
-                              (short)componentId,
+                              (short)deviceExternalId,
                               (short)doorIds.Max(),
                               2,
                               (short)doorIds.Min(),
@@ -775,9 +781,9 @@ public sealed class DeviceService(
                         var doorExIds = await bus.QueryAsync(new DoorExternalIdMapGuidByGuidRangeQuery(g.Components.Select(x => x.Doors)),ct);
                         var timeExIds = await bus.QueryAsync(new TimeExternalIdMapGuidByGuidRangeQuery(g.Components.Select(x => x.TimeZone)),ct);
 
-                        var res = gRepo.AddAccessGroup(
+                        var res = group.AddAccessGroup(
                               mac,
-                              (short)componentId,
+                              (short)deviceExternalId,
                               (short)groupId,
                               0,
                               g.Components.Select(x => ((short)doorExIds[x.Doors],(short)timeExIds[x.TimeZone])).ToList()
@@ -787,14 +793,121 @@ public sealed class DeviceService(
                   }
 
                   // input
-                  var mps = await bus.QueryAsync(new TimeZoneByLocationQuery(device.LocationGuid), ct);
+                  var mps = await bus.QueryAsync(new InputByDeviceQuery(device.Guid), ct);
+                  foreach(var mp in mps)
+                  {
+                        var meta = JsonHelper.Deserialize<InputMetadata>(mp.Metadata);
+                        if (meta == null)
+                              throw new Exception(MessageHelper.Common.DeserializeFailed("InputMetadata"));
+
+                        var dev = await bus.QueryAsync(new InputCommandDetailByGuidQuery(mp.Guid),ct);
+                        var res = input.MonitorPointConfiguration(
+                              device.Mac,
+                              deviceExternalId,
+                              dev.ComponentExternalId ?? -1,
+                              dev.ModuleExternalId,
+                              mp.SlotNo,
+                              meta.LfCode,
+                              meta.Mode,
+                              meta.DelayEntry,
+                              meta.DelayExit
+                        );
+
+                        await bus.SendAsync(new AdapterEventCommand(res),ct);
+                  }
 
                   // output
-                  var cps = await bus.QueryAsync(new TimeZoneByLocationQuery(device.LocationGuid), ct);
+                  var cps = await bus.QueryAsync(new OutputByDeviceQuery(device.Guid), ct);
+                  foreach(var cp in cps)
+                  {
+                        var meta = JsonHelper.Deserialize<OutputMetadata>(cp.Metadata);
+                        if (meta == null)
+                              throw new Exception(MessageHelper.Common.DeserializeFailed("OutputMetadata"));
+
+                        var dev = await bus.QueryAsync(new OutputCommandDetailByGuidQuery(cp.Guid),ct);
+                        var res = output.OutputPointSpecification(
+                              device.Mac,
+                              deviceExternalId,
+                              dev.ModuleExternalId,
+                              cp.SlotNo,
+                              meta.OfflineMode,
+                              meta.DefaultMode
+                        );
+
+                        await bus.SendAsync(new AdapterEventCommand(res),ct);
+
+                        res = output.ControlPointConfiguration(
+                              device.Mac,
+                              deviceExternalId,
+                              dev.ModuleExternalId,
+                              dev.ComponentExternalId ?? -1,
+                              cp.SlotNo,
+                              meta.DefaultPulse
+                        );
+
+                        await bus.SendAsync(new AdapterEventCommand(res),ct);
+                  }
 
                   // mpg
+                  var mpgs = await bus.QueryAsync(new MonitorGroupByDeviceQuery(device.Guid),ct);
+                  foreach(var mpg in mpgs)
+                  {
+                        // var meta = JsonHelper.Deserialize<Mpo>(mpg.Metadata);
+                        // if (meta == null)
+                        //       throw new Exception(MessageHelper.Common.DeserializeFailed("MonitorGroupMetadata"));
+                        var inputGuids = mpg.Components.Where(x => x.Type == MonitorType.MONITOR_POINT).Select(x => x.ComponentGuid).ToArray();
+                        var inputMap = await bus.QueryAsync(new InputExternalIdMapGuidByGuidRangeQuery(inputGuids),ct);
+                        var doorGuids = mpg.Components.Where(x => x.Type == MonitorType.FORCED_OPEN || x.Type == MonitorType.HELD_OPEN).Select(x => x.ComponentGuid).ToArray();
+                        var doorMap = await bus.QueryAsync(new DoorExternalIdMapGuidByGuidRangeQuery(doorGuids),ct);
+
+                        var dev = await bus.QueryAsync(new MonitorGroupCommandDetailByGuidQuery(mpg.Guid),ct);
+
+                        var res = mpgg.ConfigureMonitorPointGroup(
+                              dev.DeviceMac,
+                              dev.DeviceExternalId,
+                              dev.ComponentExternalId ?? -1,
+                              (short)mpg.Components.Count,
+                              mpg.Components.Select(x => (x.Type, x.Type == MonitorType.MONITOR_POINT ? inputMap[x.ComponentGuid] : doorMap[x.ComponentGuid])).ToList()
+                        );
+
+                        await bus.SendAsync(new AdapterEventCommand(res),ct);
+                  }
 
                   // area
+                  var areas = await bus.QueryAsync(new AreaByDeviceQuery(device.Guid),ct);
+                  foreach(var area in areas)
+                  {
+
+                        var meta = JsonHelper.Deserialize<AreaMetadata>(area.Metadata);
+                        if (meta == null)
+                              throw new Exception(MessageHelper.Common.DeserializeFailed("AreaMetadata"));
+
+                         short areaflag = 0;
+
+                        if(meta.AirLock)
+                              areaflag |= (short)AreaFlags.AREA_F_AIRLOCK;
+
+                        if(meta.OnlyOneDoor)
+                              areaflag |= (short)AreaFlags.AREA_F_AIRLOCK_ODO;
+
+                        var dev = await bus.QueryAsync(new AreaCommandDetailByGuidQuery(area.Guid),ct);
+
+                        var res = areaa.ConfigureAccessArea(
+                              dev.DeviceMac,
+                              dev.DeviceExternalId,
+                              dev.ComponentExternalId ?? -1,
+                              (short)area.MultiMode,
+                              (short)AreaCommand.Enabled,
+                              0,
+                              0,
+                              area.OccMax,
+                              area.OccUp,
+                              area.OccDown,
+                              areaflag
+                        );
+
+                        await bus.SendAsync(new AdapterEventCommand(res),ct);
+                  }
 
                   // procedure
 
@@ -803,7 +916,7 @@ public sealed class DeviceService(
 
                   // finally
 
-                  await bus.SendAsync(new ConfigurationStatusCommand(mac, true, true));
+                  await bus.SendAsync(new ConfigurationStatusCommand(mac, true, true),ct);
 
             }
       }

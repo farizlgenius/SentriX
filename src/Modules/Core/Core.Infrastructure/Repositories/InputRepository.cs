@@ -99,4 +99,13 @@ public sealed class InputRepository(CoreDbContext context) : BaseRepository<Pers
                   ))
                   .ToArrayAsync(ct);
       }
+
+      public async Task<IEnumerable<InputDto>> GetByDeviceAsync(Guid guid, CancellationToken ct = default)
+      {
+            return await Context.Inputs
+                  .AsNoTracking()
+                  .Where(x => x.device_module.device.guid == guid)
+                  .Select(InputProjections.ToDto)
+                  .ToArrayAsync(ct);
+      }
 }

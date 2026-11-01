@@ -95,6 +95,15 @@ public sealed class AreaRepository(CoreDbContext context) : BaseRepository<Persi
                   .ToDictionaryAsync(x => x.guid, x => x.id, ct);
       }
 
+      public async Task<IEnumerable<AreaDto>> GetByDeviceAsync(Guid guid, CancellationToken ct = default)
+      {
+           return await Context.Areas
+            .AsNoTracking()
+            .Where(x => x.device.guid == guid)
+            .Select(AreaProjections.ToDto)
+            .ToArrayAsync(ct);
+      }
+
       public async Task<Pagination<AreaDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
       {
             return await base.GetPaginationAsync(

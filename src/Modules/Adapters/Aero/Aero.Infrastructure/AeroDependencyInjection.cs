@@ -1,5 +1,4 @@
 using System.Threading.Channels;
-using Adapter.Aero.Listener;
 using Adapter.Contract.Interfaces;
 using Aero.Application.Helpers;
 using Aero.Application.Interfaces;
@@ -8,6 +7,7 @@ using Aero.Application.Services;
 using Aero.Application.ValueObjects;
 using Aero.Domain.Entities;
 using Aero.Infrastructure.Adapter;
+using Aero.Infrastructure.Listener;
 using Aero.Infrastructure.Repositories;
 using Aero.Infrastructure.Workers;
 using Core.Contract.Interfaces;

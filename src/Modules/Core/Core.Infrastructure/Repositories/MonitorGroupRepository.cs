@@ -22,6 +22,15 @@ public sealed class MonitorGroupRepository(CoreDbContext context) : BaseReposito
       MonitorGroupProjections.ToCommand
 ), IMonitorGroupRepository
 {
+      public async Task<IEnumerable<MonitorGroupDto>> GetByDeviceAsync(Guid guid, CancellationToken ct = default)
+      {
+            return await Context.MonitorGroups
+                  .AsNoTracking()
+                  .Where(x => x.device.guid == guid)
+                  .Select(MonitorGroupProjections.ToDto)
+                  .ToArrayAsync(ct);
+      }
+
       public async Task<short> GetFreeExternalIdByMacAsync(string mac, int max, IEnumerable<short> excepions, CancellationToken ct = default)
       {
             var existingIds = await Context.MonitorGroups

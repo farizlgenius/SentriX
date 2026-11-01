@@ -1,4 +1,4 @@
-using Adapter.Aero.Listener;
+
 using Aero.Application.Interfaces;
 using Core.Application.Interfaces;
 using Host.Helpers;

@@ -2,7 +2,7 @@ using Aero.Application.Enums;
 using Aero.Application.Helpers;
 using Aero.Application.Interfaces;
 using Aero.Domain.Entities;
-using Core.Contract.Commands.ComponentMapping;
+using Core.Contract.Commands.Device;
 using Core.Contract.Commands.Events;
 using Core.Contract.DTOs.Device;
 using Core.Contract.Interfaces;
@@ -31,7 +31,7 @@ public sealed class IdReportService(
   public async Task HandleInCommingDeviceAsync(ReplyMessage.SCPReplyIDReport dto, CancellationToken ct = default)
   {
     // Get Setting
-    var scpDevice = await setting.GetAeroDriverSettingAsync();
+    var scpDevice = await setting.GetAeroDriverSettingAsync(ct);
 
     var mac = UtilitiesHelper.ByteToHexStr(dto.mac_addr);
 
@@ -68,17 +68,27 @@ public sealed class IdReportService(
       return;
     }
 
-    #region Found Device
-    if (await bus.QueryAsync(new IsAnyMacQuery(mac)))
-    {
+    short newScpId = dto.scp_id;
 
-      await bus.SendAsync(new UpdateExternalIdByMacCommand(mac,dto.scp_id,ct));
+    #region Found Device
+    if (await bus.QueryAsync(new IsAnyMacQuery(mac), ct))
+    {
+      var oldScpId = await bus.QueryAsync(new DeviceExternalIdByMacQuery(mac), ct);
+
+      if (oldScpId != dto.scp_id && await bus.QueryAsync(new IsAnyDeviceExeternalIdQuery(dto.scp_id), ct))
+      {
+        newScpId = await bus.QueryAsync(new FreeDeviceExternalIdQuery(),ct);
+        res = repo.SetScpId(mac,dto.scp_id,newScpId);
+        await bus.SendAsync(new AdapterEventCommand(res), ct);
+        await bus.SendAsync(new UpdateExternalIdByMacCommand(mac, dto.scp_id, ct), ct);
+
+      }
 
       // Update data 
       // Send Command to get Ip
       res = repo.ReadsConfiguration(
          UtilitiesHelper.ByteToHexStr(dto.mac_addr),
-         dto.scp_id,
+         newScpId,
          WebConfigReadType.NetworkSettingss
         );
 
@@ -87,7 +97,7 @@ public sealed class IdReportService(
       // Port
       res = repo.ReadsConfiguration(
         UtilitiesHelper.ByteToHexStr(dto.mac_addr),
-        dto.scp_id,
+        newScpId,
         WebConfigReadType.HostCommunicationPrimarySettings
        );
 

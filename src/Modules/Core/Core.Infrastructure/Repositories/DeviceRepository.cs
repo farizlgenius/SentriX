@@ -249,5 +249,24 @@ public sealed class DeviceRepository(CoreDbContext context) : BaseRepository<Per
                   .FirstOrDefaultAsync(ct);
       }
 
+      public async Task UpdateExternalIdByMacAsync(string mac, short externalId, CancellationToken ct = default)
+      {
+            var en = await Context.Devices
+                  .Where(x => x.mac == mac)
+                  .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.DEVICE.ToString(),mac);
 
+            en.updated_at = DateTime.UtcNow;
+            en.external_id = externalId;
+
+            Context.Devices.Update(en);
+
+            await Context.SaveChangesAsync(ct);
+      }
+
+      public async Task<bool> IsAnyDeviceExeternalIdAsync(short externalId, CancellationToken ct = default)
+      {
+            return await Context.Devices
+                  .AsNoTracking()
+                  .AnyAsync(x => x.external_id == externalId,ct);
+      }
 }

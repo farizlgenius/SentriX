@@ -14,7 +14,7 @@ public static class MonitorGroupProjections
             x.guid,
             x.name,
             x.components.Select(c => new MonitorGroupComponentDto(
-                  c.type == SharedKernel.Enums.MonitorType.MONITOR_POINT ? c.input.guid : c.type == SharedKernel.Enums.MonitorType.FORCED_OPEN ? c.door.guid : c.door.guid,
+                  c.type == SharedKernel.Enums.MonitorType.MONITOR_POINT ? c.input == null ? Guid.Empty : c.input.guid : c.type == SharedKernel.Enums.MonitorType.FORCED_OPEN ? c.door == null ? Guid.Empty : c.door.guid : c.door == null ? Guid.Empty : c.door.guid,
                   c.type
             )).ToList(),
             x.device.guid,

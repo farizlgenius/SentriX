@@ -1,7 +1,6 @@
 using System;
 using System.Threading.Channels;
 using Adapter.Contract.Interfaces;
-using Aero.Application.Helpers;
 using Aero.Domain.Entities;
 using Aero.Infrastructure.Helpers;
 using Core.Contract.DTOs.Alert;
@@ -9,9 +8,8 @@ using HID.Aero.ScpdNet.Wrapper;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using SharedKernel.Enums;
-using SharedKernel.Messaging;
 
-namespace Adapter.Aero.Listener;
+namespace Aero.Infrastructure.Listener;
 
 
 public sealed class ReplyMessageListener(ILogger<ReplyMessageListener> logger, 
