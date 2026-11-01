@@ -34,11 +34,10 @@ import { FormField } from "../../components/form/template/FormTemplate";
 import Input from "../../components/form/input/InputField";
 import Button from "../../components/ui/button/Button";
 import { AeroOutputMetadata } from "../../model/ControlPoint/AeroOutputMetadata";
-import { InputStatus } from "../../model/Status/InputStatus";
 import { OutputStatus } from "../../model/Status/OutputStatus";
-import { ChangeOfState } from "../../enum/ChangeOfState";
 import { StatusHelper } from "../../helper/StatusHelper";
 import { ChangeOfStateEncode } from "../../enum/ChangeOfStateEncode";
+import { HttpStatusCode } from "axios";
 
 // Define Global Variable
 
@@ -46,7 +45,6 @@ export const OUTPUT_TABLE_HEADER: string[] = [
   "Name",
   "Pulse Time",
   "Status",
-  "Flags",
   "Enabled",
   "Action",
 ];
@@ -148,20 +146,20 @@ const Output = () => {
         endDate,
       ),
     );
-    if (res && res.data) {
+    if (res.status == HttpStatusCode.Ok) {
       res.data.data.items.forEach((a: OutputDto) => {
         setOutputsDto(prev => (
-          prev.some(x => x.guid == a.guid) ? 
-          [...prev]
-          :
-          [
-          
-          ...prev,
-          {
-            ...a,
-            metadata: JSON.parse(a.metadata as string)
-          }
-        ]))
+          prev.some(x => x.guid == a.guid) ?
+            [...prev]
+            :
+            [
+
+              ...prev,
+              {
+                ...a,
+                metadata: JSON.parse(a.metadata as string)
+              }
+            ]))
       })
       //setOutputsDto(res.data.data.items);
       setPagination(res.data.data);
@@ -170,7 +168,6 @@ const Output = () => {
       const newStatuses = res.data.data.items.map((a: OutputDto) => {
         const status: OutputStatus = {
           guid: a.guid,
-          code: ChangeOfState.Unknown,
           offline: false,
           mask: false,
           localMask: false,
@@ -215,12 +212,12 @@ const Output = () => {
             item.guid === status.guid
               ? {
                 ...item,
-                code: status.code,
                 offline: status.offline,
                 mask: status.mask,
                 localMask: status.localMask,
                 entryDelayInProgress: status.entryDelayInProgress,
-                notAttached: status.notAttached
+                notAttached: status.notAttached,
+                status:status.status
               }
               : item,
           ),
@@ -240,7 +237,7 @@ const Output = () => {
       const connection = SignalRService.getConnection();
       connection?.off(SignalRTopic.OUTPUT_STATUS);
     };
-  }, []);
+  }, [refresh, locationGuid, token]);
 
   {
     /* Button Command */
@@ -413,31 +410,32 @@ const Output = () => {
   const renderOptionalComponent = (data: OutputDto) => {
     // 1. Look up the matched record once
     const matchedItem = status.find((b) => b.guid === data.guid);
-    const currentChangeState = matchedItem?.code ?? ChangeOfState.Unknown;
     const currentChangeEncode = matchedItem?.status ?? ChangeOfStateEncode.Unknown;
 
     // 2. Resolve icon configuration cleanly
-    const iconConfig = StatusHelper.ChangeOfStateIcon(currentChangeState);
-    const iconCos = StatusHelper.ChangeOfStateIconEncode(currentChangeEncode);
+    //const iconConfig = StatusHelper.OutputChangeOfStateIcon(currentChangeState, (data.metadata as AeroOutputMetadata).driveMode);
+    const iconCos = StatusHelper.OutputChangeOfStateIcon(currentChangeEncode,(data.metadata as AeroOutputMetadata).driveMode);
+    const badgeColor = iconCos.colorClass == "red" ? "error" : iconCos.colorClass == "yellow" ? "warning" : "success"; 
 
 
     return [
-      <TableCell
-        key={`status-icon-${data.guid}`}
-        className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400"
-      >
-        {iconConfig && (
+      // <TableCell
+      //   key={`status-icon-${data.guid}`}
+      //   className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400"
+      // >
+      //   {iconConfig && (
 
-          <span title={iconConfig.label} className="flex gap-1 items-center">
-            <iconConfig.Icon className={`text-lg ${iconConfig.colorClass}`} />
-            <Badge>
-              {iconConfig.label}
-            </Badge>
-          </span>
+      //     <span title={iconConfig.label} className="flex gap-1 items-center">
+      //       <iconConfig.Icon className={`text-lg text-${iconConfig.colorClass}-500`} />
+      //       <Badge color={badgeColor}>
+      //         {iconConfig.label}
+      //       </Badge>
 
-        )}
+      //     </span>
 
-      </TableCell>,
+      //   )}
+
+      // </TableCell>,
 
       <TableCell
         key={`status-badge-${data.guid}`}
@@ -446,7 +444,10 @@ const Output = () => {
         {
           iconCos && (
             <span title={iconCos.label} className="inline-flex items-center">
-              <iconCos.Icon className={`text-lg ${iconCos.colorClass}`} />
+              <iconCos.Icon className={`text-3xl text-${iconCos.colorClass}-500`} />
+                  {/* <Badge color={badgeColor}>
+                  {iconCos.label}
+                  </Badge> */}
             </span>
           )
         }

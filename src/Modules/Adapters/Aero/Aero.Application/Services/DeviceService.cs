@@ -315,7 +315,7 @@ public sealed class DeviceService(
       {
             // Start with Upload Scp Driver 
             // 1. Get Device Setting
-            var device = await bus.QueryAsync(new DeviceByMacQuery(mac));
+            var device = await bus.QueryAsync(new DeviceByMacQuery(mac), ct);
             // 2. Get ComponentId
             var componentId = await bus.QueryAsync(new DeviceExternalIdByMacQuery(mac),ct);
             // 3.Json Serialize with Metadata Class 
@@ -355,7 +355,7 @@ public sealed class DeviceService(
 
             // Time 
 
-            var tzs = await bus.QueryAsync(new TimeZoneByLocationQuery(device.LocationGuid));
+            var tzs = await bus.QueryAsync(new TimeZoneByLocationQuery(device.LocationGuid), ct);
 
             foreach (var tz in tzs)
             {
@@ -418,7 +418,7 @@ public sealed class DeviceService(
             }
 
             // Door
-            var doors = await bus.QueryAsync(new DoorByMacQuery(device.Mac));
+            var doors = await bus.QueryAsync(new DoorByMacQuery(device.Mac), ct);
             foreach (var d in doors)
             {
                   // Reader Configuation
@@ -785,6 +785,20 @@ public sealed class DeviceService(
 
                         await bus.SendAsync(new AdapterEventCommand(res),ct);
                   }
+
+                  // input
+                  var mps = await bus.QueryAsync(new TimeZoneByLocationQuery(device.LocationGuid), ct);
+
+                  // output
+                  var cps = await bus.QueryAsync(new TimeZoneByLocationQuery(device.LocationGuid), ct);
+
+                  // mpg
+
+                  // area
+
+                  // procedure
+
+                  // trigger
 
 
                   // finally

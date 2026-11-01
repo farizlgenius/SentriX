@@ -3,7 +3,6 @@ import { ChangeOfStateEncode } from "../../enum/ChangeOfStateEncode";
 
 export interface OutputStatus{
       guid:string;
-      code:ChangeOfState;
       status:ChangeOfStateEncode
       offline:boolean;
       mask:boolean;

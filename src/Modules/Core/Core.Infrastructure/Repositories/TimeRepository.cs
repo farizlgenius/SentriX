@@ -101,7 +101,7 @@ public sealed class TimeRepository(CoreDbContext context) : BaseRepository<Persi
       var en = await context.TimeZones
       .Where(x => x.guid == entity.Guid)
       .OrderByDescending(x => x.id)
-      .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.TIMEZONE.ToString(), entity.Guid.ToString());
+      .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.TIMEZONE.ToString(), entity.Guid.ToString());
 
       var existingInterval = await context.TimeZoneIntervals.Where(x => x.timezone_id == en.id).ToArrayAsync();
 

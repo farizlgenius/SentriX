@@ -1,8 +1,17 @@
-import { BaseDto } from "../BaseDto";
-import { MonitorGroupListDto } from "./MonitorGroupListDto";
+import { MonitorType } from "../../enum/MonitorType";
 
-export interface MonitorGroupDto extends BaseDto{
+
+
+export interface MonitorGroupDto{
+    guid:string;
     name:string;
-    nMpCount:number;
-    nMpList:MonitorGroupListDto[];
+    components:MonitorPointGroupComponent[];
+    deviceGuid:string;
+    isActive:boolean;
+    isDefault:boolean;
+}
+
+export interface MonitorPointGroupComponent{
+    componentGuid:string;
+    type: MonitorType;
 }

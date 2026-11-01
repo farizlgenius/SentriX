@@ -136,7 +136,6 @@ namespace Core.Infrastructure.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     description = table.Column<string>(type: "text", nullable: false),
                     country_id = table.Column<int>(type: "integer", nullable: false),
-                    external_id = table.Column<short>(type: "smallint", nullable: true),
                     name = table.Column<string>(type: "text", nullable: false),
                     guid = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
                     created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
@@ -145,6 +144,7 @@ namespace Core.Infrastructure.Migrations
                     is_default = table.Column<bool>(type: "boolean", nullable: false),
                     location_id = table.Column<int>(type: "integer", nullable: true),
                     locationid = table.Column<int>(type: "integer", nullable: true),
+                    external_id = table.Column<short>(type: "smallint", nullable: true),
                     altr_external_id = table.Column<short>(type: "smallint", nullable: true)
                 },
                 constraints: table =>
@@ -1028,6 +1028,49 @@ namespace Core.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Areas",
+                schema: "core",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    multi_occ_mode = table.Column<int>(type: "integer", nullable: false),
+                    area_mode = table.Column<int>(type: "integer", nullable: false),
+                    occ_max = table.Column<short>(type: "smallint", nullable: false),
+                    occ_down = table.Column<short>(type: "smallint", nullable: false),
+                    occ_up = table.Column<short>(type: "smallint", nullable: false),
+                    metadata = table.Column<string>(type: "text", nullable: false),
+                    device_id = table.Column<int>(type: "integer", nullable: true),
+                    name = table.Column<string>(type: "text", nullable: false),
+                    guid = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    is_active = table.Column<bool>(type: "boolean", nullable: false),
+                    is_default = table.Column<bool>(type: "boolean", nullable: false),
+                    location_id = table.Column<int>(type: "integer", nullable: true),
+                    external_id = table.Column<short>(type: "smallint", nullable: true),
+                    altr_external_id = table.Column<short>(type: "smallint", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Areas", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_Areas_Devices_device_id",
+                        column: x => x.device_id,
+                        principalSchema: "core",
+                        principalTable: "Devices",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Areas_Locations_location_id",
+                        column: x => x.location_id,
+                        principalSchema: "core",
+                        principalTable: "Locations",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "DeviceModules",
                 schema: "core",
                 columns: table => new
@@ -1040,9 +1083,9 @@ namespace Core.Infrastructure.Migrations
                     port = table.Column<int>(type: "integer", nullable: false),
                     address = table.Column<int>(type: "integer", nullable: false),
                     model = table.Column<string>(type: "text", nullable: false),
-                    reader_slot = table.Column<int>(type: "integer", nullable: false),
-                    output_slot = table.Column<int>(type: "integer", nullable: false),
-                    input_slot = table.Column<int>(type: "integer", nullable: false),
+                    reader_slot = table.Column<short>(type: "smallint", nullable: false),
+                    output_slot = table.Column<short>(type: "smallint", nullable: false),
+                    input_slot = table.Column<short>(type: "smallint", nullable: false),
                     device_id = table.Column<int>(type: "integer", nullable: false),
                     name = table.Column<string>(type: "text", nullable: false),
                     guid = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
@@ -1071,6 +1114,43 @@ namespace Core.Infrastructure.Migrations
                         principalTable: "Locations",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MonitorGroup",
+                schema: "core",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    device_id = table.Column<int>(type: "integer", nullable: false),
+                    name = table.Column<string>(type: "text", nullable: false),
+                    guid = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    is_active = table.Column<bool>(type: "boolean", nullable: false),
+                    is_default = table.Column<bool>(type: "boolean", nullable: false),
+                    location_id = table.Column<int>(type: "integer", nullable: true),
+                    locationid = table.Column<int>(type: "integer", nullable: true),
+                    external_id = table.Column<short>(type: "smallint", nullable: true),
+                    altr_external_id = table.Column<short>(type: "smallint", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MonitorGroup", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_MonitorGroup_Devices_device_id",
+                        column: x => x.device_id,
+                        principalSchema: "core",
+                        principalTable: "Devices",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_MonitorGroup_Locations_locationid",
+                        column: x => x.locationid,
+                        principalSchema: "core",
+                        principalTable: "Locations",
+                        principalColumn: "id");
                 });
 
             migrationBuilder.CreateTable(
@@ -1301,7 +1381,7 @@ namespace Core.Infrastructure.Migrations
                 {
                     id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    slot_no = table.Column<int>(type: "integer", nullable: false),
+                    slot_no = table.Column<short>(type: "smallint", nullable: false),
                     metadata = table.Column<string>(type: "text", nullable: false),
                     vendor = table.Column<int>(type: "integer", nullable: false),
                     door_id = table.Column<int>(type: "integer", nullable: false),
@@ -1336,13 +1416,13 @@ namespace Core.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Input",
+                name: "Inputs",
                 schema: "core",
                 columns: table => new
                 {
                     id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    slot_no = table.Column<int>(type: "integer", nullable: false),
+                    slot_no = table.Column<short>(type: "smallint", nullable: false),
                     vendor = table.Column<string>(type: "text", nullable: false),
                     metadata = table.Column<string>(type: "text", nullable: false),
                     device_module_id = table.Column<int>(type: "integer", nullable: false),
@@ -1358,16 +1438,16 @@ namespace Core.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Input", x => x.id);
+                    table.PrimaryKey("PK_Inputs", x => x.id);
                     table.ForeignKey(
-                        name: "FK_Input_DeviceModules_device_module_id",
+                        name: "FK_Inputs_DeviceModules_device_module_id",
                         column: x => x.device_module_id,
                         principalSchema: "core",
                         principalTable: "DeviceModules",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Input_Locations_location_id",
+                        name: "FK_Inputs_Locations_location_id",
                         column: x => x.location_id,
                         principalSchema: "core",
                         principalTable: "Locations",
@@ -1376,13 +1456,13 @@ namespace Core.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Output",
+                name: "Outputs",
                 schema: "core",
                 columns: table => new
                 {
                     id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    slot_no = table.Column<int>(type: "integer", nullable: false),
+                    slot_no = table.Column<short>(type: "smallint", nullable: false),
                     vendor = table.Column<string>(type: "text", nullable: false),
                     metadata = table.Column<string>(type: "text", nullable: false),
                     device_module_id = table.Column<int>(type: "integer", nullable: false),
@@ -1398,16 +1478,16 @@ namespace Core.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Output", x => x.id);
+                    table.PrimaryKey("PK_Outputs", x => x.id);
                     table.ForeignKey(
-                        name: "FK_Output_DeviceModules_device_module_id",
+                        name: "FK_Outputs_DeviceModules_device_module_id",
                         column: x => x.device_module_id,
                         principalSchema: "core",
                         principalTable: "DeviceModules",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Output_Locations_location_id",
+                        name: "FK_Outputs_Locations_location_id",
                         column: x => x.location_id,
                         principalSchema: "core",
                         principalTable: "Locations",
@@ -1631,6 +1711,10 @@ namespace Core.Infrastructure.Migrations
                     buzzer_id = table.Column<int>(type: "integer", nullable: true),
                     bg_id = table.Column<int>(type: "integer", nullable: true),
                     device_id = table.Column<int>(type: "integer", nullable: false),
+                    from_area_id = table.Column<int>(type: "integer", nullable: true),
+                    antipassback_from = table.Column<int>(type: "integer", nullable: false),
+                    to_area_id = table.Column<int>(type: "integer", nullable: true),
+                    antipassback_to = table.Column<int>(type: "integer", nullable: false),
                     name = table.Column<string>(type: "text", nullable: false),
                     guid = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
                     created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
@@ -1644,6 +1728,20 @@ namespace Core.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Doors", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_Doors_Areas_from_area_id",
+                        column: x => x.from_area_id,
+                        principalSchema: "core",
+                        principalTable: "Areas",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.SetNull);
+                    table.ForeignKey(
+                        name: "FK_Doors_Areas_to_area_id",
+                        column: x => x.to_area_id,
+                        principalSchema: "core",
+                        principalTable: "Areas",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.SetNull);
                     table.ForeignKey(
                         name: "FK_Doors_Buzzers_buzzer_id",
                         column: x => x.buzzer_id,
@@ -1840,7 +1938,7 @@ namespace Core.Infrastructure.Migrations
                 {
                     id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    slot_no = table.Column<int>(type: "integer", nullable: false),
+                    slot_no = table.Column<short>(type: "smallint", nullable: false),
                     vendor = table.Column<string>(type: "text", nullable: false),
                     metadata = table.Column<string>(type: "text", nullable: false),
                     door_id = table.Column<int>(type: "integer", nullable: true),
@@ -1935,13 +2033,51 @@ namespace Core.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "MonitorGroupComponent",
+                schema: "core",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    type = table.Column<int>(type: "integer", nullable: false),
+                    input_id = table.Column<int>(type: "integer", nullable: true),
+                    door_id = table.Column<int>(type: "integer", nullable: true),
+                    monitor_group_id = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MonitorGroupComponent", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_MonitorGroupComponent_Doors_door_id",
+                        column: x => x.door_id,
+                        principalSchema: "core",
+                        principalTable: "Doors",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_MonitorGroupComponent_Inputs_input_id",
+                        column: x => x.input_id,
+                        principalSchema: "core",
+                        principalTable: "Inputs",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_MonitorGroupComponent_MonitorGroup_monitor_group_id",
+                        column: x => x.monitor_group_id,
+                        principalSchema: "core",
+                        principalTable: "MonitorGroup",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Relays",
                 schema: "core",
                 columns: table => new
                 {
                     id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    slot_no = table.Column<int>(type: "integer", nullable: false),
+                    slot_no = table.Column<short>(type: "smallint", nullable: false),
                     metadata = table.Column<string>(type: "text", nullable: false),
                     vendor = table.Column<string>(type: "text", nullable: false),
                     door_id = table.Column<int>(type: "integer", nullable: false),
@@ -1989,7 +2125,7 @@ namespace Core.Infrastructure.Migrations
                 {
                     id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    slot_no = table.Column<int>(type: "integer", nullable: false),
+                    slot_no = table.Column<short>(type: "smallint", nullable: false),
                     metadata = table.Column<string>(type: "text", nullable: false),
                     vendor = table.Column<string>(type: "text", nullable: false),
                     door_id = table.Column<int>(type: "integer", nullable: false),
@@ -2045,7 +2181,7 @@ namespace Core.Infrastructure.Migrations
                 {
                     id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    slot_no = table.Column<int>(type: "integer", nullable: false),
+                    slot_no = table.Column<short>(type: "smallint", nullable: false),
                     metadata = table.Column<string>(type: "text", nullable: false),
                     vendor = table.Column<string>(type: "text", nullable: false),
                     door_id = table.Column<int>(type: "integer", nullable: true),
@@ -2140,7 +2276,7 @@ namespace Core.Infrastructure.Migrations
                 {
                     id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    slot_no = table.Column<int>(type: "integer", nullable: false),
+                    slot_no = table.Column<short>(type: "smallint", nullable: false),
                     mode = table.Column<string>(type: "text", nullable: false),
                     metadata = table.Column<string>(type: "text", nullable: false),
                     vendor = table.Column<string>(type: "text", nullable: false),
@@ -2633,6 +2769,12 @@ namespace Core.Infrastructure.Migrations
 
             migrationBuilder.InsertData(
                 schema: "core",
+                table: "Areas",
+                columns: new[] { "id", "altr_external_id", "area_mode", "device_id", "external_id", "is_active", "is_default", "location_id", "metadata", "multi_occ_mode", "name", "occ_down", "occ_max", "occ_up" },
+                values: new object[] { 1, null, 0, null, (short)1, true, true, 1, "", 0, "Outside", (short)0, (short)0, (short)0 });
+
+            migrationBuilder.InsertData(
+                schema: "core",
                 table: "CardFormats",
                 columns: new[] { "id", "altr_external_id", "bits", "card_no_len", "card_no_loc", "even_parity_len", "even_parity_loc", "external_id", "fac", "fac_len", "fac_loc", "guid", "is_active", "is_default", "issue_code_len", "issue_code_loc", "location_id", "metadata", "name", "odd_parity_len", "odd_parity_loc" },
                 values: new object[,]
@@ -2971,6 +3113,25 @@ namespace Core.Infrastructure.Migrations
                 column: "location_id");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Areas_device_id",
+                schema: "core",
+                table: "Areas",
+                column: "device_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Areas_guid_id_location_id",
+                schema: "core",
+                table: "Areas",
+                columns: new[] { "guid", "id", "location_id" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Areas_location_id",
+                schema: "core",
+                table: "Areas",
+                column: "location_id");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_AuditTrails_guid_id_created_at_action_username_entity",
                 schema: "core",
                 table: "AuditTrails",
@@ -3133,10 +3294,10 @@ namespace Core.Infrastructure.Migrations
                 column: "location_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Devices_guid_mac_vendor",
+                name: "IX_Devices_guid_mac_vendor_location_id",
                 schema: "core",
                 table: "Devices",
-                columns: new[] { "guid", "mac", "vendor" },
+                columns: new[] { "guid", "mac", "vendor", "location_id" },
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -3159,6 +3320,12 @@ namespace Core.Infrastructure.Migrations
                 column: "device_id");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Doors_from_area_id",
+                schema: "core",
+                table: "Doors",
+                column: "from_area_id");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Doors_guid_id_device_id",
                 schema: "core",
                 table: "Doors",
@@ -3170,6 +3337,12 @@ namespace Core.Infrastructure.Migrations
                 schema: "core",
                 table: "Doors",
                 column: "location_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Doors_to_area_id",
+                schema: "core",
+                table: "Doors",
+                column: "to_area_id");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Events_guid_id_location_id_created_at_timestamp_mac_vendor",
@@ -3274,22 +3447,22 @@ namespace Core.Infrastructure.Migrations
                 column: "location_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Input_device_module_id",
+                name: "IX_Inputs_device_module_id",
                 schema: "core",
-                table: "Input",
+                table: "Inputs",
                 column: "device_module_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Input_guid_id_device_module_id_slot_no",
+                name: "IX_Inputs_guid_id_device_module_id_slot_no",
                 schema: "core",
-                table: "Input",
+                table: "Inputs",
                 columns: new[] { "guid", "id", "device_module_id", "slot_no" },
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Input_location_id",
+                name: "IX_Inputs_location_id",
                 schema: "core",
-                table: "Input",
+                table: "Inputs",
                 column: "location_id");
 
             migrationBuilder.CreateIndex(
@@ -3407,6 +3580,38 @@ namespace Core.Infrastructure.Migrations
                 column: "locationid");
 
             migrationBuilder.CreateIndex(
+                name: "IX_MonitorGroup_device_id",
+                schema: "core",
+                table: "MonitorGroup",
+                column: "device_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MonitorGroup_locationid",
+                schema: "core",
+                table: "MonitorGroup",
+                column: "locationid");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MonitorGroupComponent_door_id",
+                schema: "core",
+                table: "MonitorGroupComponent",
+                column: "door_id",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MonitorGroupComponent_input_id",
+                schema: "core",
+                table: "MonitorGroupComponent",
+                column: "input_id",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MonitorGroupComponent_monitor_group_id",
+                schema: "core",
+                table: "MonitorGroupComponent",
+                column: "monitor_group_id");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_OperatorLocations_location_id",
                 schema: "core",
                 table: "OperatorLocations",
@@ -3438,22 +3643,22 @@ namespace Core.Infrastructure.Migrations
                 column: "role_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Output_device_module_id",
+                name: "IX_Outputs_device_module_id",
                 schema: "core",
-                table: "Output",
+                table: "Outputs",
                 column: "device_module_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Output_guid_id_device_module_id_slot_no",
+                name: "IX_Outputs_guid_id_device_module_id_slot_no",
                 schema: "core",
-                table: "Output",
+                table: "Outputs",
                 columns: new[] { "guid", "id", "device_module_id", "slot_no" },
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Output_location_id",
+                name: "IX_Outputs_location_id",
                 schema: "core",
-                table: "Output",
+                table: "Outputs",
                 column: "location_id");
 
             migrationBuilder.CreateIndex(
@@ -3873,10 +4078,6 @@ namespace Core.Infrastructure.Migrations
                 schema: "core");
 
             migrationBuilder.DropTable(
-                name: "Input",
-                schema: "core");
-
-            migrationBuilder.DropTable(
                 name: "License",
                 schema: "core");
 
@@ -3885,11 +4086,15 @@ namespace Core.Infrastructure.Migrations
                 schema: "core");
 
             migrationBuilder.DropTable(
+                name: "MonitorGroupComponent",
+                schema: "core");
+
+            migrationBuilder.DropTable(
                 name: "OperatorLocations",
                 schema: "core");
 
             migrationBuilder.DropTable(
-                name: "Output",
+                name: "Outputs",
                 schema: "core");
 
             migrationBuilder.DropTable(
@@ -3938,6 +4143,14 @@ namespace Core.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "ModulePermissions",
+                schema: "core");
+
+            migrationBuilder.DropTable(
+                name: "Inputs",
+                schema: "core");
+
+            migrationBuilder.DropTable(
+                name: "MonitorGroup",
                 schema: "core");
 
             migrationBuilder.DropTable(
@@ -4038,6 +4251,10 @@ namespace Core.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "Departments",
+                schema: "core");
+
+            migrationBuilder.DropTable(
+                name: "Areas",
                 schema: "core");
 
             migrationBuilder.DropTable(

@@ -7,7 +7,6 @@ import { Options } from "../../model/Options";
 import { DeviceDto } from "../../model/Device/DeviceDto";
 import { InputDto } from "../../model/MonitorPoint/InputDto";
 import { ModeDto } from "../../model/ModeDto";
-import { ModuleDto } from "../../model/Module/ModuleDto";
 import { ModuleEndpoint } from "../../endpoint/ModuleEndpoint";
 import { MonitorPointEndpoint } from "../../endpoint/MonitorPointEndpoint";
 import { DeviceEndpoint } from "../../endpoint/DeviceEndpoint";
@@ -15,132 +14,47 @@ import { send } from "../../api/api";
 import { useLocation } from "../../context/LocationContext";
 import { FormProp, FormType } from "../../model/Form/FormProp";
 import {
-  FormActions,
   FormField,
   FormSection,
 } from "../../components/form/template/FormTemplate";
+import { HttpStatusCode } from "axios";
+import { AeroInputMetadata } from "../../model/MonitorPoint/AeroInputMetadata";
+import { InputMode } from "../../enum/InputMode";
+import { InputLatchingMode } from "../../enum/InputLatchingMode";
 
 const InputForm: React.FC<PropsWithChildren<FormProp<InputDto>>> = ({
-  handleClick,
   dto,
   setDto,
   type,
 }) => {
-  const { locationGuid: locationId } = useLocation();
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setDto((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-  };
+  const isReadOnly = type == FormType.INFO;
+  const { locationGuid } = useLocation();
 
   {
     /* Select */
   }
   const [moduleOption, setModuleOption] = useState<Options[]>([]);
   const [controllerOption, setControllerOption] = useState<Options[]>([]);
-  const [logFunctionOption, setLogFunctionOption] = useState<Options[]>([]);
   const [inputOption, setInputOption] = useState<Options[]>([]);
-  const [inputModeOption, setInputModeOption] = useState<Options[]>([]);
-  const [monitorPointModeOption, setMonitorPointModeOption] = useState<
-    Options[]
-  >([]);
+  const [selectedController,setSelectedController] = useState<string>("");
 
-  const handleSelectChange = async (
-    value: string,
-    e: React.ChangeEvent<HTMLSelectElement>,
-  ) => {
-    switch (e.target.name) {
-      case "deviceId":
-        setDto((prev) => ({ ...prev, scpId: Number(value) }));
-        const res1 = await send.get(
-          ModuleEndpoint.GET_BY_DEVICE(Number(value)),
-        );
-        if (res1.data) {
-          res1.data.map((a: Options) => {
-            setModuleOption((prev) => [
-              ...prev,
-              {
-                label: a.label,
-                value: a.value,
-                description: a.description,
-                additionalInfo: a.additionalInfo,
-                isTaken: false,
-              },
-            ]);
-          });
-        }
-        break;
-      case "moduleId":
-        setDto((prev) => ({
-          ...prev,
-          moduleId: Number(value),
-          moduleDescription:
-            moduleOption.find((x) => x.value == Number(value))?.label ?? "",
-          moduleDriverId:
-            moduleOption.find((x) => x.value == Number(value))
-              ?.additionalInfo ?? -1,
-        }));
-        const res2 = await send.get(
-          MonitorPointEndpoint.IP_LIST(Number(value)),
-        );
-        if (res2?.data.data) {
-          res2.data.data.map((a: number) => {
-            setInputOption((prev) => [
-              ...prev,
-              {
-                label: `Input ${a + 1}`,
-                value: a.toString(),
-              },
-            ]);
-          });
-        }
-        break;
-      case "monitorPointMode":
-        setDto((prev) => ({
-          ...prev,
-          monitorPointMode: Number(value),
-          monitorPointModeDescription:
-            monitorPointModeOption.find((x) => x.value == Number(value))
-              ?.label ?? "",
-        }));
-        break;
-      case "inputMode":
-        setDto((prev) => ({
-          ...prev,
-          inputMode: Number(value),
-          inputModeDescription:
-            inputModeOption.find((x) => x.value == Number(value))?.label ?? "",
-        }));
-        break;
-      case "logFunction":
-        setDto((prev) => ({
-          ...prev,
-          logFunction: Number(value),
-          logFunctionDescription:
-            logFunctionOption.find((x) => x.value == Number(value))?.label ??
-            "",
-        }));
-        break;
-      default:
-        setDto((prev) => ({ ...prev, [e.target.name]: value }));
-        break;
-    }
-  };
 
   {
     /* Controller Data */
   }
   const fetchController = async () => {
     let res = await send.get(
-      DeviceEndpoint.GET_OPTION_BY_TYPE(locationId, DeviceType.AERO),
+      DeviceEndpoint.GET_LOCATION(locationGuid),
     );
     if (res.data) {
-      res.data.map((a: Options) => {
+      res.data.data.map((a: DeviceDto) => {
         setControllerOption((prev) => [
           ...prev,
           {
-            label: a.label,
-            value: a.value,
-            description: a.description,
-            additionalInfo: a.additionalInfo,
+            label: a.name,
+            value: a.guid,
+            description: a.mac,
+            additionalInfo:a.vendor,
             isTaken: false,
           },
         ]);
@@ -148,181 +62,279 @@ const InputForm: React.FC<PropsWithChildren<FormProp<InputDto>>> = ({
     }
   };
 
-  const fetchInputMode = async () => {
-    let res = await send.get(MonitorPointEndpoint.IP_MODE);
-    if (res?.data.data) {
-      res.data.data.map((a: ModeDto) => {
-        setInputModeOption((prev) => [
-          ...prev,
-          { label: a.name, value: a.value },
-        ]);
-      });
-    }
-  };
-
-  const fetchMonitorPointMode = async () => {
-    let res = await send.get(MonitorPointEndpoint.MP_MODE);
-    if (res?.data.data) {
-      res.data.data.map((a: ModeDto) => {
-        setMonitorPointModeOption((prev) => [
-          ...prev,
-          { label: a.name, value: a.value },
-        ]);
-      });
-    }
-  };
-
-  const fetchLFMode = async () => {
-    let res = await send.get(MonitorPointEndpoint.LOG_FUNCTION);
-    if (res.data.data) {
-      res.data.data.map((a: ModeDto) => {
-        setLogFunctionOption((prev) => [
+  const fetchModule = async (guid:string) => {
+    const res = await send.get(ModuleEndpoint.GET_BY_DEVICE(guid));
+    console.log(res);
+    if(res.status == HttpStatusCode.Ok){
+      res.data.data.map((a:Options) => {
+        setModuleOption(prev => ([
           ...prev,
           {
-            label: a.name,
-            value: a.value,
-            description: a.description,
-          },
-        ]);
-      });
+            label:a.label,
+            value:a.value
+          }
+        ]))
+      })
     }
-  };
+  }
+
+  const fetchInputSlot = async (guid:string) => {
+    const res = await send.get(ModuleEndpoint.GET_INPUT_SLOT(guid))
+    if(res.status == HttpStatusCode.Ok){
+      setInputOption(res.data.data)
+    }
+  }
+
 
   {
     /* UseEffect */
   }
   useEffect(() => {
     fetchController();
-    fetchInputMode();
-    fetchMonitorPointMode();
-    fetchLFMode();
   }, []);
 
   return (
     <>
-      <FormSection title="Monitor Point Detail" description="">
-        <div className="grid gap-5 grid-cols-2 md:grid-cols-2 gap-x-10 gap-y-6 mb-8 p-5">
+      <div className="grid gap-5 grid-cols-3 md:grid-cols-3 gap-x-10 gap-y-6 mb-8 p-5">
           <FormField>
-            <Label htmlFor="name">Monitor Point Name</Label>
+            <Label htmlFor="name">Name</Label>
             <Input
               value={dto.name}
+              placeholder="Name"
               name="name"
               type="text"
               id="name"
-              onChange={handleChange}
-              disabled={type == FormType.INFO}
+              onChange={e => setDto(prev => ({
+                ...prev,
+                name:e.target.value
+              }))}
+              disabled={isReadOnly}
             />
           </FormField>
           <FormField>
             <Label>Controller</Label>
             <Select
-              disabled={type == FormType.INFO}
-              isString={false}
+              disabled={isReadOnly}
+              isString={true}
               name="deviceId"
               options={controllerOption}
               placeholder="Select Option"
-              onChangeWithEvent={handleSelectChange}
+              onChange={(e) => {
+                setSelectedController(e.target.value)
+                fetchModule(e.target.value)
+                setDto(prev => ({
+                  ...prev,
+                  vendor:controllerOption.find(x => x.value == e.target.value)?.additionalInfo
+                }))
+              }}
               className="dark:bg-dark-900"
-              defaultValue={dto.scpId}
+              defaultValue={selectedController}
             />
           </FormField>
 
           <FormField>
             <Label>Module</Label>
             <Select
-              disabled={type == FormType.INFO}
+              disabled={isReadOnly}
+              isString
               name="moduleId"
               options={moduleOption}
               placeholder="Select Option"
-              onChangeWithEvent={handleSelectChange}
+              onChange={e => {
+                setDto(prev => ({
+                  ...prev,
+                  deviceModuleGuid:e.target.value
+                }));
+                fetchInputSlot(e.target.value)
+              }}
               className="dark:bg-dark-900"
-              defaultValue={dto.moduleId}
+              defaultValue={dto.deviceModuleGuid}
             />
           </FormField>
           <FormField>
             <Label>Input</Label>
             <Select
-              disabled={type == FormType.INFO}
+              disabled={isReadOnly}
               name="inputNo"
               options={inputOption}
               placeholder="Select Option"
-              onChangeWithEvent={handleSelectChange}
+              onChange={e => {
+                setDto(prev => ({
+                  ...prev,
+                  slotNo:Number(e.target.value)
+                }))
+              }}
               className="dark:bg-dark-900"
-              defaultValue={dto.inputNo}
+              defaultValue={dto.slotNo}
+            />
+          </FormField>
+          <FormField>
+            <Label>Hold Time</Label>
+             <Input
+              disabled={isReadOnly}
+              value={(dto.metadata as AeroInputMetadata).holdTime}
+              min="0"
+              max="65535"
+              name="holdTime"
+              type="number"
+              id="holdTime"
+              onChange={e => 
+                setDto(prev => ({
+                  ...prev,
+                  metadata : {
+                    ...(prev.metadata as AeroInputMetadata),
+                    holdTime:Number(e.target.value)
+                  }
+                }))
+              }
+            />
+          </FormField>
+          <FormField>
+            <Label>Debounce</Label>
+             <Input
+              disabled={isReadOnly}
+              value={(dto.metadata as AeroInputMetadata).debounce}
+              min="0"
+              max="65535"
+              name="debounce"
+              type="number"
+              id="debounce"
+              onChange={e => 
+                setDto(prev => ({
+                  ...prev,
+                  metadata : {
+                    ...(prev.metadata as AeroInputMetadata),
+                    debounce:Number(e.target.value)
+                  }
+                }))
+              }
             />
           </FormField>
           <FormField>
             <Label className="pb-3">Monitor Point Mode</Label>
             <Select
-              disabled={type == FormType.INFO}
+              disabled={isReadOnly}
               name="monitorPointMode"
-              options={monitorPointModeOption}
+              options={[
+                {
+                  label:"Normally Close",
+                  value:InputMode.NC
+                },
+                {
+                  label:"Normally Open",
+                  value:InputMode.NO
+                },
+                {
+                  label:"Standard (ROM’ed) EOL: 1 kΩ normal, 2 kΩ active",
+                  value:InputMode.StandardN1A2
+                },{
+                  label:"Standard (ROM’ed) EOL: 1 kΩ normal, 2 kΩ active",
+                  value:InputMode.StandardN2A1
+                }
+              ]}
               placeholder="Select Option"
-              onChangeWithEvent={handleSelectChange}
+              onChange={e => 
+                setDto(prev => ({
+                  ...prev,
+                  metadata : {
+                    ...(prev.metadata as AeroInputMetadata),
+                    mode:Number(e.target.value)
+                  }
+                }))
+              }
               className="dark:bg-dark-900"
-              defaultValue={dto.monitorPointMode}
+              defaultValue={(dto.metadata as AeroInputMetadata).mode}
             />
           </FormField>
           <FormField>
             <Label className="pb-3">Log Function Mode</Label>
             <Select
-              disabled={type == FormType.INFO}
+              disabled={isReadOnly}
               name="logFunction"
-              options={logFunctionOption}
+              options={[
+                {
+                  label:"Normal",
+                  value:InputLatchingMode.NORMAL
+                },
+                {
+                  label:"Non Latching",
+                  value:InputLatchingMode.NON_LATCHING
+                },
+                {
+                  label:"Latching",
+                  value:InputLatchingMode.LATCHING
+                }
+              ]}
               placeholder="Select Option"
-              onChangeWithEvent={handleSelectChange}
+              onChange={e => 
+                setDto(prev => ({
+                  ...prev,
+                  metadata : {
+                    ...(prev.metadata as AeroInputMetadata),
+                    latchingMode:Number(e.target.value)
+                  }
+                }))
+              }
               className="dark:bg-dark-900"
-              defaultValue={dto.logFunction}
+               defaultValue={(dto.metadata as AeroInputMetadata).latchingMode}
             />
           </FormField>
 
           <FormField
             className={
-              dto.monitorPointMode == 1 || dto.monitorPointMode == 2
+              (dto.metadata as AeroInputMetadata).latchingMode == InputLatchingMode.NON_LATCHING || (dto.metadata as AeroInputMetadata).latchingMode == InputLatchingMode.LATCHING
                 ? ""
                 : "hidden"
             }
           >
             <Label htmlFor="delayEntry">Delay Entry(s)</Label>
             <Input
-              disabled={type == FormType.INFO}
-              value={dto.delayEntry}
+              disabled={isReadOnly}
+              value={(dto.metadata as AeroInputMetadata).delayEntry}
               min="0"
               max="65535"
               name="delayEntry"
               type="number"
               id="delayEntry"
-              onChange={handleChange}
+              onChange={e => 
+                setDto(prev => ({
+                  ...prev,
+                  metadata : {
+                    ...(prev.metadata as AeroInputMetadata),
+                    delayEntry:Number(e.target.value)
+                  }
+                }))
+              }
             />
           </FormField>
-          <FormField
+           <FormField
             className={
-              dto.monitorPointMode == 1 || dto.monitorPointMode == 2
+              (dto.metadata as AeroInputMetadata).latchingMode == InputLatchingMode.NON_LATCHING || (dto.metadata as AeroInputMetadata).latchingMode == InputLatchingMode.LATCHING
                 ? ""
                 : "hidden"
             }
           >
             <Label htmlFor="delayExit">Delay Exit(s)</Label>
             <Input
-              disabled={type == FormType.INFO}
-              value={dto.delayExit}
+              disabled={isReadOnly}
+              value={(dto.metadata as AeroInputMetadata).delayExit}
               min="0"
               max="65535"
               name="delayExit"
               type="number"
               id="delayExit"
-              onChange={handleChange}
+              onChange={e => 
+                setDto(prev => ({
+                  ...prev,
+                  metadata : {
+                    ...(prev.metadata as AeroInputMetadata),
+                    delayExit:Number(e.target.value)
+                  }
+                }))
+              }
             />
           </FormField>
         </div>
-      </FormSection>
-      <FormActions
-        onSubmit={handleClick}
-        onCancel={handleClick}
-        cancelName="close"
-        submitName={type == FormType.UPDATE ? "update" : "create"}
-        typeLabel={type == FormType.UPDATE ? "Update" : "Create"}
-      />
     </>
   );
 };

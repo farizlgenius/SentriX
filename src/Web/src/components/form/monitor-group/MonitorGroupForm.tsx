@@ -1,249 +1,319 @@
-import { PropsWithChildren, useEffect, useState } from "react";
+import { PropsWithChildren, useCallback, useEffect, useState } from "react";
 import Input from "../input/InputField";
 import Label from "../Label";
-import { FormProp, FormType } from "../../../model/Form/FormProp";
-import { MonitorGroupDto } from "../../../model/MonitorGroup/MonitorGroupDto";
+import { MonitorGroupDto, MonitorPointGroupComponent } from "../../../model/MonitorGroup/MonitorGroupDto";
 import Select from "../Select";
 import Button from "../../ui/button/Button";
 import { useLocation } from "../../../context/LocationContext";
 import { send } from "../../../api/api";
 import { DeviceEndpoint } from "../../../endpoint/DeviceEndpoint";
 import { Options } from "../../../model/Options";
-import { DeviceDto } from "../../../model/Device/DeviceDto";
-import { ModeDto } from "../../../model/ModeDto";
-import { MonitorGroupEndpoint } from "../../../endpoint/MonitorGroupEndpoint";
-import { MonitorGroupListDto } from "../../../model/MonitorGroup/MonitorGroupListDto";
 import { MonitorPointEndpoint } from "../../../endpoint/MonitorPointEndpoint";
 import { InputDto } from "../../../model/MonitorPoint/InputDto";
 import { DoorEndpoint } from "../../../endpoint/DoorEndpoint";
 import { DoorDto } from "../../../model/Door/DoorDto";
 import { MonitorIcon } from "../../../icons";
+import { FormField } from "../template/FormTemplate";
+import { FormProp, FormType } from "../../../model/Form/FormProp";
+import { MonitorType } from "../../../enum/MonitorType";
 
 export const MonitorGroupForm: React.FC<
   PropsWithChildren<FormProp<MonitorGroupDto>>
 > = ({ handleClick, dto, setDto, type }) => {
-  const defaultDto: MonitorGroupListDto = {
-    pointType: -1,
-    pointTypeDesc: "",
-    pointNumber: -1,
+  const isReadOnly = type == FormType.INFO;
+  const defaultDto: MonitorPointGroupComponent = {
+    componentGuid: "",
+    type: MonitorType.UNKNOWN,
   };
-  const { locationGuid: locationId } = useLocation();
+  const { locationGuid } = useLocation();
   const [hardwareOptions, setHardwareOptions] = useState<Options[]>([]);
-  const [typeOptions, setTypeOptions] = useState<Options[]>([]);
-  const [numberOptions, setNumberOptions] = useState<Options[]>([]);
-  const [selected, setSelected] = useState<MonitorGroupListDto[]>([]);
-  const [mp, setMp] = useState<MonitorGroupListDto>(defaultDto);
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setDto((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-  };
+
+  const [monitorOptions, setMonitorOptions] = useState<Options[]>([]);
+  const [doorOptions,setDoorOptions] = useState<Options[]>([]);
+  const [selectedComponents, setSelectedComponents] = useState<string[]>([]);
+  const [selectedComponent, setSelectedComponent] = useState<MonitorPointGroupComponent>(defaultDto);
+  const getComponentKey = (component: MonitorPointGroupComponent) =>
+    `${component.type}:${component.componentGuid}`;
+
   const handleSelect = (
     value: string,
     e: React.ChangeEvent<HTMLSelectElement>,
   ) => {
-    switch (e.target.name) {
-      case "macAddress":
-        setDto((prev) => ({ ...prev, mac: value }));
-        break;
-      case "pointType":
-        console.log(value);
-        setMp((prev) => ({
-          ...prev,
-          pointType: Number(value),
-          pointTypeDesc:
-            typeOptions.find((x) => x.value == Number(value))?.label ?? "",
-        }));
-        switch (Number(value)) {
-          case 1:
-            fetchMonitor(dto.mac);
-            break;
-          case 2:
-          case 3:
-            fetchDoor(dto.mac);
-            break;
-          default:
-            break;
-        }
-        break;
-      case "pointNumber":
-        setMp((prev) => ({ ...prev, pointNumber: Number(value) }));
-        break;
-      default:
-        break;
+    if (e.target.name === "deviceGuid") {
+      setDto((prev) => ({
+        ...prev,
+        deviceGuid: value,
+        components: prev.deviceGuid === value ? prev.components : [],
+      }));
+      setMonitorOptions([]);
+      setDoorOptions([]);
+      setSelectedComponents([]);
+      setSelectedComponent(defaultDto);
+      return;
+    }
+
+    if (e.target.name === "pointType") {
+      const pointType = Number(value) as MonitorType;
+      setSelectedComponent({ componentGuid: "", type: pointType });
+      return;
+    }
+
+    if (e.target.name === "pointNumber") {
+      setSelectedComponent((prev) => ({ ...prev, componentGuid: value }));
     }
   };
 
   const handleClickAdd = () => {
+    if (isReadOnly || !selectedComponent.componentGuid) return;
     setDto((prev) => ({
       ...prev,
-      nMpList: prev.nMpList.includes(mp)
-        ? [...prev.nMpList]
-        : [...prev.nMpList, mp],
+      components: prev.components.some(
+        (component) =>
+          component.componentGuid === selectedComponent.componentGuid &&
+          component.type === selectedComponent.type,
+      )
+        ? prev.components
+        : [...prev.components, selectedComponent],
     }));
-    setMp(defaultDto);
+    setSelectedComponent((previous) => ({ ...previous, componentGuid: "" }));
   };
 
-  const fetchHardware = async () => {
-    const res = await send.get(DeviceEndpoint.GET(locationId));
-    if (res && res.data.data) {
-      res.data.data.map((a: DeviceDto) => {
-        setHardwareOptions((prev) => [
-          ...prev,
-          {
-            label: a.name,
-            value: a.mac,
-          },
-        ]);
-      });
-    }
-  };
-  const fetchTypeOptions = async () => {
-    const res = await send.get(MonitorGroupEndpoint.GET_TYPE);
-    if (res && res.data.data) {
-      res.data.data.map((a: ModeDto) => {
-        setTypeOptions((prev) => [
-          ...prev,
-          {
-            label: a.name,
-            value: a.value,
-          },
-        ]);
-      });
-    }
+  const handleRemoveSelected = () => {
+    setDto((prev) => ({
+      ...prev,
+      components: prev.components.filter(
+        (component) =>
+          !selectedComponents.includes(getComponentKey(component)),
+      ),
+    }));
+    setSelectedComponents([]);
   };
 
-  const fetchMonitor = async (mac: string) => {
-    const res = await send.get(MonitorPointEndpoint.MP_BY_MAC(mac));
+  const toggleSelected = (component: MonitorPointGroupComponent) => {
+    const key = getComponentKey(component);
+    setSelectedComponents((prev) =>
+      prev.includes(key) ? prev.filter((item) => item !== key) : [...prev, key],
+    );
+  };
+
+  const fetchDevice = useCallback(async () => {
+    const res = await send.get(DeviceEndpoint.GET_OPTION(locationGuid));
     if (res && res.data.data) {
-      res.data.data.map((a: InputDto) => {
-        setNumberOptions((prev) => [
-          ...prev,
-          {
-            label: a.name,
-            value: a.componentId,
-          },
-        ]);
-      });
+      setHardwareOptions(res.data.data);
+      
+    }
+  }, [locationGuid]);
+
+
+  const fetchMonitor = async (guid:string) => {
+    const res = await send.get(MonitorPointEndpoint.GET_OPTION_BY_DEVICE(guid));
+    console.log("Monitor Options:", res.data.data);
+    if (res && res.data.data) {
+      setMonitorOptions(res.data.data);
     }
   };
 
-  const fetchDoor = async (mac: string) => {
-    const res = await send.get(DoorEndpoint.GET_ACR_BY_DEVICE_ID(mac));
+  const fetchDoor = async (deviceGuid: string) => {
+    const res = await send.get(DoorEndpoint.GET_OPTION_BY_DEVICE(deviceGuid));
+    console.log("Door Options:", res.data.data);
     if (res && res.data.data) {
-      res.data.data.map((a: DoorDto) => {
-        setNumberOptions((prev) => [
-          ...prev,
-          {
-            label: a.name,
-            value: a.componentId,
-          },
-        ]);
-      });
+      // setDoorOptions(prev => 
+      //   res.data.data.map((a: Options) => 
+      //   prev.some((prevOption) => prevOption.value === a.value) ? prev : [...prev, a]
+      //   )
+      // );
+      setDoorOptions(res.data.data);
     }
   };
 
   useEffect(() => {
-    fetchHardware();
-    fetchTypeOptions();
+    fetchDevice();
   }, []);
+
+  useEffect(() => {
+    if (!dto.deviceGuid || dto.components.length === 0) return;
+    const device = hardwareOptions.find(
+      (option) => option.value === dto.deviceGuid,
+    );
+    if (!device) return;
+
+    const loadSelectedComponentOptions = async () => {
+      const options: Options[] = [];
+      const selectedTypes = new Set(dto.components.map((component) => component.type));
+
+      if (
+        selectedTypes.has(MonitorType.MONITOR_POINT) &&
+        device.description
+      ) {
+        const res = await send.get(
+          MonitorPointEndpoint.MP_BY_MAC(String(device.description)),
+        );
+        if (res && res.data.data) {
+          options.push(
+            ...res.data.data.map((point: InputDto) => ({
+              label: point.name,
+              value: point.guid,
+            })),
+          );
+        }
+      }
+
+      if (
+        selectedTypes.has(MonitorType.FORCED_OPEN) ||
+        selectedTypes.has(MonitorType.HELD_OPEN)
+      ) {
+        const res = await send.get(DoorEndpoint.GET_BY_LOCATION(locationGuid));
+        if (res && res.data.data) {
+          options.push(
+            ...res.data.data
+              .filter((door: DoorDto) => door.deviceGuid === dto.deviceGuid)
+              .map((door: DoorDto) => ({
+                label: door.name,
+                value: door.guid,
+              })),
+          );
+        }
+      }
+
+      setMonitorOptions(options);
+    };
+
+    loadSelectedComponentOptions();
+  }, [dto.components, dto.deviceGuid, hardwareOptions, locationGuid]);
+
+  const getMonitorComponentLabel = (component: MonitorPointGroupComponent) =>
+    monitorOptions.find((option) => option.value === component.componentGuid)
+      ?.label ?? component.componentGuid;
+
+    const getDoorComponentLabel = (component: MonitorPointGroupComponent) =>
+    doorOptions.find((option) => option.value === component.componentGuid)
+      ?.label ?? component.componentGuid;
+
   return (
-    <>
-      <div className="flex flex-col gap-5 justify-center items-center p-5 border border-gray-200 rounded-2xl dark:border-gray-800 lg:p-6">
-        <div className="flex gap-2 w-1/2">
-          <div className="flex-1">
-            <Label htmlFor="name">Name</Label>
-            <Input
-              name="name"
-              type="text"
-              id="name"
-              onChange={handleChange}
-              value={dto.name}
-            />
-          </div>
-        </div>
-        <div className="flex gap-2 w-1/2">
-          <div className="flex-1">
-            <Label htmlFor="name">Hardware</Label>
-            <Select
-              isString={true}
-              options={hardwareOptions}
-              defaultValue={dto.mac}
-              onChangeWithEvent={handleSelect}
-              name="macAddress"
-            />
-          </div>
-        </div>
-        <div className="flex gap-2 w-1/2">
-          <div className="flex-1">
+    <div className="grid grid-cols-2 gap-5">
+      <FormField>
+        <Label htmlFor="name">Name</Label>
+        <Input
+          placeholder="Name"
+          name="name"
+          type="text"
+          id="name"
+          disabled={isReadOnly}
+          onChange={(event) =>
+            setDto((prev) => ({ ...prev, name: event.target.value }))
+          }
+          value={dto.name}
+        />
+      </FormField>
+      <FormField>
+        <Label htmlFor="deviceGuid">Device</Label>
+        <Select
+          isString
+          options={hardwareOptions}
+          defaultValue={dto.deviceGuid}
+          onChange={(event) => {handleSelect(event.target.value, event);
+            fetchDoor(event.target.value);
+      fetchMonitor(event.target.value);
+          }}
+          name="deviceGuid"
+          disabled={isReadOnly}
+        />
+      </FormField>
+      <FormField className="col-span-2">
+        <Label>Components</Label>
+        <div className="grid grid-cols-1 gap-5 rounded-2xl border border-gray-200 p-5 dark:border-gray-800 lg:grid-cols-2 lg:p-6">
+          <FormField>
             <Label htmlFor="pointType">Type</Label>
-            <div className="flex gap-5">
-              <Select
-                isString={false}
-                options={typeOptions}
-                defaultValue={mp.pointType}
-                onChangeWithEvent={handleSelect}
-                name="pointType"
-              />
-            </div>
-          </div>
-          <div className="flex-1">
-            <Label htmlFor="pointNumber">Point Number</Label>
-            <div className="flex gap-5">
-              <Select
-                isString={false}
-                options={numberOptions}
-                defaultValue={mp.pointNumber}
-                onChangeWithEvent={handleSelect}
-                name="pointNumber"
-              />
-            </div>
-          </div>
-          <div className="flex justify-end items-end">
-            <Button name="add" onClick={handleClickAdd}>
-              Add
+            <Select
+              options={[
+                {
+                  label: "Monitor Point", value: MonitorType.MONITOR_POINT
+                }, {
+                  label: "Forced Open", value: MonitorType.FORCED_OPEN
+                }, {
+                  label: "Held Open", value: MonitorType.HELD_OPEN
+                }
+              ]}
+              defaultValue={selectedComponent.type}
+              onChange={(event) => handleSelect(event.target.value, event)}
+              name="pointType"
+              disabled={isReadOnly || !dto.deviceGuid}
+            />
+          </FormField>
+          <FormField>
+            <Label htmlFor="pointNumber">Point</Label>
+            <Select
+            isString
+              options={selectedComponent.type === MonitorType.MONITOR_POINT ? monitorOptions : doorOptions}
+              defaultValue={selectedComponent.componentGuid}
+              onChange={(event) => handleSelect(event.target.value, event)}
+              name="pointNumber"
+              disabled={isReadOnly || (selectedComponent.type === MonitorType.MONITOR_POINT ? monitorOptions.length === 0 : doorOptions.length === 0)}
+            />
+          </FormField>
+          <div className="flex items-end lg:col-span-2">
+            <Button
+              disabled={isReadOnly || !selectedComponent.componentGuid}
+              onClick={handleClickAdd}
+            >
+              Add component
             </Button>
           </div>
-        </div>
-        <div className="flex flex-col gap-2 w-1/2">
-          <Label>Points</Label>
-          <div className="flex flex-col gap-5 justify-center items-center p-5 border border-gray-200 rounded-2xl dark:border-gray-800 lg:p-6">
-            <div className="grid grid-cols-5 gap-4">
-              {dto.nMpList.map((s, i) => (
-                <div
-                  key={i}
-                  className={`cursor-pointer flex flex-col rounded-2xl border border-gray-200 hover:dark:bg-white/[0.01] hover:bg-gray-200 ${selected.includes(s) ? "bg-gray-200 dark:bg-white/[0.01]" : "dark:bg-gray-900 bg-white"} p-5 dark:border-gray-800  md:p-6`}
-                >
-                  <div className="flex flex-col justify-center items-center gap-2">
-                    <div className="flex items-center justify-center w-12 h-12 bg-gray-100 rounded-xl dark:bg-gray-800">
-                      <MonitorIcon />
-                    </div>
-                    <span className="text-sm text-gray-500 dark:text-gray-400">
-                      {s.pointTypeDesc} + {s.pointNumber}
-                    </span>
-                  </div>
-                </div>
-              ))}
+          <div className="lg:col-span-2">
+            <div className="mb-3 flex items-center justify-between gap-3">
+              <Label>Selected components</Label>
+              <Button
+                variant="danger"
+                size="sm"
+                disabled={isReadOnly || selectedComponents.length === 0}
+                onClick={handleRemoveSelected}
+              >
+                Remove selected
+              </Button>
             </div>
+            {dto.components.length === 0 ? (
+              <p className="rounded-xl border border-dashed border-gray-300 p-5 text-center text-sm text-gray-500 dark:border-gray-700 dark:text-gray-400">
+                No components selected.
+              </p>
+            ) : (
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
+                {dto.components.map((component) => {
+                  const key = getComponentKey(component);
+                  const isSelected = selectedComponents.includes(key);
+                  return (
+                    <button
+                      key={key}
+                      type="button"
+                      aria-pressed={isSelected}
+                      disabled={isReadOnly}
+                      onClick={() => toggleSelected(component)}
+                      className={`flex items-center gap-3 rounded-xl border p-4 text-left transition ${
+                        isSelected
+                          ? "border-brand-500 bg-brand-50 dark:bg-brand-500/10"
+                          : "border-gray-200 bg-white hover:bg-gray-50 dark:border-gray-800 dark:bg-gray-900 dark:hover:bg-white/[0.03]"
+                      } ${isReadOnly ? "cursor-default" : "cursor-pointer"}`}
+                    >
+                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-300">
+                        <MonitorIcon />
+                      </span>
+                      <span className="min-w-0">
+                        <span className="block truncate text-sm font-medium text-gray-800 dark:text-white/90">
+                          { selectedComponent.type === MonitorType.MONITOR_POINT
+                            ? getMonitorComponentLabel(component)
+                            : getDoorComponentLabel(component) }
+                        </span>
+                        <span className="block text-xs text-gray-500 dark:text-gray-400">
+                          {MonitorType[component.type]}
+                        </span>
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            )}
           </div>
         </div>
-        <div className="mt-3 flex gap-5">
-          <Button
-            onClickWithEvent={handleClick}
-            disabled={type == FormType.INFO}
-            name={type == FormType.UPDATE ? "update" : "create"}
-            size="sm"
-          >
-            {type == FormType.UPDATE ? "Update" : "Create"}
-          </Button>
-          <Button
-            variant="danger"
-            onClickWithEvent={handleClick}
-            name="close"
-            size="sm"
-          >
-            Cancel
-          </Button>
-        </div>
-      </div>
-    </>
+      </FormField>
+    </div>
   );
 };

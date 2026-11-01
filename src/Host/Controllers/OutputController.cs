@@ -18,8 +18,6 @@ namespace Host.Controllers
       return Ok(res);
     }
 
-
-
     [HttpGet("{guid}")]
     public async Task<IActionResult> GetByGuidAsync(Guid guid)
     {
@@ -31,6 +29,13 @@ namespace Host.Controllers
     public async Task<IActionResult> GetByLocationAsync(Guid guid)
     {
       var res = await output.GetByLocationAsync(guid);
+      return Ok(res);
+    }
+
+    [HttpGet("status/{guid}")]
+    public async Task<IActionResult> GetStatusAsync(Guid guid)
+    {
+      var res = await output.GetStatusAsync(guid);
       return Ok(res);
     }
 

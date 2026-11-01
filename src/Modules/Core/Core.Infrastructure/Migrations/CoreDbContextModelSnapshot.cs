@@ -468,9 +468,6 @@ namespace Core.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
 
-                    b.Property<int?>("Deviceid")
-                        .HasColumnType("integer");
-
                     b.Property<short?>("altr_external_id")
                         .HasColumnType("smallint");
 
@@ -481,6 +478,9 @@ namespace Core.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
                         .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.Property<int?>("device_id")
+                        .HasColumnType("integer");
 
                     b.Property<short?>("external_id")
                         .HasColumnType("smallint");
@@ -526,7 +526,7 @@ namespace Core.Infrastructure.Migrations
 
                     b.HasKey("id");
 
-                    b.HasIndex("Deviceid");
+                    b.HasIndex("device_id");
 
                     b.HasIndex("location_id");
 
@@ -686,8 +686,8 @@ namespace Core.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("slot_no")
-                        .HasColumnType("integer");
+                    b.Property<short>("slot_no")
+                        .HasColumnType("smallint");
 
                     b.Property<DateTime>("updated_at")
                         .ValueGeneratedOnAdd()
@@ -763,8 +763,8 @@ namespace Core.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("slot_no")
-                        .HasColumnType("integer");
+                    b.Property<short>("slot_no")
+                        .HasColumnType("smallint");
 
                     b.Property<DateTime>("updated_at")
                         .ValueGeneratedOnAdd()
@@ -3051,8 +3051,8 @@ namespace Core.Infrastructure.Migrations
                         .HasColumnType("uuid")
                         .HasDefaultValueSql("gen_random_uuid()");
 
-                    b.Property<int>("input_slot")
-                        .HasColumnType("integer");
+                    b.Property<short>("input_slot")
+                        .HasColumnType("smallint");
 
                     b.Property<bool>("is_active")
                         .HasColumnType("boolean");
@@ -3075,14 +3075,14 @@ namespace Core.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("output_slot")
-                        .HasColumnType("integer");
+                    b.Property<short>("output_slot")
+                        .HasColumnType("smallint");
 
                     b.Property<int>("port")
                         .HasColumnType("integer");
 
-                    b.Property<int>("reader_slot")
-                        .HasColumnType("integer");
+                    b.Property<short>("reader_slot")
+                        .HasColumnType("smallint");
 
                     b.Property<string>("serial_number")
                         .IsRequired()
@@ -4097,8 +4097,8 @@ namespace Core.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("slot_no")
-                        .HasColumnType("integer");
+                    b.Property<short>("slot_no")
+                        .HasColumnType("smallint");
 
                     b.Property<DateTime>("updated_at")
                         .ValueGeneratedOnAdd()
@@ -4118,7 +4118,7 @@ namespace Core.Infrastructure.Migrations
                     b.HasIndex("guid", "id", "device_module_id", "slot_no")
                         .IsUnique();
 
-                    b.ToTable("Input", "core");
+                    b.ToTable("Inputs", "core");
                 });
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Interval", b =>
@@ -4733,7 +4733,10 @@ namespace Core.Infrastructure.Migrations
 
                     b.HasIndex("locationid");
 
-                    b.ToTable("MonitorGroup", "core");
+                    b.HasIndex("guid", "id", "location_id")
+                        .IsUnique();
+
+                    b.ToTable("MonitorGroups", "core");
                 });
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.MonitorGroupComponent", b =>
@@ -4766,7 +4769,10 @@ namespace Core.Infrastructure.Migrations
 
                     b.HasIndex("monitor_group_id");
 
-                    b.ToTable("MonitorGroupComponent", "core");
+                    b.HasIndex("id", "door_id", "monitor_group_id", "input_id")
+                        .IsUnique();
+
+                    b.ToTable("MonitorGroupComponents", "core");
                 });
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Operator", b =>
@@ -4969,8 +4975,8 @@ namespace Core.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("slot_no")
-                        .HasColumnType("integer");
+                    b.Property<short>("slot_no")
+                        .HasColumnType("smallint");
 
                     b.Property<DateTime>("updated_at")
                         .ValueGeneratedOnAdd()
@@ -4990,7 +4996,7 @@ namespace Core.Infrastructure.Migrations
                     b.HasIndex("guid", "id", "device_module_id", "slot_no")
                         .IsUnique();
 
-                    b.ToTable("Output", "core");
+                    b.ToTable("Outputs", "core");
                 });
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Pin", b =>
@@ -5323,8 +5329,8 @@ namespace Core.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("slot_no")
-                        .HasColumnType("integer");
+                    b.Property<short>("slot_no")
+                        .HasColumnType("smallint");
 
                     b.Property<DateTime>("updated_at")
                         .ValueGeneratedOnAdd()
@@ -5401,8 +5407,8 @@ namespace Core.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("slot_no")
-                        .HasColumnType("integer");
+                    b.Property<short>("slot_no")
+                        .HasColumnType("smallint");
 
                     b.Property<DateTime>("updated_at")
                         .ValueGeneratedOnAdd()
@@ -5478,8 +5484,8 @@ namespace Core.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("slot_no")
-                        .HasColumnType("integer");
+                    b.Property<short>("slot_no")
+                        .HasColumnType("smallint");
 
                     b.Property<int?>("timezone_id")
                         .HasColumnType("integer");
@@ -5629,8 +5635,8 @@ namespace Core.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("slot_no")
-                        .HasColumnType("integer");
+                    b.Property<short>("slot_no")
+                        .HasColumnType("smallint");
 
                     b.Property<DateTime>("updated_at")
                         .ValueGeneratedOnAdd()
@@ -8177,14 +8183,17 @@ namespace Core.Infrastructure.Migrations
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Area", b =>
                 {
-                    b.HasOne("Core.Infrastructure.Persistences.Entities.Device", null)
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.Device", "device")
                         .WithMany("areas")
-                        .HasForeignKey("Deviceid");
+                        .HasForeignKey("device_id")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Core.Infrastructure.Persistences.Entities.Location", "location")
                         .WithMany("areas")
                         .HasForeignKey("location_id")
                         .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("device");
 
                     b.Navigation("location");
                 });

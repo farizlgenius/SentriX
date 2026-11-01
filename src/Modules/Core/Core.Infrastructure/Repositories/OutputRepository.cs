@@ -52,6 +52,15 @@ public sealed class OutputRepository(CoreDbContext context) : BaseRepository<Per
             throw new ExceedException(typeof(Persistences.Entities.Output).Name);
       }
 
+      public async Task<string> GetNameByExternalIdAndMacAndVendorAsync(short externalId, string mac, Vendor vendor, CancellationToken ct = default)
+      {
+            return await Context.Outputs
+              .AsNoTracking()
+              .Where(x => x.external_id == externalId && x.device_module.device.mac == mac && x.vendor == vendor)
+              .Select(x => x.name)
+              .FirstOrDefaultAsync(ct) ?? "Unknown";
+      }
+
       public async Task<Pagination<OutputDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
   {
     return await base.GetPaginationAsync(

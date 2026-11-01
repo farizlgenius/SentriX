@@ -19,4 +19,6 @@ public sealed class NotifierTopic
       public static string DOOR_STATUS = "DOOR.STATUS";
       // Output
       public static string OUTPUT_STATUS = "OUTPUT.STATUS";
+      // Input
+      public static string INPUT_STATUS = "INPUT.STATUS";
 }

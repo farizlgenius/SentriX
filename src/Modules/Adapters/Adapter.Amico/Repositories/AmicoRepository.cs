@@ -50,7 +50,7 @@ public sealed class AmicoRepository(AmicoDbContext context) : IAmicoRepository
             var entity = await context.Amicos
             .Where(x => x.mac.Equals(Mac))
             .OrderByDescending(x => x.id)
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(ct);
 
             if (entity is null)
                   throw new Exception(MessageHelper.DB.RecordNotFound);
@@ -77,28 +77,28 @@ public sealed class AmicoRepository(AmicoDbContext context) : IAmicoRepository
       {
             return await context.Amicos.AsNoTracking()
             .Where(x => x.guid == guid)
-            .FirstOrDefaultAsync() ?? throw new Exception(MessageHelper.DB.RecordNotFounds(guid.ToString()));
+            .FirstOrDefaultAsync(ct) ?? throw new Exception(MessageHelper.DB.RecordNotFounds(guid.ToString()));
       }
 
       public async Task<Amicos> GetAmicoByMacAsync(string mac, CancellationToken ct = default)
       {
             return await context.Amicos
             .Where(x => mac.Equals(mac))
-            .FirstOrDefaultAsync() ?? throw new Exception(MessageHelper.DB.RecordNotFounds(mac));
+            .FirstOrDefaultAsync(ct) ?? throw new Exception(MessageHelper.DB.RecordNotFounds(mac));
       }
 
       public async Task<Amicos> GetAmicoByIpAsync(string ip, CancellationToken ct = default)
       {
             return await context.Amicos
             .Where(x => ip.Equals(x.ip))
-            .FirstOrDefaultAsync() ?? throw new Exception(MessageHelper.DB.RecordNotFounds(ip));
+            .FirstOrDefaultAsync(ct) ?? throw new Exception(MessageHelper.DB.RecordNotFounds(ip));
       }
 
       public async Task<TEntity> GetSlotByGuidAsync<TEntity>(Guid guid, CancellationToken ct = default) where TEntity : BaseSlot
       {
             return await context.Set<TEntity>()
             .Where(x => x.guid == guid)
-            .FirstOrDefaultAsync() ?? throw new Exception(MessageHelper.DB.RecordNotFounds(guid.ToString()));
+            .FirstOrDefaultAsync(ct) ?? throw new Exception(MessageHelper.DB.RecordNotFounds(guid.ToString()));
       }
 
       public async Task<int> GetSlotIdByGuidAsync<TEntity>(Guid Guid, CancellationToken ct = default) where TEntity : BaseSlot
@@ -119,7 +119,7 @@ public sealed class AmicoRepository(AmicoDbContext context) : IAmicoRepository
       {
             var entity = await context.Amicos
             .Where(x => x.mac.Equals(mac))
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(ct);
 
             if (entity is null)
                   throw new Exception(MessageHelper.DB.RecordNotFound);
@@ -134,7 +134,7 @@ public sealed class AmicoRepository(AmicoDbContext context) : IAmicoRepository
       {
             var entity = await context.Amicos
            .Where(x => x.ip.Equals(ip))
-           .FirstOrDefaultAsync();
+           .FirstOrDefaultAsync(ct);
 
             if (entity is null)
                   throw new Exception(MessageHelper.DB.RecordNotFound);

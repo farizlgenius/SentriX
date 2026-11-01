@@ -4,6 +4,9 @@ import svgr from "vite-plugin-svgr";
 
 // https://vite.dev/config/
 export default defineConfig({
+  resolve: {
+    extensions: [".mjs", ".mts", ".ts", ".tsx", ".js", ".jsx", ".json"],
+  },
   server:{
     host:true,
     port:5173

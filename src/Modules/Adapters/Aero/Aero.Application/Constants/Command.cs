@@ -45,6 +45,7 @@ public static class Command
   public static string MonitorPointGroupArmDisarmCommand = "321 : Monitor Point Group Arm/Disarm Command";
   public static string MonitorGroupStatusRequest = "411 : enCcMpgSrq";
   public static string MonitorPointStatusRequest = "405: enCcMpSrq";
+  public static string ControlPointStatusRequest = "406 : enCcCpSrq";
 
 
 }

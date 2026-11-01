@@ -4,6 +4,7 @@ using Core.Infrastructure.Persistences;
 using Core.Infrastructure.Projections;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel.Domain;
+using SharedKernel.Enums;
 using SharedKernel.Exceptions;
 
 namespace Core.Infrastructure.Repositories;
@@ -35,12 +36,12 @@ public sealed class InputRepository(CoreDbContext context) : BaseRepository<Pers
     );
       }
 
-      public Task<bool> IsAnyRelatedEntitiesAsync(Guid guid, CancellationToken ct = default)
+      public async Task<bool> IsAnyRelatedEntitiesAsync(Guid guid, CancellationToken ct = default)
       {
-            throw new NotImplementedException();
+           return false;
       }
 
-      public async Task<short> GetFreeExeternalIdByMacAsync(string mac,int max, IEnumerable<short>? exception = null, CancellationToken ct = default)
+      public async Task<short> GetFreeExeternalIdByMacAsync(string mac, int max, IEnumerable<short>? exception = null, CancellationToken ct = default)
       {
             var existingIds = await Context.Inputs
                   .AsNoTracking()
@@ -62,5 +63,40 @@ public sealed class InputRepository(CoreDbContext context) : BaseRepository<Pers
             }
 
             throw new ExceedException(typeof(Persistences.Entities.Input).Name);
+      }
+
+      public async Task<string> GetNameByExternalIdAndMacAndVendorAsync(short externalId, string mac, Vendor vendor, CancellationToken ct = default)
+      {
+            var res = await Context.Inputs
+                  .AsNoTracking()
+                  .Where(x => x.external_id == externalId && x.device_module.device.mac == mac && x.vendor == vendor)
+                  .Select(x => x.name)
+                  .FirstOrDefaultAsync(ct) ?? "Unknown";
+
+            return res;
+      }
+
+      public async Task<Guid> GuidByExternalIdAndDeviceExternalIdAndVendorAsync(short externalId, short deviceExternalId, Vendor vendor, CancellationToken ct = default)
+      {
+            var res = await Context.Inputs
+                  .AsNoTracking()
+                  .Where(x => x.external_id == externalId && x.device_module.device.external_id == deviceExternalId && x.vendor == vendor)
+                  .Select(x => x.guid)
+                  .FirstOrDefaultAsync(ct);
+
+            return res;
+      }
+
+      public async Task<IEnumerable<OptionDto>> GetOptionByDeviceAsync(Guid guid, CancellationToken ct = default)
+      {
+            return await Context.Inputs
+                  .AsNoTracking()
+                  .Where(x => x.device_module.device.guid == guid)
+                  .Select(x => new OptionDto(
+                        x.name,
+                        x.guid,
+                        x.device_module.device.mac
+                  ))
+                  .ToArrayAsync(ct);
       }
 }

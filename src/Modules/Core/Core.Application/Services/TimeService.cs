@@ -43,7 +43,7 @@ public sealed class TimeService(
     foreach (var devic in devices)
     {
       var dev = await device.GetCommandDetailAsync(devic.Guid, ct);
-      var tzExternalId = await time.GetFreeExeternalIdAsync(100,[],ct);
+      var tzExternalId = await time.GetFreeExternalIdAsync(100,[],ct);
       await adapter.GetAdapter(devic.Vendor).Time.TimeZone(
         devic.Mac,
         devic.Ip,

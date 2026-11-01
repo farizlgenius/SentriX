@@ -73,7 +73,7 @@ public sealed class DoorRepository(CoreDbContext context) : BaseRepository<Persi
             .AsNoTracking()
             .Where(x => x.external_id == externalId && x.device.mac == mac && x.vendor == vendor)
             .Select(x => x.name)
-            .FirstOrDefaultAsync() ?? string.Empty;
+            .FirstOrDefaultAsync(ct) ?? string.Empty;
       }
 
       public async Task<IEnumerable<DoorDto>> GetByMacAsync(string mac, CancellationToken ct = default)
@@ -169,7 +169,7 @@ public sealed class DoorRepository(CoreDbContext context) : BaseRepository<Persi
                 .AsNoTracking()
                 .Where(x => x.guid == guid)
                 .Select(x => new { x.external_id, x.altr_external_id })
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync(ct);
 
             return result is not null 
                     ? new[] { result.external_id!.Value, result.altr_external_id!.Value } 
@@ -251,5 +251,17 @@ public sealed class DoorRepository(CoreDbContext context) : BaseRepository<Persi
 
             // await Context.SaveChangesAsync(ct);
             throw new NotImplementedException();
+      }
+
+      public async Task<IEnumerable<OptionDto>> GetOptionByDeviceAsync(Guid guid, CancellationToken ct = default)
+      {
+          return await Context.Doors
+            .AsNoTracking()
+            .Where(x => x.device.guid == guid)
+            .Select(x => new OptionDto(
+                x.name,
+                x.guid,
+                x.device.mac
+            )).ToArrayAsync(ct);
       }
 }

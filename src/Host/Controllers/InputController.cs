@@ -23,6 +23,14 @@ public sealed class InputController(IInput input) : ControllerBase
             return Ok(res);
       }
 
+      [HttpGet("option/device/{guid}")]
+  public async Task<IActionResult> GetOptionByDeviceAsync(Guid guid)
+  {
+    var res = await input.GetOptionByDeviceAsync(guid);
+    return Ok(res);
+  }
+
+
       [HttpGet("status/{guid}")]
       public async Task<IActionResult> GetStatusAsync(Guid guid)
       {

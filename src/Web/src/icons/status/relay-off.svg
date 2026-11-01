@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="24px" width="24px" fill="none">
+  <!-- เส้นซ้าย -->
+  <line x1="2" y1="14" x2="6.5" y2="14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+  
+  <!-- จุดเชื่อมต่อซ้าย -->
+  <circle cx="8" cy="14" r="1.5" stroke="currentColor" stroke-width="1.8" />
+  
+  <!-- ขาของสวิตช์ที่เปิดอยู่ -->
+  <line x1="9.2" y1="13.2" x2="16.5" y2="8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+  
+  <!-- จุดเชื่อมต่อขวา -->
+  <circle cx="16" cy="14" r="1.5" stroke="currentColor" stroke-width="1.8" />
+  
+  <!-- เส้นขวา -->
+  <line x1="17.5" y1="14" x2="22" y2="14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+</svg>

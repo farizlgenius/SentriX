@@ -26,5 +26,14 @@ public interface IOutputAdapter
             short repeat,
             CancellationToken ct = default
       );
+
+      Task GetStatusAsync(
+            string mac,
+            string ip,
+            short deviceId,
+            short controlId,
+            short count,
+            CancellationToken ct = default
+      );
       
 }

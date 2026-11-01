@@ -394,7 +394,7 @@ new AdapterEvent(@event)
       .AsNoTracking()
       .Where(x => x.guid == guid)
       .Select(x => x.id)
-      .FirstOrDefaultAsync();
+      .FirstOrDefaultAsync(ct);
 
     if (res == 0)
       throw new NotFoundException(EntityType.CORE_EVENT.ToString(), guid.ToString());
@@ -408,7 +408,7 @@ new AdapterEvent(@event)
       .AsNoTracking()
       .Where(x => x.guid == guid)
       .Select(x => x.id)
-      .FirstOrDefaultAsync();
+      .FirstOrDefaultAsync(ct);
 
     if (res == 0)
       throw new NotFoundException(EntityType.CORE_ENTITY.ToString(), guid.ToString());

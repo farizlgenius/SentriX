@@ -41,7 +41,7 @@ public sealed class AlertRepository(CoreDbContext context) : BaseRepository<Pers
       {
             var en = await Context.AlertLevels
                   .Where(x => x.guid == guid)
-                  .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.ALERT_LEVEL.ToString(),guid.ToString());;
+                  .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.ALERT_LEVEL.ToString(),guid.ToString());;
 
             Context.AlertLevels.Remove(en);
 
@@ -143,7 +143,7 @@ public sealed class AlertRepository(CoreDbContext context) : BaseRepository<Pers
                   .AsNoTracking()
                   .Where(x => x.guid == guid)
                   .Select(x => x.id)
-                  .FirstOrDefaultAsync();
+                  .FirstOrDefaultAsync(ct);
 
             if(res == 0)
                   throw new NotFoundException(EntityType.ALERT_LEVEL.ToString(),guid.ToString());
@@ -274,7 +274,7 @@ public sealed class AlertRepository(CoreDbContext context) : BaseRepository<Pers
       {
             var en = await Context.AlertLevels
                   .Where(x => x.guid == domain.Guid)
-                  .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.ALERT_LEVEL.ToString(),domain.Guid.ToString());
+                  .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.ALERT_LEVEL.ToString(),domain.Guid.ToString());
 
             en.name = domain.Name;
             en.color_code = domain.ColorCode;

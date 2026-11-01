@@ -127,6 +127,10 @@ import { ReactComponent as SuperIcon } from "./status/super.svg?react";
 import { ReactComponent as NoAttachIcon } from "./status/noattach.svg?react";
 import { ReactComponent as LocalMaskIcon } from "./status/localmask.svg?react";
 import { ReactComponent as NoneIcon } from "./status/none.svg?react";
+import { ReactComponent as RelayOnIcon } from "./status/relay-on.svg?react";
+import { ReactComponent as RelayOffIcon } from "./status/relay-off.svg?react";
+import { ReactComponent as SensorOnIcon } from "./status/sensor-on.svg?react";
+import { ReactComponent as SensorOffIcon } from "./status/sesnor-off.svg?react";
 
 
 //#endregion
@@ -257,5 +261,9 @@ export {
   SuperIcon,
   NoAttachIcon,
   LocalMaskIcon,
-  NoneIcon
+  NoneIcon,
+  RelayOffIcon,
+  RelayOnIcon,
+  SensorOnIcon,
+  SensorOffIcon,
 };

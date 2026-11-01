@@ -66,7 +66,7 @@ public sealed class GroupService(
 
         foreach(var dev in uniqueDevice) // Each Mac
         {
-            var groupExternalId = await repo.GetFreeExeternalIdAsync(100,[],ct);
+            var groupExternalId = await repo.GetFreeExternalIdAsync(100,[],ct);
 
             await adapter.GetAdapter(dev.Vendor).Group.CreateAccessGroupAsync(
                 dev.Mac,

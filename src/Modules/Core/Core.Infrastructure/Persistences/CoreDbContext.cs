@@ -49,7 +49,7 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
       public DbSet<Turnstile> Turnstiles { get; set; }
       public DbSet<GroupComponent> GroupComponents { get; set; }
       public DbSet<Output> Outputs { get; set; }
-      public DbSet<Output> Inputs { get; set; }
+      public DbSet<Input> Inputs { get; set; }
       public DbSet<Event> Events { get; set; }
       public DbSet<AdapterEvent> AdapterEvents { get; set; }
       public DbSet<ExceptionEvent> ExceptionEvent { get; set; }
@@ -68,6 +68,8 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
       public DbSet<CoreEntity> CoreEntities { get; set; }
       public DbSet<AlertComponent> AlertComponents { get; set; }
       public DbSet<Area> Areas {get; set; }
+      public DbSet<MonitorGroup> MonitorGroups {get; set; }
+      public DbSet<MonitorGroupComponent> MonitorGroupComponents {get; set; }
 
       protected override void OnModelCreating(ModelBuilder modelBuilder)
       {
@@ -736,6 +738,30 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                               x.guid,
                               x.id,
                               x.location_id
+                        }
+                  ).IsUnique();
+
+
+             modelBuilder.Entity<Persistences.Entities.MonitorGroup>()
+                  .HasIndex(
+                        x => new
+                        {
+                              x.guid,
+                              x.id,
+                              x.location_id
+                        }
+                  ).IsUnique();
+
+
+             modelBuilder.Entity<Persistences.Entities.MonitorGroupComponent>()
+                  .HasIndex(
+                        x => new
+                        {
+                              
+                              x.id,
+                              x.door_id,
+                              x.monitor_group_id,
+                              x.input_id
                         }
                   ).IsUnique();
 

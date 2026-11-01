@@ -5,7 +5,7 @@ namespace Auth.Application.Interfaces;
 
 public interface IRefreshTokenAuditRepository
 {
-      Task AddAsync(string username, string hashedRefreshToken, string action, DateTime expiredAt);
-      Task<RefreshTokenDto> GetRefreshTokenAsync(string hash);
+      Task AddAsync(string username, string hashedRefreshToken, string action, DateTime expiredAt,CancellationToken ct= default);
+      Task<RefreshTokenDto> GetRefreshTokenAsync(string hash,CancellationToken ct = default);
 
 }

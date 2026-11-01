@@ -385,6 +385,11 @@ public sealed class DoorService(
     return await repo.EnableAsync(guid, ct);
   }
 
+      public async Task<IEnumerable<OptionDto>> GetOptionByDeviceAsync(Guid guid, CancellationToken ct = default)
+      {
+          return await repo.GetOptionByDeviceAsync(guid,ct);
+      }
+
       public async Task<IEnumerable<OptionDto>> GetOptionByLocationAsync(Guid guid, CancellationToken ct = default)
       {
             return await repo.GetOptionByLocationAsync(guid,ct);

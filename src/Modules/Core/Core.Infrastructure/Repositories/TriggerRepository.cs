@@ -77,7 +77,7 @@ public sealed class TriggerRepository(CoreDbContext context) : ITriggerRepositor
             throw new NotImplementedException();
       }
 
-      public Task<short> GetFreeExeternalIdAsync(int max, IEnumerable<short>? exception = null, CancellationToken ct = default)
+      public Task<short> GetFreeExternalIdAsync(int max, IEnumerable<short>? exception = null, CancellationToken ct = default)
       {
             throw new NotImplementedException();
       }

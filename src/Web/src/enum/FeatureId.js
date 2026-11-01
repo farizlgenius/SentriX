@@ -1,0 +1,25 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.FeatureId = void 0;
+var FeatureId;
+(function (FeatureId) {
+    FeatureId[FeatureId["dashboard"] = 1] = "dashboard";
+    FeatureId[FeatureId["event"] = 2] = "event";
+    FeatureId[FeatureId["location"] = 3] = "location";
+    FeatureId[FeatureId["alert"] = 4] = "alert";
+    FeatureId[FeatureId["operator"] = 5] = "operator";
+    FeatureId[FeatureId["device"] = 6] = "device";
+    FeatureId[FeatureId["control"] = 7] = "control";
+    FeatureId[FeatureId["monitor"] = 8] = "monitor";
+    FeatureId[FeatureId["monitorgroup"] = 9] = "monitorgroup";
+    FeatureId[FeatureId["acr"] = 10] = "acr";
+    FeatureId[FeatureId["user"] = 11] = "user";
+    FeatureId[FeatureId["group"] = 12] = "group";
+    FeatureId[FeatureId["area"] = 13] = "area";
+    FeatureId[FeatureId["time"] = 14] = "time";
+    FeatureId[FeatureId["trigger"] = 15] = "trigger";
+    FeatureId[FeatureId["map"] = 16] = "map";
+    FeatureId[FeatureId["report"] = 17] = "report";
+    FeatureId[FeatureId["setting"] = 18] = "setting";
+    FeatureId[FeatureId["tools"] = 19] = "tools";
+})(FeatureId || (exports.FeatureId = FeatureId = {}));

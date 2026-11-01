@@ -26,7 +26,7 @@ public sealed class AreaService(
       {
             var dev = await device.GetCommandDetailAsync(dto.DeviceGuid, ct);
 
-            var areaId = await Repo.GetFreeExeternalIdAsync(100, [], ct);
+            var areaId = await Repo.GetFreeExternalIdAsync(100, [], ct);
 
             var doorIds = await door.GetDoorIdsMapGuidsAsync(dto.Doors.Select(x => x.DoorGuid), ct);
 

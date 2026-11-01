@@ -32,4 +32,11 @@ public interface IOutputRepository
             short offTime,
             short repeat
       );
+
+      CommandResponse ControlPointStatus(
+            string mac,
+            short scpId,
+            short cpNo,
+            short count
+      );
 }

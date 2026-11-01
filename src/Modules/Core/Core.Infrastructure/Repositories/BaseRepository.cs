@@ -286,7 +286,7 @@ public abstract class BaseRepository<TEntity, TDomain, TDto>(
             return Expression.Lambda<Func<TEntity, bool>>(combinedBody!, parameter);
       }
 
-      public async Task<short> GetFreeExeternalIdAsync(int max, IEnumerable<short>? exception = null, CancellationToken ct = default)
+      public async Task<short> GetFreeExternalIdAsync(int max, IEnumerable<short>? exception = null, CancellationToken ct = default)
       {
             var existingIds = await Context.Set<TEntity>()
                   .AsNoTracking()
@@ -315,7 +315,7 @@ public abstract class BaseRepository<TEntity, TDomain, TDto>(
                   .AsNoTracking()
                   .Where(x => x.guid == guid)
                   .Select(toCommand)
-                  .FirstOrDefaultAsync() ?? throw new NotFoundException(typeof(TEntity).Name, guid.ToString());
+                  .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(typeof(TEntity).Name, guid.ToString());
       }
 
       public async Task<bool> IsAnyByNameAsync(string name, CancellationToken ct = default)

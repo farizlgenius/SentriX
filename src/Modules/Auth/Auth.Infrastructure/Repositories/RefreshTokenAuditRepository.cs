@@ -9,7 +9,7 @@ namespace Auth.Infrastructure.Repositories;
 
 public sealed class RefreshTokenAuditRepository(AuthDbContext context) : IRefreshTokenAuditRepository
 {
-      public async Task AddAsync(string username, string hashedRefreshToken, string action, DateTime expiredAt)
+      public async Task AddAsync(string username, string hashedRefreshToken, string action, DateTime expiredAt,CancellationToken ct = default)
       {
             var audit = new Persistence.Entities.RefreshTokenAudit
             {
@@ -19,18 +19,18 @@ public sealed class RefreshTokenAuditRepository(AuthDbContext context) : IRefres
                   expired_at = expiredAt
             };
 
-            await context.RefreshTokenAudits.AddAsync(audit);
-            await context.SaveChangesAsync();
+            await context.RefreshTokenAudits.AddAsync(audit,ct);
+            await context.SaveChangesAsync(ct);
       }
 
-      public async Task<RefreshTokenDto> GetRefreshTokenAsync(string hash)
+      public async Task<RefreshTokenDto> GetRefreshTokenAsync(string hash,CancellationToken ct = default)
       {
             return await context.RefreshTokenAudits
             .AsNoTracking()
             .OrderBy(x => x.id)
             .Where(x => x.hashed_refresh_token.Equals(hash))
             .Select(x => new RefreshTokenDto(x.hashed_refresh_token, x.username, x.action, x.expired_at))
-            .FirstOrDefaultAsync() ??
+            .FirstOrDefaultAsync(ct) ??
             new RefreshTokenDto(string.Empty, string.Empty, TokenAction.CREATE.ToString(), DateTime.UtcNow)
             ;
       }

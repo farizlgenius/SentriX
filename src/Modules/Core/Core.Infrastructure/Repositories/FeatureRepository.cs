@@ -26,7 +26,7 @@ public sealed class FeatureRepository(CoreDbContext context) : IFeatureRepositor
                   .Where(x => x.guid == guid)
                   .OrderByDescending(x => x.id)
                   .Select(x => x.id)
-                  .FirstOrDefaultAsync();
+                  .FirstOrDefaultAsync(ct);
       }
 
       public async Task<Dictionary<Guid, (int, string)>> GetMapIdGuidByGuidsAsync(IEnumerable<Guid> guids, CancellationToken ct = default)

@@ -23,7 +23,7 @@ public sealed class PasswordRuleRepository(SettingDbContext context) : IPassword
         x.is_symbol,
         x.is_upper,
         x.weaks.Select(w => w.pattern).ToList()
-      )).FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.PASSWORD_RULE.ToString(), "null");
+      )).FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.PASSWORD_RULE.ToString(), "null");
   }
 
   public async Task<bool> IsAnyByGuidAsync(Guid guid, CancellationToken ct = default)
@@ -38,7 +38,7 @@ public sealed class PasswordRuleRepository(SettingDbContext context) : IPassword
     var en = await context.PasswordRules
       .Include(x => x.weaks)
       .Where(x => x.guid == entity.Guid)
-      .FirstOrDefaultAsync() ?? throw new NotFoundException(EntityType.PASSWORD_RULE.ToString(), entity.Guid.ToString());
+      .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.PASSWORD_RULE.ToString(), entity.Guid.ToString());
 
     en.len = entity.Len;
     en.is_digit = entity.IsDigit;
@@ -72,7 +72,7 @@ public sealed class PasswordRuleRepository(SettingDbContext context) : IPassword
       if (!incomingWeak.Contains(existing.pattern))
       {
         var remove = await context.Set<Persistences.Entities.WeakPassword>()
-        .Where(x => x.pattern.Equals(existing.pattern)).FirstOrDefaultAsync();
+        .Where(x => x.pattern.Equals(existing.pattern)).FirstOrDefaultAsync(ct);
 
         context.Set<Persistences.Entities.WeakPassword>().Remove(remove ?? throw new NotFoundException(EntityType.WEAK_PASSWORD.ToString(), existing.pattern));
 

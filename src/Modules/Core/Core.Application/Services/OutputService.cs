@@ -143,6 +143,23 @@ public sealed class OutputService(
             return true;
       }
 
+      public async Task<bool> GetStatusAsync(Guid guid, CancellationToken ct = default)
+      {
+
+            var dev = await Repo.GetCommandDetailAsync(guid,ct);
+
+            await adapter.GetAdapter(dev.Vendor).Output.GetStatusAsync(
+                  dev.DeviceMac,
+                  dev.DeviceIp,
+                  dev.DeviceExternalId,
+                  dev.ComponentExternalId ?? -1,
+                  1,
+                  ct
+            );
+
+            return true;
+      }
+
       public async Task<bool> OutputCommandAsync(OutputCommandDto command, CancellationToken ct = default)
       {
             var output = await Repo.GetAsync(command.Guid,ct);

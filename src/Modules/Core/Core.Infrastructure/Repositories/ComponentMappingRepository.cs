@@ -142,7 +142,7 @@
 //       .Where(x => x.external_id == externalId && x.entity == entity && x.vendor == vendor)
 //       .OrderByDescending(x => x.id)
 //       .Select(x => x.mac)
-//       .FirstOrDefaultAsync();
+//       .FirstOrDefaultAsync(ct);
 
 //     return res ?? string.Empty;
 //   }
@@ -154,7 +154,7 @@
 //       .Where(x => x.entity == entity && x.guid == guid)
 //       .OrderByDescending(x => x.id)
 //       .Select(x => x.external_id)
-//       .FirstOrDefaultAsync();
+//       .FirstOrDefaultAsync(ct);
 
 //     if (res == null)
 //       throw new NotFoundException(EntityType.COMPONENT_MAPPING.ToString(), guid.ToString());
@@ -185,7 +185,7 @@
 //             .OrderByDescending(x => x.id)
 //             .Where(x => x.external_id == externalId && x.entity == entity && x.vendor == vendor)
 //             .Select(x => x.guid)
-//             .FirstOrDefaultAsync();
+//             .FirstOrDefaultAsync(ct);
 
 //           if(res == Guid.Empty)
 //             throw new NotFoundException(EntityType.COMPONENT_MAPPING.ToString());
@@ -198,7 +198,7 @@
 //           var entity = await context.ComponentMappings
 //             .Where(x => x.mac != null && x.mac.Equals(mac) && x.entity == EntityType.DEVICE)
 //             .OrderByDescending(x => x.id)
-//             .FirstOrDefaultAsync();
+//             .FirstOrDefaultAsync(ct);
 
 //           if(entity == null)
 //             throw new NotFoundException(EntityType.COMPONENT_MAPPING.ToString(),mac);
@@ -258,6 +258,6 @@
 //             .AsNoTracking()
 //             .Where(x => x.external_id == externalId && x.mac == mac && x.entity == type && x.vendor == vendor)
 //             .Select(x => x.guid)
-//             .FirstOrDefaultAsync();
+//             .FirstOrDefaultAsync(ct);
 //       }
 // }

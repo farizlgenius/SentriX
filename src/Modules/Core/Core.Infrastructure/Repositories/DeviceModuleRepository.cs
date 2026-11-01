@@ -128,7 +128,14 @@ public sealed class DeviceModuleRepository(CoreDbContext context) : BaseReposito
             return (res.TotalSlots,res.InputSlots,res.RexSlots,res.SensorSlots,res.BreakGlassSlots);
       }
 
-   
+      public async Task<string> GetNameByExternalIdAndMacAndVendorAsync(short externalId, string mac, Vendor vendor, CancellationToken ct = default)
+      {
+            return await Context.DeviceModules
+                  .AsNoTracking()
+                  .Where(x => x.device.mac == mac && x.external_id == externalId && x.device.vendor == vendor)
+                  .Select(x => x.name)
+                  .FirstOrDefaultAsync(ct) ?? "Unknown";
+      }
 
       public async Task<IEnumerable<OptionDto>> GetOptionByDeviceAsync(Guid guid, CancellationToken ct = default)
       {
@@ -156,7 +163,7 @@ public sealed class DeviceModuleRepository(CoreDbContext context) : BaseReposito
                         OutputSlots = x.outputs.Select(x => x.slot_no).ToList(),
                         BuzzerSlots = x.buzzers.Select(x => x.slot_no).ToList(),
                         RelaySlots = x.relays.Select(x => x.slot_no).ToList()
-                  }).FirstOrDefaultAsync();
+                  }).FirstOrDefaultAsync(ct);
 
             if(res == null)
                   return null;

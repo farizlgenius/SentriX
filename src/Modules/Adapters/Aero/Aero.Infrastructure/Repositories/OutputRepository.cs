@@ -112,6 +112,52 @@ public sealed class OutputRepository(
             }
       }
 
+      public CommandResponse ControlPointStatus(string mac, short scpId, short cpNo, short count)
+      {
+            CC_CPSRQ c = new CC_CPSRQ();
+            c.scp_number = scpId;
+            c.first = cpNo;
+            c.count = count;
+            var result = repo.Send((short)enCfgCmnd.enCcCpSrq,c);
+            if (result)
+            {
+                  logger.LogInformation(LogMessageHelper.CommandSuccess(Command.ControlPointStatusRequest, scpId));
+
+                  return new CommandResponse(
+                        mac,
+                        scpId,
+                        Command.ControlPointStatusRequest,
+                        SCPDLL.scpGetTagLastPosted(scpId),
+                        DateTime.UtcNow,
+                        DateTime.UtcNow,
+                        ObjectHelper.ToAsciiString(c),
+                        CommandStatus.PENDING,
+                        string.Empty,
+                        SharedKernel.Enums.Vendor.aero,
+                        true
+                        );
+
+            }
+            else
+            {
+                  logger.LogError(LogMessageHelper.CommandUnsuccess(Command.ControlPointStatusRequest, scpId));
+                  return new CommandResponse(
+                        mac,
+                       scpId,
+                       Command.ControlPointStatusRequest,
+                       -1,
+                       DateTime.UtcNow,
+                       DateTime.UtcNow,
+                       ObjectHelper.ToAsciiString(c),
+                       CommandStatus.FAILED,
+                       string.Empty,
+                       Vendor.aero,
+                       false
+                       );
+
+            }
+      }
+
       public CommandResponse OutputPointSpecification(string mac, short scpId, short sioNo, short outputNo, short offlineMode, short defaultMode)
       {
             CC_OP c = new CC_OP();

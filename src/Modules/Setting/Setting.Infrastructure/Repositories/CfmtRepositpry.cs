@@ -48,7 +48,7 @@
 //       {
 //             var entity = await context.CardFormats
 //             .Where(x => x.id == id)
-//             .FirstOrDefaultAsync();
+//             .FirstOrDefaultAsync(ct);
 
 //             if(entity is null)
 //                   throw new Exception(MessageHelper.DB.RecordNotFound);
@@ -109,7 +109,7 @@
 //                   x.location_id,
 //                   x.is_active
 //             ))
-//             .FirstOrDefaultAsync() ?? new CardFormatDto();
+//             .FirstOrDefaultAsync(ct) ?? new CardFormatDto();
 //       }
 
 //       public async Task<IEnumerable<CardFormatDto>> GetByLocationIdAsync(int LocationId, CancellationToken ct = default)
@@ -238,7 +238,7 @@
 //       {
 //             var entity = await context.CardFormats
 //             .Where(x => x.id == domain.Id)
-//             .FirstOrDefaultAsync();
+//             .FirstOrDefaultAsync(ct);
 
 //             if(entity is null)
 //                   throw new Exception(MessageHelper.DB.RecordNotFound);

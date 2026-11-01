@@ -14,14 +14,14 @@ public sealed class AeroRepository(AeroDbContext context) : IAeroRepository
       {
             return await context.AccessDatabaseSpecifications.AsNoTracking()
             .OrderByDescending(x => x.id)
-            .FirstOrDefaultAsync() ?? new AccessDatabaseSpecification();
+            .FirstOrDefaultAsync(ct) ?? new AccessDatabaseSpecification();
       }
 
       public async Task<ElevatorAccessLevelSpecification> GetElevatorAccessLevelSpecificationAsync(CancellationToken ct = default)
       {
             return await context.ElevatorAccessLevelSpecifications.AsNoTracking()
             .OrderByDescending(x => x.id)
-            .FirstOrDefaultAsync() ?? new ElevatorAccessLevelSpecification();
+            .FirstOrDefaultAsync(ct) ?? new ElevatorAccessLevelSpecification();
       }
 
       public async Task<IEnumerable<OptionDto>> GetRelayOptionAsync(CancellationToken ct = default)
@@ -50,7 +50,7 @@ public sealed class AeroRepository(AeroDbContext context) : IAeroRepository
       {
             return await context.ScpDeviceSpecifications.AsNoTracking()
             .OrderByDescending(x => x.id)
-            .FirstOrDefaultAsync() ?? new ScpDeviceSpecification();
+            .FirstOrDefaultAsync(ct) ?? new ScpDeviceSpecification();
       }
 
 
@@ -80,7 +80,7 @@ public sealed class AeroRepository(AeroDbContext context) : IAeroRepository
       {
             var e = await context.Set<TEntity>()
             .Where(x => x.device_guid == device_guid && x.slot_id == slot)
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(ct);
 
             if (e == null)
                   throw new Exception(MessageHelper.Common.NotFound("Slot", slot));
@@ -97,7 +97,7 @@ public sealed class AeroRepository(AeroDbContext context) : IAeroRepository
       {
             var e = await context.Set<TEntity>()
             .Where(x => x.slot_id == slot)
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(ct);
 
             if (e == null)
                   throw new Exception(MessageHelper.Common.NotFound("Slot", slot));
@@ -117,7 +117,7 @@ public sealed class AeroRepository(AeroDbContext context) : IAeroRepository
       {
             var e = await context.Set<TEntity>()
             .Where(x => x.device_guid == deviceGuid && x.slot_id == slot)
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(ct);
 
             if (e == null)
                   throw new Exception(MessageHelper.Common.NotFound("Slot", slot));
@@ -146,7 +146,7 @@ public sealed class AeroRepository(AeroDbContext context) : IAeroRepository
             .OrderByDescending(x => x.slot_id)
             .Where(x => x.device_guid == guid && x.is_available == true && x.slot_id != Except)
             .Select(x => x.slot_id)
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(ct);
       }
 
       public async Task<int> GetScpFreeSlotAsync(CancellationToken ct = default)
@@ -155,7 +155,7 @@ public sealed class AeroRepository(AeroDbContext context) : IAeroRepository
             .OrderByDescending(x => x.slot_id)
             .Where(x => x.is_available == true)
             .Select(x => x.slot_id)
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(ct);
       }
 
       public async Task<int> GetScpSlotByMacAsync(string mac, CancellationToken ct = default)
@@ -164,7 +164,7 @@ public sealed class AeroRepository(AeroDbContext context) : IAeroRepository
             .OrderByDescending(x => x.id)
             .Where(x => x.mac.Equals(mac))
             .Select(x => x.slot_id)
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(ct);
       }
 
       public async Task InsertScpSlotAsync(Guid guid, string mac, int slot, CancellationToken ct = default)
@@ -202,7 +202,7 @@ public sealed class AeroRepository(AeroDbContext context) : IAeroRepository
             return await context.ScpSlots.AsNoTracking()
             .Where(x => x.component_guid == guid)
             .OrderByDescending(x => x.id)
-            .FirstOrDefaultAsync() ?? new ScpSlot();
+            .FirstOrDefaultAsync(ct) ?? new ScpSlot();
       }
 
       public async Task<TEntity> GetSlotByGuidAsync<TEntity>(Guid guid, CancellationToken ct = default) where TEntity : BaseSlot
@@ -211,7 +211,7 @@ public sealed class AeroRepository(AeroDbContext context) : IAeroRepository
             .AsNoTracking()
             .OrderByDescending(x => x.id)
             .Where(x => x.component_guid == guid)
-            .FirstOrDefaultAsync() ?? new BaseSlot());
+            .FirstOrDefaultAsync(ct) ?? new BaseSlot());
       }
 
 
@@ -221,7 +221,7 @@ public sealed class AeroRepository(AeroDbContext context) : IAeroRepository
             return await context.ScpSlots.AsNoTracking()
             .Where(x => x.slot_id == slot)
             .Select(x => x.component_guid)
-            .FirstOrDefaultAsync() ?? Guid.Empty;
+            .FirstOrDefaultAsync(ct) ?? Guid.Empty;
       }
 
 
@@ -264,7 +264,7 @@ public sealed class AeroRepository(AeroDbContext context) : IAeroRepository
             .OrderByDescending(x => x.slot_id)
             .Where(x => x.is_available == true && x.slot_id != Except)
             .Select(x => x.slot_id)
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(ct);
 
             if (res == -1)
                   throw new Exception(MessageHelper.Common.SlotNotAvailable(nameof(TEntity)));
@@ -276,7 +276,7 @@ public sealed class AeroRepository(AeroDbContext context) : IAeroRepository
       {
             var e = await context.Set<TEntity>()
             .Where(x => x.slot_id == slot)
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(ct);
 
             if (e == null)
                   throw new Exception(MessageHelper.Common.NotFound("Slot", slot));

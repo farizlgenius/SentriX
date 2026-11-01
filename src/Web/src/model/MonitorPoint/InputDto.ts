@@ -1,11 +1,12 @@
 import { Vendor } from "../../enum/Vendor";
+import { AeroInputMetadata } from "./AeroInputMetadata";
 
 export interface InputDto
 {
     guid:string;
     name:string;
     slotNo:number;
-    metadata:string;
+    metadata:string | AeroInputMetadata;
     vendor:Vendor;
     deviceGuid:string;
     deviceName:string;

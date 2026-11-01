@@ -12,6 +12,7 @@ using Core.Contract.Queries;
 using Core.Contract.Queries.Device;
 using Core.Contract.Queries.DeviceModule;
 using Core.Contract.Queries.Door;
+using Core.Contract.Queries.Input;
 using Core.Contract.Queries.Output;
 using HID.Aero.ScpdNet.Wrapper;
 using Microsoft.Extensions.DependencyInjection;
@@ -60,9 +61,9 @@ public sealed class ReplyWorker(Channel<ReplyMessage> queue, ILogger<ReplyWorker
               // define mac , name , actor , image
               var bus = scope.ServiceProvider.GetRequiredService<IMessageBus>();
               var idevice = scope.ServiceProvider.GetRequiredService<IDevice>();
-              var dev = await bus.QueryAsync(new DeviceByExternalIdAndVendorQuery((short)message.SCPId,Vendor.aero));
+              var dev = await bus.QueryAsync(new DeviceByExternalIdAndVendorQuery((short)message.SCPId,Vendor.aero),ct);
               var mac = dev.Mac;
-              var name = string.Empty;
+              var name = dev.Name;
               var actor = string.Empty;
               var locationGuid = dev.LocationGuid;
               var image = string.Empty;
@@ -88,7 +89,6 @@ public sealed class ReplyWorker(Channel<ReplyMessage> queue, ILogger<ReplyWorker
                   //     ScanAcrNo = -1;
                   //     ScanScpId = -1;
                   // }
-                  bus = scope.ServiceProvider.GetRequiredService<IMessageBus>();
                   name = await bus.QueryAsync(new DoorNameByExternalIdAndMacAndVendorQuery(message.tran.source_number,mac,Vendor.aero), ct);
                   break;
                 case (short)tranType.tranTypeDblCardFull:
@@ -108,7 +108,6 @@ public sealed class ReplyWorker(Channel<ReplyMessage> queue, ILogger<ReplyWorker
                   //     ScanAcrNo = -1;
                   //     ScanScpId = -1;
                   // }
-                  bus = scope.ServiceProvider.GetRequiredService<IMessageBus>();
                   name = await bus.QueryAsync(new DoorNameByExternalIdAndMacAndVendorQuery(message.tran.source_number,mac,Vendor.aero), ct);
                   break;
                 case (short)tranType.tranTypeI64CardFull:
@@ -128,7 +127,6 @@ public sealed class ReplyWorker(Channel<ReplyMessage> queue, ILogger<ReplyWorker
                   //     ScanAcrNo = -1;
                   //     ScanScpId = -1;
                   // }
-                  bus = scope.ServiceProvider.GetRequiredService<IMessageBus>();
                   name = await bus.QueryAsync(new DoorNameByExternalIdAndMacAndVendorQuery(message.tran.source_number,mac,Vendor.aero), ct);
                   break;
                 case (short)tranType.tranTypeI64CardFullIc32:
@@ -148,19 +146,15 @@ public sealed class ReplyWorker(Channel<ReplyMessage> queue, ILogger<ReplyWorker
                   //     ScanAcrNo = -1;
                   //     ScanScpId = -1;
                   // }
-                  bus = scope.ServiceProvider.GetRequiredService<IMessageBus>();
                   name = await bus.QueryAsync(new DoorNameByExternalIdAndMacAndVendorQuery(message.tran.source_number,mac,Vendor.aero), ct);
                   break;
                 case (short)tranType.tranTypeCardID:
-                  bus = scope.ServiceProvider.GetRequiredService<IMessageBus>();
                   name = await bus.QueryAsync(new DoorNameByExternalIdAndMacAndVendorQuery(message.tran.source_number,mac,Vendor.aero), ct);
                   break;
                 case (short)tranType.tranTypeDblCardID:
-                  bus = scope.ServiceProvider.GetRequiredService<IMessageBus>();
                   name = await bus.QueryAsync(new DoorNameByExternalIdAndMacAndVendorQuery(message.tran.source_number,mac,Vendor.aero), ct);
                   break;
                 case (short)tranType.tranTypeI64CardID:
-                  bus = scope.ServiceProvider.GetRequiredService<IMessageBus>();
                   name = await bus.QueryAsync(new DoorNameByExternalIdAndMacAndVendorQuery(message.tran.source_number,mac,Vendor.aero), ct);
                   break;
                 case (short)tranType.tranTypeCoS:
@@ -171,17 +165,19 @@ public sealed class ReplyWorker(Channel<ReplyMessage> queue, ILogger<ReplyWorker
                       // publisher
                       // var module = scope.ServiceProvider.GetRequiredService<IDeviceModule>();
                       // name = await module.GetModuleNameByMacAndComponentIdAsync(mac,message.tran.source_number);
+                      name = await bus.QueryAsync(new DeviceModuleNameByExternalIdAndMacAndVendorQuery(message.tran.source_number,mac,Vendor.aero), ct);
                       break;
                     case (short)tranSrc.tranSrcMP:
-                      // var mp = new MpStatus(message.ScpId, message.tran.source_number, DecodeHelper.TypeCosStatusDecode(message.tran.cos.status));
-                      // await publisher.MpNotifyStatus(mp);
-
+                      name = await bus.QueryAsync(new InputNameByExternalIdAndMacAndVendorQuery(message.tran.source_number,mac,Vendor.aero), ct);
+                      var notifiers = scope.ServiceProvider.GetRequiredService<INotifier>();
+                      var guids = await bus.QueryAsync(new InputGuidByExternalIdAndDeviceExternalIdAndVendorQuery(message.tran.source_number,(short)message.SCPId,Vendor.aero),ct);
+                      await notifiers.SendToTopic(NotifierTopic.INPUT_STATUS,StatusHelper.ParseInputStatus(guids,message.tran.cos.status),ct);
                       break;
                     case (short)tranSrc.tranSrcCP:
-                      bus = scope.ServiceProvider.GetRequiredService<IMessageBus>();
-                      var notifiers = scope.ServiceProvider.GetRequiredService<INotifier>();
-                      var guids = await bus.QueryAsync(new OutputGuidByExternalIdAndDeviceExternalIdAndVendorQuery(message.tran.source_number,(short)message.SCPId,Vendor.aero),ct);
-                      await notifiers.SendToTopic(NotifierTopic.OUTPUT_STATUS,StatusHelper.ParseOutputStatus(guids,message.tran.tran_code,message.tran.cos.status),ct);
+                      name = await bus.QueryAsync(new OutputNameByExternalIdAndMacAndVendorQuery(message.tran.source_number,mac,Vendor.aero), ct);
+                      notifiers = scope.ServiceProvider.GetRequiredService<INotifier>();
+                      guids = await bus.QueryAsync(new OutputGuidByExternalIdAndDeviceExternalIdAndVendorQuery(message.tran.source_number,(short)message.SCPId,Vendor.aero),ct);
+                      await notifiers.SendToTopic(NotifierTopic.OUTPUT_STATUS,StatusHelper.ParseOutputStatus(guids,message.tran.cos.status),ct);
                       break;
                     default:
                       break;
@@ -189,13 +185,13 @@ public sealed class ReplyWorker(Channel<ReplyMessage> queue, ILogger<ReplyWorker
                   break;
                 case (short)tranType.tranTypeREX:
                   // door = scope.ServiceProvider.GetRequiredService<IDoor>();
-                  // name = await door.GetNameByMacAndComponentIdAsync(mac,message.tran.source_number);
+                  name = await bus.QueryAsync(new DoorNameByExternalIdAndMacAndVendorQuery(message.tran.source_number,mac,Vendor.aero), ct);
                   break;
                 case (short)tranType.tranTypeCoSDoor:
                   // var doorstatus = new AcrStatus((short)message.ScpId, message.tran.source_number, "", DescriptionHelper.GetAccessPointStatusFlagResult(message.tran.door.ap_status));
                   // await publisher.AcrNotifyStatus(doorstatus);
                   // door = scope.ServiceProvider.GetRequiredService<IDoor>();
-                  // name = await door.GetNameByMacAndComponentIdAsync(mac,message.tran.source_number);
+                  name = await bus.QueryAsync(new DoorNameByExternalIdAndMacAndVendorQuery(message.tran.source_number,mac,Vendor.aero), ct);
                   break;
                 case (short)tranType.tranTypeProcedure:
 
@@ -210,43 +206,31 @@ public sealed class ReplyWorker(Channel<ReplyMessage> queue, ILogger<ReplyWorker
                   // var modestatus = new AcrStatus((short)message.ScpId, message.tran.source_number, DescriptionHelper.GetAcrModeForStatus(message.tran.tran_code), "");
                   // await publisher.AcrNotifyStatus(modestatus);
                   // door = scope.ServiceProvider.GetRequiredService<IDoor>();
-                  // name = await door.GetNameByMacAndComponentIdAsync(mac,message.tran.source_number);
+                  name = await bus.QueryAsync(new DoorNameByExternalIdAndMacAndVendorQuery(message.tran.source_number,mac,Vendor.aero), ct);
                   break;
                 case (short)tranType.tranTypeMpg:
-
                   break;
                 case (short)tranType.tranTypeArea:
-
                   break;
                 case (short)tranType.tranTypeUseLimit:
-
                   break;
                 case (short)tranType.tranTypeWebActivity:
-
                   break;
                 case (short)tranType.tranTypeOperatingMode:
-
                   break;
                 case (short)tranType.tranTypeCoSElevator:
-
                   break;
                 case (short)tranType.tranTypeFileDownloadStatus:
-
                   break;
                 case (short)tranType.tranTypeCoSElevatorAccess:
-
                   break;
                 case (short)tranType.tranTypeAcrExtFeatureStls:
-
                   break;
                 case (short)tranType.tranTypeAcrExtFeatureCoS:
-
                   break;
                 case (short)tranType.tranTypeAsci:
-
                   break;
                 case (short)tranType.tranTypeSioDiag:
-
                   break;
                 default:
                   break;
@@ -352,14 +336,16 @@ public sealed class ReplyWorker(Channel<ReplyMessage> queue, ILogger<ReplyWorker
               ), ct);
               break;
             case (int)enSCPReplyType.enSCPReplySrMp:
-              // var mpstatus = new MpStatus(message.ScpId, message.sts_mp.first, DecodeHelper.TypeCosStatusDecode(Convert.ToByte(message.sts_mp.status[0])));
-              // await publisher.MpNotifyStatus(mpstatus);
+              bus = scope.ServiceProvider.GetRequiredService<IMessageBus>();
+              notifier = notifier = scope.ServiceProvider.GetRequiredService<INotifier>();
+              guid = await bus.QueryAsync(new InputGuidByExternalIdAndDeviceExternalIdAndVendorQuery(message.sts_mp.first,(short)message.SCPId,Vendor.aero),ct);
+              await notifier.SendToTopic(NotifierTopic.INPUT_STATUS,StatusHelper.ParseInputStatus(guid,message.sts_mp.status[0]),ct);
               break;
             case (int)enSCPReplyType.enSCPReplySrCp:
               bus = scope.ServiceProvider.GetRequiredService<IMessageBus>();
               notifier = notifier = scope.ServiceProvider.GetRequiredService<INotifier>();
               guid = await bus.QueryAsync(new OutputGuidByExternalIdAndDeviceExternalIdAndVendorQuery(message.sts_cp.first,(short)message.SCPId,Vendor.aero),ct);
-              await notifier.SendToTopic(NotifierTopic.OUTPUT_STATUS,StatusHelper.ParseOutputStatus(guid,message.tran.tran_code,message.sts_cp.status[0]),ct);
+              await notifier.SendToTopic(NotifierTopic.OUTPUT_STATUS,StatusHelper.ParseOutputStatus(guid,message.sts_cp.status[0]),ct);
               break;
             case (int)enSCPReplyType.enSCPReplySrAcr:
               bus = scope.ServiceProvider.GetRequiredService<IMessageBus>();
@@ -392,7 +378,7 @@ public sealed class ReplyWorker(Channel<ReplyMessage> queue, ILogger<ReplyWorker
               var device = scope.ServiceProvider.GetRequiredService<IDeviceAdapter>();
               var repo = scope.ServiceProvider.GetRequiredService<IDeviceRepository>();
               bus = scope.ServiceProvider.GetRequiredService<IMessageBus>();
-              dev = await bus.QueryAsync(new DeviceByExternalIdAndVendorQuery((short)message.SCPId,Vendor.aero));
+              dev = await bus.QueryAsync(new DeviceByExternalIdAndVendorQuery((short)message.SCPId,Vendor.aero), ct);
               var spec = await bus.QueryAsync(new AeroDriverSettingQuery(), ct);
               var data = ReplyMessageHelper.BuildStructureStatus(message.str_sts, spec);
               await noti.SendToTopic(DeviceNotifierTopic.CONFIG, data, ct);

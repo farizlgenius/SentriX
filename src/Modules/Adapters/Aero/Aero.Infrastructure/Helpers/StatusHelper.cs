@@ -8,11 +8,22 @@ namespace Aero.Infrastructure.Helpers;
 
 public static class StatusHelper
 {
-      public static OutputStatusDto ParseOutputStatus(Guid guid,short c,short s)
+      public static OutputStatusDto ParseOutputStatus(Guid guid,short s)
       {
             return new OutputStatusDto(
                   guid,
-                  TranCodeTypeCos(c),
+                  StatusTypeCoSDecode(s),
+                  ((TypeCosStatusFlag)(s & 0xF8)).HasFlag(TypeCosStatusFlag.Offline),
+                  ((TypeCosStatusFlag)(s & 0xF8)).HasFlag(TypeCosStatusFlag.Masked),
+                  ((TypeCosStatusFlag)(s & 0xF8)).HasFlag(TypeCosStatusFlag.LocalMask),
+                  ((TypeCosStatusFlag)(s & 0xF8)).HasFlag(TypeCosStatusFlag.DelayInProgress),
+                  ((TypeCosStatusFlag)(s & 0xF8)).HasFlag(TypeCosStatusFlag.NotAttached)
+            );
+      }
+      public static InputStatusDto ParseInputStatus(Guid guid,short s)
+      {
+            return new InputStatusDto(
+                  guid,
                   StatusTypeCoSDecode(s),
                   ((TypeCosStatusFlag)(s & 0xF8)).HasFlag(TypeCosStatusFlag.Offline),
                   ((TypeCosStatusFlag)(s & 0xF8)).HasFlag(TypeCosStatusFlag.Masked),

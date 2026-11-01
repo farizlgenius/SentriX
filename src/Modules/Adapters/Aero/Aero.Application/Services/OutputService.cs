@@ -78,4 +78,16 @@ public sealed class OutputService(
 
             await bus.SendAsync(new AdapterEventCommand(res),ct);
       }
+
+      public async Task GetStatusAsync(string mac, string ip, short deviceId, short controlId, short count, CancellationToken ct = default)
+      {
+            var res = repo.ControlPointStatus(
+                  mac,
+                  deviceId,
+                  controlId,
+                  count
+            );
+
+            await bus.SendAsync(new AdapterEventCommand(res),ct);
+      }
 }

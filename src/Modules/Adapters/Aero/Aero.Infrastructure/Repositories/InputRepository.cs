@@ -171,7 +171,7 @@ public sealed class InputRepository(
                   first = mpId,
                   count = count
             };
-            var result = repo.Send((short)enCfgCmnd.enCcMpMask, c);
+            var result = repo.Send((short)enCfgCmnd.enCcMpSrq, c);
             if (result)
             {
                   logger.LogInformation(LogMessageHelper.CommandSuccess(Command.MonitorPointStatusRequest, scpId));

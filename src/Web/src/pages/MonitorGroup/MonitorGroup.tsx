@@ -19,31 +19,28 @@ import { FormType } from "../../model/Form/FormProp";
 import { usePopup } from "../../context/PopupContext";
 import { MonitorGroupToast } from "../../model/ToastMessage";
 import { usePagination } from "../../context/PaginationContext";
+import { HttpStatusCode } from "axios";
 
 export const MP_GP_HEADER: string[] = [
   "Name",
-  "Main Controller",
   "Status",
+  "Enabled",
   "Action",
 ];
-export const MP_GP_KEY: string[] = ["name", "macAddress"];
-var removeElement = {
-  mac: "",
-  component: 0,
-};
+export const MP_GP_KEY: string[] = ["name"];
+
 
 export const MonitorGroup = () => {
   const { toggleToast } = useToast();
-  const { locationGuid: locationId } = useLocation();
+  const { locationGuid } = useLocation();
   const { setPagination } = usePagination();
   const defaultDto: MonitorGroupDto = {
+    guid: "",
     name: "",
-    nMpCount: 0,
-    nMpList: [],
-    locationId: locationId,
-    isActive: true,
-    id: 0,
-    isDefault: false,
+    components: [],
+    deviceGuid: "",
+    isActive: false,
+    isDefault: false
   };
   const { filterPermission } = useAuth();
   const [form, setForm] = useState<boolean>(false);
@@ -77,9 +74,9 @@ export const MonitorGroup = () => {
           setInfo(true);
         }
         setConfirmRemove(() => async () => {
-          var data: number[] = [];
+          var data: string[] = [];
           selectedObject.map(async (a: MonitorGroupDto) => {
-            data.push(a.componentId);
+            data.push(a.guid);
           });
           var res = await send.post(MonitorGroupEndpoint.DELETE_RANGE, data);
           if (
@@ -266,7 +263,7 @@ export const MonitorGroup = () => {
   const fetchData = async (
     pageNumber: number,
     pageSize: number,
-    locationId?: number,
+    locationGuid?: string,
     search?: string,
     startDate?: string,
     endDate?: string,
@@ -275,17 +272,16 @@ export const MonitorGroup = () => {
       MonitorGroupEndpoint.PAGINATION(
         pageNumber,
         pageSize,
-        locationId,
+        locationGuid,
         search,
         startDate,
         endDate,
       ),
     );
     console.log(res?.data.data);
-    if (res && res.data.data) {
-      console.log(res.data.data);
-      setMpGroupsDto(res.data.data.data);
-      setPagination(res.data.data.page);
+    if (res.status == HttpStatusCode.Ok) {
+      setMpGroupsDto(res.data.data.items);
+      setPagination(res.data.data);
     }
   };
 
@@ -298,8 +294,7 @@ export const MonitorGroup = () => {
           setDto={setMpGroupDto}
           dto={mpGroupDto}
           handleClick={handleClick}
-          type={formType}
-        />
+          type={formType} handleChange={()=>{}}        />
       ),
     },
   ];
@@ -335,7 +330,7 @@ export const MonitorGroup = () => {
     <>
       <PageBreadcrumb pageTitle="Monitor Group" />
       {form ? (
-        <BaseForm tabContent={tabContent} />
+        <BaseForm tabContent={tabContent} type={formType} handleClick={handleClick}  />
       ) : (
         <BaseTable<MonitorGroupDto>
           headers={MP_GP_HEADER}
@@ -350,7 +345,7 @@ export const MonitorGroup = () => {
           permission={filterPermission(FeatureId.monitorgroup)}
           action={action}
           fetchData={fetchData}
-          locationGuid={locationId}
+          locationGuid={locationGuid}
         />
       )}
     </>

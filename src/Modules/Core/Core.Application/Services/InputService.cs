@@ -3,6 +3,7 @@ using Core.Application.Interfaces;
 using Core.Contract.DTOs.Input;
 using Core.Contract.Interfaces;
 using Core.Domain.Entities;
+using SharedKernel.Domain;
 using SharedKernel.Enums;
 using SharedKernel.Exceptions;
 
@@ -147,6 +148,11 @@ public sealed class InputService(
             return true;
       }
 
+      public async Task<IEnumerable<OptionDto>> GetOptionByDeviceAsync(Guid guid, CancellationToken ct = default)
+      {
+            return await repo.GetOptionByDeviceAsync(guid,ct);
+      }
+
       public async Task<bool> GetStatusAsync(Guid guid, CancellationToken ct = default)
       {
             var dev = await Repo.GetCommandDetailAsync(guid,ct);
@@ -182,7 +188,7 @@ public sealed class InputService(
       {
             var dev = await Repo.GetCommandDetailAsync(guid,ct);
 
-            await adapter.GetAdapter(dev.Vendor).Input.MaskMonitorPointAsync(
+            await adapter.GetAdapter(dev.Vendor).Input.UnmaskMonitorPointAsync(
                   dev.DeviceMac,
                   dev.DeviceIp,
                   dev.DeviceExternalId,

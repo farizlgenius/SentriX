@@ -128,8 +128,12 @@ public static class CoreDependencyInjection
     services.AddScoped<IOutputRepository,OutputRepository>();
 
     // Input
-    //services.AddScoped<IInput,InputService>();
+    services.AddScoped<IInput,InputService>();
     services.AddScoped<IInputRepository,InputRepository>();
+
+    // Input Group
+    services.AddScoped<IMonitorGroup,MonitorGroupService>();
+    services.AddScoped<IMonitorGroupRepository,MonitorGroupRepository>();
 
     // Card Format
     services.AddScoped<ICardFormat,CardFormatService>();

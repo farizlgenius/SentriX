@@ -1,10 +1,9 @@
-import React, { JSX, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import PageBreadcrumb from "../../components/common/PageBreadCrumb";
-import { AddIcon, MaskIcon, MonitorIcon, UnmaskIcon } from "../../icons";
+import { DelayIcon, ErrorIcon, LocalMaskIcon, MaskIcon, MonitorIcon, NoAttachIcon, UnmaskIcon, UnknownIcon } from "../../icons";
 import Logger from "../../utility/Logger";
 import InputForm from "./InputForm";
 import { InputDto } from "../../model/MonitorPoint/InputDto";
-import { StatusDto } from "../../model/StatusDto";
 import { MonitorPointToast } from "../../model/ToastMessage";
 import { useToast } from "../../context/ToastContext";
 import Helper from "../../utility/Helper";
@@ -22,31 +21,27 @@ import { BaseForm } from "../UiElements/BaseForm";
 import { FormContent } from "../../model/Form/FormContent";
 import { usePopup } from "../../context/PopupContext";
 import { FormType } from "../../model/Form/FormProp";
-import { MpStatus } from "../../model/MonitorPoint/MpStatus";
 import { usePagination } from "../../context/PaginationContext";
 import { Vendor } from "../../enum/Vendor";
 import { InputStatus } from "../../model/Status/InputStatus";
 import { ChangeOfState } from "../../enum/ChangeOfState";
 import { SignalRTopic } from "../../constants/signalr-constant";
+import { StatusHelper } from "../../helper/StatusHelper";
+import { ChangeOfStateEncode } from "../../enum/ChangeOfStateEncode";
+import { InputLatchingMode } from "../../enum/InputLatchingMode";
+import { InputMode } from "../../enum/InputMode";
+import { InputLogFunction } from "../../enum/InputLogFunction";
+import { HttpStatusCode } from "axios";
 
 // Define Global Variable
 export const MP_TABLE_HEADER: string[] = [
   "Name",
-  "Main Controller",
-  "Module",
-  "Mode",
-  "Input Mode",
-  "Masked",
   "Status",
+  "Enable",
   "Action",
 ];
 export const MP_KEY: string[] = [
   "name",
-  "hardwareName",
-  "moduleDescription",
-  "monitorPointModeDescription",
-  "inputModeDescription",
-  "isMask",
 ];
 
 const Input = () => {
@@ -132,6 +127,8 @@ const Input = () => {
         break;
       case "create":
         setConfirmCreate(() => async () => {
+          monitorPointDto.locationGuid = locationGuid;
+          monitorPointDto.metadata = JSON.stringify(monitorPointDto.metadata);
           const res = await send.post(
             MonitorPointEndpoint.CREATE,
             monitorPointDto,
@@ -175,7 +172,7 @@ const Input = () => {
         break;
       case "mask":
         selectedObjects.forEach(async (a: InputDto) => {
-          res = await send.post(MonitorPointEndpoint.MASK, a);
+          res = await send.post(MonitorPointEndpoint.MASK(a.guid));
           if (
             Helper.handleToastByResCode(
               res,
@@ -190,7 +187,7 @@ const Input = () => {
         break;
       case "unmask":
         selectedObjects.forEach(async (a: InputDto) => {
-          res = await send.post(MonitorPointEndpoint.UNMASK, a);
+          res = await send.post(MonitorPointEndpoint.UNMASK(a.guid));
           if (
             Helper.handleToastByResCode(
               res,
@@ -213,16 +210,24 @@ const Input = () => {
   const defaultDto: InputDto = {
     guid: "",
     name: "",
-    slotNo: 0,
-    metadata: "",
+    slotNo: -1,
+    metadata: {
+      debounce:4,
+      latchingMode:InputLatchingMode.NORMAL,
+      mode:InputMode.NC,
+      delayEntry:0,
+      delayExit:0,
+      holdTime:2,
+      lfCode:InputLogFunction.NO_MASKED
+    },
     vendor: Vendor.unknown,
     deviceGuid: "",
     deviceName: "",
     deviceModuleGuid: "",
     deviceModuleName: "",
-    locationGuid: "",
+    locationGuid: locationGuid,
     locationName: "",
-    isActive: false,
+    isActive: true,
     isDefault: false
   };
   const [monitorPointsDto, setMonitorPointsDto] = useState<InputDto[]>([]);
@@ -247,20 +252,34 @@ const Input = () => {
       ),
     );
     console.log(res);
-    if (res?.data.data) {
-      setMonitorPointsDto(res.data.data.data);
-      setPagination(res.data.data.page);
+    if (res.status == HttpStatusCode.Ok) {
+      res.data.data.items.forEach((a: InputDto) => {
+              setMonitorPointsDto(prev => (
+                prev.some(x => x.guid == a.guid) ?
+                  [...prev]
+                  :
+                  [
+      
+                    ...prev,
+                    {
+                      ...a,
+                      metadata: JSON.parse(a.metadata as string)
+                    }
+                  ]))
+            })
+      setPagination(res.data.data);
 
       // Batch set state
-      const newStatuses = res.data.data.data.map((a: InputDto) => {
+      const newStatuses = res.data.data.items.map((a: InputDto) => {
         const status: InputStatus = {
           guid: a.guid,
-          status: ChangeOfState.Unknown,
+          code: ChangeOfState.Unknown,
           offline: false,
           mask: false,
           localMask: false,
           entryDelayInProgress: false,
-          notAttached: false
+          notAttached: false,
+          status: ChangeOfStateEncode.Unknown
         }
         return status;
       }
@@ -271,7 +290,7 @@ const Input = () => {
       setStatus((prev) => [...prev, ...newStatuses]);
 
       // Fetch status for each
-      res.data.data.data.forEach((a: InputDto) => {
+      res.data.data.items.forEach((a: InputDto) => {
         fetchStatus(a.guid);
       });
     }
@@ -298,6 +317,7 @@ const Input = () => {
       if (!connection) return;
 
       connection.on(SignalRTopic.INPUT_STATUS, (status: InputStatus) => {
+        console.log(status);
         setStatus((prev) =>
           prev.map((item) =>
             item.guid === status.guid
@@ -318,7 +338,7 @@ const Input = () => {
 
 
       try {
-        await SignalRService.joinGroup(SignalRTopic.DOOR_STATUS);
+        await SignalRService.joinGroup(SignalRTopic.INPUT_STATUS);
       } catch (err) {
         console.error("Subscribe error:", err);
       }
@@ -329,48 +349,109 @@ const Input = () => {
 
     return () => {
       const connection = SignalRService.getConnection();
-      connection?.off(SignalRTopic.DOOR_STATUS);
+      connection?.off(SignalRTopic.INPUT_STATUS);
     };
   }, [refresh, locationGuid, token]);
 
-  const renderOptionalComponent = (data: any) => {
+  const renderOptionalComponent = (data: InputDto) => {
+    // 1. Look up the matched record once
+    const matchedItem = status.find((b) => b.guid === data.guid);
+    const currentChangeEncode = matchedItem?.status ?? ChangeOfStateEncode.Unknown;
+
+    // 2. Resolve icon configuration cleanly
+    const iconCos = StatusHelper.ChangeOfStateIconEncode(currentChangeEncode);
+    const statusLabel =
+      currentChangeEncode === ChangeOfStateEncode.GroudFault
+        ? "Ground fault"
+        : currentChangeEncode === ChangeOfStateEncode.OpenCircuit
+          ? "Open circuit"
+          : currentChangeEncode === ChangeOfStateEncode.ForeignVoltage
+            ? "Foreign voltage"
+            : currentChangeEncode === ChangeOfStateEncode.NonSettlingError
+              ? "Non-settling error"
+              : currentChangeEncode === ChangeOfStateEncode.SupervisoryFaultCodes
+                ? "Supervisory fault"
+                : iconCos.label || "Unknown";
+    const statusColor: "success" | "error" | "warning" | "light" =
+      currentChangeEncode === ChangeOfStateEncode.Active
+        ? "success"
+        : currentChangeEncode === ChangeOfStateEncode.Inactive ||
+            currentChangeEncode === ChangeOfStateEncode.GroudFault ||
+            currentChangeEncode === ChangeOfStateEncode.Short ||
+            currentChangeEncode === ChangeOfStateEncode.NonSettlingError
+          ? "error"
+          : currentChangeEncode === ChangeOfStateEncode.OpenCircuit ||
+              currentChangeEncode === ChangeOfStateEncode.ForeignVoltage ||
+              currentChangeEncode === ChangeOfStateEncode.SupervisoryFaultCodes
+            ? "warning"
+            : "light";
+
     return [
-      <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-        <Badge
-          size="sm"
-          color={
-            status.find((b) => b.guid == data.guid)?.status ==
-              "Active"
-              ? "success"
-              : status.find((b) => b.guid == data.guid)?.status ==
-                "Inactive"
-                ? "error"
-                : "warning"
-          }
-        >
-          {status.find((b) => b.guid == data.guid)?.status == ""
-            ? "Error"
-            : status.find((b) => b.guid == data.guid)?.status}
-        </Badge>
+      <TableCell
+        key={`status-badge-${data.guid}`}
+        className="px-4 py-3 text-start text-theme-sm"
+      >
+        <div className="flex flex-wrap items-center gap-1.5">
+          <Badge
+            color={statusColor}
+            size="sm"
+            startIcon={
+              currentChangeEncode === ChangeOfStateEncode.Unknown ? (
+                <UnknownIcon className="h-3.5 w-3.5" />
+              ) : (
+                <iconCos.Icon className="h-3.5 w-3.5" />
+              )
+            }
+          >
+            {statusLabel}
+          </Badge>
+          {matchedItem?.entryDelayInProgress && (
+            <Badge
+              color="info"
+              size="sm"
+              startIcon={<DelayIcon className="h-3.5 w-3.5" />}
+            >
+              Entry delay
+            </Badge>
+          )}
+          {matchedItem?.localMask && (
+            <Badge
+              color="warning"
+              size="sm"
+              startIcon={<LocalMaskIcon className="h-3.5 w-3.5" />}
+            >
+              Locally masked
+            </Badge>
+          )}
+          {matchedItem?.mask && (
+            <Badge
+              color="warning"
+              size="sm"
+              startIcon={<MaskIcon className="h-3.5 w-3.5" />}
+            >
+              Masked
+            </Badge>
+          )}
+          {matchedItem?.notAttached && (
+            <Badge
+              color="error"
+              size="sm"
+              startIcon={<NoAttachIcon className="h-3.5 w-3.5" />}
+            >
+              Not attached
+            </Badge>
+          )}
+          {matchedItem?.offline && (
+            <Badge
+              color="error"
+              size="sm"
+              startIcon={<ErrorIcon className="h-3.5 w-3.5" />}
+            >
+              Offline
+            </Badge>
+          )}
+        </div>
       </TableCell>,
-      <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-        <Badge
-          size="sm"
-          color={
-            status.find((b) => b.guid == data.guid)?.status ==
-              "Active"
-              ? "success"
-              : status.find((b) => b.guid == data.guid)?.status ==
-                "Inactive"
-                ? "error"
-                : "warning"
-          }
-        >
-          {status.find((b) => b.guid == data.guid)?.status == ""
-            ? "Error"
-            : status.find((b) => b.guid == data.guid)?.status}
-        </Badge>
-      </TableCell>
     ];
   };
 
@@ -411,7 +492,6 @@ const Input = () => {
           headers={MP_TABLE_HEADER}
           keys={MP_KEY}
           data={monitorPointsDto}
-          status={status}
           onEdit={handleEdit}
           onRemove={handleRemove}
           onInfo={handleInfo}
@@ -422,7 +502,7 @@ const Input = () => {
           renderOptionalComponent={renderOptionalComponent}
           permission={filterPermission(FeatureId.monitor)}
           fetchData={fetchData}
-          locationGuid={locationId}
+          locationGuid={locationGuid}
           refresh={refresh}
         />
       )}

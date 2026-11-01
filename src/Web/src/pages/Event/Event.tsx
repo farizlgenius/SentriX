@@ -318,12 +318,12 @@ const Event = () => {
                     {<TimeIcon className="w-5 h-5" />} {new Date(data.timestamp).toTimeString().split(" ")[0]}
                   </span> */}
                 <span className="flex gap-2">
-                  {
+                  {/* {
                     <CalenderIcon
                       className="w-5 h-5"
                       style={{ color: accentColor }}
                     />
-                  }
+                  } */}
                   {new Intl.DateTimeFormat("en-GB").format(
                     new Date(data.timestamp),
                   )}{" "}
