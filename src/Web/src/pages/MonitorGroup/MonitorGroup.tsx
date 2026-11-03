@@ -3,7 +3,7 @@ import PageBreadcrumb from "../../components/common/PageBreadCrumb";
 import { BaseForm } from "../UiElements/BaseForm";
 import { BaseTable } from "../UiElements/BaseTable";
 import { FormContent } from "../../model/Form/FormContent";
-import { MonitorGroupDto, MonitorPointGroupComponent } from "../../model/MonitorGroup/MonitorGroupDto";
+import { MonitorGroupDto } from "../../model/MonitorGroup/MonitorGroupDto";
 import { useAuth } from "../../context/AuthContext";
 import { FeatureId } from "../../enum/FeatureId";
 import { send } from "../../api/api";
@@ -21,16 +21,11 @@ import { MonitorGroupToast } from "../../model/ToastMessage";
 import { usePagination } from "../../context/PaginationContext";
 import { HttpStatusCode } from "axios";
 import {
-  Table,
-  TableBody,
   TableCell,
-  TableHeader,
   TableRow,
 } from "../../components/ui/table";
 import { MonitorType } from "../../enum/MonitorType";
-import { MonitorGroupComponentStatus, MonitorGroupStatus } from "../../model/MonitorGroup/MonitorGroupStatus";
-import { ChangeOfStateEncode } from "../../enum/ChangeOfStateEncode";
-import { StatusHelper } from "../../helper/StatusHelper";
+import { MonitorGroupStatus } from "../../model/MonitorGroup/MonitorGroupStatus";
 import Badge from "../../components/ui/badge/Badge";
 import SignalRService from "../../services/SignalRService";
 import { SignalRTopic } from "../../constants/signalr-constant";
@@ -80,7 +75,7 @@ export const MonitorGroup = () => {
   const [mpGroupDto, setMpGroupDto] = useState<MonitorGroupDto>(defaultDto);
   const [selectedObject, setSelectedObjects] = useState<MonitorGroupDto[]>([]);
   const [refresh, setRefresh] = useState<boolean>(false);
-  const [status, setStatus] = useState<MonitorGroupComponentStatus[]>([]);
+  const [status, setStatus] = useState<MonitorGroupStatus[]>([]);
   const {token} = useAuth();
   const toggleRefresh = () => setRefresh((prev) => !prev);
 
@@ -370,41 +365,6 @@ export const MonitorGroup = () => {
     },
   ];
 
-   const renderOptionalComponent = (data: MonitorPointGroupComponent) => {
-    // 1. Look up the matched record once
-    const matchedItem = status.some((b) => b.guid === data.componentGuid);
-
-    return [
-      <TableCell
-        key={`status-badge-${data.componentGuid}`}
-        className="px-4 py-3 text-start text-theme-sm"
-      >
-        <div className="flex flex-wrap items-center gap-1.5">
-          {
-            matchedItem ? 
-             <Badge
-            color="success"
-            size="sm"
-            startIcon={<SensorOnIcon className="h-3.5 w-3.5" />}
-          >
-            Active
-          </Badge>
-            :
-            <Badge
-            color="error"
-            size="sm"
-            startIcon={<SensorOffIcon className="h-3.5 w-3.5" />}
-          >
-            Inactive
-          </Badge>
-
-          }
-          
-        </div>
-      </TableCell>,
-    ];
-  };
-
   useEffect(() => {
       const initSignalR = async () => {
         if (!token) return;
@@ -447,6 +407,149 @@ export const MonitorGroup = () => {
       };
     }, [refresh, locationGuid, token]);
 
+  const renderMonitorGroupSubTable = (data: MonitorGroupDto) => {
+    const groupStatus = status.find((item) => item.guid === data.guid);
+    const activeComponents = groupStatus?.activeList ?? [];
+    const activeCount = groupStatus?.numActive ?? activeComponents.length;
+
+    const renderMetric = (label: string, value: string) => (
+      <div
+        key={label}
+        className="flex items-center justify-between gap-3 rounded-lg border border-gray-100 bg-white px-3 py-2.5 dark:border-white/[0.08] dark:bg-gray-900"
+      >
+        <span className="text-sm text-gray-600 dark:text-gray-300">{label}</span>
+        <span className="font-mono text-sm font-semibold text-gray-800 dark:text-gray-200">
+          {value}
+        </span>
+      </div>
+    );
+
+    return (
+      <TableRow
+        key={`${data.guid}-components`}
+        className="bg-gray-50/70 dark:bg-white/[0.02]"
+      >
+        <TableCell colspan={MP_GP_HEADER.length + 1} className="px-5 py-4">
+          <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm dark:border-white/[0.08] dark:bg-gray-900">
+            <div className="flex flex-wrap items-center justify-between gap-3 border-b border-gray-100 px-4 py-3 dark:border-white/[0.05]">
+              <div>
+                <h2 className="text-sm font-semibold text-gray-800 dark:text-white/90">
+                  Live monitor group details
+                </h2>
+                <p className="mt-0.5 text-xs text-gray-500 dark:text-gray-400">
+                  Component states and group summary for {data.name}
+                </p>
+              </div>
+              <div className="flex flex-wrap items-center gap-2">
+                <Badge color="info" size="sm">
+                  {data.components.length} components
+                </Badge>
+                <Badge color="success" size="sm">
+                  {groupStatus ? `${activeCount} active` : "Status unavailable"}
+                </Badge>
+              </div>
+            </div>
+
+            <div className="grid gap-4 p-4 xl:grid-cols-[minmax(0,2fr)_minmax(240px,1fr)]">
+              <section className="rounded-xl border border-gray-200 bg-gray-50/70 p-4 dark:border-white/[0.08] dark:bg-white/[0.02]">
+                <div className="mb-3 flex items-center justify-between gap-3">
+                  <h3 className="text-sm font-semibold text-gray-800 dark:text-white/90">
+                    Components
+                  </h3>
+                  <span className="text-xs text-gray-500 dark:text-gray-400">
+                    {data.components.length} assigned
+                  </span>
+                </div>
+
+                {data.components.length === 0 ? (
+                  <p className="rounded-lg border border-dashed border-gray-200 bg-white px-4 py-6 text-center text-sm text-gray-500 dark:border-white/[0.08] dark:bg-gray-900 dark:text-gray-400">
+                    No components assigned to this group.
+                  </p>
+                ) : (
+                  <div className="grid gap-2 sm:grid-cols-2">
+                    {data.components.map((component, index) => {
+                      const isActive = activeComponents.some(
+                        (activeComponent) =>
+                          activeComponent.guid.toLowerCase() ===
+                          component.componentGuid.toLowerCase(),
+                      );
+                      const componentType =
+                        MONITOR_TYPE_LABELS[component.type] ?? "Unknown";
+                      const ComponentIcon =
+                        component.type === MonitorType.MONITOR_POINT
+                          ? MonitorIcon
+                          : DoorIcon;
+                      const StatusIcon = groupStatus
+                        ? isActive
+                          ? SensorOnIcon
+                          : SensorOffIcon
+                        : UnknownIcon;
+
+                      return (
+                        <article
+                          key={`${component.componentGuid}-${index}`}
+                          className="min-w-0 rounded-lg border border-gray-100 bg-white p-3 dark:border-white/[0.08] dark:bg-gray-900"
+                        >
+                          <div className="flex min-w-0 items-start justify-between gap-3">
+                            <div className="flex min-w-0 items-center gap-2">
+                              <ComponentIcon className="h-4 w-4 shrink-0 text-gray-500 dark:text-gray-400" />
+                              <div className="min-w-0">
+                                <p className="text-sm font-medium text-gray-800 dark:text-gray-200">
+                                  {componentType}
+                                </p>
+                                <p className="break-all text-xs text-gray-500 dark:text-gray-400">
+                                  {component.componentGuid}
+                                </p>
+                              </div>
+                            </div>
+                            <Badge
+                              color={
+                                !groupStatus
+                                  ? "light"
+                                  : isActive
+                                    ? "success"
+                                    : "light"
+                              }
+                              size="sm"
+                              startIcon={<StatusIcon className="h-3.5 w-3.5" />}
+                            >
+                              {!groupStatus
+                                ? "Unknown"
+                                : isActive
+                                  ? "Active"
+                                  : "Inactive"}
+                            </Badge>
+                          </div>
+                        </article>
+                      );
+                    })}
+                  </div>
+                )}
+              </section>
+
+              <section className="rounded-xl border border-gray-200 bg-gray-50/70 p-4 dark:border-white/[0.08] dark:bg-white/[0.02]">
+                <h3 className="mb-3 text-sm font-semibold text-gray-800 dark:text-white/90">
+                  Group summary
+                </h3>
+                <div className="grid gap-2">
+                  {renderMetric(
+                    "Active components",
+                    groupStatus ? String(activeCount) : "Unknown",
+                  )}
+                  {renderMetric(
+                    "Masked components",
+                    groupStatus ? String(groupStatus.maskCount) : "Unknown",
+                  )}
+                  {renderMetric("Assigned components", String(data.components.length))}
+                </div>
+              </section>
+            </div>
+          </div>
+        </TableCell>
+      </TableRow>
+    );
+  };
+
   return (
     <>
       <PageBreadcrumb pageTitle="Monitor Group" />
@@ -463,99 +566,7 @@ export const MonitorGroup = () => {
           onRemove={handleRemove}
           select={selectedObject}
           setSelect={setSelectedObjects}
-          subTable={(data) => (
-            <TableRow
-              key={`${data.guid}-components`}
-              className="bg-gray-50/70 dark:bg-white/[0.02]"
-            >
-              <TableCell
-                colspan={MP_GP_HEADER.length + 1}
-                className="px-5 py-4"
-              >
-                <section className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm dark:border-white/[0.08] dark:bg-gray-900">
-                  <div className="flex items-center justify-between gap-4 border-b border-gray-100 px-4 py-3 dark:border-white/[0.05]">
-                    <div>
-                      <h3 className="text-sm font-semibold text-gray-800 dark:text-white/90">
-                        Components
-                      </h3>
-                      <p className="mt-0.5 text-xs text-gray-500 dark:text-gray-400">
-                        Components assigned to this monitor group
-                      </p>
-                    </div>
-                    <span className="rounded-full bg-brand-50 px-2.5 py-1 text-xs font-medium text-brand-600 dark:bg-brand-500/10 dark:text-brand-400">
-                      {data.components.length}
-                    </span>
-                  </div>
-
-                  {data.components.length === 0 ? (
-                    <p className="px-4 py-6 text-center text-sm text-gray-500 dark:text-gray-400">
-                      No components assigned.
-                    </p>
-                  ) : (
-                    <div className="overflow-x-auto">
-                      <Table>
-                        <TableHeader className="bg-gray-50 dark:bg-white/[0.03]">
-                          <TableRow>
-                            <TableCell
-                              isHeader
-                              className="px-4 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-400"
-                            >
-                              Component
-                            </TableCell>
-                            <TableCell
-                              isHeader
-                              className="px-4 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-400"
-                            >
-                              Type
-                            </TableCell>
-                            <TableCell
-                              isHeader
-                              className="px-4 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-400"
-                            >
-                              Status
-                            </TableCell>
-                          </TableRow>
-                        </TableHeader>
-                        <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
-                          {data.components.map((component, index) => {
-                            const isMonitorPoint =
-                              component.type === MonitorType.MONITOR_POINT;
-                            const componentType =
-                              MONITOR_TYPE_LABELS[component.type];
-                            const ComponentIcon = isMonitorPoint
-                              ? MonitorIcon
-                              : DoorIcon;
-
-                            return (
-                              <TableRow
-                                key={`${component.type}-${component.componentGuid}-${index}`}
-                                className="hover:bg-gray-50 dark:hover:bg-white/[0.02]"
-                              >
-                                <TableCell className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">
-                                  <span className="flex min-w-0 items-center gap-2">
-                                    <ComponentIcon className="h-4 w-4 shrink-0 text-gray-500" />
-                                    <span className="break-all">
-                                      {component.componentGuid}
-                                    </span>
-                                  </span>
-                                </TableCell>
-                                <TableCell className="px-4 py-3 text-sm text-gray-500 dark:text-gray-400">
-                                  {componentType}
-                                </TableCell>
-                                <TableCell className="px-4 py-3 text-sm text-gray-500 dark:text-gray-400">
-                                  {renderOptionalComponent(component)}
-                                </TableCell>
-                              </TableRow>
-                            );
-                          })}
-                        </TableBody>
-                      </Table>
-                    </div>
-                  )}
-                </section>
-              </TableCell>
-            </TableRow>
-          )}
+          subTable={renderMonitorGroupSubTable}
           permission={filterPermission(FeatureId.monitorgroup)}
           action={action}
           fetchData={fetchData}

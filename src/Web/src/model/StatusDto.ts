@@ -1,5 +1,5 @@
 import { DoorMode } from "../enum/DoorMode";
-import { DoorStatus } from "../enum/DoorStatus";
+import { DoorCondition } from "../enum/DoorCondition";
 import { InputStatus } from "../enum/InputStatus";
 import { ReaderMode } from "../enum/ReaderMode";
 import { Status } from "../enum/Status";
@@ -19,7 +19,7 @@ import { TamperStatus } from "../enum/TamperStatus";
 export interface StatusDto{
   guid:string;
   status:Status;
-  doorStatus:DoorStatus;
+  doorStatus:DoorCondition;
   inputStatus:InputStatus;
   outputStatus:InputStatus;
   tamper:TamperStatus;

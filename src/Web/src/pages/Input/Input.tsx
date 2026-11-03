@@ -24,7 +24,6 @@ import { FormType } from "../../model/Form/FormProp";
 import { usePagination } from "../../context/PaginationContext";
 import { Vendor } from "../../enum/Vendor";
 import { InputStatus } from "../../model/Status/InputStatus";
-import { ChangeOfState } from "../../enum/ChangeOfState";
 import { SignalRTopic } from "../../constants/signalr-constant";
 import { StatusHelper } from "../../helper/StatusHelper";
 import { ChangeOfStateEncode } from "../../enum/ChangeOfStateEncode";
@@ -273,7 +272,7 @@ const Input = () => {
       const newStatuses = res.data.data.items.map((a: InputDto) => {
         const status: InputStatus = {
           guid: a.guid,
-          code: ChangeOfState.Unknown,
+          code: ChangeOfStateEncode.Unknown,
           offline: false,
           mask: false,
           localMask: false,

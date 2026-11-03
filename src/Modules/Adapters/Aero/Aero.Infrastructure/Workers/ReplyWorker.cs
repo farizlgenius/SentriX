@@ -163,6 +163,12 @@ public sealed class ReplyWorker(Channel<ReplyMessage> queue, ILogger<ReplyWorker
                   {
                     case (short)tranSrc.tranSrcACR:
                       name = await bus.QueryAsync(new DoorNameByExternalIdAndMacAndVendorQuery(message.tran.source_number,mac,Vendor.aero), ct);
+                      // bus = scope.ServiceProvider.GetRequiredService<IMessageBus>();
+                      // var notifierrr = scope.ServiceProvider.GetRequiredService<INotifier>();
+                      // var guiddd = await bus.QueryAsync(new DoorGuidByExternalIdAndDeviceExternalIdAndVendorQuery(message.tran.source_number,(short)message.SCPId,Vendor.aero),ct);
+                      // // await s.HandleFoundSioAsync(message.SCPId,message.sts_sio);
+                      // Console.WriteLine(message.tran.acr);
+                      // await notifierrr.SendToTopic(NotifierTopic.DOOR_STATUS,StatusHelper.ParseDoorStatus(guiddd,message.sts_acr.mode,message.sts_acr.rdr_status,message.sts_acr.strk_status,message.sts_acr.door_status,message.sts_acr.ap_status,message.sts_acr.rex_status0,message.sts_acr.rex_status1,message.sts_acr.led_mode,message.sts_acr.actl_flags,message.sts_acr.altrdr_status,message.sts_acr.actl_flags_extd,message.sts_acr.nExtFeatureType,message.sts_acr.nHardwareType,message.sts_acr.nExtFeatureStatus.ToString() ?? ""),ct);
                       break;
                     case (short)tranSrc.tranSrcSioCom:
                       // moduleService.TriggerDeviceStatus(message.SCPId, message.tran.source_number, DecodeHelper.TypeSioCommStatusDecode(message.tran.cos.status), null, null, null);
@@ -365,7 +371,7 @@ public sealed class ReplyWorker(Channel<ReplyMessage> queue, ILogger<ReplyWorker
               guid = await bus.QueryAsync(new DoorGuidByExternalIdAndDeviceExternalIdAndVendorQuery(message.sts_acr.number,(short)message.SCPId,Vendor.aero),ct);
               // await s.HandleFoundSioAsync(message.SCPId,message.sts_sio);
               Console.WriteLine(message.sts_acr.GetDebuggerDisplay());
-              await notifier.SendToTopic(NotifierTopic.DOOR_STATUS,StatusHelper.ParseDoorStatus(guid,message.sts_acr.mode,message.sts_acr.rdr_status,message.sts_acr.strk_status,message.sts_acr.door_status,message.sts_acr.ap_status,message.sts_acr.rex_status0,message.sts_acr.rex_status1,message.sts_acr.led_mode,message.sts_acr.actl_flags,message.sts_acr.altrdr_status),ct);
+              await notifier.SendToTopic(NotifierTopic.DOOR_STATUS,StatusHelper.ParseDoorStatus(guid,message.sts_acr.mode,message.sts_acr.rdr_status,message.sts_acr.strk_status,message.sts_acr.door_status,message.sts_acr.ap_status,message.sts_acr.rex_status0,message.sts_acr.rex_status1,message.sts_acr.led_mode,message.sts_acr.actl_flags,message.sts_acr.altrdr_status,message.sts_acr.actl_flags_extd,message.sts_acr.nExtFeatureType,message.sts_acr.nHardwareType,message.sts_acr.nExtFeatureStatus.ToString() ?? ""),ct);
               break;
             case (int)enSCPReplyType.enSCPReplySrTz:
               break;

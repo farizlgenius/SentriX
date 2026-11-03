@@ -1,4 +1,4 @@
-export enum DoorStatus{
+export enum DoorCondition{
       Unknown,
       Secure,
       Unlocked,

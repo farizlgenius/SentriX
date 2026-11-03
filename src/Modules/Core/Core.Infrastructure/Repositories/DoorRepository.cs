@@ -56,7 +56,7 @@ public sealed class DoorRepository(CoreDbContext context) : BaseRepository<Persi
       {
            return await Context.Doors
             .AsNoTracking()
-            .Where(x => x.external_id == externalId && x.device.external_id == externalId && x.device.vendor == vendor)
+            .Where(x => x.external_id == externalId && x.device.external_id == deviceExternalId && x.device.vendor == vendor)
             .Select(x => x.guid)
             .FirstOrDefaultAsync(ct);
       }

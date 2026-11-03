@@ -1,15 +1,14 @@
-import { ChangeOfState } from "../enum/ChangeOfState";
 import { ChangeOfStateEncode } from "../enum/ChangeOfStateEncode";
 import { OutputDriverMode as OutputDriveMode } from "../enum/OutputDriveMode";
-import { RelayMode } from "../enum/RelayMode";
-import { ActiveIcon, AlarmIcon, DelayIcon, DisconnectIcon, ErrorStatusIcon, FaultIcon, GroundIcon, InactiveIcon, NoneIcon, OfflineIcon, OpenIcon, RelayOffIcon, RelayOnIcon, SecureIcon, SensorOffIcon, SensorOnIcon, ShortIcon, SuperIcon, UnknownIcon, VoltageIcon } from "../icons";
+import { ReaderStatus } from "../enum/ReaderStatus";
+import { ActiveIcon, AlarmIcon, DelayIcon, DisconnectIcon, ErrorStatusIcon, FaultIcon, GroundIcon, InactiveIcon, NoneIcon, OfflineIcon, OpenIcon, ReaderIcon, RelayOffIcon, RelayOnIcon, SecureIcon, SensorOffIcon, SensorOnIcon, ShortIcon, SuperIcon, UnknownIcon, VoltageIcon } from "../icons";
 
 export type SvgIconComponent = React.FC<React.SVGProps<SVGSVGElement>>;
 
 export interface StatusDisplay {
   Icon: SvgIconComponent;
   label: string;
-  colorClass: string;
+  colorClass: "success" | "error" | "warning" | "light" | "info";
 }
 
 export class StatusHelper {
@@ -23,68 +22,68 @@ export class StatusHelper {
           {
             Icon: RelayOnIcon,
             label: "Active",
-            colorClass: "green"
+            colorClass: "success"
           }
           :
           {
             Icon: RelayOffIcon,
             label: "Inactive",
-            colorClass: "red"
+            colorClass: "error"
           }
       case ChangeOfStateEncode.Inactive:
         return mode == OutputDriveMode.NORMAL ?
           {
             Icon: RelayOffIcon,
             label: "Inactive",
-            colorClass: "red"
+            colorClass: "error"
           }
           :
           {
             Icon: RelayOnIcon,
             label: "Active",
-            colorClass: "green"
+            colorClass: "success"
           }
       case ChangeOfStateEncode.GroudFault:
         return {
           Icon: GroundIcon,
           label: "GroudFault",
-          colorClass: "red"
+          colorClass: "error"
         }
       case ChangeOfStateEncode.Short:
         return {
           Icon: ShortIcon,
           label: "Short",
-          colorClass: "red"
+          colorClass: "error"
         }
       case ChangeOfStateEncode.OpenCircuit:
         return {
           Icon: OpenIcon,
           label: "OpenCircuit",
-          colorClass: "yellow"
+          colorClass: "warning"
         }
       case ChangeOfStateEncode.ForeignVoltage:
         return {
           Icon: VoltageIcon,
           label: "ForeignVoltage",
-          colorClass: "yellow"
+          colorClass: "warning"
         }
       case ChangeOfStateEncode.NonSettlingError:
         return {
           Icon: ErrorStatusIcon,
           label: "NonSettlingError",
-          colorClass: "red"
+          colorClass: "error"
         }
       case ChangeOfStateEncode.SupervisoryFaultCodes:
         return {
           Icon: SuperIcon,
           label: "SupervisoryFaultCodes",
-          colorClass: "yellow"
+          colorClass: "warning"
         }
       default:
         return {
           Icon: NoneIcon,
-          label: "",
-          colorClass: ""
+          label: "light",
+          colorClass: "light"
         }
     }
   }
@@ -96,44 +95,44 @@ export class StatusHelper {
   //         {
   //           Icon: RelayOffIcon,
   //           label: "Inactive",
-  //           colorClass: "red"
+  //           colorClass: "error"
   //         }
   //         :
   //         {
   //           Icon: RelayOnIcon,
   //           label: "Active",
-  //           colorClass: "green"
+  //           colorClass: "success"
   //         }
   //     case ChangeOfState.Alarm:
   //       return mode == OutputDriveMode.NORMAL ?
   //         {
   //           Icon: RelayOnIcon,
   //           label: "Active",
-  //           colorClass: "green"
+  //           colorClass: "success"
   //         }
   //         :
   //         {
   //           Icon: RelayOffIcon,
   //           label: "Inactive",
-  //           colorClass: "red"
+  //           colorClass: "error"
   //         }
   //     case ChangeOfState.Disconnected:
   //       return {
   //         Icon: DisconnectIcon,
   //         label: "Disconnected",
-  //         colorClass: "red"
+  //         colorClass: "error"
   //       }
   //     case ChangeOfState.Offline:
   //       return {
   //         Icon: OfflineIcon,
   //         label: "Offline",
-  //         colorClass: "red"
+  //         colorClass: "error"
   //       }
   //     case ChangeOfState.Fault:
   //       return {
   //         Icon: FaultIcon,
   //         label: "Fault",
-  //         colorClass: "yellow"
+  //         colorClass: "warning"
   //       }
   //     case ChangeOfState.ExitDelayInProgress:
   //     case ChangeOfState.EntryDelayInProgress:
@@ -146,60 +145,49 @@ export class StatusHelper {
   //       return {
   //         Icon: UnknownIcon,
   //         label: "Unknown",
-  //         colorClass: "yellow"
+  //         colorClass: "warning"
   //       }
   //   }
   // }
 
-
-  static ChangeOfStateIcon(data: ChangeOfState): StatusDisplay {
-    switch (data) {
-      case ChangeOfState.Disconnected:
+  static ReaderStatusParser(s:number) : StatusDisplay {
+    switch(s){
+      case ReaderStatus.Online:
         return {
-          Icon: DisconnectIcon,
-          label: "Disconnected",
-          colorClass: "red"
+          Icon:ReaderIcon,
+          label:"Online",
+          colorClass:"success"
         }
-      case ChangeOfState.Offline:
+      case ReaderStatus.Offline:
         return {
-          Icon: OfflineIcon,
-          label: "Offline",
-          colorClass: "red"
+          Icon:ReaderIcon,
+          label:"Offline",
+          colorClass:"error"
         }
-      case ChangeOfState.Secure:
+      case ReaderStatus.Tamper:
         return {
-          Icon: SecureIcon,
-          label: "Secure",
-          colorClass: "green"
+          Icon:ReaderIcon,
+          label:"Tamper",
+          colorClass:"warning"
         }
-      case ChangeOfState.Alarm:
+      case ReaderStatus.NA:
         return {
-          Icon: AlarmIcon,
-          label: "Alarm",
-          colorClass: "yellow"
+          Icon:ReaderIcon,
+          label:"N/A",
+          colorClass:"info"
         }
-      case ChangeOfState.Fault:
-        return {
-          Icon: FaultIcon,
-          label: "Fault",
-          colorClass: "yellow"
-        }
-      case ChangeOfState.ExitDelayInProgress:
-      case ChangeOfState.EntryDelayInProgress:
-        return {
-          Icon: DelayIcon,
-          label: "Delay",
-          colorClass: "text-brand-500"
-        }
-      case ChangeOfState.Unknown:
+      case ReaderStatus.Unknown:
       default:
         return {
-          Icon: NoneIcon,
-          label: "",
-          colorClass: ""
+          Icon:UnknownIcon,
+          label:"Unknown",
+          colorClass:"light"
         }
     }
   }
+
+
+
 
   static OutputChangeOfStateIconEncode(data: ChangeOfStateEncode): StatusDisplay {
     switch (data) {
@@ -207,55 +195,55 @@ export class StatusHelper {
         return {
           Icon: RelayOnIcon,
           label: "Active",
-          colorClass: "green"
+          colorClass: "success"
         }
       case ChangeOfStateEncode.Inactive:
         return {
           Icon: RelayOffIcon,
           label: "Inactive",
-          colorClass: "red"
+          colorClass: "error"
         }
       case ChangeOfStateEncode.GroudFault:
         return {
           Icon: GroundIcon,
           label: "GroudFault",
-          colorClass: "red"
+          colorClass: "error"
         }
       case ChangeOfStateEncode.Short:
         return {
           Icon: ShortIcon,
           label: "Short",
-          colorClass: "red"
+          colorClass: "error"
         }
       case ChangeOfStateEncode.OpenCircuit:
         return {
           Icon: OpenIcon,
           label: "OpenCircuit",
-          colorClass: "yellow"
+          colorClass: "warning"
         }
       case ChangeOfStateEncode.ForeignVoltage:
         return {
           Icon: VoltageIcon,
           label: "ForeignVoltage",
-          colorClass: "yellow"
+          colorClass: "warning"
         }
       case ChangeOfStateEncode.NonSettlingError:
         return {
           Icon: ErrorStatusIcon,
           label: "NonSettlingError",
-          colorClass: "red"
+          colorClass: "error"
         }
       case ChangeOfStateEncode.SupervisoryFaultCodes:
         return {
           Icon: SuperIcon,
           label: "SupervisoryFaultCodes",
-          colorClass: "yellow"
+          colorClass: "warning"
         }
       default:
         return {
           Icon: NoneIcon,
-          label: "",
-          colorClass: ""
+          label: "light",
+          colorClass: "light"
         }
     }
   }
@@ -266,59 +254,58 @@ export class StatusHelper {
         return {
           Icon: SensorOnIcon,
           label: "Active",
-          colorClass: "green"
+          colorClass: "success"
         }
       case ChangeOfStateEncode.Inactive:
         return {
           Icon: SensorOffIcon,
           label: "Inactive",
-          colorClass: "red"
+          colorClass: "error"
         }
       case ChangeOfStateEncode.GroudFault:
         return {
           Icon: GroundIcon,
           label: "GroudFault",
-          colorClass: "red"
+          colorClass: "error"
         }
       case ChangeOfStateEncode.Short:
         return {
           Icon: ShortIcon,
           label: "Short",
-          colorClass: "red"
+          colorClass: "error"
         }
       case ChangeOfStateEncode.OpenCircuit:
         return {
           Icon: OpenIcon,
           label: "OpenCircuit",
-          colorClass: "yellow"
+          colorClass: "warning"
         }
       case ChangeOfStateEncode.ForeignVoltage:
         return {
           Icon: VoltageIcon,
           label: "ForeignVoltage",
-          colorClass: "yellow"
+          colorClass: "warning"
         }
       case ChangeOfStateEncode.NonSettlingError:
         return {
           Icon: ErrorStatusIcon,
           label: "NonSettlingError",
-          colorClass: "red"
+          colorClass: "error"
         }
       case ChangeOfStateEncode.SupervisoryFaultCodes:
         return {
           Icon: SuperIcon,
           label: "SupervisoryFaultCodes",
-          colorClass: "yellow"
+          colorClass: "warning"
         }
       default:
         return {
           Icon: NoneIcon,
-          label: "",
-          colorClass: ""
+          label: "light",
+          colorClass: "light"
         }
     }
   }
 
 
 }
-

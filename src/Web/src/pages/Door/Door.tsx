@@ -11,6 +11,9 @@ import {
   MomentIcon,
   MonitorIcon,
   OnIcon,
+  ReaderIcon,
+  RelayOffIcon,
+  RelayOnIcon,
   UnlockIcon,
 } from "../../icons";
 import Logger from "../../utility/Logger";
@@ -27,7 +30,7 @@ import { useAuth } from "../../context/AuthContext";
 import { FeatureId } from "../../enum/FeatureId";
 import { BaseForm } from "../UiElements/BaseForm";
 import { FormContent } from "../../model/Form/FormContent";
-import { TableCell } from "../../components/ui/table";
+import { TableCell, TableRow } from "../../components/ui/table";
 import Badge from "../../components/ui/badge/Badge";
 import { DoorToast } from "../../model/ToastMessage";
 import { usePagination } from "../../context/PaginationContext";
@@ -51,7 +54,6 @@ import DoorBGForm from "./DoorBGForm";
 import { ReaderDto } from "../../model/Door/ReaderDto";
 import { RexDto } from "../../model/Door/RexDto";
 import { Status } from "../../enum/Status";
-import { DoorStatus } from "../../enum/DoorStatus";
 import { DoorMode } from "../../enum/DoorMode";
 import { ReaderStatus } from "../../enum/ReaderStatus";
 import { InputStatus } from "../../enum/InputStatus";
@@ -61,14 +63,15 @@ import SignalRService from "../../services/SignalRService";
 import { SignalRTopic } from "../../constants/signalr-constant";
 import DoorAdvanceForm from "./DoorAdvanceForm";
 import { AeroDoorMetadata } from "../../model/Door/AeroDoorMetadata";
+import { DoorCondition } from "../../enum/DoorCondition";
+import { DoorStatus } from "../../model/Status/DoorStatus";
+import { StatusHelper } from "../../helper/StatusHelper";
+import { ChangeOfStateEncode } from "../../enum/ChangeOfStateEncode";
 
 // ACR Page
 const DOOR_TABLE_HEADER: string[] = [
   "Name",
-  "Door Type",
-  "Mode",
-  "Status",
-  "Action",
+  "Type",
 ];
 const DOOR_KEY: string[] = ["name", "doorType"];
 
@@ -129,7 +132,7 @@ const Door = () => {
   };
   const [dto, setDto] = useState<DoorDto>(defaultDoorDto);
   const [refresh, setRefresh] = useState(false);
-  const [status, setStatus] = useState<StatusDto[]>([]);
+  const [status, setStatus] = useState<DoorStatus[]>([]);
   const toggleRefresh = () => setRefresh(!refresh);
   {
     /* Modal */
@@ -460,15 +463,26 @@ const Door = () => {
       setPagination(res.data.data);
 
       // Batch set state
-      const newStatuses = res.data.data.items.map((a: DoorDto) => ({
-        guid: a.guid,
-        status: DoorStatus.Unknown,
-        altr1: DoorMode.Unknown,
-        altr2: ReaderStatus.Unknown,
-        altr3: InputStatus.Unknown, // Strile
-        altr4: InputStatus.Unknown, // rex
-
-      }));
+      const newStatuses = res.data.data.items.map((a: DoorDto) => {
+        const status:DoorStatus = {
+          guid: a.guid,
+          mode: DoorMode.Unknown,
+          readerStatus: ReaderStatus.Unknown,
+          strikeStatus: ChangeOfStateEncode.Unknown,
+          sensorStatus: ChangeOfStateEncode.Unknown,
+          doorStatus: ChangeOfStateEncode.Unknown,
+          rex0Status: ChangeOfStateEncode.Unknown,
+          rex1Status: ChangeOfStateEncode.Unknown,
+          ledModeControl: 0,
+          accessControlFlag: 0,
+          alternateReaderStatus: ReaderStatus.Unknown,
+          extendedAccessControlFlag: 0,
+          extendedFeatureType: 0,
+          deviceType: 0,
+          extendedFeatureStatus: 0
+        }
+        return status;
+      });
 
       setStatus((prev) => [...prev, ...newStatuses]);
 
@@ -634,36 +648,155 @@ const Door = () => {
       : []),
   ];
 
-  const renderOptional = (item: DoorDto,i: number) => {
-    return [
-      <React.Fragment key={i + 1}>
-        <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-          <>
-            <Badge size="sm" color="dark">
-              {DoorMode[status.find((b) => b.guid == item.guid)?.altr1 as DoorMode] ?? "Unknown"}
-            </Badge>
-          </>
+  const renderDoorStatusSubTable = (data: DoorDto) => {
+    const doorStatus = status.find((item) => item.guid === data.guid);
+    const readerIn = StatusHelper.ReaderStatusParser(
+      doorStatus?.readerStatus ?? ReaderStatus.Unknown,
+    );
+    const readerOut = StatusHelper.ReaderStatusParser(
+      doorStatus?.alternateReaderStatus ?? ReaderStatus.Unknown,
+    );
+    const strike = StatusHelper.OutputChangeOfStateIconEncode(
+      doorStatus?.strikeStatus ?? ChangeOfStateEncode.Unknown,
+    );
+    const doorContact = StatusHelper.ChangeOfStateIconEncode(
+      doorStatus?.doorStatus ?? ChangeOfStateEncode.Unknown,
+    );
+    const sensor = StatusHelper.ChangeOfStateIconEncode(
+      doorStatus?.sensorStatus ?? ChangeOfStateEncode.Unknown,
+    );
+    const rex0 = StatusHelper.ChangeOfStateIconEncode(
+      doorStatus?.rex0Status ?? ChangeOfStateEncode.Unknown,
+    );
+    const rex1 = StatusHelper.ChangeOfStateIconEncode(
+      doorStatus?.rex1Status ?? ChangeOfStateEncode.Unknown,
+    );
+    const mode = doorStatus?.mode ?? DoorMode.Unknown;
+    const hasReaderIn = data.readers.some(
+      (reader) => reader.readerDirection === ReaderDirection.In,
+    );
+    const hasReaderOut = data.readers.some(
+      (reader) => reader.readerDirection === ReaderDirection.Out,
+    );
+    const formatFlag = (value: number | undefined) =>
+      value === undefined
+        ? "Unknown"
+        : `${value} (0x${(value & 0xffff).toString(16).toUpperCase().padStart(4, "0")})`;
+    const renderStatusCard = (
+      label: string,
+      display: ReturnType<typeof StatusHelper.ReaderStatusParser> | null,
+    ) => (
+      <div
+        key={label}
+        className="flex min-w-0 items-center justify-between gap-3 rounded-lg border border-gray-100 bg-white px-3 py-2.5 dark:border-white/[0.08] dark:bg-gray-900"
+      >
+        <span className="text-sm text-gray-600 dark:text-gray-300">{label}</span>
+        {display ? (
+          <Badge
+            color={display.colorClass}
+            size="sm"
+            startIcon={<display.Icon className="h-3.5 w-3.5" />}
+          >
+            {display.label === "light" ? "Unknown" : display.label}
+          </Badge>
+        ) : (
+          <Badge color="light" size="sm">Not configured</Badge>
+        )}
+      </div>
+    );
+    const renderValueCard = (label: string, value: string) => (
+      <div
+        key={label}
+        className="flex min-w-0 items-center justify-between gap-3 rounded-lg border border-gray-100 bg-white px-3 py-2.5 dark:border-white/[0.08] dark:bg-gray-900"
+      >
+        <span className="text-sm text-gray-600 dark:text-gray-300">{label}</span>
+        <span className="break-all text-right font-mono text-xs font-medium text-gray-800 dark:text-gray-200">
+          {value}
+        </span>
+      </div>
+    );
+    const renderSection = (title: string, children: React.ReactNode) => (
+      <section className="rounded-xl border border-gray-200 bg-gray-50/70 p-4 dark:border-white/[0.08] dark:bg-white/[0.02]">
+        <h3 className="mb-3 text-sm font-semibold text-gray-800 dark:text-white/90">
+          {title}
+        </h3>
+        <div className="grid gap-2 sm:grid-cols-2">{children}</div>
+      </section>
+    );
+
+    return (
+      <TableRow
+        key={`${data.guid}-status-details`}
+        className="bg-gray-50/70 dark:bg-white/[0.02]"
+      >
+        <TableCell colspan={DOOR_TABLE_HEADER.length + 3} className="px-5 py-4">
+          <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm dark:border-white/[0.08] dark:bg-gray-900">
+            <div className="flex flex-wrap items-center justify-between gap-3 border-b border-gray-100 px-4 py-3 dark:border-white/[0.05]">
+              <div>
+                <h2 className="text-sm font-semibold text-gray-800 dark:text-white/90">
+                  Live door details
+                </h2>
+                <p className="mt-0.5 text-xs text-gray-500 dark:text-gray-400">
+                  Component states and controller values for {data.name}
+                </p>
+              </div>
+              <Badge color="info" size="sm">
+                Mode: {DoorMode[mode] ?? "Unknown"}
+              </Badge>
+            </div>
+
+            <div className="grid gap-4 p-4 xl:grid-cols-3">
+              {renderSection(
+                "Access",
+                <>
+                  {renderStatusCard("Reader in", hasReaderIn ? readerIn : null)}
+                  {renderStatusCard("Reader out", hasReaderOut ? readerOut : null)}
+                </>,
+              )}
+              {renderSection(
+                "Door hardware",
+                <>
+                  {renderStatusCard("Strike / lock", data.relay ? strike : null)}
+                  {renderStatusCard("Door contact", doorContact)}
+                  {renderStatusCard("Sensor", data.sensor ? sensor : null)}
+                  {renderStatusCard("REX 0", data.rexes[0] ? rex0 : null)}
+                  {renderStatusCard("REX 1", data.rexes[1] ? rex1 : null)}
+                </>,
+              )}
+              {renderSection(
+                "Controller details",
+                <>
+                  {renderValueCard(
+                    "LED mode control",
+                    String(doorStatus?.ledModeControl ?? "Unknown"),
+                  )}
+                  {renderValueCard(
+                    "Access control flag",
+                    formatFlag(doorStatus?.accessControlFlag),
+                  )}
+                  {renderValueCard(
+                    "Extended access control flag",
+                    formatFlag(doorStatus?.extendedAccessControlFlag),
+                  )}
+                  {renderValueCard(
+                    "Extended feature type",
+                    String(doorStatus?.extendedFeatureType ?? "Unknown"),
+                  )}
+                  {renderValueCard(
+                    "Device type",
+                    String(doorStatus?.deviceType ?? "Unknown"),
+                  )}
+                  {renderValueCard(
+                    "Extended feature status",
+                    String(doorStatus?.extendedFeatureStatus ?? "Unknown"),
+                  )}
+                </>,
+              )}
+            </div>
+          </div>
         </TableCell>
-        <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-          <>
-            {status.find((b) => b.guid == item.guid)?.status === DoorStatus.Secure ? (
-              <Badge size="sm" color="success">
-                {DoorStatus[DoorStatus.Secure]}
-              </Badge>
-            ) : status.find((b) => b.guid == item.guid)?.status === DoorStatus.Forced ||
-              status.find((b) => b.guid == item.guid)?.status === DoorStatus.Locked ? (
-              <Badge size="sm" color="error">
-                {status.find((b) => b.guid == item.guid)?.status == DoorStatus.Forced ? DoorStatus[DoorStatus.Forced] : DoorStatus[DoorStatus.Locked] ?? "Unknown"}
-              </Badge>
-            ) : (
-              <Badge size="sm" color="warning">
-                {DoorStatus[status.find((b) => b.guid == item.guid)?.status as DoorStatus] ?? "Unknown"}
-              </Badge>
-            )}
-          </>
-        </TableCell>
-      </React.Fragment>,
-    ];
+      </TableRow>
+    );
   };
 
   {
@@ -869,18 +1002,27 @@ const Door = () => {
         const connection = SignalRService.getConnection();
         if (!connection) return;
   
-        connection.on(SignalRTopic.DOOR_STATUS, (status: StatusDto) => {
+        connection.on(SignalRTopic.DOOR_STATUS, (status: DoorStatus) => {
           console.log(status);
           setStatus((prev) =>
             prev.map((item) =>
               item.guid === status.guid
                 ? {
                   ...item,
-                  status: status.status,
-                  altr1:status.altr1,
-                  altr2:status.altr2,
-                  altr3:status.altr3,
-                  altr4:status.altr4
+                  mode: status.mode,
+                  readerStatus: status.readerStatus,
+                  strikeStatus:status.strikeStatus,
+                  sensorStatus: status.sensorStatus,
+                  doorStatus: status.doorStatus,
+                  rex0Status: status.rex0Status,
+                  rex1Status: status.rex1Status,
+                  ledModeControl: 0,
+                  accessControlFlag: 0,
+                  alternateReaderStatus: status.alternateReaderStatus,
+                  extendedAccessControlFlag: 0,
+                  extendedFeatureType: 0,
+                  deviceType: 0,
+                  extendedFeatureStatus: 0
                 }
                 : item,
             ),
@@ -936,7 +1078,7 @@ const Door = () => {
           data={doorsDto}
           action={action}
           permission={filterPermission(FeatureId.acr)}
-          renderOptionalComponent={renderOptional}
+          subTable={renderDoorStatusSubTable}
           fetchData={fetchData}
           locationGuid={locationGuid}
           refresh={refresh}
@@ -949,17 +1091,17 @@ const Door = () => {
                     <div className="flex items-center gap-2">
                       <DoorInIcon fontSize={20} />
                       <DoorOutIcon fontSize={20} />
-                      {DoorType[d.type]}
+                      {/* {DoorType[d.type]} */}
                     </div>
                   ) : d.type == DoorType.Single ? (
                     <div className="flex items-center gap-2">
                       <DoorInIcon fontSize={20} />
-                      {DoorType[d.type]}
+                      {/* {DoorType[d.type]} */}
                     </div>
                   ) : (
                     <div className="flex items-center gap-2">
                       <DoorOutIcon fontSize={20} />
-                      {DoorType[d.type]}
+                      {/* {DoorType[d.type]} */}
                     </div>
                   )}
                 </TableCell>

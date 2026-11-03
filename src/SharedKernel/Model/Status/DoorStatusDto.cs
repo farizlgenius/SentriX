@@ -12,10 +12,10 @@ public sealed record DoorStatusDto(
       ChangeOfState Rex0Status,
       ChangeOfState Rex1Status,
       short LedModeControl,
-      DoorFlag AccessControlFlag,
+      short AccessControlFlag,
       ReaderStatus AlternateReaderStatus,
       short ExtendedAccessControlFlag,
       short ExtendedFeatureType,
       short DeviceType,
-      short ExtendedFeatureStatus 
+      string ExtendedFeatureStatus 
 );

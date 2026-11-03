@@ -31,7 +31,11 @@ public static class StatusHelper
             short rex1,
             short ledMode,
             short acsFlag,
-            short altrReader
+            short altrReader,
+            short extendAccessControlFlag,
+            short extendFeatureType,
+            short deviceType,
+            string extendFeatureStatus
             )
       {
             return new DoorStatusDto(
@@ -44,12 +48,12 @@ public static class StatusHelper
                   StatusTypeCoSDecode(rex0),
                   StatusTypeCoSDecode(rex1),
                   ledMode,
-                  (DoorFlag)acsFlag,
+                  acsFlag,
                   (ReaderStatus)altrReader,
-                  0,
-                  0,
-                  0,
-                  0
+                  extendAccessControlFlag,
+                  extendFeatureType,
+                  deviceType,
+                  extendFeatureStatus
             );
       }
       public static MonitorGroupStatusDto ParseMonitorGroupStatus(

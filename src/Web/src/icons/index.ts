@@ -131,6 +131,7 @@ import { ReactComponent as RelayOnIcon } from "./status/relay-on.svg?react";
 import { ReactComponent as RelayOffIcon } from "./status/relay-off.svg?react";
 import { ReactComponent as SensorOnIcon } from "./status/sensor-on.svg?react";
 import { ReactComponent as SensorOffIcon } from "./status/sesnor-off.svg?react";
+import { ReactComponent as ReaderIcon } from "./status/reader.svg?react";
 
 
 //#endregion
@@ -266,4 +267,5 @@ export {
   RelayOnIcon,
   SensorOnIcon,
   SensorOffIcon,
+  ReaderIcon
 };
