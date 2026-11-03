@@ -38,6 +38,18 @@ public sealed class MonitorGroupService(
             await bus.SendAsync(new AdapterEventCommand(res),ct);
       }
 
+      public async Task GetStatusAsync(string mac, string ip, short deviceExternalId, short monitorGroupExternalId, short count, CancellationToken ct = default)
+      {
+            var res = repo.MonitorGroupStatusRequest(
+                  mac,
+                  deviceExternalId,
+                  monitorGroupExternalId,
+                  count
+            );
+
+            await bus.SendAsync(new AdapterEventCommand(res),ct);
+      }
+
       public async Task MonitorGroupCommandAsync(string mac, string ip,short deviceExternalId,short monitorGroupExternalId,short command, short argument, CancellationToken ct = default)
       {
             var res = repo.MonitorPointGroupArmDisarmCommand(

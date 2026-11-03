@@ -18,6 +18,7 @@ public static class MonitorGroupProjections
                   c.type
             )).ToList(),
             x.device.guid,
+            x.device.name,
             x.is_active,
             x.is_default
                   );

@@ -23,4 +23,13 @@ public interface IMonitorGroupAdapter
       );
 
       Task MonitorGroupCommandAsync(string mac, string ip,short deviceExternalId,short monitorGroupExternalId,short command, short argument, CancellationToken ct = default);
+
+      Task GetStatusAsync(
+            string mac,
+            string ip,
+            short deviceExternalId,
+            short monitorGroupExternalId,
+            short count,
+            CancellationToken ct = default
+      );
 }

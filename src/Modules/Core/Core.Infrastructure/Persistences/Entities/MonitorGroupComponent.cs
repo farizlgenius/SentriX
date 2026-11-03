@@ -20,6 +20,7 @@ public sealed class MonitorGroupComponent
             int componentId
       )
       {
+            this.type = type;
             switch (type)
             {
                   case MonitorType.MONITOR_POINT:

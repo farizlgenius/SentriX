@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import PageBreadcrumb from "../../components/common/PageBreadCrumb";
-import { ActiveIcon, ControlIcon, DelayIcon, DisableIcon, DisconnectIcon, ErrorIcon, InactiveIcon, LocalMaskIcon, MaskIcon, NoAttachIcon, OffIcon, OnIcon, ToggleIcon } from "../../icons";
+import { ActiveIcon, ControlIcon, DelayIcon, DisableIcon, DisconnectIcon, ErrorIcon, InactiveIcon, LocalMaskIcon, MaskIcon, NoAttachIcon, OffIcon, OnIcon, ToggleIcon, UnknownIcon } from "../../icons";
 import OutputForm from "./OutputForm";
 import Logger from "../../utility/Logger";
 import { OutputDto } from "../../model/ControlPoint/OutputDto";
@@ -413,80 +413,98 @@ const Output = () => {
     const currentChangeEncode = matchedItem?.status ?? ChangeOfStateEncode.Unknown;
 
     // 2. Resolve icon configuration cleanly
-    //const iconConfig = StatusHelper.OutputChangeOfStateIcon(currentChangeState, (data.metadata as AeroOutputMetadata).driveMode);
-    const iconCos = StatusHelper.OutputChangeOfStateIcon(currentChangeEncode,(data.metadata as AeroOutputMetadata).driveMode);
-    const badgeColor = iconCos.colorClass == "red" ? "error" : iconCos.colorClass == "yellow" ? "warning" : "success"; 
-
+    const iconCos = StatusHelper.OutputChangeOfStateIconEncode(currentChangeEncode);
+    const statusLabel =
+      currentChangeEncode === ChangeOfStateEncode.GroudFault
+        ? "Ground fault"
+        : currentChangeEncode === ChangeOfStateEncode.OpenCircuit
+          ? "Open circuit"
+          : currentChangeEncode === ChangeOfStateEncode.ForeignVoltage
+            ? "Foreign voltage"
+            : currentChangeEncode === ChangeOfStateEncode.NonSettlingError
+              ? "Non-settling error"
+              : currentChangeEncode === ChangeOfStateEncode.SupervisoryFaultCodes
+                ? "Supervisory fault"
+                : iconCos.label || "Unknown";
+    const statusColor: "success" | "error" | "warning" | "light" =
+      currentChangeEncode === ChangeOfStateEncode.Active
+        ? "success"
+        : currentChangeEncode === ChangeOfStateEncode.Inactive ||
+            currentChangeEncode === ChangeOfStateEncode.GroudFault ||
+            currentChangeEncode === ChangeOfStateEncode.Short ||
+            currentChangeEncode === ChangeOfStateEncode.NonSettlingError
+          ? "error"
+          : currentChangeEncode === ChangeOfStateEncode.OpenCircuit ||
+              currentChangeEncode === ChangeOfStateEncode.ForeignVoltage ||
+              currentChangeEncode === ChangeOfStateEncode.SupervisoryFaultCodes
+            ? "warning"
+            : "light";
 
     return [
-      // <TableCell
-      //   key={`status-icon-${data.guid}`}
-      //   className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400"
-      // >
-      //   {iconConfig && (
-
-      //     <span title={iconConfig.label} className="flex gap-1 items-center">
-      //       <iconConfig.Icon className={`text-lg text-${iconConfig.colorClass}-500`} />
-      //       <Badge color={badgeColor}>
-      //         {iconConfig.label}
-      //       </Badge>
-
-      //     </span>
-
-      //   )}
-
-      // </TableCell>,
-
       <TableCell
         key={`status-badge-${data.guid}`}
-        className="flex px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400 gap-2"
+        className="px-4 py-3 text-start text-theme-sm"
       >
-        {
-          iconCos && (
-            <span title={iconCos.label} className="inline-flex items-center">
-              <iconCos.Icon className={`text-3xl text-${iconCos.colorClass}-500`} />
-                  {/* <Badge color={badgeColor}>
-                  {iconCos.label}
-                  </Badge> */}
-            </span>
-          )
-        }
-        {
-          matchedItem?.entryDelayInProgress && (
-            <span title="EntryDelayInProgress" className="inline-flex items-center">
-              <DelayIcon className={`text-lg ${"text-brand-500"}`} />
-            </span>
-          )
-
-        }
-        {
-          (matchedItem?.localMask || matchedItem?.mask) && (
-            <span title="LocalMask" className="inline-flex items-center">
-              <LocalMaskIcon className={`text-lg ${"text-yellow-500"}`} />
-            </span>
-          )
-        }
-        {
-          (matchedItem?.mask) && (
-            <span title="Mask" className="inline-flex items-center">
-              <MaskIcon className={`text-lg ${"text-yellow-500"}`} />
-            </span>
-          )
-        }
-        {
-          matchedItem?.notAttached && (
-            <span title="NoAttach" className="inline-flex items-center">
-              <NoAttachIcon className={`text-lg ${"text-red-500"}`} />
-            </span>
-          )
-        }
-        {
-          matchedItem?.offline && (
-            <span title="Offline" className="inline-flex items-center">
-              <ErrorIcon className={`text-lg ${"text-red-500"}`} />
-            </span>
-          )
-        }
+        <div className="flex flex-wrap items-center gap-1.5">
+          <Badge
+            color={statusColor}
+            size="sm"
+            startIcon={
+              currentChangeEncode === ChangeOfStateEncode.Unknown ? (
+                <UnknownIcon className="h-3.5 w-3.5" />
+              ) : (
+                <iconCos.Icon className="h-3.5 w-3.5" />
+              )
+            }
+          >
+            {statusLabel}
+          </Badge>
+          {matchedItem?.entryDelayInProgress && (
+            <Badge
+              color="info"
+              size="sm"
+              startIcon={<DelayIcon className="h-3.5 w-3.5" />}
+            >
+              Entry delay
+            </Badge>
+          )}
+          {matchedItem?.localMask && (
+            <Badge
+              color="warning"
+              size="sm"
+              startIcon={<LocalMaskIcon className="h-3.5 w-3.5" />}
+            >
+              Locally masked
+            </Badge>
+          )}
+          {matchedItem?.mask && (
+            <Badge
+              color="warning"
+              size="sm"
+              startIcon={<MaskIcon className="h-3.5 w-3.5" />}
+            >
+              Masked
+            </Badge>
+          )}
+          {matchedItem?.notAttached && (
+            <Badge
+              color="error"
+              size="sm"
+              startIcon={<NoAttachIcon className="h-3.5 w-3.5" />}
+            >
+              Not attached
+            </Badge>
+          )}
+          {matchedItem?.offline && (
+            <Badge
+              color="error"
+              size="sm"
+              startIcon={<ErrorIcon className="h-3.5 w-3.5" />}
+            >
+              Offline
+            </Badge>
+          )}
+        </div>
       </TableCell>,
     ];
   };

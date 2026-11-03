@@ -9,5 +9,6 @@ export const MonitorGroupEndpoint = {
     UPDATE : `/api/${CONTROLLER}`,
     DELETE_RANGE: `/api/${CONTROLLER}/delete/range`,
     COMMAND: `/api/${CONTROLLER}/command`,
-    DELETE:(guid: string) => `/api/${CONTROLLER}/${guid}`
+    DELETE:(guid: string) => `/api/${CONTROLLER}/${guid}`,
+    STATUS:(guid:string) => `/api/${CONTROLLER}/status/${guid}`
 } as const;

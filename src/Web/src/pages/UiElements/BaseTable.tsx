@@ -7,7 +7,7 @@ import {
 } from "../../components/ui/table";
 import Search from "../../components/ui/table/Search";
 import { TableProp } from "../../model/TableProp";
-import { EditIcon, Info2Icon, TrashBinIcon } from "../../icons";
+import { EditIcon, EyeIcon, Info2Icon, TimeIcon, TrashBinIcon } from "../../icons";
 import { useEffect, useMemo, useState } from "react";
 import Pagination from "../../components/ui/table/Pagination";
 import { usePagination } from "../../context/PaginationContext";
@@ -330,6 +330,31 @@ export const BaseTable = <
                               >
                                 <TrashBinIcon className="h-5 w-5" />
                               </button>
+                              {subTable && (
+                                <button
+                                  type="button"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setShow((current) =>
+                                      current === i ? -1 : i,
+                                    );
+                                  }}
+                                  aria-label={
+                                    show === i
+                                      ? "Collapse components"
+                                      : "Expand components"
+                                  }
+                                  aria-expanded={show === i}
+                                  className={`
+                                                                    inline-flex items-center justify-center
+                                                                    rounded-lg p-1
+                                                                    transition-all duration-200
+                                                                    cursor-pointer text-brand-600 hover:bg-brand-50 hover:text-brand-700 active:scale-95
+  `}
+                                >
+                                  <Info2Icon className="h-5 w-5" />
+                                </button>
+                              )}
 
                             </div>
 
@@ -337,7 +362,7 @@ export const BaseTable = <
 
                         </TableCell>
                       </TableRow>
-                      {/* {show == i && subTable && subTable(i + 1)} */}
+                      {show === i && subTable && subTable(data)}
                     </React.Fragment>
                   ))}
               </TableBody>

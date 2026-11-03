@@ -90,6 +90,13 @@ namespace Host.Controllers
       return Ok(res);
     }
 
+    [HttpPost("upload/{guid}")]
+    public async Task<IActionResult> UploadAsync(Guid guid)
+    {
+      await device.UploadAsync(guid);
+      return Ok();
+    }
+
   
     [HttpPost]
     public async Task<IActionResult> CreateAsync([FromBody] CreateDeviceDto dto)

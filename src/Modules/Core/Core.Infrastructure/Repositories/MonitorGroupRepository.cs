@@ -5,6 +5,7 @@ using Core.Infrastructure.Persistences;
 using Core.Infrastructure.Projections;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel.Domain;
+using SharedKernel.Enums;
 using SharedKernel.Exceptions;
 
 namespace Core.Infrastructure.Repositories;
@@ -31,6 +32,21 @@ public sealed class MonitorGroupRepository(CoreDbContext context) : BaseReposito
                   .ToArrayAsync(ct);
       }
 
+      public async Task<IEnumerable<(Guid Guid,short ExternalId,MonitorType Type)>> GetComponentExternalIdMapGuidByMonitorGroupExternalIdAndDeviceExternalIdAndVendorAsync(short externalId, short deviceExternalId, Vendor vendor, CancellationToken ct = default)
+      {
+            var res = await Context.MonitorGroups
+                  .AsNoTracking()
+                  .Where(x => x.external_id == externalId && x.device.external_id == deviceExternalId && x.device.vendor == vendor)
+                  .SelectMany(x => x.components.Select(c => new 
+                  {
+                        Guid = c.door == null ? c.input == null ? Guid.Empty : c.input.guid : c.door.guid,
+                        ExternalId = c.door == null ? c.input == null ? -1 : c.input.external_id : c.door.external_id ,
+                        Type=c.type,
+                        })).ToArrayAsync(ct);
+
+            return [.. res.Select(x => (x.Guid,x.ExternalId ?? -1,x.Type))];
+      }
+
       public async Task<short> GetFreeExternalIdByMacAsync(string mac, int max, IEnumerable<short> excepions, CancellationToken ct = default)
       {
             var existingIds = await Context.MonitorGroups
@@ -53,6 +69,24 @@ public sealed class MonitorGroupRepository(CoreDbContext context) : BaseReposito
             }
 
             throw new ExceedException(typeof(MonitorGroup).Name);
+      }
+
+      public async Task<Guid> GetGuidByExternalIdAndDeviceExternalIdAndVendorAsync(short externalId, short deviceExternalId, Vendor vendor, CancellationToken ct = default)
+      {
+           return await Context.MonitorGroups
+            .AsNoTracking()
+            .Where(x => x.external_id == externalId && x.device.external_id == deviceExternalId && x.device.vendor == vendor)
+            .Select(x => x.guid)
+            .FirstOrDefaultAsync(ct);
+      }
+
+      public async Task<string> GetNameByExternalIdAndMacAndVendorAsync(short ExternalId, string Mac, Vendor Vendor, CancellationToken ct = default)
+      {
+            return await Context.MonitorGroups
+                  .AsNoTracking()
+                  .Where(x => x.external_id == ExternalId && x.device.mac == Mac && x.device.vendor == Vendor)
+                  .Select(x => x.name)
+                  .FirstOrDefaultAsync(ct) ?? "Unknown";
       }
 
       public async Task<Pagination<MonitorGroupDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)

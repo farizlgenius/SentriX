@@ -23,7 +23,7 @@ public sealed class Door : BaseEntity,IAuditableEntity
   public Device device { get; set; } = default!;
   public ICollection<GroupComponent> group_components { get; set; } = default!;
   public ICollection<AlertComponent> alert_components {get; set; } = default!;
-  public MonitorGroupComponent? monitor_group_component {get; set; }
+  public ICollection<MonitorGroupComponent> monitor_group_components {get; set; } = default!;
   public int? from_area_id {get; set; }
   public Area? from_area {get; set; }
   public AntipassBackMode antipassback_from {get; set; } = AntipassBackMode.NONE;

@@ -22,7 +22,7 @@ export interface TableProp<T extends { guid: string }> {
   permission?: FeaturePermissionDto;
   action?: ActionButton[];
   altrAction?:ActionButton[];
-  subTable?: (index: number) => JSX.Element;
+  subTable?: (data: T) => JSX.Element;
   fetchData: (
     pageNumber: number,
     pageSize: number,

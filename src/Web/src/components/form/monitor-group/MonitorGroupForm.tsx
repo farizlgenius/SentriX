@@ -12,7 +12,7 @@ import { MonitorPointEndpoint } from "../../../endpoint/MonitorPointEndpoint";
 import { InputDto } from "../../../model/MonitorPoint/InputDto";
 import { DoorEndpoint } from "../../../endpoint/DoorEndpoint";
 import { DoorDto } from "../../../model/Door/DoorDto";
-import { MonitorIcon } from "../../../icons";
+import { DoorIcon, MonitorIcon } from "../../../icons";
 import { FormField } from "../template/FormTemplate";
 import { FormProp, FormType } from "../../../model/Form/FormProp";
 import { MonitorType } from "../../../enum/MonitorType";
@@ -117,11 +117,6 @@ export const MonitorGroupForm: React.FC<
     const res = await send.get(DoorEndpoint.GET_OPTION_BY_DEVICE(deviceGuid));
     console.log("Door Options:", res.data.data);
     if (res && res.data.data) {
-      // setDoorOptions(prev => 
-      //   res.data.data.map((a: Options) => 
-      //   prev.some((prevOption) => prevOption.value === a.value) ? prev : [...prev, a]
-      //   )
-      // );
       setDoorOptions(res.data.data);
     }
   };
@@ -175,7 +170,7 @@ export const MonitorGroupForm: React.FC<
         }
       }
 
-      setMonitorOptions(options);
+      //setMonitorOptions(options);
     };
 
     loadSelectedComponentOptions();
@@ -213,7 +208,7 @@ export const MonitorGroupForm: React.FC<
           defaultValue={dto.deviceGuid}
           onChange={(event) => {handleSelect(event.target.value, event);
             fetchDoor(event.target.value);
-      fetchMonitor(event.target.value);
+            fetchMonitor(event.target.value);
           }}
           name="deviceGuid"
           disabled={isReadOnly}
@@ -294,11 +289,18 @@ export const MonitorGroupForm: React.FC<
                       } ${isReadOnly ? "cursor-default" : "cursor-pointer"}`}
                     >
                       <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-300">
-                        <MonitorIcon />
+                        {
+                          component.type === MonitorType.MONITOR_POINT ? 
+                          <MonitorIcon />
+                          
+                          :
+                          <DoorIcon />
+                        }
+                        
                       </span>
                       <span className="min-w-0">
                         <span className="block truncate text-sm font-medium text-gray-800 dark:text-white/90">
-                          { selectedComponent.type === MonitorType.MONITOR_POINT
+                          { component.type === MonitorType.MONITOR_POINT
                             ? getMonitorComponentLabel(component)
                             : getDoorComponentLabel(component) }
                         </span>

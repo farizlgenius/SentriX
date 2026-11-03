@@ -13,6 +13,7 @@ using Core.Contract.Queries.Device;
 using Core.Contract.Queries.DeviceModule;
 using Core.Contract.Queries.Door;
 using Core.Contract.Queries.Input;
+using Core.Contract.Queries.MonitorGroup;
 using Core.Contract.Queries.Output;
 using HID.Aero.ScpdNet.Wrapper;
 using Microsoft.Extensions.DependencyInjection;
@@ -160,6 +161,9 @@ public sealed class ReplyWorker(Channel<ReplyMessage> queue, ILogger<ReplyWorker
                 case (short)tranType.tranTypeCoS:
                   switch (message.tran.source_type)
                   {
+                    case (short)tranSrc.tranSrcACR:
+                      name = await bus.QueryAsync(new DoorNameByExternalIdAndMacAndVendorQuery(message.tran.source_number,mac,Vendor.aero), ct);
+                      break;
                     case (short)tranSrc.tranSrcSioCom:
                       // moduleService.TriggerDeviceStatus(message.SCPId, message.tran.source_number, DecodeHelper.TypeSioCommStatusDecode(message.tran.cos.status), null, null, null);
                       // publisher
@@ -209,6 +213,14 @@ public sealed class ReplyWorker(Channel<ReplyMessage> queue, ILogger<ReplyWorker
                   name = await bus.QueryAsync(new DoorNameByExternalIdAndMacAndVendorQuery(message.tran.source_number,mac,Vendor.aero), ct);
                   break;
                 case (short)tranType.tranTypeMpg:
+                  name = await bus.QueryAsync(new MonitorGroupNameByExternalIdAndMacAndVendorQuery(message.tran.source_number,mac,Vendor.aero), ct);
+                  //bus = scope.ServiceProvider.GetRequiredService<IMessageBus>();
+                  var notifierr = scope.ServiceProvider.GetRequiredService<INotifier>();
+                  var guidd = await bus.QueryAsync(new MonitorGroupGuidByExternalIdAndDeviceExternalIdAndVendorQuery(message.tran.source_number,(short)message.SCPId,Vendor.aero),ct);
+                  var componentss = await bus.QueryAsync(new ComponentExternalIdMapGuidByMonitorGroupExternalIdAndDeviceExternalIdAndVendorQuery(message.tran.source_number,(short)message.SCPId,Vendor.aero),ct);
+                  var doorss = componentss.Where(x => x.Type == MonitorType.FORCED_OPEN || x.Type == MonitorType.HELD_OPEN).ToDictionary(x => x.ExternalId,x => x.Guid);
+                  var monitorss = componentss.Where(x => x.Type == MonitorType.MONITOR_POINT).ToDictionary(x => x.ExternalId,x => x.Guid);
+                  await notifierr.SendToTopic(NotifierTopic.MONITOR_GROUP_STATUS,StatusHelper.ParseMonitorGroupStatus(guidd,message.tran.mpg.mask_count,message.tran.mpg.nActiveMps, [.. message.tran.mpg.nMpList], monitorss,doorss),ct);
                   break;
                 case (short)tranType.tranTypeArea:
                   break;
@@ -353,21 +365,20 @@ public sealed class ReplyWorker(Channel<ReplyMessage> queue, ILogger<ReplyWorker
               guid = await bus.QueryAsync(new DoorGuidByExternalIdAndDeviceExternalIdAndVendorQuery(message.sts_acr.number,(short)message.SCPId,Vendor.aero),ct);
               // await s.HandleFoundSioAsync(message.SCPId,message.sts_sio);
               Console.WriteLine(message.sts_acr.GetDebuggerDisplay());
-              await notifier.SendToTopic(NotifierTopic.DOOR_STATUS,
-              new DoorStatusDto(
-                  guid,
-                  DescriptionHelper.DecodeTypeDoorCos(message.sts_acr.ap_status),
-                  (DoorMode)message.sts_acr.mode,
-                  (ReaderStatus)DescriptionHelper.DecodeStatusTypeCoS(message.sts_acr.rdr_status, (short)tranSrc.tranSrcAcrTmpr),
-                  DescriptionHelper.DecodeStatusTypeCoS(message.sts_acr.strk_status),
-                  DescriptionHelper.DecodeStatusTypeCoS(message.sts_acr.rex_status0)
-              ), ct);
+              await notifier.SendToTopic(NotifierTopic.DOOR_STATUS,StatusHelper.ParseDoorStatus(guid,message.sts_acr.mode,message.sts_acr.rdr_status,message.sts_acr.strk_status,message.sts_acr.door_status,message.sts_acr.ap_status,message.sts_acr.rex_status0,message.sts_acr.rex_status1,message.sts_acr.led_mode,message.sts_acr.actl_flags,message.sts_acr.altrdr_status),ct);
               break;
             case (int)enSCPReplyType.enSCPReplySrTz:
               break;
             case (int)enSCPReplyType.enSCPReplySrTv:
               break;
             case (int)enSCPReplyType.enSCPReplySrMpg:
+              bus = scope.ServiceProvider.GetRequiredService<IMessageBus>();
+              notifier = scope.ServiceProvider.GetRequiredService<INotifier>();
+              guid = await bus.QueryAsync(new MonitorGroupGuidByExternalIdAndDeviceExternalIdAndVendorQuery(message.sts_mpg.number,(short)message.SCPId,Vendor.aero),ct);
+              var components = await bus.QueryAsync(new ComponentExternalIdMapGuidByMonitorGroupExternalIdAndDeviceExternalIdAndVendorQuery(message.sts_mpg.number,(short)message.SCPId,Vendor.aero),ct);
+              var doors = components.Where(x => x.Type == MonitorType.FORCED_OPEN || x.Type == MonitorType.HELD_OPEN).ToDictionary(x => x.ExternalId,x => x.Guid);
+              var monitors = components.Where(x => x.Type == MonitorType.MONITOR_POINT).ToDictionary(x => x.ExternalId,x => x.Guid);
+              await notifier.SendToTopic(NotifierTopic.MONITOR_GROUP_STATUS,StatusHelper.ParseMonitorGroupStatus(guid,message.sts_mpg.mask_count,message.sts_mpg.num_active,[.. message.sts_mpg.active_mp_list],monitors,doors),ct);
               break;
             case (int)enSCPReplyType.enSCPReplySrArea:
               break;

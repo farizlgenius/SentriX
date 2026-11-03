@@ -201,6 +201,65 @@ export class StatusHelper {
     }
   }
 
+  static OutputChangeOfStateIconEncode(data: ChangeOfStateEncode): StatusDisplay {
+    switch (data) {
+      case ChangeOfStateEncode.Active:
+        return {
+          Icon: RelayOnIcon,
+          label: "Active",
+          colorClass: "green"
+        }
+      case ChangeOfStateEncode.Inactive:
+        return {
+          Icon: RelayOffIcon,
+          label: "Inactive",
+          colorClass: "red"
+        }
+      case ChangeOfStateEncode.GroudFault:
+        return {
+          Icon: GroundIcon,
+          label: "GroudFault",
+          colorClass: "red"
+        }
+      case ChangeOfStateEncode.Short:
+        return {
+          Icon: ShortIcon,
+          label: "Short",
+          colorClass: "red"
+        }
+      case ChangeOfStateEncode.OpenCircuit:
+        return {
+          Icon: OpenIcon,
+          label: "OpenCircuit",
+          colorClass: "yellow"
+        }
+      case ChangeOfStateEncode.ForeignVoltage:
+        return {
+          Icon: VoltageIcon,
+          label: "ForeignVoltage",
+          colorClass: "yellow"
+        }
+      case ChangeOfStateEncode.NonSettlingError:
+        return {
+          Icon: ErrorStatusIcon,
+          label: "NonSettlingError",
+          colorClass: "red"
+        }
+      case ChangeOfStateEncode.SupervisoryFaultCodes:
+        return {
+          Icon: SuperIcon,
+          label: "SupervisoryFaultCodes",
+          colorClass: "yellow"
+        }
+      default:
+        return {
+          Icon: NoneIcon,
+          label: "",
+          colorClass: ""
+        }
+    }
+  }
+
   static ChangeOfStateIconEncode(data: ChangeOfStateEncode): StatusDisplay {
     switch (data) {
       case ChangeOfStateEncode.Active:

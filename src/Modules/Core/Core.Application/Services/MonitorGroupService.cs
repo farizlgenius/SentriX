@@ -33,12 +33,12 @@ public sealed class MonitorGroupService(
 
             if(dto.Components.Any(x => x.Type == SharedKernel.Enums.MonitorType.MONITOR_POINT))
             {
-                  monitors = await input.GetIdAndExternalIdMapGuidByGuidRangeAsync(dto.Components.Select(x => x.ComponentGuid),ct);
+                  monitors = await input.GetIdAndExternalIdMapGuidByGuidRangeAsync(dto.Components.Where(x => x.Type == SharedKernel.Enums.MonitorType.MONITOR_POINT).Select(x => x.ComponentGuid),ct);
             }
 
             if(dto.Components.Any(x => x.Type == SharedKernel.Enums.MonitorType.FORCED_OPEN || x.Type == SharedKernel.Enums.MonitorType.HELD_OPEN))
             {
-                  doors = await door.GetIdAndExternalIdMapGuidByGuidRangeAsync(dto.Components.Select(x => x.ComponentGuid),ct);
+                  doors = await door.GetIdAndExternalIdMapGuidByGuidRangeAsync(dto.Components.Where(x => x.Type == SharedKernel.Enums.MonitorType.FORCED_OPEN || x.Type == SharedKernel.Enums.MonitorType.HELD_OPEN).Select(x => x.ComponentGuid),ct);
             }
 
             var mpgId = await repo.GetFreeExternalIdByMacAsync(dev.DeviceMac,100,[],ct);
@@ -95,6 +95,21 @@ public sealed class MonitorGroupService(
             throw new NotImplementedException();
       }
 
+      public async Task<bool> GetStatusAsync(Guid guid, CancellationToken ct = default)
+      {
+            var dev = await Repo.GetCommandDetailAsync(guid,ct);
+
+            await adapter.GetAdapter(dev.Vendor).MonitorGroup.GetStatusAsync(
+                  dev.DeviceMac,
+                  dev.DeviceIp,
+                  dev.DeviceExternalId,
+                  dev.ComponentExternalId ?? -1,
+                  1,
+                  ct
+            );
+
+            return true;
+      }
 
       public async Task<Guid> UpdateAsync(UpdateMonitorGroupDto dto, CancellationToken ct = default)
       {
@@ -107,12 +122,12 @@ public sealed class MonitorGroupService(
 
             if(dto.Components.Any(x => x.Type == SharedKernel.Enums.MonitorType.MONITOR_POINT))
             {
-                  monitors = await input.GetIdAndExternalIdMapGuidByGuidRangeAsync(dto.Components.Select(x => x.ComponentGuid),ct);
+                  monitors = await input.GetIdAndExternalIdMapGuidByGuidRangeAsync(dto.Components.Where(x => x.Type == SharedKernel.Enums.MonitorType.MONITOR_POINT).Select(x => x.ComponentGuid),ct);
             }
 
             if(dto.Components.Any(x => x.Type == SharedKernel.Enums.MonitorType.FORCED_OPEN || x.Type == SharedKernel.Enums.MonitorType.HELD_OPEN))
             {
-                  doors = await door.GetIdAndExternalIdMapGuidByGuidRangeAsync(dto.Components.Select(x => x.ComponentGuid),ct);
+                  doors = await door.GetIdAndExternalIdMapGuidByGuidRangeAsync(dto.Components.Where(x => x.Type == SharedKernel.Enums.MonitorType.FORCED_OPEN || x.Type == SharedKernel.Enums.MonitorType.HELD_OPEN).Select(x => x.ComponentGuid),ct);
             }
 
             var mpgId = await repo.GetFreeExternalIdByMacAsync(dev.DeviceMac,100,[],ct);

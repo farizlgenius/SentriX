@@ -21,4 +21,7 @@ public sealed class NotifierTopic
       public static string OUTPUT_STATUS = "OUTPUT.STATUS";
       // Input
       public static string INPUT_STATUS = "INPUT.STATUS";
+
+      // MONITOR POINT
+      public static string MONITOR_GROUP_STATUS = "MONITOR.GROUP.STATUS";
 }

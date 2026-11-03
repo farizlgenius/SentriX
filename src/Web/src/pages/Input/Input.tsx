@@ -296,8 +296,8 @@ const Input = () => {
     }
   };
   const fetchStatus = async (guid: string) => {
-    const res = await send.get(MonitorPointEndpoint.GET_MP_STATUS(guid));
-    Logger.info(res);
+    await send.get(MonitorPointEndpoint.GET_MP_STATUS(guid));
+    
   };
 
   {

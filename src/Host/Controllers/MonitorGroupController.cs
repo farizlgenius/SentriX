@@ -25,6 +25,13 @@ public class MonitorGroupController(IMonitorGroup group) : ControllerBase
             return Ok(res);
       }
 
+      [HttpGet("status/{guid}")]
+      public async Task<IActionResult> GetStatusAsync(Guid guid)
+      {
+            var res = await group.GetStatusAsync(guid);
+            return Ok(res);
+      }
+
       [HttpGet("location/{guid}")]
       public async Task<IActionResult> GetByLocationAsync(Guid guid)
       {

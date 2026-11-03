@@ -1,4 +1,3 @@
-import { ChangeOfState } from "../../enum/ChangeOfState";
 import { ChangeOfStateEncode } from "../../enum/ChangeOfStateEncode";
 
 export interface OutputStatus{

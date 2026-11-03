@@ -246,10 +246,16 @@ public sealed class IdReportService(
 
     #endregion
 
+
+    newScpId = await bus.QueryAsync(new FreeDeviceExternalIdQuery(),ct);
+
+    res = repo.SetScpId(mac,dto.scp_id,newScpId);
+    await bus.SendAsync(new AdapterEventCommand(res), ct);
+
     // Send Command to get Ip
     res = repo.ReadsConfiguration(
        UtilitiesHelper.ByteToHexStr(dto.mac_addr),
-       dto.scp_id,
+       newScpId,
        WebConfigReadType.NetworkSettingss
       );
 
@@ -258,7 +264,7 @@ public sealed class IdReportService(
     // Port
     res = repo.ReadsConfiguration(
       UtilitiesHelper.ByteToHexStr(dto.mac_addr),
-      dto.scp_id,
+      newScpId,
       WebConfigReadType.HostCommunicationPrimarySettings
      );
 
@@ -279,7 +285,7 @@ public sealed class IdReportService(
     var added = temp.TryAdd(
       new TempDeviceDto(
         Guid.NewGuid(),
-        dto.scp_id,
+        newScpId,
         dto.serial_number,
         UtilitiesHelper.ByteToHexStr(dto.mac_addr),
         Vendor.aero,

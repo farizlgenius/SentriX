@@ -1321,22 +1321,22 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
             // Monitor Group
 
              modelBuilder.Entity<Persistences.Entities.MonitorGroup>()
-                  .HasMany(x => x.components)
-                  .WithOne(x => x.monitor_group)
-                  .HasForeignKey(x => x.monitor_group_id)
-                  .OnDelete(DeleteBehavior.Cascade);
+            .HasMany(x => x.components)
+            .WithOne(x => x.monitor_group)
+            .HasForeignKey(x => x.monitor_group_id)
+            .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Persistences.Entities.Door>()
-                  .HasOne(x => x.monitor_group_component)
-                  .WithOne(x => x.door)
-                  .HasForeignKey<MonitorGroupComponent>(x => x.door_id)
-                  .OnDelete(DeleteBehavior.Cascade);
+            .HasMany(x => x.monitor_group_components)
+            .WithOne(x => x.door)
+            .HasForeignKey(x => x.door_id)
+            .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Persistences.Entities.Input>()
-                  .HasOne(x => x.monitor_group_component)
-                  .WithOne(x => x.input)
-                  .HasForeignKey<MonitorGroupComponent>(x => x.input_id)
-                  .OnDelete(DeleteBehavior.Cascade);
+            .HasMany(x => x.monitor_group_components)
+            .WithOne(x => x.input)
+            .HasForeignKey(x => x.input_id)
+            .OnDelete(DeleteBehavior.Cascade);
 
 
 

@@ -9,7 +9,8 @@ export enum SignalRTopic {
       EXCEPTION_EVENT = "EXCEPTION.EVENT",
       ADAPTER_EVENT = "ADAPTER.EVENT",
       CONFIG = "DEVICE.CONFIG",
-      DOOR_STATUS = "DOOR.STATUS"
+      DOOR_STATUS = "DOOR.STATUS",
+      MONITOR_GROUP_STATUS="MONITOR.GROUP.STATUS"
 }
 
 export enum SignalRHub {

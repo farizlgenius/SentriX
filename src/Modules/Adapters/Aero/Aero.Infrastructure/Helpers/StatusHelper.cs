@@ -20,6 +20,58 @@ public static class StatusHelper
                   ((TypeCosStatusFlag)(s & 0xF8)).HasFlag(TypeCosStatusFlag.NotAttached)
             );
       }
+      public static DoorStatusDto ParseDoorStatus(
+            Guid guid,
+            short mode,
+            short reader,
+            short strike,
+            short sensor,
+            short door,
+            short rex0,
+            short rex1,
+            short ledMode,
+            short acsFlag,
+            short altrReader
+            )
+      {
+            return new DoorStatusDto(
+                  guid,
+                  (DoorMode)mode,
+                  (ReaderStatus)reader,
+                  StatusTypeCoSDecode(strike),
+                  StatusTypeCoSDecode(sensor),
+                  StatusTypeCoSDecode(strike),
+                  StatusTypeCoSDecode(rex0),
+                  StatusTypeCoSDecode(rex1),
+                  ledMode,
+                  (DoorFlag)acsFlag,
+                  (ReaderStatus)altrReader,
+                  0,
+                  0,
+                  0,
+                  0
+            );
+      }
+      public static MonitorGroupStatusDto ParseMonitorGroupStatus(
+            Guid guid,
+            short maskCount,
+            short numActive,
+            List<short> activeList,
+            Dictionary<short, Guid> monitors,
+            Dictionary<short, Guid> doors
+            )
+      {
+            var parse = activeList
+                  .Chunk(2)
+                  .Select(pair => new MonitorGroupComponentStatusDto( (MonitorType)pair[0],(MonitorType)pair[0] == MonitorType.MONITOR_POINT ? monitors[pair[1]] : doors[pair[1]])).ToArray();
+
+            return new MonitorGroupStatusDto(
+                  guid,
+                  maskCount,
+                  numActive,
+                  parse
+            );
+      }
       public static InputStatusDto ParseInputStatus(Guid guid,short s)
       {
             return new InputStatusDto(

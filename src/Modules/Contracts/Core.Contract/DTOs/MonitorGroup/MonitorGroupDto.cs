@@ -5,6 +5,7 @@ public sealed record MonitorGroupDto(
       string Name,
       List<MonitorGroupComponentDto> Components,
       Guid DeviceGuid,
+      string DeviceName,
       bool IsActive,
       bool IsDefault
 );

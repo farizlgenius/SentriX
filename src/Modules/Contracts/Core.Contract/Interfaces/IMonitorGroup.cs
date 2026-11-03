@@ -6,4 +6,5 @@ public interface IMonitorGroup : IService<MonitorGroupDto,CreateMonitorGroupDto,
 {
       Task<bool> ArmAsync(Guid guid,CancellationToken ct = default);
       Task<bool> DisarmAsync(Guid guid,CancellationToken ct = default);
+      Task<bool> GetStatusAsync(Guid guid,CancellationToken ct = default);
 }

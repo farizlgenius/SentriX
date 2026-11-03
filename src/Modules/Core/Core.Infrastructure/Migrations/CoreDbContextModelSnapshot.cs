@@ -4761,11 +4761,9 @@ namespace Core.Infrastructure.Migrations
 
                     b.HasKey("id");
 
-                    b.HasIndex("door_id")
-                        .IsUnique();
+                    b.HasIndex("door_id");
 
-                    b.HasIndex("input_id")
-                        .IsUnique();
+                    b.HasIndex("input_id");
 
                     b.HasIndex("monitor_group_id");
 
@@ -8638,13 +8636,13 @@ namespace Core.Infrastructure.Migrations
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.MonitorGroupComponent", b =>
                 {
                     b.HasOne("Core.Infrastructure.Persistences.Entities.Door", "door")
-                        .WithOne("monitor_group_component")
-                        .HasForeignKey("Core.Infrastructure.Persistences.Entities.MonitorGroupComponent", "door_id")
+                        .WithMany("monitor_group_components")
+                        .HasForeignKey("door_id")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Core.Infrastructure.Persistences.Entities.Input", "input")
-                        .WithOne("monitor_group_component")
-                        .HasForeignKey("Core.Infrastructure.Persistences.Entities.MonitorGroupComponent", "input_id")
+                        .WithMany("monitor_group_components")
+                        .HasForeignKey("input_id")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Core.Infrastructure.Persistences.Entities.MonitorGroup", "monitor_group")
@@ -9190,7 +9188,7 @@ namespace Core.Infrastructure.Migrations
 
                     b.Navigation("group_components");
 
-                    b.Navigation("monitor_group_component");
+                    b.Navigation("monitor_group_components");
 
                     b.Navigation("readers");
 
@@ -9221,7 +9219,7 @@ namespace Core.Infrastructure.Migrations
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Input", b =>
                 {
-                    b.Navigation("monitor_group_component");
+                    b.Navigation("monitor_group_components");
                 });
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Interval", b =>
