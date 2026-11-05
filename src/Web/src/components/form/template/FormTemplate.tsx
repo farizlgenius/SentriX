@@ -69,7 +69,7 @@ export const FormSection: React.FC<FormSectionProps> = ({
 }) => {
   return (
     <section
-      className={`rounded-[24px] border border-[var(--app-panel-border)] bg-[var(--app-panel-muted)]/30 p-5 lg:p-6 ${className}`}
+      className={`rounded-[20px] border border-[var(--app-panel-border)] bg-[var(--app-panel-muted)]/35 p-4 sm:p-5 lg:p-6 ${className}`}
     >
       {(title || description || overall) && (
         <div className="mb-5">
@@ -115,7 +115,7 @@ export const FormSectionChecked: React.FC<FormSectionCheckedProps> = ({
 }) => {
   return (
     <section
-      className={`rounded-[24px] border border-[var(--app-panel-border)] bg-[var(--app-panel-muted)]/30 p-5 lg:p-6 ${className}`}
+      className={`rounded-[20px] border border-[var(--app-panel-border)] bg-[var(--app-panel-muted)]/35 p-4 sm:p-5 lg:p-6 ${className}`}
     >
       {(title || description) && (
         <div className="flex justify-between items-start">

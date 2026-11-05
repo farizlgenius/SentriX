@@ -63,16 +63,24 @@ export const BaseForm: React.FC<PropsWithChildren<FormProp>> = ({
   };
 
   return (
-    <div className="rounded-[32px] border border-[var(--app-panel-border)] bg-[var(--app-panel-bg)] p-6 shadow-theme-xs lg:p-8">
-      <div className="mb-6 rounded-[24px] bg-[linear-gradient(180deg,rgba(59,130,246,0.10),rgba(255,255,255,0))] p-5 dark:bg-[linear-gradient(180deg,rgba(59,130,246,0.18),rgba(17,24,39,0))]">
-        <p className="text-xs font-semibold uppercase tracking-[0.24em] text-brand-500">
-          SentriX
-        </p>
-        <h2 className="mt-2 text-2xl font-semibold text-gray-900 dark:text-white">
-          {header}
-        </h2>
-        <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">{desc}</p>
-      </div>
+    <>
+      {(header || desc) && (
+        <div className="mb-5 border-b border-[var(--app-panel-border)] px-1 pb-5">
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-500">
+            SentriX
+          </p>
+          {header && (
+            <h2 className="mt-1 text-2xl font-semibold text-gray-900 dark:text-white">
+              {header}
+            </h2>
+          )}
+          {desc && (
+            <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+              {desc}
+            </p>
+          )}
+        </div>
+      )}
 
       {tabContent.length > 1  && (
         <StepProgress
@@ -176,7 +184,7 @@ export const BaseForm: React.FC<PropsWithChildren<FormProp>> = ({
           );
         })}
       </div>
-    </div>
+    </>
   );
 
  

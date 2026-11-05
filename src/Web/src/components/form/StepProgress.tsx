@@ -26,9 +26,9 @@ const StepProgress: React.FC<StepProgressProps> = ({
   const minWidth = Math.max(steps.length * 112, 360);
 
   return (
-    <div className={`overflow-x-auto pb-2 ${className}`}>
+    <div className={["overflow-x-auto pb-2", className].filter(Boolean).join(" ")}>
       <div
-        className="relative rounded-2xl border border-[var(--app-panel-border)] bg-[var(--app-panel-bg)] px-8 py-5 shadow-theme-sm"
+        className="relative rounded-[20px] border border-[var(--app-panel-border)] bg-[var(--app-panel-muted)]/35 px-6 py-4 sm:px-8 sm:py-5"
         style={{ minWidth }}
       >
         <div className="absolute left-16 right-16 top-9 h-px bg-gray-200 dark:bg-gray-700" />
