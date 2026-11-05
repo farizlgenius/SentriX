@@ -13,6 +13,12 @@ interface FormProp {
   handleClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
   layout?: JSX.Element | undefined;
   isNext?:boolean;
+  activeTab?: string;
+  onActiveTabChange?: (tab: string) => void;
+  validateSteps?: boolean;
+  submitOnEveryStep?: boolean;
+  canSubmit?: boolean;
+  submitHint?: string;
 }
 
 export const BaseForm: React.FC<PropsWithChildren<FormProp>> = ({
@@ -23,8 +29,21 @@ export const BaseForm: React.FC<PropsWithChildren<FormProp>> = ({
   desc = "",
   layout = undefined,
   isNext=true,
+  activeTab: controlledActiveTab,
+  onActiveTabChange,
+  validateSteps = true,
+  submitOnEveryStep = false,
+  canSubmit = true,
+  submitHint,
 }) => {
-  const [activeTab, setActiveTab] = useState<string>(tabContent[0].label);
+  const [internalActiveTab, setInternalActiveTab] = useState<string>(
+    tabContent[0]?.label ?? "",
+  );
+  const activeTab = tabContent.some((tab) => tab.label === controlledActiveTab)
+    ? controlledActiveTab!
+    : tabContent.some((tab) => tab.label === internalActiveTab)
+      ? internalActiveTab
+      : tabContent[0]?.label ?? "";
   const currentStepIndex = Math.max(
     0,
     tabContent.findIndex((tab) => tab.label === activeTab),
@@ -36,7 +55,11 @@ export const BaseForm: React.FC<PropsWithChildren<FormProp>> = ({
 
   const goToStep = (stepIndex: number) => {
     if (stepIndex < 0 || stepIndex >= tabContent.length) return;
-    setActiveTab(tabContent[stepIndex].label);
+    const nextTab = tabContent[stepIndex].label;
+    if (controlledActiveTab === undefined) {
+      setInternalActiveTab(nextTab);
+    }
+    onActiveTabChange?.(nextTab);
   };
 
   return (
@@ -63,13 +86,13 @@ export const BaseForm: React.FC<PropsWithChildren<FormProp>> = ({
           onStepClick={goToStep}
         />
       )}
-      <div className={layout ? "grid grid-cols-5 gap-5" : ""}>
+      <div className={layout ? "grid grid-cols-1 gap-5 xl:grid-cols-5" : ""}>
         {layout && (
           <FormSection
             overall="Door layout detail"
-            title="Door Component"
-            description="Diagram for show dooe component selected each component to setting."
-            className="col-span-3"
+            title="Door component layout"
+            description="Click a component to edit it. Green means configured; blue marks your selection."
+            className="xl:col-span-3"
           >
             {layout}
           </FormSection>
@@ -84,13 +107,14 @@ export const BaseForm: React.FC<PropsWithChildren<FormProp>> = ({
                   title={a.title}
                   description={a.description}
                   key={i}
-                  className="col-span-2 flex flex-col"
+                  className="xl:col-span-2 flex flex-col"
                 >
                   <div className="flex flex-col h-full justify-between">
                     <div className="text-sm text-gray-500 dark:text-gray-400">
                       {a.content}
                     </div>
-                    <div className="mt-6 flex w-full items-center justify-between gap-3">
+                    <div>
+                      <div className="mt-6 flex w-full items-center justify-between gap-3">
                       <div>
                         {!isFirstStep && (
                           <Button
@@ -103,7 +127,7 @@ export const BaseForm: React.FC<PropsWithChildren<FormProp>> = ({
                           </Button>
                         )}
                       </div>
-                      <div className="flex gap-3">
+                      <div className="flex flex-wrap justify-end gap-3">
                         <Button
                           onClickWithEvent={handleClick}
                           name="close"
@@ -112,19 +136,9 @@ export const BaseForm: React.FC<PropsWithChildren<FormProp>> = ({
                         >
                           Cancel
                         </Button>
-                        {isLastStep ? (
+                        {!isLastStep && (
                           <Button
-                            disabled={type == FormType.INFO}
-                            onClickWithEvent={handleClick}
-                            name={type == FormType.UPDATE ? "update" : "create"}
-                            className="min-w-[120px]"
-                            size="sm"
-                          >
-                            {type == FormType.UPDATE ? "Update" : type == FormType.INFO ? "Info" : "Create"}
-                          </Button>
-                        ) : (
-                          <Button
-                            disabled={!isNext}
+                            disabled={validateSteps && !isNext}
                             onClick={() => {
                               goToStep(currentStepIndex + 1)
                             }}
@@ -134,8 +148,27 @@ export const BaseForm: React.FC<PropsWithChildren<FormProp>> = ({
                             Next
                           </Button>
                         )}
+                        {(isLastStep || submitOnEveryStep) && (
+                          <Button
+                            disabled={type == FormType.INFO || !canSubmit}
+                            onClickWithEvent={handleClick}
+                            name={type == FormType.UPDATE ? "update" : "create"}
+                            className="min-w-[120px]"
+                            size="sm"
+                          >
+                            {type == FormType.UPDATE ? "Update" : type == FormType.INFO ? "Info" : "Create"}
+                          </Button>
+                        )}
                       </div>
                     </div>
+                    {submitHint && (
+                      <p className="mt-3 text-xs text-gray-500 dark:text-gray-400">
+                        {submitHint}
+                      </p>
+                    )}
+
+                    </div>
+                    
                   </div>
                 </FormSection>
               )}

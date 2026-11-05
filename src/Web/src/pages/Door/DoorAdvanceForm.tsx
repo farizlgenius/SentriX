@@ -364,7 +364,12 @@ const DoorAdvanceForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({
                               }}
                               defaultChecked={(dto.metadata as AeroDoorMetadata).hostOfflineGrant ?? false}
                               />
-                               {
+                              
+                              </div>
+                        </div>
+                  </FormField>
+                  <FormField className="col-span-2">
+                         {
                         followRelay && (
                               <>
                                <FormField>
@@ -383,10 +388,6 @@ const DoorAdvanceForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({
                              
                         )
                   }
-                              </div>
-                              
-                              
-                        </div>
                   </FormField>
                  
                   
