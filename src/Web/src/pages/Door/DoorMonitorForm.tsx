@@ -76,7 +76,8 @@ const DoorMonitorForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps
                   mode:InputMode.NC,
                   debounce:4,
                   holdTime:0,
-                  dcHeld:1
+                  dcHeld:1,
+                  dcHeldADA:0
                 }
               }
             }))
@@ -159,7 +160,7 @@ const DoorMonitorForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps
         <Input 
         disabled={isReadOnly}
         type="number" min="0" max="15" 
-        value={ (dto.sensor?.metadata as AeroSensorMetadata)?.debounce ?? ""}
+        value={ (dto.sensor?.metadata as AeroSensorMetadata)?.debounce ?? 0}
         onChange={(e) => 
             setDto(prev => ({
               ...prev,
@@ -183,7 +184,7 @@ const DoorMonitorForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps
         disabled={isReadOnly}
         type="number" min="2" max="15" 
         defaultValue={2}
-        value={ (dto.sensor?.metadata as AeroSensorMetadata)?.holdTime ?? ""}
+        value={ (dto.sensor?.metadata as AeroSensorMetadata)?.holdTime ?? 2}
         onChange={(e) => 
             setDto(prev => ({
               ...prev,
@@ -206,7 +207,7 @@ const DoorMonitorForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps
         <Input 
         disabled={isReadOnly}
         type="number" min="1" max="32767" 
-        value={ (dto.sensor?.metadata as AeroSensorMetadata)?.dcHeld ?? ""}
+        value={ (dto.sensor?.metadata as AeroSensorMetadata)?.dcHeld ?? 1}
         onChange={(e) => 
             setDto(prev => ({
               ...prev,
@@ -216,6 +217,29 @@ const DoorMonitorForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps
                 metadata:{
                   ...(prev.sensor.metadata as AeroSensorMetadata),
                   dcHeld:Number(e.target.value)
+                }
+              }
+              :
+              prev.sensor
+            }))
+          }
+        />
+      </FormField>
+       <FormField>
+        <Label htmlFor="sensor.holdTime">Dc Held (ADA)</Label>
+        <Input 
+        disabled={isReadOnly}
+        type="number" min="0" max="32767" 
+        value={ (dto.sensor?.metadata as AeroSensorMetadata)?.dcHeldADA ?? 0}
+        onChange={(e) => 
+            setDto(prev => ({
+              ...prev,
+              sensor: prev.sensor != null ? 
+              {
+                ...prev.sensor,
+                metadata:{
+                  ...(prev.sensor.metadata as AeroSensorMetadata),
+                  dcHeldADA:Number(e.target.value)
                 }
               }
               :

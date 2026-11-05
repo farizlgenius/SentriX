@@ -482,6 +482,33 @@ public sealed class DeviceService(
 
                   }
 
+                  // Relay Follower
+                  short pulse = -1;
+                  short delay = 0;
+                  var  followerRelayModuleId = -1;
+                  if(d.FollowerRelay != null)
+                  {
+                        followerRelayModuleId = await bus.QueryAsync(new DeviceModuleExternalIdByGuidQuery(d.FollowerRelay.DeviceModuleGuid),ct);
+
+                        var meta = JsonHelper.Deserialize<FollowerRelayMetadata>(d.FollowerRelay.Metadata);
+                        if (meta == null)
+                              throw new Exception(MessageHelper.Common.DeserializeFailed("RelayMetadata"));
+
+                        var res = output.OutputPointSpecification(
+                              mac,
+                             (short)deviceExternalId,
+                              (short)relayModuleId,
+                              (short)d.FollowerRelay.SlotNo,
+                              meta.OfflineMode,
+                              meta.DriveMode
+                        );
+
+                         pulse = meta.Pulse;
+                        delay = meta.Delay;
+
+                        await bus.SendAsync(new AdapterEventCommand(res),ct);
+                  }
+
                   // Sensor Configuration
                   var sensorModuleId = -1;
                   if (d.Sensor != null)
@@ -615,6 +642,55 @@ public sealed class DeviceService(
 
                   }
 
+                  // Interior Push Button
+                  short interiorPushButtonModuleId = -1;
+                  InteriorPushButtonMetadata? interiorPushButtonMetadata = null;
+                  short longPress = 0;
+                  if (d.InteriorPushButton != null)
+                  {
+                        interiorPushButtonModuleId = await bus.QueryAsync(new DeviceModuleExternalIdByGuidQuery(d.InteriorPushButton.DeviceModuleGuid), ct);
+                        interiorPushButtonMetadata = JsonHelper.Deserialize<InteriorPushButtonMetadata>(d.InteriorPushButton.Metadata);
+                        if (interiorPushButtonMetadata == null)
+                              throw new Exception(MessageHelper.Common.DeserializeFailed("InteriorPushButtonMetadata"));
+
+                        var res = input.InputPointSpecification(
+                              mac,
+                              deviceExternalId,
+                              interiorPushButtonModuleId,
+                              d.InteriorPushButton.SlotNo,
+                              interiorPushButtonMetadata.Mode,
+                              interiorPushButtonMetadata.Debounce,
+                              interiorPushButtonMetadata.HoldTime
+                        );
+
+                        longPress = interiorPushButtonMetadata.LongPress;
+
+                        await bus.SendAsync(new AdapterEventCommand(res), ct);
+                  }
+
+                        // Interior Push Button Output
+                  short interiorPushButtonOutputModuleId = -1;
+                  InteriorPushButtonOutputMetadata? interiorPushButtonOutputMetadata = null;
+                  if (d.InteriorPushButtonOutput != null)
+                  {
+                        interiorPushButtonOutputModuleId = await bus.QueryAsync(new DeviceModuleExternalIdByGuidQuery(d.InteriorPushButtonOutput.DeviceModuleGuid), ct);
+                        interiorPushButtonOutputMetadata = JsonHelper.Deserialize<InteriorPushButtonOutputMetadata>(d.InteriorPushButtonOutput.Metadata);
+                        if (interiorPushButtonOutputMetadata == null)
+                              throw new Exception(MessageHelper.Common.DeserializeFailed("InteriorPushButtonOutputMetadata"));
+
+                        var res = output.OutputPointSpecification(
+                              mac,
+                              deviceExternalId,
+                              interiorPushButtonOutputModuleId,
+                              d.InteriorPushButtonOutput.SlotNo,
+                              interiorPushButtonOutputMetadata.OfflineMode,
+                              interiorPushButtonOutputMetadata.DriveMode
+                        );
+
+                        await bus.SendAsync(new AdapterEventCommand(res),ct);
+
+                  }
+
                   // Door Configuration
                   short spare = 0x00;
                   short accessFlag = 0x00;
@@ -653,6 +729,12 @@ public sealed class DeviceService(
                   if (d.Relay != null)
                   {
                         relayMeta = JsonHelper.Deserialize<RelayMetadata>(d.Relay.Metadata) ?? throw new Exception(MessageHelper.Common.DeserializeFailed("RelayMetadata"));
+                  }
+
+                  FollowerRelayMetadata? followerRelayMetadata = null;
+                  if(d.FollowerRelay != null)
+                  {
+                        followerRelayMetadata = JsonHelper.Deserialize<FollowerRelayMetadata>(d.FollowerRelay.Metadata) ?? throw new Exception(MessageHelper.Common.DeserializeFailed("FollowerRelayMetadata"));
                   }
 
                   SensorMetadata? sensorMeta = null;
@@ -713,12 +795,22 @@ public sealed class DeviceService(
                         -1,
                         1,
                         spare,
-                        accessFlag,
-                        doorMetadata.OfflineMode,
-                        doorMetadata.DefaultMode,
-                        doorMetadata.DefaultLedMode,
-                        0,
-                        0
+                              accessFlag,
+                              doorMetadata.OfflineMode,
+                              doorMetadata.DefaultMode,
+                              doorMetadata.DefaultLedMode,
+                              doorMetadata.PreAlarm,
+                              0,
+                              doorMetadata.ADAStrikeTime,
+                              doorMetadata.ADAHeldTime,
+                              pulse,
+                              delay,
+                              (short)d.ExtendFeatureType,
+                              interiorPushButtonModuleId,
+                              d.InteriorPushButton == null ? (short)0 : d.InteriorPushButton.SlotNo,
+                              (short)longPress,
+                              interiorPushButtonOutputModuleId,
+                              d.InteriorPushButtonOutput == null ? (short)0 : d.InteriorPushButtonOutput.SlotNo
                   );
 
                   await bus.SendAsync(new AdapterEventCommand(doorRes), ct);
@@ -763,8 +855,18 @@ public sealed class DeviceService(
                               doorMetadata.OfflineMode,
                               doorMetadata.DefaultMode,
                               doorMetadata.DefaultLedMode,
+                              doorMetadata.PreAlarm,
                               0,
-                              0
+                              doorMetadata.ADAStrikeTime,
+                              doorMetadata.ADAHeldTime,
+                              pulse,
+                              delay,
+                              (short)d.ExtendFeatureType,
+                              interiorPushButtonModuleId,
+                              d.InteriorPushButton == null ? (short)0 : d.InteriorPushButton.SlotNo,
+                              (short)longPress,
+                              interiorPushButtonOutputModuleId,
+                              d.InteriorPushButtonOutput == null ? (short)0 : d.InteriorPushButtonOutput.SlotNo
                         );
 
                         await bus.SendAsync(new AdapterEventCommand(res), ct);

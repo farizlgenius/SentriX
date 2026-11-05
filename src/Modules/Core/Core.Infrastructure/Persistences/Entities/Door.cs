@@ -16,7 +16,7 @@ public sealed class Door : BaseEntity,IAuditableEntity
   public int? relay_id { get; set; }
   public Relay? relay { get; set; }
   public int? follower_relay_id { get; set; }
-  public Relay? follower_relay { get; set; }
+  public FollowerRelay? follower_relay { get; set; }
   public int? buzzer_id { get; set; }
   public Buzzer? buzzer { get; set; }
   public ICollection<Rex> rexes { get; set; } = default!;
@@ -50,7 +50,7 @@ public sealed class Door : BaseEntity,IAuditableEntity
     readers = [.. d.Readers.Select(x => new Reader(x))];
     sensor = d.Sensor == null ? null : new Sensor(d.Sensor);
     relay = d.Relay == null ? null : new Relay(d.Relay);
-    follower_relay = d.FollowerRelay == null ? null : new Relay(d.FollowerRelay);
+    follower_relay = d.FollowerRelay == null ? null : new FollowerRelay(d.FollowerRelay);
     buzzer = d.Buzzer == null ? null : new Buzzer(d.Buzzer);
     rexes = [.. d.Rexes.Select(x => new Rex(x))];
     bg = d.BG == null ? null : new BreakGlass(d.BG);

@@ -44,6 +44,7 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
       public DbSet<BreakGlass> BreakGlasses { get; set; }
       public DbSet<Rex> Rexes { get; set; }
       public DbSet<Relay> Relays { get; set; }
+      public DbSet<FollowerRelay> FollowerRelays { get; set; }
       public DbSet<Buzzer> Buzzers { get; set; }
       public DbSet<Lane> Lanes { get; set; }
       public DbSet<Turnstile> Turnstiles { get; set; }
@@ -250,6 +251,13 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
 
             // Relay Enums
             modelBuilder.Entity<Relay>(b =>
+            {
+                  b.Property(x => x.vendor).HasConversion<string>();
+
+            });
+
+            // Relay Enums
+            modelBuilder.Entity<FollowerRelay>(b =>
             {
                   b.Property(x => x.vendor).HasConversion<string>();
 
@@ -489,6 +497,18 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   ).IsUnique();
 
             modelBuilder.Entity<Relay>()
+                  .HasIndex(
+                        x => new
+                        {
+                              x.guid,
+                              x.id,
+                              x.door_id,
+                              x.device_module_id,
+                              x.slot_no
+                        }
+                  ).IsUnique();
+
+            modelBuilder.Entity<FollowerRelay>()
                   .HasIndex(
                         x => new
                         {
@@ -1011,6 +1031,12 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<DeviceModule>()
+                  .HasMany(x => x.follower_relays)
+                  .WithOne(x => x.device_module)
+                  .HasForeignKey(x => x.device_module_id)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<DeviceModule>()
                   .HasMany(x => x.rexes)
                   .WithOne(x => x.device_module)
                   .HasForeignKey(x => x.device_module_id)
@@ -1231,6 +1257,12 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
             .HasOne(x => x.relay)
             .WithOne(x => x.door)
             .HasForeignKey<Relay>(x => x.door_id) // FK is now on Relay
+            .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Door>()
+            .HasOne(x => x.follower_relay)
+            .WithOne(x => x.door)
+            .HasForeignKey<FollowerRelay>(x => x.door_id) // FK is now on Relay
             .OnDelete(DeleteBehavior.Cascade);
 
             // Bg configuration

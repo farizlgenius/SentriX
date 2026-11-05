@@ -1,17 +1,17 @@
 import React, { PropsWithChildren, useEffect } from "react";
 import { FormProp, FormType } from "../../model/Form/FormProp";
 import { DoorDto } from "../../model/Door/DoorDto";
-import { FormField } from "../../components/form/template/FormTemplate";
+import { FormField, FormGrid } from "../../components/form/template/FormTemplate";
 import Label from "../../components/form/Label";
 import Select from "../../components/form/Select";
 import { Options } from "../../model/Options";
-import { RelayMode } from "../../enum/RelayMode";
 import { Vendor } from "../../enum/Vendor";
 import Input from "../../components/form/input/InputField";
 import { AeroRelayMetadata } from "../../model/Door/AeroRelayMetadata";
 import { DriveMode } from "../../enum/DriveMode";
 import { OfflineMode } from "../../enum/OfflineMode";
 import { StrikeMode } from "../../enum/StrikeMode";
+import Switch from "../../components/form/switch/Switch";
 
 type ExtraProps = {
   moduleOption: Options[]
@@ -74,7 +74,6 @@ const DoorRelayForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps>>
               ...prev,
               relay: {
                 slotNo: -1,
-                mode: RelayMode.None,
                 vendor: Vendor.aero,
                 deviceModuleGuid: e.target.value,
                 metadata: {
@@ -82,7 +81,8 @@ const DoorRelayForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps>>
                   strikeMax: 5,
                   driveMode: DriveMode.Normal,
                   offlineMode: OfflineMode.NoChange,
-                  strikeMode: StrikeMode.None
+                  strikeMode: StrikeMode.None,
+                  strikeADA : 0
                 }
               }
             }))
@@ -284,6 +284,26 @@ const DoorRelayForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps>>
           defaultValue={
             (dto.relay?.metadata as AeroRelayMetadata)?.offlineMode ?? -1
           }
+        />
+      </FormField>
+      <FormField>
+        <Label>Strike Time (ADA)</Label>
+        <Input disabled={isReadOnly} type="number" min="0" defaultValue={0} value={(dto.relay?.metadata as AeroRelayMetadata)?.strikeADA ?? 0} 
+        onChange={(e) => {
+            setDto((prev) => ({
+              ...prev,
+              relay: prev.relay != null ?
+                {
+                  ...prev.relay,
+                  metadata: {
+                    ...(prev.relay.metadata as AeroRelayMetadata),
+                    strikeADA: Number(e.target.value)
+                  }
+                }
+                :
+                prev.relay
+            }));
+          }}
         />
       </FormField>
     </div>

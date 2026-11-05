@@ -25,6 +25,7 @@ public sealed class DeviceModule : BaseEntity,IAuditableEntity
   public ICollection<Reader> readers { get; set; } = default!;
   public ICollection<Sensor> sensors { get; set; } = default!;
   public ICollection<Relay> relays { get; set; } = default!;
+  public ICollection<FollowerRelay> follower_relays { get; set; } = default!;
   public ICollection<Rex> rexes { get; set; } = default!;
   public ICollection<Buzzer> buzzers { get; set; } = default!;
   public ICollection<Output> outputs { get; set; } = default!;

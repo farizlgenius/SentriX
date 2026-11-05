@@ -92,11 +92,14 @@ public sealed class AreaService(
                         doorDto.Bg == null ? null : ((short)doorDto.Bg.SlotNo, doorDto.Bg.Metadata, await module.GetExternalIdByGuidAsync(doorDto.Bg.DeviceModuleGuid, ct), await input.GetExternalIdByGuidAsync(doorDto.Bg.Guid ?? Guid.Empty, ct)),
                         doorDto.Sensor == null ? null : ((short)doorDto.Sensor.SlotNo, doorDto.Sensor.Metadata, await module.GetExternalIdByGuidAsync(doorDto.Sensor.DeviceModuleGuid, ct)),
                         doorDto.Relay == null ? null : ((short)doorDto.Relay.SlotNo, doorDto.Relay.Metadata, await module.GetExternalIdByGuidAsync(doorDto.Relay.DeviceModuleGuid, ct)),
+                        doorDto.FollowerRelay == null ? null : ((short)doorDto.FollowerRelay.SlotNo, doorDto.FollowerRelay.Metadata, await module.GetExternalIdByGuidAsync(doorDto.FollowerRelay.DeviceModuleGuid, ct)),
+                        doorDto.InteriorPushButton == null ? null : (doorDto.InteriorPushButton.SlotNo,await module.GetExternalIdByGuidAsync(doorDto.InteriorPushButton.DeviceModuleGuid, ct),doorDto.InteriorPushButton.Metadata),
+                        doorDto.InteriorPushButtonOutput == null ? null : (doorDto.InteriorPushButtonOutput.SlotNo,await module.GetExternalIdByGuidAsync(doorDto.InteriorPushButtonOutput.DeviceModuleGuid, ct),doorDto.InteriorPushButtonOutput.Metadata),
+                        (short)doorDto.ExtendFeatureType,
                         areaFromExternalId[dor.AreaFromGuid],
                         areaId,
                         dor.AntipassbackFrom,
                         dor.AntipassbackTo,
-                        ,
                         ct
                   );
             }
@@ -252,6 +255,10 @@ public sealed class AreaService(
                         doorDto.Bg == null ? null : ((short)doorDto.Bg.SlotNo, doorDto.Bg.Metadata, await module.GetExternalIdByGuidAsync(doorDto.Bg.DeviceModuleGuid, ct), await input.GetExternalIdByGuidAsync(doorDto.Bg.Guid ?? Guid.Empty, ct)),
                         doorDto.Sensor == null ? null : ((short)doorDto.Sensor.SlotNo, doorDto.Sensor.Metadata, await module.GetExternalIdByGuidAsync(doorDto.Sensor.DeviceModuleGuid, ct)),
                         doorDto.Relay == null ? null : ((short)doorDto.Relay.SlotNo, doorDto.Relay.Metadata, await module.GetExternalIdByGuidAsync(doorDto.Relay.DeviceModuleGuid, ct)),
+                        doorDto.FollowerRelay == null ? null : ((short)doorDto.FollowerRelay.SlotNo, doorDto.FollowerRelay.Metadata, await module.GetExternalIdByGuidAsync(doorDto.FollowerRelay.DeviceModuleGuid, ct)),
+                        doorDto.InteriorPushButton == null ? null : (doorDto.InteriorPushButton.SlotNo,await module.GetExternalIdByGuidAsync(doorDto.InteriorPushButton.DeviceModuleGuid, ct),doorDto.InteriorPushButton.Metadata),
+                        doorDto.InteriorPushButtonOutput == null ? null : (doorDto.InteriorPushButtonOutput.SlotNo,await module.GetExternalIdByGuidAsync(doorDto.InteriorPushButtonOutput.DeviceModuleGuid, ct),doorDto.InteriorPushButtonOutput.Metadata),
+                        (short)doorDto.ExtendFeatureType,
                         areaFrom[dor.AreaFromGuid],
                         de.ComponentExternalId ?? -1,
                         dor.AntipassbackFrom,

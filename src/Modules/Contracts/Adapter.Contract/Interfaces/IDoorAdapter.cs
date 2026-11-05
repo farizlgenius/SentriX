@@ -6,7 +6,7 @@ namespace Adapter.Contract.Interfaces;
 public interface IDoorAdapter
 {
       Task AddDoorsAsync(
-          string mac,
+         string mac,
             string ip,
             DoorType type,
             short deviceId,
@@ -24,9 +24,9 @@ public interface IDoorAdapter
             (short inputNo, string metadata, short deviceModuleId, short bgId)? bg,
             (short inputNo, string metadata, short deviceModuleId)? sensor,
             (short outputNo, string metadata, short deviceModuleId)? relay,
-            (short outputNo, string metadata, short deviceModuleId,short pulse,short delay)? followerRelay,
-            (short inputNo,short deviceModuleId,string metadata)? interiorPushButton=null,
-            (short output,short deviceModuleId,string metadata)? interiorPushButtonOutput=null,
+            (short outputNo, string metadata, short deviceModuleId)? followerRelay,
+            (short inputNo,short deviceModuleId,string metadata)? interiorPushButton,
+            (short output,short deviceModuleId,string metadata)? interiorPushButtonOutput,
             short extendFeatureType=0,
             short areaFrom=-1,
             short areaTo=1,

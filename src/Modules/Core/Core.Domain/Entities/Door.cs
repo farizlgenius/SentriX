@@ -13,7 +13,7 @@ public sealed class Door : BaseDomain
   public List<Reader> Readers { get; private set; } = default!;
   public Sensor? Sensor { get; private set; }
   public Relay? Relay { get; private set; }
-  public Relay? FollowerRelay {get; private set;}
+  public FollowerRelay? FollowerRelay {get; private set;}
   public Buzzer? Buzzer { get; private set; }
   public List<Rex> Rexes { get; private set; } = default!;
   public BreakGlass? BG {get; private set;}
@@ -30,7 +30,7 @@ public sealed class Door : BaseDomain
    List<Reader> readers,
     Sensor? sensor,
     Relay? relay,
-    Relay? followerRelay,
+    FollowerRelay? followerRelay,
     Buzzer? buzzer,
      List<Rex> rexes,
     BreakGlass? bg,
@@ -69,7 +69,7 @@ public sealed class Door : BaseDomain
   List<Reader> readers,
     Sensor? sensor,
     Relay? relay,
-    Relay? followerRelay,
+    FollowerRelay? followerRelay,
     Buzzer? buzzer,
     List<Rex> rexes,
     BreakGlass? bg,

@@ -99,14 +99,14 @@ public sealed class DoorService(
       dto.Type,
       dev.DeviceId,
       dto.Metadata,
-      dto.Readers.Select(x => new Reader(
+      [.. dto.Readers.Select(x => new Reader(
         x.SlotNo,
         x.Mode,
         x.Metadata,
         x.Vendor,
         x.ReaderDirection,
         readerMapModuleId[x.DeviceModuleGuid]
-      )).ToList(),
+      ))],
       dto.Sensor == null ? null : new Sensor(
         dto.Sensor.SlotNo,
         dto.Sensor.Metadata,
@@ -119,7 +119,7 @@ public sealed class DoorService(
           dto.Relay.Vendor,
           relayMapModuleId
         ),
-        dto.FollowerRelay == null ? null : new Relay(
+        dto.FollowerRelay == null ? null : new FollowerRelay(
           dto.FollowerRelay.SlotNo,
           string.Empty,
           dto.FollowerRelay.Vendor,
@@ -291,6 +291,25 @@ public sealed class DoorService(
         d.Relay.Metadata,
         await module.GetExternalIdByGuidAsync(dto.Relay.DeviceModuleGuid, ct)
       ),
+      d.FollowerRelay == null || dto.FollowerRelay == null ? 
+      null : (
+        d.FollowerRelay.SlotNo,
+        d.FollowerRelay.Metadata,
+        await module.GetExternalIdByGuidAsync(dto.FollowerRelay.DeviceModuleGuid, ct)
+      ),
+      d.InteriorPushButton == null || dto.InteriorPushButton == null ? 
+      null : (
+        d.InteriorPushButton.SlotNo,
+        await module.GetExternalIdByGuidAsync(dto.InteriorPushButton.DeviceModuleGuid, ct),
+        d.InteriorPushButton.Metadata
+      ),
+      d.InteriorPushButtonOutput == null || dto.InteriorPushButtonOutput == null ? 
+      null : (
+        d.InteriorPushButtonOutput.SlotNo,
+        await module.GetExternalIdByGuidAsync(dto.InteriorPushButtonOutput.DeviceModuleGuid, ct),
+        d.InteriorPushButtonOutput.Metadata
+      ),
+      (short)d.ExtendFeatureType,
       -1,
       1,
       AntipassBackMode.NONE,
@@ -515,7 +534,7 @@ public sealed class DoorService(
           dto.Relay.Vendor,
           relayMapModuleId
         ),
-        dto.Relay == null ? null : new Relay(
+        dto.Relay == null ? null : new FollowerRelay(
           dto.Relay.SlotNo,
           dto.Relay.Metadata,
           dto.Relay.Vendor,

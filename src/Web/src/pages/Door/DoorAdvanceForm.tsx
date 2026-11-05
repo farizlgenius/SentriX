@@ -8,6 +8,7 @@ import { AeroDoorMetadata } from "../../model/Door/AeroDoorMetadata";
 import { DoorMode } from "../../enum/DoorMode";
 import Switch from "../../components/form/switch/Switch";
 import { DoorExtendFeatureType } from "../../enum/DoorExtendFeatureType";
+import Input from "../../components/form/input/InputField";
 
 
 
@@ -19,6 +20,7 @@ const DoorAdvanceForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({
       setIsNext
 }) => {
       const isReadOnly = type == FormType.INFO;
+      const [followRelay,setFollowRelay] = useState<boolean>(false);
       //const [deviceOption,setDeviceOption] = useState<Options[]>([]);
 
       // NEW: Automatically validate whenever name or deviceGuid changes
@@ -355,8 +357,39 @@ const DoorAdvanceForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({
                               }}
                               defaultChecked={(dto.metadata as AeroDoorMetadata).hostOfflineGrant ?? false}
                               />
+                              <div className="flex gap-5">
+                                    <Switch label={"Follower Relay"}
+                              onChange={(checked) => {
+                                    setFollowRelay(checked)
+                              }}
+                              defaultChecked={(dto.metadata as AeroDoorMetadata).hostOfflineGrant ?? false}
+                              />
+                               {
+                        followRelay && (
+                              <>
+                               <FormField>
+                        <Label>Slot No</Label>
+                        <Input isReadOnly value={dto.followerRelay?.slotNo} />
+                  </FormField>
+                   <FormField>
+                        <Label>Pulse</Label>
+                        <Input type="number"  />
+                  </FormField>
+                   <FormField>
+                        <Label>Delay</Label>
+                        <Input type="number" />
+                  </FormField>
+                              </>
+                             
+                        )
+                  }
+                              </div>
+                              
+                              
                         </div>
                   </FormField>
+                 
+                  
                   {/* <FormField>
         <Label>Device</Label>
         <Select

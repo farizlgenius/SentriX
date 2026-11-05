@@ -8342,3 +8342,23 @@ WebConfigNetwork: SCP-1, Method2 = 0, IP Address2: 0.0.0.0, Subnet Mask2: 0.0.0.
 75554.251 Nov 05 17:45:53 SCP-1:421 SCP DIAGNOSTICS-0, 1:5 error code = 0, Autosave complete (config)
 76207.897 Shutting down debug Thread...
 File closed Thu Nov  5 17:56:47 2026
+Debug file SCPDEBUG.txt <SCPDEBUGc.txt> <SCPDEBUG.TXT> opened Thu Nov  5 23:25:35 2026
+Begin - SCP Driver DLL (64-bit) version 4.7.1.43
+95935.209 WSAStartup ok
+95935.212 RNG_X931A24 Initialized
+95935.212 1, enCcSystem: 011 1 1024 0 0 1
+95935.377 1, enCcCreateChannel: 0012 1 7 3333 0 3000 0 "" 0
+95935.873 listen(lsock) created socket=3384 on port 3333
+95935.873 Listen Successful, port: 3333
+96140.663 Shutting down debug Thread...
+File closed Thu Nov  5 23:29:00 2026
+Debug file SCPDEBUG.txt <SCPDEBUGc.txt> <SCPDEBUG.TXT> opened Thu Nov  5 23:33:46 2026
+Begin - SCP Driver DLL (64-bit) version 4.7.1.43
+96426.543 WSAStartup ok
+96426.553 RNG_X931A24 Initialized
+96426.553 1, enCcSystem: 011 1 1024 0 0 1
+96426.613 1, enCcCreateChannel: 0012 1 7 3333 0 3000 0 "" 0
+96426.695 listen(lsock) created socket=3376 on port 3333
+96426.695 Listen Successful, port: 3333
+99840.977 Shutting down debug Thread...
+File closed Fri Nov  6 00:30:40 2026

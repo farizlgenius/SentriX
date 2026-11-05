@@ -50,7 +50,7 @@ public sealed class DoorService(
             (short inputNo, string metadata, short deviceModuleId, short bgId)? bg,
             (short inputNo, string metadata, short deviceModuleId)? sensor,
             (short outputNo, string metadata, short deviceModuleId)? relay,
-            (short outputNo, string metadata, short deviceModuleId,short pulse,short delay)? followerRelay,
+            (short outputNo, string metadata, short deviceModuleId)? followerRelay,
             (short inputNo,short deviceModuleId,string metadata)? interiorPushButton,
             (short output,short deviceModuleId,string metadata)? interiorPushButtonOutput,
             short extendFeatureType=0,
@@ -112,9 +112,11 @@ public sealed class DoorService(
             }
 
             // Follower Relay Configuration
+            short pulse = -1;
+            short delay = 0;
             if (followerRelay != null)
             {
-                  var meta = JsonHelper.Deserialize<RelayMetadata>(followerRelay.Value.metadata);
+                  var meta = JsonHelper.Deserialize<FollowerRelayMetadata>(followerRelay.Value.metadata);
                   if (meta == null)
                         throw new Exception(MessageHelper.Common.DeserializeFailed("FollowerRelayMetadata"));
 
@@ -126,6 +128,9 @@ public sealed class DoorService(
                         meta.OfflineMode,
                         meta.DriveMode
                   );
+
+                  pulse = meta.Pulse;
+                  delay = meta.Delay;
 
                   await bus.SendAsync(new AdapterEventCommand(res),ct);
 
@@ -359,8 +364,8 @@ public sealed class DoorService(
                         0,
                         doorMetadata.ADAStrikeTime,
                         doorMetadata.ADAHeldTime,
-                        followerRelay == null ? (short)-1 : followerRelay.Value.pulse,
-                        followerRelay == null ? (short)0 : followerRelay.Value.delay,
+                        pulse,
+                        delay,
                         extendFeatureType,
                         interiorPushButton == null ? (short)-1 : interiorPushButton.Value.deviceModuleId,
                         interiorPushButton == null ? (short)0 : interiorPushButton.Value.inputNo,
@@ -428,8 +433,8 @@ public sealed class DoorService(
                         0,
                         doorMetadata.ADAStrikeTime,
                         doorMetadata.ADAHeldTime,
-                        followerRelay == null ? (short)-1 : followerRelay.Value.pulse,
-                        followerRelay == null ? (short)0 : followerRelay.Value.delay,
+                        pulse,
+                        delay,
                         extendFeatureType,
                         interiorPushButton == null ? (short)-1 : interiorPushButton.Value.deviceModuleId,
                         interiorPushButton == null ? (short)0 : interiorPushButton.Value.inputNo,
