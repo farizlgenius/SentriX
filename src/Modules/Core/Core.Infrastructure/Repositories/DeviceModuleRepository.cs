@@ -99,11 +99,11 @@ public sealed class DeviceModuleRepository(CoreDbContext context) : BaseReposito
                   .ToDictionaryAsync(x => x.guid, x => x.id, ct);
       }
 
-      public async Task<Guid> GetGuidByExternalIdAndDeviceExternalIdAndVendorAsync(short externalId, short deviceExternalId, Vendor vendor, CancellationToken ct = default)
+      public async Task<Guid> GetGuidByExternalIdAndMacAndVendorAsync(short externalId, string mac, Vendor vendor, CancellationToken ct = default)
       {
            return await Context.DeviceModules
             .AsNoTracking()
-            .Where(x => x.external_id == externalId && x.device.external_id == externalId && x.device.vendor == vendor)
+            .Where(x => x.external_id == externalId && x.device.mac == mac && x.device.vendor == vendor)
             .Select(x => x.guid)
             .FirstOrDefaultAsync(ct);
       }

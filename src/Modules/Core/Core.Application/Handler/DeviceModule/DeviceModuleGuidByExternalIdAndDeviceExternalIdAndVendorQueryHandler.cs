@@ -4,10 +4,10 @@ using SharedKernel.Messaging;
 
 namespace Core.Application.Handler.DeviceModule;
 
-public sealed class DeviceModuleGuidByExternalIdAndDeviceExternalIdAndVendorQueryHandler(IDeviceModuleRepository repo) : IQueryHandler<DeviceModuleGuidByExternalIdAndDeviceExternalIdAndVendorQuery, Guid>
+public sealed class DeviceModuleGuidByExternalIdAndMacAndVendorQueryHandler(IDeviceModuleRepository repo) : IQueryHandler<DeviceModuleGuidByExternalIdAndMacAndVendorQuery, Guid>
 {
-      public async Task<Guid> HandleAsync(DeviceModuleGuidByExternalIdAndDeviceExternalIdAndVendorQuery query, CancellationToken ct)
+      public async Task<Guid> HandleAsync(DeviceModuleGuidByExternalIdAndMacAndVendorQuery query, CancellationToken ct)
       {
-            return await repo.GetGuidByExternalIdAndDeviceExternalIdAndVendorAsync(query.externalId,query.deviceExternalId,query.vendor,ct);
+            return await repo.GetGuidByExternalIdAndMacAndVendorAsync(query.externalId,query.mac,query.vendor,ct);
       }
 }

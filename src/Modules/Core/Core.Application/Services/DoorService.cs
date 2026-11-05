@@ -62,6 +62,8 @@ public sealed class DoorService(
     var buzzerMapModuleId = dto.Buzzer == null ? (-1,(short)-1) : await module.GetIdAndExternalIdByGuidAsync(dto.Buzzer.DeviceModuleGuid, ct);
     var rexMapModuleId = await module.GetDeviceModuleIdsMapGuidsByGuidsAsync(dto.Rexes.Select(x => x.DeviceModuleGuid), ct);
     var bgMapModuleId = dto.Bg == null ? (-1,(short)-1) : await module.GetIdAndExternalIdByGuidAsync(dto.Bg.DeviceModuleGuid, ct);
+    var interiorPushButtonModuleId = dto.InteriorPushButton == null ? (-1,(short)-1) : await module.GetIdAndExternalIdByGuidAsync(dto.InteriorPushButton.DeviceModuleGuid,ct);
+    var interiorPushButtonOutputModuleId = dto.InteriorPushButtonOutput == null ? (-1,(short)-1) : await module.GetIdAndExternalIdByGuidAsync(dto.InteriorPushButtonOutput.DeviceModuleGuid,ct);
 
     if (await repo.IsAnyByNameAndLocationGuidAsync(dto.Name, dto.LocationGuid, ct))
       throw new DuplicateException(nameof(dto.Name), dto.Name);
@@ -117,26 +119,44 @@ public sealed class DoorService(
           dto.Relay.Vendor,
           relayMapModuleId
         ),
+        dto.FollowerRelay == null ? null : new Relay(
+          dto.FollowerRelay.SlotNo,
+          string.Empty,
+          dto.FollowerRelay.Vendor,
+          relayMapModuleId
+        ),
         dto.Buzzer == null ? null : new Buzzer(
           dto.Buzzer.SlotNo,
           dto.Buzzer.Metadata,
           dto.Buzzer.Vendor,
           buzzerMapModuleId.Item1,
           BuzzerExternalId
-
         ),
-        dto.Rexes.Select(x => new Rex(
+        [.. dto.Rexes.Select(x => new Rex(
         x.SlotNo,
         x.Metadata,
         x.Vendor,
         readerMapModuleId[x.DeviceModuleGuid]
-      )).ToList(),
+      ))],
         dto.Bg == null ? null : new BreakGlass(
           dto.Bg.SlotNo,
           dto.Bg.Vendor,
           dto.Bg.Metadata,
           bgMapModuleId.Item1,
           BgExternalId
+        ),
+        dto.ExtendFeatureType,
+        dto.InteriorPushButton == null ? null : new InteriorPushButton(
+          dto.InteriorPushButton.SlotNo,
+          dto.InteriorPushButton.Vendor,
+          dto.InteriorPushButton.Metadata,
+          interiorPushButtonModuleId.Item1
+        ),
+        dto.InteriorPushButtonOutput == null ? null : new InteriorPushButtonOutput(
+          dto.InteriorPushButtonOutput.SlotNo,
+          dto.InteriorPushButtonOutput.Vendor,
+          dto.InteriorPushButtonOutput.Metadata,
+          interiorPushButtonOutputModuleId.Item1
         ),
         dev.LocationId ?? 1,
         doorExternalIds.Count > 0 ? doorExternalIds.ElementAt(0) : (short)-1,
@@ -452,6 +472,8 @@ public sealed class DoorService(
     var buzzerMapModuleId = dto.Buzzer == null ? 0 : await module.GetIdByGuidAsync(dto.Buzzer.DeviceModuleGuid,ct);
     var rexMapModuleId = await module.GetDeviceModuleIdsMapGuidsByGuidsAsync(dto.Rexes.Select(x => x.DeviceModuleGuid), ct);
     var bgMapModuleId = dto.Bg == null ? 0 : await module.GetIdByGuidAsync(dto.Bg.DeviceModuleGuid,ct);
+    var interiorPushButtonModuleId = dto.InteriorPushButton == null ? (-1,(short)-1) : await module.GetIdAndExternalIdByGuidAsync(dto.InteriorPushButton.DeviceModuleGuid,ct);
+    var interiorPushButtonOutputModuleId = dto.InteriorPushButtonOutput == null ? (-1,(short)-1) : await module.GetIdAndExternalIdByGuidAsync(dto.InteriorPushButtonOutput.DeviceModuleGuid,ct);
 
     
     short BuzzerExternalId = 0;
@@ -493,6 +515,12 @@ public sealed class DoorService(
           dto.Relay.Vendor,
           relayMapModuleId
         ),
+        dto.Relay == null ? null : new Relay(
+          dto.Relay.SlotNo,
+          dto.Relay.Metadata,
+          dto.Relay.Vendor,
+          relayMapModuleId
+        ),
         dto.Buzzer == null ? null : new Buzzer(
           dto.Buzzer.SlotNo,
           dto.Buzzer.Metadata,
@@ -512,6 +540,19 @@ public sealed class DoorService(
           dto.Bg.Metadata,
           bgMapModuleId,
           BgExternalId
+        ),
+         dto.ExtendFeatureType,
+        dto.InteriorPushButton == null ? null : new InteriorPushButton(
+          dto.InteriorPushButton.SlotNo,
+          dto.InteriorPushButton.Vendor,
+          dto.InteriorPushButton.Metadata,
+          interiorPushButtonModuleId.Item1
+        ),
+        dto.InteriorPushButtonOutput == null ? null : new InteriorPushButtonOutput(
+          dto.InteriorPushButtonOutput.SlotNo,
+          dto.InteriorPushButtonOutput.Vendor,
+          dto.InteriorPushButtonOutput.Metadata,
+          interiorPushButtonOutputModuleId.Item1
         ),
         dev.LocationId ?? -1,
         dev.ComponentExternalId ?? -1,

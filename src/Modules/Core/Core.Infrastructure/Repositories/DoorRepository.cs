@@ -52,11 +52,11 @@ public sealed class DoorRepository(CoreDbContext context) : BaseRepository<Persi
 ), IDoorRepository
 {
 
-  public async Task<Guid> GetGuidByExternalIdAndDeviceExternalIdAndVendorAsync(short externalId, short deviceExternalId, Vendor vendor, CancellationToken ct = default)
+  public async Task<Guid> GetGuidByExternalIdAndMacAndVendorAsync(short externalId, string mac, Vendor vendor, CancellationToken ct = default)
       {
            return await Context.Doors
             .AsNoTracking()
-            .Where(x => x.external_id == externalId && x.device.external_id == deviceExternalId && x.device.vendor == vendor)
+            .Where(x => x.external_id == externalId && x.device.mac == mac && x.device.vendor == vendor)
             .Select(x => x.guid)
             .FirstOrDefaultAsync(ct);
       }
@@ -81,60 +81,7 @@ public sealed class DoorRepository(CoreDbContext context) : BaseRepository<Persi
     return await Context.Doors
       .AsNoTracking()
       .Where(x => x.device.mac == mac)
-      .Select(x => new DoorDto(
-  x.guid,
-  x.name,
-  x.vendor,
-  x.type,
-   x.device.guid,
-  x.device.name,
-  x.metadata,
-  x.readers.Select(
-    r => new ReaderDto(
-      r.slot_no,
-      r.mode,
-      r.metadata,
-      r.vendor,
-      r.reader_direction,
-      r.device_module.guid
-    )
-  ).ToList(),
-  x.buzzer == null ? null : new BuzzerDto(
-    x.buzzer.slot_no,
-    x.buzzer.metadata,
-    x.buzzer.vendor,
-    x.buzzer.device_module.guid
-  ),
-  x.rexes.Select(x => new RexDto(
-    x.slot_no,
-    x.metadata,
-    x.vendor,
-    x.device_module.guid,
-     x.timezone == null ? default : x.timezone.guid
-  )).ToList(),
-  x.sensor == null ? null : new SensorDto(
-    x.sensor.slot_no,
-    x.sensor.metadata,
-    x.sensor.vendor,
-    x.sensor.device_module.guid
-  ),
-  x.relay == null ? null : new RelayDto(
-    x.relay.slot_no,
-    x.relay.metadata,
-    x.relay.vendor,
-    x.relay.device_module.guid
-  ),
-   x.bg == null ? null : new BGDto(
-    x.bg.slot_no,
-    x.metadata,
-    x.bg.vendor,
-    x.bg.device_module.guid
-  ),
-   x.location.guid,
-  x.location.name,
-  x.is_active,
-  x.is_default
-)).ToArrayAsync(ct);
+      .Select(DoorProjections.ToDto).ToArrayAsync(ct);
   }
 
   public async Task<IEnumerable<(Guid guid, int id, string mac, string ip, Vendor vendor,short external_id)>> GetDetailsByGuidAsync(IEnumerable<Guid> guids, CancellationToken ct = default)

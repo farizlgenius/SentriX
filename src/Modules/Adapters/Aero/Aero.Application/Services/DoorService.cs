@@ -50,6 +50,10 @@ public sealed class DoorService(
             (short inputNo, string metadata, short deviceModuleId, short bgId)? bg,
             (short inputNo, string metadata, short deviceModuleId)? sensor,
             (short outputNo, string metadata, short deviceModuleId)? relay,
+            (short outputNo, string metadata, short deviceModuleId,short pulse,short delay)? followerRelay,
+            (short inputNo,short deviceModuleId,string metadata)? interiorPushButton,
+            (short output,short deviceModuleId,string metadata)? interiorPushButtonOutput,
+            short extendFeatureType=0,
             short areaFrom=-1,
             short areaTo=1,
             AntipassBackMode apbModeFrom = AntipassBackMode.NONE,
@@ -107,6 +111,26 @@ public sealed class DoorService(
 
             }
 
+            // Follower Relay Configuration
+            if (followerRelay != null)
+            {
+                  var meta = JsonHelper.Deserialize<RelayMetadata>(followerRelay.Value.metadata);
+                  if (meta == null)
+                        throw new Exception(MessageHelper.Common.DeserializeFailed("FollowerRelayMetadata"));
+
+                  var res = output.OutputPointSpecification(
+                        mac,
+                        deviceId,
+                        followerRelay.Value.deviceModuleId,
+                        followerRelay.Value.outputNo,
+                        meta.OfflineMode,
+                        meta.DriveMode
+                  );
+
+                  await bus.SendAsync(new AdapterEventCommand(res),ct);
+
+            }
+
             // Sensor Configuration
             if (sensor != null)
             {
@@ -127,6 +151,7 @@ public sealed class DoorService(
                   await bus.SendAsync(new AdapterEventCommand(res),ct);
 
             }
+
 
             // Rex Configuration
             foreach (var rex in rexes)
@@ -217,10 +242,55 @@ public sealed class DoorService(
 
             }
 
+            var longPress = 0;
+
+            // Interior Push Button
+            if (interiorPushButton != null)
+            {
+                  var meta = JsonHelper.Deserialize<InteriorPushButtonMetadata>(interiorPushButton.Value.metadata);
+                  if (meta == null)
+                        throw new Exception(MessageHelper.Common.DeserializeFailed("InteriorPushButtonMetadata"));
+
+                  var res = input.InputPointSpecification(
+                        mac,
+                        deviceId,
+                        interiorPushButton.Value.deviceModuleId,
+                        interiorPushButton.Value.inputNo,
+                        meta.Mode,
+                        meta.Debounce,
+                        meta.HoldTime
+                  );
+
+                  longPress = meta.LongPress;
+
+                  await bus.SendAsync(new AdapterEventCommand(res),ct);
+
+            }
+
+            // Interior Push Button Output
+            if (interiorPushButtonOutput != null)
+            {
+                  var meta = JsonHelper.Deserialize<InteriorPushButtonOutputMetadata>(interiorPushButtonOutput.Value.metadata);
+                  if (meta == null)
+                        throw new Exception(MessageHelper.Common.DeserializeFailed("OutputMetadata"));
+
+                  var res = output.OutputPointSpecification(
+                        mac,
+                        deviceId,
+                        interiorPushButtonOutput.Value.deviceModuleId,
+                        interiorPushButtonOutput.Value.output,
+                        meta.OfflineMode,
+                        meta.DriveMode
+                  );
+
+                  await bus.SendAsync(new AdapterEventCommand(res),ct);
+
+            }
+
             // Door Configuration
             short spare = 0x00;
             short accessFlag = 0x00;
-            DoorMetadata doorMetadata = new DoorMetadata();
+            DoorMetadata doorMetadata = new();
 
             if (!string.IsNullOrWhiteSpace(metadata))
             {
@@ -285,8 +355,18 @@ public sealed class DoorService(
                         doorMetadata.OfflineMode,
                         doorMetadata.DefaultMode,
                         doorMetadata.DefaultLedMode,
+                        doorMetadata.PreAlarm,
                         0,
-                        0
+                        doorMetadata.ADAStrikeTime,
+                        doorMetadata.ADAHeldTime,
+                        followerRelay == null ? (short)-1 : followerRelay.Value.pulse,
+                        followerRelay == null ? (short)0 : followerRelay.Value.delay,
+                        extendFeatureType,
+                        interiorPushButton == null ? (short)-1 : interiorPushButton.Value.deviceModuleId,
+                        interiorPushButton == null ? (short)0 : interiorPushButton.Value.inputNo,
+                        (short)longPress,
+                        interiorPushButtonOutput == null ? (short)-1 : interiorPushButtonOutput.Value.deviceModuleId,
+                        interiorPushButtonOutput == null ? (short)0 : interiorPushButtonOutput.Value.output
                   );
 
                   await bus.SendAsync(new AdapterEventCommand(res),ct);
@@ -344,8 +424,18 @@ public sealed class DoorService(
                   doorMetadata.OfflineMode,
                   doorMetadata.DefaultMode,
                   doorMetadata.DefaultLedMode,
-                  0,
-                  0
+                        doorMetadata.PreAlarm,
+                        0,
+                        doorMetadata.ADAStrikeTime,
+                        doorMetadata.ADAHeldTime,
+                        followerRelay == null ? (short)-1 : followerRelay.Value.pulse,
+                        followerRelay == null ? (short)0 : followerRelay.Value.delay,
+                        extendFeatureType,
+                        interiorPushButton == null ? (short)-1 : interiorPushButton.Value.deviceModuleId,
+                        interiorPushButton == null ? (short)0 : interiorPushButton.Value.inputNo,
+                        (short)longPress,
+                        interiorPushButtonOutput == null ? (short)-1 : interiorPushButtonOutput.Value.deviceModuleId,
+                        interiorPushButtonOutput == null ? (short)0 : interiorPushButtonOutput.Value.output
             );
 
             await bus.SendAsync(new AdapterEventCommand(doorRes), ct);
@@ -408,6 +498,17 @@ public sealed class DoorService(
                         1,
                         0,
                         0,
+                        0,
+                        //
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        -1,
+                        0,
+                        0,
+                        -1,
                         0
                   );
 
@@ -450,6 +551,16 @@ public sealed class DoorService(
                         1,
                         0,
                         0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        -1,
+                        0,
+                        0,
+                        -1,
                         0
             );
 

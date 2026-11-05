@@ -104,6 +104,24 @@ public sealed class AreaRepository(CoreDbContext context) : BaseRepository<Persi
             .ToArrayAsync(ct);
       }
 
+      public async Task<Guid> GetGuidByExternalIdAndMacAndVendorAsync(short ExternalId, string Mac, Vendor vendor, CancellationToken ct = default)
+      {
+           return await Context.Areas
+            .AsNoTracking()
+            .Where(x => x.external_id == ExternalId && x.device.mac == Mac && x.device.vendor == vendor)
+            .Select(x => x.guid)
+            .FirstOrDefaultAsync(ct);
+      }
+
+      public async Task<string> GetNameByExternalIdAndMacAndVendorAsync(short ExternalId, string Mac, Vendor Vendor, CancellationToken ct = default)
+      {
+            return await Context.Areas
+                  .AsNoTracking()
+                  .Where(x => x.external_id == ExternalId && x.device.mac == Mac && x.device.vendor == Vendor)
+                  .Select(x => x.name)
+                  .FirstOrDefaultAsync(ct) ?? "Unknown";
+      }
+
       public async Task<Pagination<AreaDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
       {
             return await base.GetPaginationAsync(

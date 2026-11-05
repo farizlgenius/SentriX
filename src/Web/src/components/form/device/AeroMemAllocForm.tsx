@@ -307,37 +307,41 @@ export const AeroMemAllocForm: React.FC<
     }, []);
 
   return (
-    <Table className="border-separate border-spacing-y-4 overflow-hidden rounded-2xl border border-[var(--app-panel-border)] bg-[var(--app-panel-bg)] ">
-          <TableHeader className="h-10 items-center gap-3 bg-[var(--app-panel-muted)] px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.12em] text-gray-400">
-            <TableRow>
-              <TableCell className="text-center">Type</TableCell>
-              <TableCell className="text-center">Device Allocate</TableCell>
-              <TableCell className="text-center">Record Size</TableCell>
-              <TableCell className="text-center">Active Record</TableCell>
-              <TableCell className="text-center">Driver Allocate</TableCell>
-              <TableCell className="text-center">Status</TableCell>
-            </TableRow>
-          </TableHeader>
-          <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
-            {memAllocs.map((a: MemoryDto, i: number) => (
-              <TableRow key={i}>
-                <TableCell className="text-center">{a.type}</TableCell>
-                <TableCell className="text-center">{a.record}</TableCell>
-                <TableCell className="text-center">{a.recordSize}</TableCell>
-                <TableCell className="text-center">{a.active}</TableCell>
-                <TableCell className="text-center">{a.driverRecord}</TableCell>
-                <TableCell className="text-center">
-                  {a.status == DeviceConfigurationStatus.sync ? (
-                    <Badge color="success">Sync</Badge>
-                  ) : a.status == DeviceConfigurationStatus.info ? (
-                    <Badge color="info">Info</Badge>
-                  ) : (
-                    <Badge color="error">Not Sync</Badge>
-                  )}
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+    <Table className="border-separate border-spacing-y-4 overflow-hidden rounded-2xl border border-[var(--app-panel-border)] bg-[var(--app-panel-bg)]">
+      <TableHeader className="h-10 items-center gap-3 bg-[var(--app-panel-muted)] px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.12em] text-gray-400">
+        <TableRow>
+          <TableCell className="text-center">Type</TableCell>
+          <TableCell className="text-center">Device Allocate</TableCell>
+          <TableCell className="text-center">Record Size</TableCell>
+          <TableCell className="text-center">Active Record</TableCell>
+          <TableCell className="text-center">Driver Allocate</TableCell>
+          <TableCell className="text-center">Status</TableCell>
+        </TableRow>
+      </TableHeader>
+      <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
+        {memAllocs.map((allocation: MemoryDto) => (
+          <TableRow key={allocation.id}>
+            <TableCell className="text-center">{allocation.type}</TableCell>
+            <TableCell className="text-center">{allocation.record}</TableCell>
+            <TableCell className="text-center">
+              {allocation.recordSize}
+            </TableCell>
+            <TableCell className="text-center">{allocation.active}</TableCell>
+            <TableCell className="text-center">
+              {allocation.driverRecord}
+            </TableCell>
+            <TableCell className="text-center">
+              {allocation.status === DeviceConfigurationStatus.sync ? (
+                <Badge color="success">Sync</Badge>
+              ) : allocation.status === DeviceConfigurationStatus.info ? (
+                <Badge color="info">Info</Badge>
+              ) : (
+                <Badge color="error">Not Sync</Badge>
+              )}
+            </TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
   );
 };

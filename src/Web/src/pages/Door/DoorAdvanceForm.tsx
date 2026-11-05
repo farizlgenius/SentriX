@@ -3,14 +3,11 @@ import { FormProp, FormType } from "../../model/Form/FormProp";
 import { DoorDto } from "../../model/Door/DoorDto";
 import { FormField } from "../../components/form/template/FormTemplate";
 import Label from "../../components/form/Label";
-import Input from "../../components/form/input/InputField";
 import Select from "../../components/form/Select";
-import { Vendor } from "../../enum/Vendor";
-import { DoorType } from "../../enum/DoorType";
-import { Options } from "../../model/Options";
 import { AeroDoorMetadata } from "../../model/Door/AeroDoorMetadata";
 import { DoorMode } from "../../enum/DoorMode";
 import Switch from "../../components/form/switch/Switch";
+import { DoorExtendFeatureType } from "../../enum/DoorExtendFeatureType";
 
 
 
@@ -163,6 +160,50 @@ const DoorAdvanceForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({
                                           {
                                                 label: "Table 3",
                                                 value: 3,
+                                          }
+                                    ]}
+                              onChange={(e) => {
+                                    setDto(prev => ({
+                                          ...prev,
+                                          metadata: {
+                                                ...(prev.metadata as AeroDoorMetadata),
+                                                defaultLedMode: Number(e.target.value)
+                                          }
+                                    }))
+
+                              }
+
+                              }
+                              defaultValue={(dto.metadata as AeroDoorMetadata).defaultLedMode ?? 0}
+                        />
+                  </FormField>
+                  <FormField>
+                        <Label>Extended Feature</Label>
+                        <Select
+                              disabled={isReadOnly}
+                              name="extend"
+                              options={
+                                    [
+                                          
+                                          {
+                                                label: "None",
+                                                value: DoorExtendFeatureType.NONE,
+                                          },
+                                          {
+                                                label: "Classroom",
+                                                value: DoorExtendFeatureType.CLASSROOM,
+                                          },
+                                          {
+                                                label: "Office",
+                                                value: DoorExtendFeatureType.OFFICE,
+                                          },
+                                          {
+                                                label: "Privacy",
+                                                value: DoorExtendFeatureType.PRIVACY,
+                                          },
+                                           {
+                                                label: "Apartment",
+                                                value: DoorExtendFeatureType.APARTMENT,
                                           }
                                     ]}
                               onChange={(e) => {

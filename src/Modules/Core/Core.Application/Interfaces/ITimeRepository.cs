@@ -9,4 +9,5 @@ public interface ITimeRepository : IRepository<TimeZoneDto, Domain.Entities.Time
     Task<Dictionary<Guid, int>> GetTimeZoneIdsMapGuidsByGuidsAsync(IEnumerable<Guid> guids, CancellationToken ct = default);
     Task<Components> GetComponentsAsync(Guid locationGuid, DateTime syncedAt, CancellationToken ct = default);
     Task<IEnumerable<OptionDto>> GetOptionByLocationAsync(Guid guid,CancellationToken ct = default);
+    Task<string> GetNameByExternalIdAsync(short externalId,CancellationToken ct = default);
 }

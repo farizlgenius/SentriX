@@ -1,4 +1,4 @@
-import { PropsWithChildren, SetStateAction, useEffect, useState } from "react";
+import { PropsWithChildren, useEffect, useState } from "react";
 import {
   Table,
   TableBody,
@@ -10,16 +10,13 @@ import { DeviceDto } from "../../../model/Device/DeviceDto";
 import { StatusDto } from "../../../model/StatusDto";
 import SignalRService from "../../../services/SignalRService";
 import { SignalRTopic } from "../../../constants/signalr-constant";
-import Badge from "../../ui/badge/Badge";
 import { DeviceModuleDto } from "../../../model/Device/DeviceModuleDto";
-import { Status } from "../../../enum/Status";
 import { BaseTable } from "../../../pages/UiElements/BaseTable";
 import { DeviceModuleModel } from "../../../enum/DeviceModuleModel";
 import { useAuth } from "../../../context/AuthContext";
 import { FeatureId } from "../../../enum/FeatureId";
 import { ModuleEndpoint } from "../../../endpoint/ModuleEndpoint";
 import { send } from "../../../api/api";
-import { InputStatus } from "../../../enum/InputStatus";
 
 interface AeroModuleDetailFormInterface {
   data: DeviceDto;
@@ -31,11 +28,7 @@ const headers = [
   "Address",
   "Serial Number",
   "Port",
-  "Batt",
-  "AC",
-  "Tamper",
-  "Status",
-  "Enable",
+  "Enabled",
   "Action"
 ]
 
@@ -53,14 +46,15 @@ const keys = [
 export const AeroModuleDetailForm: React.FC<
   PropsWithChildren<AeroModuleDetailFormInterface>
 > = ({ data }) => {
-  const statusDefault:StatusDto[] = data.deviceModules.map((a:DeviceModuleDto) => ({
-    guid:a.guid,
-    status:Status.Unknown,
-    batt:InputStatus.Unknown,
-    ac:InputStatus.Unknown,
-    tamper:InputStatus.Unknown
-  }))
-  const [status, setStatus] = useState<StatusDto[]>(statusDefault);
+  // const statusDefault:StatusDto[] = data.deviceModules.map((a:DeviceModuleDto) => ({
+  //   guid:a.guid,
+  //   status:Status.Unknown,
+  //   batt:InputStatus.Unknown,
+  //   ac:InputStatus.Unknown,
+  //   tamper:InputStatus.Unknown
+  // }))
+
+  const [, setStatus] = useState<StatusDto[]>([]);
   const [refresh, setRefresh] = useState<boolean>(false);
   const toggleRefresh = () => setRefresh(!refresh);
   const [select, setSelect] = useState<DeviceModuleDto[]>([]);
@@ -87,78 +81,78 @@ export const AeroModuleDetailForm: React.FC<
   const handleInfo = (item: DeviceModuleDto) => { }
   const handleRemove = (item: DeviceModuleDto) => { }
 
-  const renderOptional = (
-    item: DeviceDto,
-    statusDto: StatusDto[],
-    index: number,
-  ) => {
-    return [
-      <TableCell
-      key={index + 1}
-      className="text-center">
+  // const renderOptional = (
+  //   item: DeviceDto,
+  //   statusDto: StatusDto[],
+  //   index: number,
+  // ) => {
+  //   return [
+  //     <TableCell
+  //     key={index + 1}
+  //     className="text-center">
 
-        <Badge
-          size="sm"
-          color={
-            status.find((x) => x.guid == item.guid)?.altr3 == InputStatus.Active
-              ? "success"
-              : "error"
-          }
-        >
-          {status.find((x) => x.guid == item.guid)?.altr3 == InputStatus.Active ? "Active" :
-           InputStatus[status.find((x) => x.guid == item.guid)?.altr3 ?? InputStatus.Unknown]}
-        </Badge>
-      </TableCell>,
-      <TableCell
-      key={index + 2} className="text-center">
+  //       <Badge
+  //         size="sm"
+  //         color={
+  //           status.find((x) => x.guid == item.guid)?.altr3 == InputStatus.Active
+  //             ? "success"
+  //             : "error"
+  //         }
+  //       >
+  //         {status.find((x) => x.guid == item.guid)?.altr3 == InputStatus.Active ? "Active" :
+  //          InputStatus[status.find((x) => x.guid == item.guid)?.altr3 ?? InputStatus.Unknown]}
+  //       </Badge>
+  //     </TableCell>,
+  //     <TableCell
+  //     key={index + 2} className="text-center">
 
-        <Badge
-          size="sm"
-          color={
-            status.find((x) => x.guid == item.guid)?.altr2 == InputStatus.Active
-              ? "success"
-              : "error"
-          }
-        >
-          {status.find((x) => x.guid == item.guid)?.altr2 == InputStatus.Active ? "Active" :
-            InputStatus[status.find((x) => x.guid == item.guid)?.altr2 ?? InputStatus.Unknown]}
-        </Badge>
-      </TableCell>,
-      <TableCell key={index + 3} className="text-center">
+  //       <Badge
+  //         size="sm"
+  //         color={
+  //           status.find((x) => x.guid == item.guid)?.altr2 == InputStatus.Active
+  //             ? "success"
+  //             : "error"
+  //         }
+  //       >
+  //         {status.find((x) => x.guid == item.guid)?.altr2 == InputStatus.Active ? "Active" :
+  //           InputStatus[status.find((x) => x.guid == item.guid)?.altr2 ?? InputStatus.Unknown]}
+  //       </Badge>
+  //     </TableCell>,
+  //     <TableCell key={index + 3} className="text-center">
 
-        <Badge
-          size="sm"
-          color={
-            status.find((x) => x.guid == item.guid)?.altr1 == InputStatus.Active
-              ? "success"
-              : "error"
-          }
-        >
-          {status.find((x) => x.guid == item.guid)?.altr1 == InputStatus.Active ? "Active" :
-            InputStatus[status.find((x) => x.guid == item.guid)?.altr1 ?? InputStatus.Unknown]}
-        </Badge>
-      </TableCell>,
+  //       <Badge
+  //         size="sm"
+  //         color={
+  //           status.find((x) => x.guid == item.guid)?.altr1 == InputStatus.Active
+  //             ? "success"
+  //             : "error"
+  //         }
+  //       >
+  //         {status.find((x) => x.guid == item.guid)?.altr1 == InputStatus.Active ? "Active" :
+  //           InputStatus[status.find((x) => x.guid == item.guid)?.altr1 ?? InputStatus.Unknown]}
+  //       </Badge>
+  //     </TableCell>,
 
-      <TableCell
-        key={index + 4}
-        className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400"
-      >
-        <Badge
-          size="sm"
-          color={
-            statusDto.find((statusItem) => statusItem.guid === item.guid)
-              ?.status == Status.Online
-              ? "success"
-              : "error"
-          }
-        >
-          {statusDto.find((statusItem) => statusItem.guid === item.guid)?.status == Status.Online
-            ? "Online"
-            : Status[statusDto.find((statusItem) => statusItem.guid === item.guid)?.status ?? Status.Unknown]}
-        </Badge>
-      </TableCell>,
-    ];
-  };
+  //     <TableCell
+  //       key={index + 4}
+  //       className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400"
+  //     >
+  //       <Badge
+  //         size="sm"
+  //         color={
+  //           statusDto.find((statusItem) => statusItem.guid === item.guid)
+  //             ?.status == Status.Online
+  //             ? "success"
+  //             : "error"
+  //         }
+  //       >
+  //         {statusDto.find((statusItem) => statusItem.guid === item.guid)?.status == Status.Online
+  //           ? "Online"
+  //           : Status[statusDto.find((statusItem) => statusItem.guid === item.guid)?.status ?? Status.Unknown]}
+  //       </Badge>
+  //     </TableCell>,
+  //   ];
+  // };
 
   {
     /* UseEffect */
@@ -220,20 +214,17 @@ export const AeroModuleDetailForm: React.FC<
       <BaseTable<DeviceModuleDto>
         headers={headers}
         keys={keys}
-        status={status}
         data={data.deviceModules}
         permission={filterPermission(FeatureId.device)}
         onInfo={handleInfo}
         onEdit={handleEdit}
         onRemove={handleRemove}
-        onClick={function (e: React.MouseEvent<HTMLButtonElement, MouseEvent>): void {
-          throw new Error("Function not implemented.");
-        }}
+        onClick={() => {}}
         select={select}
         setSelect={setSelect}
         fetchData={fetchData}
         locationGuid={data.locationGuid}
-        renderOptionalComponent={renderOptional}
+       // renderOptionalComponent={renderOptional}
         specialDisplay={[
           {
             key:"model",

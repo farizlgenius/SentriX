@@ -5,6 +5,9 @@ public sealed class DoorMetadata
       public short OfflineMode {get; set;}
       public short DefaultMode {get; set;}
       public short DefaultLedMode {get; set;}
+      public short PreAlarm {get; set; } = 0;
+      public short ADAStrikeTime {get; set; } = 0;
+      public short ADAHeldTime {get; set; } = 0;
       // Spare
       public bool ForceCardPin {get; set;}
       public bool DoubleCard {get ;set;}

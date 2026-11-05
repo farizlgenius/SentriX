@@ -14,7 +14,7 @@ namespace SharedKernel.Domain;
 public sealed record StatusDto(
       Guid Guid,
       Status Status,
-      DoorStatus DoorStatus=DoorStatus.Unknown,
+      DoorStatus DoorStatus=DoorStatus.UNKNOWN,
       InputStatus InputStatus=InputStatus.Unknown,
       InputStatus OutputStatus=InputStatus.Unknown,
       TamperStatus TamperStatus=TamperStatus.Unknown,

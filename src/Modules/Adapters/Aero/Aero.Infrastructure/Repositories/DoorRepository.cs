@@ -13,7 +13,53 @@ public sealed class DoorRepository(
       IBaseRepository repo
 ) : IDoorRepository
 {
-      public CommandResponse AccessControlReaderConfiguration(string mac, short scpId, short acrNo, short readerConfig, short pairAcr, short readerSio, short readerNo, short relaySio, short relayNo,short relayMin,short relayMax, short relayMode, short sendorSio, short sendorNo, short heldOpenDelay, short rexSio, short rexNo, short rex1Sio, short rex1No, short rex0Mask, short rex1Mask, short altrRdrSio, short altrRdrNo, short altrRdrSpec, short cdFormat, short apbMode, short apbIn, short apbOut, short spare, short actlFlags, short offlineMode, short defaultMode, short defaultLedMode, short preAalrm, short apbDelay)
+      public CommandResponse AccessControlReaderConfiguration(
+            string mac,
+            short scpId,
+            short acrNo,
+            short readerConfig,
+            short pairAcr,
+            short readerSio,
+            short readerNo,
+            short relaySio,
+            short relayNo,
+            short relayMin,
+            short relayMax,
+            short relayMode,
+            short sendorSio,
+            short sendorNo,
+            short heldOpenDelay,
+            short rexSio,
+            short rexNo,
+            short rex1Sio,
+            short rex1No,
+            short rex0Mask,
+            short rex1Mask,
+            short altrRdrSio,
+            short altrRdrNo,
+            short altrRdrSpec,
+            short cdFormat,
+            short apbMode,
+            short apbIn,
+            short apbOut,
+            short spare,
+            short actlFlags,
+            short offlineMode,
+            short defaultMode,
+            short defaultLedMode,
+            short preAalrm,
+            short apbDelay,
+            short relayT2,
+            short heldOpen2,
+            short relayFollowerPulse,
+            short relayFollowerDelay,
+            short extendFeatureType,
+            short interiorPushButtonModuleComponentId,
+            short interiorPushButtonInputNumber,
+            short interiorPushButtonLongPress,
+            short interiorPushButtonOutModuleComponentId,
+            short interiorPushButtonOutRelayNumber
+      )
       {
             CC_ACR c= new CC_ACR();
             c.lastModified = 0;
@@ -51,18 +97,18 @@ public sealed class DoorRepository(
             c.default_led_mode = defaultLedMode;
             c.pre_alarm = preAalrm;
             c.apb_delay = apbDelay;
-            // c.strk_t2 = relayT2;
-            // c.dc_held2 = heldOpen2;
-            // c.strk_follow_pulse = relayFollowerPulse;
-            // c.strk_follow_delay = relayFollowerDelay;
-            // c.nAuthModFlags = 0;
-            // c.nExtFeatureType = ExtendFeatureType;
-            // c.uExtFeatureInfo.sIPBoverrides.iIPB_sio = InteriorPushButtonModuleComponentId;
-            // c.uExtFeatureInfo.sIPBoverrides.iIPB_number = InteriorPushButtonInputNumber;
-            // c.uExtFeatureInfo.sIPBoverrides.iIPB_long_press = InteriorPushButtonLongPress;
-            // c.uExtFeatureInfo.sIPBoverrides.iIPB_out_sio = InteriorPushButtonOutModuleComponentId;
-            // c.uExtFeatureInfo.sIPBoverrides.iIPB_out_num = InteriorPushButtonOutRelayNumber;
-            // c.dfofFilterTime = 0;
+            c.strk_t2 = relayT2;
+            c.dc_held2 = heldOpen2;
+            c.strk_follow_pulse = relayFollowerPulse;
+            c.strk_follow_delay = relayFollowerDelay;
+            c.nAuthModFlags = 0;
+            c.nExtFeatureType = extendFeatureType;
+            c.uExtFeatureInfo.sIPBoverrides.iIPB_sio = interiorPushButtonModuleComponentId;
+            c.uExtFeatureInfo.sIPBoverrides.iIPB_number = interiorPushButtonInputNumber;
+            c.uExtFeatureInfo.sIPBoverrides.iIPB_long_press = interiorPushButtonLongPress;
+            c.uExtFeatureInfo.sIPBoverrides.iIPB_out_sio = interiorPushButtonOutModuleComponentId;
+            c.uExtFeatureInfo.sIPBoverrides.iIPB_out_num = interiorPushButtonOutRelayNumber;
+            c.dfofFilterTime = 0;
             var result = repo.Send((short)enCfgCmnd.enCcACR, c);
             if (result)
             {

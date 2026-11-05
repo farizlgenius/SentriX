@@ -187,7 +187,7 @@ public sealed class DeviceRepository(CoreDbContext context) : BaseRepository<Per
       {
             return await Context.Devices
                   .AsNoTracking()
-                  .AnyAsync(x => x.device_modules.Any() || x.doors.Any() || x.procedures.Any() || x.actions.Any(),ct);
+                  .AnyAsync(x => x.device_modules.Where(x => x.external_id != 0).Any() || x.doors.Any() || x.procedures.Any() || x.actions.Any(),ct);
       }
 
 

@@ -4,10 +4,10 @@ using SharedKernel.Messaging;
 
 namespace Core.Application.Handler.MonitorGroup;
 
-public sealed class MonitorGroupGuidByExternalIdAndDeviceExternalIdAndVendorQueryHandler(IMonitorGroupRepository repo) : IQueryHandler<MonitorGroupGuidByExternalIdAndDeviceExternalIdAndVendorQuery, Guid>
+public sealed class MonitorGroupGuidByExternalIdAndMacAndVendorQueryHandler(IMonitorGroupRepository repo) : IQueryHandler<MonitorGroupGuidByExternalIdAndMacAndVendorQuery, Guid>
 {
-      public async Task<Guid> HandleAsync(MonitorGroupGuidByExternalIdAndDeviceExternalIdAndVendorQuery query, CancellationToken ct)
+      public async Task<Guid> HandleAsync(MonitorGroupGuidByExternalIdAndMacAndVendorQuery query, CancellationToken ct)
       {
-           return await repo.GetGuidByExternalIdAndDeviceExternalIdAndVendorAsync(query.externalId,query.deviceExternalId,query.vendor,ct);
+           return await repo.GetGuidByExternalIdAndMacAndVendorAsync(query.externalId,query.mac,query.vendor,ct);
       }
 }

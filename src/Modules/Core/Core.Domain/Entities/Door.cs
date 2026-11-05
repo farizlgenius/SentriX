@@ -13,9 +13,13 @@ public sealed class Door : BaseDomain
   public List<Reader> Readers { get; private set; } = default!;
   public Sensor? Sensor { get; private set; }
   public Relay? Relay { get; private set; }
+  public Relay? FollowerRelay {get; private set;}
   public Buzzer? Buzzer { get; private set; }
   public List<Rex> Rexes { get; private set; } = default!;
   public BreakGlass? BG {get; private set;}
+  public InteriorPushButton? InteriorPushButton {get; private set; }
+  public InteriorPushButtonOutput? InteriorPushButtonOutput {get; private set;}
+  public DoorExtendFeatureType ExtendFeatureType {get; private set;} 
   public int LocationId { get; private set; }
   public Door(
     string name,
@@ -26,9 +30,13 @@ public sealed class Door : BaseDomain
    List<Reader> readers,
     Sensor? sensor,
     Relay? relay,
+    Relay? followerRelay,
     Buzzer? buzzer,
      List<Rex> rexes,
     BreakGlass? bg,
+    DoorExtendFeatureType extendFeatureType,
+    InteriorPushButton? interiorPushButton,
+    InteriorPushButtonOutput? interiorPushButtonOutput,
     int locationId,
     short externalId,
     short externalIdTwo
@@ -42,10 +50,14 @@ public sealed class Door : BaseDomain
     Readers = readers;
     Sensor = sensor;
     Relay = relay;
+    FollowerRelay = followerRelay;
     Buzzer = buzzer;
     Rexes = rexes;
     BG = bg;
+    InteriorPushButton = interiorPushButton;
+    InteriorPushButtonOutput = interiorPushButtonOutput;
     LocationId = locationId;
+    ExtendFeatureType = extendFeatureType;
   }
   public Door(
     Guid guid,
@@ -57,9 +69,13 @@ public sealed class Door : BaseDomain
   List<Reader> readers,
     Sensor? sensor,
     Relay? relay,
+    Relay? followerRelay,
     Buzzer? buzzer,
     List<Rex> rexes,
     BreakGlass? bg,
+    DoorExtendFeatureType extendFeatureType,
+    InteriorPushButton? interiorPushButton,
+    InteriorPushButtonOutput? interiorPushButtonOutput,
     int locationId,
      short externalId,
      short externalIdTwo
@@ -76,9 +92,13 @@ public sealed class Door : BaseDomain
     Readers = readers;
     Sensor = sensor;
     Relay = relay;
+    FollowerRelay = followerRelay;
     Buzzer = buzzer;
    Rexes = rexes;
     BG = bg;
+    InteriorPushButton = interiorPushButton;
+    InteriorPushButtonOutput = interiorPushButtonOutput;
     LocationId = locationId;
+    ExtendFeatureType = extendFeatureType;
   }
 }

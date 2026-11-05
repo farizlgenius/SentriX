@@ -67,6 +67,7 @@ import { DoorCondition } from "../../enum/DoorCondition";
 import { DoorStatus } from "../../model/Status/DoorStatus";
 import { StatusHelper } from "../../helper/StatusHelper";
 import { ChangeOfStateEncode } from "../../enum/ChangeOfStateEncode";
+import { DoorExtendFeatureType } from "../../enum/DoorExtendFeatureType";
 
 // ACR Page
 const DOOR_TABLE_HEADER: string[] = [
@@ -99,21 +100,21 @@ const Door = () => {
     guid: "",
     name: "",
     metadata: {
-      offlineMode:DoorMode.Unlocked,
-      defaultMode:DoorMode.Card,
-      defaultLedMode:0,
-      forceCardPin:false,
-      doubleCard:true,
-      outputSelectionTracking:false,
-      lockedOverrid:true,
-      decreaseUseLimit:false,
-      requireUseLimit:false,
-      deniedDuress:false,
-      quietRex:false,
-      filterStatus:false,
-      doubleCardAccess:false,
-      hostPermission:false,
-      hostOfflineGrant:false
+      offlineMode: DoorMode.Unlocked,
+      defaultMode: DoorMode.Card,
+      defaultLedMode: 0,
+      forceCardPin: false,
+      doubleCard: true,
+      outputSelectionTracking: false,
+      lockedOverrid: true,
+      decreaseUseLimit: false,
+      requireUseLimit: false,
+      deniedDuress: false,
+      quietRex: false,
+      filterStatus: false,
+      doubleCardAccess: false,
+      hostPermission: false,
+      hostOfflineGrant: false
     },
     readers: [],
     buzzer: null,
@@ -128,7 +129,11 @@ const Door = () => {
     vendor: Vendor.aero,
     type: DoorType.Single,
     deviceGuid: "",
-    deviceName: ""
+    deviceName: "",
+    followerRelay: null,
+    extendFeatureType: DoorExtendFeatureType.NONE,
+    interiorPushButton: null,
+    interiorPushOutputButton : null
   };
   const [dto, setDto] = useState<DoorDto>(defaultDoorDto);
   const [refresh, setRefresh] = useState(false);

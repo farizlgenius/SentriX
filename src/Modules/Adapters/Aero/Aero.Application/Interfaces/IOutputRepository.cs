@@ -11,7 +11,7 @@ public interface IOutputRepository
             short sioNo,
             short outputNo,
             short offlineMode,
-            short defaultMode
+            short driveMode
       );
 
       CommandResponse ControlPointConfiguration(

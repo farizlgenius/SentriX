@@ -5,4 +5,5 @@ export interface AeroSensorMetadata{
       debounce:number;
       holdTime:number;
       dcHeld:number;
+      dcHeldADA:number;
 }

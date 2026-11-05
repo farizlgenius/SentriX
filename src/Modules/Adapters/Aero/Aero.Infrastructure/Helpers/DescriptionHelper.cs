@@ -811,61 +811,7 @@ public sealed class DescriptionHelper
     }
   }
 
-  public static object DecodeStatusTypeCoS(short b, short sourceType)
-  {
-    byte codeValue = (byte)(b & 0x07);
-    var flags = (TypeCosStatusFlag)(b & 0xF8);
-
-    if (flags.HasFlag(TypeCosStatusFlag.Offline))
-    {
-      return InputStatus.Offline;
-    }
-
-    if (flags.HasFlag(TypeCosStatusFlag.Masked))
-    {
-      return InputStatus.Mask;
-    }
-
-    if (flags.HasFlag(TypeCosStatusFlag.LocalMask))
-    {
-      return InputStatus.LocalMask;
-    }
-
-    if (flags.HasFlag(TypeCosStatusFlag.DelayInProgress))
-    {
-      return InputStatus.DelayInProgress;
-    }
-
-    if (flags.HasFlag(TypeCosStatusFlag.NotAttached))
-    {
-      return InputStatus.NotAttached;
-    }
-
-
-    if (sourceType == (short)tranSrc.tranSrcAcrTmpr)
-    {
-      return DecodeReaderTamperStatus(codeValue);
-    }
-    else if (sourceType == (short)tranSrc.tranSrcSioPwr)
-    {
-      return DecodePowerFaultStatus(codeValue);
-    }
-    else
-    {
-      return codeValue switch
-      {
-        (byte)MonitorStatus.Inactive => InputStatus.Inactive,
-        (byte)MonitorStatus.Active => InputStatus.Active,
-        (byte)MonitorStatus.GroundFault => InputStatus.GroundFault,
-        (byte)MonitorStatus.Short => InputStatus.Short,
-        (byte)MonitorStatus.OpenCircuit => InputStatus.Open,
-        (byte)MonitorStatus.ForeignVoltage => InputStatus.Foreign,
-        (byte)MonitorStatus.NonSettlingError => InputStatus.NonSetting,
-        (byte)MonitorStatus.SupervisoryFault => InputStatus.SupFault,
-        _ => InputStatus.Unknown
-      };
-    }
-  }
+ 
 
     public static InputStatus DecodeStatusTypeCoS(short b)
   {
@@ -875,46 +821,6 @@ public sealed class DescriptionHelper
 
   }
 
-  public static DoorStatus DecodeTypeDoorCos(short b)
-  {
-    AccessPointStatus s = (AccessPointStatus)b;
-
-    if (!s.HasFlag(AccessPointStatus.ForcedOpenMasked))
-    {
-      if (s.HasFlag(AccessPointStatus.ForcedOpen))
-      {
-        return DoorStatus.Forced;
-      }
-    }
-
-
-    if (!s.HasFlag(AccessPointStatus.HeldOpenMasked))
-    {
-      if (s.HasFlag(AccessPointStatus.HeldOpen))
-      {
-        return DoorStatus.Held;
-      }
-    }
-
-
-
-    if (s.HasFlag(AccessPointStatus.ExitCycleInProgress))
-    {
-      return DoorStatus.ExitedCycle;
-    }
-
-    if (s.HasFlag(AccessPointStatus.Unlocked))
-    {
-      return DoorStatus.Unlocked;
-    }
-
-    if (s.HasFlag(AccessPointStatus.None))
-    {
-      return DoorStatus.Secure;
-    }
-
-    return DoorStatus.Unknown;
-  }
 
 
 

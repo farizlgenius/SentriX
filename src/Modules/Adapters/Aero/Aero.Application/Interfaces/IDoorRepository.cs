@@ -13,7 +13,7 @@ public interface IDoorRepository
             short osdpFlag
       );
       CommandResponse AccessControlReaderConfiguration(
-            string mac,
+           string mac,
             short scpId,
             short acrNo,
             short readerConfig,
@@ -47,7 +47,17 @@ public interface IDoorRepository
             short defaultMode,
             short defaultLedMode,
             short preAalrm,
-            short apbDelay
+            short apbDelay,
+            short relayT2,
+            short heldOpen2,
+            short relayFollowerPulse,
+            short relayFollowerDelay,
+            short extendFeatureType,
+            short interiorPushButtonModuleComponentId,
+            short interiorPushButtonInputNumber,
+            short interiorPushButtonLongPress,
+            short interiorPushButtonOutModuleComponentId,
+            short interiorPushButtonOutRelayNumber
       );
 
       CommandResponse EnCcAcrSrq(

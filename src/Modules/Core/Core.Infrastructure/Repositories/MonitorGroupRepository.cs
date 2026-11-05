@@ -71,11 +71,11 @@ public sealed class MonitorGroupRepository(CoreDbContext context) : BaseReposito
             throw new ExceedException(typeof(MonitorGroup).Name);
       }
 
-      public async Task<Guid> GetGuidByExternalIdAndDeviceExternalIdAndVendorAsync(short externalId, short deviceExternalId, Vendor vendor, CancellationToken ct = default)
+      public async Task<Guid> GetGuidByExternalIdAndMacAndVendorAsync(short externalId, string mac, Vendor vendor, CancellationToken ct = default)
       {
            return await Context.MonitorGroups
             .AsNoTracking()
-            .Where(x => x.external_id == externalId && x.device.external_id == deviceExternalId && x.device.vendor == vendor)
+            .Where(x => x.external_id == externalId && x.device.mac == mac && x.device.vendor == vendor)
             .Select(x => x.guid)
             .FirstOrDefaultAsync(ct);
       }

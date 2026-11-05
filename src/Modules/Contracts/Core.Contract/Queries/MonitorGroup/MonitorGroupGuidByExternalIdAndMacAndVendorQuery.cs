@@ -3,8 +3,8 @@ using SharedKernel.Messaging;
 
 namespace Core.Contract.Queries.MonitorGroup;
 
-public sealed record MonitorGroupGuidByExternalIdAndDeviceExternalIdAndVendorQuery(
+public sealed record MonitorGroupGuidByExternalIdAndMacAndVendorQuery(
       short externalId,
-      short deviceExternalId,
+      string mac,
       Vendor vendor
 ) : IQuery<Guid>;

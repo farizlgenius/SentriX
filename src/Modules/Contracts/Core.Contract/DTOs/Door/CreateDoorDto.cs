@@ -12,7 +12,11 @@ public sealed record CreateDoorDto(
   BuzzerDto? Buzzer,
   List<RexDto> Rexes,
   BGDto? Bg,
+  DoorExtendFeatureType ExtendFeatureType,
+  InteriorPushButtonDto? InteriorPushButton,
+  InteriorPushButtonOutputDto? InteriorPushButtonOutput,
   SensorDto Sensor,
   RelayDto Relay,
+  RelayDto? FollowerRelay,
   Guid LocationGuid
 );

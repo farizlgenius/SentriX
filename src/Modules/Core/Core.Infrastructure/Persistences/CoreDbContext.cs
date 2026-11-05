@@ -230,6 +230,7 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
             {
                   b.Property(d => d.vendor).HasConversion<string>();
                   b.Property(d => d.type).HasConversion<string>();
+                  b.Property(d => d.extended_feature_type).HasConversion<string>();
             });
 
             // Reader Enums
@@ -512,6 +513,30 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   ).IsUnique();
 
             modelBuilder.Entity<Rex>()
+                  .HasIndex(
+                        x => new
+                        {
+                              x.guid,
+                              x.id,
+                              x.door_id,
+                              x.device_module_id,
+                              x.slot_no
+                        }
+                  ).IsUnique();
+
+            modelBuilder.Entity<InteriorPushButton>()
+                  .HasIndex(
+                        x => new
+                        {
+                              x.guid,
+                              x.id,
+                              x.door_id,
+                              x.device_module_id,
+                              x.slot_no
+                        }
+                  ).IsUnique();
+
+            modelBuilder.Entity<InteriorPushButtonOutput>()
                   .HasIndex(
                         x => new
                         {
@@ -1009,6 +1034,18 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   .HasForeignKey(x => x.device_module_id)
                   .OnDelete(DeleteBehavior.Cascade);
 
+            modelBuilder.Entity<DeviceModule>()
+                  .HasMany(x => x.interior_push_button)
+                  .WithOne(x => x.device_module)
+                  .HasForeignKey(x => x.device_module_id)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<DeviceModule>()
+                  .HasMany(x => x.interior_push_button_output)
+                  .WithOne(x => x.device_module)
+                  .HasForeignKey(x => x.device_module_id)
+                  .OnDelete(DeleteBehavior.Cascade);
+
 
             // User
 
@@ -1206,8 +1243,20 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
             modelBuilder.Entity<Door>()
             .HasOne(x => x.buzzer)
             .WithOne(x => x.door)
-            .HasForeignKey<Door>(x => x.buzzer_id)
+            .HasForeignKey<Buzzer>(x => x.door_id)
             .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Door>()
+                  .HasOne(x => x.interior_push_button)
+                  .WithOne(x => x.door)
+                  .HasForeignKey<InteriorPushButton>(x => x.door_id)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Door>()
+                  .HasOne(x => x.interior_push_button_output)
+                  .WithOne(x => x.door)
+                  .HasForeignKey<InteriorPushButtonOutput>(x => x.door_id)
+                  .OnDelete(DeleteBehavior.Cascade);
 
             // Turnstile
 

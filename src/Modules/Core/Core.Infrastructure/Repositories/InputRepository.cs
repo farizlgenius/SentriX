@@ -76,11 +76,11 @@ public sealed class InputRepository(CoreDbContext context) : BaseRepository<Pers
             return res;
       }
 
-      public async Task<Guid> GuidByExternalIdAndDeviceExternalIdAndVendorAsync(short externalId, short deviceExternalId, Vendor vendor, CancellationToken ct = default)
+      public async Task<Guid> GuidByExternalIdAndMacAndVendorAsync(short externalId, string mac, Vendor vendor, CancellationToken ct = default)
       {
             var res = await Context.Inputs
                   .AsNoTracking()
-                  .Where(x => x.external_id == externalId && x.device_module.device.external_id == deviceExternalId && x.vendor == vendor)
+                  .Where(x => x.external_id == externalId && x.device_module.device.mac == mac && x.vendor == vendor)
                   .Select(x => x.guid)
                   .FirstOrDefaultAsync(ct);
 

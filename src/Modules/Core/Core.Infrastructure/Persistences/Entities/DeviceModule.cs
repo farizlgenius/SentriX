@@ -30,6 +30,8 @@ public sealed class DeviceModule : BaseEntity,IAuditableEntity
   public ICollection<Output> outputs { get; set; } = default!;
   public ICollection<Input> inputs { get; set; } = default!;
   public ICollection<BreakGlass> break_glasses { get; set; } = default!;
+  public ICollection<InteriorPushButton> interior_push_button {get; set; } = default!;
+  public ICollection<InteriorPushButtonOutput> interior_push_button_output {get; set; } = default!;
 
   public DeviceModule() { }
   public DeviceModule(Core.Domain.Entities.DeviceModule d) : base(d.Guid,d.ExternalId,d.AltrExternalId)

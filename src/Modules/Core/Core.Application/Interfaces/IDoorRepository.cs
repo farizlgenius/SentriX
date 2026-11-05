@@ -16,7 +16,7 @@ public interface IDoorRepository : IRepository<DoorDto, Door>
       Task<short> GetFreeExeternalIdByMacAsync(string mac,int max, IEnumerable<short>? exception = null, CancellationToken ct = default);
       Task<IEnumerable<short>> GetExternalIdRangeByGuidAsync(Guid guid,CancellationToken ct = default);
       Task<string> GetNameByExternalIdAndMacAndVendorQuery(short externalId,string mac,Vendor vendor,CancellationToken ct = default);
-      Task<Guid> GetGuidByExternalIdAndDeviceExternalIdAndVendorAsync(short externalId,short deviceExternalId,Vendor vendor,CancellationToken ct = default);
+      Task<Guid> GetGuidByExternalIdAndMacAndVendorAsync(short externalId,string mac,Vendor vendor,CancellationToken ct = default);
       Task UpdateAreaAndAntipassbackAsync(DoorAreaDto dto,int toArea,int fromArea,CancellationToken ct =default);
       Task<IEnumerable<OptionDto>> GetOptionByLocationAsync(Guid guid,CancellationToken ct = default);
       Task<IEnumerable<OptionDto>> GetOptionByDeviceAsync(Guid guid,CancellationToken ct = default);
