@@ -9,18 +9,30 @@ import { DoorMode } from "../../enum/DoorMode";
 import Switch from "../../components/form/switch/Switch";
 import { DoorExtendFeatureType } from "../../enum/DoorExtendFeatureType";
 import Input from "../../components/form/input/InputField";
+import { Options } from "../../model/Options";
+import { InputMode } from "../../enum/InputMode";
+import { Vendor } from "../../enum/Vendor";
 
 
+type ExtraProps = {
+      moduleOption: Options[]
+      intputOption:Options[]
+      outputOption:Options[]
+};
 
-const DoorAdvanceForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({
+
+const DoorAdvanceForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps>> = ({
       dto,
       type,
       handleChange,
       setDto,
-      setIsNext
+      setIsNext,
+      moduleOption,
+      intputOption,
+      outputOption
 }) => {
       const isReadOnly = type == FormType.INFO;
-      const [followRelay,setFollowRelay] = useState<boolean>(false);
+      const [followRelay, setFollowRelay] = useState<boolean>(false);
       //const [deviceOption,setDeviceOption] = useState<Options[]>([]);
 
       // NEW: Automatically validate whenever name or deviceGuid changes
@@ -139,14 +151,14 @@ const DoorAdvanceForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({
                               defaultValue={(dto.metadata as AeroDoorMetadata).offlineMode ?? DoorMode.Unlocked}
                         />
                   </FormField>
-                   <FormField>
+                  <FormField>
                         <Label>LED Mode</Label>
                         <Select
                               disabled={isReadOnly}
                               name="led"
                               options={
                                     [
-                                          
+
                                           {
                                                 label: "No Change",
                                                 value: 0,
@@ -186,7 +198,7 @@ const DoorAdvanceForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({
                               name="extend"
                               options={
                                     [
-                                          
+
                                           {
                                                 label: "None",
                                                 value: DoorExtendFeatureType.NONE,
@@ -203,7 +215,7 @@ const DoorAdvanceForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({
                                                 label: "Privacy",
                                                 value: DoorExtendFeatureType.PRIVACY,
                                           },
-                                           {
+                                          {
                                                 label: "Apartment",
                                                 value: DoorExtendFeatureType.APARTMENT,
                                           }
@@ -211,186 +223,304 @@ const DoorAdvanceForm: React.FC<PropsWithChildren<FormProp<DoorDto>>> = ({
                               onChange={(e) => {
                                     setDto(prev => ({
                                           ...prev,
-                                          metadata: {
-                                                ...(prev.metadata as AeroDoorMetadata),
-                                                defaultLedMode: Number(e.target.value)
-                                          }
+                                          extendFeatureType: Number(e.target.value),
+                                          interiorPushButton: Number(e.target.value) == DoorExtendFeatureType.NONE ? null : {
+                                                slotNo: 0,
+                                                deviceModuleGuid: "",
+                                                mode: InputMode.NO,
+                                                vendor: Vendor.aero,
+                                                longPress: 0
+                                          },
+                                          interiorPushOutputButton: Number(e.target.value) == DoorExtendFeatureType.NONE ? null : {
+                                                slotNo: 0,
+                                                deviceModuleGuid: "",
+                                                mode: InputMode.NO,
+                                                vendor: Vendor.aero,
+                                          },
                                     }))
 
                               }
 
                               }
-                              defaultValue={(dto.metadata as AeroDoorMetadata).defaultLedMode ?? 0}
+                              defaultValue={dto.extendFeatureType}
                         />
                   </FormField>
                   <FormField className="col-span-2">
                         <div className="grid grid-cols-2 gap-5">
-                              <Switch label={"Double Swipe Trigger"} 
-                              onChange={(checked) => {
-                                    setDto((prev) => ({
-                                          ...prev,
-                                          metadata:{
-                                                ...(prev.metadata as AeroDoorMetadata),
-                                                doubleCard:checked
-                                          }
-                                    }))
-                              }}
-                              defaultChecked={(dto.metadata as AeroDoorMetadata).doubleCard ?? false}
+                              <Switch label={"Double Swipe Trigger"}
+                                    onChange={(checked) => {
+                                          setDto((prev) => ({
+                                                ...prev,
+                                                metadata: {
+                                                      ...(prev.metadata as AeroDoorMetadata),
+                                                      doubleCard: checked
+                                                }
+                                          }))
+                                    }}
+                                    defaultChecked={(dto.metadata as AeroDoorMetadata).doubleCard ?? false}
                               />
                               <Switch label={"Elevator Floor Select"}
-                              onChange={(checked) => {
-                                    setDto((prev) => ({
-                                          ...prev,
-                                          metadata:{
-                                                ...(prev.metadata as AeroDoorMetadata),
-                                                outputSelectionTracking:checked
-                                          }
-                                    }))
-                              }}
-                              defaultChecked={(dto.metadata as AeroDoorMetadata).outputSelectionTracking ?? false}
+                                    onChange={(checked) => {
+                                          setDto((prev) => ({
+                                                ...prev,
+                                                metadata: {
+                                                      ...(prev.metadata as AeroDoorMetadata),
+                                                      outputSelectionTracking: checked
+                                                }
+                                          }))
+                                    }}
+                                    defaultChecked={(dto.metadata as AeroDoorMetadata).outputSelectionTracking ?? false}
                               />
                               <Switch label={"Locked mode override"}
-                              onChange={(checked) => {
-                                    setDto((prev) => ({
-                                          ...prev,
-                                          metadata:{
-                                                ...(prev.metadata as AeroDoorMetadata),
-                                                lockedOverrid:checked
-                                          }
-                                    }))
-                              }}
-                              defaultChecked={(dto.metadata as AeroDoorMetadata).lockedOverrid ?? false}
+                                    onChange={(checked) => {
+                                          setDto((prev) => ({
+                                                ...prev,
+                                                metadata: {
+                                                      ...(prev.metadata as AeroDoorMetadata),
+                                                      lockedOverrid: checked
+                                                }
+                                          }))
+                                    }}
+                                    defaultChecked={(dto.metadata as AeroDoorMetadata).lockedOverrid ?? false}
                               />
                               <Switch label={"Decrease Use Limit"}
-                              onChange={(checked) => {
-                                    setDto((prev) => ({
-                                          ...prev,
-                                          metadata:{
-                                                ...(prev.metadata as AeroDoorMetadata),
-                                                decreaseUseLimit:checked
-                                          }
-                                    }))
-                              }}
-                              defaultChecked={(dto.metadata as AeroDoorMetadata).decreaseUseLimit ?? false}
+                                    onChange={(checked) => {
+                                          setDto((prev) => ({
+                                                ...prev,
+                                                metadata: {
+                                                      ...(prev.metadata as AeroDoorMetadata),
+                                                      decreaseUseLimit: checked
+                                                }
+                                          }))
+                                    }}
+                                    defaultChecked={(dto.metadata as AeroDoorMetadata).decreaseUseLimit ?? false}
                               />
                               <Switch label={"Require 1 Use Limit"}
-                              onChange={(checked) => {
-                                    setDto((prev) => ({
-                                          ...prev,
-                                          metadata:{
-                                                ...(prev.metadata as AeroDoorMetadata),
-                                                requireUseLimit:checked
-                                          }
-                                    }))
-                              }}
-                              defaultChecked={(dto.metadata as AeroDoorMetadata).requireUseLimit ?? false}
+                                    onChange={(checked) => {
+                                          setDto((prev) => ({
+                                                ...prev,
+                                                metadata: {
+                                                      ...(prev.metadata as AeroDoorMetadata),
+                                                      requireUseLimit: checked
+                                                }
+                                          }))
+                                    }}
+                                    defaultChecked={(dto.metadata as AeroDoorMetadata).requireUseLimit ?? false}
                               />
                               <Switch label={"Denied Duress"}
-                              onChange={(checked) => {
-                                    setDto((prev) => ({
-                                          ...prev,
-                                          metadata:{
-                                                ...(prev.metadata as AeroDoorMetadata),
-                                                deniedDuress:checked
-                                          }
-                                    }))
-                              }}
-                              defaultChecked={(dto.metadata as AeroDoorMetadata).deniedDuress ?? false}
+                                    onChange={(checked) => {
+                                          setDto((prev) => ({
+                                                ...prev,
+                                                metadata: {
+                                                      ...(prev.metadata as AeroDoorMetadata),
+                                                      deniedDuress: checked
+                                                }
+                                          }))
+                                    }}
+                                    defaultChecked={(dto.metadata as AeroDoorMetadata).deniedDuress ?? false}
                               />
                               <Switch label={"Quiet REX"}
-                              onChange={(checked) => {
-                                    setDto((prev) => ({
-                                          ...prev,
-                                          metadata:{
-                                                ...(prev.metadata as AeroDoorMetadata),
-                                                quietRex:checked
-                                          }
-                                    }))
-                              }}
-                              defaultChecked={(dto.metadata as AeroDoorMetadata).quietRex ?? false}
+                                    onChange={(checked) => {
+                                          setDto((prev) => ({
+                                                ...prev,
+                                                metadata: {
+                                                      ...(prev.metadata as AeroDoorMetadata),
+                                                      quietRex: checked
+                                                }
+                                          }))
+                                    }}
+                                    defaultChecked={(dto.metadata as AeroDoorMetadata).quietRex ?? false}
                               />
                               <Switch label={"Filter Status"}
-                              onChange={(checked) => {
-                                    setDto((prev) => ({
-                                          ...prev,
-                                          metadata:{
-                                                ...(prev.metadata as AeroDoorMetadata),
-                                                filterStatus:checked
-                                          }
-                                    }))
-                              }}
-                              defaultChecked={(dto.metadata as AeroDoorMetadata).filterStatus ?? false}
+                                    onChange={(checked) => {
+                                          setDto((prev) => ({
+                                                ...prev,
+                                                metadata: {
+                                                      ...(prev.metadata as AeroDoorMetadata),
+                                                      filterStatus: checked
+                                                }
+                                          }))
+                                    }}
+                                    defaultChecked={(dto.metadata as AeroDoorMetadata).filterStatus ?? false}
                               />
                               <Switch label={"Double Card Access"}
-                              onChange={(checked) => {
-                                    setDto((prev) => ({
-                                          ...prev,
-                                          metadata:{
-                                                ...(prev.metadata as AeroDoorMetadata),
-                                                doubleCardAccess:checked
-                                          }
-                                    }))
-                              }}
-                              defaultChecked={(dto.metadata as AeroDoorMetadata).doubleCardAccess ?? false}
+                                    onChange={(checked) => {
+                                          setDto((prev) => ({
+                                                ...prev,
+                                                metadata: {
+                                                      ...(prev.metadata as AeroDoorMetadata),
+                                                      doubleCardAccess: checked
+                                                }
+                                          }))
+                                    }}
+                                    defaultChecked={(dto.metadata as AeroDoorMetadata).doubleCardAccess ?? false}
                               />
                               <Switch label={"Host Permission"}
-                              onChange={(checked) => {
-                                    setDto((prev) => ({
-                                          ...prev,
-                                          metadata:{
-                                                ...(prev.metadata as AeroDoorMetadata),
-                                                hostPermission:checked
-                                          }
-                                    }))
-                              }}
-                              defaultChecked={(dto.metadata as AeroDoorMetadata).hostPermission ?? false}
+                                    onChange={(checked) => {
+                                          setDto((prev) => ({
+                                                ...prev,
+                                                metadata: {
+                                                      ...(prev.metadata as AeroDoorMetadata),
+                                                      hostPermission: checked
+                                                }
+                                          }))
+                                    }}
+                                    defaultChecked={(dto.metadata as AeroDoorMetadata).hostPermission ?? false}
                               />
                               <Switch label={"Host Offline Grant"}
-                              onChange={(checked) => {
-                                    setDto((prev) => ({
-                                          ...prev,
-                                          metadata:{
-                                                ...(prev.metadata as AeroDoorMetadata),
-                                                hostOfflineGrant:checked
-                                          }
-                                    }))
-                              }}
-                              defaultChecked={(dto.metadata as AeroDoorMetadata).hostOfflineGrant ?? false}
+                                    onChange={(checked) => {
+                                          setDto((prev) => ({
+                                                ...prev,
+                                                metadata: {
+                                                      ...(prev.metadata as AeroDoorMetadata),
+                                                      hostOfflineGrant: checked
+                                                }
+                                          }))
+                                    }}
+                                    defaultChecked={(dto.metadata as AeroDoorMetadata).hostOfflineGrant ?? false}
                               />
                               <div className="flex gap-5">
                                     <Switch label={"Follower Relay"}
-                              onChange={(checked) => {
-                                    setFollowRelay(checked)
-                              }}
-                              defaultChecked={(dto.metadata as AeroDoorMetadata).hostOfflineGrant ?? false}
-                              />
-                              
+                                          onChange={(checked) => {
+                                                setFollowRelay(checked)
+                                          }}
+                                          defaultChecked={(dto.metadata as AeroDoorMetadata).hostOfflineGrant ?? false}
+                                    />
+
                               </div>
                         </div>
                   </FormField>
-                  <FormField className="col-span-2">
-                         {
-                        followRelay && (
-                              <>
-                               <FormField>
-                        <Label>Slot No</Label>
-                        <Input isReadOnly value={dto.followerRelay?.slotNo} />
-                  </FormField>
-                   <FormField>
-                        <Label>Pulse</Label>
-                        <Input type="number"  />
-                  </FormField>
-                   <FormField>
-                        <Label>Delay</Label>
-                        <Input type="number" />
-                  </FormField>
-                              </>
-                             
-                        )
-                  }
-                  </FormField>
-                 
-                  
+                  <div className="col-span-2 grid grid-cols-2 gap-5">
+                        {
+                              followRelay && (
+                                    <>
+                                          <FormField>
+                                                <Label>Slot No</Label>
+                                                <Input isReadOnly value={dto.followerRelay?.slotNo} />
+                                          </FormField>
+                                          <FormField>
+                                                <Label>Pulse</Label>
+                                                <Input type="number" />
+                                          </FormField>
+                                          <FormField>
+                                                <Label>Delay</Label>
+                                                <Input type="number" />
+                                          </FormField>
+                                    </>
+
+                              )
+                        }
+                  </div>
+                  <div className="col-span-2 grid grid-cols-2 gap-5">
+                        {
+                              dto.extendFeatureType != DoorExtendFeatureType.NONE && (
+                                    <>
+                                          <FormField>
+                                                <Label>ilPB In - Module</Label>
+                                                <Select
+                                                      isString={true}
+                                                      disabled={isReadOnly}
+                                                      name="interiorPushButton.module"
+                                                      options={moduleOption}
+                                                      placeholder="Select Option"
+                                                      onChange={(e) => {
+                                                            setDto(prev => ({
+                                                                  ...prev,
+                                                                  interiorPushButton: prev.interiorPushButton == null ? null : {
+                                                                        ...prev.interiorPushButton,
+                                                                        deviceModuleGuid: e.target.value,
+                                                                  }
+                                                            }))
+                                                      }
+                                                      }
+                                                      className="dark:bg-dark-900"
+                                                      defaultValue={dto.interiorPushButton?.deviceModuleGuid ?? ""}
+                                                />
+                                          </FormField>
+                                          <FormField>
+                                                <Label>ilPB In - Slot</Label>
+                                                <Select
+                                                      isString={true}
+                                                      disabled={isReadOnly}
+                                                      name="interiorPushButton.slotNo"
+                                                      options={outputOption}
+                                                      placeholder="Select Option"
+                                                      onChange={(e) => {
+                                                            setDto(prev => ({
+                                                                  ...prev,
+                                                                  interiorPushButton: prev.interiorPushButton == null ? null : {
+                                                                        ...prev.interiorPushButton,
+                                                                        slotNo: Number(e.target.value),
+                                                                  }
+                                                            }))
+                                                      }
+                                                      }
+                                                      className="dark:bg-dark-900"
+                                                      defaultValue={dto.interiorPushOutputButton?.deviceModuleGuid ?? ""}
+                                                />
+                                          </FormField>
+                                          <FormField>
+                                                <Label>ilPB In - Longpress</Label>
+                                                <Input type="number" defaultValue={0} value={dto.interiorPushButton?.longPress} onChange={e => setDto(prev => ({
+                                                      ...prev,
+                                                      interiorPushButton:prev.interiorPushButton == null ? null : {
+                                                            ...prev.interiorPushButton,
+                                                            longPress:Number(e.target.value)
+                                                      }
+                                                }))} />
+                                          </FormField>
+                                          <FormField>
+                                                <Label>ilPB Out - Module</Label>
+                                                <Select
+                                                      isString={true}
+                                                      disabled={isReadOnly}
+                                                      name="interiorPushButtonOutput.module"
+                                                      options={moduleOption}
+                                                      placeholder="Select Option"
+                                                      onChange={(e) => {
+                                                            handleChange(e)
+                                                            setDto(prev => ({
+                                                                  ...prev,
+                                                                  interiorPushOutputButton: prev.interiorPushOutputButton == null ? null : {
+                                                                        ...prev.interiorPushOutputButton,
+                                                                        deviceModuleGuid: e.target.value,
+                                                                  }
+                                                            }))
+                                                      }
+                                                      }
+                                                      className="dark:bg-dark-900"
+                                                      defaultValue={dto.interiorPushOutputButton?.deviceModuleGuid ?? ""}
+                                                />
+                                          </FormField>
+                                          <FormField>
+                                                <Label>ilPB Out - Slot</Label>
+                                                <Select
+                                                      isString={true}
+                                                      disabled={isReadOnly}
+                                                      name="interiorPushButtonOutput.slotNo"
+                                                      options={outputOption}
+                                                      placeholder="Select Option"
+                                                      onChange={(e) => {
+                                                            setDto(prev => ({
+                                                                  ...prev,
+                                                                  interiorPushOutputButton: prev.interiorPushOutputButton == null ? null : {
+                                                                        ...prev.interiorPushOutputButton,
+                                                                        slotNo: Number(e.target.value),
+                                                                  }
+                                                            }))
+                                                      }
+                                                      }
+                                                      className="dark:bg-dark-900"
+                                                      defaultValue={dto.interiorPushOutputButton?.deviceModuleGuid ?? ""}
+                                                />
+                                          </FormField>
+                                    </>
+
+                              )
+                        }
+                  </div>
+
+
                   {/* <FormField>
         <Label>Device</Label>
         <Select

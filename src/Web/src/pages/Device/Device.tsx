@@ -680,6 +680,7 @@ const Device = () => {
             overall="Device setup"
             title="Choose device type"
             description="Select the controller you want to add before completing its details."
+            className="mb-5"
           >
             <div className="grid gap-4 sm:grid-cols-2">
               {deviceTypes.map((deviceType) => {

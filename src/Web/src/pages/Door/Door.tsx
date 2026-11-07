@@ -299,6 +299,12 @@ const Door = () => {
       case "buzzer.module":
         fetchOutput(e.target.value)
         break;
+      case "interiorPushButton.module":
+        fetchInput(e.target.value)
+        break;
+      case "interiorPushButtonOutput.module":
+        fetchOutput(e.target.value)
+        break;
       default:
         break;
     }
@@ -651,7 +657,7 @@ const Door = () => {
         {
           label:"Advance",
           icon:<DoorIcon/>,
-          content:<DoorAdvanceForm dto={dto} setDto={setDto} type={formType} handleChange={handleChange} setIsNext={setIsNext} />
+          content:<DoorAdvanceForm dto={dto} setDto={setDto} type={formType} handleChange={handleChange} setIsNext={setIsNext} moduleOption={moduleOption} outputOption={outputOption} intputOption={inputOption}  />
         }
 
       ] : [],

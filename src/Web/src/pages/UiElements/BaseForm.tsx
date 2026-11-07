@@ -92,6 +92,7 @@ export const BaseForm: React.FC<PropsWithChildren<FormProp>> = ({
           }))}
           activeIndex={currentStepIndex}
           onStepClick={goToStep}
+          className="mb-4"
         />
       )}
       <div className={layout ? "grid grid-cols-1 gap-5 xl:grid-cols-5" : ""}>
@@ -110,13 +111,7 @@ export const BaseForm: React.FC<PropsWithChildren<FormProp>> = ({
           return (
             <>
               {activeTab == a.label && (
-                <FormSection
-                  overall={a.label}
-                  title={a.title}
-                  description={a.description}
-                  key={i}
-                  className="xl:col-span-2 flex flex-col"
-                >
+                <>
                   <div className="flex flex-col h-full justify-between">
                     <div className="text-sm text-gray-500 dark:text-gray-400">
                       {a.content}
@@ -178,7 +173,7 @@ export const BaseForm: React.FC<PropsWithChildren<FormProp>> = ({
                     </div>
                     
                   </div>
-                </FormSection>
+                </>
               )}
             </>
           );
