@@ -109,10 +109,9 @@ export const BaseForm: React.FC<PropsWithChildren<FormProp>> = ({
 
         {tabContent.map((a: FormContent, i: number) => {
           return (
-            <>
+            <React.Fragment key={i}>
               {activeTab == a.label && (
-                <>
-                  <div className="flex flex-col h-full justify-between">
+                 <div className="flex flex-col h-full justify-between xl:col-span-2">
                     <div className="text-sm text-gray-500 dark:text-gray-400">
                       {a.content}
                     </div>
@@ -173,9 +172,8 @@ export const BaseForm: React.FC<PropsWithChildren<FormProp>> = ({
                     </div>
                     
                   </div>
-                </>
               )}
-            </>
+            </React.Fragment>
           );
         })}
       </div>

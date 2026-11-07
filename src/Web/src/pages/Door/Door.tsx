@@ -69,6 +69,8 @@ import { DoorStatus } from "../../model/Status/DoorStatus";
 import { StatusHelper } from "../../helper/StatusHelper";
 import { ChangeOfStateEncode } from "../../enum/ChangeOfStateEncode";
 import { DoorExtendFeatureType } from "../../enum/DoorExtendFeatureType";
+import AeroX1100SlotPicker from "../../components/door/AeroX1100SlotPicker";
+import type { AeroSlotType } from "../../components/door/AeroX1100SlotPicker";
 
 // ACR Page
 const DOOR_TABLE_HEADER: string[] = [
@@ -920,22 +922,64 @@ const Door = () => {
     if (content.some((tab) => tab.label === targetTab)) {
       setActiveTab(targetTab);
     }
+
+    const moduleGuid =
+      component === "readerIn"
+        ? dto.readers.find((reader) => reader.readerDirection === ReaderDirection.In)?.deviceModuleGuid
+        : component === "readerOut"
+          ? dto.readers.find((reader) => reader.readerDirection === ReaderDirection.Out)?.deviceModuleGuid
+          : component === "rex"
+            ? dto.rexes[0]?.deviceModuleGuid
+            : component === "magneticLock"
+              ? dto.relay?.deviceModuleGuid
+              : component === "buzzer"
+                ? dto.buzzer?.deviceModuleGuid
+                : component === "bg"
+                  ? dto.bg?.deviceModuleGuid
+                  : dto.sensor?.deviceModuleGuid;
+
+    const slotCategory =
+      component === "readerIn" || component === "readerOut"
+        ? "reader"
+        : component === "rex" || component === "bg" || component === "sensor"
+          ? "input"
+          : "output";
+
+    if (!moduleGuid) {
+      if (slotCategory === "reader") setReaderOption([]);
+      if (slotCategory === "input") setInputOption([]);
+      if (slotCategory === "output") setOutputOption([]);
+      return;
+    }
+
+    if (slotCategory === "reader") void fetchReader(moduleGuid);
+    if (slotCategory === "input") void fetchInput(moduleGuid);
+    if (slotCategory === "output") void fetchOutput(moduleGuid);
   };
 
   const handleFormTabChange = (tab: string) => {
-    setActiveTab(tab);
     const component = tabComponents[tab];
     if (component) {
-      setSelectedComponent(component);
+      handleLayoutSelect(component);
+    } else {
+      setActiveTab(tab);
     }
   };
 
   const DoorLayout = ({
     selected,
     onSelect,
+    slotOptions,
+    slotNo,
+    moduleSelected,
+    onSlotSelect,
   }: {
     selected: DoorComponent;
     onSelect: (component: DoorComponent) => void;
+    slotOptions: Options[];
+    slotNo: number | undefined;
+    moduleSelected: boolean;
+    onSlotSelect: (slotNo: number) => void;
   }) => {
     const labels: Record<DoorComponent, string> = {
       readerIn: "Reader in",
@@ -1002,11 +1046,18 @@ const Door = () => {
       );
     };
 
+    const slotCategory: AeroSlotType =
+      selected === "readerIn" || selected === "readerOut"
+        ? "reader"
+        : selected === "rex" || selected === "bg" || selected === "sensor"
+          ? "input"
+          : "output";
     return (
+      <>
       <div className="overflow-x-auto rounded-2xl border border-[var(--app-panel-border)] bg-white p-5 dark:bg-gray-900">
         <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
           <p className="text-sm text-gray-500 dark:text-gray-400">
-            Choose a component to jump to its settings.
+            Choose a component to jump to its settings. 
           </p>
           <div className="flex flex-wrap gap-3 text-xs text-gray-600 dark:text-gray-300">
             <span className="inline-flex items-center gap-1.5">
@@ -1034,7 +1085,7 @@ const Door = () => {
             y="48"
             className="fill-gray-700 dark:fill-gray-100"
             fontSize="20"
-            fontWeight="700"
+            fontWeight="500"
           >
             ACS DOOR ACCESSORY
           </text>
@@ -1182,12 +1233,14 @@ const Door = () => {
             Inside
           </text>
         </svg>
-        <p className="mt-2 text-sm text-gray-600 dark:text-gray-300" aria-live="polite">
-          Selected: <span className="font-semibold">{labels[selected]}</span>
-          <span className="ml-2 text-gray-500 dark:text-gray-400">
-            {configured[selected] ? "Configured" : "Not configured"}
-          </span>
-        </p>
+        {/* <AeroX1100SlotPicker
+          slotType={slotCategory}
+          slotOptions={slotOptions}
+          selectedSlot={slotNo}
+          onSelect={onSlotSelect}
+          moduleSelected={moduleSelected}
+          disabled={formType === FormType.INFO}
+        /> */}
         <div className="mt-4 grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
           {requiredSetup.map((requirement) => (
             <div
@@ -1210,7 +1263,116 @@ const Door = () => {
           ))}
         </div>
       </div>
+      <AeroX1100SlotPicker 
+        slotType={"reader"} 
+        slotOptions={[{
+          label:"Slot 1",
+          value:0
+        },
+      {
+          label:"Slot 2",
+          value:2
+        }]} 
+        onSelect={function (slotNo: number): void {
+          throw new Error("Function not implemented.");
+        } } 
+        moduleSelected={true}
+       
+        />
+      </>
     );
+  };
+
+  const readerOut = dto.readers.find(
+    (reader) => reader.readerDirection === ReaderDirection.Out,
+  );
+  const selectedSlotData: Record<
+    DoorComponent,
+    { options: Options[]; slotNo: number | undefined; moduleSelected: boolean }
+  > = {
+    readerIn: {
+      options: readerOption,
+      slotNo: readerIn?.slotNo,
+      moduleSelected: Boolean(readerIn?.deviceModuleGuid),
+    },
+    readerOut: {
+      options: readerOption,
+      slotNo: readerOut?.slotNo,
+      moduleSelected: Boolean(readerOut?.deviceModuleGuid),
+    },
+    rex: {
+      options: inputOption,
+      slotNo: dto.rexes[0]?.slotNo,
+      moduleSelected: Boolean(dto.rexes[0]?.deviceModuleGuid),
+    },
+    magneticLock: {
+      options: outputOption,
+      slotNo: dto.relay?.slotNo,
+      moduleSelected: Boolean(dto.relay?.deviceModuleGuid),
+    },
+    buzzer: {
+      options: outputOption,
+      slotNo: dto.buzzer?.slotNo,
+      moduleSelected: Boolean(dto.buzzer?.deviceModuleGuid),
+    },
+    bg: {
+      options: inputOption,
+      slotNo: dto.bg?.slotNo,
+      moduleSelected: Boolean(dto.bg?.deviceModuleGuid),
+    },
+    sensor: {
+      options: inputOption,
+      slotNo: dto.sensor?.slotNo,
+      moduleSelected: Boolean(dto.sensor?.deviceModuleGuid),
+    },
+  };
+
+  const handleSlotSelect = (slotNo: number) => {
+    setDto((prev) => {
+      switch (selectedComponent) {
+        case "readerIn":
+          return {
+            ...prev,
+            readers: prev.readers.map((reader) =>
+              reader.readerDirection === ReaderDirection.In
+                ? { ...reader, slotNo }
+                : reader,
+            ),
+          };
+        case "readerOut":
+          return {
+            ...prev,
+            readers: prev.readers.map((reader) =>
+              reader.readerDirection === ReaderDirection.Out
+                ? { ...reader, slotNo }
+                : reader,
+            ),
+          };
+        case "rex":
+          return {
+            ...prev,
+            rexes: prev.rexes.map((rex, index) =>
+              index === 0 ? { ...rex, slotNo } : rex,
+            ),
+          };
+        case "bg":
+          return prev.bg ? { ...prev, bg: { ...prev.bg, slotNo } } : prev;
+        case "sensor":
+          return prev.sensor
+            ? { ...prev, sensor: { ...prev.sensor, slotNo } }
+            : prev;
+        case "magneticLock":
+          return prev.relay
+            ? { ...prev, relay: { ...prev.relay, slotNo } }
+            : prev;
+        case "buzzer":
+          return prev.buzzer
+            ? { ...prev, buzzer: { ...prev.buzzer, slotNo } }
+            : prev;
+        default:
+          return prev;
+      }
+    });
   };
 
   useEffect(() => {
@@ -1291,6 +1453,10 @@ const Door = () => {
             <DoorLayout
               selected={selectedComponent}
               onSelect={handleLayoutSelect}
+              slotOptions={[]}
+              slotNo={0}
+              moduleSelected={true}
+              onSlotSelect={handleSlotSelect}
             />
           }
         />
