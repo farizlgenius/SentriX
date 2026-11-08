@@ -9,10 +9,10 @@ import { InputMode } from "../../enum/InputMode";
 import { Vendor } from "../../enum/Vendor";
 import { AeroBgMetadata } from "../../model/Door/AeroBgMetadata";
 import Input from "../../components/form/input/InputField";
+import Button from "../../components/ui/button/Button";
 
 type ExtraProps = {
   moduleOption:Options[]
-  inputOption:Options[]
 };
 
 const DoorBGForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps>> = ({
@@ -21,28 +21,11 @@ const DoorBGForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps>> = 
   type,
   handleChange,
   moduleOption,
-  inputOption
+  handleClick
 }) => {
-  const isReadOnly = type == FormType.INFO || dto.bg == null
-
-  //  useEffect(() => {
-  //         if (setIsNext) {
-  //           let isValid = false;
-  //           // 1. Safely find the reader (might be undefined)
-  //           const bg = dto.bg;
-      
-  //           // 2. Extract values safely, providing fallbacks if undefined
-  //           const moduleGuid = bg?.deviceModuleGuid || "";
-  //           const slotNo = bg?.slotNo ?? -1;
-      
-  //           // 3. Perform the validation check safely
-  //           isValid = moduleGuid.trim() !== "" && slotNo !== -1;
-      
-      
-  //           console.log("BgForm isValid:", isValid); 
-  //           setIsNext(isValid); // This will now successfully run!
-  //         }
-  //       }, [dto.buzzer, setIsNext]); // Simplified dependency array
+    const isFinished = dto.bg?.slotNo == undefined ;
+    const isReadOnly = type == FormType.INFO;
+    const isModuleSelected = dto.bg?.deviceModuleGuid  == "" || dto.bg?.deviceModuleGuid  == undefined;
         
   return (
      <div className="grid grid-cols-2 gap-5">
@@ -72,8 +55,8 @@ const DoorBGForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps>> = 
         />
       </FormField>
       <FormField>
-        <Label htmlFor="bg.slot">Input No</Label>
-        <Select
+        <Label htmlFor="bg.slot">Slot No</Label>
+        {/* <Select
           disabled={isReadOnly}
           name="bg.slot"
           options={inputOption}
@@ -92,7 +75,10 @@ const DoorBGForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps>> = 
           }
           className="dark:bg-dark-900"
           defaultValue={dto.bg?.slotNo ?? -1}
-        />
+        /> */}
+        <Button disabled={isReadOnly || isModuleSelected} name="select.slot" onClick={handleClick} variant={isFinished ? "primary" : "green" }>
+          {isFinished ? "Select Slot" : "Selected"}
+        </Button>
       </FormField>
    
        <FormField>

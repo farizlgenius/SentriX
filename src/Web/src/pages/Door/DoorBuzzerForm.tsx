@@ -6,14 +6,13 @@ import { FormProp, FormType } from "../../model/Form/FormProp";
 import Select from "../../components/form/Select";
 import { Options } from "../../model/Options";
 import { Vendor } from "../../enum/Vendor";
-import { RelayMode } from "../../enum/RelayMode";
 import { DriveMode } from "../../enum/DriveMode";
 import { OfflineMode } from "../../enum/OfflineMode";
 import { AeroBuzzerMetadata } from "../../model/Door/AeroBuzzerMetadata";
+import Button from "../../components/ui/button/Button";
 
 type ExtraProps = {
   moduleOption:Options[]
-  outputOption:Options[]
 };
 
 const DoorBuzzerForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps>> = ({
@@ -21,30 +20,12 @@ const DoorBuzzerForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps>
   setDto,
   type,
   moduleOption,
-  outputOption,
+  handleClick,
   handleChange
 }) => {
-
-  const isReadOnly = type == FormType.INFO || dto.buzzer == null
-
-  //  useEffect(() => {
-  //       if (setIsNext) {
-  //         let isValid = false;
-  //         // 1. Safely find the reader (might be undefined)
-  //         const buzzer = dto.buzzer;
-    
-  //         // 2. Extract values safely, providing fallbacks if undefined
-  //         const moduleGuid = buzzer?.deviceModuleGuid || "";
-  //         const slotNo = buzzer?.slotNo ?? -1;
-    
-  //         // 3. Perform the validation check safely
-  //         isValid = moduleGuid.trim() !== "" && slotNo !== -1;
-    
-    
-  //         console.log("BuzzerForm isValid:", isValid); 
-  //         setIsNext(isValid); // This will now successfully run!
-  //       }
-  //     }, [dto.buzzer, setIsNext]); // Simplified dependency array
+  const isFinished = dto.buzzer?.slotNo == undefined ;
+      const isReadOnly = type == FormType.INFO;
+      const isModuleSelected = dto.buzzer?.deviceModuleGuid  == "" || dto.buzzer?.deviceModuleGuid  == undefined;
 
   return (
     <div className="grid grid-cols-2 gap-5">
@@ -78,8 +59,8 @@ const DoorBuzzerForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps>
         />
       </FormField>
       <FormField>
-        <Label htmlFor="buzzer.slot">Output No</Label>
-        <Select
+        <Label htmlFor="buzzer.slot">Slot No</Label>
+        {/* <Select
           disabled={isReadOnly}
           name="strk.slot"
           options={outputOption}
@@ -97,7 +78,10 @@ const DoorBuzzerForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps>
           }
           className="dark:bg-dark-900"
           defaultValue={dto.buzzer?.slotNo ?? -1}
-        />
+        /> */}
+        <Button disabled={isReadOnly || isModuleSelected} name="select.slot" onClick={handleClick} variant={isFinished ? "primary" : "green" }>
+          {isFinished ? "Select Slot" : "Selected"}
+        </Button>
       </FormField>
        <FormField>
         <Label htmlFor="relay.relayMode">Drive Mode</Label>

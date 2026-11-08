@@ -7,19 +7,14 @@ import {
   DoorInIcon,
   DoorOutIcon,
   LockIcon,
-  ModuleIcon,
   MomentIcon,
   MonitorIcon,
   OnIcon,
-  ReaderIcon,
-  RelayOffIcon,
-  RelayOnIcon,
   UnlockIcon,
 } from "../../icons";
 import Logger from "../../utility/Logger";
 import Helper from "../../utility/Helper";
 import { DoorDto } from "../../model/Door/DoorDto";
-import { StatusDto } from "../../model/StatusDto";
 import { useToast } from "../../context/ToastContext";
 import { DoorEndpoint } from "../../endpoint/DoorEndpoint";
 import { useLocation } from "../../context/LocationContext";
@@ -53,10 +48,8 @@ import { TimezoneEndPoint } from "../../endpoint/TimezoneEndpoint";
 import DoorBGForm from "./DoorBGForm";
 import { ReaderDto } from "../../model/Door/ReaderDto";
 import { RexDto } from "../../model/Door/RexDto";
-import { Status } from "../../enum/Status";
 import { DoorMode } from "../../enum/DoorMode";
 import { ReaderStatus } from "../../enum/ReaderStatus";
-import { InputStatus } from "../../enum/InputStatus";
 import { ReaderDirection } from "../../enum/DoorDirection";
 import { ReaderMode } from "../../enum/ReaderMode";
 import { AeroReaderMetadata } from "../../model/Door/AeroReaderMetadata";
@@ -64,13 +57,11 @@ import SignalRService from "../../services/SignalRService";
 import { SignalRTopic } from "../../constants/signalr-constant";
 import DoorAdvanceForm from "./DoorAdvanceForm";
 import { AeroDoorMetadata } from "../../model/Door/AeroDoorMetadata";
-import { DoorCondition } from "../../enum/DoorCondition";
 import { DoorStatus } from "../../model/Status/DoorStatus";
 import { StatusHelper } from "../../helper/StatusHelper";
 import { ChangeOfStateEncode } from "../../enum/ChangeOfStateEncode";
 import { DoorExtendFeatureType } from "../../enum/DoorExtendFeatureType";
-import AeroX1100SlotPicker from "../../components/door/AeroX1100SlotPicker";
-import type { AeroSlotType } from "../../components/door/AeroX1100SlotPicker";
+import { AeroSlotType, useAeroComponentLayout } from "../../context/AeroComponentLayoutContext";
 
 // ACR Page
 const DOOR_TABLE_HEADER: string[] = [
@@ -82,7 +73,7 @@ const DOOR_KEY: string[] = ["name", "doorType"];
 // Default Value
 
 const Door = () => {
-  const { filterPermission,token } = useAuth();
+  const { filterPermission, token } = useAuth();
   const { toggleToast } = useToast();
   const { locationGuid } = useLocation();
   const { setPagination } = usePagination();
@@ -136,12 +127,14 @@ const Door = () => {
     followerRelay: null,
     extendFeatureType: DoorExtendFeatureType.NONE,
     interiorPushButton: null,
-    interiorPushOutputButton : null
+    interiorPushOutputButton: null
   };
   const [dto, setDto] = useState<DoorDto>(defaultDoorDto);
   const [refresh, setRefresh] = useState(false);
   const [status, setStatus] = useState<DoorStatus[]>([]);
   const toggleRefresh = () => setRefresh(!refresh);
+  const [componentLayout, setComponentLayout] = useState<boolean>(false);
+  const { AeroLayout } = useAeroComponentLayout();
   {
     /* Modal */
   }
@@ -154,10 +147,12 @@ const Door = () => {
     console.log(e.currentTarget.name);
     console.log(e.currentTarget.value);
     switch (e.currentTarget.name) {
+      case "select.slot":
+        setComponentLayout(!componentLayout);
+        break;
       case "add":
         setFormType(FormType.CREATE);
-        setActiveTab("General");
-        setSelectedComponent("readerIn");
+        setSelectedComponent("General");
         setForm(true);
         break;
       case "delete":
@@ -282,30 +277,39 @@ const Door = () => {
         break;
       case "readerIn.module":
         fetchReader(e.target.value)
+        setReaderModule(e.target.value);
         break;
       case "readerOut.module":
         fetchReader(e.target.value)
+        setReaderModule(e.target.value);
         break;
       case "rex.module":
         fetchInput(e.target.value);
+        setInputModule(e.target.value);
         break;
       case "relay.module":
         fetchOutput(e.target.value);
+        setOutputModule(e.target.value);
         break;
       case "sensor.module":
         fetchInput(e.target.value);
+        setInputModule(e.target.value)
         break;
       case "bg.module":
         fetchInput(e.target.value);
+        setInputModule(e.target.value)
         break;
       case "buzzer.module":
         fetchOutput(e.target.value)
+        setOutputModule(e.target.value);
         break;
       case "interiorPushButton.module":
         fetchInput(e.target.value)
+        setInputModule(e.target.value)
         break;
       case "interiorPushButtonOutput.module":
         fetchOutput(e.target.value)
+        setOutputModule(e.target.value);
         break;
       default:
         break;
@@ -329,16 +333,14 @@ const Door = () => {
   const handleEdit = (data: DoorDto) => {
     setDto(data);
     setFormType(FormType.UPDATE);
-    setActiveTab("General");
-    setSelectedComponent("readerIn");
+    setSelectedComponent("DoorIn");
     setForm(true);
   };
 
   const handleInfo = (data: DoorDto) => {
     setDto(data);
     setFormType(FormType.INFO);
-    setActiveTab("General");
-    setSelectedComponent("readerIn");
+    setSelectedComponent("DoorIn");
     setForm(true);
   };
 
@@ -347,11 +349,16 @@ const Door = () => {
   }
   const [doorsDto, setDoorsDto] = useState<DoorDto[]>([]);
   const [deviceOptions, setDeviceOptions] = useState<Options[]>([]);
-  const [moduleOption, setModuleOption] = useState<Options[]>([]);
+  const [readerModuleOption, setReaderModuleOption] = useState<Options[]>([]);
+  const [outputModuleOption, setOutputModuleOption] = useState<Options[]>([]);
+  const [inputModuleOption, setInputModuleOption] = useState<Options[]>([]);
   const [readerOption, setReaderOption] = useState<Options[]>([]);
   const [inputOption, setInputOption] = useState<Options[]>([]);
   const [outputOption, setOutputOption] = useState<Options[]>([]);
   const [timeOption, setTimeOption] = useState<Options[]>([]);
+  const [readerModule,setReaderModule] = useState<string>("")
+  const [inputModule,setInputModule] = useState<string>("")
+  const [outputModule,setOutputModule] = useState<string>("")
 
 
   const fetchDevice = async () => {
@@ -376,20 +383,33 @@ const Door = () => {
       isTaken: false
     }))
 
-    setModuleOption(option)
+    setReaderModuleOption(option)
+    setOutputModuleOption(option);
+    setInputModuleOption(option);
   }
 
   const fetchReader = async (guid: string) => {
+    if(guid == readerModule)
+        return;
+
     var res = await send.get(ModuleEndpoint.GET_READER_SLOT(guid))
     setReaderOption(res.data.data);
   }
 
   const fetchInput = async (guid: string) => {
+    if(guid == inputModule)
+        return;
+      
+
     var res = await send.get(ModuleEndpoint.GET_INPUT_SLOT(guid))
     setInputOption(res.data.data);
   }
 
   const fetchOutput = async (guid: string) => {
+    if(guid == outputModule)
+        return;
+      
+
     var res = await send.get(ModuleEndpoint.GET_OUTPUT_SLOT(guid))
     setOutputOption(res.data.data);
   }
@@ -448,38 +468,38 @@ const Door = () => {
         return {
           ...door,
           metadata: parsedMetadata,
-           readers:door.readers.map(x =>  
-            x.readerDirection == ReaderDirection.In ? 
-            {
-              ...x,
-              metadata:parsedReaderInMetadata
-            }: x.readerDirection == ReaderDirection.Out ? {
-              ...x,
-              metadata:parsedReaderOutMetadata
-            }:x
-           ),
+          readers: door.readers.map(x =>
+            x.readerDirection == ReaderDirection.In ?
+              {
+                ...x,
+                metadata: parsedReaderInMetadata
+              } : x.readerDirection == ReaderDirection.Out ? {
+                ...x,
+                metadata: parsedReaderOutMetadata
+              } : x
+          ),
           sensor: door.sensor
             ? {
-                ...door.sensor,
-                metadata: parsedSensorMetadata,
-              }
+              ...door.sensor,
+              metadata: parsedSensorMetadata,
+            }
             : null,
           relay: door.relay
             ? {
-                ...door.relay,
-                metadata: parsedRelayMetadata,
-              }
+              ...door.relay,
+              metadata: parsedRelayMetadata,
+            }
             : null,
-          rexes:door.rexes.map((x,i) => 
-          i == 0 ? {
-            ...x,
-            metadata : parsedRex0Metadata
-          } : i == 1 ? {
-            ...x,
-            metadata: parsedRex1Metadata         
-          } : x
+          rexes: door.rexes.map((x, i) =>
+            i == 0 ? {
+              ...x,
+              metadata: parsedRex0Metadata
+            } : i == 1 ? {
+              ...x,
+              metadata: parsedRex1Metadata
+            } : x
           )
-         
+
         };
       });
 
@@ -488,7 +508,7 @@ const Door = () => {
 
       // Batch set state
       const newStatuses = res.data.data.items.map((a: DoorDto) => {
-        const status:DoorStatus = {
+        const status: DoorStatus = {
           guid: a.guid,
           mode: DoorMode.Unknown,
           readerStatus: ReaderStatus.Unknown,
@@ -521,7 +541,7 @@ const Door = () => {
     Logger.info(res);
   };
 
-  const changeDoorMode = async ( 
+  const changeDoorMode = async (
     guid: string,
     mode: number,
   ) => {
@@ -602,23 +622,23 @@ const Door = () => {
     ...(dto.vendor === Vendor.aero) ?
       [
         {
-          label: "Door In",
+          label: "DoorIn",
           icon: <DoorInIcon />,
-          content: <DoorInForm dto={dto} setDto={setDto} type={formType} moduleOption={moduleOption} handleChange={handleChange} readerOption={readerOption} setIsNext={setIsNext} />,
+          content: <DoorInForm dto={dto} setDto={setDto} type={formType} moduleOption={readerModuleOption} handleChange={handleChange} readerOption={readerOption} setIsNext={setIsNext} handleClick={handleClick} />,
         },
         ...(dto.type === DoorType.Dual
           ? [
             {
-              label: "Door Out",
+              label: "DoorOut",
               icon: <DoorOutIcon />,
               content: (
-                <DoorOutForm dto={dto} setDto={setDto} type={formType} moduleOption={moduleOption} handleChange={handleChange} readerOption={readerOption} setIsNext={setIsNext} />
+                <DoorOutForm dto={dto} setDto={setDto} type={formType} moduleOption={readerModuleOption} handleChange={handleChange} setIsNext={setIsNext} handleClick={handleClick} />
               ),
             },
           ]
           : [
             {
-              label: "Rex Out",
+              label: "Rex",
               icon: <DoorOutIcon />,
               content: (
                 <DoorRexOutForm
@@ -627,11 +647,12 @@ const Door = () => {
                   type={formType}
                   inputOption={inputOption}
                   handleChange={handleChange}
-                  moduleOption={moduleOption}
+                  moduleOption={inputModuleOption}
                   fetchTime={fetchTime}
                   timeOption={timeOption}
                   setIsNext={setIsNext}
                   setInputOption={setInputOption}
+                  handleClick={handleClick}
                 />
               ),
             },
@@ -639,27 +660,27 @@ const Door = () => {
         {
           label: "Relay",
           icon: <DoorIcon />,
-          content: <DoorRelayForm dto={dto} setDto={setDto} type={formType} handleChange={handleChange} moduleOption={moduleOption} outputOption={outputOption} setIsNext={setIsNext} />,
+          content: <DoorRelayForm dto={dto} setDto={setDto} type={formType} handleChange={handleChange} moduleOption={outputModuleOption} setIsNext={setIsNext} handleClick={handleClick} />,
         },
         {
           label: "Sensor",
           icon: <MonitorIcon />,
-          content: <DoorMonitorForm dto={dto} setDto={setDto} type={formType} moduleOption={moduleOption} handleChange={handleChange} inputOption={inputOption} setIsNext={setIsNext} />,
+          content: <DoorMonitorForm dto={dto} setDto={setDto} type={formType} moduleOption={inputModuleOption} handleChange={handleChange} inputOption={inputOption} setIsNext={setIsNext} handleClick={handleClick} />,
         },
         {
           label: "Buzzer",
           icon: <OnIcon />,
-          content: <DoorBuzzerForm dto={dto} setDto={setDto} type={formType} moduleOption={moduleOption} outputOption={outputOption} handleChange={handleChange} setIsNext={setIsNext} />,
+          content: <DoorBuzzerForm dto={dto} setDto={setDto} type={formType} moduleOption={outputModuleOption} handleChange={handleChange} setIsNext={setIsNext} handleClick={handleClick} />,
         },
         {
-          label: "Break Glass",
+          label: "BreakGlass",
           icon: <OnIcon />,
-          content: <DoorBGForm dto={dto} setDto={setDto} type={formType} moduleOption={moduleOption} handleChange={handleChange} inputOption={inputOption} setIsNext={setIsNext} />,
+          content: <DoorBGForm dto={dto} setDto={setDto} type={formType} moduleOption={inputModuleOption} handleChange={handleChange} setIsNext={setIsNext} handleClick={handleClick} />,
         },
         {
-          label:"Advance",
-          icon:<DoorIcon/>,
-          content:<DoorAdvanceForm dto={dto} setDto={setDto} type={formType} handleChange={handleChange} setIsNext={setIsNext} moduleOption={moduleOption} outputOption={outputOption} intputOption={inputOption}  />
+          label: "Advance",
+          icon: <DoorIcon />,
+          content: <DoorAdvanceForm dto={dto} setDto={setDto} type={formType} handleChange={handleChange} setIsNext={setIsNext} moduleOption={readerModuleOption} outputOption={outputOption} intputOption={inputOption} handleClick={handleClick} />
         }
 
       ] : [],
@@ -828,13 +849,14 @@ const Door = () => {
   }
 
   type DoorComponent =
-    | "readerIn"
-    | "readerOut"
-    | "rex"
-    | "magneticLock"
-    | "buzzer"
-    | "bg"
-    | "sensor";
+    | "General"
+    | "DoorIn"
+    | "DoorOut"
+    | "Rex"
+    | "Relay"
+    | "Buzzer"
+    | "BreakGlass"
+    | "Sensor";
 
   // type DoorAccessLayout = "inOut" | "inOnly";
 
@@ -845,8 +867,8 @@ const Door = () => {
   // const hasReaderOut = accessLayout === "inOut";
 
   const [selectedComponent, setSelectedComponent] =
-    useState<DoorComponent>("readerIn");
-  const [activeTab, setActiveTab] = useState("General");
+    useState<DoorComponent>("DoorIn");
+
 
   const hasAssignedSlot = (
     component: { deviceModuleGuid: string; slotNo: number } | null | undefined,
@@ -855,6 +877,7 @@ const Door = () => {
     Boolean(component.deviceModuleGuid.trim()) &&
     Number.isFinite(component.slotNo) &&
     component.slotNo >= 0;
+
   const readerIn = dto.readers.find(
     (reader) => reader.readerDirection === ReaderDirection.In,
   );
@@ -867,30 +890,31 @@ const Door = () => {
         readerInMetadata?.baudrate !== undefined &&
         readerInMetadata.baudrate !== -1));
   const configured: Record<DoorComponent, boolean> = {
-    readerIn: readerInConfigured,
-    readerOut: hasAssignedSlot(
+    DoorIn: readerInConfigured,
+    DoorOut: hasAssignedSlot(
       dto.readers.find(
-        (reader) => reader.readerDirection === ReaderDirection.Out,
-      ),
+        (reader) => reader.readerDirection === ReaderDirection.Out
+      )
     ),
-    rex: hasAssignedSlot(dto.rexes[0]),
-    magneticLock: hasAssignedSlot(dto.relay),
-    buzzer: hasAssignedSlot(dto.buzzer),
-    bg: hasAssignedSlot(dto.bg),
-    sensor: hasAssignedSlot(dto.sensor),
+    Rex: hasAssignedSlot(dto.rexes[0]),
+    Relay: hasAssignedSlot(dto.relay),
+    Buzzer: hasAssignedSlot(dto.buzzer),
+   BreakGlass: hasAssignedSlot(dto.bg),
+    Sensor: hasAssignedSlot(dto.sensor),
+    General: false
   };
   const requiredSetup = [
     {
       label: "General information",
       configured: Boolean(dto.name.trim() && dto.deviceGuid.trim()),
     },
-    { label: "Reader in", configured: configured.readerIn },
+    { label: "Reader in", configured: configured.DoorIn },
     {
       label: dto.type === DoorType.Dual ? "Reader out" : "REX",
-      configured: dto.type === DoorType.Dual ? configured.readerOut : configured.rex,
+      configured: dto.type === DoorType.Dual ? configured.DoorOut: configured.Rex,
     },
-    { label: "Relay", configured: configured.magneticLock },
-    { label: "Sensor", configured: configured.sensor },
+    { label: "Relay", configured: configured.Relay },
+    { label: "Sensor", configured: configured.BreakGlass },
   ];
   const missingRequirements = requiredSetup
     .filter((requirement) => !requirement.configured)
@@ -898,63 +922,29 @@ const Door = () => {
   const canSubmitDoor = missingRequirements.length === 0;
 
   const componentTabs: Record<DoorComponent, string> = {
-    readerIn: "Door In",
-    readerOut: "Door Out",
-    rex: "Rex Out",
-    magneticLock: "Relay",
-    buzzer: "Buzzer",
-    bg: "Break Glass",
-    sensor: "Sensor",
+    General: "General",
+    DoorIn: "DoorIn",
+    DoorOut: "Door Out",
+    Rex: "Rex Out",
+    Relay: "Relay",
+    Buzzer: "Buzzer",
+    BreakGlass: "Break Glass",
+    Sensor: "Sensor",
   };
   const tabComponents: Partial<Record<string, DoorComponent>> = {
-    "Door In": "readerIn",
-    "Door Out": "readerOut",
-    "Rex Out": "rex",
-    Relay: "magneticLock",
-    Buzzer: "buzzer",
-    "Break Glass": "bg",
-    Sensor: "sensor",
+    DoorIn: "DoorIn",
+    DoorOut: "DoorOut",
+    Rex: "Rex",
+    Relay: "Relay",
+    Buzzer: "Buzzer",
+    BreakGlass: "BreakGlass",
+    Sensor: "Sensor",
   };
 
   const handleLayoutSelect = (component: DoorComponent) => {
+    console.log(component)
     setSelectedComponent(component);
-    const targetTab = componentTabs[component];
-    if (content.some((tab) => tab.label === targetTab)) {
-      setActiveTab(targetTab);
-    }
-
-    const moduleGuid =
-      component === "readerIn"
-        ? dto.readers.find((reader) => reader.readerDirection === ReaderDirection.In)?.deviceModuleGuid
-        : component === "readerOut"
-          ? dto.readers.find((reader) => reader.readerDirection === ReaderDirection.Out)?.deviceModuleGuid
-          : component === "rex"
-            ? dto.rexes[0]?.deviceModuleGuid
-            : component === "magneticLock"
-              ? dto.relay?.deviceModuleGuid
-              : component === "buzzer"
-                ? dto.buzzer?.deviceModuleGuid
-                : component === "bg"
-                  ? dto.bg?.deviceModuleGuid
-                  : dto.sensor?.deviceModuleGuid;
-
-    const slotCategory =
-      component === "readerIn" || component === "readerOut"
-        ? "reader"
-        : component === "rex" || component === "bg" || component === "sensor"
-          ? "input"
-          : "output";
-
-    if (!moduleGuid) {
-      if (slotCategory === "reader") setReaderOption([]);
-      if (slotCategory === "input") setInputOption([]);
-      if (slotCategory === "output") setOutputOption([]);
-      return;
-    }
-
-    if (slotCategory === "reader") void fetchReader(moduleGuid);
-    if (slotCategory === "input") void fetchInput(moduleGuid);
-    if (slotCategory === "output") void fetchOutput(moduleGuid);
+    setComponentLayout(false)
   };
 
   const handleFormTabChange = (tab: string) => {
@@ -962,17 +952,13 @@ const Door = () => {
     if (component) {
       handleLayoutSelect(component);
     } else {
-      setActiveTab(tab);
+      setSelectedComponent(tab as DoorComponent);
     }
   };
 
   const DoorLayout = ({
     selected,
     onSelect,
-    slotOptions,
-    slotNo,
-    moduleSelected,
-    onSlotSelect,
   }: {
     selected: DoorComponent;
     onSelect: (component: DoorComponent) => void;
@@ -982,13 +968,14 @@ const Door = () => {
     onSlotSelect: (slotNo: number) => void;
   }) => {
     const labels: Record<DoorComponent, string> = {
-      readerIn: "Reader in",
-      readerOut: "Reader out",
-      rex: "Request to exit",
-      magneticLock: "Lock / relay",
-      buzzer: "Buzzer",
-      bg: "Break glass",
-      sensor: "Sensor",
+      General : "General",
+      DoorIn: "Reader in",
+      DoorOut: "Reader out",
+      Rex: "Request to exit",
+      Relay: "Lock / relay",
+      Buzzer: "Buzzer",
+      BreakGlass: "Break glass",
+      Sensor: "Sensor",
     };
     const device = (
       id: DoorComponent,
@@ -1047,290 +1034,339 @@ const Door = () => {
     };
 
     const slotCategory: AeroSlotType =
-      selected === "readerIn" || selected === "readerOut"
+      selected === "DoorIn" || selected === "DoorOut"
         ? "reader"
-        : selected === "rex" || selected === "bg" || selected === "sensor"
+        : selected === "Rex" || selected === "BreakGlass" || selected === "Sensor"
           ? "input"
           : "output";
+
     return (
       <>
-      <div className="overflow-x-auto rounded-2xl border border-[var(--app-panel-border)] bg-white p-5 dark:bg-gray-900">
-        <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-          <p className="text-sm text-gray-500 dark:text-gray-400">
-            Choose a component to jump to its settings. 
-          </p>
-          <div className="flex flex-wrap gap-3 text-xs text-gray-600 dark:text-gray-300">
-            <span className="inline-flex items-center gap-1.5">
-              <span className="h-2.5 w-2.5 rounded-full bg-green-500" />
-              Configured
-            </span>
-            <span className="inline-flex items-center gap-1.5">
-              <span className="h-2.5 w-2.5 rounded-full border border-gray-400 bg-gray-100" />
-              Not configured
-            </span>
-            <span className="inline-flex items-center gap-1.5">
-              <span className="h-2.5 w-2.5 rounded-full bg-blue-500" />
-              Selected
-            </span>
-          </div>
-        </div>
-        <svg
-          aria-label="ACS door component layout"
-          className="mx-auto min-w-[760px]"
-          viewBox="0 0 900 500"
-          role="group"
-        >
-          <text
-            x="28"
-            y="48"
-            className="fill-gray-700 dark:fill-gray-100"
-            fontSize="20"
-            fontWeight="500"
-          >
-            ACS DOOR ACCESSORY
-          </text>
-          <rect
-            x="160"
-            y="150"
-            width="150"
-            height="250"
-            className="fill-white stroke-gray-900 dark:fill-gray-800 dark:stroke-gray-300"
-            strokeWidth="2"
-          />
-          <rect
-            x="172"
-            y="162"
-            width="126"
-            height="226"
-            className="fill-white stroke-gray-900 dark:fill-gray-800 dark:stroke-gray-300"
-            strokeWidth="1.5"
-          />
-          <circle
-            cx="188"
-            cy="270"
-            r="8"
-            className="fill-white stroke-gray-900 dark:fill-gray-800 dark:stroke-gray-300"
-            strokeWidth="1.5"
-          />
-          {device("readerIn", 102, 252, 16, 38)}
-          <text
-            x="110"
-            y="320"
-            textAnchor="middle"
-            className="fill-gray-900 dark:fill-gray-100"
-            fontSize="15"
-            fontWeight="600"
-          >
-            Reader
-          </text>
-          <text
-            x="235"
-            y="433"
-            textAnchor="middle"
-            className="fill-gray-900 dark:fill-gray-100"
-            fontSize="16"
-            fontWeight="600"
-          >
-            Outside
-          </text>
 
-          <rect
-            x="500"
-            y="150"
-            width="150"
-            height="250"
-            className="fill-white stroke-gray-900 dark:fill-gray-800 dark:stroke-gray-300"
-            strokeWidth="2"
-          />
-          <rect
-            x="512"
-            y="162"
-            width="126"
-            height="226"
-            className="fill-white stroke-gray-900 dark:fill-gray-800 dark:stroke-gray-300"
-            strokeWidth="1.5"
-          />
-          <circle
-            cx="622"
-            cy="270"
-            r="8"
-            className="fill-white stroke-gray-900 dark:fill-gray-800 dark:stroke-gray-300"
-            strokeWidth="1.5"
-          />
-          {device("buzzer", 450, 144, 28, 28)}
-          <text
-            x="445"
-            y="135"
-            className="fill-gray-900 dark:fill-gray-100"
-            fontSize="15"
-            fontWeight="600"
-          >
-            Buzzer
-          </text>
-          {device("magneticLock", 515, 144, 58, 22)}
-          <text
-            x="544"
-            y="135"
-            textAnchor="middle"
-            className="fill-gray-900 dark:fill-gray-100"
-            fontSize="15"
-            fontWeight="600"
-          >
-            Lock
-          </text>
-          {device("sensor", 578, 145, 22, 10)}
-          <text
-            x="590"
-            y="135"
-            className="fill-gray-900 dark:fill-gray-100"
-            fontSize="15"
-            fontWeight="600"
-          >
-            Sensor
-          </text>
-          {device("bg", 660, 144, 28, 28)}
-          <rect
-            x="665"
-            y="152"
-            width="18"
-            height="10"
-            rx="1"
-            fill="none"
-            stroke={selected === "bg" ? "#2563eb" : configured.bg ? "#16a34a" : "#9ca3af"}
-            strokeWidth="1.5"
-            pointerEvents="none"
-          />
-          <text
-            x="700"
-            y="160"
-            className="fill-gray-900 dark:fill-gray-100"
-            fontSize="15"
-            fontWeight="600"
-          >
-            Break Glass
-          </text>
-
-          {dto.type == DoorType.Dual
-            ? device("readerOut", 665, 255, 16, 38)
-            : device("rex", 665, 255, 16, 38)}
-          <text
-            x="700"
-            y="280"
-            className="fill-gray-900 dark:fill-gray-100"
-            fontSize="15"
-            fontWeight="600"
-          >
-            {dto.type == DoorType.Dual ? "Reader" : "REX"}
-          </text>
-          <text
-            x="580"
-            y="433"
-            textAnchor="middle"
-            className="fill-gray-900 dark:fill-gray-100"
-            fontSize="16"
-            fontWeight="600"
-          >
-            Inside
-          </text>
-        </svg>
-        {/* <AeroX1100SlotPicker
-          slotType={slotCategory}
-          slotOptions={slotOptions}
-          selectedSlot={slotNo}
-          onSelect={onSlotSelect}
-          moduleSelected={moduleSelected}
-          disabled={formType === FormType.INFO}
-        /> */}
-        <div className="mt-4 grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
-          {requiredSetup.map((requirement) => (
-            <div
-              key={requirement.label}
-              className="flex items-center justify-between gap-2 rounded-lg border border-[var(--app-panel-border)] bg-[var(--app-panel-muted)]/50 px-3 py-2 text-sm"
-            >
-              <span className="text-gray-700 dark:text-gray-200">
-                {requirement.label}
-              </span>
-              <span
-                className={
-                  requirement.configured
-                    ? "font-medium text-green-700 dark:text-green-400"
-                    : "font-medium text-amber-700 dark:text-amber-400"
-                }
+        {
+          !componentLayout ?
+            <div className="overflow-x-auto rounded-2xl border border-[var(--app-panel-border)] bg-white p-5 dark:bg-gray-900">
+              <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  Choose a component to jump to its settings.
+                </p>
+                <div className="flex flex-wrap gap-3 text-xs text-gray-600 dark:text-gray-300">
+                  <span className="inline-flex items-center gap-1.5">
+                    <span className="h-2.5 w-2.5 rounded-full bg-green-500" />
+                    Configured
+                  </span>
+                  <span className="inline-flex items-center gap-1.5">
+                    <span className="h-2.5 w-2.5 rounded-full border border-gray-400 bg-gray-100" />
+                    Not configured
+                  </span>
+                  <span className="inline-flex items-center gap-1.5">
+                    <span className="h-2.5 w-2.5 rounded-full bg-blue-500" />
+                    Selected
+                  </span>
+                </div>
+              </div>
+              <svg
+                aria-label="ACS door component layout"
+                className="mx-auto min-w-[760px]"
+                viewBox="0 0 900 500"
+                role="group"
               >
-                {requirement.configured ? "Ready" : "Required"}
-              </span>
+                <text
+                  x="28"
+                  y="48"
+                  className="fill-gray-700 dark:fill-gray-100"
+                  fontSize="20"
+                  fontWeight="500"
+                >
+                  ACS DOOR ACCESSORY
+                </text>
+                <rect
+                  x="160"
+                  y="150"
+                  width="150"
+                  height="250"
+                  className="fill-white stroke-gray-900 dark:fill-gray-800 dark:stroke-gray-300"
+                  strokeWidth="2"
+                />
+                <rect
+                  x="172"
+                  y="162"
+                  width="126"
+                  height="226"
+                  className="fill-white stroke-gray-900 dark:fill-gray-800 dark:stroke-gray-300"
+                  strokeWidth="1.5"
+                />
+                <circle
+                  cx="188"
+                  cy="270"
+                  r="8"
+                  className="fill-white stroke-gray-900 dark:fill-gray-800 dark:stroke-gray-300"
+                  strokeWidth="1.5"
+                />
+                {device("DoorIn", 102, 252, 16, 38)}
+                <text
+                  x="110"
+                  y="320"
+                  textAnchor="middle"
+                  className="fill-gray-900 dark:fill-gray-100"
+                  fontSize="15"
+                  fontWeight="600"
+                >
+                  Reader
+                </text>
+                <text
+                  x="235"
+                  y="433"
+                  textAnchor="middle"
+                  className="fill-gray-900 dark:fill-gray-100"
+                  fontSize="16"
+                  fontWeight="600"
+                >
+                  Outside
+                </text>
+
+                <rect
+                  x="500"
+                  y="150"
+                  width="150"
+                  height="250"
+                  className="fill-white stroke-gray-900 dark:fill-gray-800 dark:stroke-gray-300"
+                  strokeWidth="2"
+                />
+                <rect
+                  x="512"
+                  y="162"
+                  width="126"
+                  height="226"
+                  className="fill-white stroke-gray-900 dark:fill-gray-800 dark:stroke-gray-300"
+                  strokeWidth="1.5"
+                />
+                <circle
+                  cx="622"
+                  cy="270"
+                  r="8"
+                  className="fill-white stroke-gray-900 dark:fill-gray-800 dark:stroke-gray-300"
+                  strokeWidth="1.5"
+                />
+                {device("Buzzer", 450, 144, 28, 28)}
+                <text
+                  x="445"
+                  y="135"
+                  className="fill-gray-900 dark:fill-gray-100"
+                  fontSize="15"
+                  fontWeight="600"
+                >
+                  Buzzer
+                </text>
+                {device("Relay", 515, 144, 58, 22)}
+                <text
+                  x="544"
+                  y="135"
+                  textAnchor="middle"
+                  className="fill-gray-900 dark:fill-gray-100"
+                  fontSize="15"
+                  fontWeight="600"
+                >
+                  Lock
+                </text>
+                {device("Sensor", 578, 145, 22, 10)}
+                <text
+                  x="590"
+                  y="135"
+                  className="fill-gray-900 dark:fill-gray-100"
+                  fontSize="15"
+                  fontWeight="600"
+                >
+                  Sensor
+                </text>
+                {device("BreakGlass", 660, 144, 28, 28)}
+                <rect
+                  x="665"
+                  y="152"
+                  width="18"
+                  height="10"
+                  rx="1"
+                  fill="none"
+                  stroke={selected === "BreakGlass" ? "#2563eb" : configured.BreakGlass ? "#16a34a" : "#9ca3af"}
+                  strokeWidth="1.5"
+                  pointerEvents="none"
+                />
+                <text
+                  x="700"
+                  y="160"
+                  className="fill-gray-900 dark:fill-gray-100"
+                  fontSize="15"
+                  fontWeight="600"
+                >
+                  Break Glass
+                </text>
+
+                {dto.type == DoorType.Dual
+                  ? device("DoorOut", 665, 255, 16, 38)
+                  : device("Rex", 665, 255, 16, 38)}
+                <text
+                  x="700"
+                  y="280"
+                  className="fill-gray-900 dark:fill-gray-100"
+                  fontSize="15"
+                  fontWeight="600"
+                >
+                  {dto.type == DoorType.Dual ? "Reader" : "REX"}
+                </text>
+                <text
+                  x="580"
+                  y="433"
+                  textAnchor="middle"
+                  className="fill-gray-900 dark:fill-gray-100"
+                  fontSize="16"
+                  fontWeight="600"
+                >
+                  Inside
+                </text>
+              </svg>
+              <div className="mt-4 grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
+                {requiredSetup.map((requirement) => (
+                  <div
+                    key={requirement.label}
+                    className="flex items-center justify-between gap-2 rounded-lg border border-[var(--app-panel-border)] bg-[var(--app-panel-muted)]/50 px-3 py-2 text-sm"
+                  >
+                    <span className="text-gray-700 dark:text-gray-200">
+                      {requirement.label}
+                    </span>
+                    <span
+                      className={
+                        requirement.configured
+                          ? "font-medium text-green-700 dark:text-green-400"
+                          : "font-medium text-amber-700 dark:text-amber-400"
+                      }
+                    >
+                      {requirement.configured ? "Ready" : "Required"}
+                    </span>
+                  </div>
+                ))}
+              </div>
             </div>
-          ))}
-        </div>
-      </div>
-      <AeroX1100SlotPicker 
-        slotType={"reader"} 
-        slotOptions={[{
-          label:"Slot 1",
-          value:0
-        },
-      {
-          label:"Slot 2",
-          value:2
-        }]} 
-        onSelect={function (slotNo: number): void {
-          throw new Error("Function not implemented.");
-        } } 
-        moduleSelected={true}
-       
-        />
+
+            :
+            <AeroLayout
+              slotType={slotCategory}
+              slotOptions={slotCategory == "reader" ? readerOption : slotCategory == "input" ? inputOption : outputOption}
+              onSelect={(e) => {
+                switch (slotCategory) {
+                  case "reader":
+                    switch (selectedComponent) {
+                      case "DoorIn":
+                        setDto(prev => ({
+                          ...prev,
+                          readers: prev.readers.map((reader) =>
+                            reader.readerDirection == ReaderDirection.In ? { ...reader, slotNo: e } : reader
+                          )
+                        }))
+                        setReaderOption(Helper.updateOptionByValue(readerOption,e,true))
+                        setComponentLayout(false);
+                        break;
+                      case "DoorOut":
+                        setDto(prev => ({
+                          ...prev,
+                          readers: prev.readers.map((reader) =>
+                            reader.readerDirection == ReaderDirection.Out ? { ...reader, slotNo: e } : reader
+                          )
+                        }))
+                        setReaderOption(Helper.updateOptionByValue(readerOption,e,true))
+                        setComponentLayout(false);
+                        break;
+                      default:
+                        break;
+                    }
+                    break;
+                  case "input":
+                    switch (selectedComponent) {
+                      case "BreakGlass":
+                        setDto((prev) => ({
+                          ...prev,
+                          bg: prev.bg != null
+                            ?
+                            {
+                              ...prev.bg,
+                              slotNo: e
+                            }
+                            :
+                            prev.bg
+                        }))
+                        setComponentLayout(false);
+                        break;
+                      case "Sensor":
+                        setDto((prev) => ({
+                          ...prev,
+                          sensor: prev.sensor != null
+                            ?
+                            {
+                              ...prev.sensor,
+                              slotNo: e
+                            }
+                            :
+                            prev.sensor
+                        }))
+                        setComponentLayout(false);
+                        break;
+                      default:
+                        break;
+                    }
+                    break;
+                  case "output":
+                    switch (selectedComponent) {
+                      case "Buzzer":
+                        setDto((prev) => ({
+                          ...prev,
+                          buzzer: prev.buzzer != null ?
+                            {
+                              ...prev.buzzer,
+                              slotNo: e
+                            }
+                            :
+                            prev.buzzer
+                        }))
+                        setComponentLayout(false);
+                        break;
+                      case "Relay":
+                        setDto((prev) => ({
+                          ...prev,
+                          relay: prev.relay != null ?
+                            {
+                              ...prev.relay,
+                              slotNo: e
+                            } :
+                            prev.relay
+                        }))
+                        setComponentLayout(false);
+                        break;
+                      default:
+                        break;
+                    }
+                    break;
+                  default:
+                    break;
+                }
+              }}
+              moduleSelected={true}
+              selectedSlot={
+                selectedComponent == componentTabs.DoorIn ? dto.readers.find(x => x.readerDirection == ReaderDirection.In)?.slotNo : 
+                  selectedComponent == componentTabs.DoorOut ? dto.readers.find(x => x.readerDirection == ReaderDirection.Out)?.slotNo :
+                    selectedComponent == componentTabs.Relay ? dto.relay?.slotNo :
+                      dto.sensor?.slotNo
+                }
+            />
+        }
+
       </>
     );
   };
 
-  const readerOut = dto.readers.find(
-    (reader) => reader.readerDirection === ReaderDirection.Out,
-  );
-  const selectedSlotData: Record<
-    DoorComponent,
-    { options: Options[]; slotNo: number | undefined; moduleSelected: boolean }
-  > = {
-    readerIn: {
-      options: readerOption,
-      slotNo: readerIn?.slotNo,
-      moduleSelected: Boolean(readerIn?.deviceModuleGuid),
-    },
-    readerOut: {
-      options: readerOption,
-      slotNo: readerOut?.slotNo,
-      moduleSelected: Boolean(readerOut?.deviceModuleGuid),
-    },
-    rex: {
-      options: inputOption,
-      slotNo: dto.rexes[0]?.slotNo,
-      moduleSelected: Boolean(dto.rexes[0]?.deviceModuleGuid),
-    },
-    magneticLock: {
-      options: outputOption,
-      slotNo: dto.relay?.slotNo,
-      moduleSelected: Boolean(dto.relay?.deviceModuleGuid),
-    },
-    buzzer: {
-      options: outputOption,
-      slotNo: dto.buzzer?.slotNo,
-      moduleSelected: Boolean(dto.buzzer?.deviceModuleGuid),
-    },
-    bg: {
-      options: inputOption,
-      slotNo: dto.bg?.slotNo,
-      moduleSelected: Boolean(dto.bg?.deviceModuleGuid),
-    },
-    sensor: {
-      options: inputOption,
-      slotNo: dto.sensor?.slotNo,
-      moduleSelected: Boolean(dto.sensor?.deviceModuleGuid),
-    },
-  };
 
   const handleSlotSelect = (slotNo: number) => {
     setDto((prev) => {
       switch (selectedComponent) {
-        case "readerIn":
+        case "DoorIn":
           return {
             ...prev,
             readers: prev.readers.map((reader) =>
@@ -1339,7 +1375,7 @@ const Door = () => {
                 : reader,
             ),
           };
-        case "readerOut":
+        case "DoorOut":
           return {
             ...prev,
             readers: prev.readers.map((reader) =>
@@ -1348,24 +1384,24 @@ const Door = () => {
                 : reader,
             ),
           };
-        case "rex":
+        case "Rex":
           return {
             ...prev,
             rexes: prev.rexes.map((rex, index) =>
               index === 0 ? { ...rex, slotNo } : rex,
             ),
           };
-        case "bg":
+        case "BreakGlass":
           return prev.bg ? { ...prev, bg: { ...prev.bg, slotNo } } : prev;
-        case "sensor":
+        case "Sensor":
           return prev.sensor
             ? { ...prev, sensor: { ...prev.sensor, slotNo } }
             : prev;
-        case "magneticLock":
+        case "Relay":
           return prev.relay
             ? { ...prev, relay: { ...prev.relay, slotNo } }
             : prev;
-        case "buzzer":
+        case "Buzzer":
           return prev.buzzer
             ? { ...prev, buzzer: { ...prev.buzzer, slotNo } }
             : prev;
@@ -1376,57 +1412,61 @@ const Door = () => {
   };
 
   useEffect(() => {
-      const initSignalR = async () => {
-        if (!token) return;
-  
-        await SignalRService.startConnection();
-        const connection = SignalRService.getConnection();
-        if (!connection) return;
-  
-        connection.on(SignalRTopic.DOOR_STATUS, (status: DoorStatus) => {
-          console.log(status);
-          setStatus((prev) =>
-            prev.map((item) =>
-              item.guid === status.guid
-                ? {
-                  ...item,
-                  mode: status.mode,
-                  readerStatus: status.readerStatus,
-                  strikeStatus:status.strikeStatus,
-                  sensorStatus: status.sensorStatus,
-                  doorStatus: status.doorStatus,
-                  rex0Status: status.rex0Status,
-                  rex1Status: status.rex1Status,
-                  ledModeControl: 0,
-                  accessControlFlag: 0,
-                  alternateReaderStatus: status.alternateReaderStatus,
-                  extendedAccessControlFlag: 0,
-                  extendedFeatureType: 0,
-                  deviceType: 0,
-                  extendedFeatureStatus: 0
-                }
-                : item,
-            ),
-          );
-        });
-  
+    setComponentLayout(false)
+  }, [selectedComponent])
 
-  
-        try {
+  useEffect(() => {
+    const initSignalR = async () => {
+      if (!token) return;
+
+      await SignalRService.startConnection();
+      const connection = SignalRService.getConnection();
+      if (!connection) return;
+
+      connection.on(SignalRTopic.DOOR_STATUS, (status: DoorStatus) => {
+        console.log(status);
+        setStatus((prev) =>
+          prev.map((item) =>
+            item.guid === status.guid
+              ? {
+                ...item,
+                mode: status.mode,
+                readerStatus: status.readerStatus,
+                strikeStatus: status.strikeStatus,
+                sensorStatus: status.sensorStatus,
+                doorStatus: status.doorStatus,
+                rex0Status: status.rex0Status,
+                rex1Status: status.rex1Status,
+                ledModeControl: 0,
+                accessControlFlag: 0,
+                alternateReaderStatus: status.alternateReaderStatus,
+                extendedAccessControlFlag: 0,
+                extendedFeatureType: 0,
+                deviceType: 0,
+                extendedFeatureStatus: 0
+              }
+              : item,
+          ),
+        );
+      });
+
+
+
+      try {
         await SignalRService.joinGroup(SignalRTopic.DOOR_STATUS);
-        } catch (err) {
-          console.error("Subscribe error:", err);
-        }
-  
-      };
-  
-      initSignalR();
-  
-      return () => {
-        const connection = SignalRService.getConnection();
-        connection?.off(SignalRTopic.DOOR_STATUS);
-      };
-    }, [refresh, locationGuid, token]);
+      } catch (err) {
+        console.error("Subscribe error:", err);
+      }
+
+    };
+
+    initSignalR();
+
+    return () => {
+      const connection = SignalRService.getConnection();
+      connection?.off(SignalRTopic.DOOR_STATUS);
+    };
+  }, [refresh, locationGuid, token]);
 
   return (
     <>
@@ -1447,7 +1487,7 @@ const Door = () => {
               ? "Required setup is complete. Buzzer, break glass, and other components are optional."
               : `Complete required setup: ${missingRequirements.join(", ")}. Optional components can be skipped.`
           }
-          activeTab={activeTab}
+          activeTab={selectedComponent}
           onActiveTabChange={handleFormTabChange}
           layout={
             <DoorLayout

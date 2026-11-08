@@ -12,10 +12,10 @@ import { DriveMode } from "../../enum/DriveMode";
 import { OfflineMode } from "../../enum/OfflineMode";
 import { StrikeMode } from "../../enum/StrikeMode";
 import Switch from "../../components/form/switch/Switch";
+import Button from "../../components/ui/button/Button";
 
 type ExtraProps = {
   moduleOption: Options[]
-  outputOption: Options[]
 };
 
 
@@ -24,11 +24,13 @@ const DoorRelayForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps>>
   setDto,
   type,
   moduleOption,
-  outputOption,
+handleClick,
   handleChange,
   setIsNext
 }) => {
-  const isReadOnly = type == FormType.INFO || dto.relay == null
+  const isFinished = dto.relay?.slotNo == undefined ;
+        const isReadOnly = type == FormType.INFO;
+        const isModuleSelected = dto.relay?.deviceModuleGuid  == "" || dto.relay?.deviceModuleGuid  == undefined;
 
   // NEW: Automatically validate whenever name or deviceGuid changes
   useEffect(() => {
@@ -95,7 +97,7 @@ const DoorRelayForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps>>
       </FormField>
       <FormField>
         <Label htmlFor="relay.slot">Relay No</Label>
-        <Select
+        {/* <Select
           disabled={isReadOnly}
           name="relay.slot"
           options={outputOption}
@@ -112,7 +114,10 @@ const DoorRelayForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps>>
           }
           className="dark:bg-dark-900"
           defaultValue={dto.relay?.slotNo ?? -1}
-        />
+        /> */}
+        <Button disabled={isReadOnly || isModuleSelected} name="select.slot" onClick={handleClick} variant={isFinished ? "primary" : "green" }>
+          {isFinished ? "Select Slot" : "Selected"}
+        </Button>
       </FormField>
       <FormField>
         <Label htmlFor="relay.minStrk">Minimum Strike Time</Label>

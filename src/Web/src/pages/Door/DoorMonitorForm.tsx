@@ -9,6 +9,7 @@ import { InputMode } from "../../enum/InputMode";
 import { Vendor } from "../../enum/Vendor";
 import { AeroSensorMetadata } from "../../model/Door/AeroSensorMetadata";
 import Input from "../../components/form/input/InputField";
+import Button from "../../components/ui/button/Button";
 
 type ExtraProps = {
   moduleOption:Options[]
@@ -22,9 +23,13 @@ const DoorMonitorForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps
   handleChange,
   moduleOption,
   inputOption,
+  handleClick,
   setIsNext
 }) => {
-  const isReadOnly = type == FormType.INFO || dto.sensor == null
+
+  const isFinished = dto.sensor?.slotNo == undefined ;
+      const isReadOnly = type == FormType.INFO;
+      const isModuleSelected = dto.sensor?.deviceModuleGuid  == "" || dto.sensor?.deviceModuleGuid  == undefined;
 
    useEffect(() => {
       if (setIsNext) {
@@ -89,8 +94,8 @@ const DoorMonitorForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps
         />
       </FormField>
       <FormField>
-        <Label htmlFor="sensor.slot">Input No</Label>
-        <Select
+        <Label htmlFor="sensor.slot">Slot No</Label>
+        {/* <Select
           disabled={isReadOnly}
           name="sensor.slot"
           options={inputOption}
@@ -109,7 +114,10 @@ const DoorMonitorForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps
           }
           className="dark:bg-dark-900"
           defaultValue={dto.sensor?.slotNo ?? -1}
-        />
+        /> */}
+        <Button disabled={isReadOnly || isModuleSelected} name="select.slot" onClick={handleClick} variant={isFinished ? "primary" : "green" }>
+          {isFinished ? "Select Slot" : "Selected"}
+        </Button>
       </FormField>
       <FormField>
         <Label htmlFor="sensor.mode">Input Mode</Label>

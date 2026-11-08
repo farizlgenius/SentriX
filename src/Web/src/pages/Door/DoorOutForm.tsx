@@ -12,10 +12,10 @@ import { readerAddress, readerBaudrate } from "../../model/Door/ReaderOption";
 import { ReaderMode } from "../../enum/ReaderMode";
 import { Vendor } from "../../enum/Vendor";
 import { ReaderDirection } from "../../enum/DoorDirection";
+import Button from "../../components/ui/button/Button";
 
 type ExtraProps = {
   moduleOption:Options[]
-  readerOption:Options[]
 };
 
 const DoorOutForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps>> = ({
@@ -24,13 +24,16 @@ const DoorOutForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps>> =
   dto,
   handleChange,
   moduleOption,
-  readerOption,
+  handleClick,
   setIsNext
   
 }) => {
   const [readerType, setReaderType] = useState<ReaderType>(
     ReaderType.wiegand,
   );
+    const isFinished = dto.readers.find(x => x.readerDirection == ReaderDirection.Out)?.slotNo == -1 || dto.readers.find(x => x.readerDirection == ReaderDirection.Out)?.slotNo == undefined ;
+  const isReadOnly = type == FormType.INFO;
+  const isModuleSelected = dto.readers.find(x => x.readerDirection == ReaderDirection.Out)?.deviceModuleGuid  == "" || dto.readers.find(x => x.readerDirection == ReaderDirection.Out)?.deviceModuleGuid  == undefined;
 
   // NEW: Automatically validate whenever name or deviceGuid changes
   useEffect(() => {
@@ -144,7 +147,7 @@ const DoorOutForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps>> =
     
       <FormField>
         <Label htmlFor="readerOut.slot">Slot No</Label>
-        <Select
+        {/* <Select
           disabled={type == FormType.INFO || dto.readers.length == 0 || dto.readers.find(x => x.readerDirection == ReaderDirection.Out) == undefined}
           name="readerOut.slot"
           options={readerOption}
@@ -159,7 +162,10 @@ const DoorOutForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps>> =
           }
           className="dark:bg-dark-900"
          defaultValue={ dto.readers.find(x => x.readerDirection == ReaderDirection.Out)?.slotNo ?? -1}
-        />
+        /> */}
+        <Button disabled={isReadOnly || isModuleSelected} name="select.slot" onClick={handleClick} variant={isFinished ? "primary" : "green" }>
+          {isFinished ? "Select Slot" : "Selected"}
+        </Button>
       </FormField>
 
       {readerType == ReaderType.odsp && (

@@ -186,14 +186,44 @@ class Helper {
   static updateOptionByValue(
     array: Options[],
     value: string | number,
-    isTaken: boolean,
+    isTaken: boolean
   ): Options[] {
+    console.log(array)
     const index = array.findIndex((item) => item.value === value);
     if (index === -1) return array; // not found → return original
 
     const updated = [...array]; // shallow copy
     updated[index] = { ...updated[index], isTaken }; // update only isTaken
+
+    console.log(updated)
     return updated;
+  }
+
+    static updateSelectedOptionByValue(
+    array: Options[],
+    values: string[] | number[]
+  ): Options[] {
+    console.log(array)
+    // const selectedArray = array.filter(v => values.some(x => x == v.value))
+    // const indexes = selectedArray.ide
+    // const index = array.findIndex((item) => values.some(x => x == item.value));
+    // if (index === -1) return array; // not found → return original
+
+    // const updated = [...array]; // shallow copy
+    // updated[index] = { ...updated[index], isTaken:true }; // update only isTaken
+    // console.log(updated)
+    var updated = array.map(x => 
+       values.some(v => v == x.value) ? 
+      {
+        ...x,
+        isTaken:true
+      }
+      :
+      x
+    )
+    console.log(updated)
+    return updated;
+    
   }
 
   static toCapitalCase(str: string): string {

@@ -12,6 +12,7 @@ import { AeroReaderMetadata } from "../../model/Door/AeroReaderMetadata";
 import { ReaderMode } from "../../enum/ReaderMode";
 import { Vendor } from "../../enum/Vendor";
 import { ReaderDirection } from "../../enum/DoorDirection";
+import Button from "../../components/ui/button/Button";
 
 type ExtraProps = {
   moduleOption: Options[];
@@ -25,9 +26,13 @@ const DoorInForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps>> = 
   moduleOption,
   readerOption,
   handleChange,
+  handleClick,
   setIsNext
 }) => {
   const [readerType, setReaderType] = useState<ReaderType>(ReaderType.wiegand);
+  const isFinished = dto.readers.find(x => x.readerDirection == ReaderDirection.In)?.slotNo == -1 || dto.readers.find(x => x.readerDirection == ReaderDirection.In)?.slotNo == undefined ;
+  const isReadOnly = type == FormType.INFO;
+  const isModuleSelected = dto.readers.find(x => x.readerDirection == ReaderDirection.In)?.deviceModuleGuid  == "" || dto.readers.find(x => x.readerDirection == ReaderDirection.In)?.deviceModuleGuid  == undefined;
 
 
   // NEW: Automatically validate whenever name or deviceGuid changes
@@ -85,7 +90,7 @@ const DoorInForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps>> = 
         <Label htmlFor="readerIn.module">Module</Label>
         <Select
           isString={true}
-          disabled={type == FormType.INFO}
+          disabled={isReadOnly}
           name="readerIn.module"
           options={moduleOption}
           placeholder="Select Option"
@@ -123,7 +128,7 @@ const DoorInForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps>> = 
       <FormField>
         <Label htmlFor="readerIn.type">Type</Label>
         <Select
-          disabled={type == FormType.INFO || dto.readers.length == 0 || dto.readers.find(x => x.readerDirection == ReaderDirection.In) == undefined}
+          disabled={isReadOnly || dto.readers.length == 0 || dto.readers.find(x => x.readerDirection == ReaderDirection.In) == undefined}
           name="readerIn.type"
           options={[
             {
@@ -159,7 +164,7 @@ const DoorInForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps>> = 
 
       <FormField>
         <Label htmlFor="readerIn.slot">Slot No</Label>
-        <Select
+        {/* <Select
           disabled={type == FormType.INFO || dto.readers.length == 0 || dto.readers.find(x => x.readerDirection == ReaderDirection.In) == undefined}
           name="readerIn.slot"
           options={readerOption}
@@ -174,14 +179,17 @@ const DoorInForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps>> = 
           }
           className="dark:bg-dark-900"
           defaultValue={dto.readers.find(x => x.readerDirection == ReaderDirection.In)?.slotNo ?? -1}
-        />
+        /> */}
+        <Button disabled={isReadOnly || isModuleSelected} name="select.slot" onClick={handleClick} variant={isFinished ? "primary" : "green" }>
+          {isFinished ? "Select Slot" : "Selected"}
+        </Button>
       </FormField>
       {readerType == ReaderType.odsp && (
         <>
           <FormField>
             <Label htmlFor="readerIn.address">Address</Label>
             <Select
-              disabled={type == FormType.INFO || dto.readers.length == 0 || dto.readers.find(x => x.readerDirection == ReaderDirection.In) == undefined}
+              disabled={isReadOnly || dto.readers.length == 0 || dto.readers.find(x => x.readerDirection == ReaderDirection.In) == undefined}
               name="readerIn.address"
               options={readerAddress}
               placeholder="Select Option"
@@ -207,7 +215,7 @@ const DoorInForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps>> = 
           <FormField>
             <Label htmlFor="readerIn.baudrate">Baudrate</Label>
             <Select
-              disabled={type == FormType.INFO || dto.readers.length == 0 || dto.readers.find(x => x.readerDirection == ReaderDirection.In) == undefined}
+              disabled={isReadOnly || dto.readers.length == 0 || dto.readers.find(x => x.readerDirection == ReaderDirection.In) == undefined}
               name="readerIn.baudrate"
               options={readerBaudrate}
               placeholder="Select Option"
@@ -233,7 +241,7 @@ const DoorInForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps>> = 
           <FormField>
             <div className="mt-3">
               <Switch
-                disabled={type == FormType.INFO || dto.readers.length == 0 || dto.readers.find(x => x.readerDirection == ReaderDirection.In) == undefined}
+                disabled={isReadOnly || dto.readers.length == 0 || dto.readers.find(x => x.readerDirection == ReaderDirection.In) == undefined}
                 label="Auto Discover"
                 defaultChecked={true}
                 onChange={(checked: boolean) => {
@@ -255,7 +263,7 @@ const DoorInForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps>> = 
             </div>
             <div className="mt-3">
               <Switch
-                disabled={type == FormType.INFO || dto.readers.length == 0 || dto.readers.find(x => x.readerDirection == ReaderDirection.In) == undefined}
+                disabled={isReadOnly || dto.readers.length == 0 || dto.readers.find(x => x.readerDirection == ReaderDirection.In) == undefined}
                 label="Tracing"
                 defaultChecked={false}
                 onChange={(checked: boolean) => {
@@ -276,7 +284,7 @@ const DoorInForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps>> = 
             </div>
             <div className="mt-3">
               <Switch
-                disabled={type == FormType.INFO || dto.readers.length == 0 || dto.readers.find(x => x.readerDirection == ReaderDirection.In) == undefined}
+                disabled={isReadOnly || dto.readers.length == 0 || dto.readers.find(x => x.readerDirection == ReaderDirection.In) == undefined}
                 label="Secure Channel"
                 defaultChecked={false}
                 onChange={(checked: boolean) => {

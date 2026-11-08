@@ -17,6 +17,7 @@ import { LocationProvider } from "./context/LocationContext.tsx";
 import { PaginationProvider } from "./context/PaginationContext.tsx";
 import { IdReportProvider } from "./context/IdReportContext.tsx";
 import { AppBootstrap } from "./AppBootstrap.tsx";
+import { AeroComponentProvider } from "./context/AeroComponentLayoutContext.tsx";
 
 createRoot(document.getElementById("root")!).render(
   // <StrictMode>
@@ -39,9 +40,13 @@ createRoot(document.getElementById("root")!).render(
                     <AlertProvider>
                       <PaginationProvider>
                         <IdReportProvider>
-                          <AppBootstrap>
+                          <AeroComponentProvider>
+                            <AppBootstrap>
                             <App />
                           </AppBootstrap>
+
+                          </AeroComponentProvider>
+                          
 
                         </IdReportProvider>
 
