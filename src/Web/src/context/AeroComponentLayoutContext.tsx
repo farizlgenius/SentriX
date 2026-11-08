@@ -14,7 +14,6 @@ interface AeroX1100SlotPickerProps {
   slotOptions: Options[];
   selectedSlot?: number;
   onSelect: (slotNo: number) => void;
-  moduleSelected: boolean;
   disabled?: boolean;
 }
 
@@ -26,26 +25,28 @@ const slotTypeLabels: Record<AeroSlotType, string> = {
 
 const slotDefinitions: Record<
   AeroSlotType,
-  { label: string; x: number; y: number; width: number; height: number }[]
+  { label: string; x: number; y: number; width: number; height: number; slot:number; }[]
 > = {
   reader: [
-    { label: "Reader 1", x: 12, y: 100, width: 44, height: 121 },
-    { label: "Reader 2", x: 760, y: 100, width: 44, height: 121 },
-    { label: "Reader 3", x: 12, y: 221, width: 44, height: 121 },
-    { label: "Reader 4", x: 760, y: 221, width: 44, height: 121 },
+    { label: "Reader 1", x: 12, y: 100, width: 44, height: 121 ,slot:0 },
+    { label: "Reader 2", x: 760, y: 100, width: 44, height: 121,slot:1 },
+    { label: "Reader 3", x: 12, y: 221, width: 44, height: 121,slot:2 },
+    { label: "Reader 4", x: 760, y: 221, width: 44, height: 121,slot:3 },
   ],
   input: [
-    { label: "Input 1", x: 12, y: 350, width: 44, height: 47 },
-    { label: "Input 2", x: 12, y: 398, width: 44, height: 49 },
-    { label: "Input 3", x: 760, y: 350, width: 44, height: 47 },
-    { label: "Input 4", x: 760, y: 398, width: 44, height: 49 },
-    { label: "Input 4", x: 760, y: 398, width: 44, height: 49 },
+    { label: "Input 1", x: 12, y: 350, width: 45, height: 47,slot:0 },
+    { label: "Input 2", x: 12, y: 398, width: 45, height: 49,slot:1 },
+    { label: "Input 3", x: 760, y: 350, width: 45, height: 47,slot:2 },
+    { label: "Input 4", x: 760, y: 398, width: 45, height: 49,slot:3 },
+    { label: "Input 5", x: 310, y: 16, width: 45, height: 49,slot:4 },
+    { label: "Input 6", x: 358, y: 16, width: 45, height: 49,slot:5 },
+    { label: "Input 7", x: 406, y: 16, width: 45, height: 49,slot:6 },
   ],
   output: [
-    { label: "Output 1", x: 114, y: 444, width: 107, height: 62 },
-    { label: "Output 2", x: 114, y: 508, width: 107, height: 57 },
-    { label: "Output 3", x: 592, y: 444, width: 107, height: 62 },
-    { label: "Output 4", x: 592, y: 508, width: 107, height: 57 },
+    { label: "Output 1", x: 114, y: 444, width: 107, height: 62,slot:0 },
+    { label: "Output 2", x: 114, y: 508, width: 107, height: 57,slot:1 },
+    { label: "Output 3", x: 592, y: 444, width: 107, height: 62,slot:2 },
+    { label: "Output 4", x: 592, y: 508, width: 107, height: 57,slot:3 },
   ],
 };
 
@@ -60,26 +61,23 @@ export const AeroComponentProvider:React.FC<{children:React.ReactNode}> = ({chil
       slotOptions,
       selectedSlot,
       onSelect,
-      moduleSelected,
       disabled = false,
     }: AeroX1100SlotPickerProps) => {
-      const [isOpen, setIsOpen] = useState(false);
       const slots = slotDefinitions[slotType];
-      const availableSlots = new Set(
-        slotOptions
-          .map((option) => Number(option.value))
-          .filter((slotNo) => Number.isInteger(slotNo)),
-      );
+      // const availableSlots = new Set(
+      //   slotOptions
+      //     .map((option) => Number(option.value))
+      //     .filter((slotNo) => Number.isInteger(slotNo)),
+      // );
 
       // const availableSlots = new Set(
       //   slotOptions.filter(x => x.isTaken == false).map((option) => Number(option.value)).filter((slotNo) => Number.isInteger(slotNo))
       // );
 
-      console.log(availableSlots);
+      // console.log(availableSlots);
     
       const handleSelect = (slotNo: number) => {
         onSelect(slotNo);
-        setIsOpen(false);
       };
     
       return (
@@ -117,8 +115,11 @@ export const AeroComponentProvider:React.FC<{children:React.ReactNode}> = ({chil
                       role="group"
                     >
                       {slots.map((slot, index) => {
-                        const isSelected = selectedSlot === index;
-                        const isAvailable = availableSlots.has(index) || isSelected;
+                        const isSelected = selectedSlot === slot.slot;
+                        console.log(selectedSlot)
+                        console.log(slot.slot)
+                        // const isAvailable = availableSlots.has(slot.slot) || isSelected;
+                        const isAvailable = slotOptions.find(x => x.value == slot.slot)?.isTaken == false
                         const slotStatus = isSelected
                           ? "Selected"
                           : isAvailable

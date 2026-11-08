@@ -8870,3 +8870,71 @@ WebConfigNetwork: SCP-1, Method2 = 0, IP Address2: 0.0.0.0, Subnet Mask2: 0.0.0.
 64710.366 > 05 00 00 00 00 80 80 01 00 00 80 80 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
 64710.366 . 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
 64710.366 Command Status: Scp-1.0, (tag-55-ok)
+Debug file SCPDEBUG.txt <SCPDEBUGc.txt> <SCPDEBUG.TXT> opened Sun Nov  8 07:53:14 2026
+Begin - SCP Driver DLL (64-bit) version 4.7.1.43
+99194.052 WSAStartup ok
+99194.061 RNG_X931A24 Initialized
+99194.061 1, enCcSystem: 011 1 1024 0 0 1
+99194.218 1, enCcCreateChannel: 0012 1 7 3333 0 3000 0 "" 0
+99194.534 listen(lsock) created socket=3380 on port 3333
+99194.534 Listen Successful, port: 3333
+99232.031 0(0), enCcTranSrq: 0402 1
+99236.347 0(0), enCcAcrSrq: 0407 1 1 1
+99251.163 0(0), enCcAcrSrq: 0407 1 1 1
+99664.192 0(0), enCcAcrSrq: 0407 1 1 1
+99920.882 0(0), enCcAcrSrq: 0407 1 1 1
+00247.926 0(0), enCcAcrSrq: 0407 1 1 1
+00320.808 0(0), enCcAcrSrq: 0407 1 1 1
+00627.816 0(0), enCcAcrSrq: 0407 1 1 1
+01082.840 0(0), enCcAcrSrq: 0407 1 1 1
+01459.063 0(0), enCcAcrSrq: 0407 1 1 1
+01546.989 0(0), enCcAcrSrq: 0407 1 1 1
+02089.901 0(0), enCcAcrSrq: 0407 1 1 1
+02179.953 0(0), enCcAcrSrq: 0407 1 1 1
+02193.194 0(0), enCcAcrSrq: 0407 1 1 1
+02540.653 0(0), enCcAcrSrq: 0407 1 1 1
+03221.385 0(0), enCcAcrSrq: 0407 1 1 1
+03230.930 0(0), enCcAcrSrq: 0407 1 1 1
+03247.852 0(0), enCcAcrSrq: 0407 1 1 1
+03249.819 0(0), enCcAcrSrq: 0407 1 1 1
+03268.013 0(0), enCcAcrSrq: 0407 1 1 1
+03278.168 0(0), enCcAcrSrq: 0407 1 1 1
+03332.961 0(0), enCcAcrSrq: 0407 1 1 1
+03453.254 0(0), enCcAcrSrq: 0407 1 1 1
+03456.183 0(0), enCcAcrSrq: 0407 1 1 1
+03476.698 0(0), enCcAcrSrq: 0407 1 1 1
+03481.950 0(0), enCcAcrSrq: 0407 1 1 1
+03488.815 0(0), enCcAcrSrq: 0407 1 1 1
+03491.912 0(0), enCcAcrSrq: 0407 1 1 1
+03502.023 0(0), enCcAcrSrq: 0407 1 1 1
+03518.198 0(0), enCcAcrSrq: 0407 1 1 1
+03542.975 0(0), enCcAcrSrq: 0407 1 1 1
+03568.823 0(0), enCcAcrSrq: 0407 1 1 1
+03614.098 0(0), enCcAcrSrq: 0407 1 1 1
+03924.674 0(0), enCcAcrSrq: 0407 1 1 1
+04036.119 0(0), enCcAcrSrq: 0407 1 1 1
+04446.609 0(0), enCcAcrSrq: 0407 1 1 1
+04460.087 0(0), enCcAcrSrq: 0407 1 1 1
+04463.153 0(0), enCcAcrSrq: 0407 1 1 1
+04647.823 0(0), enCcAcrSrq: 0407 1 1 1
+04670.068 0(0), enCcTranSrq: 0402 1
+04698.033 0(0), enCcAcrSrq: 0407 1 1 1
+04710.952 0(0), enCcAcrSrq: 0407 1 1 1
+04743.717 0(0), enCcAcrSrq: 0407 1 1 1
+04764.819 0(0), enCcAcrSrq: 0407 1 1 1
+04801.860 0(0), enCcAcrSrq: 0407 1 1 1
+04820.893 0(0), enCcAcrSrq: 0407 1 1 1
+04898.582 0(0), enCcAcrSrq: 0407 1 1 1
+05283.635 0(0), enCcAcrSrq: 0407 1 1 1
+05456.093 0(0), enCcAcrSrq: 0407 1 1 1
+05497.490 0(0), enCcAcrSrq: 0407 1 1 1
+05516.156 0(0), enCcAcrSrq: 0407 1 1 1
+05562.503 0(0), enCcAcrSrq: 0407 1 1 1
+05650.748 0(0), enCcAcrSrq: 0407 1 1 1
+05689.162 0(0), enCcAcrSrq: 0407 1 1 1
+05700.505 0(0), enCcAcrSrq: 0407 1 1 1
+05855.920 0(0), enCcAcrSrq: 0407 1 1 1
+06219.708 0(0), enCcAcrSrq: 0407 1 1 1
+06354.432 0(0), enCcAcrSrq: 0407 1 1 1
+06366.661 0(0), enCcACR: 0115 0 1 2 2 1 -1 -1 -1 -1 1 5 0 -1 -1 1 -1 -1 -1 -1 0 0 -1 -1 0 255 0 -1 1 0 0 1 1 0 0 0 5 1 0 0 0 0 0
+06366.665 0(0), enCcACR: 0115 0 1 1 1 2 -1 -1 -1 -1 1 5 0 -1 -1 1 -1 -1 -1 -1 0 0 -1 -1 0 255 0 -1 1 0 0 1 1 0 0 0 5 1 0 0 0 0 0

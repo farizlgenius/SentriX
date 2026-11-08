@@ -237,6 +237,12 @@ const Door = () => {
       case "close":
       case "cancel":
         setDto(defaultDoorDto);
+        setReaderModule("");
+        setInputModule("");
+        setOutputModule("")
+        setReaderOption([]);
+        setInputOption([]);
+        setOutputOption([]);
         setForm(false);
         break;
       case "unlock":
@@ -359,6 +365,11 @@ const Door = () => {
   const [readerModule,setReaderModule] = useState<string>("")
   const [inputModule,setInputModule] = useState<string>("")
   const [outputModule,setOutputModule] = useState<string>("")
+
+  // value for store data 
+  let doorInSlot = -1;
+  let doorOutSlot = -1;
+  
 
 
   const fetchDevice = async () => {
@@ -856,15 +867,9 @@ const Door = () => {
     | "Relay"
     | "Buzzer"
     | "BreakGlass"
-    | "Sensor";
+    | "Sensor"
+    | "Advance";
 
-  // type DoorAccessLayout = "inOut" | "inOnly";
-
-  // const [accessLayout, setAccessLayout] = useState<DoorAccessLayout>(
-  //   doorDto.type === DoorType.Dual ? "inOut" : "inOnly",
-  // );
-
-  // const hasReaderOut = accessLayout === "inOut";
 
   const [selectedComponent, setSelectedComponent] =
     useState<DoorComponent>("DoorIn");
@@ -899,9 +904,10 @@ const Door = () => {
     Rex: hasAssignedSlot(dto.rexes[0]),
     Relay: hasAssignedSlot(dto.relay),
     Buzzer: hasAssignedSlot(dto.buzzer),
-   BreakGlass: hasAssignedSlot(dto.bg),
+    BreakGlass: hasAssignedSlot(dto.bg),
     Sensor: hasAssignedSlot(dto.sensor),
-    General: false
+    General: false,
+    Advance: false
   };
   const requiredSetup = [
     {
@@ -924,14 +930,16 @@ const Door = () => {
   const componentTabs: Record<DoorComponent, string> = {
     General: "General",
     DoorIn: "DoorIn",
-    DoorOut: "Door Out",
-    Rex: "Rex Out",
+    DoorOut: "DoorOut",
+    Rex: "RexOut",
     Relay: "Relay",
     Buzzer: "Buzzer",
-    BreakGlass: "Break Glass",
+    BreakGlass: "BreakGlass",
     Sensor: "Sensor",
+    Advance: "Advance"
   };
   const tabComponents: Partial<Record<string, DoorComponent>> = {
+    General : "General",
     DoorIn: "DoorIn",
     DoorOut: "DoorOut",
     Rex: "Rex",
@@ -939,6 +947,7 @@ const Door = () => {
     Buzzer: "Buzzer",
     BreakGlass: "BreakGlass",
     Sensor: "Sensor",
+    Advance : "Advance"
   };
 
   const handleLayoutSelect = (component: DoorComponent) => {
@@ -951,8 +960,6 @@ const Door = () => {
     const component = tabComponents[tab];
     if (component) {
       handleLayoutSelect(component);
-    } else {
-      setSelectedComponent(tab as DoorComponent);
     }
   };
 
@@ -968,14 +975,15 @@ const Door = () => {
     onSlotSelect: (slotNo: number) => void;
   }) => {
     const labels: Record<DoorComponent, string> = {
-      General : "General",
-      DoorIn: "Reader in",
-      DoorOut: "Reader out",
-      Rex: "Request to exit",
-      Relay: "Lock / relay",
+      General: "General",
+      DoorIn: "DoorIn",
+      DoorOut: "DoorOut",
+      Rex: "Rex",
+      Relay: "Relay",
       Buzzer: "Buzzer",
-      BreakGlass: "Break glass",
+      BreakGlass: "BreakGlass",
       Sensor: "Sensor",
+      Advance: "Advance"
     };
     const device = (
       id: DoorComponent,
@@ -1262,8 +1270,9 @@ const Door = () => {
                             reader.readerDirection == ReaderDirection.In ? { ...reader, slotNo: e } : reader
                           )
                         }))
-                        setReaderOption(Helper.updateOptionByValue(readerOption,e,true))
+                        setReaderOption(Helper.updateOptionIsTaken(readerOption,e,dto.readers.find(x => x.readerDirection == ReaderDirection.In)?.slotNo))
                         setComponentLayout(false);
+                        console.log(dto.readers)
                         break;
                       case "DoorOut":
                         setDto(prev => ({
@@ -1272,8 +1281,9 @@ const Door = () => {
                             reader.readerDirection == ReaderDirection.Out ? { ...reader, slotNo: e } : reader
                           )
                         }))
-                        setReaderOption(Helper.updateOptionByValue(readerOption,e,true))
+                        setReaderOption(Helper.updateOptionIsTaken(readerOption,e,dto.readers.find(x => x.readerDirection == ReaderDirection.Out)?.slotNo))
                         setComponentLayout(false);
+                        console.log(dto.readers)
                         break;
                       default:
                         break;
@@ -1293,6 +1303,7 @@ const Door = () => {
                             :
                             prev.bg
                         }))
+                        setInputOption(Helper.updateOptionIsTaken(readerOption,e,dto.bg?.slotNo))
                         setComponentLayout(false);
                         break;
                       case "Sensor":
@@ -1307,6 +1318,23 @@ const Door = () => {
                             :
                             prev.sensor
                         }))
+                        setInputOption(Helper.updateOptionIsTaken(readerOption,e,dto.sensor?.slotNo))
+                        setComponentLayout(false);
+                        break;
+                      case "Rex":
+                        setDto((prev) => ({
+                            ...prev,
+                            rexes: prev.rexes.map((d,i) => 
+                            i == 0 ? 
+                            {
+                              ...d,
+                              slotNo:e
+                            }
+                            :
+                            d
+                            )
+                          }))
+                        setInputOption(Helper.updateOptionIsTaken(readerOption,e,dto.rexes[0]?.slotNo))
                         setComponentLayout(false);
                         break;
                       default:
@@ -1326,6 +1354,7 @@ const Door = () => {
                             :
                             prev.buzzer
                         }))
+                        setOutputOption(Helper.updateOptionIsTaken(readerOption,e,dto.buzzer?.slotNo))
                         setComponentLayout(false);
                         break;
                       case "Relay":
@@ -1338,6 +1367,7 @@ const Door = () => {
                             } :
                             prev.relay
                         }))
+                        setOutputOption(Helper.updateOptionIsTaken(readerOption,e,dto.relay?.slotNo))
                         setComponentLayout(false);
                         break;
                       default:
@@ -1348,12 +1378,14 @@ const Door = () => {
                     break;
                 }
               }}
-              moduleSelected={true}
               selectedSlot={
                 selectedComponent == componentTabs.DoorIn ? dto.readers.find(x => x.readerDirection == ReaderDirection.In)?.slotNo : 
                   selectedComponent == componentTabs.DoorOut ? dto.readers.find(x => x.readerDirection == ReaderDirection.Out)?.slotNo :
                     selectedComponent == componentTabs.Relay ? dto.relay?.slotNo :
-                      dto.sensor?.slotNo
+                      selectedComponent == componentTabs.Sensor ? dto.sensor?.slotNo :
+                        selectedComponent == componentTabs.Buzzer ? dto.buzzer?.slotNo :
+                          selectedComponent == componentTabs.BreakGlass ? dto.bg?.slotNo :
+                            dto.rexes.length > 0 ? dto.rexes[0].slotNo : -1
                 }
             />
         }

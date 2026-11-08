@@ -10,9 +10,11 @@ import { Vendor } from "../../enum/Vendor";
 import { AeroBgMetadata } from "../../model/Door/AeroBgMetadata";
 import Input from "../../components/form/input/InputField";
 import Button from "../../components/ui/button/Button";
+import { InputLatchingMode } from "../../enum/InputLatchingMode";
+import { InputLogFunction } from "../../enum/InputLogFunction";
 
 type ExtraProps = {
-  moduleOption:Options[]
+  moduleOption: Options[]
 };
 
 const DoorBGForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps>> = ({
@@ -23,28 +25,36 @@ const DoorBGForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps>> = 
   moduleOption,
   handleClick
 }) => {
-    const isFinished = dto.bg?.slotNo == undefined ;
-    const isReadOnly = type == FormType.INFO;
-    const isModuleSelected = dto.bg?.deviceModuleGuid  == "" || dto.bg?.deviceModuleGuid  == undefined;
-        
+  const isFinished = dto.bg?.slotNo == undefined;
+  const isReadOnly = type == FormType.INFO;
+  const isModuleSelected = dto.bg?.deviceModuleGuid == "" || dto.bg?.deviceModuleGuid == undefined;
+
   return (
-     <div className="grid grid-cols-2 gap-5">
+    <div className="grid grid-cols-2 gap-5">
       <FormField>
         <Label htmlFor="bg.module">Break Glass Module</Label>
         <Select
-        isString={true}
+          isString={true}
           disabled={type == FormType.INFO}
           name="bg.module"
           options={moduleOption}
           onChange={(e) => {
-             setDto((prev) => ({
+            setDto((prev) => ({
               ...prev,
-              bg:{
-                slotNo:-1,
-                mode:InputMode.NC,
-                vendor:Vendor.aero,
-                deviceModuleGuid:e.target.value,
-                metadata:""
+              bg: {
+                slotNo: -1,
+                mode: InputMode.NC,
+                vendor: Vendor.aero,
+                deviceModuleGuid: e.target.value,
+                metadata: {
+                  debounce: 4,
+                  latchingMode: InputLatchingMode.NORMAL,
+                  mode: InputMode.NC,
+                  delayEntry: 0,
+                  delayExit: 0,
+                  holdTime: 2,
+                  lfCode: InputLogFunction.NO_MASKED
+                }
               }
             }))
             handleChange(e)
@@ -76,44 +86,44 @@ const DoorBGForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps>> = 
           className="dark:bg-dark-900"
           defaultValue={dto.bg?.slotNo ?? -1}
         /> */}
-        <Button disabled={isReadOnly || isModuleSelected} name="select.slot" onClick={handleClick} variant={isFinished ? "primary" : "green" }>
+        <Button disabled={isReadOnly || isModuleSelected} name="select.slot" onClick={handleClick} variant={isFinished ? "primary" : "green"}>
           {isFinished ? "Select Slot" : "Selected"}
         </Button>
       </FormField>
-   
-       <FormField>
+
+      <FormField>
         <Label htmlFor="bg.mode">Input Mode</Label>
         <Select
           disabled={type == FormType.INFO}
           name="bg.mode"
-         options={[
+          options={[
             {
-              label:"Normally Close",
-              value:InputMode.NC
+              label: "Normally Close",
+              value: InputMode.NC
             },
             {
-              label:"Normally Open",
-              value:InputMode.NO
-            },
-             {
-              label:"Standard Noraml 1K Active 2K",
-              value:InputMode.StandardN1A2
+              label: "Normally Open",
+              value: InputMode.NO
             },
             {
-              label:"Standard Noraml 2K Active 1K",
-              value:InputMode.StandardN2A1
+              label: "Standard Noraml 1K Active 2K",
+              value: InputMode.StandardN1A2
+            },
+            {
+              label: "Standard Noraml 2K Active 1K",
+              value: InputMode.StandardN2A1
             }
           ]}
-          onChange={(e) => 
+          onChange={(e) =>
             setDto((prev) => ({
               ...prev,
-              bg:prev.bg != null ? 
-              {
-                ...prev.bg,
-                mode:Number(e.target.value)
-              }
-              :
-              prev.bg
+              bg: prev.bg != null ?
+                {
+                  ...prev.bg,
+                  mode: Number(e.target.value)
+                }
+                :
+                prev.bg
             }))
           }
           className="dark:bg-dark-900"
@@ -122,49 +132,49 @@ const DoorBGForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps>> = 
           }
         />
       </FormField>
-       <FormField>
+      <FormField>
         <Label htmlFor="sensor.debounce">Debounce</Label>
-        <Input 
-        disabled={isReadOnly}
-        type="number" min="0" max="15" 
-        value={ (dto.bg?.metadata as AeroBgMetadata)?.debounce ?? ""}
-        onChange={(e) => 
+        <Input
+          disabled={isReadOnly}
+          type="number" min="0" max="15"
+          value={(dto.bg?.metadata as AeroBgMetadata)?.debounce ?? ""}
+          onChange={(e) =>
             setDto(prev => ({
               ...prev,
-              bg: prev.bg != null ? 
-              {
-                ...prev.bg,
-                metadata:{
-                  ...(prev.bg.metadata as AeroBgMetadata),
-                  debounce:Number(e.target.value)
+              bg: prev.bg != null ?
+                {
+                  ...prev.bg,
+                  metadata: {
+                    ...(prev.bg.metadata as AeroBgMetadata),
+                    debounce: Number(e.target.value)
+                  }
                 }
-              }
-              :
-              prev.bg
+                :
+                prev.bg
             }))
           }
         />
       </FormField>
-       <FormField>
+      <FormField>
         <Label htmlFor="sensor.holdTime">Hold Time</Label>
-        <Input 
-        disabled={isReadOnly}
-        type="number" min="2" max="15" 
-        defaultValue={2}
-        value={(dto.bg?.metadata as AeroBgMetadata)?.holdTime ?? ""}
-        onChange={(e) => 
+        <Input
+          disabled={isReadOnly}
+          type="number" min="2" max="15"
+          defaultValue={2}
+          value={(dto.bg?.metadata as AeroBgMetadata)?.holdTime ?? ""}
+          onChange={(e) =>
             setDto(prev => ({
               ...prev,
-              bg: prev.bg != null ? 
-              {
-                ...prev.bg,
-                metadata:{
-                  ...(prev.bg.metadata as AeroBgMetadata),
-                  holdTime:Number(e.target.value)
+              bg: prev.bg != null ?
+                {
+                  ...prev.bg,
+                  metadata: {
+                    ...(prev.bg.metadata as AeroBgMetadata),
+                    holdTime: Number(e.target.value)
+                  }
                 }
-              }
-              :
-              prev.bg
+                :
+                prev.bg
             }))
           }
         />

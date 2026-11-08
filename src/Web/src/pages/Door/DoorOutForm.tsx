@@ -80,27 +80,27 @@ const DoorOutForm: React.FC<PropsWithChildren<FormProp<DoorDto> & ExtraProps>> =
           onChange={(e) => 
           {
             handleChange(e)
-           setDto((prev) => ({
-                     ...prev,
-                     readers: [...prev.readers,
-                       {
-                         slotNo: -1,
-                         mode: ReaderMode.wiegand,
-                         metadata: {
-                           osdpFlag:false,
-                           address:-1,
-                           baudrate:-1,
-                           autoDiscover: 0x00,
+            setDto((prev) => ({
+              ...prev,
+              readers: [...prev.readers,
+              {
+                slotNo: -1,
+                mode: ReaderMode.wiegand,
+                metadata: {
+                  osdpFlag: false,
+                  address: -1,
+                  baudrate: -1,
+                  autoDiscover: 0x00,
                   tracing: 0x00,
                   secureChannel: 0x00
-                         },
-                         vendor: Vendor.aero,
-                         readerDirection: ReaderDirection.Out,
-                         deviceModuleGuid: e.target.value
-                       }
-                     ]
-                   }))
-          }  
+                },
+                vendor: Vendor.aero,
+                readerDirection: ReaderDirection.Out,
+                deviceModuleGuid: e.target.value
+              }
+              ]
+            }))
+          }
           }
           className="dark:bg-dark-900"
           defaultValue={
