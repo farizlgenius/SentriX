@@ -25,6 +25,7 @@ public sealed class Device : BaseEntity,IAuditableEntity
   public ICollection<Persistences.Entities.Action> actions {get; set;} = default!;
   public ICollection<MonitorGroup> monitor_groups {get; set; } = default!;
   public ICollection<Area> areas {get; set; } = default!;
+  public ICollection<Trigger> triggers {get; set; } = default!; 
 
   public Device() { }
   public Device(Core.Domain.Entities.Device domain) : base(domain.Guid,domain.ExternalId,domain.AltrExternalId)

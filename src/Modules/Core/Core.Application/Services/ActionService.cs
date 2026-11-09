@@ -20,6 +20,11 @@ public sealed class ActionService(
             var deviceId = await device.GetIdByGuidAsync(dto.DeviceGuid,ct);
             var locationId = await loc.GetIdByGuidAsync(dto.LocationGuid,ct);
 
+            // Check name in same location 
+
+            if(await Repo.IsAnyByNameAndLocationGuidAsync(dto.Name,dto.LocationGuid,ct))
+                  throw new DuplicateException(EntityType.ACTION.ToString(),nameof(dto.Name));
+
             var d = new Domain.Entities.Actions(
                   dto.Name,
                   dto.Type,
@@ -47,22 +52,67 @@ public sealed class ActionService(
 
       public async Task<IEnumerable<Guid>> DeleteListAsync(IEnumerable<Guid> guids, CancellationToken ct = default)
       {
-            throw new NotImplementedException();
+            // Check if guids is empty 
+            if (!guids.Any())
+                  throw new NotFoundException(EntityType.ACTION.ToString());
+
+            foreach (var guid in guids)
+            {
+                  // Check is any location with guid
+                  if (!await repo.IsAnyGuidAsync(guid, ct))
+                        throw new NotFoundException(EntityType.ACTION.ToString(), guid.ToString());
+
+                  // Check relate object here
+                  if (await repo.IsAnyRelatedEntitiesAsync(guid, ct))
+                        throw new FoundRelateException(EntityType.ACTION.ToString(), guid.ToString(), EntityType.PROCEDURE.ToString());
+            }
+
+            await repo.DeleteRangeAsync(guids, ct);
+
+            return guids;
       }
 
-      public Task<bool> DisabledAsync(Guid guid, CancellationToken ct = default)
+      public async Task<bool> DisabledAsync(Guid guid, CancellationToken ct = default)
       {
-            throw new NotImplementedException();
+            // Check is any location with guid
+            if (!await repo.IsAnyGuidAsync(guid, ct))
+                  throw new NotFoundException(EntityType.ACTION.ToString(), guid.ToString());
+
+            return await repo.DisableAsync(guid, ct);
       }
 
-      public Task<bool> EnabledAsync(Guid guid, CancellationToken ct = default)
+      public async Task<bool> EnabledAsync(Guid guid, CancellationToken ct = default)
       {
-            throw new NotImplementedException();
+            // Check is any location with guid
+            if (!await repo.IsAnyGuidAsync(guid, ct))
+                  throw new NotFoundException(EntityType.ACTION.ToString(), guid.ToString());
+
+            return await repo.EnableAsync(guid, ct);
       }
 
 
-      public Task<Guid> UpdateAsync(UpdateActionDto dto, CancellationToken ct = default)
+      public async Task<Guid> UpdateAsync(UpdateActionDto dto, CancellationToken ct = default)
       {
-            throw new NotImplementedException();
+            // Check is any location with guid
+            if (!await repo.IsAnyGuidAsync(dto.Guid,ct))
+                  throw new NotFoundException(EntityType.ACTION.ToString(), dto.Guid.ToString());
+
+            if(await Repo.IsAnyByNameAndLocationGuidExceptCurrentAsync(dto.Name,dto.Guid,dto.LocationGuid,ct))
+                  throw new DuplicateException(EntityType.ACTION.ToString(),nameof(dto.Name));
+
+            var deviceId = await device.GetIdByGuidAsync(dto.DeviceGuid, ct);
+            var locationId = await loc.GetIdByGuidAsync(dto.LocationGuid, ct);
+
+            var d = new Domain.Entities.Actions(
+                  dto.Name,
+                  dto.Type,
+                  dto.Metadata,
+                  deviceId,
+                  locationId
+            );
+
+            await repo.UpdateAsync(d, ct);
+
+            return d.Guid;
       }
 }

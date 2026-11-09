@@ -56,12 +56,7 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
       public DbSet<ExceptionEvent> ExceptionEvent { get; set; }
       public DbSet<AuditTrail> AuditTrails { get; set; }
       public DbSet<CardFormat> CardFormats { get; set; }
-      public DbSet<Procedure> Procedures { get; set; }
-      public DbSet<Persistences.Entities.Action> Action { get; set; }
-      public DbSet<ProcedureAction> ProcedureActions { get; set; }
-      public DbSet<TriggerSource> TriggerSources { get; set; }
-      public DbSet<TriggerType> TriggerTypes { get; set; }
-      public DbSet<TriggerCode> TriggerCodes { get; set; }
+      
       public DbSet<Alert> Alerts { get; set; }
       public DbSet<AlertEvent> AlertEvents { get; set; }
       public DbSet<Persistences.Entities.AlertLevel> AlertLevels { get; set; }
@@ -71,6 +66,14 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
       public DbSet<Area> Areas {get; set; }
       public DbSet<MonitorGroup> MonitorGroups {get; set; }
       public DbSet<MonitorGroupComponent> MonitorGroupComponents {get; set; }
+      public DbSet<TriggerArg> TriggerArgs {get; set; }
+      public DbSet<Trigger> Triggers {get; set; }
+      public DbSet<Procedure> Procedures { get; set; }
+      public DbSet<Persistences.Entities.Action> Action { get; set; }
+      public DbSet<ProcedureAction> ProcedureActions { get; set; }
+      public DbSet<TriggerSource> TriggerSources { get; set; }
+      public DbSet<TriggerType> TriggerTypes { get; set; }
+      public DbSet<TriggerCode> TriggerCodes { get; set; }
 
       protected override void OnModelCreating(ModelBuilder modelBuilder)
       {
@@ -653,6 +656,8 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                         }
                   ).IsUnique();
 
+            // Prcedure & Trigger
+
             modelBuilder.Entity<Procedure>()
                   .HasIndex(
                         x => new
@@ -709,6 +714,36 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                         {
                               x.guid,
                               x.id
+                        }
+                  ).IsUnique();
+
+            modelBuilder.Entity<Persistences.Entities.TriggerArg>()
+                  .HasIndex(
+                        x => new
+                        {
+                              x.guid,
+                              x.id,
+                              x.trigger_code_id
+                        }
+                  ).IsUnique();
+
+            modelBuilder.Entity<Persistences.Entities.Trigger>()
+                  .HasIndex(
+                        x => new
+                        {
+                              x.guid,
+                              x.id,
+                              x.trigger_type_id,
+                              x.external_id,
+                              x.trigger_source_id,
+                              x.timezone_id,
+                              x.src_device_module_id,
+                              x.src_input_id,
+                              x.src_output_id,
+                              x.src_door_id,
+                              x.src_timezone_id,
+                              x.src_monitor_group_id,
+                              x.src_area_id
                         }
                   ).IsUnique();
 
@@ -932,6 +967,13 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   .HasForeignKey(x => x.location_id)
                   .OnDelete(DeleteBehavior.Cascade);
 
+             modelBuilder.Entity<Location>()
+                  .HasMany(x => x.triggers)
+                  .WithOne(x => x.location)
+                  .HasForeignKey(x => x.location_id)
+                  .IsRequired(false)
+                  .OnDelete(DeleteBehavior.SetNull);
+
             modelBuilder.Entity<Location>()
                   .HasMany(x => x.alert_event)
                   .WithOne(x => x.location)
@@ -1001,6 +1043,12 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
 
             modelBuilder.Entity<Device>()
                   .HasMany(x => x.areas)
+                  .WithOne(x => x.device)
+                  .HasForeignKey(x => x.device_id)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Device>()
+                  .HasMany(x => x.triggers)
                   .WithOne(x => x.device)
                   .HasForeignKey(x => x.device_id)
                   .OnDelete(DeleteBehavior.Cascade);
@@ -1335,7 +1383,14 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   .HasForeignKey(x => x.timezone_id)
                   .OnDelete(DeleteBehavior.Cascade);
 
-            // Procedure && Action
+            // Procedure && Action && Trigger
+            modelBuilder.Entity<Trigger>()
+                  .HasOne(x => x.procedure)
+                  .WithMany(x => x.triggers)
+                  .HasForeignKey(x => x.procedure_id)
+                  .IsRequired(false)
+                  .OnDelete(DeleteBehavior.SetNull);
+
             modelBuilder.Entity<Procedure>()
                   .HasMany(x => x.procedure_actions)
                   .WithOne(x => x.procedure)
@@ -1355,9 +1410,15 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<TriggerType>()
-                  .HasMany(x => x.codes)
+                  .HasMany(x => x.trigger_codes)
                   .WithOne(x => x.trigger_type)
                   .HasForeignKey(x => x.trigger_type_id)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<TriggerCode>()
+                  .HasMany(x => x.trigger_args)
+                  .WithOne(x => x.trigger_code)
+                  .HasForeignKey(x => x.trigger_code_id)
                   .OnDelete(DeleteBehavior.Cascade);
 
 
@@ -1396,7 +1457,6 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   .HasForeignKey(x => x.core_event_id)
                   .OnDelete(DeleteBehavior.Cascade);
 
-            // Area
 
 
             // Monitor Group
@@ -1418,7 +1478,6 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
             .WithOne(x => x.input)
             .HasForeignKey(x => x.input_id)
             .OnDelete(DeleteBehavior.Cascade);
-
 
 
 
@@ -1915,50 +1974,6 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                         }
                   );
 
-            // Interval 
-
-            // modelBuilder.Entity<Interval>()
-            //       .HasData(
-            //             new Interval
-            //             {
-            //                   id=1,
-            //                   start_time=new TimeOnly(0,0),
-            //                   end_time=new TimeOnly(23,59),
-            //                   location_id=1,
-            //                   is_default=true,
-            //                   day = new DayInWeek
-            //                   {
-            //                         id=1,
-            //                         sunday=true,
-            //                         monday=true,
-            //                         tuesday=true,
-            //                         wednesday=true,
-            //                         thursday=true,
-            //                         friday=true,
-            //                         saturday=true,
-            //                   }
-            //             },
-            //             new Interval
-            //             {
-            //                   id=1,
-            //                   start_time=new TimeOnly(0,0),
-            //                   end_time=new TimeOnly(0,0),
-            //                   location_id=1,
-            //                   is_default=true,
-            //                   day = new DayInWeek
-            //                   {
-            //                         id=2,
-            //                         sunday=false,
-            //                         monday=false,
-            //                         tuesday=false,
-            //                         wednesday=false,
-            //                         thursday=false,
-            //                         friday=false,
-            //                         saturday=false,
-            //                   }
-            //             }
-            //       );
-
             // Time Zone
             modelBuilder.Entity<Core.Infrastructure.Persistences.Entities.TimeZone>()
                   .HasData(
@@ -2347,6 +2362,32 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                         new TriggerCode { id = 175, name = "Alarm / Active", value = 4, trigger_type_id = 29 }
                   );
 
+            modelBuilder.Entity<TriggerArg>()
+                  .HasData(
+                        // TypeDoorCos Secure
+                        new TriggerArg { id = 1, name = "Held open pre-alarm", trigger_code_id = 77,value=1 },
+                        new TriggerArg { id = 2, name = "Forced open cancelled", trigger_code_id = 77,value=2 },
+                        new TriggerArg { id = 3, name = "Held open cancelled", trigger_code_id = 77,value=3 },
+                        new TriggerArg { id = 4, name = "Held or force cancelled", trigger_code_id = 77,value=4 },
+                        new TriggerArg { id = 5, name = "Door closed", trigger_code_id = 77,value=5 },
+                        new TriggerArg { id = 6, name = "Door opened", trigger_code_id = 77,value=6 },
+                        new TriggerArg { id = 7, name = "Held open pre-alarm cancel", trigger_code_id = 77,value=7 },
+                        // TypeDoorCos Alarm
+                        new TriggerArg { id = 8, name = "Forced open only", trigger_code_id = 78,value=1 },
+                        new TriggerArg { id = 9, name = "Held open after normal", trigger_code_id = 78,value=2 },
+                        new TriggerArg { id = 10, name = "Forced and held open", trigger_code_id = 78,value=3 },
+                        new TriggerArg { id = 11, name = "Forced open only", trigger_code_id = 78,value=4 },
+                        new TriggerArg { id = 12, name = "Forced or held open", trigger_code_id = 78,value=5 },
+                        new TriggerArg { id = 13, name = "Reader tamper", trigger_code_id = 78,value=6 },
+                        // Type Cose
+                        new TriggerArg { id = 14, name = "Inactive", trigger_code_id = 62,value=1 },
+                        new TriggerArg { id = 15, name = "Active", trigger_code_id = 62,value=2 },
+                        new TriggerArg { id = 16, name = "Alarm", trigger_code_id = 62,value=3 },
+                        new TriggerArg { id = 17, name = "Fault", trigger_code_id = 62,value=4 },
+                        new TriggerArg { id = 18, name = "Fault or alarm", trigger_code_id = 62,value=5 }
+
+                  );
+
 
 
             modelBuilder.Entity<AlertLevel>()
@@ -2455,6 +2496,8 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                               is_default=true
                         }
                   );
+
+            
 
       }
 }

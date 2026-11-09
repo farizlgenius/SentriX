@@ -11,6 +11,7 @@ public sealed class TriggerCode
       public short value {get; set; }
       public int? trigger_type_id {get; set;}
       public TriggerType? trigger_type {get; set;}
+      public ICollection<TriggerArg> trigger_args {get; set; } = default!;
       public TriggerCode()
       {
       

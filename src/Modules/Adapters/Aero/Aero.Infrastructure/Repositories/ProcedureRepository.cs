@@ -9,31 +9,241 @@ using Aero.Infrastructure.Helpers;
 using HID.Aero.ScpdNet.Wrapper;
 using Microsoft.Extensions.Logging;
 using SharedKernel.Enums;
+using SharedKernel.Helpers;
 using SharedKernel.Model;
 
 namespace Aero.Infrastructure.Repositories;
 
 public sealed class ProcedureRepository(IBaseRepository repo,ILogger<ProcedureRepository> logger) : IProcedureRepository
 {
-      // public CommandResponse ActionSpecification(string mac,short scpId,short procId,ActionType type,object values)
-      // {
-      //       CC_ACTN c = new CC_ACTN((short)type);
-      //       c.hdr.lastModified = 0;
-      //       c.hdr.scp_number = scpId;
-      //       c.hdr.proc_number = procId;
-      //       switch (type)
-      //       {
-      //             case ActionType.MonitorPointMask:
-      //             if(values is not InputMaskMetadata)
-      //                   break;
-      //             c.mp_mask.scp_number = scpId;
-      //             c.mp_mask.mp_number = values.
-      //             break;
-      //             default:
-      //             break;
-      //       }
-      // }
+      public CommandResponse ActionSpecification(string mac, short scpId, short procId,Dictionary<ActionType,string> values)
+      {
+            CC_ACTN  c = new();
 
+            // hdr
+            c.hdr = new CC_ACTN_HDR
+                  {
+                        lastModified=0,
+                        scp_number = scpId,
+                        proc_number=procId
+                  };
+
+            // mp_mask
+            if (JsonHelper.Deserialize<InputMaskMetadata>(values[ActionType.MonitorPointMask]) is var maskMeta && maskMeta is not null)
+            {
+                  c.mp_mask = new CC_MPMASK
+                  {
+                        scp_number = scpId,
+                        mp_number = maskMeta.InputNumber,    // Example property name
+                        set_clear = (short)maskMeta.SetClear     // Example property name
+                  };
+            }
+
+            // cp control
+            if (JsonHelper.Deserialize<OutputCommandMetadata>(values[ActionType.ControlPointCommand]) is var outMeta && outMeta is not null)
+            {
+                  c.cp_ctl = new CC_CPCTL
+                  {
+                        scp_number = scpId,
+                        cp_number = outMeta.OutputNumber,    
+                        command = outMeta.Command,
+                        on_time = outMeta.OnTime,
+                        off_time = outMeta.OffTime,
+                        repeat = outMeta.Repeat     
+                  }; 
+            }
+
+            // acr mode
+            if (JsonHelper.Deserialize<DoorModeMetadata>(values[ActionType.ControlPointCommand]) is var doorModeMeta && doorModeMeta is not null)
+            {
+                  c.acr_mode = new CC_ACRMODE
+                  {
+                        scp_number = scpId,
+                        acr_number = doorModeMeta.DoorNumber,    
+                        acr_mode = (short)doorModeMeta.Mode
+                  };
+            }
+
+            // fo_mask
+            if (JsonHelper.Deserialize<ForceOpenMaskMetadata>(values[ActionType.ForceOpenMask]) is var forceOpenMaskMeta && forceOpenMaskMeta is not null)
+            {
+                  c.fo_mask = new CC_FOMASK
+                  {
+                        scp_number = scpId,
+                        acr_number = forceOpenMaskMeta.DoorNumber,    
+                        set_clear = (short)forceOpenMaskMeta.SetClear
+                  };
+            }
+
+            // ho_maks
+            if (JsonHelper.Deserialize<ForceOpenMaskMetadata>(values[ActionType.HeldOpenMask]) is var heldOpenMaskMeta && heldOpenMaskMeta is not null)
+            {
+                  c.ho_mask = new CC_HOMASK {
+                        scp_number = scpId,
+                        acr_number = heldOpenMaskMeta.DoorNumber,
+                        set_clear = (short)heldOpenMaskMeta.SetClear
+                  };
+            }
+
+            // unlock
+            if (JsonHelper.Deserialize<MomentaryUnlockMetadata>(values[ActionType.MomentaryUnlock]) is var unlockMeta && unlockMeta is not null)
+            {
+                  c.unlock = new CC_UNLOCK {
+                        scp_number = scpId,
+                        acr_number = unlockMeta.DoorNumber,
+                        floor_number = unlockMeta.FloorNumber,
+                        strk_tm = unlockMeta.StrikeTime,
+                        t_held = unlockMeta.HeldOpenTime,
+                        t_held_pre = unlockMeta.HeldOpenPreAlarm,
+                  };
+            }
+
+            // proc
+            if (JsonHelper.Deserialize<ProcedureCommandMetadata>(values[ActionType.ProcedureControlCommand]) is var procMeta && procMeta is not null)
+            {
+                  c.proc = new CC_PROCEDURE {
+                        scp_number = scpId,
+                        proc_number = procMeta.ProcedureNumber,
+                        command = (short)procMeta.Command
+                  };
+            }
+
+            // tv_ctl
+            if (JsonHelper.Deserialize<TriggerVariableControlCommandMetadata>(values[ActionType.TriggerVariableControlCommand]) is var tvMeta && tvMeta is not null)
+            {
+                  c.tv_ctl = new CC_TVCOMMAND {
+                        scp_number = scpId,
+                        tv_number = tvMeta.TriggerNumber,
+                        set_clear = tvMeta.SetClear
+                  };
+            }
+
+            // tz_ctl
+            if (JsonHelper.Deserialize<TimeZoneCommandMetadata>(values[ActionType.TimeZoneControl]) is var tzMeta && tzMeta is not null)
+            {
+                  c.tz_ctl = new CC_TZCOMMAND
+                  {
+                        scp_number = scpId,
+                        tz_number = tzMeta.TimeZoneNumber,
+                        command = (short)tzMeta.Command
+
+                  };
+            }
+
+            // led_mode
+            if (JsonHelper.Deserialize<ReaderLEDMetadata>(values[ActionType.ReaderLEDModeControl]) is var ledMeta && ledMeta is not null)
+            {
+                  c.led_mode = new CC_ACRLEDMODE
+                  {
+                        scp_number = scpId,
+                        acr_number = ledMeta.DoorNumber,
+                        led_mode = (short)ledMeta.Mode
+
+                  };
+            }
+
+            // mpg
+            if (JsonHelper.Deserialize<MonitorPointGroupArmDisarmMetadata>(values[ActionType.MonitorPointGroupArmDisarmCommand]) is var mpgMeta && mpgMeta is not null)
+            {
+                  c.mpg_set = new CC_MPGSET
+                  {
+                        scp_number = scpId,
+                        mpg_number = mpgMeta.InputGroupNumber,
+                        command = (short)mpgMeta.Command,
+                        arg1=mpgMeta.Arg1
+
+                  };
+            }
+
+            // area
+            if (JsonHelper.Deserialize<AreaConfigurationMetadata>(values[ActionType.ModifyAreaConfiguration]) is var areaMeta && areaMeta is not null)
+            {
+                  c.area_set = new CC_AREASET
+                  {
+                        scp_number = scpId,
+                        area_number = areaMeta.AreaNumber,
+                        command = (short)areaMeta.Command,
+                        occ_set=areaMeta.OccSet
+
+                  };
+            }
+
+            // temp acr
+            if (JsonHelper.Deserialize<TempDoorModeMetadata>(values[ActionType.TempDoorMode]) is var tempDoorMeta && tempDoorMeta is not null)
+            {
+                  c.temp_acr_mode = new CC_TEMP_ACR_MODE
+                  {
+                        scp_number = scpId,
+                        acr_number = tempDoorMeta.DoorNumber,
+                        acr_mode = (short)tempDoorMeta.Mode,
+                        time = tempDoorMeta.Time
+
+                  };
+            }
+
+            // use limit
+            if (JsonHelper.Deserialize<UseLimitMetadata>(values[ActionType.SetUseLimit]) is var limitMeta && limitMeta is not null)
+            {
+                  c.use_limit = new CC_USELIMITI64
+                  {
+                        scp_number = scpId,
+                        cardholder_id = limitMeta.CardNo,
+                        new_limit = limitMeta.NewLimit,
+
+                  };
+            }
+
+            // Delay
+            if (values.TryGetValue(ActionType.DelayMinIncrement, out _))
+            {
+                  c.delay = new CC_DELAY
+                  {
+                        delay_time = short.Parse(values[ActionType.DelayMinIncrement])
+                  };
+            }
+
+
+
+            var result = repo.Send((short)enCfgCmnd.enCcProc, c);
+            if (result)
+            {
+                  logger.LogInformation(LogMessageHelper.CommandSuccess(Command.ActionSpecification, scpId));
+
+                  return new CommandResponse(
+                        mac,
+                        scpId,
+                        Command.ActionSpecification,
+                        SCPDLL.scpGetTagLastPosted(scpId),
+                        DateTime.UtcNow,
+                        DateTime.UtcNow,
+                       ObjectHelper.ToAsciiString(c),
+                        CommandStatus.PENDING,
+                        string.Empty,
+                        Vendor.aero,
+                        true
+                        );
+
+            }
+            else
+            {
+                  logger.LogError(LogMessageHelper.CommandUnsuccess(Command.ActionSpecification, scpId));
+                  return new CommandResponse(
+                        mac,
+                       scpId,
+                       Command.ActionSpecification,
+                       -1,
+                       DateTime.UtcNow,
+                       DateTime.UtcNow,
+                       ObjectHelper.ToAsciiString(c),
+                       CommandStatus.FAILED,
+                       string.Empty,
+                       Vendor.aero,
+                       false
+                       );
+
+            }
+            
+      }
       public CommandResponse ActionSpecification(string mac, short scpId, short procId,Dictionary<ActionType,object> values)
       {
             CC_ACTN c = new CC_ACTN

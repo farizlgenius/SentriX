@@ -6,5 +6,5 @@ namespace Aero.Application.Interfaces;
 
 public interface IProcedureRepository
 {
-      CommandResponse ActionSpecification(string mac, short scpId, short procId,Dictionary<ActionType,object> values);
+      CommandResponse ActionSpecification(string mac, short scpId, short procId,Dictionary<ActionType,string> values);
 }

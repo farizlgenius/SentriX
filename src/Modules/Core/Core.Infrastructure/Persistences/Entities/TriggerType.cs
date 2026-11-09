@@ -9,7 +9,7 @@ public sealed class TriggerType
       public Guid guid {get; set;}
       public string name {get; set;} = string.Empty;
       public short value {get; set; }
-      public ICollection<TriggerCode> codes {get; set; } = default!;
+      public ICollection<TriggerCode> trigger_codes {get; set; } = default!;
       public int? trigger_source_id {get; set;}
       public TriggerSource? trigger_source {get; set;}
       public TriggerType()

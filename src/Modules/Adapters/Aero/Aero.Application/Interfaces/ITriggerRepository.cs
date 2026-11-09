@@ -16,6 +16,7 @@ public interface ITriggerRepository
             short tranTyp,
              List<short> codeMap,
             short tz,
-            short[] trgVar
+            short[] trgVar,
+            short[] args
             );
 }

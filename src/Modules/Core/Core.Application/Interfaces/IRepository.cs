@@ -30,6 +30,9 @@ public interface IRepository<TDto, TDomain> where TDto : class where TDomain : c
   Task<bool> IsAnyRelatedEntitiesAsync(Guid guid, CancellationToken ct = default);
   Task<string> GetNameByGuidAsync(Guid guid,CancellationToken ct = default);
   Task<bool> IsAnyByNameAndLocationGuidAsync(string name,Guid guid,CancellationToken ct = default);
+  Task<bool> IsAnyByNameAndLocationIdAsync(string name,int id,CancellationToken ct = default);
+  Task<bool> IsAnyByNameAndLocationGuidExceptCurrentAsync(string name,Guid guid,Guid locationGuid,CancellationToken ct = default);
+  Task<bool> IsAnyByNameAndLocationIdExceptCurrentAsync(string name,Guid guid,int locationId,CancellationToken ct = default);
   Task<bool> IsAnyByNameAsync(string name,CancellationToken ct = default);
   Task<short> GetFreeExternalIdAsync(int max,IEnumerable<short>? exception = default,CancellationToken ct = default);
   
@@ -39,6 +42,7 @@ public interface IRepository<TDto, TDomain> where TDto : class where TDomain : c
   Task<IEnumerable<short>> GetRangeExernalIdByGuidsAsync(IEnumerable<Guid> guids,CancellationToken ct = default);
   Task<Dictionary<Guid,short>> GetExternalIdMapGuidByGuidRangeAsync(IEnumerable<Guid> guids,CancellationToken ct = default);
   Task<Dictionary<Guid,(int id,short externalId)>> GetIdAndExternalIdMapGuidByGuidRangeAsync(IEnumerable<Guid> guids,CancellationToken ct = default);
+  Task<IEnumerable<int>> GetIdsByRangeGuidAsync(IEnumerable<Guid> guids, CancellationToken ct = default);
   
   
 

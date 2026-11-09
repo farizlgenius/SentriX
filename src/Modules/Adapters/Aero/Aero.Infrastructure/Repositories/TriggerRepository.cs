@@ -24,7 +24,8 @@ public sealed class TriggerRepository(
             short tranTyp,
              List<short> codeMap,
             short tz,
-            short[] trgVar
+            short[] trgVar,
+            short[] args
             )
       {
             CC_TRGR c = new CC_TRGR();
@@ -49,6 +50,10 @@ public sealed class TriggerRepository(
             for(int i = 0; i < 4; i++)
             {
                   c.trig_var[i] = trgVar.ElementAtOrDefault(i);
+            }
+            for(int i = 0;i < 4;i++)
+            {
+                  c.arg[i] = args.ElementAtOrDefault(i);
             }
             var result = repo.Send((short)enCfgCmnd.enCcScpTimezoneExAct, c);
             if (result)

@@ -33,6 +33,7 @@ public sealed class Location : BaseEntity,IAuditableEntity
   public ICollection<AlertLevel> alert_levels {get; set; } = default!;
   public ICollection<CardFormat> card_formats {get; set; }  = default!;
   public ICollection<Area> areas {get; set; }  = default!;
+  public ICollection<Trigger> triggers {get; set; }  = default!;
 
       public Location() { }
   public Location(Core.Domain.Entities.Location d) 

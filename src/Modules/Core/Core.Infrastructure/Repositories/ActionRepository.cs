@@ -25,7 +25,20 @@ public sealed class ActionRepository(CoreDbContext context) : BaseRepository<Per
       ActionProjections.ToCommand
 ),IActionRepository
 {
-    
+      public async Task<IEnumerable<(int id, ActionType type, string metadata)>> GetActionDetailByGuidAsync(IEnumerable<Guid> guids, CancellationToken ct = default)
+      {
+            var res = await Context.Action
+                  .AsNoTracking()
+                  .Where(x => guids.Contains(x.guid))
+                  .Select(x => new
+                  {
+                        x.id,
+                        x.type,
+                        x.metadata
+                  }).ToArrayAsync(ct);
+
+            return [.. res.Select(x => (x.id,x.type,x.metadata))];
+      }
 
       public async Task<Pagination<ActionDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
       {

@@ -3,12 +3,22 @@ using Core.Contract.DTOs;
 using Core.Contract.DTOs.Trigger;
 using Core.Domain.Entities;
 using Core.Infrastructure.Persistences;
+using Core.Infrastructure.Projections;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel.Domain;
 
 namespace Core.Infrastructure.Repositories;
 
-public sealed class TriggerRepository(CoreDbContext context) : ITriggerRepository
+public sealed class TriggerRepository(CoreDbContext context) : BaseRepository<Persistences.Entities.Trigger,Domain.Entities.Trigger,TriggerDto>(
+      context,
+      d => new Persistences.Entities.Trigger(d),
+      (en,dom) =>
+      {
+            
+      },
+      TriggerProjections.ToDto,
+      TriggerProjections.ToCommand
+),ITriggerRepository
 {
       public Task AddAsync(Trigger entity, CancellationToken ct = default)
       {

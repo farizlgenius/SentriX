@@ -7,37 +7,37 @@ namespace Core.Application.Services;
 
 public sealed class TriggerService(ITriggerRepository repo) : ITrigger
 {
-      public Task<Guid> CreateAsync(CreateTriggerDto dto, CancellationToken ct = default)
+      public async Task<Guid> CreateAsync(CreateTriggerDto dto, CancellationToken ct = default)
       {
             throw new NotImplementedException();
       }
 
-      public Task<bool> DeleteByGuidAsync(Guid guid, CancellationToken ct = default)
+      public async Task<bool> DeleteByGuidAsync(Guid guid, CancellationToken ct = default)
       {
             throw new NotImplementedException();
       }
 
-      public Task<IEnumerable<Guid>> DeleteListAsync(IEnumerable<Guid> guids, CancellationToken ct = default)
+      public async Task<IEnumerable<Guid>> DeleteListAsync(IEnumerable<Guid> guids, CancellationToken ct = default)
       {
             throw new NotImplementedException();
       }
 
-      public Task<bool> DisabledAsync(Guid guid, CancellationToken ct = default)
+      public async Task<bool> DisabledAsync(Guid guid, CancellationToken ct = default)
       {
             throw new NotImplementedException();
       }
 
-      public Task<bool> EnabledAsync(Guid guid, CancellationToken ct = default)
+      public async Task<bool> EnabledAsync(Guid guid, CancellationToken ct = default)
       {
             throw new NotImplementedException();
       }
 
-      public Task<TriggerDto> GetByGuidAsync(Guid guid, CancellationToken ct = default)
+      public async Task<TriggerDto> GetByGuidAsync(Guid guid, CancellationToken ct = default)
       {
             throw new NotImplementedException();
       }
 
-      public Task<IEnumerable<TriggerDto>> GetByLocationAsync(Guid guid, CancellationToken ct = default)
+      public async Task<IEnumerable<TriggerDto>> GetByLocationAsync(Guid guid, CancellationToken ct = default)
       {
             throw new NotImplementedException();
       }
@@ -47,7 +47,7 @@ public sealed class TriggerService(ITriggerRepository repo) : ITrigger
             return await repo.GetCodeAsync(type,ct);
       }
 
-      public Task<Pagination<TriggerDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
+      public async Task<Pagination<TriggerDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
       {
             throw new NotImplementedException();
       }
@@ -62,7 +62,7 @@ public sealed class TriggerService(ITriggerRepository repo) : ITrigger
             return await repo.GetTypeAsync(source,ct);
       }
 
-      public Task<Guid> UpdateAsync(UpdateTriggerDto dto, CancellationToken ct = default)
+      public async Task<Guid> UpdateAsync(UpdateTriggerDto dto, CancellationToken ct = default)
       {
             throw new NotImplementedException();
       }

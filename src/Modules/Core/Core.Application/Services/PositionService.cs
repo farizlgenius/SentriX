@@ -63,7 +63,7 @@ public sealed class PositionService(
       public async Task<IEnumerable<Guid>> DeleteListAsync(IEnumerable<Guid> guids, CancellationToken ct = default)
       {
             // Check if guids is empty 
-            if (guids.Count() == 0)
+            if (!guids.Any())
                   throw new NotFoundException(EntityType.COMPANY.ToString());
 
             foreach (var guid in guids)
@@ -78,7 +78,7 @@ public sealed class PositionService(
                         throw new FoundRelateException(EntityType.COMPANY.ToString(), guid.ToString(), EntityType.USER.ToString());
             }
 
-            await dep.DeleteRangeAsync(guids);
+            await dep.DeleteRangeAsync(guids, ct);
 
             return guids;
       }
@@ -87,7 +87,7 @@ public sealed class PositionService(
       {
             // Check is any location with guid
             if (!await dep.IsAnyGuidAsync(guid, ct))
-                  throw new NotFoundException(EntityType.LOCATION.ToString(), guid.ToString());
+                  throw new NotFoundException(EntityType.POSITION.ToString(), guid.ToString());
 
             return await dep.DisableAsync(guid, ct);
       }
@@ -96,7 +96,7 @@ public sealed class PositionService(
       {
             // Check is any location with guid
             if (!await dep.IsAnyGuidAsync(guid, ct))
-                  throw new NotFoundException(EntityType.LOCATION.ToString(), guid.ToString());
+                  throw new NotFoundException(EntityType.POSITION.ToString(), guid.ToString());
 
             return await dep.EnableAsync(guid, ct);
       }
@@ -132,7 +132,7 @@ public sealed class PositionService(
                   throw new NotFoundException(EntityType.DEPARTMENT.ToString(), dto.DepartmentGuid.ToString());
 
 
-            var id = await com.GetIdByGuidAsync(dto.DepartmentGuid);
+            var id = await com.GetIdByGuidAsync(dto.DepartmentGuid, ct);
 
             var d = new Core.Domain.Entities.Position(
               dto.Guid,
@@ -141,7 +141,7 @@ public sealed class PositionService(
               id
             );
 
-            await dep.UpdateAsync(d);
+            await dep.UpdateAsync(d, ct);
 
             return d.Guid;
       }

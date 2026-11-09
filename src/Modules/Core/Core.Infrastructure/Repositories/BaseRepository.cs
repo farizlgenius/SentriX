@@ -7,6 +7,7 @@ using Core.Infrastructure.Persistences;
 using Core.Infrastructure.Persistences.Entities;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel.Domain;
+using SharedKernel.Enums;
 using SharedKernel.Exceptions;
 
 namespace Core.Infrastructure.Repositories;
@@ -205,7 +206,37 @@ public abstract class BaseRepository<TEntity, TDomain, TDto>(
       public async Task<bool> IsAnyByNameAndLocationGuidAsync(string name, Guid locationGuid, CancellationToken ct = default)
       {
             return await Context.Set<TEntity>()
-                  .AnyAsync(x => (x.location == null || x.location.guid == locationGuid) && x.name == name, ct);
+                  .AnyAsync(x => (x.location == null || x.location.guid == locationGuid) && (x.name == name ), ct);
+      }
+
+      public async Task<bool> IsAnyByNameAndLocationIdAsync(string name, int locationId, CancellationToken ct = default)
+      {
+            return await Context.Set<TEntity>()
+                  .AnyAsync(x => (x.location == null || x.location_id == locationId) && (x.name == name ), ct);
+      }
+
+      public async Task<bool> IsAnyByNameAndLocationGuidExceptCurrentAsync(string name,Guid guid,Guid locationGuid,CancellationToken ct = default)
+      {
+            var oldName = await Context.Set<TEntity>()
+                  .AsNoTracking()
+                  .Where(x => x.guid == guid)
+                  .Select(x => x.name)
+                  .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(typeof(TEntity).Name,"Name");
+
+            return await Context.Set<TEntity>()
+                  .AnyAsync(x => (x.location == null || x.location.guid == locationGuid) && x.name == name && name != oldName, ct);
+      }
+
+      public async Task<bool> IsAnyByNameAndLocationIdExceptCurrentAsync(string name,Guid guid,int locationId,CancellationToken ct = default)
+      {
+            var oldName = await Context.Set<TEntity>()
+                  .AsNoTracking()
+                  .Where(x => x.guid == guid)
+                  .Select(x => x.name)
+                  .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(typeof(TEntity).Name,"Name");
+
+            return await Context.Set<TEntity>()
+                  .AnyAsync(x => (x.location == null || x.location_id == locationId) && x.name == name && name != oldName, ct);
       }
 
       public async Task<bool> IsAnyGuidAsync(Guid guid, CancellationToken ct = default)
@@ -378,6 +409,15 @@ public abstract class BaseRepository<TEntity, TDomain, TDto>(
                   .ToArrayAsync(cancellationToken: ct); 
 
             return res.ToDictionary(x => x.guid,x => (id:x.id,externalId:x.externalId ?? -1));
+      }
+
+      public async Task<IEnumerable<int>> GetIdsByRangeGuidAsync(IEnumerable<Guid> guids, CancellationToken ct = default)
+      {
+            return await Context.Set<TEntity>()
+                  .AsNoTracking()
+                  .Where(x => guids.Contains(x.guid))
+                  .Select(x => x.id)
+                  .ToArrayAsync(ct);
       }
 }
 

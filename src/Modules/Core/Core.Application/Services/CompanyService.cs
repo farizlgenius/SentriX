@@ -62,7 +62,7 @@ public sealed class CompanyService(
   public async Task<IEnumerable<Guid>> DeleteListAsync(IEnumerable<Guid> guids, CancellationToken ct = default)
   {
     // Check if guids is empty 
-    if (guids.Count() == 0)
+    if (!guids.Any())
       throw new NotFoundException(EntityType.COMPANY.ToString());
 
     foreach (var guid in guids)
@@ -79,7 +79,7 @@ public sealed class CompanyService(
         throw new FoundRelateException(EntityType.COMPANY.ToString(), guid.ToString(), EntityType.USER.ToString());
     }
 
-    await repo.DeleteRangeAsync(guids);
+    await repo.DeleteRangeAsync(guids, ct);
 
     return guids;
   }
