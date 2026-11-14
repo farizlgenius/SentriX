@@ -6,15 +6,15 @@ namespace Aero.Application.Interfaces;
 public interface ITriggerRepository
 {
       CommandResponse TriggerSpecification(
-            string mac, 
+           string mac, 
             short scpId,
             short trgId,
-            ProcedureCommand procCommand,
+            TriggerCommand procCommand,
             short procId,
             short srcType,
             short srcNo,
             short tranTyp,
-             List<short> codeMap,
+             IEnumerable<short> codeMap,
             short tz,
             short[] trgVar,
             short[] args

@@ -24,14 +24,12 @@ public class BaseEntity : IBaseEntity
 
   }
 
-  public BaseEntity(Guid guid,short externalId = -1,short altrExternalId=-1)
+  public BaseEntity(Guid guid,short? externalId = null,short? altrExternalId=null)
   {
     this.guid = guid;
     created_at = DateTime.UtcNow;
     updated_at = DateTime.UtcNow;
-    if(externalId != -1)
       external_id = externalId;
-    if(altrExternalId != -1)
       altr_external_id = altrExternalId;
   }
 

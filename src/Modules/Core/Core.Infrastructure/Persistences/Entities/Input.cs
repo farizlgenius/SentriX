@@ -13,6 +13,7 @@ public sealed class Input : BaseEntity,IAuditableEntity
   public int device_module_id { get; set; }
   public DeviceModule device_module { get; set; } = default!;
   public ICollection<MonitorGroupComponent> monitor_group_components { get; set; } = default!;
+  public ICollection<Trigger> triggers {get; set; } = default!;
   public Input() { }
   public Input(Domain.Entities.Input d) : base(d.Guid,d.ExternalId)
   {

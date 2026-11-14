@@ -5,8 +5,8 @@ namespace Core.Domain.Entities;
 public class BaseDomain 
 {
   public Guid Guid { get; private set; }
-  public short ExternalId { get; private set; }
-  public short AltrExternalId {get; private set; }
+  public short? ExternalId { get; private set; }
+  public short? AltrExternalId {get; private set; }
 
   public BaseDomain()
   {
@@ -15,8 +15,8 @@ public class BaseDomain
 
   public BaseDomain(
     Guid Guid,
-    short ExternalId  = -1,
-    short AltrExternalId = -1
+    short? ExternalId  = null,
+    short? AltrExternalId = null
   )
   {
     ValidationHelper.GuidEmpty(Guid, nameof(Guid));

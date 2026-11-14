@@ -17,12 +17,12 @@ public sealed class TriggerRepository(
             string mac, 
             short scpId,
             short trgId,
-            ProcedureCommand procCommand,
+            TriggerCommand procCommand,
             short procId,
             short srcType,
             short srcNo,
             short tranTyp,
-             List<short> codeMap,
+             IEnumerable<short> codeMap,
             short tz,
             short[] trgVar,
             short[] args
@@ -42,7 +42,7 @@ public sealed class TriggerRepository(
             {
                   re += (int)Math.Pow(2, code);
             }
-            if(codeMap.Count > 0)
+            if(codeMap.Any())
             {
                  c.code_map = re; 
             }

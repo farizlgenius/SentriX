@@ -17,6 +17,7 @@ public sealed class Area : BaseEntity,IAuditableEntity
       public ICollection<Door> doors_from {get; set; } = default!;
       public int? device_id {get; set; } 
       public Device? device {get; set; }
+      public ICollection<Trigger> triggers {get; set; } = default!;
 
       public Area(){}
       public Area(Domain.Entities.Area d) : base(d.Guid,d.ExternalId)

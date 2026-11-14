@@ -74,6 +74,9 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
       public DbSet<TriggerSource> TriggerSources { get; set; }
       public DbSet<TriggerType> TriggerTypes { get; set; }
       public DbSet<TriggerCode> TriggerCodes { get; set; }
+      public DbSet<TriggerMapTriggerCode> TriggerMapTriggerCodes {get; set; }
+      public DbSet<TriggerVariable> TriggerVariables {get; set; }
+      public DbSet<TriggerVariableMapTrigger> TriggerVariableMapTriggers {get; set; }
 
       protected override void OnModelCreating(ModelBuilder modelBuilder)
       {
@@ -302,6 +305,10 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   b.Property(x => x.entity).HasConversion<string>();
 
             });
+
+            modelBuilder.Entity<Persistences.Entities.TriggerVariableMapTrigger>()
+            .Property(o => o.index)
+            .HasConversion<string>();
 
 
 
@@ -744,6 +751,37 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                               x.src_timezone_id,
                               x.src_monitor_group_id,
                               x.src_area_id
+                        }
+                  ).IsUnique();
+
+            modelBuilder.Entity<Persistences.Entities.TriggerVariable>()
+                  .HasIndex(
+                        x => new
+                        {
+                              x.guid,
+                              x.id,
+                              x.external_id,
+                        }
+                  ).IsUnique();
+
+             modelBuilder.Entity<Persistences.Entities.TriggerVariableMapTrigger>()
+                  .HasIndex(
+                        x => new
+                        {
+                              x.id,
+                              x.trigger_variable_id,
+                              x.trigger_id,
+                              x.index
+                        }
+                  ).IsUnique();
+
+            modelBuilder.Entity<Persistences.Entities.TriggerArgMapTrigger>()
+                  .HasIndex(
+                        x => new
+                        {
+                              x.id,
+                              x.trigger_arg_id,
+                              x.trigger_id
                         }
                   ).IsUnique();
 
@@ -1391,6 +1429,81 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   .IsRequired(false)
                   .OnDelete(DeleteBehavior.SetNull);
 
+            // Trigger Source 
+            
+            modelBuilder.Entity<Trigger>()
+                  .HasOne(x => x.src_device_module)
+                  .WithMany(x => x.triggers)
+                  .HasForeignKey(x => x.src_device_module_id)
+                  .IsRequired(false)
+                  .OnDelete(DeleteBehavior.SetNull);
+            
+            modelBuilder.Entity<Trigger>()
+                  .HasOne(x => x.src_input)
+                  .WithMany(x => x.triggers)
+                  .HasForeignKey(x => x.src_input_id)
+                  .IsRequired(false)
+                  .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<Trigger>()
+                  .HasOne(x => x.src_output)
+                  .WithMany(x => x.triggers)
+                  .HasForeignKey(x => x.src_output_id)
+                  .IsRequired(false)
+                  .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<Trigger>()
+                  .HasOne(x => x.src_door)
+                  .WithMany(x => x.triggers)
+                  .HasForeignKey(x => x.src_door_id)
+                  .IsRequired(false)
+                  .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<Trigger>()
+                  .HasOne(x => x.src_timezone)
+                  .WithMany(x => x.src_triggers)
+                  .HasForeignKey(x => x.src_timezone_id)
+                  .IsRequired(false)
+                  .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<Trigger>()
+                  .HasOne(x => x.src_monitor_group)
+                  .WithMany(x => x.triggers)
+                  .HasForeignKey(x => x.src_monitor_group_id)
+                  .IsRequired(false)
+                  .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<Trigger>()
+                  .HasOne(x => x.src_area)
+                  .WithMany(x => x.triggers)
+                  .HasForeignKey(x => x.src_area_id)
+                  .IsRequired(false)
+                  .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<TriggerSource>()
+                  .HasMany(x => x.triggers)
+                  .WithOne(x => x.trigger_source)
+                  .HasForeignKey(x => x.trigger_source_id)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<TriggerType>()
+                  .HasMany(x => x.triggers)
+                  .WithOne(x => x.trigger_type)
+                  .HasForeignKey(x => x.trigger_type_id)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Trigger>()
+                  .HasMany(x => x.trigger_map_trigger_codes)
+                  .WithOne(x => x.trigger)
+                  .HasForeignKey(x => x.trigger_id)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<TriggerCode>()
+                  .HasMany(x => x.trigger_map_trigger_codes)
+                  .WithOne(x => x.trigger_code)
+                  .HasForeignKey(x => x.trigger_code_id)
+                  .OnDelete(DeleteBehavior.Cascade);
+
             modelBuilder.Entity<Procedure>()
                   .HasMany(x => x.procedure_actions)
                   .WithOne(x => x.procedure)
@@ -1419,6 +1532,30 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   .HasMany(x => x.trigger_args)
                   .WithOne(x => x.trigger_code)
                   .HasForeignKey(x => x.trigger_code_id)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Trigger>()
+                  .HasMany(x => x.trigger_variable_map_trigger)
+                  .WithOne(x => x.trigger)
+                  .HasForeignKey(x => x.trigger_id)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<TriggerVariable>()
+                  .HasMany(x => x.trigger_variable_map_trigger)
+                  .WithOne(x => x.trigger_variable)
+                  .HasForeignKey(x => x.trigger_variable_id)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Trigger>()
+                  .HasMany(x => x.trigger_arg_map_trigger)
+                  .WithOne(x => x.trigger)
+                  .HasForeignKey(x => x.trigger_id)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<TriggerArg>()
+                  .HasMany(x => x.trigger_arg_map_trigger)
+                  .WithOne(x => x.trigger_arg)
+                  .HasForeignKey(x => x.trigger_arg_id)
                   .OnDelete(DeleteBehavior.Cascade);
 
 

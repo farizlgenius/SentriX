@@ -54,6 +54,8 @@ public class TriggerController(ITrigger trigger) : ControllerBase
             return Ok(res);
       }
 
+      
+
       [HttpGet("source")]
       public async Task<IActionResult> GetSourceAsync()
       {
@@ -92,4 +94,67 @@ public class TriggerController(ITrigger trigger) : ControllerBase
             var res = await trigger.GetCodeAsync(type);
             return Ok(res);
       }
+
+      // Variable 
+      [HttpGet("variable/pagination")]
+      public async Task<IActionResult> GetVariablePaginationAsync([FromQuery] PaginationParams param)
+      {
+            var res = await trigger.GetPaginationAsync(param);
+            return Ok(res);
+      }
+
+      [HttpGet("variable/{guid}")]
+      public async Task<IActionResult> GetVariableByGuidAsync(Guid guid)
+      {
+            var res = await trigger.GetByGuidAsync(guid);
+            return Ok(res);
+      }
+
+      [HttpPut("variable")]
+      public async Task<IActionResult> UpdateVariableAsync([FromBody] UpdateTriggerDto dto)
+      {
+            var res = await trigger.UpdateAsync(dto);
+            return Ok(res);
+      }
+
+      [HttpDelete("variable/{guid}")]
+      public async Task<IActionResult> DeleteVariableAsync(Guid guid)
+      {
+            var res = await trigger.DeleteByGuidAsync(guid);
+            return Ok(res);
+      }
+
+      [HttpDelete("variable/list")]
+      public async Task<IActionResult> DeleteVariableListAsync(IEnumerable<Guid> guids)
+      {
+            var res = await trigger.DeleteListAsync(guids);
+            return Ok(res);
+      }
+
+      [HttpPost("variable")]
+      public async Task<IActionResult> CreateVariableAsync([FromBody] CreateTriggerDto dto)
+      {
+            var res = await trigger.CreateAsync(dto);
+            return Ok(res);
+      }
+
+
+      [HttpPut("variable/enable/{guid}")]
+      public async Task<IActionResult> EnableVariableAsync(Guid guid)
+      {
+
+            var res = await trigger.EnabledAsync(guid);
+            return Ok(res);
+      }
+
+      [HttpPut("variable/disable/{guid}")]
+      public async Task<IActionResult> DisableVariableAsync(Guid guid)
+      {
+
+
+            var res = await trigger.DisabledAsync(guid);
+            return Ok(res);
+      }
+
+
 }

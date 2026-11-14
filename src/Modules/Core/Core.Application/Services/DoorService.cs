@@ -231,7 +231,7 @@ public sealed class DoorService(
         dev.DeviceExternalId,
         buzzerMapModuleId.Item2,
         (short)d.Buzzer.SlotNo,
-        d.Buzzer.ExternalId,
+        d.Buzzer.ExternalId ?? -1,
         d.Buzzer.Metadata,
         ct
       );

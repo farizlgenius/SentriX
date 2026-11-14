@@ -12,6 +12,7 @@ public sealed class TriggerType
       public ICollection<TriggerCode> trigger_codes {get; set; } = default!;
       public int? trigger_source_id {get; set;}
       public TriggerSource? trigger_source {get; set;}
+      public ICollection<Trigger> triggers {get; set; } = default!;
       public TriggerType()
       {
             

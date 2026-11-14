@@ -10,6 +10,7 @@ public sealed class TriggerSource
       public string name {get; set;} = string.Empty;
       public short value {get; set; }
       public ICollection<TriggerType> types {get; set; } = default!;
+      public ICollection<Trigger> triggers {get; set; } = default!;
       public TriggerSource()
       {
       }

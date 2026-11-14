@@ -11,7 +11,7 @@ namespace Core.Application.Interfaces;
 
 public interface IRepository<TDto, TDomain> where TDto : class where TDomain : class
 {
-  Task<(int,short)> GetIdAndExternalIdByGuidAsync(Guid guid,CancellationToken ct = default);
+  Task<(int id,short externalId)> GetIdAndExternalIdByGuidAsync(Guid guid,CancellationToken ct = default);
   Task<int> GetIdByGuidAsync(Guid guid, CancellationToken ct = default);
   Task<Guid> GetGuidByIdAsync(int id,CancellationToken ct = default);
   Task<TDto> GetAsync(Guid guid, CancellationToken ct = default);
@@ -42,8 +42,6 @@ public interface IRepository<TDto, TDomain> where TDto : class where TDomain : c
   Task<IEnumerable<short>> GetRangeExernalIdByGuidsAsync(IEnumerable<Guid> guids,CancellationToken ct = default);
   Task<Dictionary<Guid,short>> GetExternalIdMapGuidByGuidRangeAsync(IEnumerable<Guid> guids,CancellationToken ct = default);
   Task<Dictionary<Guid,(int id,short externalId)>> GetIdAndExternalIdMapGuidByGuidRangeAsync(IEnumerable<Guid> guids,CancellationToken ct = default);
-  Task<IEnumerable<int>> GetIdsByRangeGuidAsync(IEnumerable<Guid> guids, CancellationToken ct = default);
-  
-  
+  Task<IEnumerable<int>> GetIdsByRangeGuidAsync(IEnumerable<Guid> guids, CancellationToken ct = default);  
 
 }
