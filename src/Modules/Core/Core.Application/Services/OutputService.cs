@@ -143,6 +143,11 @@ public sealed class OutputService(
             return true;
       }
 
+      public async Task<IEnumerable<OptionDto>> GetOptionByDeviceAsync(Guid guid, CancellationToken ct = default)
+      {
+           return await repo.GetOptionByDeviceAsync(guid,ct);
+      }
+
       public async Task<bool> GetStatusAsync(Guid guid, CancellationToken ct = default)
       {
 

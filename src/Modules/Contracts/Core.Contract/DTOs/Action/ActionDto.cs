@@ -5,12 +5,11 @@ namespace Core.Contract.DTOs.Action;
 public sealed record ActionDto(
       Guid Guid,
       string Name,
-      string DeviceName,
       Guid DeviceGuid,
+      string DeviceName,
       ActionType Type,
-      string Metadata,
-      string LocationName,
-      Guid LocationGuid,
-      bool IsActive,
-      bool IsDefault
+      Guid? SrcGuid = null,
+      string? Metadata = null,
+      bool IsActive=true,
+      bool IsDefault=false
 );

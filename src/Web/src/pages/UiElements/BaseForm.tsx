@@ -98,8 +98,8 @@ export const BaseForm: React.FC<PropsWithChildren<FormProp>> = ({
       <div className={layout ? "grid grid-cols-1 gap-5 xl:grid-cols-5" : ""}>
         {layout && (
           <FormSection
-            overall="Door layout detail"
-            title="Door component layout"
+            overall="Sentrix"
+            title="Door Layout"
             description="Click a component to edit it. Green means configured; blue marks your selection."
             className="xl:col-span-3"
           >
@@ -109,11 +109,11 @@ export const BaseForm: React.FC<PropsWithChildren<FormProp>> = ({
 
         {tabContent.map((a: FormContent, i: number) => {
           return (
-            <React.Fragment key={i}>
+            <React.Fragment  key={i}>
               {activeTab == a.label && (
-                 <div className="flex flex-col h-full justify-between xl:col-span-2">
+                 <FormSection overall={"Sentrix"} title={a.title} description={a.description} className="flex flex-col col-span-2">
                     <div className="text-sm text-gray-500 dark:text-gray-400">
-                      {a.content}
+                          {a.content}
                     </div>
                     <div>
                       <div className="mt-6 flex w-full items-center justify-between gap-3">
@@ -171,7 +171,7 @@ export const BaseForm: React.FC<PropsWithChildren<FormProp>> = ({
 
                     </div>
                     
-                  </div>
+                  </FormSection>
               )}
             </React.Fragment>
           );

@@ -1,12 +1,9 @@
 import { useEffect, useState } from "react";
 import PageBreadcrumb from "../../components/common/PageBreadCrumb";
 import { BaseTable } from "../UiElements/BaseTable";
-import { ProcedureDto } from "../../model/Procedure/ProcedureDto";
 import { BaseForm } from "../UiElements/BaseForm";
 import { FormContent } from "../../model/Form/FormContent";
-import RemoveModal from "../UiElements/RemoveModal";
 import { send } from "../../api/api";
-import { ProcedureEndpoint } from "../../endpoint/ProcedureEndpoint";
 import Helper from "../../utility/Helper";
 import { useToast } from "../../context/ToastContext";
 import { useLocation } from "../../context/LocationContext";
@@ -14,7 +11,7 @@ import { TriggerIcon } from "../../icons";
 import { useAuth } from "../../context/AuthContext";
 import { FeatureId } from "../../enum/FeatureId";
 import { FormType } from "../../model/Form/FormProp";
-import { ProcedureToast } from "../../model/ToastMessage";
+import { ActionToast } from "../../model/ToastMessage";
 import { usePopup } from "../../context/PopupContext";
 import { usePagination } from "../../context/PaginationContext";
 import { ActionDto } from "../../model/Action/ActionDto";
@@ -49,10 +46,12 @@ export const Action = () => {
     name: "",
     guid: "",
     metadata: "",
-    deviceGuid :null,
     isActive: true,
     isDefault: false,
-    type: ActionType.DeleteAll
+    type: ActionType.DeleteAll,
+    deviceGuid: "",
+    deviceName: "",
+    srcGuid: null
   };
   const [dto, setDto] = useState<ActionDto>(defaultDto);
 
@@ -62,7 +61,7 @@ export const Action = () => {
     setConfirmRemove(() => async () => {
       const res = await send.delete(ActionEndpoint.DELETE(data.guid));
       if (
-        Helper.handleToastByResCode(res, ProcedureToast.DELETE, toggleToast)
+        Helper.handleToastByResCode(res, ActionToast.DELETE, toggleToast)
       ) {
         setRemove(false);
         toggleRefresh();
@@ -102,11 +101,11 @@ export const Action = () => {
           selectedObject.map((a: ActionDto) => {
             data.push(a.guid);
           });
-          var res = await send.post(ProcedureEndpoint.DLETE_RANGE, data);
+          var res = await send.post(ActionEndpoint.DLETE_RANGE, data);
           if (
             Helper.handleToastByResCode(
               res,
-              ProcedureToast.DELETE_RANGE,
+              ActionToast.DELETE_RANGE,
               toggleToast,
             )
           ) {
@@ -117,10 +116,11 @@ export const Action = () => {
         setRemove(true);
         break;
       case "create":
+        dto.metadata = JSON.stringify(dto.metadata);
         setConfirmCreate(() => async () => {
-          const res = await send.post(ProcedureEndpoint.CREATE, dto);
+          const res = await send.post(ActionEndpoint.CREATE, dto);
           if (
-            Helper.handleToastByResCode(res, ProcedureToast.CREATE, toggleToast)
+            Helper.handleToastByResCode(res, ActionToast.CREATE, toggleToast)
           ) {
             setForm(false);
             setDto(defaultDto);
@@ -131,9 +131,9 @@ export const Action = () => {
         break;
       case "update":
         setConfirmUpdate(() => async () => {
-          const res = await send.put(ProcedureEndpoint.UPDATE, dto);
+          const res = await send.put(ActionEndpoint.UPDATE, dto);
           if (
-            Helper.handleToastByResCode(res, ProcedureToast.UPDATE, toggleToast)
+            Helper.handleToastByResCode(res, ActionToast.UPDATE, toggleToast)
           ) {
             setForm(false);
             setDto(defaultDto);
@@ -180,6 +180,8 @@ export const Action = () => {
     {
       label: "Action",
       icon: <TriggerIcon />,
+      description:"Please fill out the detail below for action setting",
+      title:"Action",
       content: (
         <ActionForm
           handleClick={handleClick}

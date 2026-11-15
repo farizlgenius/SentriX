@@ -69,7 +69,7 @@ export const FormSection: React.FC<FormSectionProps> = ({
 }) => {
   return (
     <section
-      className={`rounded-[20px] border border-[var(--app-panel-border)] bg-[var(--app-panel-muted)]/35 p-4 sm:p-5 lg:p-6 ${className}`}
+      className={`rounded-[20px] border border-[var(--app-panel-border)] bg-[var(--app-panel-bg)] shadow-theme-sm p-4 sm:p-5 lg:p-6 ${className}`}
     >
       {(title || description || overall) && (
         <div className="mb-5">
@@ -100,7 +100,10 @@ export const FormSection: React.FC<FormSectionProps> = ({
           )} */}
         </div>
       )}
-      {children}
+      <div className="flex flex-col justify-between h-full">
+        {children}
+      </div>
+      
     </section>
   );
 };

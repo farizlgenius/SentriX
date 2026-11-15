@@ -220,6 +220,14 @@ const acsNavItems: NavItem[] = [
       { name: "Adapter Logs", path: "/adapter" },
       { name: "Error Logs", path: "/exception" },
     ],
+    // subItems: [
+    //   { name: "Aero", path: "/aero" },
+    //   { name: "Card Format", path: "/cardformat" },
+    //   { name: "Password Rule", path: "/pass" },
+    //   // { name: "Send Command", path: "/command" },
+    //   // { name: "Adapter Logs", path: "/adapter" },
+    //   { name: "Error Logs", path: "/exception" },
+    // ],
   },
 ];
 

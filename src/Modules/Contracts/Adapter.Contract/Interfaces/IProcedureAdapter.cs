@@ -4,7 +4,14 @@ namespace Adapter.Contract.Interfaces;
 
 public interface IProcedureAdapter
 {
-     Task AddProcedureAsync(string mac, string ip,short deviceId,short procId, Dictionary<ActionType,string> metadata,CancellationToken ct = default);
+     Task AddProcedureAsync(
+          string mac, 
+          string ip,
+          short deviceId,
+          short procId, 
+          IEnumerable<(ActionType type,string? metadata,short? externalId,int sequence)> actions,
+          CancellationToken ct = default
+     );
      Task DeleteProcedureAsync(
           string mac,
           string ip,

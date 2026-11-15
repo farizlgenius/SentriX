@@ -10,12 +10,11 @@ public static class ActionProjections
       x => new ActionDto(
             x.guid,
             x.name,
-            x.device.name,
             x.device.guid,
+            x.device.name,
             x.type,
+            null,
             x.metadata,
-            x.location == null ? "" : x.location.name,
-            x.location == null ? Guid.Empty : x.location.guid,
             x.is_active,
             x.is_default
       );

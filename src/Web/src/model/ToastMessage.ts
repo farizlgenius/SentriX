@@ -168,6 +168,13 @@ export enum ProcedureToast {
     UPDATE = "Update Procedure"
 }
 
+export enum ActionToast {
+    CREATE = "Create Action",
+    DELETE = "Delete Action",
+    DELETE_RANGE = "Delete Action",
+    UPDATE = "Update Action"
+}
+
 
 export enum AlertToast {
     CREATE = "Create Alert",

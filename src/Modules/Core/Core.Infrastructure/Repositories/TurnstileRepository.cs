@@ -21,7 +21,7 @@ public sealed class TurnstileRepository(CoreDbContext context) : BaseRepository<
     context.Lanes.RemoveRange(en.lanes);
     en.lanes.Clear();
 
-    en.lanes = dom.Lanes.Select(x => new Persistences.Entities.Lane(x)).ToList();
+    en.lanes = [.. dom.Lanes.Select(x => new Persistences.Entities.Lane(x))];
     en.updated_at = DateTime.UtcNow;
   },
   TurnstileProjections.ToDto,

@@ -151,6 +151,10 @@ public static class CoreDependencyInjection
     services.AddScoped<ITrigger,TriggerService>();
     services.AddScoped<ITriggerRepository,TriggerRepository>();
 
+    // Trigger Var
+    services.AddScoped<ITriggerVariable,TriggerVariableService>();
+    services.AddScoped<ITriggerVariableRepository,TriggerVariableRepository>();
+
     // alert
     services.AddScoped<IAlert,AlertService>();
     services.AddScoped<IAlertRepository,AlertRepository>();

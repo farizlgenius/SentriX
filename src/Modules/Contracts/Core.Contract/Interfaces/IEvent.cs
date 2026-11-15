@@ -12,7 +12,7 @@ public interface IEvent : IService<EventDto, CreateEventDto, UpdateEventDto>
 {
 
       Task<Pagination<AdapterEventDto>> GetAdapterPaginationAsync(PaginationParams param,CancellationToken ct = default);
-
+      Task<Pagination<AdapterEventDto>> GetAdapterAsciiPaginationAsync(PaginationParams param, CancellationToken ct = default);
       Task UpdateAdapterEventStatusAsync(string mac,int componentId,int tag,CommandStatus status,string reason,CancellationToken ct= default);
       Task<Pagination<ExceptionEventDto>> GetExceptionPaginationAsync(PaginationParams param,CancellationToken ct = default);
       Task InsertExceptionEventAsync(string method,string path, string exception, string innerException, string stackTrace, CancellationToken ct = default);

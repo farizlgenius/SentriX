@@ -60,7 +60,6 @@ namespace Core.Infrastructure.Migrations
                         .HasColumnType("integer");
 
                     b.Property<string>("metadata")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("name")
@@ -5436,6 +5435,9 @@ namespace Core.Infrastructure.Migrations
                     b.Property<int>("procedure_id")
                         .HasColumnType("integer");
 
+                    b.Property<int>("sequence")
+                        .HasColumnType("integer");
+
                     b.HasKey("id");
 
                     b.HasIndex("action_id");
@@ -5999,6 +6001,434 @@ namespace Core.Infrastructure.Migrations
                     b.HasIndex("timezone_id");
 
                     b.ToTable("TimeZoneIntervals", "core");
+                });
+
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Trigger", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<short?>("altr_external_id")
+                        .HasColumnType("smallint");
+
+                    b.Property<int>("command")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("created_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.Property<int>("device_id")
+                        .HasColumnType("integer");
+
+                    b.Property<short?>("external_id")
+                        .HasColumnType("smallint");
+
+                    b.Property<Guid>("guid")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<bool>("is_active")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("is_default")
+                        .HasColumnType("boolean");
+
+                    b.Property<int?>("location_id")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("procedure_id")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("source_component_type")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("src_area_id")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("src_device_module_id")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("src_door_id")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("src_input_id")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("src_monitor_group_id")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("src_output_id")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("src_timezone_id")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("timezone_id")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("timezoneid")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("trigger_source_id")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("trigger_type_id")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("updated_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("device_id");
+
+                    b.HasIndex("location_id");
+
+                    b.HasIndex("procedure_id");
+
+                    b.HasIndex("src_area_id");
+
+                    b.HasIndex("src_device_module_id");
+
+                    b.HasIndex("src_door_id");
+
+                    b.HasIndex("src_input_id");
+
+                    b.HasIndex("src_monitor_group_id");
+
+                    b.HasIndex("src_output_id");
+
+                    b.HasIndex("src_timezone_id");
+
+                    b.HasIndex("timezoneid");
+
+                    b.HasIndex("trigger_source_id");
+
+                    b.HasIndex("trigger_type_id");
+
+                    b.HasIndex("guid", "id", "trigger_type_id", "external_id", "trigger_source_id", "timezone_id", "src_device_module_id", "src_input_id", "src_output_id", "src_door_id", "src_timezone_id", "src_monitor_group_id", "src_area_id")
+                        .IsUnique();
+
+                    b.ToTable("Triggers", "core");
+                });
+
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.TriggerArg", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<short?>("altr_external_id")
+                        .HasColumnType("smallint");
+
+                    b.Property<DateTime>("created_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.Property<short?>("external_id")
+                        .HasColumnType("smallint");
+
+                    b.Property<Guid>("guid")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<bool>("is_active")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("is_default")
+                        .HasColumnType("boolean");
+
+                    b.Property<int?>("location_id")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("locationid")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("trigger_code_id")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("updated_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.Property<short>("value")
+                        .HasColumnType("smallint");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("locationid");
+
+                    b.HasIndex("trigger_code_id");
+
+                    b.HasIndex("guid", "id", "trigger_code_id")
+                        .IsUnique();
+
+                    b.ToTable("TriggerArgs", "core");
+
+                    b.HasData(
+                        new
+                        {
+                            id = 1,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
+                            name = "Held open pre-alarm",
+                            trigger_code_id = 77,
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            value = (short)1
+                        },
+                        new
+                        {
+                            id = 2,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
+                            name = "Forced open cancelled",
+                            trigger_code_id = 77,
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            value = (short)2
+                        },
+                        new
+                        {
+                            id = 3,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
+                            name = "Held open cancelled",
+                            trigger_code_id = 77,
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            value = (short)3
+                        },
+                        new
+                        {
+                            id = 4,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
+                            name = "Held or force cancelled",
+                            trigger_code_id = 77,
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            value = (short)4
+                        },
+                        new
+                        {
+                            id = 5,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
+                            name = "Door closed",
+                            trigger_code_id = 77,
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            value = (short)5
+                        },
+                        new
+                        {
+                            id = 6,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
+                            name = "Door opened",
+                            trigger_code_id = 77,
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            value = (short)6
+                        },
+                        new
+                        {
+                            id = 7,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
+                            name = "Held open pre-alarm cancel",
+                            trigger_code_id = 77,
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            value = (short)7
+                        },
+                        new
+                        {
+                            id = 8,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
+                            name = "Forced open only",
+                            trigger_code_id = 78,
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            value = (short)1
+                        },
+                        new
+                        {
+                            id = 9,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
+                            name = "Held open after normal",
+                            trigger_code_id = 78,
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            value = (short)2
+                        },
+                        new
+                        {
+                            id = 10,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
+                            name = "Forced and held open",
+                            trigger_code_id = 78,
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            value = (short)3
+                        },
+                        new
+                        {
+                            id = 11,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
+                            name = "Forced open only",
+                            trigger_code_id = 78,
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            value = (short)4
+                        },
+                        new
+                        {
+                            id = 12,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
+                            name = "Forced or held open",
+                            trigger_code_id = 78,
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            value = (short)5
+                        },
+                        new
+                        {
+                            id = 13,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
+                            name = "Reader tamper",
+                            trigger_code_id = 78,
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            value = (short)6
+                        },
+                        new
+                        {
+                            id = 14,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
+                            name = "Inactive",
+                            trigger_code_id = 62,
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            value = (short)1
+                        },
+                        new
+                        {
+                            id = 15,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
+                            name = "Active",
+                            trigger_code_id = 62,
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            value = (short)2
+                        },
+                        new
+                        {
+                            id = 16,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
+                            name = "Alarm",
+                            trigger_code_id = 62,
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            value = (short)3
+                        },
+                        new
+                        {
+                            id = 17,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
+                            name = "Fault",
+                            trigger_code_id = 62,
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            value = (short)4
+                        },
+                        new
+                        {
+                            id = 18,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            is_active = true,
+                            is_default = false,
+                            name = "Fault or alarm",
+                            trigger_code_id = 62,
+                            updated_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            value = (short)5
+                        });
+                });
+
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.TriggerArgMapTrigger", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<int>("trigger_arg_id")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("trigger_id")
+                        .HasColumnType("integer");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("trigger_arg_id");
+
+                    b.HasIndex("trigger_id");
+
+                    b.HasIndex("id", "trigger_arg_id", "trigger_id")
+                        .IsUnique();
+
+                    b.ToTable("TriggerArgMapTrigger", "core");
                 });
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.TriggerCode", b =>
@@ -7468,6 +7898,29 @@ namespace Core.Infrastructure.Migrations
                         });
                 });
 
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.TriggerMapTriggerCode", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<int>("trigger_code_id")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("trigger_id")
+                        .HasColumnType("integer");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("trigger_code_id");
+
+                    b.HasIndex("trigger_id");
+
+                    b.ToTable("TriggerMapTriggerCodes", "core");
+                });
+
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.TriggerSource", b =>
                 {
                     b.Property<int>("id")
@@ -8005,6 +8458,107 @@ namespace Core.Infrastructure.Migrations
                             trigger_source_id = 18,
                             value = (short)12
                         });
+                });
+
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.TriggerVariable", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<short?>("altr_external_id")
+                        .HasColumnType("smallint");
+
+                    b.Property<DateTime>("created_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.Property<int>("device_id")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("deviceid")
+                        .HasColumnType("integer");
+
+                    b.Property<short?>("external_id")
+                        .HasColumnType("smallint");
+
+                    b.Property<Guid>("guid")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<bool>("is_active")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("is_default")
+                        .HasColumnType("boolean");
+
+                    b.Property<int?>("location_id")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("locationid")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("trigger_id")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("triggerid")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("updated_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("deviceid");
+
+                    b.HasIndex("locationid");
+
+                    b.HasIndex("triggerid");
+
+                    b.HasIndex("guid", "id", "external_id")
+                        .IsUnique();
+
+                    b.ToTable("TriggerVariables", "core");
+                });
+
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.TriggerVariableMapTrigger", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<string>("index")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("trigger_id")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("trigger_variable_id")
+                        .HasColumnType("integer");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("trigger_id");
+
+                    b.HasIndex("trigger_variable_id");
+
+                    b.HasIndex("id", "trigger_variable_id", "trigger_id", "index")
+                        .IsUnique();
+
+                    b.ToTable("TriggerVariableMapTriggers", "core");
                 });
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Turnstile", b =>
@@ -9250,14 +9804,167 @@ namespace Core.Infrastructure.Migrations
                     b.Navigation("timezone");
                 });
 
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Trigger", b =>
+                {
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.Device", "device")
+                        .WithMany("triggers")
+                        .HasForeignKey("device_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.Location", "location")
+                        .WithMany("triggers")
+                        .HasForeignKey("location_id")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.Procedure", "procedure")
+                        .WithMany("triggers")
+                        .HasForeignKey("procedure_id")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.Area", "src_area")
+                        .WithMany("triggers")
+                        .HasForeignKey("src_area_id")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.DeviceModule", "src_device_module")
+                        .WithMany("triggers")
+                        .HasForeignKey("src_device_module_id")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.Door", "src_door")
+                        .WithMany("triggers")
+                        .HasForeignKey("src_door_id")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.Input", "src_input")
+                        .WithMany("triggers")
+                        .HasForeignKey("src_input_id")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.MonitorGroup", "src_monitor_group")
+                        .WithMany("triggers")
+                        .HasForeignKey("src_monitor_group_id")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.Output", "src_output")
+                        .WithMany("triggers")
+                        .HasForeignKey("src_output_id")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.TimeZone", "src_timezone")
+                        .WithMany("src_triggers")
+                        .HasForeignKey("src_timezone_id")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.TimeZone", "timezone")
+                        .WithMany("triggers")
+                        .HasForeignKey("timezoneid")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.TriggerSource", "trigger_source")
+                        .WithMany("triggers")
+                        .HasForeignKey("trigger_source_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.TriggerType", "trigger_type")
+                        .WithMany("triggers")
+                        .HasForeignKey("trigger_type_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("device");
+
+                    b.Navigation("location");
+
+                    b.Navigation("procedure");
+
+                    b.Navigation("src_area");
+
+                    b.Navigation("src_device_module");
+
+                    b.Navigation("src_door");
+
+                    b.Navigation("src_input");
+
+                    b.Navigation("src_monitor_group");
+
+                    b.Navigation("src_output");
+
+                    b.Navigation("src_timezone");
+
+                    b.Navigation("timezone");
+
+                    b.Navigation("trigger_source");
+
+                    b.Navigation("trigger_type");
+                });
+
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.TriggerArg", b =>
+                {
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.Location", "location")
+                        .WithMany()
+                        .HasForeignKey("locationid");
+
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.TriggerCode", "trigger_code")
+                        .WithMany("trigger_args")
+                        .HasForeignKey("trigger_code_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("location");
+
+                    b.Navigation("trigger_code");
+                });
+
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.TriggerArgMapTrigger", b =>
+                {
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.TriggerArg", "trigger_arg")
+                        .WithMany("trigger_arg_map_trigger")
+                        .HasForeignKey("trigger_arg_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.Trigger", "trigger")
+                        .WithMany("trigger_arg_map_trigger")
+                        .HasForeignKey("trigger_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("trigger");
+
+                    b.Navigation("trigger_arg");
+                });
+
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.TriggerCode", b =>
                 {
                     b.HasOne("Core.Infrastructure.Persistences.Entities.TriggerType", "trigger_type")
-                        .WithMany("codes")
+                        .WithMany("trigger_codes")
                         .HasForeignKey("trigger_type_id")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("trigger_type");
+                });
+
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.TriggerMapTriggerCode", b =>
+                {
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.TriggerCode", "trigger_code")
+                        .WithMany("trigger_map_trigger_codes")
+                        .HasForeignKey("trigger_code_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.Trigger", "trigger")
+                        .WithMany("trigger_map_trigger_codes")
+                        .HasForeignKey("trigger_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("trigger");
+
+                    b.Navigation("trigger_code");
                 });
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.TriggerType", b =>
@@ -9268,6 +9975,50 @@ namespace Core.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("trigger_source");
+                });
+
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.TriggerVariable", b =>
+                {
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.Device", "device")
+                        .WithMany()
+                        .HasForeignKey("deviceid")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.Location", "location")
+                        .WithMany()
+                        .HasForeignKey("locationid");
+
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.Trigger", "trigger")
+                        .WithMany()
+                        .HasForeignKey("triggerid")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("device");
+
+                    b.Navigation("location");
+
+                    b.Navigation("trigger");
+                });
+
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.TriggerVariableMapTrigger", b =>
+                {
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.Trigger", "trigger")
+                        .WithMany("trigger_variable_map_trigger")
+                        .HasForeignKey("trigger_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.TriggerVariable", "trigger_variable")
+                        .WithMany("trigger_variable_map_trigger")
+                        .HasForeignKey("trigger_variable_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("trigger");
+
+                    b.Navigation("trigger_variable");
                 });
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Turnstile", b =>
@@ -9419,6 +10170,8 @@ namespace Core.Infrastructure.Migrations
                     b.Navigation("doors_from");
 
                     b.Navigation("doors_to");
+
+                    b.Navigation("triggers");
                 });
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Company", b =>
@@ -9469,6 +10222,8 @@ namespace Core.Infrastructure.Migrations
                     b.Navigation("monitor_groups");
 
                     b.Navigation("procedures");
+
+                    b.Navigation("triggers");
                 });
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.DeviceModule", b =>
@@ -9494,6 +10249,8 @@ namespace Core.Infrastructure.Migrations
                     b.Navigation("rexes");
 
                     b.Navigation("sensors");
+
+                    b.Navigation("triggers");
                 });
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Door", b =>
@@ -9521,6 +10278,8 @@ namespace Core.Infrastructure.Migrations
                     b.Navigation("rexes");
 
                     b.Navigation("sensor");
+
+                    b.Navigation("triggers");
                 });
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Face", b =>
@@ -9544,6 +10303,8 @@ namespace Core.Infrastructure.Migrations
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Input", b =>
                 {
                     b.Navigation("monitor_group_components");
+
+                    b.Navigation("triggers");
                 });
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Interval", b =>
@@ -9608,6 +10369,8 @@ namespace Core.Infrastructure.Migrations
 
                     b.Navigation("timezones");
 
+                    b.Navigation("triggers");
+
                     b.Navigation("turnstiles");
 
                     b.Navigation("user_locations");
@@ -9630,11 +10393,18 @@ namespace Core.Infrastructure.Migrations
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.MonitorGroup", b =>
                 {
                     b.Navigation("components");
+
+                    b.Navigation("triggers");
                 });
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Operator", b =>
                 {
                     b.Navigation("operator_locations");
+                });
+
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Output", b =>
+                {
+                    b.Navigation("triggers");
                 });
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Pin", b =>
@@ -9651,6 +10421,8 @@ namespace Core.Infrastructure.Migrations
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Procedure", b =>
                 {
                     b.Navigation("procedure_actions");
+
+                    b.Navigation("triggers");
                 });
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.QrCode", b =>
@@ -9679,17 +10451,51 @@ namespace Core.Infrastructure.Migrations
 
                     b.Navigation("rexes");
 
+                    b.Navigation("src_triggers");
+
                     b.Navigation("timezone_intervals");
+
+                    b.Navigation("triggers");
+                });
+
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Trigger", b =>
+                {
+                    b.Navigation("trigger_arg_map_trigger");
+
+                    b.Navigation("trigger_map_trigger_codes");
+
+                    b.Navigation("trigger_variable_map_trigger");
+                });
+
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.TriggerArg", b =>
+                {
+                    b.Navigation("trigger_arg_map_trigger");
+                });
+
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.TriggerCode", b =>
+                {
+                    b.Navigation("trigger_args");
+
+                    b.Navigation("trigger_map_trigger_codes");
                 });
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.TriggerSource", b =>
                 {
+                    b.Navigation("triggers");
+
                     b.Navigation("types");
                 });
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.TriggerType", b =>
                 {
-                    b.Navigation("codes");
+                    b.Navigation("trigger_codes");
+
+                    b.Navigation("triggers");
+                });
+
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.TriggerVariable", b =>
+                {
+                    b.Navigation("trigger_variable_map_trigger");
                 });
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Turnstile", b =>

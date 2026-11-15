@@ -36,10 +36,7 @@ const OutputForm: React.FC<PropsWithChildren<FormProp<OutputDto>>> = ({
   const [controllerOption, setControllerOption] = useState<Options[]>([]);
   const [moduleOption, setModuleOption] = useState<Options[]>([]);
   const [relayOption, setRelayOption] = useState<Options[]>([]);
-  const [offlineModeOption, setOfflineModeOption] = useState<Options[]>([]);
-  const [driveModeOption, setDriverModeOption] = useState<Options[]>([]);
   const [selectedDevice,setSelectedDevice] = useState<string>("");
-  const [controller, setController] = useState<number>(-1);
 
   const handleSelect = async (
     value: string,

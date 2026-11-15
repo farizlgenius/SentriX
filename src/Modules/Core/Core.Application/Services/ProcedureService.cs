@@ -31,7 +31,7 @@ public sealed class ProcedureService(
                   dto.Name,
                   dev.DeviceId,
                   dev.LocationId ?? 1,
-                  actions.Select(x => x.id),
+                  actions.Select(x => (x.id,x.sequence)),
                   externalId
             );
 
@@ -41,7 +41,7 @@ public sealed class ProcedureService(
                   dev.DeviceIp,
                   dev.DeviceExternalId,
                   externalId,
-                  actions.ToDictionary(x => x.type, x => x.metadata),
+                  actions.Select(x => (x.type,x.metadata,x.externalId,x.sequence)),
                   ct
             );
 
@@ -124,24 +124,32 @@ public sealed class ProcedureService(
             if (await Repo.IsAnyByNameAndLocationIdExceptCurrentAsync(dto.Name,dto.Guid,dev.LocationId ?? 1,ct))
                   throw new DuplicateException(EntityType.PROCEDURE.ToString(), nameof(dto.Name));
 
-            var externalId = await Repo.GetFreeExternalIdAsync(100, [], ct);
-            
 
-            var d = new Domain.Entities.Procedure(
+             var d = new Domain.Entities.Procedure(
+                  dto.Guid,
                   dto.Name,
                   dev.DeviceId,
                   dev.LocationId ?? 1,
-                  actions.Select(x => x.id),
-                  externalId
+                  actions.Select(x => (x.id,x.sequence)),
+                  dev.ComponentExternalId ?? -1
             );
 
             // Send command to controller 
+
+            await adapter.GetAdapter(dev.Vendor).Procedure.DeleteProcedureAsync(
+                  dev.DeviceMac,
+                  dev.DeviceIp,
+                  dev.DeviceExternalId,
+                  dev.ComponentExternalId ?? -1,
+                  ct
+            );
+
             await adapter.GetAdapter(dev.Vendor).Procedure.AddProcedureAsync(
                   dev.DeviceMac,
                   dev.DeviceIp,
                   dev.DeviceExternalId,
-                  externalId,
-                  actions.ToDictionary(x => x.type, x => x.metadata),
+                  dev.ComponentExternalId ?? -1,
+                  actions.Select(x => (x.type,x.metadata,x.externalId,x.sequence)),
                   ct
             );
 

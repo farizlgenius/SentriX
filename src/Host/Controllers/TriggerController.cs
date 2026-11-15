@@ -10,7 +10,10 @@ namespace Host.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class TriggerController(ITrigger trigger) : ControllerBase
+public class TriggerController(
+      ITrigger trigger,
+      ITriggerVariable variable
+      ) : ControllerBase
 {
       [HttpGet("pagination")]
       public async Task<IActionResult> GetPaginationAsync([FromQuery] PaginationParams param)
@@ -99,21 +102,21 @@ public class TriggerController(ITrigger trigger) : ControllerBase
       [HttpGet("variable/pagination")]
       public async Task<IActionResult> GetVariablePaginationAsync([FromQuery] PaginationParams param)
       {
-            var res = await trigger.GetPaginationAsync(param);
+            var res = await variable.GetPaginationAsync(param);
             return Ok(res);
       }
 
       [HttpGet("variable/{guid}")]
       public async Task<IActionResult> GetVariableByGuidAsync(Guid guid)
       {
-            var res = await trigger.GetByGuidAsync(guid);
+            var res = await variable.GetByGuidAsync(guid);
             return Ok(res);
       }
 
       [HttpPut("variable")]
-      public async Task<IActionResult> UpdateVariableAsync([FromBody] UpdateTriggerDto dto)
+      public async Task<IActionResult> UpdateVariableAsync([FromBody] UpdateTriggerVariableDto dto)
       {
-            var res = await trigger.UpdateAsync(dto);
+            var res = await variable.UpdateAsync(dto);
             return Ok(res);
       }
 
@@ -127,14 +130,14 @@ public class TriggerController(ITrigger trigger) : ControllerBase
       [HttpDelete("variable/list")]
       public async Task<IActionResult> DeleteVariableListAsync(IEnumerable<Guid> guids)
       {
-            var res = await trigger.DeleteListAsync(guids);
+            var res = await variable.DeleteListAsync(guids);
             return Ok(res);
       }
 
       [HttpPost("variable")]
-      public async Task<IActionResult> CreateVariableAsync([FromBody] CreateTriggerDto dto)
+      public async Task<IActionResult> CreateVariableAsync([FromBody] CreateTriggerVariableDto dto)
       {
-            var res = await trigger.CreateAsync(dto);
+            var res = await variable.CreateAsync(dto);
             return Ok(res);
       }
 
@@ -143,7 +146,7 @@ public class TriggerController(ITrigger trigger) : ControllerBase
       public async Task<IActionResult> EnableVariableAsync(Guid guid)
       {
 
-            var res = await trigger.EnabledAsync(guid);
+            var res = await variable.EnabledAsync(guid);
             return Ok(res);
       }
 
@@ -152,7 +155,7 @@ public class TriggerController(ITrigger trigger) : ControllerBase
       {
 
 
-            var res = await trigger.DisabledAsync(guid);
+            var res = await variable.DisabledAsync(guid);
             return Ok(res);
       }
 

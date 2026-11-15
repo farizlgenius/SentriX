@@ -12,6 +12,7 @@ namespace Core.Application.Interfaces;
 public interface IEventRepository : IRepository<EventDto, Event>
 {
       Task<Pagination<AdapterEventDto>> GetAdapterPaginationAsync(PaginationParams param,CancellationToken ct = default);
+      Task<Pagination<AdapterEventDto>> GetAdapterAsciiPaginationAsync(PaginationParams param, CancellationToken ct = default);
       Task<Pagination<ExceptionEventDto>> GetExceptionPaginationAsync(PaginationParams param,CancellationToken ct = default);
       Task<Pagination<AuditTrailDto>> GetAuditPaginationAsync(PaginationParams param,CancellationToken ct = default);
       Task AddAdapterAsync(AdapterEvent @event,CancellationToken ct = default);

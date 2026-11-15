@@ -1,7 +1,10 @@
-import { BaseDto } from "../BaseDto";
-import { ActionDto } from "./ActionDto";
-
-export interface ProcedureDto extends BaseDto {
+export interface ProcedureDto {
+    guid:string;
     name:string;
-    Actions:ActionDto[];
+    actions:string[];
+    location:string;
+    deviceGuid:string;
+    device:string;
+    isActive:boolean;
+    isDefault:boolean;
 }

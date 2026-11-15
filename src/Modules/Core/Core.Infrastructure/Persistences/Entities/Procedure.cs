@@ -16,6 +16,6 @@ public sealed class Procedure : BaseEntity
       {
             name = d.Name;
             device_id = d.DeviceId;
-            procedure_actions = d.ActionIds.Select(x => new ProcedureAction(x)).ToList();
+            procedure_actions = d.ActionIds.Select(x => new ProcedureAction(x.id,x.respective)).ToList();
       }
 }

@@ -7,6 +7,6 @@ public sealed record UpdateActionDto(
       string Name,
       Guid DeviceGuid,
       ActionType Type,
-      string Metadata,
-      Guid LocationGuid
+      Guid? SrcGuid = null,
+      string? Metadata = null
 );

@@ -1,0 +1,10 @@
+using Aero.Application.Enums;
+using SharedKernel.Enums;
+
+namespace Aero.Application.Metadata.Procedure;
+
+public sealed class DelayMetadata
+{
+      public int DelayTime {get; set; }
+
+}

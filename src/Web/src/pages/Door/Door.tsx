@@ -920,7 +920,7 @@ const Door = () => {
       configured: dto.type === DoorType.Dual ? configured.DoorOut: configured.Rex,
     },
     { label: "Relay", configured: configured.Relay },
-    { label: "Sensor", configured: configured.BreakGlass },
+    { label: "Sensor", configured: configured.Sensor },
   ];
   const missingRequirements = requiredSetup
     .filter((requirement) => !requirement.configured)

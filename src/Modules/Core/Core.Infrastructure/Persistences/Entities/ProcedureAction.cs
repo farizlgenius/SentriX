@@ -11,11 +11,14 @@ public sealed class ProcedureAction
       public Procedure procedure {get; set;} = default!;
       public int action_id {get; set;}
       public Action action {get; set; }= default!;
+      public int sequence {get; set; }
       public ProcedureAction(){}
       public ProcedureAction(
-            int actionId
+            int actionId,
+            int sequence
       )
       {
             action_id = actionId;
+            this.sequence = sequence;
       }
 }

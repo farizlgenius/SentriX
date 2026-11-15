@@ -14,20 +14,13 @@ public static class ProcedureProjections
                         x.guid,
                         x.name,
                         x.procedure_actions.Select(
-                              a => new ActionDto(
-                                a.action.guid,
-                                a.action.name,
-                                a.action.device.name,
-                                a.action.device.guid,
-                                a.action.type,
-                                a.action.metadata,
-                                a.action.location == null ? string.Empty : a.action.location.name,
-                                a.action.location == null ? Guid.Empty : a.action.location.guid,
-                                a.action.is_active,
-                                a.action.is_default
-                              )
+                            p => new ActionProcedureDto(
+                                p.action.guid,
+                                p.action.name,
+                                p.sequence
+                            )
                         ).ToList(),
-                        x.location == null ? string.Empty : x.location.name,
+                        x.device.guid,
                         x.device.name,
                         x.is_active,
                         x.is_default

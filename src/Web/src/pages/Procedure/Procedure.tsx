@@ -18,6 +18,7 @@ import { FormType } from "../../model/Form/FormProp";
 import { ProcedureToast } from "../../model/ToastMessage";
 import { usePopup } from "../../context/PopupContext";
 import { usePagination } from "../../context/PaginationContext";
+import { HttpStatusCode } from "axios";
 
 const HEADERS: string[] = ["Name", "Action"];
 const KEYS: string[] = ["name"];
@@ -43,13 +44,14 @@ export const Procedure = () => {
   const { setPagination } = usePagination();
   const [refresh, setRefresh] = useState<boolean>(false);
   const defaultDto: ProcedureDto = {
+    guid: "",
     name: "",
-    Actions: [],
-    componentId: 0,
-    mac: "",
-    locationId: locationId,
-    isActive: false,
-    hardwareName: "",
+    actions: [],
+    location: "",
+    device: "",
+    isActive: true,
+    isDefault: false,
+    deviceGuid: ""
   };
   const [dto, setDto] = useState<ProcedureDto>(defaultDto);
 
@@ -57,7 +59,7 @@ export const Procedure = () => {
 
   const handleRemove = (data: ProcedureDto) => {
     setConfirmRemove(() => async () => {
-      const res = await send.delete(ProcedureEndpoint.DELETE(data.componentId));
+      const res = await send.delete(ProcedureEndpoint.DELETE(data.guid));
       if (
         Helper.handleToastByResCode(res, ProcedureToast.DELETE, toggleToast)
       ) {
@@ -95,9 +97,9 @@ export const Procedure = () => {
           setInfo(true);
         }
         setConfirmRemove(() => async () => {
-          var data: number[] = [];
+          var data: string[] = [];
           selectedObject.map(async (a: ProcedureDto) => {
-            data.push(a.componentId);
+            data.push(a.guid);
           });
           var res = await send.post(ProcedureEndpoint.DLETE_RANGE, data);
           if (
@@ -152,7 +154,7 @@ export const Procedure = () => {
   const fetchData = async (
     pageNumber: number,
     pageSize: number,
-    locationId?: number,
+    locationGuid?: string,
     search?: string,
     startDate?: string,
     endDate?: string,
@@ -161,17 +163,16 @@ export const Procedure = () => {
       ProcedureEndpoint.PAGINATION(
         pageNumber,
         pageSize,
-        locationId,
+        locationGuid,
         search,
         startDate,
         endDate,
       ),
     );
     console.log(res?.data.data);
-    if (res && res.data.data) {
-      console.log(res.data.data);
-      setProcedureDtos(res.data.data.data);
-      setPagination(res.data.data.page);
+    if (res.status == HttpStatusCode.Ok) {
+      setProcedureDtos(res.data.data.items);
+      setPagination(res.data.data);
     }
   };
 
@@ -184,8 +185,7 @@ export const Procedure = () => {
           handleClick={handleClick}
           dto={dto}
           setDto={setDto}
-          type={formType}
-        />
+          type={formType} handleChange={() => {}}        />
       ),
     },
   ];
@@ -195,7 +195,7 @@ export const Procedure = () => {
       <PageBreadcrumb pageTitle="Procedure" />
 
       {form ? (
-        <BaseForm tabContent={tabContent} />
+        <BaseForm tabContent={tabContent} type={FormType.CREATE} handleClick={handleClick} />
       ) : (
         <BaseTable<ProcedureDto>
           refresh={refresh}
@@ -208,7 +208,7 @@ export const Procedure = () => {
           onClick={handleClick}
           select={selectedObject}
           setSelect={setSelectedObjects}
-          permission={filterPermission(FeatureId.TRIGGER)}
+          permission={filterPermission(FeatureId.trigger)}
           fetchData={fetchData}
           locationGuid={locationId}
         />

@@ -39,6 +39,13 @@ namespace Host.Controllers
       return Ok(res);
     }
 
+    [HttpGet("option/device/{guid}")]
+  public async Task<IActionResult> GetOptionByDeviceAsync(Guid guid)
+  {
+    var res = await output.GetOptionByDeviceAsync(guid);
+    return Ok(res);
+  }
+
     [HttpPost]
     public async Task<IActionResult> CreateAsync([FromBody] CreateOutputDto dto)
     {

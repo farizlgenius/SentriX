@@ -14,8 +14,7 @@ namespace Core.Application.Services;
 
 public sealed class EventService(
   IEventRepository repo,
-  ILocationRepository loc,
-  ILogger<EventService> logger
+  ILocationRepository loc
   ) : Core.Contract.Interfaces.IEvent
 {
   public async Task<Guid> CreateAsync(CreateEventDto dto, CancellationToken ct = default)
@@ -69,6 +68,11 @@ public sealed class EventService(
   public async Task<Pagination<AdapterEventDto>> GetAdapterPaginationAsync(PaginationParams param, CancellationToken ct = default)
   {
     return await repo.GetAdapterPaginationAsync(param, ct);
+  }
+
+  public async Task<Pagination<AdapterEventDto>> GetAdapterAsciiPaginationAsync(PaginationParams param, CancellationToken ct = default)
+  {
+    return await repo.GetAdapterAsciiPaginationAsync(param, ct);
   }
 
 

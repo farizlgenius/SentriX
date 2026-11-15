@@ -1,7 +1,11 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace Core.Infrastructure.Persistences.Entities;
 
 public sealed class TriggerMapTriggerCode
 {
+      [Key]
+      public int id {get; set; }
       public int trigger_id {get; set; }
       public Trigger trigger {get; set; } = default!;
       public int trigger_code_id {get; set; }

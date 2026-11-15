@@ -25,19 +25,46 @@ public sealed class ActionRepository(CoreDbContext context) : BaseRepository<Per
       ActionProjections.ToCommand
 ),IActionRepository
 {
-      public async Task<IEnumerable<(int id, ActionType type, string metadata)>> GetActionDetailByGuidAsync(IEnumerable<Guid> guids, CancellationToken ct = default)
+      public async Task<IEnumerable<(int id, ActionType type,short? externalId,string? metadata,int sequence)>> GetActionDetailByGuidAsync(IEnumerable<(Guid guid,int sequence)> actions, CancellationToken ct = default)
       {
+            var guids = actions.Select(x => x.guid);
             var res = await Context.Action
                   .AsNoTracking()
                   .Where(x => guids.Contains(x.guid))
                   .Select(x => new
                   {
                         x.id,
+                        x.guid,
                         x.type,
+                        x.external_id,
                         x.metadata
                   }).ToArrayAsync(ct);
 
-            return [.. res.Select(x => (x.id,x.type,x.metadata))];
+            return [.. res.Select(x => (x.id,x.type,externalId:x.external_id,x.metadata,actions.Where(a => a.guid == x.guid).Select(s => s.sequence).FirstOrDefault()))];
+      }
+
+      public async Task<IEnumerable<OptionDto>> GetActionOptionByDeviceAsync(Guid guid, CancellationToken ct = default)
+      {
+            return await Context.Action
+                  .AsNoTracking()
+                  .Where(x => x.device.guid == guid)
+                  .Select(x => new OptionDto(
+                        x.name,
+                        x.guid,
+                        x.type
+                  )).ToArrayAsync(ct);
+      }
+
+      public async Task<IEnumerable<OptionDto>> GetActionOptionByTypeAndDeviceAsync(Guid guid, ActionType type, CancellationToken ct = default)
+      {
+            return await Context.Action
+                  .AsNoTracking()
+                  .Where(x => x.device.guid == guid && x.type == type)
+                  .Select(x => new OptionDto(
+                        x.name,
+                        x.guid,
+                        x.device.mac
+                  )).ToArrayAsync(ct);
       }
 
       public async Task<Pagination<ActionDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)

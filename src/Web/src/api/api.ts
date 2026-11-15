@@ -113,7 +113,7 @@ api.interceptors.request.use((config) => {
   if (accessToken) {
     config.headers = {
       ...(config.headers as any),
-      // "Content-Type": "application/json",
+      "Content-Type": "application/json",
       Authorization: `Bearer ${accessToken}`,
     };
   }

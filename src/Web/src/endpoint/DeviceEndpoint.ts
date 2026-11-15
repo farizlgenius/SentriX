@@ -39,4 +39,5 @@ export const DeviceEndpoint = {
   GET_RELAY: (moduleId: number) =>
     `/api/${CONTROLLER}/module/relay/options/${moduleId}`,
   CHECK_AMICO_CONNECT: `/api/${CONTROLLER}/${Vendor.amico}/connect`,
+  COMMAND:`/api/${CONTROLLER}/ascii`
 } as const;

@@ -17,7 +17,7 @@ public sealed class ProcedureRepository(CoreDbContext context) : BaseRepository<
       (en,dom) =>
       {
             en.device_id = dom.DeviceId;
-            en.procedure_actions = dom.ActionIds.Select(x => new ProcedureAction(x)).ToList();
+            en.procedure_actions = [.. dom.ActionIds.Select(x => new ProcedureAction(x.id,x.respective))];
             en.updated_at = DateTime.UtcNow;
       },
       ProcedureProjections.ToDto,

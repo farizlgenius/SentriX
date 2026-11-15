@@ -1,4 +1,5 @@
 using Core.Application.Interfaces;
+using Core.Contract.Commands.Events;
 using Core.Contract.DTOs.Events.AdapterEvent;
 using Core.Contract.DTOs.Events.Audit;
 using Core.Contract.DTOs.Events.Event;
@@ -65,6 +66,101 @@ new AdapterEvent(@event)
   {
     var query = Context.AdapterEvents
                   .Where(x => x.location == null || x.location.guid == param.locationGuid)
+                  .AsNoTracking()
+                  .AsQueryable();
+
+    if (!string.IsNullOrWhiteSpace(param.search))
+    {
+      if (!string.IsNullOrWhiteSpace(param.search))
+      {
+        var search = param.search.Trim();
+
+        if (Context.Database.IsNpgsql())
+        {
+          var pattern = $"%{search}%";
+
+          query = query.Where(x =>
+              EF.Functions.ILike(x.name.ToString(), pattern) ||
+              EF.Functions.ILike(x.mac, pattern) ||
+              EF.Functions.ILike(x.command, pattern) ||
+              EF.Functions.ILike(x.tag.ToString(), pattern) ||
+              EF.Functions.ILike(x.body, pattern) ||
+              EF.Functions.ILike(x.status.ToString(), pattern) ||
+              EF.Functions.ILike(x.reason, pattern) ||
+              EF.Functions.ILike(x.response, pattern) ||
+              EF.Functions.ILike(x.vendor.ToString(), pattern)
+          );
+        }
+        else // SQL Server
+        {
+          query = query.Where(x =>
+              x.name.ToString().Contains(search) ||
+              x.mac.Contains(search) ||
+              x.command.Contains(search) ||
+              x.tag.ToString().Contains(search) ||
+              x.body.Contains(search) ||
+              x.status.ToString().Contains(search) ||
+              x.reason.Contains(search) ||
+              x.response.Contains(search) ||
+              x.vendor.ToString().Contains(search)
+          );
+        }
+
+      }
+    }
+
+
+    if (param.startDate != null)
+    {
+      var startUtc = DateTime.SpecifyKind(param.startDate.Value, DateTimeKind.Utc);
+      query = query.Where(x => x.created_at >= startUtc);
+    }
+
+    if (param.endDate != null)
+    {
+      var endUtc = DateTime.SpecifyKind(param.endDate.Value, DateTimeKind.Utc);
+      query = query.Where(x => x.created_at <= endUtc);
+    }
+
+    var count = await query.CountAsync();
+
+    var res = await query
+          .AsNoTracking()
+          .OrderByDescending(e => e.created_at)
+          .Skip((param.pageNumber - 1) * param.pageSize)
+          .Take(param.pageSize)
+         .Select(x => new AdapterEventDto(
+          x.guid,
+          x.name,
+          x.mac,
+          x.component_id,
+          x.command,
+          x.tag,
+          x.send_at,
+          x.received_at,
+          x.body,
+          x.status,
+          x.reason,
+          x.response,
+          x.vendor,
+          x.location == null ? Guid.Empty : x.location.guid,
+          x.is_active,
+          x.is_default
+      )).ToListAsync();
+
+    return new Pagination<AdapterEventDto>(
+          param.pageNumber,
+          param.pageSize,
+          count,
+          (int)Math.Ceiling(count / (double)param.pageSize),
+          res
+          );
+  }
+
+  public async Task<Pagination<AdapterEventDto>> GetAdapterAsciiPaginationAsync(PaginationParams param, CancellationToken ct = default)
+  {
+    var query = Context.AdapterEvents
+                  .Where(x => (x.location == null || x.location.guid == param.locationGuid) && x.command == "ASCII : Command")
                   .AsNoTracking()
                   .AsQueryable();
 
