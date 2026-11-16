@@ -47,7 +47,7 @@ const ActionForm: React.FC<PropsWithChildren<FormProp<ActionDto>>> = ({
                                           <Label>Monitor Number</Label>
                                           <Select
                                                 name={""}
-                                                isString={false}
+                                                isString={true}
                                                 defaultValue={dto.srcGuid ?? ""}
                                                 options={option}
                                                 onChange={(e) =>
@@ -95,7 +95,7 @@ const ActionForm: React.FC<PropsWithChildren<FormProp<ActionDto>>> = ({
                                           <Label>Control Number</Label>
                                           <Select
                                                 name={""}
-                                                isString={false}
+                                                isString={true}
                                                 defaultValue={dto.srcGuid ?? ""}
                                                 options={option}
                                                 onChange={(e) =>
@@ -205,7 +205,7 @@ const ActionForm: React.FC<PropsWithChildren<FormProp<ActionDto>>> = ({
                                           <Label>Door</Label>
                                           <Select
                                                 name={""}
-                                                isString={false}
+                                                isString={true}
                                                 defaultValue={dto.srcGuid ?? ""}
                                                 options={option}
                                                 onChange={(e) =>

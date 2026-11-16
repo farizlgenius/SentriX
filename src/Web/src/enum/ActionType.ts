@@ -1,5 +1,5 @@
 export enum ActionType{
-      DeleteAll,
+        DeleteAll,
       MonitorPointMask,
       ControlPointCommand,
       DoorMode,
@@ -25,6 +25,6 @@ export enum ActionType{
       HostSimulatedKeyPress,
       FilterOutTriggerActivationSummary,
       TriggerActivationSummary,
-      DelayMillisecIncrement,
-      DelayMinIncrement
+      DelayMillisecIncrement=126,
+      DelayMinIncrement=127
 }

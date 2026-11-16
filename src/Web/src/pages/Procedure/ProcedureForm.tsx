@@ -129,7 +129,7 @@ export const ProcedureForm: React.FC<
   const [doorOprion,setDoorOption] = useState<Options[]>([]);
   const [actionOption, setActionOption] = useState<Options[]>([]);
   const [deviceOption, setDeviceOption] = useState<Options[]>([]);
-  const [selectAction, setSelectAction] = useState<string | null>(null);
+  const [selectAction, setSelectAction] = useState<string>("");
   const [selectedActionIndex, setSelectedActionIndex] = useState<number | null>(null);
   const [actionType, setActionType] = useState<ActionType>(ActionType.DeleteAll);
 
@@ -176,7 +176,7 @@ export const ProcedureForm: React.FC<
       actions: previous.actions.filter((_, index) => index !== selectedActionIndex),
     }));
     setSelectedActionIndex(null);
-    setSelectAction(null);
+    setSelectAction("");
   };
 
   const moveAction = (index: number, direction: -1 | 1) => {
@@ -255,7 +255,7 @@ export const ProcedureForm: React.FC<
           options={actionTypeOption}
           onChange={e => {
             setActionType(Number(e.target.value));
-            // fetchActionByType(dto.deviceGuid,Number(e.target.value))
+            setSelectAction("")
           }}
           defaultValue={actionType}
         />
@@ -263,8 +263,8 @@ export const ProcedureForm: React.FC<
       <FormField>
         <Label>Action</Label>
         <Select
-        disabled={isReadOnly || actionType == ActionType.DeleteAll}
-          isString={true}
+          disabled={isReadOnly || actionType == ActionType.DeleteAll}
+          isString
           name={""}
           options={actionOption.filter(x => x.description == actionType)}
           onChange={e => {
@@ -277,7 +277,7 @@ export const ProcedureForm: React.FC<
             }));
             setSelectedActionIndex(dto.actions.length);
           }}
-          defaultValue={selectAction ?? ""}
+          defaultValue={selectAction}
         />
       </FormField>
       {/*  */}

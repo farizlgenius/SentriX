@@ -11830,3 +11830,29 @@ WebConfigNetwork: SCP-1, Method2 = 0, IP Address2: 0.0.0.0, Subnet Mask2: 0.0.0.
 58227.200 Nov 15 22:57:06 SCP-1:152 SCP DIAGNOSTICS-0, 1:5 error code = 0, Autosave complete (config)
 58642.752 Shutting down debug Thread...
 File closed Sun Nov 15 23:04:02 2026
+Debug file SCPDEBUG.txt <SCPDEBUGc.txt> <SCPDEBUG.TXT> opened Mon Nov 16 07:57:54 2026
+Begin - SCP Driver DLL (64-bit) version 4.7.1.43
+90674.298 WSAStartup ok
+90674.306 RNG_X931A24 Initialized
+90674.306 1, enCcSystem: 011 1 1024 0 0 1
+90674.492 1, enCcCreateChannel: 0012 1 7 3333 0 3000 0 "" 0
+90675.033 listen(lsock) created socket=3376 on port 3333
+90675.033 Listen Successful, port: 3333
+91474.381 scpCfgCmndEx unknown action type (32) for SCP-1
+91474.381 0(0), enCcProc: 0118 0 1 1 32 
+91474.678 0(0), enCcProc: 0118 0 1 1 2  1 -1 2 0 0 0
+91677.192 Shutting down debug Thread...
+File closed Mon Nov 16 08:14:37 2026
+Debug file SCPDEBUG.txt <SCPDEBUGc.txt> <SCPDEBUG.TXT> opened Mon Nov 16 08:34:03 2026
+Begin - SCP Driver DLL (64-bit) version 4.7.1.43
+92843.269 WSAStartup ok
+92843.272 RNG_X931A24 Initialized
+92843.272 1, enCcSystem: 011 1 1024 0 0 1
+92843.356 1, enCcCreateChannel: 0012 1 7 3333 0 3000 0 "" 0
+92843.462 listen(lsock) created socket=3408 on port 3333
+92843.462 Listen Successful, port: 3333
+93486.750 0(0), enCcProc: 0118 0 1 1 2  1 1 2 0 0 0
+93487.046 0(0), enCcProc: 0118 0 1 1 1  1 1 1
+93487.067 0(0), enCcProc: 0118 0 1 1 127  1
+93529.327 Shutting down debug Thread...
+File closed Mon Nov 16 08:45:29 2026

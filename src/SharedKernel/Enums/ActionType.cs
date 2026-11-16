@@ -28,8 +28,8 @@ public enum ActionType
       HostSimulatedKeyPress,
       FilterOutTriggerActivationSummary,
       TriggerActivationSummary,
-      DelayMillisecIncrement,
-      DelayMinIncrement
+      DelayMillisecIncrement=126,
+      DelayMinIncrement=127
 
 
 }

@@ -18,7 +18,8 @@ public sealed class ProcedureService(
       public async Task<Guid> CreateAsync(CreateProcedureDto dto, CancellationToken ct = default)
       {
             var dev = await device.GetCommandDetailAsync(dto.DeviceGuid, ct);
-            var actions = await action.GetActionDetailByGuidAsync(dto.Actions, ct);
+           
+            var actions = await action.GetActionDetailByGuidAsync(dto.Actions.Select((x,i) => (x,i)), ct);
 
             // Check name in same location 
 

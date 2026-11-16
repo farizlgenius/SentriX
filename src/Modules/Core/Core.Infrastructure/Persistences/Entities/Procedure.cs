@@ -12,10 +12,11 @@ public sealed class Procedure : BaseEntity
       public Procedure(){}
       public Procedure(
             Domain.Entities.Procedure d
-      ) : base(d.Guid)
+      ) : base(d.Guid,d.ExternalId,d.AltrExternalId)
       {
             name = d.Name;
             device_id = d.DeviceId;
+            location_id = d.LocationId;
             procedure_actions = d.ActionIds.Select(x => new ProcedureAction(x.id,x.respective)).ToList();
       }
 }
