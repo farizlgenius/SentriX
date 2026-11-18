@@ -26,38 +26,28 @@ public sealed class ProcedureRepository(IBaseRepository repo,ILogger<ProcedureRe
             string? metadata
             )
       {
-            CC_ACTN c = new CC_ACTN();
-            c.hdr = new CC_ACTN_HDR
-            {
-                  lastModified = 0,
-                  scp_number = scpId,
-                  proc_number = procId,
-                  action_type = (short)type    
-            };
-
+            CC_ACTN c = new CC_ACTN((short)type);
+            c.hdr.lastModified = 0;
+            c.hdr.scp_number = scpId;
+            c.hdr.proc_number = procId;
+            c.hdr.action_type = (short)type;
             switch (type)
             {
 
                   case ActionType.MonitorPointMask:
                   var maskMeta = JsonHelper.Deserialize<InputMaskMetadata>(metadata ?? "");
-                  c.mp_mask = new CC_MPMASK
-                  {
-                        scp_number = scpId,
-                        mp_number = externalId ?? -1,    // Example property name
-                        set_clear = (short)maskMeta.SetClear     // Example property name
-                  };
+                  c.mp_mask.scp_number = scpId;
+                  c.mp_mask.mp_number = externalId ?? -1;
+                  c.mp_mask.set_clear = (short)maskMeta.SetClear;
                   break;
                   case ActionType.ControlPointCommand:
                   var outMeta = JsonHelper.Deserialize<OutputCommandMetadata>(metadata ?? "");
-                   c.cp_ctl = new CC_CPCTL
-                  {
-                        scp_number = scpId,
-                        cp_number = externalId ?? -1,    
-                        command = outMeta.Command,
-                        on_time = outMeta.OnTime,
-                        off_time = outMeta.OffTime,
-                        repeat = outMeta.Repeat     
-                  };
+                  c.cp_ctl.scp_number = scpId;
+                  c.cp_ctl.cp_number = externalId ?? -1;
+                  c.cp_ctl.command = outMeta.Command;
+                  c.cp_ctl.on_time = outMeta.OnTime;
+                  c.cp_ctl.off_time = outMeta.OffTime;
+                  c.cp_ctl.repeat = outMeta.Repeat;
                   break;
                   case ActionType.DoorMode:
                   case ActionType.ForceOpenMask:
@@ -94,10 +84,7 @@ public sealed class ProcedureRepository(IBaseRepository repo,ILogger<ProcedureRe
                   case ActionType.DelayMillisecIncrement:
                   case ActionType.DelayMinIncrement:
                   var delayMeta = JsonHelper.Deserialize<DelayMetadata>(metadata ?? "");
-                  c.delay = new CC_DELAY
-                  {
-                        delay_time = (short)delayMeta.DelayTime  
-                  };
+                  c.delay.delay_time = (short)delayMeta.DelayTime;
                   break;
                   case ActionType.DeleteAll:
                   default:

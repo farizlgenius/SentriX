@@ -38,6 +38,9 @@ public static class ObjectHelper
         foreach (var field in type.GetFields(BindingFlags.Instance | BindingFlags.Public)
                                   .OrderBy(f => f.MetadataToken))
         {
+            if (type == typeof(CC_ACTN_HDR) && field.Name == nameof(CC_ACTN_HDR.arg))
+                continue;
+
             AppendValue(values, field.GetValue(obj));
         }
     }

@@ -35,9 +35,11 @@ public sealed class ProcedureRepository(CoreDbContext context) : BaseRepository<
       }
 
 
-      public Task<bool> IsAnyRelatedEntitiesAsync(Guid guid, CancellationToken ct = default)
+      public async Task<bool> IsAnyRelatedEntitiesAsync(Guid guid, CancellationToken ct = default)
       {
-            throw new NotImplementedException();
+            return await Context.Procedures
+                  .AsNoTracking()
+                  .AnyAsync(x => x.triggers.Any(),ct);
       }
 
 
