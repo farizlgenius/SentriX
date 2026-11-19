@@ -17,6 +17,9 @@ import { usePagination } from "../../context/PaginationContext";
 import { FormType } from "../../model/Form/FormProp";
 import { usePopup } from "../../context/PopupContext";
 import { IntervalToast, TriggerToast } from "../../model/ToastMessage";
+import { EntityType } from "../../enum/EntityType";
+import { TriggerCommand } from "../../enum/TriggerCommand";
+import { HttpStatusCode } from "axios";
 
 const KEYS: string[] = ["name"];
 const HEADERS: string[] = ["Name", "Action"];
@@ -43,18 +46,24 @@ export const Trigger = () => {
   const [formType, setFormType] = useState<FormType>(FormType.CREATE);
   const toggleRefresh = () => setRefresh((prev) => !prev);
   const defaultDto: TriggerDto = {
-    command: -1,
-    procedureId: -1,
-    sourceType: -1,
-    sourceNumber: -1,
-    tranType: -1,
-    codeMap: [],
-    timeZone: -1,
-    componentId: 0,
-    mac: "",
-    locationId: locationId,
-    isActive: true,
-    hardwareName: "",
+    guid: "",
+    name: "",
+    command: TriggerCommand.ABORT_DELAY,
+    device: "",
+    triggerSource: "",
+    triggerType: "",
+    triggerCodes: [],
+    triggerArgs: [],
+    firstTriggerVariable: null,
+    secondTriggerVariable: null,
+    thirdTriggerVariable: null,
+    forthTriggerVariable: null,
+    timeZone: "",
+    procedure: "",
+    src: "",
+    srcType: EntityType.AUTH,
+    isActive: false,
+    isDefault: false
   };
   const [dto, setDto] = useState<TriggerDto>(defaultDto);
 
@@ -69,7 +78,7 @@ export const Trigger = () => {
 
   const handleRemove = (data: TriggerDto) => {
     setConfirmRemove(() => async () => {
-      const res = await send.delete(TriggerEndpoint.DELETE(data.componentId));
+      const res = await send.delete(TriggerEndpoint.DELETE(data.guid));
       if (Helper.handleToastByResCode(res, IntervalToast.DELETE, toggleToast)) {
         toggleRefresh();
       }
@@ -95,9 +104,9 @@ export const Trigger = () => {
           setInfo(true);
         }
         setConfirmRemove(() => async () => {
-          var data: number[] = [];
+          var data: string[] = [];
           selectedObject.map(async (a: TriggerDto) => {
-            data.push(a.componentId);
+            data.push(a.guid);
           });
           var res = await send.post(TriggerEndpoint.DELETE_RANGE, data);
           if (
@@ -160,8 +169,7 @@ export const Trigger = () => {
           handleClick={handleClick}
           dto={dto}
           setDto={setDto}
-          type={formType}
-        />
+          type={formType} handleChange={() => {}}        />
       ),
     },
   ];
@@ -169,7 +177,7 @@ export const Trigger = () => {
   const fetchData = async (
     pageNumber: number,
     pageSize: number,
-    locationId?: number,
+    locationGuid?: string,
     search?: string,
     startDate?: string,
     endDate?: string,
@@ -178,17 +186,17 @@ export const Trigger = () => {
       TriggerEndpoint.PAGINATION(
         pageNumber,
         pageSize,
-        locationId,
+        locationGuid,
         search,
         startDate,
         endDate,
       ),
     );
     console.log(res?.data.data);
-    if (res && res.data.data) {
+    if (res.status == HttpStatusCode.Ok) {
       console.log(res.data.data);
-      setTriggerDtos(res.data.data.data);
-      setPagination(res.data.data.page);
+      setTriggerDtos(res.data.data.items);
+      setPagination(res.data.data);
     }
   };
 
@@ -196,7 +204,7 @@ export const Trigger = () => {
     <>
       <PageBreadcrumb pageTitle="Trigger" />
       {form ? (
-        <BaseForm tabContent={tabContent} />
+        <BaseForm tabContent={tabContent} type={formType} />
       ) : (
         <BaseTable<TriggerDto>
           keys={KEYS}
@@ -208,7 +216,7 @@ export const Trigger = () => {
           onClick={handleClick}
           select={selectedObject}
           setSelect={setSelectedObjects}
-          permission={filterPermission(FeatureId.TRIGGER)}
+          permission={filterPermission(FeatureId.trigger)}
           fetchData={fetchData}
           locationGuid={locationId}
         />

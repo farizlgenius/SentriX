@@ -69,8 +69,8 @@ public sealed class TriggerRepository(CoreDbContext context) : BaseRepository<Pe
                   .AsNoTracking()
                   .Select(x => new OptionDto(
                         x.name,
-                        x.value,
-                        x.guid.ToString()
+                        x.guid.ToString(),
+                        x.value
                   )).ToArrayAsync(ct);
       }
 
@@ -81,8 +81,8 @@ public sealed class TriggerRepository(CoreDbContext context) : BaseRepository<Pe
                   .Where(x => x.trigger_source == null || x.trigger_source.guid == source)
                   .Select(x => new OptionDto(
                         x.name,
-                        x.value,
-                        x.guid.ToString()
+                       x.guid.ToString(),
+                       x.value
                   )).ToArrayAsync(ct);
       }
 

@@ -5,7 +5,7 @@ namespace Core.Contract.DTOs.Trigger;
 public sealed record CreateTriggerDto(
       string Name,
       TriggerCommand Command,
-      Guid DeviceGuid,
+      Guid Device,
       Guid TriggerSource,
       Guid TriggerType,
       IEnumerable<Guid> TriggerCodes,
@@ -14,8 +14,8 @@ public sealed record CreateTriggerDto(
       Guid? SecondTriggerVariable,
       Guid? ThirdTriggerVariable,
       Guid? ForthTriggerVariable,
-      Guid TimeZoneGuid,
-      Guid PrcedureGuid,
-      Guid SrcGuid,
+      Guid TimeZone,
+      Guid Prcedure,
+      Guid Src,
       EntityType SrcType=EntityType.DEVICE
 );

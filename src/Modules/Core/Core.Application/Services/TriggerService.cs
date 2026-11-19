@@ -24,7 +24,7 @@ public sealed class TriggerService(
 {
       public async Task<Guid> CreateAsync(CreateTriggerDto dto, CancellationToken ct = default)
       {
-            var dev = await device.GetCommandDetailAsync(dto.DeviceGuid,ct);
+            var dev = await device.GetCommandDetailAsync(dto.Device,ct);
 
             var externalId = await Repo.GetFreeExternalIdAsync(100,[],ct);
 
@@ -43,9 +43,9 @@ public sealed class TriggerService(
             (int id,short externalId)? ForthVars = dto.ForthTriggerVariable == null ? null : await repo.GetTrigVarIdAndExternalIdByGuideAsync(dto.ForthTriggerVariable ?? Guid.Empty,ct);
 
 
-            var timeId = await time.GetIdAndExternalIdByGuidAsync(dto.TimeZoneGuid,ct);
+            var timeId = await time.GetIdAndExternalIdByGuidAsync(dto.TimeZone,ct);
 
-            var procedure = await proc.GetIdAndExternalIdByGuidAsync(dto.PrcedureGuid,ct);
+            var procedure = await proc.GetIdAndExternalIdByGuidAsync(dto.Prcedure,ct);
 
             (int id,short externalId)? srcDetail = null;
 
@@ -55,25 +55,25 @@ public sealed class TriggerService(
                   srcDetail = (dev.DeviceId,dev.DeviceExternalId);
                   break;
                   case SharedKernel.Enums.EntityType.DEVICE_MODULE:
-                  srcDetail = await module.GetIdAndExternalIdByGuidAsync(dto.SrcGuid,ct);
+                  srcDetail = await module.GetIdAndExternalIdByGuidAsync(dto.Src,ct);
                   break;
                   case SharedKernel.Enums.EntityType.INPUT:
-                  srcDetail = await input.GetIdAndExternalIdByGuidAsync(dto.SrcGuid,ct);
+                  srcDetail = await input.GetIdAndExternalIdByGuidAsync(dto.Src,ct);
                   break;
                   case SharedKernel.Enums.EntityType.OUTPUT:
-                  srcDetail = await output.GetIdAndExternalIdByGuidAsync(dto.SrcGuid,ct);
+                  srcDetail = await output.GetIdAndExternalIdByGuidAsync(dto.Src,ct);
                   break;
                   case SharedKernel.Enums.EntityType.DOOR:
-                  srcDetail = await door.GetIdAndExternalIdByGuidAsync(dto.SrcGuid,ct);
+                  srcDetail = await door.GetIdAndExternalIdByGuidAsync(dto.Src,ct);
                   break;
                   case SharedKernel.Enums.EntityType.TIMEZONE:
-                  srcDetail = await time.GetIdAndExternalIdByGuidAsync(dto.SrcGuid,ct);
+                  srcDetail = await time.GetIdAndExternalIdByGuidAsync(dto.Src,ct);
                   break;
                   case SharedKernel.Enums.EntityType.MONITOR_GROUP:
-                  srcDetail = await monitorGroup.GetIdAndExternalIdByGuidAsync(dto.SrcGuid,ct);
+                  srcDetail = await monitorGroup.GetIdAndExternalIdByGuidAsync(dto.Src,ct);
                   break;
                   case SharedKernel.Enums.EntityType.AREA:
-                  srcDetail = await area.GetIdAndExternalIdByGuidAsync(dto.SrcGuid,ct);
+                  srcDetail = await area.GetIdAndExternalIdByGuidAsync(dto.Src,ct);
                   break;
                   default:
                   break;
@@ -137,7 +137,7 @@ public sealed class TriggerService(
 
             var trig = await Repo.GetAsync(guid,ct);
 
-            var procedureExternalId = await Repo.GetExternalIdByGuidAsync(trig.Prcedure.Guid ?? Guid.Empty,ct);
+            var procedureExternalId = await Repo.GetExternalIdByGuidAsync(trig.PrcedureGuid,ct);
 
 
             // Command to send 

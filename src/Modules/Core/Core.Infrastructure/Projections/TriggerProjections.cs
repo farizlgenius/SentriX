@@ -24,50 +24,56 @@ public static class TriggerProjections
             _ => new BaseDto()
         };
     }
+
+    private static Guid SwitchSrcGuid(Persistences.Entities.Trigger x)
+    {
+        return x.source_component_type switch
+        {
+            SharedKernel.Enums.EntityType.DEVICE_MODULE => x.src_device_module == null ? Guid.Empty : x.src_device_module.guid,
+            SharedKernel.Enums.EntityType.INPUT => x.src_input == null ? Guid.Empty : x.src_input.guid,
+            SharedKernel.Enums.EntityType.OUTPUT => x.src_output == null ? Guid.Empty : x.src_output.guid,
+            SharedKernel.Enums.EntityType.DOOR => x.src_door == null ? Guid.Empty : x.src_door.guid,
+            SharedKernel.Enums.EntityType.TIMEZONE => x.src_timezone == null ? Guid.Empty : x.src_timezone.guid,
+            SharedKernel.Enums.EntityType.MONITOR_GROUP => x.src_monitor_group == null ? Guid.Empty : x.src_monitor_group.guid,
+            SharedKernel.Enums.EntityType.AREA => x.src_area == null ? Guid.Empty : x.src_area.guid,
+            _ => Guid.Empty
+        };
+    }
+
+    private static string SwitchSrcName(Persistences.Entities.Trigger x)
+    {
+        return x.source_component_type switch
+        {
+            SharedKernel.Enums.EntityType.DEVICE_MODULE => x.src_device_module == null ? string.Empty : x.src_device_module.name,
+            SharedKernel.Enums.EntityType.INPUT => x.src_input == null ? string.Empty : x.src_input.name,
+            SharedKernel.Enums.EntityType.OUTPUT => x.src_output == null ? string.Empty : x.src_output.name,
+            SharedKernel.Enums.EntityType.DOOR => x.src_door == null ? string.Empty : x.src_door.name,
+            SharedKernel.Enums.EntityType.TIMEZONE => x.src_timezone == null ? string.Empty : x.src_timezone.name,
+            SharedKernel.Enums.EntityType.MONITOR_GROUP => x.src_monitor_group == null ? string.Empty : x.src_monitor_group.name,
+            SharedKernel.Enums.EntityType.AREA => x.src_area == null ? string.Empty : x.src_area.name,
+            _ => string.Empty
+        };
+    }
     public static readonly Expression<Func<Persistences.Entities.Trigger, TriggerDto>> ToDto = 
         x => new TriggerDto(
             x.guid,
             x.name,
             x.command,
-            new BaseDto(
-                x.device.guid,
-                x.device.name
-            ),
-            new BaseDto(
-                x.trigger_source.guid,
-                x.trigger_source.name
-            ),
-            new BaseDto(
-                x.trigger_type.guid,
-                x.trigger_type.name
-            ),
-            x.trigger_map_trigger_codes.Select(
-                c => new BaseDto(
-                    c.trigger_code.guid,
-                    c.trigger_code.name
-                )
-                ).ToArray(),
-            x.trigger_arg_map_trigger.Select(
-                c => new BaseDto(
-                    c.trigger_arg.guid,
-                    c.trigger_arg.name
-                )
-                ).ToArray(),
-            x.trigger_variable_map_trigger.Select(
-                c => new BaseDto(
-                    c.trigger_variable.guid,
-                    c.trigger_variable.name
-                )
-                ).ToArray(),
-            new BaseDto(
-                x.timezone.guid,
-                x.timezone.name
-            ),
-            new BaseDto(
-                x.procedure.guid,
-                x.procedure.name
-            ),
-            SwitchSrc(x),
+            x.device.guid,
+            x.device.name,
+            x.trigger_source.guid,
+            x.trigger_source.name,
+            x.trigger_type.guid,
+            x.trigger_type.name,
+            x.trigger_map_trigger_codes.Select(x => x.trigger_code.guid),
+            x.trigger_arg_map_trigger.Select(x => x.trigger_arg.guid),
+            x.trigger_variable_map_trigger.Select(x => x.trigger_variable.guid),
+            x.timezone.guid,
+            x.timezone.name,
+            x.procedure.guid,
+            x.procedure.name,
+            SwitchSrcGuid(x),
+            SwitchSrcName(x),
             x.is_active,
             x.is_default
             );
