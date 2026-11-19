@@ -108,15 +108,16 @@ const UserForm: React.FC<PropsWithChildren<UserFormProps>> = ({
             handleClick={handleClick}
             image={image}
             setImage={setImage}
-          />
+            handleChange={()=>{}}
+            />
         )}
 
         {activeStep == UserFormStep.Operator && (
-          <UserOperatorForm type={type} setDto={setDto} dto={dto} />
+          <UserOperatorForm type={type} setDto={setDto} dto={dto} handleChange={()=>{}}/>
         )}
 
         {activeStep == UserFormStep.Location && (
-          <LocationForm type={type} setDto={setDto} dto={dto} />
+          <LocationForm type={type} setDto={setDto} dto={dto} handleChange={()=>{}}/>
         )}
 
         {activeStep === UserFormStep.AccessLevel && (
@@ -125,6 +126,7 @@ const UserForm: React.FC<PropsWithChildren<UserFormProps>> = ({
             dto={dto}
             setDto={setDto}
             handleClick={handleClick}
+            handleChange={()=>{}}
           />
         )}
 
@@ -134,7 +136,7 @@ const UserForm: React.FC<PropsWithChildren<UserFormProps>> = ({
             dto={dto}
             setDto={setDto}
             handleClick={handleClick}
-          />
+            handleChange={() => { } } image={undefined} setImage={()=>{}}          />
         )}
 
         {activeStep === UserFormStep.Setting && (
@@ -143,6 +145,7 @@ const UserForm: React.FC<PropsWithChildren<UserFormProps>> = ({
             dto={dto}
             setDto={setDto}
             handleClick={handleClick}
+            handleChange={()=>{}}
           />
         )}
 

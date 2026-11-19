@@ -4,6 +4,7 @@ export const TriggerEndpoint = {
     GET:(locationId:number) => `/api/${locationId}/${CONTROLLER}`,
     GET_TRIGGER_SOURCE: `/api/${CONTROLLER}/source`,
     GET_TRIGGER_TYPE:(source:string) => `/api/${CONTROLLER}/type/${source}`,
+    GET_TRIGGER_CODE:(type:string) => `/api/${CONTROLLER}/code/${type}`,
     PAGINATION:(pageNumber:number,pageSize:number,locationGuid?:string | undefined,search?:string | undefined,startDate?:string | undefined,endDate?:string | undefined) => `/api/${CONTROLLER}/pagination?PageNumber=${pageNumber}&PageSize=${pageSize}${search == undefined || search == "" ? "" : `&search=${search}`}${startDate == undefined ? "" : `&startDate=${startDate}`}${endDate == undefined ? "" : `&startDate=${endDate}`}${locationGuid == "" || locationGuid == undefined ?  "" : `&locationGuid=${locationGuid}` }`,
     COMMAND : `/api/${CONTROLLER}/command`,
     SOURCE : `/api/${CONTROLLER}/source`,

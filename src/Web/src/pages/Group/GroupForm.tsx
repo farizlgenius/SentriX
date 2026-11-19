@@ -4,7 +4,6 @@ import Input from "../../components/form/input/InputField";
 import Button from "../../components/ui/button/Button";
 import Select from "../../components/form/Select";
 import { Options } from "../../model/Options";
-import { TimezoneEndPoint } from "../../endpoint/TimeZoneEndpoint";
 import { DoorEndpoint } from "../../endpoint/DoorEndpoint";
 import { GroupDto } from "../../model/Group/GroupDto";
 import { send } from "../../api/api";

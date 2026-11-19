@@ -6,7 +6,6 @@ import { send } from "../../../api/api";
 import { GroupEndpoint } from "../../../endpoint/GroupEndpoint";
 import ListTransfer from "../list-transfer/ListTransfer";
 import { GroupDto } from "../../../model/Group/GroupDto";
-import { FormSection } from "../template/FormTemplate";
 
 export const GroupForm: React.FC<PropsWithChildren<FormProp<UserDto>>> = ({
   dto,

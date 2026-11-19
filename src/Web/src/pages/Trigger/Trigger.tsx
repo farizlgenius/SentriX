@@ -204,7 +204,7 @@ export const Trigger = () => {
     <>
       <PageBreadcrumb pageTitle="Trigger" />
       {form ? (
-        <BaseForm tabContent={tabContent} type={formType} />
+        <BaseForm tabContent={tabContent} type={formType} handleClick={handleClick} />
       ) : (
         <BaseTable<TriggerDto>
           keys={KEYS}
