@@ -28,15 +28,17 @@ public sealed class TriggerRepository(
             short[] args
             )
       {
-            CC_TRGR c = new CC_TRGR();
-            c.lastModified = 0;
-            c.scp_number = scpId;
-            c.trgr_number = trgId;
-            c.command = (short)procCommand;
-            c.proc_num = procId;
-            c.src_type = srcType;
-            c.src_number = srcNo;
-            c.tran_type = tranTyp;
+            CC_TRGR c = new CC_TRGR
+            {
+                  lastModified = 0,
+                  scp_number = scpId,
+                  trgr_number = trgId,
+                  command = (short)procCommand,
+                  proc_num = procId,
+                  src_type = srcType,
+                  src_number = srcNo,
+                  tran_type = tranTyp
+            };
             int re = 0;
             foreach(var code in codeMap)
             {
@@ -55,7 +57,7 @@ public sealed class TriggerRepository(
             {
                   c.arg[i] = args.ElementAtOrDefault(i);
             }
-            var result = repo.Send((short)enCfgCmnd.enCcScpTimezoneExAct, c);
+            var result = repo.Send((short)enCfgCmnd.enCcTrgr, c);
             if (result)
             {
                   logger.LogInformation(LogMessageHelper.CommandSuccess(Command.TriggerSpecification, scpId));

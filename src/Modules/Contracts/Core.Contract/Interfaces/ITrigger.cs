@@ -9,4 +9,5 @@ public interface ITrigger : IService<TriggerDto,CreateTriggerDto,UpdateTriggerDt
       Task<IEnumerable<OptionDto>> GetSourceAsync(CancellationToken ct = default);
       Task<IEnumerable<OptionDto>> GetTypeAsync(Guid source,CancellationToken ct =default);
       Task<IEnumerable<OptionDto>> GetCodeAsync(Guid type,CancellationToken ct = default);
+      Task<IEnumerable<OptionDto>> GetArgAsync(IEnumerable<Guid> codes,CancellationToken ct = default);
 }

@@ -27,6 +27,7 @@ public enum EntityType
       OUTPUT,
       PROCEDURE,
       TRIGGER,
+      TRIGGER_VARIABLE,
       MONITOR_GROUP,
       AREA,
       WEB,

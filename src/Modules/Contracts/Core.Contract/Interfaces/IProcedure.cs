@@ -6,5 +6,5 @@ namespace Core.Contract.Interfaces;
 
 public interface IProcedure : IService<ProcedureDto,CreateProcedureDto,UpdateProcedureDto>
 {
-      
+      Task<IEnumerable<OptionDto>> GetOptionByDeviceAsync(Guid guid,CancellationToken ct = default);
 }

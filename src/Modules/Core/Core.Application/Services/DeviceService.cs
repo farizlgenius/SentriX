@@ -339,6 +339,6 @@ public sealed class DeviceService(
   {
     var d = await repo.GetAsync(guid, ct);
 
-    await adapter.GetAdapter(d.Vendor).Device.UploadAsync(d.Mac, d.Ip, ct);
+    await adapter.GetAdapter(d.Vendor).Device.UploadAllConfigurationAsync(d.Mac, d.Ip, ct);
   }
 }

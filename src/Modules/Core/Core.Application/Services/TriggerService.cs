@@ -45,7 +45,7 @@ public sealed class TriggerService(
 
             var timeId = await time.GetIdAndExternalIdByGuidAsync(dto.TimeZone,ct);
 
-            var procedure = await proc.GetIdAndExternalIdByGuidAsync(dto.Prcedure,ct);
+            var procedure = await proc.GetIdAndExternalIdByGuidAsync(dto.Procedure,ct);
 
             (int id,short externalId)? srcDetail = null;
 
@@ -177,6 +177,10 @@ public sealed class TriggerService(
             throw new NotImplementedException();
       }
 
+      public async Task<IEnumerable<OptionDto>> GetArgAsync(IEnumerable<Guid> codes,CancellationToken ct = default)
+      {
+            return await repo.GetArgAsync(codes,ct);
+      }
 
       public async Task<IEnumerable<OptionDto>> GetCodeAsync(Guid type,CancellationToken ct = default)
       {

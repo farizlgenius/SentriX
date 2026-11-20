@@ -24,6 +24,17 @@ public sealed class ProcedureRepository(CoreDbContext context) : BaseRepository<
       ProcedureProjections.ToCommand
 ),IProcedureRepository
 {
+      public async Task<IEnumerable<OptionDto>> GetOptionByDeviceAsync(Guid guid, CancellationToken ct = default)
+      {
+            return await Context.Procedures
+                  .AsNoTracking()
+                  .Where(x => x.device.guid == guid)
+                  .Select(x => new OptionDto(
+                        x.name,
+                        x.guid.ToString(),
+                        string.Empty
+                  )).ToArrayAsync(ct);
+      }
 
       public async Task<Pagination<ProcedureDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
       {

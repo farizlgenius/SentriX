@@ -15,7 +15,7 @@ public sealed record CreateTriggerDto(
       Guid? ThirdTriggerVariable,
       Guid? ForthTriggerVariable,
       Guid TimeZone,
-      Guid Prcedure,
+      Guid Procedure,
       Guid Src,
       EntityType SrcType=EntityType.DEVICE
 );

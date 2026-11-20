@@ -41,6 +41,7 @@ public sealed class Trigger : BaseEntity
       public Trigger(){}
       public Trigger(Domain.Entities.Trigger d) : base(d.Guid,d.ExternalId,d.AltrExternalId)
       {
+            name = d.Name;
             command = d.Command;
             source_component_type = d.SourceComponentType;
             src_device_module_id = d.SrcDeviceModuleId;

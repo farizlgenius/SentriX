@@ -8,6 +8,7 @@ namespace Core.Application.Interfaces;
 public interface ITriggerRepository : IRepository<TriggerDto,Trigger>
 {
       Task<IEnumerable<OptionDto>> GetSourceAsync(CancellationToken ct = default);
+      Task<IEnumerable<OptionDto>> GetArgAsync(IEnumerable<Guid> codes,CancellationToken ct = default);
       Task<(int id,short value)> GetSourceIdAndValueByGuidAsync(Guid guid,CancellationToken ct = default);
       Task<IEnumerable<OptionDto>> GetTypeAsync(Guid source,CancellationToken ct = default);
       Task<(int id,short value)> GetTypeIdByGuidAsync(Guid guid,CancellationToken ct = default);

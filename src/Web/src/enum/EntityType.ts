@@ -1,5 +1,7 @@
-export enum EntityType{
-       AUTH=1,
+
+export enum EntityType
+{
+      AUTH=1,
       DEVICE,
       TEMP_DEVICE,
       DEVICE_MODULE,
@@ -18,13 +20,13 @@ export enum EntityType{
       DOOR,
       TURNSTILE,
       GROUP,
-      COMPONENT_MAPPING,
       EVENT,
       ADAPTER_EVENT,
       INPUT,
       OUTPUT,
       PROCEDURE,
       TRIGGER,
+      TRIGGER_VARIABLE,
       MONITOR_GROUP,
       AREA,
       WEB,
@@ -33,5 +35,6 @@ export enum EntityType{
       ALERT,
       ALERT_LEVEL,
       CORE_EVENT,
-      CORE_ENTITY
+      CORE_ENTITY,
+      UNKNOWN
 }

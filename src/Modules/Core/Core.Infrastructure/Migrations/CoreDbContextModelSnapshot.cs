@@ -6076,9 +6076,6 @@ namespace Core.Infrastructure.Migrations
                     b.Property<int>("timezone_id")
                         .HasColumnType("integer");
 
-                    b.Property<int>("timezoneid")
-                        .HasColumnType("integer");
-
                     b.Property<int>("trigger_source_id")
                         .HasColumnType("integer");
 
@@ -6112,7 +6109,7 @@ namespace Core.Infrastructure.Migrations
 
                     b.HasIndex("src_timezone_id");
 
-                    b.HasIndex("timezoneid");
+                    b.HasIndex("timezone_id");
 
                     b.HasIndex("trigger_source_id");
 
@@ -6997,7 +6994,7 @@ namespace Core.Infrastructure.Migrations
                             id = 67,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Online, reader tamper inactive",
-                            trigger_type_id = 7,
+                            trigger_type_id = 34,
                             value = (short)0
                         },
                         new
@@ -7005,7 +7002,7 @@ namespace Core.Infrastructure.Migrations
                             id = 68,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Online, reader tamper active",
-                            trigger_type_id = 7,
+                            trigger_type_id = 34,
                             value = (short)1
                         },
                         new
@@ -7013,7 +7010,7 @@ namespace Core.Infrastructure.Migrations
                             id = 69,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "N/A",
-                            trigger_type_id = 7,
+                            trigger_type_id = 34,
                             value = (short)2
                         },
                         new
@@ -7021,12 +7018,12 @@ namespace Core.Infrastructure.Migrations
                             id = 70,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Communication broken (reader offline)",
-                            trigger_type_id = 7,
+                            trigger_type_id = 34,
                             value = (short)3
                         },
                         new
                         {
-                            id = 176,
+                            id = 71,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Disconnected",
                             trigger_type_id = 8,
@@ -7034,7 +7031,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 177,
+                            id = 72,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Exit cycle: door use not verified",
                             trigger_type_id = 8,
@@ -7042,7 +7039,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 178,
+                            id = 73,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Exit cycle: door not used",
                             trigger_type_id = 8,
@@ -7050,7 +7047,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 179,
+                            id = 74,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Exit cycle: door used",
                             trigger_type_id = 8,
@@ -7058,7 +7055,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 71,
+                            id = 75,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Host initiated request: door use not verified",
                             trigger_type_id = 8,
@@ -7066,7 +7063,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 72,
+                            id = 76,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Host initiated request: door not used",
                             trigger_type_id = 8,
@@ -7074,7 +7071,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 73,
+                            id = 77,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Host initiated request: door used",
                             trigger_type_id = 8,
@@ -7082,7 +7079,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 74,
+                            id = 78,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Exit cycle: started",
                             trigger_type_id = 8,
@@ -7090,7 +7087,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 75,
+                            id = 79,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Disconnected",
                             trigger_type_id = 9,
@@ -7098,7 +7095,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 76,
+                            id = 80,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Unknown",
                             trigger_type_id = 9,
@@ -7106,7 +7103,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 77,
+                            id = 81,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Secure",
                             trigger_type_id = 9,
@@ -7114,7 +7111,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 78,
+                            id = 82,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Alarm (forced, held open or both)",
                             trigger_type_id = 9,
@@ -7122,7 +7119,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 79,
+                            id = 83,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Fault",
                             trigger_type_id = 9,
@@ -7130,7 +7127,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 80,
+                            id = 84,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Cancel procedure (abort delay)",
                             trigger_type_id = 10,
@@ -7138,7 +7135,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 81,
+                            id = 85,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Execute procedure (start new)",
                             trigger_type_id = 10,
@@ -7146,7 +7143,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 82,
+                            id = 86,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Resume procedure, if paused",
                             trigger_type_id = 10,
@@ -7154,7 +7151,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 83,
+                            id = 87,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Execute procedure with prefix 256 actions",
                             trigger_type_id = 10,
@@ -7162,7 +7159,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 84,
+                            id = 88,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Execute procedure with prefix 512 actions",
                             trigger_type_id = 10,
@@ -7170,7 +7167,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 85,
+                            id = 89,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Execute procedure with prefix 1024 actions",
                             trigger_type_id = 10,
@@ -7178,7 +7175,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 86,
+                            id = 90,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Resume procedure with prefix 256 actions",
                             trigger_type_id = 10,
@@ -7186,7 +7183,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 87,
+                            id = 91,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Resume procedure with prefix 512 actions",
                             trigger_type_id = 10,
@@ -7194,7 +7191,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 88,
+                            id = 92,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Resume procedure with prefix 1024 actions",
                             trigger_type_id = 10,
@@ -7202,7 +7199,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 89,
+                            id = 93,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Command was issued to procedure with no actions - (NOP)",
                             trigger_type_id = 10,
@@ -7210,7 +7207,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 90,
+                            id = 94,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Command entered by the user",
                             trigger_type_id = 11,
@@ -7218,7 +7215,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 91,
+                            id = 95,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Became inactive",
                             trigger_type_id = 12,
@@ -7226,7 +7223,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 92,
+                            id = 96,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Became active",
                             trigger_type_id = 12,
@@ -7234,7 +7231,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 93,
+                            id = 97,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Disabled",
                             trigger_type_id = 13,
@@ -7242,7 +7239,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 94,
+                            id = 98,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Unlocked",
                             trigger_type_id = 13,
@@ -7250,7 +7247,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 95,
+                            id = 99,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Locked (exit request enabled)",
                             trigger_type_id = 13,
@@ -7258,7 +7255,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 96,
+                            id = 100,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Facility code only",
                             trigger_type_id = 13,
@@ -7266,7 +7263,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 97,
+                            id = 101,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Card only",
                             trigger_type_id = 13,
@@ -7274,7 +7271,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 98,
+                            id = 102,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "PIN only",
                             trigger_type_id = 13,
@@ -7282,7 +7279,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 99,
+                            id = 103,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Card and PIN",
                             trigger_type_id = 13,
@@ -7290,7 +7287,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 100,
+                            id = 104,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "PIN or card",
                             trigger_type_id = 13,
@@ -7298,7 +7295,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 101,
+                            id = 105,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "First disarm command executed (mask_count was 0, all MPs got masked)",
                             trigger_type_id = 14,
@@ -7306,7 +7303,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 102,
+                            id = 106,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Subsequent disarm command executed (mask_count incremented, MPs already masked)",
                             trigger_type_id = 14,
@@ -7314,7 +7311,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 103,
+                            id = 107,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Override command: armed (mask_count cleared, all points unmasked)",
                             trigger_type_id = 14,
@@ -7322,7 +7319,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 104,
+                            id = 108,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Override command: disarmed (mask_count set, unmasked all points)",
                             trigger_type_id = 14,
@@ -7330,7 +7327,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 105,
+                            id = 109,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Force arm command, MPG armed, (may have active zones, mask_count is now zero)",
                             trigger_type_id = 14,
@@ -7338,7 +7335,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 106,
+                            id = 110,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Force arm command, MPG not armed (mask_count decremented)",
                             trigger_type_id = 14,
@@ -7346,7 +7343,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 107,
+                            id = 111,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Standard arm command, MPG armed (did not have active zones, mask_count is now zero)",
                             trigger_type_id = 14,
@@ -7354,7 +7351,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 108,
+                            id = 112,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Standard arm command, MPG did not arm, (had active zones, mask_count unchanged)",
                             trigger_type_id = 14,
@@ -7362,7 +7359,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 109,
+                            id = 113,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Standard arm command, MPG still armed, (mask_count decremented)",
                             trigger_type_id = 14,
@@ -7370,7 +7367,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 110,
+                            id = 114,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Override arm command, MPG armed (mask_count is now zero)",
                             trigger_type_id = 14,
@@ -7378,7 +7375,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 111,
+                            id = 115,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Override arm command, MPG did not arm, (mask_count decremented)",
                             trigger_type_id = 14,
@@ -7386,7 +7383,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 112,
+                            id = 116,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Area disabled",
                             trigger_type_id = 15,
@@ -7394,7 +7391,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 113,
+                            id = 117,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Area enabled",
                             trigger_type_id = 15,
@@ -7402,7 +7399,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 114,
+                            id = 118,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Occupancy count reached zero",
                             trigger_type_id = 15,
@@ -7410,7 +7407,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 115,
+                            id = 119,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Occupancy count reached the \"downward-limit\"",
                             trigger_type_id = 15,
@@ -7418,7 +7415,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 116,
+                            id = 120,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Occupancy count reached the \"upward-limit\"",
                             trigger_type_id = 15,
@@ -7426,7 +7423,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 117,
+                            id = 121,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Occupancy count reached the \"max-occupancy-limit\"",
                             trigger_type_id = 15,
@@ -7434,7 +7431,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 118,
+                            id = 122,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Multi-occupancy mode changed",
                             trigger_type_id = 15,
@@ -7442,7 +7439,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 119,
+                            id = 123,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Use limit changed, reporting new limit",
                             trigger_type_id = 17,
@@ -7450,7 +7447,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 120,
+                            id = 124,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Save home notes",
                             trigger_type_id = 18,
@@ -7458,7 +7455,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 121,
+                            id = 125,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Save network settings",
                             trigger_type_id = 18,
@@ -7466,7 +7463,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 122,
+                            id = 126,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Save host communication settings",
                             trigger_type_id = 18,
@@ -7474,7 +7471,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 123,
+                            id = 127,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Add user",
                             trigger_type_id = 18,
@@ -7482,7 +7479,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 124,
+                            id = 128,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Delete user",
                             trigger_type_id = 18,
@@ -7490,7 +7487,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 125,
+                            id = 129,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Modify user",
                             trigger_type_id = 18,
@@ -7498,7 +7495,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 126,
+                            id = 130,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Save password strength and session timer",
                             trigger_type_id = 18,
@@ -7506,7 +7503,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 127,
+                            id = 131,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Save web server options",
                             trigger_type_id = 18,
@@ -7514,7 +7511,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 128,
+                            id = 132,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Save time server settings",
                             trigger_type_id = 18,
@@ -7522,7 +7519,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 129,
+                            id = 133,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Auto save timer settings",
                             trigger_type_id = 18,
@@ -7530,7 +7527,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 130,
+                            id = 134,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Load certificate",
                             trigger_type_id = 18,
@@ -7538,7 +7535,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 131,
+                            id = 135,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Logged out by link",
                             trigger_type_id = 18,
@@ -7546,7 +7543,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 132,
+                            id = 136,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Logged out by timeout",
                             trigger_type_id = 18,
@@ -7554,7 +7551,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 133,
+                            id = 137,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Logged out by user",
                             trigger_type_id = 18,
@@ -7562,7 +7559,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 134,
+                            id = 138,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Logged out by apply",
                             trigger_type_id = 18,
@@ -7570,7 +7567,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 135,
+                            id = 139,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Invalid login",
                             trigger_type_id = 18,
@@ -7578,7 +7575,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 136,
+                            id = 140,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Successful login",
                             trigger_type_id = 18,
@@ -7586,7 +7583,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 137,
+                            id = 141,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Network diagnostic saved",
                             trigger_type_id = 18,
@@ -7594,7 +7591,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 138,
+                            id = 142,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Card DB size saved",
                             trigger_type_id = 18,
@@ -7602,7 +7599,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 139,
+                            id = 143,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Diagnostic page saved",
                             trigger_type_id = 18,
@@ -7610,7 +7607,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 140,
+                            id = 144,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Security options page saved",
                             trigger_type_id = 18,
@@ -7618,7 +7615,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 141,
+                            id = 145,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Add-on package page saved",
                             trigger_type_id = 18,
@@ -7626,7 +7623,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 142,
+                            id = 146,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Not used",
                             trigger_type_id = 18,
@@ -7634,7 +7631,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 143,
+                            id = 147,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Not used",
                             trigger_type_id = 18,
@@ -7642,7 +7639,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 144,
+                            id = 148,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Not used",
                             trigger_type_id = 18,
@@ -7650,7 +7647,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 145,
+                            id = 149,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Invalid login limit reached",
                             trigger_type_id = 18,
@@ -7658,7 +7655,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 146,
+                            id = 150,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Firmware download initiated",
                             trigger_type_id = 18,
@@ -7666,7 +7663,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 147,
+                            id = 151,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Advanced networking routes saved",
                             trigger_type_id = 18,
@@ -7674,7 +7671,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 148,
+                            id = 152,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Advanced networking reversion timer started",
                             trigger_type_id = 18,
@@ -7682,7 +7679,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 149,
+                            id = 153,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Advanced networking reversion timer elapsed",
                             trigger_type_id = 18,
@@ -7690,7 +7687,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 150,
+                            id = 154,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Advanced networking route changes reverted",
                             trigger_type_id = 18,
@@ -7698,7 +7695,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 151,
+                            id = 155,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Advanced networking route changes cleared",
                             trigger_type_id = 18,
@@ -7706,7 +7703,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 152,
+                            id = 156,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Certificate generation started",
                             trigger_type_id = 18,
@@ -7714,7 +7711,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 153,
+                            id = 157,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Operating mode changed to mode 0",
                             trigger_type_id = 21,
@@ -7722,7 +7719,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 154,
+                            id = 158,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Operating mode changed to mode 1",
                             trigger_type_id = 21,
@@ -7730,7 +7727,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 155,
+                            id = 159,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Operating mode changed to mode 2",
                             trigger_type_id = 21,
@@ -7738,7 +7735,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 156,
+                            id = 160,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Operating mode changed to mode 3",
                             trigger_type_id = 21,
@@ -7746,7 +7743,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 157,
+                            id = 161,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Operating mode changed to mode 4",
                             trigger_type_id = 21,
@@ -7754,7 +7751,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 158,
+                            id = 162,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Operating mode changed to mode 5",
                             trigger_type_id = 21,
@@ -7762,7 +7759,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 159,
+                            id = 163,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Operating mode changed to mode 6",
                             trigger_type_id = 21,
@@ -7770,7 +7767,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 160,
+                            id = 164,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Operating mode changed to mode 7",
                             trigger_type_id = 21,
@@ -7778,7 +7775,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 161,
+                            id = 165,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Floor status is secure",
                             trigger_type_id = 22,
@@ -7786,7 +7783,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 162,
+                            id = 166,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Floor status is public",
                             trigger_type_id = 22,
@@ -7794,7 +7791,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 163,
+                            id = 167,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Floor status is disabled (override)",
                             trigger_type_id = 22,
@@ -7802,7 +7799,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 164,
+                            id = 168,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "File transfer success",
                             trigger_type_id = 23,
@@ -7810,7 +7807,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 165,
+                            id = 169,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "File transfer error",
                             trigger_type_id = 23,
@@ -7818,7 +7815,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 166,
+                            id = 170,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "File delete successful",
                             trigger_type_id = 23,
@@ -7826,7 +7823,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 167,
+                            id = 171,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "File delete unsuccessful",
                             trigger_type_id = 23,
@@ -7834,7 +7831,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 168,
+                            id = 172,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "OSDP file transfer complete (primary ACR) - look at source number for ACR number",
                             trigger_type_id = 23,
@@ -7842,7 +7839,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 169,
+                            id = 173,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "OSDP file transfer error (primary ACR) - look at source number for ACR number",
                             trigger_type_id = 23,
@@ -7850,7 +7847,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 170,
+                            id = 174,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "OSDP file transfer complete (alternate ACR) - look at source number for ACR number",
                             trigger_type_id = 23,
@@ -7858,7 +7855,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 171,
+                            id = 175,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "OSDP file transfer error (alternate ACR) - look at source number for ACR number",
                             trigger_type_id = 23,
@@ -7866,7 +7863,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 172,
+                            id = 176,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Elevator access",
                             trigger_type_id = 24,
@@ -7874,7 +7871,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 173,
+                            id = 177,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Extended status updated",
                             trigger_type_id = 28,
@@ -7882,7 +7879,7 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 174,
+                            id = 178,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Secure / Inactive",
                             trigger_type_id = 29,
@@ -7890,11 +7887,515 @@ namespace Core.Infrastructure.Migrations
                         },
                         new
                         {
-                            id = 175,
+                            id = 179,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Alarm / Active",
                             trigger_type_id = 29,
                             value = (short)4
+                        },
+                        new
+                        {
+                            id = 180,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Disconnected",
+                            trigger_type_id = 30,
+                            value = (short)1
+                        },
+                        new
+                        {
+                            id = 181,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Unknown",
+                            trigger_type_id = 30,
+                            value = (short)2
+                        },
+                        new
+                        {
+                            id = 182,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Secure",
+                            trigger_type_id = 30,
+                            value = (short)3
+                        },
+                        new
+                        {
+                            id = 183,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Alarm",
+                            trigger_type_id = 30,
+                            value = (short)4
+                        },
+                        new
+                        {
+                            id = 184,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Fault",
+                            trigger_type_id = 30,
+                            value = (short)5
+                        },
+                        new
+                        {
+                            id = 185,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Exit delay in progress",
+                            trigger_type_id = 30,
+                            value = (short)6
+                        },
+                        new
+                        {
+                            id = 186,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Entry delay in progress",
+                            trigger_type_id = 30,
+                            value = (short)7
+                        },
+                        new
+                        {
+                            id = 187,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Disconnected",
+                            trigger_type_id = 31,
+                            value = (short)1
+                        },
+                        new
+                        {
+                            id = 188,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Unknown",
+                            trigger_type_id = 31,
+                            value = (short)2
+                        },
+                        new
+                        {
+                            id = 189,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Secure",
+                            trigger_type_id = 31,
+                            value = (short)3
+                        },
+                        new
+                        {
+                            id = 190,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Alarm",
+                            trigger_type_id = 31,
+                            value = (short)4
+                        },
+                        new
+                        {
+                            id = 191,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Fault",
+                            trigger_type_id = 31,
+                            value = (short)5
+                        },
+                        new
+                        {
+                            id = 192,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Exit delay in progress",
+                            trigger_type_id = 31,
+                            value = (short)6
+                        },
+                        new
+                        {
+                            id = 193,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Entry delay in progress",
+                            trigger_type_id = 31,
+                            value = (short)7
+                        },
+                        new
+                        {
+                            id = 194,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Disconnected",
+                            trigger_type_id = 32,
+                            value = (short)1
+                        },
+                        new
+                        {
+                            id = 195,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Unknown",
+                            trigger_type_id = 32,
+                            value = (short)2
+                        },
+                        new
+                        {
+                            id = 196,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Secure",
+                            trigger_type_id = 32,
+                            value = (short)3
+                        },
+                        new
+                        {
+                            id = 197,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Alarm",
+                            trigger_type_id = 32,
+                            value = (short)4
+                        },
+                        new
+                        {
+                            id = 198,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Fault",
+                            trigger_type_id = 32,
+                            value = (short)5
+                        },
+                        new
+                        {
+                            id = 199,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Exit delay in progress",
+                            trigger_type_id = 32,
+                            value = (short)6
+                        },
+                        new
+                        {
+                            id = 200,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Entry delay in progress",
+                            trigger_type_id = 32,
+                            value = (short)7
+                        },
+                        new
+                        {
+                            id = 201,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Disconnected",
+                            trigger_type_id = 33,
+                            value = (short)1
+                        },
+                        new
+                        {
+                            id = 202,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Unknown",
+                            trigger_type_id = 33,
+                            value = (short)2
+                        },
+                        new
+                        {
+                            id = 203,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Secure",
+                            trigger_type_id = 33,
+                            value = (short)3
+                        },
+                        new
+                        {
+                            id = 204,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Alarm",
+                            trigger_type_id = 33,
+                            value = (short)4
+                        },
+                        new
+                        {
+                            id = 205,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Fault",
+                            trigger_type_id = 33,
+                            value = (short)5
+                        },
+                        new
+                        {
+                            id = 206,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Exit delay in progress",
+                            trigger_type_id = 33,
+                            value = (short)6
+                        },
+                        new
+                        {
+                            id = 207,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Entry delay in progress",
+                            trigger_type_id = 33,
+                            value = (short)7
+                        },
+                        new
+                        {
+                            id = 208,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Disconnected",
+                            trigger_type_id = 34,
+                            value = (short)1
+                        },
+                        new
+                        {
+                            id = 209,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Unknown",
+                            trigger_type_id = 34,
+                            value = (short)2
+                        },
+                        new
+                        {
+                            id = 210,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Secure",
+                            trigger_type_id = 34,
+                            value = (short)3
+                        },
+                        new
+                        {
+                            id = 211,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Alarm",
+                            trigger_type_id = 34,
+                            value = (short)4
+                        },
+                        new
+                        {
+                            id = 212,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Fault",
+                            trigger_type_id = 34,
+                            value = (short)5
+                        },
+                        new
+                        {
+                            id = 213,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Exit delay in progress",
+                            trigger_type_id = 34,
+                            value = (short)6
+                        },
+                        new
+                        {
+                            id = 214,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Entry delay in progress",
+                            trigger_type_id = 34,
+                            value = (short)7
+                        },
+                        new
+                        {
+                            id = 215,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Disconnected",
+                            trigger_type_id = 35,
+                            value = (short)1
+                        },
+                        new
+                        {
+                            id = 216,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Unknown",
+                            trigger_type_id = 35,
+                            value = (short)2
+                        },
+                        new
+                        {
+                            id = 217,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Secure",
+                            trigger_type_id = 35,
+                            value = (short)3
+                        },
+                        new
+                        {
+                            id = 218,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Alarm",
+                            trigger_type_id = 35,
+                            value = (short)4
+                        },
+                        new
+                        {
+                            id = 219,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Fault",
+                            trigger_type_id = 35,
+                            value = (short)5
+                        },
+                        new
+                        {
+                            id = 220,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Exit delay in progress",
+                            trigger_type_id = 35,
+                            value = (short)6
+                        },
+                        new
+                        {
+                            id = 221,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Entry delay in progress",
+                            trigger_type_id = 35,
+                            value = (short)7
+                        },
+                        new
+                        {
+                            id = 222,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Disconnected",
+                            trigger_type_id = 36,
+                            value = (short)1
+                        },
+                        new
+                        {
+                            id = 223,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Unknown",
+                            trigger_type_id = 36,
+                            value = (short)2
+                        },
+                        new
+                        {
+                            id = 224,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Secure",
+                            trigger_type_id = 36,
+                            value = (short)3
+                        },
+                        new
+                        {
+                            id = 225,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Alarm",
+                            trigger_type_id = 36,
+                            value = (short)4
+                        },
+                        new
+                        {
+                            id = 226,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Fault",
+                            trigger_type_id = 36,
+                            value = (short)5
+                        },
+                        new
+                        {
+                            id = 227,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Exit delay in progress",
+                            trigger_type_id = 36,
+                            value = (short)6
+                        },
+                        new
+                        {
+                            id = 228,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Entry delay in progress",
+                            trigger_type_id = 36,
+                            value = (short)7
+                        },
+                        new
+                        {
+                            id = 229,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Disconnected",
+                            trigger_type_id = 37,
+                            value = (short)1
+                        },
+                        new
+                        {
+                            id = 230,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Unknown",
+                            trigger_type_id = 37,
+                            value = (short)2
+                        },
+                        new
+                        {
+                            id = 231,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Secure",
+                            trigger_type_id = 37,
+                            value = (short)3
+                        },
+                        new
+                        {
+                            id = 232,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Alarm",
+                            trigger_type_id = 37,
+                            value = (short)4
+                        },
+                        new
+                        {
+                            id = 233,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Fault",
+                            trigger_type_id = 37,
+                            value = (short)5
+                        },
+                        new
+                        {
+                            id = 234,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Exit delay in progress",
+                            trigger_type_id = 37,
+                            value = (short)6
+                        },
+                        new
+                        {
+                            id = 235,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Entry delay in progress",
+                            trigger_type_id = 37,
+                            value = (short)7
+                        },
+                        new
+                        {
+                            id = 236,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Disconnected",
+                            trigger_type_id = 38,
+                            value = (short)1
+                        },
+                        new
+                        {
+                            id = 237,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Unknown",
+                            trigger_type_id = 38,
+                            value = (short)2
+                        },
+                        new
+                        {
+                            id = 238,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Secure",
+                            trigger_type_id = 38,
+                            value = (short)3
+                        },
+                        new
+                        {
+                            id = 239,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Alarm",
+                            trigger_type_id = 38,
+                            value = (short)4
+                        },
+                        new
+                        {
+                            id = 240,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Fault",
+                            trigger_type_id = 38,
+                            value = (short)5
+                        },
+                        new
+                        {
+                            id = 241,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Exit delay in progress",
+                            trigger_type_id = 38,
+                            value = (short)6
+                        },
+                        new
+                        {
+                            id = 242,
+                            guid = new Guid("00000000-0000-0000-0000-000000000000"),
+                            name = "Entry delay in progress",
+                            trigger_type_id = 38,
+                            value = (short)7
                         });
                 });
 
@@ -7929,6 +8430,9 @@ namespace Core.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
 
+                    b.Property<int>("entity_Type")
+                        .HasColumnType("integer");
+
                     b.Property<Guid>("guid")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
@@ -7952,6 +8456,7 @@ namespace Core.Infrastructure.Migrations
                         new
                         {
                             id = 1,
+                            entity_Type = 2,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Device diagnostics",
                             value = (short)0
@@ -7959,6 +8464,7 @@ namespace Core.Infrastructure.Migrations
                         new
                         {
                             id = 2,
+                            entity_Type = 2,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Device to HOST communication driver - not defined",
                             value = (short)1
@@ -7966,6 +8472,7 @@ namespace Core.Infrastructure.Migrations
                         new
                         {
                             id = 3,
+                            entity_Type = 2,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Device local monitor points (tamper & power fault)",
                             value = (short)2
@@ -7973,6 +8480,7 @@ namespace Core.Infrastructure.Migrations
                         new
                         {
                             id = 4,
+                            entity_Type = 4,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Module diagnostics",
                             value = (short)3
@@ -7980,6 +8488,7 @@ namespace Core.Infrastructure.Migrations
                         new
                         {
                             id = 5,
+                            entity_Type = 4,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Module communication driver",
                             value = (short)4
@@ -7987,6 +8496,7 @@ namespace Core.Infrastructure.Migrations
                         new
                         {
                             id = 6,
+                            entity_Type = 4,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Module cabinet tamper",
                             value = (short)5
@@ -7994,6 +8504,7 @@ namespace Core.Infrastructure.Migrations
                         new
                         {
                             id = 7,
+                            entity_Type = 4,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Module power monitor",
                             value = (short)6
@@ -8001,6 +8512,7 @@ namespace Core.Infrastructure.Migrations
                         new
                         {
                             id = 8,
+                            entity_Type = 22,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Alarm monitor point",
                             value = (short)7
@@ -8008,6 +8520,7 @@ namespace Core.Infrastructure.Migrations
                         new
                         {
                             id = 9,
+                            entity_Type = 23,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Output control point",
                             value = (short)8
@@ -8015,6 +8528,7 @@ namespace Core.Infrastructure.Migrations
                         new
                         {
                             id = 10,
+                            entity_Type = 17,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Access Control Reader (ACR)",
                             value = (short)9
@@ -8022,6 +8536,7 @@ namespace Core.Infrastructure.Migrations
                         new
                         {
                             id = 11,
+                            entity_Type = 17,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Door: reader tamper monitor",
                             value = (short)10
@@ -8029,6 +8544,7 @@ namespace Core.Infrastructure.Migrations
                         new
                         {
                             id = 12,
+                            entity_Type = 17,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Door: door position sensor",
                             value = (short)11
@@ -8036,6 +8552,7 @@ namespace Core.Infrastructure.Migrations
                         new
                         {
                             id = 13,
+                            entity_Type = 17,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Door: 1st \"Request to exit\" input",
                             value = (short)13
@@ -8043,6 +8560,7 @@ namespace Core.Infrastructure.Migrations
                         new
                         {
                             id = 14,
+                            entity_Type = 17,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Door: 2nd \"Request to exit\" input",
                             value = (short)14
@@ -8050,6 +8568,7 @@ namespace Core.Infrastructure.Migrations
                         new
                         {
                             id = 15,
+                            entity_Type = 14,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Time zone",
                             value = (short)15
@@ -8057,6 +8576,7 @@ namespace Core.Infrastructure.Migrations
                         new
                         {
                             id = 16,
+                            entity_Type = 24,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Procedure (action list)",
                             value = (short)16
@@ -8064,6 +8584,7 @@ namespace Core.Infrastructure.Migrations
                         new
                         {
                             id = 17,
+                            entity_Type = 25,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Trigger",
                             value = (short)17
@@ -8071,6 +8592,7 @@ namespace Core.Infrastructure.Migrations
                         new
                         {
                             id = 18,
+                            entity_Type = 26,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Trigger variable",
                             value = (short)18
@@ -8078,6 +8600,7 @@ namespace Core.Infrastructure.Migrations
                         new
                         {
                             id = 19,
+                            entity_Type = 27,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Monitor point group",
                             value = (short)19
@@ -8085,6 +8608,7 @@ namespace Core.Infrastructure.Migrations
                         new
                         {
                             id = 20,
+                            entity_Type = 28,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Access area",
                             value = (short)20
@@ -8092,6 +8616,7 @@ namespace Core.Infrastructure.Migrations
                         new
                         {
                             id = 21,
+                            entity_Type = 17,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Door: the alternate reader's tamper monitor source_number",
                             value = (short)21
@@ -8099,6 +8624,7 @@ namespace Core.Infrastructure.Migrations
                         new
                         {
                             id = 22,
+                            entity_Type = 2,
                             guid = new Guid("00000000-0000-0000-0000-000000000000"),
                             name = "Login Service",
                             value = (short)24
@@ -9859,7 +10385,7 @@ namespace Core.Infrastructure.Migrations
 
                     b.HasOne("Core.Infrastructure.Persistences.Entities.TimeZone", "timezone")
                         .WithMany("triggers")
-                        .HasForeignKey("timezoneid")
+                        .HasForeignKey("timezone_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

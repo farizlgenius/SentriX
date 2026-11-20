@@ -13,6 +13,13 @@ import { DeviceEndpoint } from "../../endpoint/DeviceEndpoint";
 import { HttpStatusCode } from "axios";
 import { TriggerCommand } from "../../enum/TriggerCommand";
 import ListTransfer, { ListOptionsTransfer } from "../../components/form/list-transfer/ListTransfer";
+import { EntityType } from "../../enum/EntityType";
+import { TimezoneEndPoint } from "../../endpoint/TimezoneEndpoint";
+import { ModuleEndpoint } from "../../endpoint/ModuleEndpoint";
+import { DoorEndpoint } from "../../endpoint/DoorEndpoint";
+import { ProcedureEndpoint } from "../../endpoint/ProcedureEndpoint";
+import { OutputEndpoint } from "../../endpoint/ControlPointEndpoint";
+import { MonitorPointEndpoint } from "../../endpoint/MonitorPointEndpoint";
 
 export const TriggerForm: React.FC<PropsWithChildren<FormProp<TriggerDto>>> = ({
   handleClick,
@@ -29,12 +36,16 @@ export const TriggerForm: React.FC<PropsWithChildren<FormProp<TriggerDto>>> = ({
   const [selectedTriggerCodes,setSelectedTriggerCodes] = useState<Options[]>([]);
   const [availableTriggerCodes,setAvailableTriggerCodes] = useState<Options[]>([]);
 
-  const [tran, setTran] = useState<Options[]>([]);
-  const [code, setCode] = useState<Options[]>([]);
-  const [device, setDevice] = useState<Options[]>([]);
-  const [tz, setTz] = useState<Options[]>([]);
-  const [procedure, setProcedure] = useState<Options[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [triggerArgOption,setTriggerArgOption] = useState<Options[]>([]);
+  const [selectedTriggerArgs,setSelectedTriggerArgs] = useState<Options[]>([]);
+  const [availableTriggerArgs,setAvailableTriggerArgs] = useState<Options[]>([]);
+
+  const [sourceOption,setSourceOption] = useState<Options[]>([]);
+  const [tzOption,setTzOption] = useState<Options[]>([]);
+
+  const [procedureOption,setProcedureOption] = useState<Options[]>([]);
+
+
 
   const isReadOnly = type == FormType.INFO 
 
@@ -60,18 +71,63 @@ export const TriggerForm: React.FC<PropsWithChildren<FormProp<TriggerDto>>> = ({
   }
 
   const fetchTriggerCode = async (type:string) => {
-    try{
-      setLoading(false);
-      const res = await send.get(TriggerEndpoint.GET_TRIGGER_CODE(type))
+    const res = await send.get(TriggerEndpoint.GET_TRIGGER_CODE(type))
     if(res.status == HttpStatusCode.Ok){
       setTriggerCodeOption(res.data.data);
       setSelectedTriggerCodes(res.data.data.filter((x:Options) => dto.triggerCodes.includes(x.value.toString())))
       setAvailableTriggerCodes(res.data.data.filter((x:Options) => !dto.triggerCodes.includes(x.value.toString())));
     }
-    }catch (err){
-      console.error("Failed to load trigger code",err);
-    }finally{
-      setLoading(false);
+  }
+
+  const fetchTriggerArg = async (code:string[]) => {
+   const res = await send.post(TriggerEndpoint.GET_TRIGGER_ARGS,code)
+    if(res.status == HttpStatusCode.Ok){
+      setTriggerArgOption(res.data.data);
+      setSelectedTriggerArgs(res.data.data.filter((x:Options) => dto.triggerArgs.includes(x.value.toString())))
+      setAvailableTriggerArgs(res.data.data.filter((x:Options) => !dto.triggerArgs.includes(x.value.toString())));
+    }
+  }
+
+  const getSourceSwitcher = async (type:EntityType) => {
+    switch(type){
+      case EntityType.DEVICE_MODULE:
+        return await send.get(ModuleEndpoint.GET_OPTION(dto.device));
+      case EntityType.DOOR:
+        return await send.get(DoorEndpoint.GET_BY_DEVICE(dto.device));
+      case EntityType.OUTPUT:
+        return await send.get(OutputEndpoint.GET_OPTION_BY_DEVICE(dto.device));
+      case EntityType.INPUT:
+        return await send.get(MonitorPointEndpoint.GET_OPTION_BY_DEVICE(dto.device));
+      default:
+        break;
+    }
+  }
+
+  const fetchSourceDevice = async (type:EntityType) => {
+    if(type == EntityType.DEVICE){
+      setDto(prev => ({
+        ...prev,
+        src:prev.device
+      }))
+      return;
+    }
+    var res = await getSourceSwitcher(type);
+    if(res.status == HttpStatusCode.Ok){
+      setSourceOption(res.data.data);
+    }
+  }
+
+  const fetchTimeZone = async () => {
+    const res = await send.get(TimezoneEndPoint.GET_OPTION_BY_LOCATION(locationGuid))
+    if(res.status == HttpStatusCode.Ok){
+      setTzOption(res.data.data);
+    }
+  }
+
+  const fetchProcedure = async (device:string) => {
+    const res = await send.get(ProcedureEndpoint.GET_OPTION_BY_DEVICE(device))
+    if(res.status == HttpStatusCode.Ok){
+      setProcedureOption(res.data.data);
     }
   }
 
@@ -81,6 +137,14 @@ export const TriggerForm: React.FC<PropsWithChildren<FormProp<TriggerDto>>> = ({
         ...prev,
         triggerCodes: data.map((x) => x.value.toString()),
       }));
+      fetchTriggerArg(data.map(x => x.value.toString()));
+    };
+
+    const handleTriggerArgListChange = (data: Options[]) => {
+      setDto((prev) => ({
+        ...prev,
+        triggerArgs: data.map((x) => x.value.toString()),
+      }));
     };
 
   
@@ -88,6 +152,7 @@ export const TriggerForm: React.FC<PropsWithChildren<FormProp<TriggerDto>>> = ({
   useEffect(() => {
     fetchDevice();
     fetchTriggerSource();
+    fetchTimeZone();
   }, []);
   return (
     <div className="grid gap-5 grid-cols-2 md:grid-cols-2 gap-x-10 gap-y-6 mb-8 p-5">
@@ -108,11 +173,14 @@ export const TriggerForm: React.FC<PropsWithChildren<FormProp<TriggerDto>>> = ({
           name="device"
           options={deviceOption}
           defaultValue={dto.device}
-          onChange={e => 
+          onChange={e => {
             setDto(prev => ({
               ...prev,
               device:e.target.value
             }))
+            fetchProcedure(e.target.value);
+          }
+            
           }
         />
       </FormField>
@@ -171,6 +239,7 @@ export const TriggerForm: React.FC<PropsWithChildren<FormProp<TriggerDto>>> = ({
       <FormField>
         <Label>Trigger Source</Label>
         <Select
+          disabled={isReadOnly || dto.device == "" || dto.device == undefined}
           isString
           name="triggerSource"
           options={triggerSourceOption}
@@ -179,10 +248,14 @@ export const TriggerForm: React.FC<PropsWithChildren<FormProp<TriggerDto>>> = ({
             setDto(prev => ({
               ...prev,
               triggerSource:e.target.value,
+              srcType: Number(triggerSourceOption.find(x => x.value == e.target.value)?.description) ?? EntityType.UNKNOWN,
               triggerType:"",
-              triggerCodes:[]
+              triggerCodes:[],
+              src:""
             }));
             fetchTriggerType(e.target.value)
+            setSourceOption([])
+            fetchSourceDevice(Number(triggerSourceOption.find(x => x.value == e.target.value)?.description) ?? EntityType.UNKNOWN);
             setTriggerCodeOption([])
           }
           }
@@ -206,22 +279,25 @@ export const TriggerForm: React.FC<PropsWithChildren<FormProp<TriggerDto>>> = ({
           } }
         />
       </FormField>
-      <div></div>
-      <FormField className="col-span-2">
-        <Label>Trigger Code</Label>
-        {/* <Select
+     <FormField>
+        <Label>Source Device</Label>
+        <Select
+          disabled={isReadOnly || dto.triggerSource == ""}
           isString
-          name="triggerCode"
-          options={triggerTypeOption}
-          defaultValue={dto.triggerType}
-          onChange={e =>
+          name="src"
+          options={sourceOption}
+          defaultValue={dto.src}
+           onChange={e =>
             setDto(prev => ({
               ...prev,
-              triggerType:e.target.value
+              src:e.target.value
             }))
           }
-        /> */}
-        {loading ? (
+        />
+      </FormField>
+      <FormField className="col-span-2">
+        <Label>Trigger Code</Label>
+        {/* {codeLoading ? (
                 <p>Loading trigger codes...</p>
               ) : 
               triggerCodeOption.length == 0 ? 
@@ -234,56 +310,66 @@ export const TriggerForm: React.FC<PropsWithChildren<FormProp<TriggerDto>>> = ({
                   onChange={handleTriggerCodeListChange}
                   disabled={isReadOnly}
                 />
-              )}
+              )} */}
+
+           <ListOptionsTransfer<Options>
+                  availableItems={availableTriggerCodes}
+                  selectedItems={selectedTriggerCodes}
+                  onChange={handleTriggerCodeListChange}
+                  disabled={isReadOnly}
+                />
         
       </FormField>
-      <FormField>
-        <Label>Source Device</Label>
-        <Select
-          name="sourceNumber"
-          options={device}
-          defaultValue={dto.src}
-           onChange={e =>
-            setDto(prev => ({
-              ...prev,
-              src:e.target.value
-            }))
-          }
-        />
+      <FormField className="col-span-2">
+        <Label>Trigger Args</Label>
+        {/* {argLoading ? (
+                <p>Loading trigger args...</p>
+              ) : 
+              triggerArgOption.length == 0 ? 
+                <p>No trigger code available for selected type.</p>
+              :
+              (
+                <ListOptionsTransfer<Options>
+                  availableItems={availableTriggerArgs}
+                  selectedItems={selectedTriggerArgs}
+                  onChange={handleTriggerArgListChange}
+                  disabled={isReadOnly}
+                />
+              )} */}
+               <ListOptionsTransfer<Options>
+                  availableItems={availableTriggerArgs}
+                  selectedItems={selectedTriggerArgs}
+                  onChange={handleTriggerArgListChange}
+                  disabled={isReadOnly}
+                />
       </FormField>
-      <FormField>
-        <Label>Tran Type</Label>
-        <Select
-          name="tranType"
-          options={tran}
-          defaultValue={dto.triggerType}
-           onChange={e =>
-            setDto(prev => ({
-              ...prev,
-              srcType:Number(e.target.value)
-            }))
-          }
-        />
-      </FormField>
-      <FormField>
-        <Label>Tran Code</Label>
-        <Select
-          name="codeMap"
-          options={code}
-          defaultValue={-1}
-        
-        />
-      </FormField>
+      
       <FormField>
         <Label>Time Zone</Label>
         <Select
+          isString
           name="timeZone"
-          options={tz}
+          options={tzOption}
           defaultValue={dto.timeZone}
           onChange={e =>
             setDto(prev => ({
               ...prev,
               timeZone:e.target.value
+            }))
+          }
+        />
+      </FormField>
+       <FormField>
+        <Label>Procedure to trigger</Label>
+        <Select
+          isString
+          name="procedure"
+          options={procedureOption}
+          defaultValue={dto.procedure}
+          onChange={e =>
+            setDto(prev => ({
+              ...prev,
+              procedure:e.target.value
             }))
           }
         />

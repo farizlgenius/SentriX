@@ -46,8 +46,8 @@ public sealed class TriggerRepository(CoreDbContext context) : BaseRepository<Pe
                   .Where(x => x.trigger_type == null || x.trigger_type.guid == type)
                   .Select(x => new OptionDto(
                         x.name,
-                        x.value,
-                        x.guid.ToString()
+                       x.guid.ToString(),
+                        x.value
                   )).ToArrayAsync(ct);
       }
 
@@ -70,7 +70,7 @@ public sealed class TriggerRepository(CoreDbContext context) : BaseRepository<Pe
                   .Select(x => new OptionDto(
                         x.name,
                         x.guid.ToString(),
-                        x.value
+                        x.entity_Type
                   )).ToArrayAsync(ct);
       }
 
@@ -206,5 +206,19 @@ public sealed class TriggerRepository(CoreDbContext context) : BaseRepository<Pe
                   .FirstOrDefaultAsync(ct) ?? throw new NotFoundException("Trigger Variable",guid.ToString());
 
             return (res.id,res.external_id ?? 0);
+      }
+
+      public async Task<IEnumerable<OptionDto>> GetArgAsync(IEnumerable<Guid> codes, CancellationToken ct = default)
+      {
+            return await Context.TriggerArgs
+                  .AsNoTracking()
+                  .Where(x => codes.Contains(x.trigger_code.guid))
+                  .Select(x => 
+                        new OptionDto(
+                              x.name,
+                              x.guid.ToString(),
+                              x.value
+                        )
+                  ).ToArrayAsync(ct);
       }
 }

@@ -98,6 +98,13 @@ public class TriggerController(
             return Ok(res);
       }
 
+      [HttpPost("arg")]
+      public async Task<IActionResult> GetArgAsync([FromBody] IEnumerable<Guid> guids)
+      {
+            var res = await trigger.GetArgAsync(guids);
+            return Ok(res);
+      }
+
       // Variable 
       [HttpGet("variable/pagination")]
       public async Task<IActionResult> GetVariablePaginationAsync([FromQuery] PaginationParams param)

@@ -873,9 +873,9 @@ public sealed class DeviceService(
 
                   }
 
-                  
+            }
 
-                  // Group
+            // Group
                   var gps = await bus.QueryAsync(new GroupByMacQuery(device.Mac),ct);
                   foreach (var g in gps)
                   {
@@ -1019,8 +1019,6 @@ public sealed class DeviceService(
                   // finally
 
                   await bus.SendAsync(new ConfigurationStatusCommand(mac, true, true),ct);
-
-            }
       }
 
       public async Task CommandAsync(string mac, string ip, short scpId, string command, CancellationToken ct = default)

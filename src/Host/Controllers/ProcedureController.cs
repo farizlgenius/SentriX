@@ -23,6 +23,13 @@ public class ProcedureController(IProcedure proc) : ControllerBase
             return Ok(res);
       }
 
+      [HttpGet("option/{guid}")]
+      public async Task<IActionResult> GetOptionByDeviceAsync(Guid guid)
+      {
+            var res = await proc.GetOptionByDeviceAsync(guid);
+            return Ok(res);
+      }
+
       [HttpPut]
       public async Task<IActionResult> UpdateAsync([FromBody] UpdateProcedureDto dto)
       {

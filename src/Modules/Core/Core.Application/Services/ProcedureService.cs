@@ -115,6 +115,11 @@ public sealed class ProcedureService(
             return await Repo.EnableAsync(guid, ct);
       }
 
+      public async Task<IEnumerable<OptionDto>> GetOptionByDeviceAsync(Guid guid, CancellationToken ct = default)
+      {
+            return await repo.GetOptionByDeviceAsync(guid,ct);
+      }
+
       public async Task<Guid> UpdateAsync(UpdateProcedureDto dto, CancellationToken ct = default)
       {
             var dev = await device.GetCommandDetailAsync(dto.DeviceGuid, ct);

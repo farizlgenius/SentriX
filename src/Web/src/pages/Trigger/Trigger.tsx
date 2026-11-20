@@ -48,7 +48,7 @@ export const Trigger = () => {
   const defaultDto: TriggerDto = {
     guid: "",
     name: "",
-    command: TriggerCommand.ABORT_DELAY,
+    command: TriggerCommand.EXE_ACTION_PREFIX_0,
     device: "",
     triggerSource: "",
     triggerType: "",
