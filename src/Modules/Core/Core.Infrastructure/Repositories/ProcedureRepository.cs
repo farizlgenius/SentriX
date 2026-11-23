@@ -17,13 +17,36 @@ public sealed class ProcedureRepository(CoreDbContext context) : BaseRepository<
       (en,dom) =>
       {
             en.device_id = dom.DeviceId;
-            en.procedure_actions = [.. dom.ActionIds.Select(x => new ProcedureAction(x.id,x.respective))];
             en.updated_at = DateTime.UtcNow;
       },
       ProcedureProjections.ToDto,
       ProcedureProjections.ToCommand
 ),IProcedureRepository
 {
+      public async Task<short> GetFreeExternalIdByDeviceMacAsync(string mac, int max, short[] exception, CancellationToken ct = default)
+      {
+            var existingIds = await Context.Procedures
+                  .AsNoTracking()
+                  .Where(x => x.device.mac == mac)
+                  .Select(x => x.external_id!.Value)
+                  .ToArrayAsync(ct);
+
+            var existIdsHash = existingIds.ToHashSet();
+
+            if (exception != null)
+            {
+                  existIdsHash.UnionWith(exception);
+            }
+
+            for (short id = 1; id < max; id++)
+            {
+                  if (!existIdsHash.Contains(id))
+                        return id;
+            }
+
+            throw new ExceedException(EntityType.PROCEDURE.ToString());
+      }
+
       public async Task<IEnumerable<OptionDto>> GetOptionByDeviceAsync(Guid guid, CancellationToken ct = default)
       {
             return await Context.Procedures
@@ -52,6 +75,35 @@ public sealed class ProcedureRepository(CoreDbContext context) : BaseRepository<
                   .AsNoTracking()
                   .AnyAsync(x => x.triggers.Any(),ct);
       }
+
+      public override async Task UpdateAsync(Domain.Entities.Procedure d,CancellationToken ct  = default)
+      {
+            await using var transaction = await Context.Database.BeginTransactionAsync(ct);
+            try
+            {
+
+                  var entity = await Context.Procedures.Where(x => x.guid == d.Guid).FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.PROCEDURE.ToString(), d.Guid.ToString());
+
+                  entity.name = d.Name;
+                  entity.device_id = d.DeviceId;
+                  entity.updated_at = DateTime.UtcNow;
+
+                  Context.Action.RemoveRange(entity.actions);
+
+                  entity.actions.Clear();
+
+                  entity.actions = [.. d.Actions.Select(x => new Persistences.Entities.Action(x))];
+
+                  // 5. Commit updates
+                  await Context.SaveChangesAsync(ct);
+                  await transaction.CommitAsync(ct);
+            }
+            catch
+            {
+                  await Context.Database.RollbackTransactionAsync(ct);
+                  throw;
+            }
+      } 
 
 
 }

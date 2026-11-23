@@ -4,7 +4,7 @@ using SharedKernel.Messaging;
 
 namespace Core.Application.Handler.Input;
 
-public sealed class InputNameByExternalIdAndMacAndVendorQueryHandler(IInputRepository repo) : IQueryHandler<InputNameByExternalIdAndMacAndVendorQuery, string>
+public sealed class InputNameByExternalIdAndMacAndVendorQueryHandler(IMonitorRepository repo) : IQueryHandler<InputNameByExternalIdAndMacAndVendorQuery, string>
 {
       public async Task<string> HandleAsync(InputNameByExternalIdAndMacAndVendorQuery query, CancellationToken ct)
       {

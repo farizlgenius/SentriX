@@ -13,11 +13,13 @@ namespace Core.Application.Services;
 
 public sealed class DoorService(
   IDoorRepository repo,
+  IProcedureRepository proc,
+  ITriggerRepository trig,
   IDeviceRepository device,
   IDeviceModuleRepository module,
   ITimeRepository time,
-  IOutputRepository output,
-  IInputRepository input,
+  IControlRepository output,
+  IMonitorRepository input,
   IAdapterFactory adapter
   ) : BaseService<DoorDto,Domain.Entities.Door>(repo), IDoor
 {
@@ -40,8 +42,10 @@ public sealed class DoorService(
 
   public async Task<Guid> CreateAsync(CreateDoorDto dto, CancellationToken ct = default)
   {
-    Output o = null;
-    Input i = null;
+    Control o = null;
+    Procedure p = null;
+    Trigger t = null;
+            Domain.Entities.Monitor i = null;
 
     // Actually it need to check that 
     var dev = await device.GetCommandDetailAsync(dto.DeviceGuid, ct);
@@ -165,7 +169,7 @@ public sealed class DoorService(
 
     if(d.Buzzer != null)
     {
-      o = new Output(
+      o = new Control(
       $"{dto.Name} - Buzzer",
       d.Buzzer.SlotNo,
       d.Buzzer.Metadata,
@@ -174,12 +178,13 @@ public sealed class DoorService(
       d.LocationId,
       BuzzerExternalId
       );
+
       
     }
 
     if(d.BG != null)
     {
-      i = new Input(
+      i = new Domain.Entities.Monitor(
         $"{dto.Name} - Break Glass",
         d.BG.SlotNo,
         d.BG.Metadata,
@@ -225,6 +230,8 @@ public sealed class DoorService(
 
     if(d.Buzzer != null)
     {
+      var procId = await proc.GetFreeExternalIdByDeviceMacAsync(dev.DeviceMac,100,[],ct);
+
       await adapter.GetAdapter(d.Vendor).Output.CreateControlPointAsync(
         dev.DeviceMac,
         dev.DeviceIp,
@@ -235,6 +242,33 @@ public sealed class DoorService(
         d.Buzzer.Metadata,
         ct
       );
+
+      // // Send Command for set buzzer 
+      // await adapter.GetAdapter(d.Vendor).Procedure.AddProcedureAsync(
+      //   dev.DeviceMac,
+      //   dev.DeviceIp,
+      //   dev.DeviceId,
+      //   procId,
+      //   ,
+      //   ct
+      // );
+
+      // await adapter.GetAdapter(d.Vendor).Trigger.AddTriggerAsync(
+      //   dev.DeviceMac,
+      //   dev.DeviceIp,
+      //   dev.DeviceId,
+      //   ,
+      //   TriggerCommand.EXE_ACTION_PREFIX_0,
+      //   procId,
+      //   ,
+      //   ,
+      //   ,
+      //   ,
+      //   1,
+      //   [],
+      //   [],
+      //   ct
+      // );
     }
 
     if(d.BG != null)

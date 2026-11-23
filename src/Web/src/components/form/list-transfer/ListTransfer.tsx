@@ -308,7 +308,7 @@ export function ListOptionsTransfer<T extends {value:string | number,label:strin
                               <div className="flex flex-col gap-2 overflow-auto scrollbar-thin scrollbar-transparent h-64 w-full rounded-lg border px-4 py-2.5 text-sm shadow-theme-xs bg-transparent h-100">
                                     {rightItems.map((item) => (
                                           <div
-                                                key={Number(item.value)}
+                                                key={item.value}
                                                 onClick={() => toggle(setSelectedRight, item.value.toString())}
                                                 className={itemClass(selectedRight.has(item.value.toString()))}
                                           >

@@ -28,8 +28,8 @@ public sealed class DeviceModule : BaseEntity,IAuditableEntity
   public ICollection<FollowerRelay> follower_relays { get; set; } = default!;
   public ICollection<Rex> rexes { get; set; } = default!;
   public ICollection<Buzzer> buzzers { get; set; } = default!;
-  public ICollection<Output> outputs { get; set; } = default!;
-  public ICollection<Input> inputs { get; set; } = default!;
+  public ICollection<Control> outputs { get; set; } = default!;
+  public ICollection<Monitor> inputs { get; set; } = default!;
   public ICollection<BreakGlass> break_glasses { get; set; } = default!;
   public ICollection<InteriorPushButton> interior_push_button {get; set; } = default!;
   public ICollection<InteriorPushButtonOutput> interior_push_button_output {get; set; } = default!;

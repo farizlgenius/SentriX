@@ -8,7 +8,7 @@ import { StatusDto } from "../../model/StatusDto";
 import Helper from "../../utility/Helper";
 import { useToast } from "../../context/ToastContext";
 import { ControlPointToast } from "../../model/ToastMessage";
-import { OutputEndpoint } from "../../endpoint/ControlPointEndpoint";
+import { ControlEndpoint } from "../../endpoint/ControlPointEndpoint";
 import { send } from "../../api/api";
 import { useLocation } from "../../context/LocationContext";
 import { BaseTable } from "../UiElements/BaseTable";
@@ -90,7 +90,7 @@ const Output = () => {
 
   const handleRemove = (data: OutputDto) => {
     setConfirmRemove(() => async () => {
-      const res = await send.delete(OutputEndpoint.DELETE(data.guid));
+      const res = await send.delete(ControlEndpoint.DELETE(data.guid));
       if (
         Helper.handleToastByResCode(res, ControlPointToast.DELETE, toggleToast)
       ) {
@@ -137,7 +137,7 @@ const Output = () => {
     endDate?: string,
   ) => {
     const res = await send.get(
-      OutputEndpoint.PAGINATION(
+      ControlEndpoint.PAGINATION(
         pageNumber,
         pageSize,
         locationGuid,
@@ -190,7 +190,7 @@ const Output = () => {
   };
 
   const fetchStatus = async (outputId: string) => {
-    const res = send.get(OutputEndpoint.STATUS(outputId));
+    const res = send.get(ControlEndpoint.STATUS(outputId));
     Logger.info(res);
   };
 
@@ -270,7 +270,7 @@ const Output = () => {
           selectedObjects.map(async (a: OutputDto) => {
             data.push(a.guid);
           });
-          var res = await send.post(OutputEndpoint.DELETE_RANGE, data);
+          var res = await send.post(ControlEndpoint.DELETE_RANGE, data);
           if (
             Helper.handleToastByResCode(
               res,
@@ -288,7 +288,7 @@ const Output = () => {
         console.log(controlPointDto);
         setConfirmCreate(() => async () => {
           controlPointDto.metadata = JSON.stringify(controlPointDto.metadata);
-          const res = await send.post(OutputEndpoint.CREATE, controlPointDto);
+          const res = await send.post(ControlEndpoint.CREATE, controlPointDto);
           if (
             Helper.handleToastByResCode(
               res,
@@ -304,7 +304,7 @@ const Output = () => {
         break;
       case "update":
         setConfirmUpdate(() => async () => {
-          const res = await send.put(OutputEndpoint.UPDATE, controlPointDto);
+          const res = await send.put(ControlEndpoint.UPDATE, controlPointDto);
           if (
             Helper.handleToastByResCode(
               res,
@@ -327,7 +327,7 @@ const Output = () => {
         console.log(selectedObjects);
         if (selectedObjects.length > 0) {
           selectedObjects.map(async (a: OutputDto) => {
-            const res = await send.post(OutputEndpoint.TRIGGER, {
+            const res = await send.post(ControlEndpoint.TRIGGER, {
               guid: a.guid,
               command: OutputCommand.ON
             });
@@ -343,7 +343,7 @@ const Output = () => {
       case "off":
         if (selectedObjects.length > 0) {
           selectedObjects.map(async (a: OutputDto) => {
-            const res = await send.post(OutputEndpoint.TRIGGER, {
+            const res = await send.post(ControlEndpoint.TRIGGER, {
               guid: a.guid,
               command: OutputCommand.OFF
             });
@@ -358,7 +358,7 @@ const Output = () => {
       case "toggle":
         if (selectedObjects.length > 0) {
           selectedObjects.map(async (a: OutputDto) => {
-            const res = await send.post(OutputEndpoint.TRIGGER, {
+            const res = await send.post(ControlEndpoint.TRIGGER, {
               guid: a.guid,
               command: OutputCommand.SINGLE
             });
@@ -546,7 +546,7 @@ const Output = () => {
               <Button onClick={e => {
                 if (selectedObjects.length > 0) {
                   selectedObjects.map(async (a: OutputDto) => {
-                    const res = await send.post(OutputEndpoint.TRIGGER, {
+                    const res = await send.post(ControlEndpoint.TRIGGER, {
                       guid: a.guid,
                       command: OutputCommand.REPEAT,
                       onTime: repeat.onTime,

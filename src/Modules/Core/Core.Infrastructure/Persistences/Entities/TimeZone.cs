@@ -10,7 +10,7 @@ public sealed class TimeZone : BaseEntity,IAuditableEntity
   public ICollection<Rex> rexes {get; set; } = default!;
   public ICollection<Trigger> triggers {get; set; } = default!;
   public ICollection<Trigger> src_triggers {get; set; } = default!;
-  
+  public ICollection<ActionTarget> action_targets {get; set; } = default!;
   public TimeZone() { }
   public TimeZone(Domain.Entities.TimeZone d) : base(d.Guid,d.ExternalId,d.AltrExternalId)
   {

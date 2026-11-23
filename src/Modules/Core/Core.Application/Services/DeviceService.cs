@@ -20,7 +20,7 @@ public sealed class DeviceService(
   // Below is service that call for get count
   IDeviceModuleRepository module,
   IDoorRepository door,
-  IOutputRepository output,
+  IControlRepository output,
   ITimeRepository time,
   IGroupRepository group,
   IHolidayRepository hol,

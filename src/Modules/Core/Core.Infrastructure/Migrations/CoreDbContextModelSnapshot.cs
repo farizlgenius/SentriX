@@ -66,6 +66,12 @@ namespace Core.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<int>("procedure_id")
+                        .HasColumnType("integer");
+
+                    b.Property<short>("sequence")
+                        .HasColumnType("smallint");
+
                     b.Property<string>("type")
                         .IsRequired()
                         .HasColumnType("text");
@@ -81,10 +87,83 @@ namespace Core.Infrastructure.Migrations
 
                     b.HasIndex("location_id");
 
+                    b.HasIndex("procedure_id");
+
                     b.HasIndex("guid", "id", "type", "device_id", "location_id")
                         .IsUnique();
 
                     b.ToTable("Action", "core");
+                });
+
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.ActionTarget", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<int>("action_id")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("area_id")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("control_id")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("door_id")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("monitor_group_id")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("monitor_id")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("procedure_id")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("timezone_id")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("trigger_id")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("trigger_variable_id")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("user_id")
+                        .HasColumnType("integer");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("action_id");
+
+                    b.HasIndex("area_id");
+
+                    b.HasIndex("control_id");
+
+                    b.HasIndex("door_id");
+
+                    b.HasIndex("monitor_group_id");
+
+                    b.HasIndex("monitor_id");
+
+                    b.HasIndex("procedure_id");
+
+                    b.HasIndex("timezone_id");
+
+                    b.HasIndex("trigger_id");
+
+                    b.HasIndex("trigger_variable_id");
+
+                    b.HasIndex("user_id");
+
+                    b.HasIndex("id", "action_id")
+                        .IsUnique();
+
+                    b.ToTable("ActionTarget", "core");
                 });
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.AdapterEvent", b =>
@@ -1087,6 +1166,74 @@ namespace Core.Infrastructure.Migrations
                     b.HasIndex("locationid");
 
                     b.ToTable("Companies", "core");
+                });
+
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Control", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<short?>("altr_external_id")
+                        .HasColumnType("smallint");
+
+                    b.Property<DateTime>("created_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.Property<int>("device_module_id")
+                        .HasColumnType("integer");
+
+                    b.Property<short?>("external_id")
+                        .HasColumnType("smallint");
+
+                    b.Property<Guid>("guid")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<bool>("is_active")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("is_default")
+                        .HasColumnType("boolean");
+
+                    b.Property<int?>("location_id")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("metadata")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<short>("slot_no")
+                        .HasColumnType("smallint");
+
+                    b.Property<DateTime>("updated_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.Property<string>("vendor")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("device_module_id");
+
+                    b.HasIndex("location_id");
+
+                    b.HasIndex("guid", "id", "device_module_id", "slot_no")
+                        .IsUnique();
+
+                    b.ToTable("Outputs", "core");
                 });
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.CoreEntity", b =>
@@ -4142,74 +4289,6 @@ namespace Core.Infrastructure.Migrations
                     b.ToTable("Holidays", "core");
                 });
 
-            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Input", b =>
-                {
-                    b.Property<int>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
-
-                    b.Property<short?>("altr_external_id")
-                        .HasColumnType("smallint");
-
-                    b.Property<DateTime>("created_at")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
-                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
-
-                    b.Property<int>("device_module_id")
-                        .HasColumnType("integer");
-
-                    b.Property<short?>("external_id")
-                        .HasColumnType("smallint");
-
-                    b.Property<Guid>("guid")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasDefaultValueSql("gen_random_uuid()");
-
-                    b.Property<bool>("is_active")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("is_default")
-                        .HasColumnType("boolean");
-
-                    b.Property<int?>("location_id")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("metadata")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<short>("slot_no")
-                        .HasColumnType("smallint");
-
-                    b.Property<DateTime>("updated_at")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
-                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
-
-                    b.Property<string>("vendor")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("id");
-
-                    b.HasIndex("device_module_id");
-
-                    b.HasIndex("location_id");
-
-                    b.HasIndex("guid", "id", "device_module_id", "slot_no")
-                        .IsUnique();
-
-                    b.ToTable("Inputs", "core");
-                });
-
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.InteriorPushButton", b =>
                 {
                     b.Property<int>("id")
@@ -4920,6 +4999,74 @@ namespace Core.Infrastructure.Migrations
                         });
                 });
 
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Monitor", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<short?>("altr_external_id")
+                        .HasColumnType("smallint");
+
+                    b.Property<DateTime>("created_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.Property<int>("device_module_id")
+                        .HasColumnType("integer");
+
+                    b.Property<short?>("external_id")
+                        .HasColumnType("smallint");
+
+                    b.Property<Guid>("guid")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<bool>("is_active")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("is_default")
+                        .HasColumnType("boolean");
+
+                    b.Property<int?>("location_id")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("metadata")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<short>("slot_no")
+                        .HasColumnType("smallint");
+
+                    b.Property<DateTime>("updated_at")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.Property<string>("vendor")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("device_module_id");
+
+                    b.HasIndex("location_id");
+
+                    b.HasIndex("guid", "id", "device_module_id", "slot_no")
+                        .IsUnique();
+
+                    b.ToTable("Inputs", "core");
+                });
+
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.MonitorGroup", b =>
                 {
                     b.Property<int>("id")
@@ -5170,74 +5317,6 @@ namespace Core.Infrastructure.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Output", b =>
-                {
-                    b.Property<int>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
-
-                    b.Property<short?>("altr_external_id")
-                        .HasColumnType("smallint");
-
-                    b.Property<DateTime>("created_at")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
-                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
-
-                    b.Property<int>("device_module_id")
-                        .HasColumnType("integer");
-
-                    b.Property<short?>("external_id")
-                        .HasColumnType("smallint");
-
-                    b.Property<Guid>("guid")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasDefaultValueSql("gen_random_uuid()");
-
-                    b.Property<bool>("is_active")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("is_default")
-                        .HasColumnType("boolean");
-
-                    b.Property<int?>("location_id")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("metadata")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<short>("slot_no")
-                        .HasColumnType("smallint");
-
-                    b.Property<DateTime>("updated_at")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
-                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
-
-                    b.Property<string>("vendor")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("id");
-
-                    b.HasIndex("device_module_id");
-
-                    b.HasIndex("location_id");
-
-                    b.HasIndex("guid", "id", "device_module_id", "slot_no")
-                        .IsUnique();
-
-                    b.ToTable("Outputs", "core");
-                });
-
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Pin", b =>
                 {
                     b.Property<int>("id")
@@ -5432,7 +5511,13 @@ namespace Core.Infrastructure.Migrations
                     b.Property<int>("action_id")
                         .HasColumnType("integer");
 
+                    b.Property<int>("actionid")
+                        .HasColumnType("integer");
+
                     b.Property<int>("procedure_id")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("procedureid")
                         .HasColumnType("integer");
 
                     b.Property<int>("sequence")
@@ -5440,12 +5525,14 @@ namespace Core.Infrastructure.Migrations
 
                     b.HasKey("id");
 
-                    b.HasIndex("action_id");
+                    b.HasIndex("actionid");
+
+                    b.HasIndex("procedureid");
 
                     b.HasIndex("procedure_id", "action_id")
                         .IsUnique();
 
-                    b.ToTable("ProcedureActions", "core");
+                    b.ToTable("ProcedureAction", "core");
                 });
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.QrCode", b =>
@@ -9421,9 +9508,98 @@ namespace Core.Infrastructure.Migrations
                         .HasForeignKey("location_id")
                         .OnDelete(DeleteBehavior.Cascade);
 
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.Procedure", "procedure")
+                        .WithMany("actions")
+                        .HasForeignKey("procedure_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("device");
 
                     b.Navigation("location");
+
+                    b.Navigation("procedure");
+                });
+
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.ActionTarget", b =>
+                {
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.Action", "action")
+                        .WithMany("action_target")
+                        .HasForeignKey("action_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.Area", "area")
+                        .WithMany("action_targets")
+                        .HasForeignKey("area_id")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.Control", "control")
+                        .WithMany("action_targets")
+                        .HasForeignKey("control_id")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.Door", "door")
+                        .WithMany("action_targets")
+                        .HasForeignKey("door_id")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.MonitorGroup", "monitor_group")
+                        .WithMany("action_targets")
+                        .HasForeignKey("monitor_group_id")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.Monitor", "monitor")
+                        .WithMany("action_targets")
+                        .HasForeignKey("monitor_id")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.Procedure", "procedure")
+                        .WithMany("action_targets")
+                        .HasForeignKey("procedure_id")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.TimeZone", "timezone")
+                        .WithMany("action_targets")
+                        .HasForeignKey("timezone_id")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.Trigger", "trigger")
+                        .WithMany("action_targets")
+                        .HasForeignKey("trigger_id")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.TriggerVariable", "trigger_variable")
+                        .WithMany("action_targets")
+                        .HasForeignKey("trigger_variable_id")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.User", "user")
+                        .WithMany("action_targets")
+                        .HasForeignKey("user_id")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("action");
+
+                    b.Navigation("area");
+
+                    b.Navigation("control");
+
+                    b.Navigation("door");
+
+                    b.Navigation("monitor");
+
+                    b.Navigation("monitor_group");
+
+                    b.Navigation("procedure");
+
+                    b.Navigation("timezone");
+
+                    b.Navigation("trigger");
+
+                    b.Navigation("trigger_variable");
+
+                    b.Navigation("user");
                 });
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.AdapterEvent", b =>
@@ -9607,6 +9783,24 @@ namespace Core.Infrastructure.Migrations
                     b.HasOne("Core.Infrastructure.Persistences.Entities.Location", "location")
                         .WithMany("companies")
                         .HasForeignKey("locationid");
+
+                    b.Navigation("location");
+                });
+
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Control", b =>
+                {
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.DeviceModule", "device_module")
+                        .WithMany("outputs")
+                        .HasForeignKey("device_module_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.Location", "location")
+                        .WithMany("outputs")
+                        .HasForeignKey("location_id")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("device_module");
 
                     b.Navigation("location");
                 });
@@ -9826,24 +10020,6 @@ namespace Core.Infrastructure.Migrations
                     b.Navigation("location");
                 });
 
-            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Input", b =>
-                {
-                    b.HasOne("Core.Infrastructure.Persistences.Entities.DeviceModule", "device_module")
-                        .WithMany("inputs")
-                        .HasForeignKey("device_module_id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Core.Infrastructure.Persistences.Entities.Location", "location")
-                        .WithMany("inputs")
-                        .HasForeignKey("location_id")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.Navigation("device_module");
-
-                    b.Navigation("location");
-                });
-
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.InteriorPushButton", b =>
                 {
                     b.HasOne("Core.Infrastructure.Persistences.Entities.DeviceModule", "device_module")
@@ -10012,6 +10188,24 @@ namespace Core.Infrastructure.Migrations
                     b.Navigation("role");
                 });
 
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Monitor", b =>
+                {
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.DeviceModule", "device_module")
+                        .WithMany("inputs")
+                        .HasForeignKey("device_module_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.Location", "location")
+                        .WithMany("inputs")
+                        .HasForeignKey("location_id")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("device_module");
+
+                    b.Navigation("location");
+                });
+
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.MonitorGroup", b =>
                 {
                     b.HasOne("Core.Infrastructure.Persistences.Entities.Device", "device")
@@ -10036,7 +10230,7 @@ namespace Core.Infrastructure.Migrations
                         .HasForeignKey("door_id")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("Core.Infrastructure.Persistences.Entities.Input", "input")
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.Monitor", "input")
                         .WithMany("monitor_group_components")
                         .HasForeignKey("input_id")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -10090,24 +10284,6 @@ namespace Core.Infrastructure.Migrations
                     b.Navigation("operator");
                 });
 
-            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Output", b =>
-                {
-                    b.HasOne("Core.Infrastructure.Persistences.Entities.DeviceModule", "device_module")
-                        .WithMany("outputs")
-                        .HasForeignKey("device_module_id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Core.Infrastructure.Persistences.Entities.Location", "location")
-                        .WithMany("outputs")
-                        .HasForeignKey("location_id")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.Navigation("device_module");
-
-                    b.Navigation("location");
-                });
-
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Pin", b =>
                 {
                     b.HasOne("Core.Infrastructure.Persistences.Entities.Location", "location")
@@ -10155,14 +10331,14 @@ namespace Core.Infrastructure.Migrations
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.ProcedureAction", b =>
                 {
                     b.HasOne("Core.Infrastructure.Persistences.Entities.Action", "action")
-                        .WithMany("procedure_actions")
-                        .HasForeignKey("action_id")
+                        .WithMany()
+                        .HasForeignKey("actionid")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Core.Infrastructure.Persistences.Entities.Procedure", "procedure")
-                        .WithMany("procedure_actions")
-                        .HasForeignKey("procedure_id")
+                        .WithMany()
+                        .HasForeignKey("procedureid")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -10363,7 +10539,7 @@ namespace Core.Infrastructure.Migrations
                         .HasForeignKey("src_door_id")
                         .OnDelete(DeleteBehavior.SetNull);
 
-                    b.HasOne("Core.Infrastructure.Persistences.Entities.Input", "src_input")
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.Monitor", "src_input")
                         .WithMany("triggers")
                         .HasForeignKey("src_input_id")
                         .OnDelete(DeleteBehavior.SetNull);
@@ -10373,7 +10549,7 @@ namespace Core.Infrastructure.Migrations
                         .HasForeignKey("src_monitor_group_id")
                         .OnDelete(DeleteBehavior.SetNull);
 
-                    b.HasOne("Core.Infrastructure.Persistences.Entities.Output", "src_output")
+                    b.HasOne("Core.Infrastructure.Persistences.Entities.Control", "src_output")
                         .WithMany("triggers")
                         .HasForeignKey("src_output_id")
                         .OnDelete(DeleteBehavior.SetNull);
@@ -10678,7 +10854,7 @@ namespace Core.Infrastructure.Migrations
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Action", b =>
                 {
-                    b.Navigation("procedure_actions");
+                    b.Navigation("action_target");
                 });
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Alert", b =>
@@ -10693,6 +10869,8 @@ namespace Core.Infrastructure.Migrations
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Area", b =>
                 {
+                    b.Navigation("action_targets");
+
                     b.Navigation("doors_from");
 
                     b.Navigation("doors_to");
@@ -10705,6 +10883,13 @@ namespace Core.Infrastructure.Migrations
                     b.Navigation("departments");
 
                     b.Navigation("users");
+                });
+
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Control", b =>
+                {
+                    b.Navigation("action_targets");
+
+                    b.Navigation("triggers");
                 });
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.CoreEntity", b =>
@@ -10781,6 +10966,8 @@ namespace Core.Infrastructure.Migrations
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Door", b =>
                 {
+                    b.Navigation("action_targets");
+
                     b.Navigation("alert_components");
 
                     b.Navigation("bg");
@@ -10824,13 +11011,6 @@ namespace Core.Infrastructure.Migrations
                     b.Navigation("components");
 
                     b.Navigation("user_groups");
-                });
-
-            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Input", b =>
-                {
-                    b.Navigation("monitor_group_components");
-
-                    b.Navigation("triggers");
                 });
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Interval", b =>
@@ -10916,8 +11096,19 @@ namespace Core.Infrastructure.Migrations
                     b.Navigation("feature_permissions");
                 });
 
+            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Monitor", b =>
+                {
+                    b.Navigation("action_targets");
+
+                    b.Navigation("monitor_group_components");
+
+                    b.Navigation("triggers");
+                });
+
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.MonitorGroup", b =>
                 {
+                    b.Navigation("action_targets");
+
                     b.Navigation("components");
 
                     b.Navigation("triggers");
@@ -10926,11 +11117,6 @@ namespace Core.Infrastructure.Migrations
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Operator", b =>
                 {
                     b.Navigation("operator_locations");
-                });
-
-            modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Output", b =>
-                {
-                    b.Navigation("triggers");
                 });
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Pin", b =>
@@ -10946,7 +11132,9 @@ namespace Core.Infrastructure.Migrations
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Procedure", b =>
                 {
-                    b.Navigation("procedure_actions");
+                    b.Navigation("action_targets");
+
+                    b.Navigation("actions");
 
                     b.Navigation("triggers");
                 });
@@ -10973,6 +11161,8 @@ namespace Core.Infrastructure.Migrations
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.TimeZone", b =>
                 {
+                    b.Navigation("action_targets");
+
                     b.Navigation("group_components");
 
                     b.Navigation("rexes");
@@ -10986,6 +11176,8 @@ namespace Core.Infrastructure.Migrations
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.Trigger", b =>
                 {
+                    b.Navigation("action_targets");
+
                     b.Navigation("trigger_arg_map_trigger");
 
                     b.Navigation("trigger_map_trigger_codes");
@@ -11021,6 +11213,8 @@ namespace Core.Infrastructure.Migrations
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.TriggerVariable", b =>
                 {
+                    b.Navigation("action_targets");
+
                     b.Navigation("trigger_variable_map_trigger");
                 });
 
@@ -11031,6 +11225,8 @@ namespace Core.Infrastructure.Migrations
 
             modelBuilder.Entity("Core.Infrastructure.Persistences.Entities.User", b =>
                 {
+                    b.Navigation("action_targets");
+
                     b.Navigation("additionals");
 
                     b.Navigation("cards");

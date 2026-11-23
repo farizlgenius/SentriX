@@ -4,7 +4,7 @@ using SharedKernel.Messaging;
 
 namespace Core.Application.Handler.Output;
 
-public sealed class OutputExternalIdByGuidQueryHandler(IOutputRepository repo) : IQueryHandler<OutputExternalIdByGuidQuery, short>
+public sealed class OutputExternalIdByGuidQueryHandler(IControlRepository repo) : IQueryHandler<OutputExternalIdByGuidQuery, short>
 {
       public async Task<short> HandleAsync(OutputExternalIdByGuidQuery query, CancellationToken ct)
       {

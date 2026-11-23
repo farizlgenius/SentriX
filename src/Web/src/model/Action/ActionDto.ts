@@ -1,8 +1,10 @@
 import { ActionType } from "../../enum/ActionType";
 import { DelayMetadata } from "./DelayMetadata";
 import { DoorModeMetadata } from "./DoorModeMetadata";
-import { InputMaskMetadata } from "./InputMaskMetadata";
+import { MaskMetadata } from "./InputMaskMetadata";
+import { MomentUnlockMetadata } from "./MomentUnlockMetadata";
 import { OutputCommandMetadata } from "./OutputCommandMetadata";
+import { ProcedureControlCommandMetadata } from "./ProcedureControlCommandMetadata";
 
 export interface ActionDto {
     guid:string;
@@ -10,8 +12,16 @@ export interface ActionDto {
     deviceGuid:string;
     deviceName:string;
     type:ActionType;
-    srcGuid:string | null;
-    metadata:string | InputMaskMetadata | OutputCommandMetadata | DoorModeMetadata | DelayMetadata | null;
+    actionType:string;
+    sequence:number;
+    actionTarget:ActionTagetDto[] | null;
+    targetGuids:string[] | null;
+    metadata:string | MaskMetadata | OutputCommandMetadata | DoorModeMetadata | DelayMetadata | MomentUnlockMetadata | ProcedureControlCommandMetadata | null;
     isActive:boolean;
     isDefault:boolean;
+}
+
+export interface ActionTagetDto{
+    guid:string;
+    name:string;
 }

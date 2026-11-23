@@ -10,9 +10,9 @@ public sealed class Trigger : BaseEntity
       public int? src_device_module_id {get; set; }
       public DeviceModule? src_device_module {get; set; }
       public int? src_input_id {get; set; }
-      public Input? src_input {get; set; }
+      public Monitor? src_input {get; set; }
       public int? src_output_id {get; set; }
-      public Output? src_output {get; set; }
+      public Control? src_output {get; set; }
       public int? src_door_id {get; set; }
       public Door? src_door {get; set; }
       public int? src_timezone_id {get; set; }
@@ -37,7 +37,7 @@ public sealed class Trigger : BaseEntity
       public TimeZone timezone {get; set; } = default!;
       public ICollection<TriggerVariableMapTrigger> trigger_variable_map_trigger {get; set; } = default!;
       public ICollection<TriggerArgMapTrigger> trigger_arg_map_trigger {get; set; } = default!;
-
+      public ICollection<ActionTarget> action_targets {get; set; } = default!;
       public Trigger(){}
       public Trigger(Domain.Entities.Trigger d) : base(d.Guid,d.ExternalId,d.AltrExternalId)
       {

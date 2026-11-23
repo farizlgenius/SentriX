@@ -19,6 +19,7 @@ import { ProcedureToast } from "../../model/ToastMessage";
 import { usePopup } from "../../context/PopupContext";
 import { usePagination } from "../../context/PaginationContext";
 import { HttpStatusCode } from "axios";
+import ActionForm from "./ActionForm";
 
 const HEADERS: string[] = ["Name", "Action"];
 const KEYS: string[] = ["name"];
@@ -31,6 +32,7 @@ export const Procedure = () => {
   const [formType, setFormType] = useState<FormType>(FormType.CREATE);
   const [selectedObject, setSelectedObjects] = useState<ProcedureDto[]>([]);
   const [procedureDtos, setProcedureDtos] = useState<ProcedureDto[]>([]);
+  const [isNext,setIsNext] = useState<boolean>(false);
   const {
     setRemove,
     setConfirmRemove,
@@ -185,9 +187,24 @@ export const Procedure = () => {
           handleClick={handleClick}
           dto={dto}
           setDto={setDto}
-          type={formType} handleChange={() => {}}        />
+          type={formType}
+          setIsNext={setIsNext} 
+          handleChange={() => {}}     
+          />
       ),
-    },
+    },{
+      label: "Action",
+      icon:<TriggerIcon/>,
+      content :(
+        <ActionForm
+          handleClick={handleClick}
+          dto={dto}
+          setDto={setDto}
+          type={formType}
+          handleChange={() => {}}
+        />
+      )
+    }
   ];
 
   return (
@@ -195,7 +212,7 @@ export const Procedure = () => {
       <PageBreadcrumb pageTitle="Procedure" />
 
       {form ? (
-        <BaseForm tabContent={tabContent} type={FormType.CREATE} handleClick={handleClick} />
+        <BaseForm tabContent={tabContent} type={FormType.CREATE} handleClick={handleClick} isNext={isNext}/>
       ) : (
         <BaseTable<ProcedureDto>
           refresh={refresh}

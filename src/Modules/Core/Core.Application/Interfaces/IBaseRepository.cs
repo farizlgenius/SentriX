@@ -43,6 +43,8 @@ public interface IBaseRepository<TEntity,TDomain,TDto> where TEntity : IBaseEnti
       Task<IEnumerable<int>> GetIdsByRangeGuidAsync(IEnumerable<Guid> guids,CancellationToken ct = default);
       Task<bool> IsAnyByNameAndLocationIdExceptCurrentAsync(string name,Guid guid,int locationId,CancellationToken ct = default);
       Task<bool> IsAnyByNameAndLocationIdAsync(string name,int id,CancellationToken ct = default);
+      Task<IEnumerable<(int id,short externalId)>> GetIdsAndExternalIdsByRangeGuidAsync(IEnumerable<Guid> guids,CancellationToken ct = default);
+
       
       
 }

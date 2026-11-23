@@ -5,9 +5,9 @@ using SharedKernel.Messaging;
 
 namespace Core.Application.Handler.Output;
 
-public sealed class OutputByDeviceQueryHandler(IOutputRepository repo) : IQueryHandler<OutputByDeviceQuery, IEnumerable<OutputDto>>
+public sealed class OutputByDeviceQueryHandler(IControlRepository repo) : IQueryHandler<OutputByDeviceQuery, IEnumerable<ControlDto>>
 {
-      public async Task<IEnumerable<OutputDto>> HandleAsync(OutputByDeviceQuery query, CancellationToken ct)
+      public async Task<IEnumerable<ControlDto>> HandleAsync(OutputByDeviceQuery query, CancellationToken ct)
       {
             return await repo.GetByDeviceAsync(query.guid, ct);
       }

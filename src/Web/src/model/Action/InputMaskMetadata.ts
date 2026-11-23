@@ -1,5 +1,5 @@
 import { MaskAction } from "../../enum/MaskAction";
 
-export interface InputMaskMetadata{
+export interface MaskMetadata{
       setClear:MaskAction;
 }

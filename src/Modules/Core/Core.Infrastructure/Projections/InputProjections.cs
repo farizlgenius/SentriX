@@ -1,6 +1,6 @@
 using System.Linq.Expressions;
 using Core.Contract.DTOs;
-using Core.Contract.DTOs.Input;
+using Core.Contract.DTOs.Monitor;
 using Core.Contract.DTOs.Output;
 
 namespace Core.Infrastructure.Projections;
@@ -8,8 +8,8 @@ namespace Core.Infrastructure.Projections;
 public static class InputProjections
 {
     // Reusable projection expression for EF Core queries
-    public static readonly Expression<Func<Persistences.Entities.Input, InputDto>> ToDto = 
-        x => new InputDto(
+    public static readonly Expression<Func<Persistences.Entities.Monitor, MonitorDto>> ToDto = 
+        x => new MonitorDto(
             x.guid,
             x.name,
             x.slot_no,
@@ -25,7 +25,7 @@ public static class InputProjections
             x.is_default
         );
 
-        public static readonly Expression<Func<Persistences.Entities.Input,CommandDetailDto>> ToCommand = 
+        public static readonly Expression<Func<Persistences.Entities.Monitor,CommandDetailDto>> ToCommand = 
     x => new CommandDetailDto(
         x.device_module.device.id,
         x.device_module.device.external_id ?? -1,

@@ -27,7 +27,7 @@ public interface IOutputRepository
             string mac,
             short scpId,
             short cpNo,
-            OutputCommand command,
+            ControlCommand command,
             short onTime,
             short offTime,
             short repeat

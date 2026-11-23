@@ -8,7 +8,7 @@ public sealed class TriggerVariable : BaseEntity
       public int device_id {get; set; }
       public Device device {get; set; } = default!;
       public ICollection<TriggerVariableMapTrigger> trigger_variable_map_trigger {get; set; } = default!;
-      
+      public ICollection<ActionTarget> action_targets {get; set; } = default!;
       public TriggerVariable(){}
       public TriggerVariable(
             Domain.Entities.TriggerVariable d

@@ -5,7 +5,7 @@ using SharedKernel.Messaging;
 
 namespace Core.Application.Handler.Input;
 
-public sealed class InputCommandDetailByGuidQueryHandler(IInputRepository repo) : IQueryHandler<InputCommandDetailByGuidQuery, CommandDetailDto>
+public sealed class InputCommandDetailByGuidQueryHandler(IMonitorRepository repo) : IQueryHandler<InputCommandDetailByGuidQuery, CommandDetailDto>
 {
       public async Task<CommandDetailDto> HandleAsync(InputCommandDetailByGuidQuery query, CancellationToken ct)
       {

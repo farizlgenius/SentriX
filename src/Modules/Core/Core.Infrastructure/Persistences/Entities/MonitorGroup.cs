@@ -9,6 +9,7 @@ public sealed class MonitorGroup : BaseEntity, IAuditableEntity
       public int device_id {get; set; }
       public Device device {get; set; } = default!;
       public ICollection<Trigger> triggers {get; set; } = default!;
+      public ICollection<ActionTarget> action_targets {get; set; } = default!;
       public MonitorGroup(){}
       public MonitorGroup(
             Domain.Entities.MonitorGroup d

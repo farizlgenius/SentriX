@@ -20,8 +20,8 @@ public sealed class Location : BaseEntity,IAuditableEntity
   public ICollection<Interval> intervals { get; set; } = default!;
   public ICollection<Door> doors { get; set; } = default!;
   public ICollection<Group> groups { get; set; } = default!;
-  public ICollection<Output> outputs { get; set; } = default!;
-  public ICollection<Input> inputs { get; set; } = default!;
+  public ICollection<Control> outputs { get; set; } = default!;
+  public ICollection<Monitor> inputs { get; set; } = default!;
   public ICollection<Turnstile> turnstiles { get; set; } = default!;
   public ICollection<Event> events { get; set; } = default!;
   public ICollection<AdapterEvent> adapter_events { get; set; } = default!;

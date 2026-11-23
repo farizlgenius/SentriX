@@ -3,4 +3,4 @@ using SharedKernel.Messaging;
 
 namespace Core.Contract.Queries.Output;
 
-public sealed record OutputByDeviceQuery(Guid guid) : IQuery<IEnumerable<OutputDto>>;
+public sealed record OutputByDeviceQuery(Guid guid) : IQuery<IEnumerable<ControlDto>>;

@@ -14,8 +14,8 @@ public sealed class AreaService(
       IDoorRepository door,
       IDeviceRepository device,
       IDeviceModuleRepository module,
-      IInputRepository input,
-      IOutputRepository output,
+      IMonitorRepository input,
+      IControlRepository output,
       ITimeRepository time,
       IAdapterFactory adapter
       ) : BaseService<AreaDto, Domain.Entities.Area>(

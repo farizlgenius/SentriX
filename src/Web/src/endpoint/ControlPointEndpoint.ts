@@ -1,6 +1,6 @@
-const CONTROLLER = `output`;
+const CONTROLLER = `control`;
 
-export const OutputEndpoint = {
+export const ControlEndpoint = {
     GET:(location:number) => `/api/${location}/${CONTROLLER}`,
     GET_DEVICE:(guid:string) => `/api/${CONTROLLER}/device/${guid}`,
     GET_OPTION_BY_DEVICE: (guid: string) => `/api/${CONTROLLER}/option/device/${guid}`,

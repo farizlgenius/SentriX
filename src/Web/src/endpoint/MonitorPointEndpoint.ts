@@ -1,4 +1,4 @@
-const CONTROLLER = `input`;
+const CONTROLLER = `monitor`;
 
 export const MonitorPointEndpoint = {
     GET:(locationGuid:number)=> `/api/${locationGuid}/${CONTROLLER}`,

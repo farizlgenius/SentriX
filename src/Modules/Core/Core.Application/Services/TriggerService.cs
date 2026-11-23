@@ -8,8 +8,8 @@ namespace Core.Application.Services;
 
 public sealed class TriggerService(
       IDeviceModuleRepository module,
-      IInputRepository input,
-      IOutputRepository output,
+      IMonitorRepository input,
+      IControlRepository output,
       IDoorRepository door,
       ITimeRepository time,
       IMonitorGroupRepository monitorGroup,

@@ -6,7 +6,7 @@ using SharedKernel.Messaging;
 
 namespace Core.Application.Handler.Output;
 
-public sealed class OutputCommandDetailByGuidQueryHandler(IOutputRepository repo) : IQueryHandler<OutputCommandDetailByGuidQuery, CommandDetailDto>
+public sealed class OutputCommandDetailByGuidQueryHandler(IControlRepository repo) : IQueryHandler<OutputCommandDetailByGuidQuery, CommandDetailDto>
 {
       public async Task<CommandDetailDto> HandleAsync(OutputCommandDetailByGuidQuery query, CancellationToken ct)
       {

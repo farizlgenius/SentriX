@@ -14,7 +14,7 @@ public sealed class OutputRepository(
       ILogger<OutputRepository> logger
       ) : IOutputRepository
 {
-      public CommandResponse ControlPointCommand(string mac, short scpId, short cpNo, OutputCommand command, short onTime, short offTime, short repeat)
+      public CommandResponse ControlPointCommand(string mac, short scpId, short cpNo, ControlCommand command, short onTime, short offTime, short repeat)
       {
             CC_CPCTL c = new CC_CPCTL();
             c.scp_number = scpId;

@@ -124,12 +124,12 @@ public static class CoreDependencyInjection
     services.AddScoped<IEventRepository,EventRepostory>();
 
     // Output
-    services.AddScoped<IOutput,OutputService>();
-    services.AddScoped<IOutputRepository,OutputRepository>();
+    services.AddScoped<IOutput,ControlService>();
+    services.AddScoped<IControlRepository,ControlRepository>();
 
     // Input
-    services.AddScoped<IInput,InputService>();
-    services.AddScoped<IInputRepository,InputRepository>();
+    services.AddScoped<IMonitor,MonitorService>();
+    services.AddScoped<IMonitorRepository,MonitorRepository>();
 
     // Input Group
     services.AddScoped<IMonitorGroup,MonitorGroupService>();

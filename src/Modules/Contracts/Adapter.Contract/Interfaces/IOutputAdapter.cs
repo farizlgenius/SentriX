@@ -20,7 +20,7 @@ public interface IOutputAdapter
             string ip,
             short deviceId,
             short controlId,
-            OutputCommand command,
+            ControlCommand command,
             short onTime,
             short offTime,
             short repeat,

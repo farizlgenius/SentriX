@@ -4,7 +4,7 @@ using SharedKernel.Messaging;
 
 namespace Core.Application.Handler.Input;
 
-public sealed class InputExternalIdByGuidQueryHandler(IInputRepository repo) : IQueryHandler<InputExternalIdByGuidQuery, short>
+public sealed class InputExternalIdByGuidQueryHandler(IMonitorRepository repo) : IQueryHandler<InputExternalIdByGuidQuery, short>
 {
       public async Task<short> HandleAsync(InputExternalIdByGuidQuery query, CancellationToken ct)
       {

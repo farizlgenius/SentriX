@@ -7,8 +7,8 @@ namespace Core.Infrastructure.Projections;
 public static class OutputProjections
 {
     // Reusable projection expression for EF Core queries
-    public static readonly Expression<Func<Persistences.Entities.Output, OutputDto>> ToDto = 
-        x => new OutputDto(
+    public static readonly Expression<Func<Persistences.Entities.Control, ControlDto>> ToDto = 
+        x => new ControlDto(
             x.guid,
             x.name,
             x.slot_no,
@@ -18,7 +18,7 @@ public static class OutputProjections
             x.is_default
         );
 
-    public static readonly Expression<Func<Persistences.Entities.Output,CommandDetailDto>> ToCommand = 
+    public static readonly Expression<Func<Persistences.Entities.Control,CommandDetailDto>> ToCommand = 
     x => new CommandDetailDto(
         x.device_module.device.id,
         x.device_module.device.external_id ?? -1,

@@ -12,7 +12,7 @@ namespace Core.Application.Services;
 public sealed class MonitorGroupService(
       IMonitorGroupRepository repo,
       IDeviceRepository device,
-      IInputRepository input,
+      IMonitorRepository input,
       IDoorRepository door,
       IAdapterFactory adapter
 ) : BaseService<MonitorGroupDto,MonitorGroup>(repo),IMonitorGroup

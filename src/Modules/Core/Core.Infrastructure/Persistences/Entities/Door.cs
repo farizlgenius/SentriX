@@ -38,6 +38,7 @@ public sealed class Door : BaseEntity,IAuditableEntity
   public int? interior_push_button_output_id {get; set; } 
   public InteriorPushButtonOutput? interior_push_button_output {get; set; } 
   public ICollection<Trigger> triggers {get; set; } = default!;
+  public ICollection<ActionTarget> action_targets {get; set; } = default!;
 
   public Door() { }
 

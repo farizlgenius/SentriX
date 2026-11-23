@@ -10,7 +10,7 @@ using SharedKernel.Exceptions;
 
 namespace Core.Infrastructure.Repositories;
 
-public sealed class ActionRepository(CoreDbContext context) : BaseRepository<Persistences.Entities.Action,Domain.Entities.Actions,ActionDto>(
+public sealed class ActionRepository(CoreDbContext context) : BaseRepository<Persistences.Entities.Action,Domain.Entities.Action,ActionDto>(
       context,
       d => new Persistences.Entities.Action(d),
       (en,dom) =>
@@ -25,23 +25,6 @@ public sealed class ActionRepository(CoreDbContext context) : BaseRepository<Per
       ActionProjections.ToCommand
 ),IActionRepository
 {
-      public async Task<IEnumerable<(int id, ActionType type,short? externalId,string? metadata,int sequence)>> GetActionDetailByGuidAsync(IEnumerable<(Guid guid,int sequence)> actions, CancellationToken ct = default)
-      {
-            var guids = actions.Select(x => x.guid);
-            var res = await Context.Action
-                  .AsNoTracking()
-                  .Where(x => guids.Contains(x.guid))
-                  .Select(x => new
-                  {
-                        x.id,
-                        x.guid,
-                        x.type,
-                        x.external_id,
-                        x.metadata
-                  }).ToArrayAsync(ct);
-
-            return [.. res.Select(x => (x.id,x.type,externalId:x.external_id,x.metadata,actions.Where(a => a.guid == x.guid).Select(s => s.sequence).FirstOrDefault()))];
-      }
 
       public async Task<IEnumerable<OptionDto>> GetActionOptionByDeviceAsync(Guid guid, CancellationToken ct = default)
       {
@@ -77,14 +60,8 @@ public sealed class ActionRepository(CoreDbContext context) : BaseRepository<Per
           );
       }
 
-   
-
-      public async Task<bool> IsAnyRelatedEntitiesAsync(Guid guid, CancellationToken ct = default)
+      public Task<bool> IsAnyRelatedEntitiesAsync(Guid guid, CancellationToken ct = default)
       {
-            return await Context.Action
-                  .AsNoTracking()
-                  .AnyAsync(x => x.guid == guid && x.procedure_actions.Any(),ct);
+            throw new NotImplementedException();
       }
-
-
 }

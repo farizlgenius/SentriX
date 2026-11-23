@@ -1,0 +1,54 @@
+using SharedKernel.Enums;
+using SharedKernel.Helpers;
+
+namespace Core.Domain.Entities;
+
+public sealed class Control : BaseDomain
+{
+  public string Name { get; set; } = string.Empty;
+  public short SlotNo { get; set; }
+  public string Metadata { get; set; } = string.Empty;
+  public Vendor Vendor { get; set; } = Vendor.aero;
+  public int DeviceModuleId { get; set; }
+  public int LocationId { get; set; }
+
+  public Control(
+    string name,
+    short slotNo,
+    string metadata,
+    Vendor vendor,
+    int deviceModuleId,
+    int locationId,
+    short externalId
+  ) : base(Guid.NewGuid(),externalId)
+  {
+    ValidationHelper.Name(name);
+    ValidationHelper.Vendor(vendor);
+    Name = name;
+    SlotNo = slotNo;
+    Metadata = metadata;
+    Vendor = vendor;
+    DeviceModuleId = deviceModuleId;
+    LocationId = locationId;
+  }
+
+  public Control(
+    Guid guid,
+    string name,
+    short slotNo,
+    string metadata,
+    Vendor vendor,
+    int deviceModuleId,
+    int locationId
+  ) : base(guid)
+  {
+    ValidationHelper.Name(name);
+    ValidationHelper.Vendor(vendor);
+    Name = name;
+    SlotNo = slotNo;
+    Metadata = metadata;
+    Vendor = vendor;
+    DeviceModuleId = deviceModuleId;
+    LocationId = locationId;
+  }
+}

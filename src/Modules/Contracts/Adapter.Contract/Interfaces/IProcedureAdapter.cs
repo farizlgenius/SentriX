@@ -9,7 +9,7 @@ public interface IProcedureAdapter
           string ip,
           short deviceId,
           short procId, 
-          IEnumerable<(ActionType type,string? metadata,short? externalId,int sequence)> actions,
+          IEnumerable<(ActionType type,string? metadata,short? externalId,short sequence)> actions,
           CancellationToken ct = default
      );
      Task DeleteProcedureAsync(

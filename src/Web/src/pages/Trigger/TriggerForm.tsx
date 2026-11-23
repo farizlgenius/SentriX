@@ -18,7 +18,7 @@ import { TimezoneEndPoint } from "../../endpoint/TimezoneEndpoint";
 import { ModuleEndpoint } from "../../endpoint/ModuleEndpoint";
 import { DoorEndpoint } from "../../endpoint/DoorEndpoint";
 import { ProcedureEndpoint } from "../../endpoint/ProcedureEndpoint";
-import { OutputEndpoint } from "../../endpoint/ControlPointEndpoint";
+import { ControlEndpoint } from "../../endpoint/ControlPointEndpoint";
 import { MonitorPointEndpoint } from "../../endpoint/MonitorPointEndpoint";
 
 export const TriggerForm: React.FC<PropsWithChildren<FormProp<TriggerDto>>> = ({
@@ -95,7 +95,7 @@ export const TriggerForm: React.FC<PropsWithChildren<FormProp<TriggerDto>>> = ({
       case EntityType.DOOR:
         return await send.get(DoorEndpoint.GET_BY_DEVICE(dto.device));
       case EntityType.OUTPUT:
-        return await send.get(OutputEndpoint.GET_OPTION_BY_DEVICE(dto.device));
+        return await send.get(ControlEndpoint.GET_OPTION_BY_DEVICE(dto.device));
       case EntityType.INPUT:
         return await send.get(MonitorPointEndpoint.GET_OPTION_BY_DEVICE(dto.device));
       default:

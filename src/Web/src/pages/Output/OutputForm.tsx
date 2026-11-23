@@ -5,7 +5,7 @@ import Select from "../../components/form/Select";
 import { Options } from "../../model/Options";
 import { OutputDto } from "../../model/ControlPoint/OutputDto";
 import { DeviceEndpoint } from "../../endpoint/DeviceEndpoint";
-import { OutputEndpoint } from "../../endpoint/ControlPointEndpoint";
+import { ControlEndpoint } from "../../endpoint/ControlPointEndpoint";
 import { ModuleEndpoint } from "../../endpoint/ModuleEndpoint";
 import api, { send } from "../../api/api";
 import { useLocation } from "../../context/LocationContext";

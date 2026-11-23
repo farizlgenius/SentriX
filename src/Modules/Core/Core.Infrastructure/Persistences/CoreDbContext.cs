@@ -49,8 +49,8 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
       public DbSet<Lane> Lanes { get; set; }
       public DbSet<Turnstile> Turnstiles { get; set; }
       public DbSet<GroupComponent> GroupComponents { get; set; }
-      public DbSet<Output> Outputs { get; set; }
-      public DbSet<Input> Inputs { get; set; }
+      public DbSet<Control> Outputs { get; set; }
+      public DbSet<Entities.Monitor> Inputs { get; set; }
       public DbSet<Event> Events { get; set; }
       public DbSet<AdapterEvent> AdapterEvents { get; set; }
       public DbSet<ExceptionEvent> ExceptionEvent { get; set; }
@@ -70,7 +70,6 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
       public DbSet<Trigger> Triggers {get; set; }
       public DbSet<Procedure> Procedures { get; set; }
       public DbSet<Persistences.Entities.Action> Action { get; set; }
-      public DbSet<ProcedureAction> ProcedureActions { get; set; }
       public DbSet<TriggerSource> TriggerSources { get; set; }
       public DbSet<TriggerType> TriggerTypes { get; set; }
       public DbSet<TriggerCode> TriggerCodes { get; set; }
@@ -282,13 +281,13 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
            });
 
             // Sensor Enums
-            modelBuilder.Entity<Output>(b =>
+            modelBuilder.Entity<Control>(b =>
             {
                   b.Property(x => x.vendor).HasConversion<string>();
 
             });
 
-            modelBuilder.Entity<Input>(b =>
+            modelBuilder.Entity<Entities.Monitor>(b =>
             {
                   b.Property(x => x.vendor).HasConversion<string>();
 
@@ -598,7 +597,7 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                         }
                   ).IsUnique();
 
-            modelBuilder.Entity<Output>()
+            modelBuilder.Entity<Control>()
                   .HasIndex(
                         x => new
                         {
@@ -609,7 +608,7 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                         }
                   ).IsUnique();
 
-            modelBuilder.Entity<Input>()
+            modelBuilder.Entity<Entities.Monitor>()
                   .HasIndex(
                         x => new
                         {
@@ -782,6 +781,15 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                               x.id,
                               x.trigger_arg_id,
                               x.trigger_id
+                        }
+                  ).IsUnique();
+
+            modelBuilder.Entity<Persistences.Entities.ActionTarget>()
+                  .HasIndex(
+                        x => new
+                        {
+                              x.id,
+                              x.action_id
                         }
                   ).IsUnique();
 
@@ -1513,16 +1521,11 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Procedure>()
-                  .HasMany(x => x.procedure_actions)
+                  .HasMany(x => x.actions)
                   .WithOne(x => x.procedure)
                   .HasForeignKey(x => x.procedure_id)
                   .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<Persistences.Entities.Action>()
-                  .HasMany(x => x.procedure_actions)
-                  .WithOne(x => x.action)
-                  .HasForeignKey(x => x.action_id)
-                  .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<TriggerSource>()
                   .HasMany(x => x.types)
@@ -1564,6 +1567,74 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
                   .HasMany(x => x.trigger_arg_map_trigger)
                   .WithOne(x => x.trigger_arg)
                   .HasForeignKey(x => x.trigger_arg_id)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Persistences.Entities.Action>()
+                  .HasMany(x => x.action_target)
+                  .WithOne(x => x.action)
+                  .HasForeignKey(x => x.action_id)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            // Action Target 
+
+            modelBuilder.Entity<Persistences.Entities.ActionTarget>()
+                  .HasOne(x => x.door)
+                  .WithMany(x => x.action_targets)
+                  .HasForeignKey(x => x.door_id)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Persistences.Entities.ActionTarget>()
+                  .HasOne(x => x.monitor)
+                  .WithMany(x => x.action_targets)
+                  .HasForeignKey(x => x.monitor_id)
+                  .OnDelete(DeleteBehavior.Cascade);
+            
+            modelBuilder.Entity<Persistences.Entities.ActionTarget>()
+                  .HasOne(x => x.control)
+                  .WithMany(x => x.action_targets)
+                  .HasForeignKey(x => x.control_id)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Persistences.Entities.ActionTarget>()
+                  .HasOne(x => x.area)
+                  .WithMany(x => x.action_targets)
+                  .HasForeignKey(x => x.area_id)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Persistences.Entities.ActionTarget>()
+                  .HasOne(x => x.user)
+                  .WithMany(x => x.action_targets)
+                  .HasForeignKey(x => x.user_id)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Persistences.Entities.ActionTarget>()
+                  .HasOne(x => x.trigger_variable)
+                  .WithMany(x => x.action_targets)
+                  .HasForeignKey(x => x.trigger_variable_id)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Persistences.Entities.ActionTarget>()
+                  .HasOne(x => x.procedure)
+                  .WithMany(x => x.action_targets)
+                  .HasForeignKey(x => x.procedure_id)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Persistences.Entities.ActionTarget>()
+                  .HasOne(x => x.timezone)
+                  .WithMany(x => x.action_targets)
+                  .HasForeignKey(x => x.timezone_id)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Persistences.Entities.ActionTarget>()
+                  .HasOne(x => x.monitor_group)
+                  .WithMany(x => x.action_targets)
+                  .HasForeignKey(x => x.monitor_group_id)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Persistences.Entities.ActionTarget>()
+                  .HasOne(x => x.trigger)
+                  .WithMany(x => x.action_targets)
+                  .HasForeignKey(x => x.trigger_id)
                   .OnDelete(DeleteBehavior.Cascade);
 
 
@@ -1618,7 +1689,7 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
             .HasForeignKey(x => x.door_id)
             .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<Persistences.Entities.Input>()
+            modelBuilder.Entity<Persistences.Entities.Monitor>()
             .HasMany(x => x.monitor_group_components)
             .WithOne(x => x.input)
             .HasForeignKey(x => x.input_id)

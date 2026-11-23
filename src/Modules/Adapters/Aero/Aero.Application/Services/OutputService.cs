@@ -13,7 +13,7 @@ public sealed class OutputService(
       IMessageBus bus
 ) : IOutputAdapter
 {
-      public async Task ControlPointCommandAsync(string mac, string ip, short deviceId, short controlId, OutputCommand command, short onTime, short offTime, short repeat,CancellationToken ct = default)
+      public async Task ControlPointCommandAsync(string mac, string ip, short deviceId, short controlId, ControlCommand command, short onTime, short offTime, short repeat,CancellationToken ct = default)
       {
             var res = repo.ControlPointCommand(
                   mac,

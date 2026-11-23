@@ -17,20 +17,20 @@ public sealed class ProcedureService(
           string ip,
           short deviceId,
           short procId,
-          IEnumerable<(ActionType type, string? metadata, short? externalId, int sequence)> actions,
+          IEnumerable<(ActionType type, string? metadata, short? externalId, short sequence)> actions,
           CancellationToken ct = default
       )
       {
             var actionsFinal = actions.OrderBy(x => x.sequence);
-            foreach (var ac in actionsFinal)
+            foreach (var (type, metadata, externalId, sequence) in actionsFinal)
             {
                   var res = repo.ActionSpecification(
                         mac,
                         deviceId,
                         procId,
-                        ac.type,
-                        ac.externalId,
-                        ac.metadata
+                        type,
+                        externalId,
+                        metadata
                   );
 
                   await bus.SendAsync(new AdapterEventCommand(res), ct);

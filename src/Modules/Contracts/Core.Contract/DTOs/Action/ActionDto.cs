@@ -8,7 +8,10 @@ public sealed record ActionDto(
       Guid DeviceGuid,
       string DeviceName,
       ActionType Type,
-      Guid? SrcGuid = null,
+      string ActionType,
+      short Sequence,
+      IEnumerable<ActionTargetDto?>? ActionTarget = null,
+      IEnumerable<Guid>? TargetGuids = null,
       string? Metadata = null,
       bool IsActive=true,
       bool IsDefault=false

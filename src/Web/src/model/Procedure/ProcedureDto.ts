@@ -1,7 +1,9 @@
+import { ActionDto } from "../Action/ActionDto";
+
 export interface ProcedureDto {
     guid:string;
     name:string;
-    actions:string[];
+    actions:ActionDto[];
     location:string;
     deviceGuid:string;
     device:string;

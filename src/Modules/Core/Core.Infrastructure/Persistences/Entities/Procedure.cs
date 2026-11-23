@@ -6,9 +6,9 @@ public sealed class Procedure : BaseEntity
 {
       public int device_id {get; set; }
       public Device device {get; set; } = default!;
-      public ICollection<ProcedureAction> procedure_actions {get; set; }= default!;
+      public ICollection<Persistences.Entities.Action> actions {get; set; } = default!;
       public ICollection<Trigger> triggers {get; set; } = default!;
-
+      public ICollection<ActionTarget> action_targets {get; set; } = default!;
       public Procedure(){}
       public Procedure(
             Domain.Entities.Procedure d
@@ -17,6 +17,6 @@ public sealed class Procedure : BaseEntity
             name = d.Name;
             device_id = d.DeviceId;
             location_id = d.LocationId;
-            procedure_actions = d.ActionIds.Select(x => new ProcedureAction(x.id,x.respective)).ToList();
+            actions = [.. d.Actions.Select(a => new Persistences.Entities.Action(a))];
       }
 }

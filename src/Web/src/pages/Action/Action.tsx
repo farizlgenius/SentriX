@@ -16,7 +16,7 @@ import { usePopup } from "../../context/PopupContext";
 import { usePagination } from "../../context/PaginationContext";
 import { ActionDto } from "../../model/Action/ActionDto";
 import { ActionEndpoint } from "../../endpoint/ActionEndpoint";
-import ActionForm from "./ActionForm";
+import ActionForm from "../Procedure/ActionForm";
 import { ActionType } from "../../enum/ActionType";
 
 const HEADERS: string[] = ["Name", "Action"];

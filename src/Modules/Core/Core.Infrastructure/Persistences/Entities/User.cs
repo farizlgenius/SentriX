@@ -41,6 +41,7 @@ public sealed class User : BaseEntity,IAuditableEntity
       public ICollection<UserLocation> user_locations { get; set; } = default!;
       public ICollection<UserGroup> user_groups { get; set; } = default!;
       public string metadata {get; set; } = string.Empty;
+      public ICollection<ActionTarget> action_targets {get; set; } = default!;
 
       public User() { }
 

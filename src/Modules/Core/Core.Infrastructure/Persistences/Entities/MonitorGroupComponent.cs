@@ -9,7 +9,7 @@ public sealed class MonitorGroupComponent
       public int id {get; set; }
       public MonitorType type {get; set; }
       public int? input_id {get; set; }
-      public Input? input {get; set; } = default!;
+      public Monitor? input {get; set; } = default!;
       public int? door_id {get; set; }
       public Door? door {get; set; }
       public int monitor_group_id {get; set; }
