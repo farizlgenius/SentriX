@@ -96,7 +96,7 @@ public sealed class ProcedureService(
                   dev.DeviceIp,
                   dev.DeviceExternalId,
                   externalId,
-                  d.Actions.SelectMany(x => x.ActionTarget.Select(a => (x.Type,x.Metadata,a.ExternalId,x.Sequence))),
+                  d.Actions.SelectMany(x => !x.ActionTarget.Any() ? [(x.Type,x.Metadata,null,x.Sequence)] :  x.ActionTarget.Select(a => (x.Type,x.Metadata,a.ExternalId,x.Sequence))),
                   ct
             );
 
@@ -174,136 +174,18 @@ public sealed class ProcedureService(
 
             var proc = await repo.GetAsync(guid,ct);
 
-            Dictionary<Guid,(int id,short? externalId)> extractedAction = [];
+            var actionTasks = proc.Actions.Select(async (x, i) => new Domain.Entities.Action(
+                        x.Name,
+                        x.Type,
+                        dev.DeviceId,
+                        dev.LocationId ?? 1,
+                        (short)i,
+                        await IdAndExternalIdSwitcher(x.TargetGuids, x.Type),
+                        x.Metadata
+            ));
 
-            foreach(var action in proc.Actions)
-            {
-                  switch (action.Type)
-                  {
-                        case ActionType.MonitorPointMask:
-                        if(action.TargetGuids != null)
-                        {
-                                    var datas = await monitor.GetIdAndExternalIdMapGuidByGuidRangeAsync(action.TargetGuids, ct);
-                                    foreach (var data in datas)
-                                    {
-                                          extractedAction.TryAdd(data.Key, data.Value);
-                                    }
-                              }
-                        break;
-                        case ActionType.ControlPointCommand:
-                        if(action.TargetGuids != null)
-                        {
-                              var datas = await control.GetIdAndExternalIdMapGuidByGuidRangeAsync(action.TargetGuids, ct);
-                              foreach (var data in datas)
-                                    {
-                                          extractedAction.TryAdd(data.Key, data.Value);
-                                    }
-                        }
-                        break;
-                        case ActionType.DoorMode:
-                        case ActionType.ForceOpenMask:
-                        case ActionType.HeldOpenMask:
-                        case ActionType.MomentaryUnlock:
-                        case ActionType.ReaderLEDModeControl:
-                        case ActionType.AbortWaitForDoorOpenState:
-                        case ActionType.TempReaderLEDControl:
-                        case ActionType.TempDoorMode:
-                        case ActionType.HostSimulateCardRead:
-                        case ActionType.HostSimulatedKeyPress:
-                        if(action.TargetGuids != null)
-                        {
-                              var datas = await door.GetIdAndExternalIdMapGuidByGuidRangeAsync(action.TargetGuids, ct);
-                              foreach (var data in datas)
-                                    {
-                                          extractedAction.TryAdd(data.Key, data.Value);
-                                    }
-                        }
-                        break;
-                        case ActionType.ProcedureControlCommand:
-                        if(action.TargetGuids != null)
-                        {
-                              var datas = await repo.GetIdAndExternalIdMapGuidByGuidRangeAsync(action.TargetGuids, ct);
-                              foreach (var data in datas)
-                                    {
-                                          extractedAction.TryAdd(data.Key, data.Value);
-                                    }
-                        }
-                        break;
-                        case ActionType.TriggerVariableControlCommand:
-                        if(action.TargetGuids != null)
-                        {
-                              var datas = await triggerVar.GetIdAndExternalIdMapGuidByGuidRangeAsync(action.TargetGuids, ct);
-    
-                              foreach (var data in datas)
-                                    {
-                                          extractedAction.TryAdd(data.Key, data.Value);
-                                    }
-                        }
-                        break;
-                        case ActionType.TimeZoneControl:
-                        if(action.TargetGuids != null)
-                        {
-                              var datas = await time.GetIdAndExternalIdMapGuidByGuidRangeAsync(action.TargetGuids, ct);
-    
-                              foreach (var data in datas)
-                                    {
-                                          extractedAction.TryAdd(data.Key, data.Value);
-                                    }
-                        }
-                        break;
-                        case ActionType.AntipassbackControlCommand:
-                        case ActionType.SetUseLimit:
-                        if(action.TargetGuids != null)
-                        {
-                              var datas = await user.GetIdAndExternalIdMapGuidByGuidRangeAsync(action.TargetGuids, ct);
-    
-                              foreach (var data in datas)
-                                    {
-                                          extractedAction.TryAdd(data.Key, data.Value);
-                                    }
-                        }
-                        break;
-                        case ActionType.MonitorPointGroupArmDisarmCommand:
-                        if(action.TargetGuids != null)
-                        {
-                              var datas = await monitorGroup.GetIdAndExternalIdMapGuidByGuidRangeAsync(action.TargetGuids, ct);
-    
-                              foreach (var data in datas)
-                                    {
-                                          extractedAction.TryAdd(data.Key, data.Value);
-                                    }
-                        }
-                        break;
-                        case ActionType.ModifyAreaConfiguration:
-                        if(action.TargetGuids != null)
-                        {
-                              var datas = await area.GetIdAndExternalIdMapGuidByGuidRangeAsync(action.TargetGuids, ct);
-    
-                              foreach (var data in datas)
-                                    {
-                                          extractedAction.TryAdd(data.Key, data.Value);
-                                    }
-                        }
-                        break;
-                        case ActionType.TriggerActivationSummary:
-                        case ActionType.FilterOutTriggerActivationSummary:
-                        if(action.TargetGuids != null)
-                        {
-                              var datas = await trigger.GetIdAndExternalIdMapGuidByGuidRangeAsync(action.TargetGuids, ct);
-    
-                              foreach (var data in datas)
-                                    {
-                                          extractedAction.TryAdd(data.Key, data.Value);
-                                    }
-                        }
-                        break;
-                        case ActionType.DelaySecIncrement:
-                        case ActionType.DelayMillisecIncrement:
-                        case ActionType.DeleteAll:
-                        default:
-                        break;
-                  }
-            }
+            var actions = await Task.WhenAll(actionTasks);
+
 
             await adapter.GetAdapter(dev.Vendor).Procedure.DeleteProcedureAsync(
                   dev.DeviceMac,
@@ -318,7 +200,7 @@ public sealed class ProcedureService(
                   dev.DeviceIp,
                   dev.DeviceExternalId,
                   dev.ComponentExternalId ?? -1,
-                  proc.Actions.SelectMany((x,i) => x.TargetGuids == null ? [] : x.TargetGuids.Select(a => (x.Type,x.Metadata,extractedAction[a].externalId,x.Sequence))),
+                  proc.Actions.SelectMany(x => !x.ActionTarget.Any() ? [(x.Type,x.Metadata,null,x.Sequence)] :  x.ActionTarget.Select(a => (x.Type,x.Metadata,a.ExternalId,x.Sequence))),
                   ct
             );
 
@@ -378,7 +260,7 @@ public sealed class ProcedureService(
                   dev.DeviceIp,
                   dev.DeviceExternalId,
                   dev.ComponentExternalId ?? -1,
-                  d.Actions.SelectMany(x => x.ActionTarget.Select(a => (x.Type,x.Metadata,a.ExternalId,x.Sequence))),
+                  d.Actions.SelectMany(x => !x.ActionTarget.Any() ? [(x.Type,x.Metadata,null,x.Sequence)] :  x.ActionTarget.Select(a => (x.Type,x.Metadata,a.ExternalId,x.Sequence))),
                   ct
             );
 
