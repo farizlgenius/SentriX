@@ -65,7 +65,7 @@ public sealed class ActionTarget
                   case ActionType.FilterOutTriggerActivationSummary:
                   TriggerId = targetId;
                   break;
-                  case ActionType.DelayMinIncrement:
+                  case ActionType.DelaySecIncrement:
                   case ActionType.DelayMillisecIncrement:
                   case ActionType.DeleteAll:
                   default:

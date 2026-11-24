@@ -62,7 +62,7 @@ public static class ActionProjections
             ActionType.ModifyAreaConfiguration => target.area == null ? null : new ActionTargetDto(target.area.guid, target.area.name),
             ActionType.TriggerActivationSummary => target.trigger == null ? null : new ActionTargetDto(target.trigger.guid, target.trigger.name),
             ActionType.FilterOutTriggerActivationSummary => target.trigger == null ? null : new ActionTargetDto(target.trigger.guid, target.trigger.name),
-            ActionType.DelayMinIncrement => null,
+            ActionType.DelaySecIncrement => null,
             ActionType.DelayMillisecIncrement => null,
             ActionType.DeleteAll => null,
             _ => null

@@ -29,7 +29,7 @@ public enum ActionType
       FilterOutTriggerActivationSummary,
       TriggerActivationSummary,
       DelayMillisecIncrement=126,
-      DelayMinIncrement=127
+      DelaySecIncrement=127
 
 
 }

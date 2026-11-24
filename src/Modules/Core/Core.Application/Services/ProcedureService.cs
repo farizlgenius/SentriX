@@ -51,7 +51,7 @@ public sealed class ProcedureService(
                   ActionType.ModifyAreaConfiguration => target == null ? [] : await area.GetIdsAndExternalIdsByRangeGuidAsync(target, ct),
                   ActionType.TriggerActivationSummary => target == null ? [] : await trigger.GetIdsAndExternalIdsByRangeGuidAsync(target, ct),
                   ActionType.FilterOutTriggerActivationSummary => target == null ? [] : await trigger.GetIdsAndExternalIdsByRangeGuidAsync(target, ct),
-                  ActionType.DelayMinIncrement or
+                  ActionType.DelaySecIncrement or
                   ActionType.DelayMillisecIncrement or
                   ActionType.DeleteAll or
                   _ => []
@@ -297,7 +297,7 @@ public sealed class ProcedureService(
                                     }
                         }
                         break;
-                        case ActionType.DelayMinIncrement:
+                        case ActionType.DelaySecIncrement:
                         case ActionType.DelayMillisecIncrement:
                         case ActionType.DeleteAll:
                         default:

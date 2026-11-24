@@ -82,7 +82,7 @@ public sealed class ProcedureRepository(IBaseRepository repo,ILogger<ProcedureRe
                   case ActionType.FilterOutTriggerActivationSummary:
                   case ActionType.TriggerActivationSummary:
                   case ActionType.DelayMillisecIncrement:
-                  case ActionType.DelayMinIncrement:
+                  case ActionType.DelaySecIncrement:
                   var delayMeta = JsonHelper.Deserialize<DelayMetadata>(metadata ?? "");
                   c.delay.delay_time = (short)delayMeta.DelayTime;
                   break;

@@ -556,7 +556,7 @@ const ActionForm: React.FC<PropsWithChildren<FormProp<ProcedureDto>>> = ({
                                     </FormField>
                               </div>
                         )
-                  case ActionType.DelayMinIncrement:
+                  case ActionType.DelaySecIncrement:
                         return (
                               <div className="rounded-[24px] border border-[var(--app-panel-border)] p-10 grid grid-cols-2 col-span-2 gap-5">
                                     <FormField>
@@ -630,7 +630,7 @@ const ActionForm: React.FC<PropsWithChildren<FormProp<ProcedureDto>>> = ({
                               repeat:0
                         }
                   case ActionType.DelayMillisecIncrement:
-                  case ActionType.DelayMinIncrement:
+                  case ActionType.DelaySecIncrement:
                         return {
                               delayTime:0,
                         }
@@ -814,9 +814,13 @@ const ActionForm: React.FC<PropsWithChildren<FormProp<ProcedureDto>>> = ({
                                                       label: "Simulated Keypad",
                                                       value: ActionType.HostSimulatedKeyPress
                                                 },
+                                                 {
+                                                      label: "Delay (Millisec)",
+                                                      value: ActionType.DelayMillisecIncrement
+                                                },
                                                 {
-                                                      label: "Delay",
-                                                      value: ActionType.DelayMinIncrement
+                                                      label: "Delay (Second)",
+                                                      value: ActionType.DelaySecIncrement
                                                 }
                                           ]} name={""}
                                           onChange={(e) => {
