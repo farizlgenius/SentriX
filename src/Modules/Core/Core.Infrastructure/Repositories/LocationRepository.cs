@@ -58,19 +58,31 @@ public sealed class LocationRepository(CoreDbContext context) :BaseRepository<Pe
       }
 
      
-      public async Task<IEnumerable<CountryDto>> GetCountriesAsync(CancellationToken ct = default)
+      public async Task<IEnumerable<OptionDto>> GetCountriesAsync(CancellationToken ct = default)
       {
             return await Context.Countries
                   .AsNoTracking()
-                  .Select(x => new CountryDto(
-                        x.id,
+                  .Select(x => new OptionDto(
                         x.name,
+                        x.guid,
                         x.code
                   ))
                   .ToArrayAsync(ct);
       }
 
-    
+      public async Task<int> GetCountryIdByGuidAsync(Guid? guid, CancellationToken ct = default)
+      {
+           var res = await Context.Countries
+            .AsNoTracking()
+            .Where(x => x.guid == guid)
+            .Select(x => x.id)
+            .FirstOrDefaultAsync(ct);
+
+            if(res == 0)
+                  throw new NotFoundException("Country",guid.ToString() ?? "Unknown");
+
+            return res;
+      }
 
       public async Task<IEnumerable<int>> GetIdsByGuidsAsync(IEnumerable<Guid> guids, CancellationToken ct = default)
       {
@@ -92,8 +104,10 @@ public sealed class LocationRepository(CoreDbContext context) :BaseRepository<Pe
                         e.guid,
                         e.name,
                         e.description,
-                        e.country_id,
-                        e.country.name,
+                        new Contract.DTOs.BaseDto(
+                              e.country.guid,
+                              e.country.name
+                        ),
                         e.is_active,
                         e.is_default
                   )).ToListAsync(ct);
@@ -121,7 +135,7 @@ public sealed class LocationRepository(CoreDbContext context) :BaseRepository<Pe
                   .ToListAsync(ct);
       }
 
-      public Task<bool> IsAnyRelatedEntitiesAsync(Guid guid, CancellationToken ct = default)
+      public async Task<bool> IsAnyRelatedEntitiesAsync(Guid guid, CancellationToken ct = default)
       {
             throw new NotImplementedException();
       }

@@ -7,6 +7,6 @@ public sealed record UpdateOutputDto(
   string Name,
   short SlotNo,
   string Metadata,
-  Vendor Vendor,
-  Guid DeviceModuleGuid
+  BaseDto Device,
+  BaseDto DeviceModule
 );

@@ -5,7 +5,7 @@ namespace Core.Contract.Interfaces;
 
 public interface ILocation : IService<LocationDto, CreateLocationDto, UpdateLocationDto>
 {
-  Task<IEnumerable<CountryDto>> GetCountriesAsync(CancellationToken ct = default);
+  Task<IEnumerable<OptionDto>> GetCountriesAsync(CancellationToken ct = default);
   Task<IEnumerable<LocationDto>> GetListAsync(IEnumerable<Guid> guids, CancellationToken ct = default);
 
 

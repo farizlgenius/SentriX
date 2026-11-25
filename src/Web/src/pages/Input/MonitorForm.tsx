@@ -5,7 +5,7 @@ import Select from "../../components/form/Select";
 import Button from "../../components/ui/button/Button";
 import { Options } from "../../model/Options";
 import { DeviceDto } from "../../model/Device/DeviceDto";
-import { InputDto } from "../../model/MonitorPoint/InputDto";
+import { MonitorDto } from "../../model/MonitorPoint/MonitorDto";
 import { ModeDto } from "../../model/ModeDto";
 import { ModuleEndpoint } from "../../endpoint/ModuleEndpoint";
 import { MonitorPointEndpoint } from "../../endpoint/MonitorPointEndpoint";
@@ -22,7 +22,7 @@ import { AeroInputMetadata } from "../../model/MonitorPoint/AeroInputMetadata";
 import { InputMode } from "../../enum/InputMode";
 import { InputLatchingMode } from "../../enum/InputLatchingMode";
 
-const InputForm: React.FC<PropsWithChildren<FormProp<InputDto>>> = ({
+const MonitorForm: React.FC<PropsWithChildren<FormProp<MonitorDto>>> = ({
   dto,
   setDto,
   type,
@@ -36,8 +36,6 @@ const InputForm: React.FC<PropsWithChildren<FormProp<InputDto>>> = ({
   const [moduleOption, setModuleOption] = useState<Options[]>([]);
   const [controllerOption, setControllerOption] = useState<Options[]>([]);
   const [inputOption, setInputOption] = useState<Options[]>([]);
-  const [selectedController,setSelectedController] = useState<string>("");
-
 
   {
     /* Controller Data */
@@ -91,6 +89,10 @@ const InputForm: React.FC<PropsWithChildren<FormProp<InputDto>>> = ({
   }
   useEffect(() => {
     fetchController();
+    if(type == FormType.INFO || type == FormType.UPDATE){
+      fetchModule(dto.device.guid ?? "")
+      fetchInputSlot(dto.deviceModule.guid ?? "")
+    }
   }, []);
 
   return (
@@ -114,47 +116,54 @@ const InputForm: React.FC<PropsWithChildren<FormProp<InputDto>>> = ({
           <FormField>
             <Label>Controller</Label>
             <Select
-              disabled={isReadOnly}
+              disabled={isReadOnly || dto.name == ""}
               isString={true}
-              name="deviceId"
+              name="device"
               options={controllerOption}
               placeholder="Select Option"
               onChange={(e) => {
-                setSelectedController(e.target.value)
                 fetchModule(e.target.value)
                 setDto(prev => ({
                   ...prev,
-                  vendor:controllerOption.find(x => x.value == e.target.value)?.additionalInfo
+                  device:{
+                    ...prev.device,
+                    guid:e.target.value,
+                    vendor:Number(controllerOption.find(x => x.value == e.target.value)?.description)
+                  }
                 }))
               }}
               className="dark:bg-dark-900"
-              defaultValue={selectedController}
+              defaultValue={dto.device.guid as string}
             />
           </FormField>
 
           <FormField>
             <Label>Module</Label>
             <Select
-              disabled={isReadOnly}
+              disabled={isReadOnly || dto.device.guid == ""}
               isString
-              name="moduleId"
+              name="module"
               options={moduleOption}
               placeholder="Select Option"
               onChange={e => {
                 setDto(prev => ({
                   ...prev,
-                  deviceModuleGuid:e.target.value
+                  deviceModule:{
+                    ...prev.device,
+                    guid:e.target.value,
+                    vendor:Number(controllerOption.find(x => x.value == e.target.value)?.description)
+                  }
                 }));
                 fetchInputSlot(e.target.value)
               }}
               className="dark:bg-dark-900"
-              defaultValue={dto.deviceModuleGuid}
+              defaultValue={dto.deviceModule.guid as string}
             />
           </FormField>
           <FormField>
             <Label>Input</Label>
             <Select
-              disabled={isReadOnly}
+              disabled={isReadOnly || dto.deviceModule.guid == ""}
               name="inputNo"
               options={inputOption}
               placeholder="Select Option"
@@ -171,7 +180,7 @@ const InputForm: React.FC<PropsWithChildren<FormProp<InputDto>>> = ({
           <FormField>
             <Label>Hold Time</Label>
              <Input
-              disabled={isReadOnly}
+              disabled={isReadOnly || dto.slotNo == -1}
               value={(dto.metadata as AeroInputMetadata).holdTime}
               min="0"
               max="65535"
@@ -192,7 +201,7 @@ const InputForm: React.FC<PropsWithChildren<FormProp<InputDto>>> = ({
           <FormField>
             <Label>Debounce</Label>
              <Input
-              disabled={isReadOnly}
+              disabled={isReadOnly || dto.slotNo == -1}
               value={(dto.metadata as AeroInputMetadata).debounce}
               min="0"
               max="65535"
@@ -213,7 +222,7 @@ const InputForm: React.FC<PropsWithChildren<FormProp<InputDto>>> = ({
           <FormField>
             <Label className="pb-3">Monitor Point Mode</Label>
             <Select
-              disabled={isReadOnly}
+              disabled={isReadOnly || dto.slotNo == -1}
               name="monitorPointMode"
               options={[
                 {
@@ -249,7 +258,7 @@ const InputForm: React.FC<PropsWithChildren<FormProp<InputDto>>> = ({
           <FormField>
             <Label className="pb-3">Log Function Mode</Label>
             <Select
-              disabled={isReadOnly}
+              disabled={isReadOnly || dto.slotNo == -1}
               name="logFunction"
               options={[
                 {
@@ -289,7 +298,7 @@ const InputForm: React.FC<PropsWithChildren<FormProp<InputDto>>> = ({
           >
             <Label htmlFor="delayEntry">Delay Entry(s)</Label>
             <Input
-              disabled={isReadOnly}
+              disabled={isReadOnly || dto.slotNo == -1}
               value={(dto.metadata as AeroInputMetadata).delayEntry}
               min="0"
               max="65535"
@@ -316,7 +325,7 @@ const InputForm: React.FC<PropsWithChildren<FormProp<InputDto>>> = ({
           >
             <Label htmlFor="delayExit">Delay Exit(s)</Label>
             <Input
-              disabled={isReadOnly}
+              disabled={isReadOnly || dto.slotNo == -1}
               value={(dto.metadata as AeroInputMetadata).delayExit}
               min="0"
               max="65535"
@@ -339,4 +348,4 @@ const InputForm: React.FC<PropsWithChildren<FormProp<InputDto>>> = ({
   );
 };
 
-export default InputForm;
+export default MonitorForm;

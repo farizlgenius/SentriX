@@ -6,7 +6,6 @@ namespace Core.Infrastructure.Persistences.Entities;
 public sealed class Monitor : BaseEntity,IAuditableEntity
 {
   public short slot_no { get; set; }
-  public Vendor vendor { get; set; } = Vendor.aero;
   public string metadata { get; set; } = string.Empty;
 
   // Relation
@@ -20,7 +19,6 @@ public sealed class Monitor : BaseEntity,IAuditableEntity
   {
     name = d.Name;
     slot_no = d.SlotNo;
-    vendor = d.Vendor;
     metadata = d.Metadata;
     location_id = d.LocationId;
     device_module_id = d.DeviceModuleId;

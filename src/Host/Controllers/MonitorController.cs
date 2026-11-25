@@ -66,7 +66,7 @@ public sealed class MonitorController(IMonitor input) : ControllerBase
             return Ok(res);
       }
 
-      [HttpDelete("range")]
+      [HttpDelete("list")]
       public async Task<IActionResult> DeleteRangeAsync([FromBody]IEnumerable<Guid> guids)
       {
             var res = await input.DeleteListAsync(guids);

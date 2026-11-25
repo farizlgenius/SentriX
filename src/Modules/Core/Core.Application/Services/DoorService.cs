@@ -173,7 +173,6 @@ public sealed class DoorService(
       $"{dto.Name} - Buzzer",
       d.Buzzer.SlotNo,
       d.Buzzer.Metadata,
-      d.Vendor,
       buzzerMapModuleId.Item1,
       d.LocationId,
       BuzzerExternalId
@@ -188,7 +187,6 @@ public sealed class DoorService(
         $"{dto.Name} - Break Glass",
         d.BG.SlotNo,
         d.BG.Metadata,
-        d.BG.Vendor,
         bgMapModuleId.Item1,
         d.LocationId,
         BgExternalId

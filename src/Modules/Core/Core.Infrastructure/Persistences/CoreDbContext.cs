@@ -281,17 +281,7 @@ public sealed class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbC
            });
 
             // Sensor Enums
-            modelBuilder.Entity<Control>(b =>
-            {
-                  b.Property(x => x.vendor).HasConversion<string>();
 
-            });
-
-            modelBuilder.Entity<Entities.Monitor>(b =>
-            {
-                  b.Property(x => x.vendor).HasConversion<string>();
-
-            });
 
             modelBuilder.Entity<Persistences.Entities.CoreEvent>(b =>
             {

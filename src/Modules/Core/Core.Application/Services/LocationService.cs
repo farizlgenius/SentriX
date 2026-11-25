@@ -18,15 +18,17 @@ public sealed class LocationService(
 {
   public async Task<Guid> CreateAsync(CreateLocationDto dto, CancellationToken ct = default)
   {
-    var d = new Core.Domain.Entities.Location(
-      dto.Name,
-      dto.Description,
-      dto.CountryId
-    );
+    var countryId = await repo.GetCountryIdByGuidAsync(dto.Country.Guid,ct);
 
     // Check name is duplicate 
     if (await repo.IsAnyByNameAndLocationGuidAsync(dto.Name,Guid.Empty,ct))
       throw new DuplicateException(EntityType.LOCATION.ToString(), dto.Name);
+
+    var d = new Core.Domain.Entities.Location(
+      dto.Name,
+      dto.Description,
+      countryId
+    );
 
     await repo.AddAsync(d, ct);
 
@@ -102,14 +104,14 @@ public sealed class LocationService(
     throw new NotImplementedException();
   }
 
-  public async Task<IEnumerable<CountryDto>> GetCountriesAsync(CancellationToken ct = default)
+  public async Task<IEnumerable<OptionDto>> GetCountriesAsync(CancellationToken ct = default)
   {
     return await repo.GetCountriesAsync(ct);
   }
 
   public async Task<IEnumerable<LocationDto>> GetListAsync(IEnumerable<Guid> guids, CancellationToken ct = default)
   {
-    return await repo.GetListAsync(guids);
+    return await repo.GetListAsync(guids, ct);
   }
 
   public async Task<Pagination<LocationDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
@@ -123,14 +125,16 @@ public sealed class LocationService(
     if (!await repo.IsAnyGuidAsync(dto.Guid, ct))
       throw new NotFoundException(EntityType.LOCATION.ToString(), dto.Guid.ToString());
 
+    var countryId = await repo.GetCountryIdByGuidAsync(dto.Country.Guid,ct);
+
     var d = new Core.Domain.Entities.Location(
       dto.Guid,
       dto.Name,
       dto.Description,
-      dto.CountryId
+      countryId
     );
 
-    await repo.UpdateAsync(d);
+    await repo.UpdateAsync(d, ct);
 
     return d.Guid;
 

@@ -18,7 +18,6 @@ public sealed class ControlRepository(CoreDbContext context) : BaseRepository<Pe
   {
     en.name = dom.Name;
     en.slot_no = dom.SlotNo;
-    en.vendor = dom.Vendor;
     en.metadata = dom.Metadata;
     en.location_id = dom.LocationId;
     en.device_module_id = dom.DeviceModuleId;
@@ -65,7 +64,7 @@ public sealed class ControlRepository(CoreDbContext context) : BaseRepository<Pe
       {
             return await Context.Outputs
               .AsNoTracking()
-              .Where(x => x.external_id == externalId && x.device_module.device.mac == mac && x.vendor == vendor)
+              .Where(x => x.external_id == externalId && x.device_module.device.mac == mac && x.device_module.device.vendor == vendor)
               .Select(x => x.name)
               .FirstOrDefaultAsync(ct) ?? "Unknown";
       }
@@ -84,14 +83,14 @@ public sealed class ControlRepository(CoreDbContext context) : BaseRepository<Pe
       }
 
       public async Task<Pagination<ControlDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
-  {
-    return await base.GetPaginationAsync(
-      param,
-      param.locationGuid != new Guid("3a9c9947-d5ca-4bb2-b525-0499a340f1d6") ? x => x.location.guid == param.locationGuid : null,
-      [x => x.name],
-      ct
-    );
-  }
+    {
+      return await base.GetPaginationAsync(
+        param,
+        param.locationGuid != new Guid("3a9c9947-d5ca-4bb2-b525-0499a340f1d6") ?  x => x.location.guid == param.locationGuid : null,
+        [x => x.name],
+        ct
+      );
+    }
 
   public async Task<bool> IsAnyRelatedEntitiesAsync(Guid guid, CancellationToken ct = default)
   {
@@ -102,7 +101,7 @@ public sealed class ControlRepository(CoreDbContext context) : BaseRepository<Pe
       {
             return await Context.Outputs
               .AsNoTracking()
-              .Where(x => x.external_id == externalId && x.device_module.device.mac == mac && x.vendor == vendor)
+              .Where(x => x.external_id == externalId && x.device_module.device.mac == mac && x.device_module.device.vendor == vendor)
               .Select(x => x.guid)
               .FirstOrDefaultAsync(ct);
       }

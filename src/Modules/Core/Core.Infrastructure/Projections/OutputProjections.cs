@@ -13,7 +13,16 @@ public static class OutputProjections
             x.name,
             x.slot_no,
             x.metadata,
-            x.vendor,
+            new BaseDto(
+                x.device_module.device.guid,
+                x.device_module.device.name,
+                x.device_module.device.vendor
+            ),
+            new BaseDto(
+                x.device_module.guid,
+                x.device_module.name,
+                x.device_module.device.vendor
+            ),
             x.is_active,
             x.is_default
         );
@@ -26,7 +35,7 @@ public static class OutputProjections
         x.device_module.device.ip,
         x.device_module.id,
         x.device_module.external_id ?? -1,
-        x.vendor,
+        x.device_module.device.vendor,
         x.location_id,
         x.id,
         x.external_id

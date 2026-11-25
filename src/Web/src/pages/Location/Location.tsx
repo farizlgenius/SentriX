@@ -17,19 +17,23 @@ import { FeatureId } from "../../enum/FeatureId";
 import { FormType } from "../../model/Form/FormProp";
 import { usePagination } from "../../context/PaginationContext";
 import { useLocation } from "../../context/LocationContext";
+import { TableCell } from "../../components/ui/table";
 
 const defaultDto: LocationDto = {
   guid: "",
   name: "",
   description: "",
-  country: "",
-  isActive: false,
+  country: {
+    guid:"",
+    name:null,
+    vendor:null
+  },
+  isActive: true,
   isDefault: false,
-  countryId: -1,
 };
 
-export const LOCATION_HEADER: string[] = ["Name", "Enable", "Action"];
-export const LOCATION_KEY: string[] = ["name"];
+export const LOCATION_HEADER: string[] = ["Name","Country","Action"];
+export const LOCATION_KEY: string[] = ["name","country"];
 
 export const Location = () => {
   const { locationGuid } = useLocation();
@@ -55,7 +59,7 @@ export const Location = () => {
   const [formType, setFormType] = useState<FormType>(FormType.CREATE);
 
   const handleRemove = (data: LocationDto) => {
-    setRemove(true);
+    
     setConfirmRemove(() => async () => {
       const res = await send.delete(LocationEndpoint.DELETE(data.guid));
       console.log(res);
@@ -64,6 +68,7 @@ export const Location = () => {
         toggleRefresh();
       }
     });
+    setRemove(true);
   };
 
   const handleInfo = (data: LocationDto) => {
@@ -191,7 +196,8 @@ export const Location = () => {
           type={formType}
           dto={locationDto}
           setDto={setLocationDto}
-          handleClick={handleClickWithEvent} handleChange={()=>{}}        />
+          handleClick={handleClickWithEvent} handleChange={()=>{}}        
+        />
       ),
     },
   ];
@@ -203,7 +209,7 @@ export const Location = () => {
         <BaseForm
           handleClick={handleClickWithEvent}
           tabContent={tabContent}
-          header={"Location"}
+          header={""}
           desc={""}
           type={formType}
         />
@@ -222,6 +228,14 @@ export const Location = () => {
             fetchData={fetchData}
             refresh={refresh}
             locationGuid={locationGuid}
+            specialDisplay={[
+              {
+                key:"country",
+                content: (data, i) => <TableCell key={i} className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                {data.country.name}
+              </TableCell>,
+              }
+            ]}
           />
       )}
     </>

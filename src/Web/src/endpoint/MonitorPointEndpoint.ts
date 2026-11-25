@@ -10,7 +10,7 @@ export const MonitorPointEndpoint = {
     UPDATE:  `/api/${CONTROLLER}`,
     GET_MP_STATUS:(guid:string) => `/api/${CONTROLLER}/status/${guid}`,
     DELETE :(guid:string) => `/api/${CONTROLLER}/${guid}`,
-    DELETE_RANGE: `/api/${CONTROLLER}/delete/range`,
+    DELETE_RANGE: `/api/${CONTROLLER}/list`,
     IP_LIST :(moduleId:number) => `/api/${CONTROLLER}/input/${moduleId}`,
     MASK : (guid:string) => `/api/${CONTROLLER}/mask/${guid}`,
     UNMASK : (guid:string) => `/api/${CONTROLLER}/unmask/${guid}`,

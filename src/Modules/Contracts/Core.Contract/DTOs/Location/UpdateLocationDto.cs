@@ -4,5 +4,5 @@ public sealed record UpdateLocationDto(
   Guid Guid,
   string Name,
   string Description,
-  int CountryId
+  BaseDto Country
 );

@@ -7,7 +7,8 @@ public sealed record ControlDto(
   string Name,
   short SlotNo,
   string Metadata,
-  Vendor Vendor,
+  BaseDto Device,
+  BaseDto DeviceModule,
   bool IsActive,
   bool IsDefault
 );

@@ -19,7 +19,7 @@ public sealed class MonitorService(
 {
       public async Task<Guid> CreateAsync(CreateMonitorDto dto, CancellationToken ct = default)
       {
-            var dev = await module.GetCommandDetailAsync(dto.DeviceModuleGuid, ct);
+            var dev = await module.GetCommandDetailAsync(dto.DeviceModule.Guid, ct);
 
             if (await repo.IsAnyByNameAsync(dto.Name, ct))
                   throw new DuplicateException(EntityType.INPUT.ToString(), nameof(dto.Name));
@@ -30,7 +30,6 @@ public sealed class MonitorService(
                   dto.Name,
                   dto.SlotNo,
                   dto.Metadata,
-                  dto.Vendor,
                   dev.ModuleId,
                   dev.LocationId ?? 1,
                   inputExternalId
@@ -204,10 +203,10 @@ public sealed class MonitorService(
             var dev = await repo.GetCommandDetailAsync(dto.Guid, ct);
 
             var d = new Domain.Entities.Monitor(
+                  dto.Guid,
                   dto.Name,
                   dto.SlotNo,
                   dto.Metadata,
-                  dto.Vendor,
                   dev.ModuleId,
                   dev.LocationId ?? 1,
                   dev.ComponentExternalId ?? -1

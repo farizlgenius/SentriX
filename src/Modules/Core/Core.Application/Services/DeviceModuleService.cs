@@ -12,7 +12,7 @@ namespace Core.Application.Services;
 
 public sealed class DeviceModuleService(
   IDeviceModuleRepository repo,
-  IAdapterFactory adapter, 
+  IAdapterFactory adapter,
   IMessageBus bus
   ) : IDeviceModule
 {
@@ -68,29 +68,40 @@ public sealed class DeviceModuleService(
   }
 
   public async Task<IEnumerable<OptionDto>> GetInputSlotAsync(Guid guid, CancellationToken ct = default)
-  {
+{
     // 1. Get the data from the repository
-        var slotData = await repo.GetInputSlotAsync(guid, ct);
+    var slotData = await repo.GetInputSlotAsync(guid, ct);
 
-        if (slotData == null)
-            return Array.Empty<OptionDto>();
+    if (slotData == null)
+        return Array.Empty<OptionDto>();
 
-        // 2. Apply business logic: Calculate free slots
-        var allPossibleSlots = Enumerable.Range(0, slotData.Value.TotalSlots).Select(x => (short)x);
+    // 2. Build all possible slots and mark which ones are already taken
+    var occupiedSlots = slotData.Value.InputSlots
+        .Concat(slotData.Value.RexSlots)
+        .Concat(slotData.Value.SensorSlots)
+        .Concat(slotData.Value.BreakGlassSlots)
+        .ToHashSet();
 
-        var occupiedSlots = slotData.Value.InputSlots.Concat(slotData.Value.RexSlots).Concat(slotData.Value.SensorSlots).Concat(slotData.Value.BreakGlassSlots).Distinct();
-        
-        return allPossibleSlots
-            .Except(occupiedSlots)
-            .Order()
-            .Select(x => new OptionDto(
-              $"Input {x+1}",
-              x,
-              string.Empty
-            ))
-            .ToArray();
+    var totalSlots = slotData.Value.TotalSlots;
 
-  }
+    return [.. Enumerable.Range(0, totalSlots)
+        .Select(x => (short)x)
+        .Order()
+        .Select(x => new OptionDto(
+            GetSlotLabel(x, totalSlots),
+            x,
+            string.Empty,
+            IsTaken: occupiedSlots.Contains(x)
+        ))];
+}
+
+private static string GetSlotLabel(short index, int totalSlots) => index switch
+{
+    _ when totalSlots >= 3 && index == totalSlots - 3 => "Tamper",
+    _ when totalSlots >= 2 && index == totalSlots - 2 => "AC Fail",
+    _ when totalSlots >= 1 && index == totalSlots - 1 => "Batt Fail",
+    _ => $"Input {index + 1}"
+};
 
   public async Task<IEnumerable<OptionDto>> GetOptionByDeviceAsync(Guid guid, CancellationToken ct = default)
   {
@@ -100,25 +111,26 @@ public sealed class DeviceModuleService(
   public async Task<IEnumerable<OptionDto>> GetOutputSlotAsync(Guid guid, CancellationToken ct = default)
   {
     // 1. Get the data from the repository
-        var slotData = await repo.GetOutputSlotAsync(guid, ct);
+    var slotData = await repo.GetOutputSlotAsync(guid, ct);
 
-        if (slotData == null)
-            return Array.Empty<OptionDto>();
+    if (slotData == null)
+      return [];
 
-        // 2. Apply business logic: Calculate free slots
-        var allPossibleSlots = Enumerable.Range(0, slotData.Value.TotalSlots).Select(x => (short)x);
+    // 2. Build all possible slots and mark which ones are already taken
+    var occupiedSlots = slotData.Value.RelaySlots
+        .Concat(slotData.Value.BuzzerSlots)
+        .Concat(slotData.Value.OutputSlots)
+        .ToHashSet();
 
-        var occupiedSlots = slotData.Value.RelaySlots.Concat(slotData.Value.BuzzerSlots).Concat(slotData.Value.OutputSlots).Distinct();
-        
-        return allPossibleSlots
-            .Except(occupiedSlots)
-            .Order()
-            .Select(x => new OptionDto(
-              $"Output {x+1}",
-              x,
-              string.Empty
-            ))
-            .ToArray();
+    return [.. Enumerable.Range(0, slotData.Value.TotalSlots)
+        .Select(x => (short)x)
+        .Order()
+        .Select(x => new OptionDto(
+            $"Output {x + 1}",
+            x,
+            string.Empty,
+            IsTaken:occupiedSlots.Contains(x)
+        ))];
   }
 
   public async Task<Pagination<DeviceModuleDto>> GetPaginationAsync(PaginationParams param, CancellationToken ct = default)
@@ -128,50 +140,49 @@ public sealed class DeviceModuleService(
 
   public async Task<IEnumerable<OptionDto>> GetReaderSlotAsync(Guid guid, CancellationToken ct = default)
   {
-     // 1. Get the data from the repository
-        var slotData = await repo.GetReaderSlotAsync(guid, ct);
+    // 1. Get the data from the repository
+    var slotData = await repo.GetReaderSlotAsync(guid, ct);
 
-        if (slotData == null)
-            return Array.Empty<OptionDto>();
+    if (slotData == null)
+      return [];
 
-        // 2. Apply business logic: Calculate free slots
-        var allPossibleSlots = Enumerable.Range(0, slotData.Value.TotalSlots).Select(x => (short)x);
+    // 2. Apply business logic: Calculate free slots
 
-        var occupiedSlots = slotData.Value.OccupiedSlots.Distinct();
-        
-        return allPossibleSlots
-            .Except(occupiedSlots)
+    var occupiedSlots = slotData.Value.OccupiedSlots.ToHashSet();
+
+    return [.. Enumerable.Range(0, slotData.Value.TotalSlots)
+            .Select(x => (short)x)
             .Order()
             .Select(x => new OptionDto(
               $"Reader {x+1}",
               x,
-              string.Empty
-            ))
-            .ToArray();
+              string.Empty,
+              IsTaken:occupiedSlots.Contains(x)
+            ))];
   }
 
-      public async Task<bool> GetStatusAsync(Guid guid, CancellationToken ct = default)
-      {
+  public async Task<bool> GetStatusAsync(Guid guid, CancellationToken ct = default)
+  {
 
-          var dev = await repo.GetCommandDetailAsync(guid,ct);
+    var dev = await repo.GetCommandDetailAsync(guid, ct);
 
-          await adapter.GetAdapter(Vendor.aero).Module.GetStatusAsync(
-            dev.DeviceMac,
-            dev.DeviceIp,
-            dev.DeviceExternalId,
-            dev.ModuleExternalId,
-            ct
-          );
+    await adapter.GetAdapter(Vendor.aero).Module.GetStatusAsync(
+      dev.DeviceMac,
+      dev.DeviceIp,
+      dev.DeviceExternalId,
+      dev.ModuleExternalId,
+      ct
+    );
 
-          return true;
-      }
+    return true;
+  }
 
-      public Task<bool> GetStatusesAsync(IEnumerable<Guid> guids, CancellationToken ct = default)
-      {
-            throw new NotImplementedException();
-      }
+  public Task<bool> GetStatusesAsync(IEnumerable<Guid> guids, CancellationToken ct = default)
+  {
+    throw new NotImplementedException();
+  }
 
-      public async Task<Guid> UpdateAsync(UpdateDeviceModuleDto dto, CancellationToken ct = default)
+  public async Task<Guid> UpdateAsync(UpdateDeviceModuleDto dto, CancellationToken ct = default)
   {
     throw new NotImplementedException();
   }

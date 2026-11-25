@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
 import PageBreadcrumb from "../../components/common/PageBreadCrumb";
 import { ActiveIcon, ControlIcon, DelayIcon, DisableIcon, DisconnectIcon, ErrorIcon, InactiveIcon, LocalMaskIcon, MaskIcon, NoAttachIcon, OffIcon, OnIcon, ToggleIcon, UnknownIcon } from "../../icons";
-import OutputForm from "./OutputForm";
+import ControlForm from "./ControlForm";
 import Logger from "../../utility/Logger";
-import { OutputDto } from "../../model/ControlPoint/OutputDto";
-import { StatusDto } from "../../model/StatusDto";
+import { ControlDto } from "../../model/ControlPoint/ControlDto";
 import Helper from "../../utility/Helper";
 import { useToast } from "../../context/ToastContext";
 import { ControlPointToast } from "../../model/ToastMessage";
@@ -24,8 +23,6 @@ import { usePopup } from "../../context/PopupContext";
 import { FormType } from "../../model/Form/FormProp";
 import { usePagination } from "../../context/PaginationContext";
 import { SignalRTopic } from "../../constants/signalr-constant";
-import { Vendor } from "../../enum/Vendor";
-import { Status } from "../../enum/Status";
 import { OutputCommand } from "../../enum/OutputCommand";
 import { OutputRepeatCommand } from "../../model/ControlPoint/OutputRepeatCommand";
 import Modals from "../UiElements/Modals";
@@ -43,14 +40,15 @@ import { HttpStatusCode } from "axios";
 
 export const OUTPUT_TABLE_HEADER: string[] = [
   "Name",
+  "Module",
+  "Slot",
   "Pulse Time",
   "Status",
-  "Enabled",
   "Action",
 ];
-export const OUTPUT_KEY: string[] = ["name", "defaultPulse"];
+export const OUTPUT_KEY: string[] = ["name","deviceModule","slotNo","defaultPulse" ];
 
-const Output = () => {
+const Control = () => {
   const { toggleToast } = useToast();
   const { token } = useAuth();
   const { setPagination } = usePagination();
@@ -75,20 +73,20 @@ const Output = () => {
   {
     /* handle Table Action */
   }
-  const handleEdit = (data: OutputDto) => {
+  const handleEdit = (data: ControlDto) => {
     setControlPointDto(data);
     setFormType(FormType.UPDATE);
     setForm(true);
   };
 
-  const handleInfo = (data: OutputDto) => {
+  const handleInfo = (data: ControlDto) => {
     console.log(data);
     setControlPointDto(data);
     setFormType(FormType.INFO);
     setForm(true);
   };
 
-  const handleRemove = (data: OutputDto) => {
+  const handleRemove = (data: ControlDto) => {
     setConfirmRemove(() => async () => {
       const res = await send.delete(ControlEndpoint.DELETE(data.guid));
       if (
@@ -103,7 +101,7 @@ const Output = () => {
   {
     /* Output Data */
   }
-  const defaultOutputDto: OutputDto = {
+  const defaultOutputDto: ControlDto = {
     guid: "",
     name: "",
     slotNo: -1,
@@ -112,10 +110,18 @@ const Output = () => {
       offlineMode: 0,
       driveMode: 0
     },
-    deviceModuleGuid: "",
-    vendor: Vendor.unknown,
     isActive: true,
-    isDefault: false
+    isDefault: false,
+    deviceModule: {
+      guid: "",
+      name: null,
+      vendor: null
+    },
+    device: {
+      guid:"",
+      name:null,
+      vendor:null
+    }
   };
   const defaultRepeatCommand: OutputRepeatCommand = {
     onTime: 0,
@@ -123,10 +129,10 @@ const Output = () => {
     repeat: 0
   }
   const [controlPointDto, setControlPointDto] =
-    useState<OutputDto>(defaultOutputDto);
+    useState<ControlDto>(defaultOutputDto);
   const [repeat, setRepeat] = useState<OutputRepeatCommand>(defaultRepeatCommand);
   //const [onTime,setOnTime] = useState<number>(1);
-  const [outputsDto, setOutputsDto] = useState<OutputDto[]>([]);
+  const [outputsDto, setOutputsDto] = useState<ControlDto[]>([]);
   const [status, setStatus] = useState<OutputStatus[]>([]);
   const fetchData = async (
     pageNumber: number,
@@ -147,7 +153,7 @@ const Output = () => {
       ),
     );
     if (res.status == HttpStatusCode.Ok) {
-      res.data.data.items.forEach((a: OutputDto) => {
+      res.data.data.items.forEach((a: ControlDto) => {
         setOutputsDto(prev => (
           prev.some(x => x.guid == a.guid) ?
             [...prev]
@@ -165,7 +171,7 @@ const Output = () => {
       setPagination(res.data.data);
 
       // Batch set state
-      const newStatuses = res.data.data.items.map((a: OutputDto) => {
+      const newStatuses = res.data.data.items.map((a: ControlDto) => {
         const status: OutputStatus = {
           guid: a.guid,
           offline: false,
@@ -183,7 +189,7 @@ const Output = () => {
       setStatus((prev) => [...prev, ...newStatuses]);
 
       // Fetch status for each
-      res.data.data.items.forEach((a: OutputDto) => {
+      res.data.data.items.forEach((a: ControlDto) => {
         fetchStatus(a.guid);
       });
     }
@@ -267,10 +273,10 @@ const Output = () => {
         }
         setConfirmRemove(() => async () => {
           var data: string[] = [];
-          selectedObjects.map(async (a: OutputDto) => {
+          selectedObjects.map(async (a: ControlDto) => {
             data.push(a.guid);
           });
-          var res = await send.post(ControlEndpoint.DELETE_RANGE, data);
+          var res = await send.deleteBody(ControlEndpoint.DELETE_RANGE, data);
           if (
             Helper.handleToastByResCode(
               res,
@@ -287,7 +293,10 @@ const Output = () => {
       case "create":
         console.log(controlPointDto);
         setConfirmCreate(() => async () => {
-          controlPointDto.metadata = JSON.stringify(controlPointDto.metadata);
+          if(typeof controlPointDto.metadata != 'string'){
+            controlPointDto.metadata = JSON.stringify(controlPointDto.metadata);
+          }
+          
           const res = await send.post(ControlEndpoint.CREATE, controlPointDto);
           if (
             Helper.handleToastByResCode(
@@ -304,6 +313,9 @@ const Output = () => {
         break;
       case "update":
         setConfirmUpdate(() => async () => {
+          if(typeof controlPointDto.metadata != 'string'){
+            controlPointDto.metadata = JSON.stringify(controlPointDto.metadata);
+          }
           const res = await send.put(ControlEndpoint.UPDATE, controlPointDto);
           if (
             Helper.handleToastByResCode(
@@ -326,7 +338,7 @@ const Output = () => {
       case "on":
         console.log(selectedObjects);
         if (selectedObjects.length > 0) {
-          selectedObjects.map(async (a: OutputDto) => {
+          selectedObjects.map(async (a: ControlDto) => {
             const res = await send.post(ControlEndpoint.TRIGGER, {
               guid: a.guid,
               command: OutputCommand.ON
@@ -342,7 +354,7 @@ const Output = () => {
         break;
       case "off":
         if (selectedObjects.length > 0) {
-          selectedObjects.map(async (a: OutputDto) => {
+          selectedObjects.map(async (a: ControlDto) => {
             const res = await send.post(ControlEndpoint.TRIGGER, {
               guid: a.guid,
               command: OutputCommand.OFF
@@ -357,7 +369,7 @@ const Output = () => {
         break;
       case "toggle":
         if (selectedObjects.length > 0) {
-          selectedObjects.map(async (a: OutputDto) => {
+          selectedObjects.map(async (a: ControlDto) => {
             const res = await send.post(ControlEndpoint.TRIGGER, {
               guid: a.guid,
               command: OutputCommand.SINGLE
@@ -382,7 +394,7 @@ const Output = () => {
   {
     /* checkBox */
   }
-  const [selectedObjects, setSelectedObjects] = useState<OutputDto[]>([]);
+  const [selectedObjects, setSelectedObjects] = useState<ControlDto[]>([]);
 
   const action: ActionButton[] = [
     {
@@ -407,7 +419,7 @@ const Output = () => {
     },
   ];
 
-  const renderOptionalComponent = (data: OutputDto) => {
+  const renderOptionalComponent = (data: ControlDto) => {
     // 1. Look up the matched record once
     const matchedItem = status.find((b) => b.guid === data.guid);
     const currentChangeEncode = matchedItem?.status ?? ChangeOfStateEncode.Unknown;
@@ -425,7 +437,7 @@ const Output = () => {
               ? "Non-settling error"
               : currentChangeEncode === ChangeOfStateEncode.SupervisoryFaultCodes
                 ? "Supervisory fault"
-                : iconCos.label || "Unknown";
+                : "Unknown";
     const statusColor: "success" | "error" | "warning" | "light" =
       currentChangeEncode === ChangeOfStateEncode.Active
         ? "success"
@@ -514,7 +526,7 @@ const Output = () => {
       icon: <ControlIcon />,
       label: "Control Point",
       content: (
-        <OutputForm
+        <ControlForm
           dto={controlPointDto}
           setDto={setControlPointDto}
           handleClick={handleClick}
@@ -545,7 +557,7 @@ const Output = () => {
             <FormField className="flex justify-end">
               <Button onClick={e => {
                 if (selectedObjects.length > 0) {
-                  selectedObjects.map(async (a: OutputDto) => {
+                  selectedObjects.map(async (a: ControlDto) => {
                     const res = await send.post(ControlEndpoint.TRIGGER, {
                       guid: a.guid,
                       command: OutputCommand.REPEAT,
@@ -570,10 +582,10 @@ const Output = () => {
       )}
       {form ? (
         <>
-          <BaseForm handleClick={handleClick} tabContent={formContent} header={"Control Point"} desc={""} type={FormType.CREATE} />
+          <BaseForm handleClick={handleClick} tabContent={formContent} header={""} desc={""} type={formType} />
         </>
       ) : (
-        <BaseTable<OutputDto>
+        <BaseTable<ControlDto>
           headers={OUTPUT_TABLE_HEADER}
           keys={OUTPUT_KEY}
           data={outputsDto}
@@ -595,6 +607,16 @@ const Output = () => {
               content: (data, i) => <TableCell key={i} className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
                 {(data.metadata as AeroOutputMetadata).defaultPulse ?? 0}
               </TableCell>,
+            },{
+              key: "slotNo",
+              content: (data, i) => <TableCell key={i} className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                {`Output ${data.slotNo + 1}`}
+              </TableCell>,
+            },{
+              key: "deviceModule",
+              content: (data, i) => <TableCell key={i} className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                {data.deviceModule.name}
+              </TableCell>,
             }
           ]}
         />
@@ -603,4 +625,4 @@ const Output = () => {
   );
 };
 
-export default Output;
+export default Control;

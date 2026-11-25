@@ -146,7 +146,7 @@ public sealed class DeviceModuleRepository(CoreDbContext context) : BaseReposito
             .Select(x => new OptionDto(
                   x.name,
                   x.guid,
-                  x.mac,
+                  x.device.vendor,
                   null,
                   false
             )).ToArrayAsync(ct);

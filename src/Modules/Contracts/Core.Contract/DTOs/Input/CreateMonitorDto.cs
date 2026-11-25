@@ -6,7 +6,6 @@ public sealed record CreateMonitorDto(
   string Name,
   short SlotNo,
   string Metadata,
-  Vendor Vendor,
-  Guid DeviceModuleGuid,
-  Guid LocationGuid
+  BaseDto Device,
+  BaseDto DeviceModule
 );

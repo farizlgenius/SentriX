@@ -6,6 +6,6 @@ public sealed record CreateControlDto(
   string Name,
   short SlotNo,
   string Metadata,
-  Vendor Vendor,
-  Guid DeviceModuleGuid
+  BaseDto Device,
+  BaseDto DeviceModule
 );

@@ -1,7 +1,7 @@
 namespace Core.Contract.DTOs.Location;
 
 public sealed record CountryDto(
-      int Id,
+      Guid Guid,
       string Name,
       string Code
 );

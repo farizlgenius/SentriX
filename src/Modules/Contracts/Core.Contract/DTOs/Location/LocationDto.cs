@@ -4,8 +4,7 @@ public sealed record LocationDto(
   Guid Guid,
   string Name,
   string Description,
-  int CountryId,
-  string Country,
+  BaseDto Country,
   bool IsActive,
   bool IsDefault
 );

@@ -19,7 +19,7 @@ public sealed class ControlService(
       public async Task<Guid> CreateAsync(CreateControlDto dto, CancellationToken ct = default)
       {
 
-            var dev = await module.GetCommandDetailAsync(dto.DeviceModuleGuid, ct);
+            var dev = await module.GetCommandDetailAsync(dto.DeviceModule.Guid, ct);
 
             if (await repo.IsAnyByNameAsync(dto.Name, ct))
                   throw new DuplicateException(EntityType.OUTPUT.ToString(), nameof(dto.Name));
@@ -30,7 +30,6 @@ public sealed class ControlService(
                   dto.Name,
                   dto.SlotNo,
                   dto.Metadata,
-                  dto.Vendor,
                   dev.ModuleId,
                   dev.LocationId ?? 1,
                   controlExternalId
@@ -38,7 +37,7 @@ public sealed class ControlService(
 
             
             // Send command to create output 
-            await adapter.GetAdapter(dto.Vendor).Output.CreateControlPointAsync(
+            await adapter.GetAdapter(dev.Vendor).Output.CreateControlPointAsync(
                   dev.DeviceMac,
                   dev.DeviceIp,
                   dev.DeviceExternalId,
@@ -127,7 +126,7 @@ public sealed class ControlService(
             var output = await repo.GetAsync(guid, ct);
 
 
-            await adapter.GetAdapter(output.Vendor).Output.CreateControlPointAsync(
+            await adapter.GetAdapter(dev.Vendor).Output.CreateControlPointAsync(
                   dev.DeviceMac,
                   dev.DeviceIp,
                   dev.DeviceExternalId,
@@ -171,16 +170,7 @@ public sealed class ControlService(
 
             var dev = await Repo.GetCommandDetailAsync(command.Guid,ct);
             
-            await adapter.GetAdapter(output.Vendor).Output.ControlPointCommandAsync(
-                  dev.DeviceMac,
-                  dev.DeviceIp,
-                  dev.DeviceExternalId,
-                  dev.ComponentExternalId ?? -1,
-                  command.Command,
-                  command.OnTime,
-                  command.OffTime,
-                  command.Repeat
-            );
+            await adapter.GetAdapter(dev.Vendor).Output.ControlPointCommandAsync(dev.DeviceMac, dev.DeviceIp, dev.DeviceExternalId, dev.ComponentExternalId ?? -1, command.Command, command.OnTime, command.OffTime, command.Repeat, ct);
 
             return true;
       }
@@ -195,13 +185,12 @@ public sealed class ControlService(
                   dto.Name,
                   dto.SlotNo,
                   dto.Metadata,
-                  dto.Vendor,
                   dev.ModuleId,
                   dev.LocationId ?? 1
             );
 
             // Send command to create output 
-            await adapter.GetAdapter(dto.Vendor).Output.CreateControlPointAsync(
+            await adapter.GetAdapter(dev.Vendor).Output.CreateControlPointAsync(
                   dev.DeviceMac,
                   dev.DeviceIp,
                   dev.DeviceExternalId,

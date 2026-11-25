@@ -12496,3 +12496,366 @@ WebConfigNetwork: SCP-1, Method2 = 0, IP Address2: 0.0.0.0, Subnet Mask2: 0.0.0.
 38455.188 Command Status: Scp-1.0, (tag-115-ok)
 38457.728 Shutting down debug Thread...
 File closed Tue Nov 24 23:40:57 2026
+Debug file SCPDEBUG.txt <SCPDEBUGc.txt> <SCPDEBUG.TXT> opened Wed Nov 25 09:18:12 2026
+Begin - SCP Driver DLL (64-bit) version 4.7.1.43
+73092.967 WSAStartup ok
+73092.978 RNG_X931A24 Initialized
+73092.978 1, enCcSystem: 011 1 1024 0 0 1
+73093.166 1, enCcCreateChannel: 0012 1 7 3333 0 3000 0 "" 0
+73093.543 listen(lsock) created socket=3384 on port 3333
+73093.543 Listen Successful, port: 3333
+73154.420 0(0), enCcTranSrq: 0402 1
+73156.585 0(0), enCcCpSrq: 0406 1 2 1
+73156.585 0(0), enCcCpSrq: 0406 1 1 1
+73162.113 0(0), enCcCpSrq: 0406 1 1 1
+73162.113 0(0), enCcCpSrq: 0406 1 2 1
+73350.492 0(0), enCcCpSrq: 0406 1 2 1
+73350.492 0(0), enCcCpSrq: 0406 1 1 1
+73360.551 0(0), enCcCpSrq: 0406 1 1 1
+73360.551 0(0), enCcCpSrq: 0406 1 2 1
+73363.062 0(0), enCcCpSrq: 0406 1 2 1
+73363.062 0(0), enCcCpSrq: 0406 1 1 1
+73482.918 0(0), enCcCpSrq: 0406 1 1 1
+73482.975 0(0), enCcCpSrq: 0406 1 2 1
+73498.202 0(0), enCcCpSrq: 0406 1 1 1
+73498.202 0(0), enCcCpSrq: 0406 1 2 1
+73621.582 0(0), enCcCpSrq: 0406 1 2 1
+73621.582 0(0), enCcCpSrq: 0406 1 1 1
+73630.646 0(0), enCcCpSrq: 0406 1 2 1
+73630.646 0(0), enCcCpSrq: 0406 1 1 1
+74558.800 0(0), enCcCpSrq: 0406 1 2 1
+74558.880 0(0), enCcCpSrq: 0406 1 1 1
+75706.226 0(0), enCcCpSrq: 0406 1 2 1
+75706.343 0(0), enCcCpSrq: 0406 1 1 1
+81413.631 0(0), enCcCpSrq: 0406 1 1 1
+81413.663 0(0), enCcCpSrq: 0406 1 2 1
+81533.165 0(0), enCcCpSrq: 0406 1 2 1
+81533.166 0(0), enCcCpSrq: 0406 1 1 1
+81566.170 0(0), enCcCpSrq: 0406 1 2 1
+81566.170 0(0), enCcCpSrq: 0406 1 1 1
+90722.410 0(0), enCcCpSrq: 0406 1 1 1
+90722.483 0(0), enCcCpSrq: 0406 1 2 1
+91475.877 0(0), enCcCpSrq: 0406 1 2 1
+91475.925 0(0), enCcCpSrq: 0406 1 1 1
+91742.272 0(0), enCcCpSrq: 0406 1 2 1
+91742.272 0(0), enCcCpSrq: 0406 1 1 1
+92032.505 Shutting down debug Thread...
+File closed Wed Nov 25 14:33:52 2026
+Debug file SCPDEBUG.txt <SCPDEBUGc.txt> <SCPDEBUG.TXT> opened Wed Nov 25 14:39:37 2026
+Begin - SCP Driver DLL (64-bit) version 4.7.1.43
+92377.557 WSAStartup ok
+92377.559 RNG_X931A24 Initialized
+92377.559 1, enCcSystem: 011 1 1024 0 0 1
+92377.675 1, enCcCreateChannel: 0012 1 7 3333 0 3000 0 "" 0
+92377.833 listen(lsock) created socket=3392 on port 3333
+92377.833 Listen Successful, port: 3333
+92403.042 0(0), enCcCpSrq: 0406 1 2 1
+92403.249 0(0), enCcCpSrq: 0406 1 1 1
+92415.442 0(0), enCcCpSrq: 0406 1 1 1
+92415.442 0(0), enCcCpSrq: 0406 1 2 1
+92417.007 0(0), enCcCP: 0114 0 1 2 -1 1 1
+92417.831 0(0), enCcCpSrq: 0406 1 1 1
+92419.453 0(0), enCcCP: 0114 0 1 1 -1 0 1
+92435.992 Shutting down debug Thread...
+File closed Wed Nov 25 14:40:35 2026
+Debug file SCPDEBUG.txt <SCPDEBUGc.txt> <SCPDEBUG.TXT> opened Wed Nov 25 14:43:01 2026
+Begin - SCP Driver DLL (64-bit) version 4.7.1.43
+92581.649 WSAStartup ok
+92581.660 RNG_X931A24 Initialized
+92581.660 1, enCcSystem: 011 1 1024 0 0 1
+92581.855 1, enCcCreateChannel: 0012 1 7 3333 0 3000 0 "" 0
+92582.278 listen(lsock) created socket=3392 on port 3333
+92582.278 Listen Successful, port: 3333
+92632.491 0(0), enCcOutput: 0111 0 1 0 0 0
+92632.844 0(0), enCcCP: 0114 0 1 1 0 0 1
+92633.319 0(0), enCcCpSrq: 0406 1 1 1
+92648.513 0(0), enCcCpSrq: 0406 1 1 1
+92652.736 0(0), enCcCpSrq: 0406 1 1 1
+92802.405 0(0), enCcCP: 0114 0 1 1 -1 0 1
+Debug file SCPDEBUG.txt <SCPDEBUGc.txt> <SCPDEBUG.TXT> opened Wed Nov 25 20:52:32 2026
+Begin - SCP Driver DLL (64-bit) version 4.7.1.43
+14752.960 WSAStartup ok
+14752.965 RNG_X931A24 Initialized
+14752.965 1, enCcSystem: 011 1 1024 0 0 1
+14753.095 1, enCcCreateChannel: 0012 1 7 3333 0 3000 0 "" 0
+14753.467 listen(lsock) created socket=3380 on port 3333
+14753.467 Listen Successful, port: 3333
+14839.609 0(0), enCcTranSrq: 0402 1
+14851.408 0(0), enCcOutput: 0111 0 1 0 0 0
+14851.423 0(0), enCcCP: 0114 0 1 1 0 0 1
+14851.770 0(0), enCcCpSrq: 0406 1 1 1
+14866.922 0(0), enCcCpSrq: 0406 1 1 1
+14867.985 0(0), enCcMpSrq: 0405 1 1 1
+14868.164 0(0), enCcCpSrq: 0406 1 1 1
+14870.643 0(0), enCcCP: 0114 0 1 1 -1 0 1
+14896.019 0(0), enCcOutput: 0111 0 1 0 0 0
+14896.022 0(0), enCcCP: 0114 0 1 1 0 0 1
+14896.113 0(0), enCcCpSrq: 0406 1 1 1
+16103.424 0(0), enCcOutput: 0111 0 1 0 1 0
+16103.438 0(0), enCcCP: 0114 0 1 2 0 1 1
+16135.914 Shutting down debug Thread...
+File closed Wed Nov 25 21:15:35 2026
+Debug file SCPDEBUG.txt <SCPDEBUGc.txt> <SCPDEBUG.TXT> opened Wed Nov 25 21:17:30 2026
+Begin - SCP Driver DLL (64-bit) version 4.7.1.43
+16250.136 WSAStartup ok
+16250.144 RNG_X931A24 Initialized
+16250.144 1, enCcSystem: 011 1 1024 0 0 1
+16250.312 1, enCcCreateChannel: 0012 1 7 3333 0 3000 0 "" 0
+16250.567 listen(lsock) created socket=3372 on port 3333
+16250.567 Listen Successful, port: 3333
+16267.601 0(0), enCcCpSrq: 0406 1 2 1
+16267.601 0(0), enCcCpSrq: 0406 1 1 1
+16272.813 0(0), enCcCP: 0114 0 1 1 -1 0 1
+16273.171 0(0), enCcCpSrq: 0406 1 2 1
+16275.943 0(0), enCcCpSrq: 0406 1 2 1
+16422.208 0(0), enCcCP: 0114 0 1 2 -1 1 1
+16437.567 0(0), enCcOutput: 0111 0 1 0 0 0
+16437.575 0(0), enCcCP: 0114 0 1 1 0 0 1
+16437.684 0(0), enCcCpSrq: 0406 1 1 1
+16444.023 0(0), enCcCpSrq: 0406 1 1 1
+16477.560 0(0), enCcCpSrq: 0406 1 1 1
+16481.488 0(0), enCcCpSrq: 0406 1 1 1
+16489.766 0(0), enCcCpSrq: 0406 1 1 1
+16526.293 0(0), enCcCpSrq: 0406 1 1 1
+16555.568 0(0), enCcCpSrq: 0406 1 1 1
+16652.251 0(0), enCcCpSrq: 0406 1 1 1
+16741.062 0(0), enCcCpSrq: 0406 1 1 1
+16744.598 0(0), enCcCpSrq: 0406 1 1 1
+16746.134 0(0), enCcCP: 0114 0 1 1 -1 0 1
+16761.444 0(0), enCcOutput: 0111 0 1 0 0 0
+16761.459 0(0), enCcCP: 0114 0 1 1 0 0 1
+16761.619 0(0), enCcCpSrq: 0406 1 1 1
+16930.538 0(0), enCcCpSrq: 0406 1 1 1
+16936.391 0(0), enCcCpSrq: 0406 1 1 1
+16939.235 0(0), enCcCpSrq: 0406 1 1 1
+16951.864 0(0), enCcCpSrq: 0406 1 1 1
+17049.201 Shutting down debug Thread...
+File closed Wed Nov 25 21:30:49 2026
+Debug file SCPDEBUG.txt <SCPDEBUGc.txt> <SCPDEBUG.TXT> opened Wed Nov 25 21:32:27 2026
+Begin - SCP Driver DLL (64-bit) version 4.7.1.43
+17147.289 WSAStartup ok
+17147.292 RNG_X931A24 Initialized
+17147.293 1, enCcSystem: 011 1 1024 0 0 1
+17147.418 1, enCcCreateChannel: 0012 1 7 3333 0 3000 0 "" 0
+17147.710 listen(lsock) created socket=3156 on port 3333
+17147.710 Listen Successful, port: 3333
+17190.711 0(0), enCcCpSrq: 0406 1 1 1
+17197.365 0(0), enCcCpSrq: 0406 1 1 1
+17201.444 0(0), enCcCpSrq: 0406 1 1 1
+17203.575 0(0), enCcCpSrq: 0406 1 1 1
+17464.952 0(0), enCcOutput: 0111 0 1 0 2 0
+17464.972 0(0), enCcCP: 0114 0 1 1 0 2 1
+17465.323 0(0), enCcCpSrq: 0406 1 1 1
+17469.017 0(0), enCcCpSrq: 0406 1 1 1
+17473.151 0(0), enCcCpSrq: 0406 1 1 1
+17475.639 0(0), enCcCpSrq: 0406 1 1 1
+17479.931 0(0), enCcOutput: 0111 0 1 0 3 0
+17479.933 0(0), enCcCP: 0114 0 1 1 0 3 1
+17480.032 0(0), enCcCpSrq: 0406 1 1 1
+17482.517 0(0), enCcCpSrq: 0406 1 1 1
+17484.786 0(0), enCcCpSrq: 0406 1 1 1
+17486.914 0(0), enCcCpSrq: 0406 1 1 1
+17488.867 0(0), enCcCpSrq: 0406 1 1 1
+17491.257 0(0), enCcCpSrq: 0406 1 1 1
+17493.068 0(0), enCcCpSrq: 0406 1 1 1
+17537.206 0(0), enCcCpSrq: 0406 1 1 1
+17633.958 0(0), enCcCpSrq: 0406 1 1 1
+17636.127 0(0), enCcCpSrq: 0406 1 1 1
+17639.463 0(0), enCcCpSrq: 0406 1 1 1
+18272.962 0(0), enCcCpSrq: 0406 1 1 1
+18901.275 Shutting down debug Thread...
+File closed Wed Nov 25 22:01:41 2026
+Debug file SCPDEBUG.txt <SCPDEBUGc.txt> <SCPDEBUG.TXT> opened Wed Nov 25 22:02:28 2026
+Begin - SCP Driver DLL (64-bit) version 4.7.1.43
+18948.126 WSAStartup ok
+18948.126 RNG_X931A24 Initialized
+18948.126 1, enCcSystem: 011 1 1024 0 0 1
+18948.170 1, enCcCreateChannel: 0012 1 7 3333 0 3000 0 "" 0
+18948.236 listen(lsock) created socket=3380 on port 3333
+18948.236 Listen Successful, port: 3333
+19039.163 0(0), enCcCpSrq: 0406 1 1 1
+19044.018 0(0), enCcCpSrq: 0406 1 1 1
+19046.401 0(0), enCcCpSrq: 0406 1 1 1
+19057.800 0(0), enCcCpSrq: 0406 1 1 1
+19097.748 0(0), enCcCpSrq: 0406 1 1 1
+19100.916 0(0), enCcCpSrq: 0406 1 1 1
+19103.121 0(0), enCcCpSrq: 0406 1 1 1
+19110.330 0(0), enCcOutput: 0111 0 1 0 0 0
+19110.343 0(0), enCcCP: 0114 0 1 1 0 0 1
+19110.569 0(0), enCcCpSrq: 0406 1 1 1
+19113.301 0(0), enCcCpSrq: 0406 1 1 1
+19114.897 0(0), enCcCpSrq: 0406 1 1 1
+19115.965 0(0), enCcMpSrq: 0405 1 1 1
+19116.170 0(0), enCcCpSrq: 0406 1 1 1
+19117.913 0(0), enCcCpSrq: 0406 1 1 1
+19120.866 0(0), enCcCpSrq: 0406 1 1 1
+19123.201 0(0), enCcCpSrq: 0406 1 1 1
+19124.980 0(0), enCcCpSrq: 0406 1 1 1
+19128.215 0(0), enCcOutput: 0111 0 1 0 1 0
+19128.215 0(0), enCcCP: 0114 0 1 1 0 1 1
+19128.302 0(0), enCcCpSrq: 0406 1 1 1
+19130.147 0(0), enCcCpSrq: 0406 1 1 1
+19132.596 0(0), enCcCpSrq: 0406 1 1 1
+19133.694 0(0), enCcMpSrq: 0405 1 1 1
+19134.131 0(0), enCcCpSrq: 0406 1 1 1
+19135.765 0(0), enCcCpSrq: 0406 1 1 1
+19200.910 0(0), enCcCpSrq: 0406 1 1 1
+19202.910 0(0), enCcCpSrq: 0406 1 1 1
+19208.209 0(0), enCcOutput: 0111 0 1 0 1 0
+19208.212 0(0), enCcCP: 0114 0 1 1 0 1 1
+19208.279 0(0), enCcCpSrq: 0406 1 1 1
+19210.563 0(0), enCcCpSrq: 0406 1 1 1
+19211.159 0(0), enCcMpSrq: 0405 1 1 1
+19211.523 0(0), enCcCpSrq: 0406 1 1 1
+19213.667 0(0), enCcCpSrq: 0406 1 1 1
+19216.193 0(0), enCcCpSrq: 0406 1 1 1
+19567.228 0(0), enCcMpSrq: 0405 1 1 1
+19567.781 0(0), enCcCpSrq: 0406 1 1 1
+19570.179 0(0), enCcCP: 0114 0 1 1 -1 1 1
+19686.900 0(0), enCcMpSrq: 0405 1 1 1
+19703.160 0(0), enCcOutput: 0111 0 1 0 0 0
+19703.160 0(0), enCcCP: 0114 0 1 1 0 0 1
+19703.315 0(0), enCcCpSrq: 0406 1 1 1
+19712.065 0(0), enCcCpSrq: 0406 1 1 1
+19713.301 0(0), enCcMpSrq: 0405 1 1 1
+19715.445 0(0), enCcMP: 0113 0 1 1 -1 1 1 0 0 0
+19722.564 0(0), enCcCpSrq: 0406 1 1 1
+19729.028 0(0), enCcCpSrq: 0406 1 1 1
+19730.723 0(0), enCcCpSrq: 0406 1 1 1
+19798.490 0(0), enCcCpSrq: 0406 1 1 1
+19801.052 0(0), enCcCpSrq: 0406 1 1 1
+19808.543 0(0), enCcCpSrq: 0406 1 1 1
+19844.344 0(0), enCcCpSrq: 0406 1 1 1
+19851.952 0(0), enCcCpSrq: 0406 1 1 1
+19894.980 0(0), enCcCpSrq: 0406 1 1 1
+19961.712 0(0), enCcCpSrq: 0406 1 1 1
+19965.942 0(0), enCcCpSrq: 0406 1 1 1
+19968.530 0(0), enCcCpSrq: 0406 1 1 1
+20122.002 0(0), enCcCpSrq: 0406 1 1 1
+20261.787 0(0), enCcCpSrq: 0406 1 1 1
+20265.094 0(0), enCcCpSrq: 0406 1 1 1
+20714.210 0(0), enCcCpSrq: 0406 1 1 1
+20717.363 Shutting down debug Thread...
+File closed Wed Nov 25 22:31:57 2026
+Debug file SCPDEBUG.txt <SCPDEBUGc.txt> <SCPDEBUG.TXT> opened Wed Nov 25 22:38:21 2026
+Begin - SCP Driver DLL (64-bit) version 4.7.1.43
+21101.678 WSAStartup ok
+21101.678 RNG_X931A24 Initialized
+21101.678 1, enCcSystem: 011 1 1024 0 0 1
+21101.747 1, enCcCreateChannel: 0012 1 7 3333 0 3000 0 "" 0
+21101.843 listen(lsock) created socket=3388 on port 3333
+21101.843 Listen Successful, port: 3333
+21103.664 Shutting down debug Thread...
+File closed Wed Nov 25 22:38:23 2026
+Debug file SCPDEBUG.txt <SCPDEBUGc.txt> <SCPDEBUG.TXT> opened Wed Nov 25 22:41:19 2026
+Begin - SCP Driver DLL (64-bit) version 4.7.1.43
+21279.822 WSAStartup ok
+21279.827 RNG_X931A24 Initialized
+21279.827 1, enCcSystem: 011 1 1024 0 0 1
+21279.933 1, enCcCreateChannel: 0012 1 7 3333 0 3000 0 "" 0
+21280.187 listen(lsock) created socket=3396 on port 3333
+21280.187 Listen Successful, port: 3333
+21447.537 0(0), enCcInput: 0110 0 1 0 0 1 1 0
+21447.683 0(0), enCcMP: 0113 0 1 1 0 0 0 0 0 0
+21447.971 0(0), enCcMpSrq: 0405 1 1 1
+21454.765 0(0), enCcMpSrq: 0405 1 1 1
+21456.875 0(0), enCcMpSrq: 0405 1 1 1
+21515.792 0(0), enCcMpSrq: 0405 1 1 1
+21519.062 0(0), enCcMpSrq: 0405 1 1 1
+21521.438 0(0), enCcMpSrq: 0405 1 1 1
+21524.848 0(0), enCcCpSrq: 0406 1 1 1
+21525.268 0(0), enCcMpSrq: 0405 1 1 1
+21546.126 0(0), enCcCpSrq: 0406 1 1 1
+21548.584 0(0), enCcMpSrq: 0405 1 1 1
+21550.547 0(0), enCcCpSrq: 0406 1 1 1
+21564.629 0(0), enCcMpSrq: 0405 1 1 1
+21584.244 0(0), enCcMpSrq: 0405 1 1 1
+21586.399 0(0), enCcCpSrq: 0406 1 1 1
+21648.691 0(0), enCcMpSrq: 0405 1 1 1
+21653.014 0(0), enCcCpSrq: 0406 1 1 1
+21810.668 0(0), enCcMpSrq: 0405 1 1 1
+21829.469 0(0), enCcCpSrq: 0406 1 1 1
+21830.967 0(0), enCcMpSrq: 0405 1 1 1
+21922.268 0(0), enCcMpSrq: 0405 1 1 1
+21955.288 0(0), enCcCpSrq: 0406 1 1 1
+21956.133 0(0), enCcMpSrq: 0405 1 1 1
+21957.500 0(0), enCcCpSrq: 0406 1 1 1
+21959.561 0(0), enCcMpSrq: 0405 1 1 1
+21968.085 0(0), enCcCpSrq: 0406 1 1 1
+21968.782 0(0), enCcMpSrq: 0405 1 1 1
+21971.298 0(0), enCcMpSrq: 0405 1 1 1
+21976.847 0(0), enCcInput: 0110 0 1 0 5 1 1 0
+21976.847 0(0), enCcMP: 0113 0 1 1 0 5 0 0 0 0
+22091.938 0(0), enCcMpSrq: 0405 1 1 1
+22094.203 0(0), enCcMpSrq: 0405 1 1 1
+22096.108 0(0), enCcMpSrq: 0405 1 1 1
+22100.899 0(0), enCcInput: 0110 0 1 0 5 1 1 0
+22100.909 0(0), enCcMP: 0113 0 1 1 0 5 0 0 0 0
+22102.725 0(0), enCcInput: 0110 0 1 0 5 1 1 0
+22102.746 0(0), enCcMP: 0113 0 1 1 0 5 0 0 0 0
+22131.090 0(0), enCcInput: 0110 0 1 0 5 1 1 0
+22131.108 0(0), enCcMP: 0113 0 1 1 0 5 0 0 0 0
+22141.604 0(0), enCcInput: 0110 0 1 0 5 1 1 0
+22141.610 0(0), enCcMP: 0113 0 1 1 0 5 0 0 0 0
+22158.561 0(0), enCcInput: 0110 0 1 0 5 1 1 0
+22158.563 0(0), enCcMP: 0113 0 1 1 0 5 0 0 0 0
+22168.012 0(0), enCcInput: 0110 0 1 0 5 1 1 0
+22168.015 0(0), enCcMP: 0113 0 1 1 0 5 0 0 0 0
+22212.616 0(0), enCcMpSrq: 0405 1 1 1
+22227.053 0(0), enCcMP: 0113 0 1 1 -1 0 0 0 0 0
+22246.753 0(0), enCcInput: 0110 0 1 0 0 1 2 1
+22246.768 0(0), enCcMP: 0113 0 1 1 0 0 0 0 0 0
+22246.909 0(0), enCcMpSrq: 0405 1 1 1
+22249.964 0(0), enCcMpSrq: 0405 1 1 1
+22253.587 0(0), enCcInput: 0110 0 1 0 1 1 2 1
+22253.603 0(0), enCcMP: 0113 0 1 1 0 1 0 0 0 0
+22265.286 0(0), enCcMpSrq: 0405 1 1 1
+22272.654 0(0), enCcMpSrq: 0405 1 1 1
+22276.281 0(0), enCcInput: 0110 0 1 0 6 1 2 1
+22276.290 0(0), enCcMP: 0113 0 1 1 0 6 0 0 0 0
+22276.368 0(0), enCcMpSrq: 0405 1 1 1
+22278.531 0(0), enCcMpSrq: 0405 1 1 1
+22280.574 0(0), enCcMpSrq: 0405 1 1 1
+22285.550 0(0), enCcMpSrq: 0405 1 1 1
+22290.238 0(0), enCcCpSrq: 0406 1 1 1
+22290.673 0(0), enCcMpSrq: 0405 1 1 1
+22303.768 0(0), enCcInput: 0110 0 1 0 1 1 1 1
+22303.782 0(0), enCcMP: 0113 0 1 2 0 1 0 0 0 0
+22303.862 0(0), enCcMpSrq: 0405 1 2 1
+22303.862 0(0), enCcMpSrq: 0405 1 1 1
+22313.395 0(0), enCcCpSrq: 0406 1 1 1
+22320.312 0(0), enCcOutput: 0111 0 1 0 1 0
+22320.323 0(0), enCcCP: 0114 0 1 2 0 1 1
+22320.470 0(0), enCcCpSrq: 0406 1 1 1
+22320.470 0(0), enCcCpSrq: 0406 1 2 1
+22397.389 0(0), enCcCpSrq: 0406 1 2 1
+22397.392 0(0), enCcCpSrq: 0406 1 1 1
+22439.550 0(0), enCcCpSrq: 0406 1 2 1
+22439.553 0(0), enCcCpSrq: 0406 1 1 1
+22464.994 0(0), enCcCpSrq: 0406 1 1 1
+22464.994 0(0), enCcCpSrq: 0406 1 2 1
+22497.329 0(0), enCcCP: 0114 0 1 1 -1 0 1
+22497.338 0(0), enCcCP: 0114 0 1 2 -1 1 1
+22502.274 0(0), enCcMpSrq: 0405 1 2 1
+22502.276 0(0), enCcMpSrq: 0405 1 1 1
+22567.826 0(0), enCcMpSrq: 0405 1 2 1
+22567.910 0(0), enCcMpSrq: 0405 1 1 1
+22570.290 0(0), enCcMP: 0113 0 1 1 -1 6 0 0 0 0
+22570.290 0(0), enCcMP: 0113 0 1 2 -1 1 0 0 0 0
+23235.773 Shutting down debug Thread...
+File closed Wed Nov 25 23:13:55 2026
+Debug file SCPDEBUG.txt <SCPDEBUGc.txt> <SCPDEBUG.TXT> opened Wed Nov 25 23:16:27 2026
+Begin - SCP Driver DLL (64-bit) version 4.7.1.43
+23387.026 WSAStartup ok
+23387.026 RNG_X931A24 Initialized
+23387.026 1, enCcSystem: 011 1 1024 0 0 1
+23387.175 1, enCcCreateChannel: 0012 1 7 3333 0 3000 0 "" 0
+23387.388 listen(lsock) created socket=3360 on port 3333
+23387.388 Listen Successful, port: 3333
+23854.376 0(0), enCcInput: 0110 0 1 0 0 0 3 3
+23854.567 0(0), enCcMP: 0113 0 1 1 0 0 0 0 0 0
+23854.805 0(0), enCcMpSrq: 0405 1 1 1
+23857.105 0(0), enCcMP: 0113 0 1 1 -1 0 0 0 0 0
+23906.850 0(0), enCcTranSrq: 0402 1
+23950.382 Shutting down debug Thread...
+File closed Wed Nov 25 23:25:50 2026

@@ -200,7 +200,7 @@ public sealed class ProcedureService(
                   dev.DeviceIp,
                   dev.DeviceExternalId,
                   dev.ComponentExternalId ?? -1,
-                  proc.Actions.SelectMany(x => !x.ActionTarget.Any() ? [(x.Type,x.Metadata,null,x.Sequence)] :  x.ActionTarget.Select(a => (x.Type,x.Metadata,a.ExternalId,x.Sequence))),
+                  actions.SelectMany(x => !x.ActionTarget.Any() ? [(x.Type,x.Metadata,null,x.Sequence)] :  x.ActionTarget.Select(a => (x.Type,x.Metadata,a.ExternalId,x.Sequence))),
                   ct
             );
 

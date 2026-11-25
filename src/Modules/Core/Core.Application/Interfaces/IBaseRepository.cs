@@ -32,7 +32,7 @@ public interface IBaseRepository<TEntity,TDomain,TDto> where TEntity : IBaseEnti
       Task<bool> IsAnyByNameAndLocationGuidExceptCurrentAsync(string name,Guid guid,Guid locationGuid,CancellationToken ct = default);
       Task<short> GetFreeExternalIdAsync(int max,IEnumerable<short>? exception = default,CancellationToken ct = default);
       Task<short> GetExternalIdByGuidAsync(Guid guid,CancellationToken ct = default);
-      Task<CommandDetailDto> GetCommandDetailAsync(Guid guid,CancellationToken ct = default);
+      Task<CommandDetailDto> GetCommandDetailAsync(Guid? guid, CancellationToken ct = default);
       Task<bool> IsAnyByNameAsync(string name,CancellationToken ct = default);
       Task<IEnumerable<short>> GetRangeExernalIdByGuidsAsync(IEnumerable<Guid> guids,CancellationToken ct = default);
       Task<Dictionary<Guid,short>> GetExternalIdMapGuidByGuidRangeAsync(IEnumerable<Guid> guids,CancellationToken ct = default);

@@ -190,8 +190,8 @@ const Holiday = () => {
           type={formType}
           setDto={setHolidayDto}
           handleClick={handleClick}
-          dto={holidatDto}
-        />
+          dto={holidatDto} handleChange={()=>{}}        
+          />
       ),
     },
   ];

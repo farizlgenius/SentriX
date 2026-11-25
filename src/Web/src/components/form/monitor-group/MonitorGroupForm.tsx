@@ -9,7 +9,7 @@ import { send } from "../../../api/api";
 import { DeviceEndpoint } from "../../../endpoint/DeviceEndpoint";
 import { Options } from "../../../model/Options";
 import { MonitorPointEndpoint } from "../../../endpoint/MonitorPointEndpoint";
-import { InputDto } from "../../../model/MonitorPoint/InputDto";
+import { MonitorDto } from "../../../model/MonitorPoint/MonitorDto";
 import { DoorEndpoint } from "../../../endpoint/DoorEndpoint";
 import { DoorDto } from "../../../model/Door/DoorDto";
 import { DoorIcon, MonitorIcon } from "../../../icons";
@@ -145,7 +145,7 @@ export const MonitorGroupForm: React.FC<
         );
         if (res && res.data.data) {
           options.push(
-            ...res.data.data.map((point: InputDto) => ({
+            ...res.data.data.map((point: MonitorDto) => ({
               label: point.name,
               value: point.guid,
             })),

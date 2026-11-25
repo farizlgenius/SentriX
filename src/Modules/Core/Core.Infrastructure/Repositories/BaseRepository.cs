@@ -340,13 +340,16 @@ public abstract class BaseRepository<TEntity, TDomain, TDto>(
             throw new ExceedException(typeof(TEntity).Name);
       }
 
-      public async Task<CommandDetailDto> GetCommandDetailAsync(Guid guid, CancellationToken ct = default)
+      public async Task<CommandDetailDto> GetCommandDetailAsync(Guid? guid, CancellationToken ct = default)
       {
+            if(guid == null)
+                  throw new BadRequestException(typeof(TEntity).Name,"Guid is null");
+
             return await Context.Set<TEntity>()
                   .AsNoTracking()
                   .Where(x => x.guid == guid)
                   .Select(toCommand)
-                  .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(typeof(TEntity).Name, guid.ToString());
+                  .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(typeof(TEntity).Name, guid.ToString() ?? "Unknown");
       }
 
       public async Task<bool> IsAnyByNameAsync(string name, CancellationToken ct = default)

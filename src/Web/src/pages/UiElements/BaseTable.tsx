@@ -145,7 +145,6 @@ export const BaseTable = <
   };
 
   useEffect(() => {
-    console.log(permission);
     if (locationGuid != "") {
       fetchData(1, pageSize, locationGuid, search, startDate, endDate);
     }
@@ -278,7 +277,7 @@ export const BaseTable = <
                           renderOptionalComponent(data, i)}
 
                         {/* Status */}
-                        <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                        {/* <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
                           {
                             !data.isDefault &&
                             <Switch
@@ -290,7 +289,7 @@ export const BaseTable = <
                             />
                           }
 
-                        </TableCell>
+                        </TableCell> */}
 
                         {/* Action */}
                         <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">

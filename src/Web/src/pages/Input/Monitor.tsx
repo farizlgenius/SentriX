@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
 import PageBreadcrumb from "../../components/common/PageBreadCrumb";
 import { DelayIcon, ErrorIcon, LocalMaskIcon, MaskIcon, MonitorIcon, NoAttachIcon, UnmaskIcon, UnknownIcon } from "../../icons";
-import Logger from "../../utility/Logger";
-import InputForm from "./InputForm";
-import { InputDto } from "../../model/MonitorPoint/InputDto";
+import MonitorForm from "./MonitorForm";
+import { MonitorDto } from "../../model/MonitorPoint/MonitorDto";
 import { MonitorPointToast } from "../../model/ToastMessage";
 import { useToast } from "../../context/ToastContext";
 import Helper from "../../utility/Helper";
@@ -22,28 +21,25 @@ import { FormContent } from "../../model/Form/FormContent";
 import { usePopup } from "../../context/PopupContext";
 import { FormType } from "../../model/Form/FormProp";
 import { usePagination } from "../../context/PaginationContext";
-import { Vendor } from "../../enum/Vendor";
 import { InputStatus } from "../../model/Status/InputStatus";
 import { SignalRTopic } from "../../constants/signalr-constant";
 import { StatusHelper } from "../../helper/StatusHelper";
 import { ChangeOfStateEncode } from "../../enum/ChangeOfStateEncode";
-import { InputLatchingMode } from "../../enum/InputLatchingMode";
-import { InputMode } from "../../enum/InputMode";
-import { InputLogFunction } from "../../enum/InputLogFunction";
 import { HttpStatusCode } from "axios";
 
 // Define Global Variable
 export const MP_TABLE_HEADER: string[] = [
   "Name",
+  "Module",
+  "Slot",
   "Status",
-  "Enable",
   "Action",
 ];
 export const MP_KEY: string[] = [
-  "name",
+  "name", "deviceModule", "slotNo"
 ];
 
-const Input = () => {
+const Monitor = () => {
   const { filterPermission, token } = useAuth();
   const { toggleToast } = useToast();
   const { locationGuid } = useLocation();
@@ -69,19 +65,20 @@ const Input = () => {
   {
     /* handle Table Action */
   }
-  const handleEdit = (data: InputDto) => {
-    setMonitorPointDto(data);
+  const handleEdit = (data: MonitorDto) => {
     setFormType(FormType.UPDATE);
-    setForm(true);
-  };
-
-  const handleInfo = (data: InputDto) => {
     setMonitorPointDto(data);
-    setFormType(FormType.INFO);
+    
     setForm(true);
   };
 
-  const handleRemove = (data: InputDto) => {
+  const handleInfo = (data: MonitorDto) => {
+    setFormType(FormType.INFO);
+    setMonitorPointDto(data);
+    setForm(true);
+  };
+
+  const handleRemove = (data: MonitorDto) => {
     setConfirmRemove(() => async () => {
       const res = await send.delete(MonitorPointEndpoint.DELETE(data.guid));
       if (
@@ -107,10 +104,10 @@ const Input = () => {
         }
         setConfirmRemove(() => async () => {
           var data: string[] = [];
-          selectedObjects.map(async (a: InputDto) => {
+          selectedObjects.map(async (a: MonitorDto) => {
             data.push(a.guid);
           });
-          var res = await send.post(MonitorPointEndpoint.DELETE_RANGE, data);
+          var res = await send.deleteBody(MonitorPointEndpoint.DELETE_RANGE, data);
           if (
             Helper.handleToastByResCode(
               res,
@@ -126,8 +123,9 @@ const Input = () => {
         break;
       case "create":
         setConfirmCreate(() => async () => {
-          monitorPointDto.locationGuid = locationGuid;
-          monitorPointDto.metadata = JSON.stringify(monitorPointDto.metadata);
+          if(typeof monitorPointDto.metadata != 'string'){
+            monitorPointDto.metadata = JSON.stringify(monitorPointDto.metadata);
+          }
           const res = await send.post(
             MonitorPointEndpoint.CREATE,
             monitorPointDto,
@@ -141,12 +139,17 @@ const Input = () => {
           ) {
             setForm(false);
             toggleRefresh();
+            setMonitorPointDto(defaultDto);
           }
         });
         setCreate(true);
         break;
       case "update":
         setConfirmUpdate(() => async () => {
+          if(typeof monitorPointDto.metadata != 'string'){
+            monitorPointDto.metadata = JSON.stringify(monitorPointDto.metadata);
+          }
+          
           const res = await send.put(
             MonitorPointEndpoint.UPDATE,
             monitorPointDto,
@@ -170,7 +173,7 @@ const Input = () => {
         setForm(false);
         break;
       case "mask":
-        selectedObjects.forEach(async (a: InputDto) => {
+        selectedObjects.forEach(async (a: MonitorDto) => {
           res = await send.post(MonitorPointEndpoint.MASK(a.guid));
           if (
             Helper.handleToastByResCode(
@@ -185,7 +188,7 @@ const Input = () => {
 
         break;
       case "unmask":
-        selectedObjects.forEach(async (a: InputDto) => {
+        selectedObjects.forEach(async (a: MonitorDto) => {
           res = await send.post(MonitorPointEndpoint.UNMASK(a.guid));
           if (
             Helper.handleToastByResCode(
@@ -206,31 +209,26 @@ const Input = () => {
   {
     /* input Data */
   }
-  const defaultDto: InputDto = {
+  const defaultDto: MonitorDto = {
     guid: "",
     name: "",
     slotNo: -1,
-    metadata: {
-      debounce:4,
-      latchingMode:InputLatchingMode.NORMAL,
-      mode:InputMode.NC,
-      delayEntry:0,
-      delayExit:0,
-      holdTime:2,
-      lfCode:InputLogFunction.NO_MASKED
+    metadata: "",
+    device: {
+      guid: "",
+      name: null,
+      vendor: null
     },
-    vendor: Vendor.unknown,
-    deviceGuid: "",
-    deviceName: "",
-    deviceModuleGuid: "",
-    deviceModuleName: "",
-    locationGuid: locationGuid,
-    locationName: "",
-    isActive: true,
+    deviceModule: {
+      guid: "",
+      name: null,
+      vendor: null
+    },
+    isActive: false,
     isDefault: false
   };
-  const [monitorPointsDto, setMonitorPointsDto] = useState<InputDto[]>([]);
-  const [monitorPointDto, setMonitorPointDto] = useState<InputDto>(defaultDto);
+  const [monitorPointsDto, setMonitorPointsDto] = useState<MonitorDto[]>([]);
+  const [monitorPointDto, setMonitorPointDto] = useState<MonitorDto>(defaultDto);
   const [status, setStatus] = useState<InputStatus[]>([]);
   const fetchData = async (
     pageNumber: number,
@@ -252,24 +250,24 @@ const Input = () => {
     );
     console.log(res);
     if (res.status == HttpStatusCode.Ok) {
-      res.data.data.items.forEach((a: InputDto) => {
-              setMonitorPointsDto(prev => (
-                prev.some(x => x.guid == a.guid) ?
-                  [...prev]
-                  :
-                  [
-      
-                    ...prev,
-                    {
-                      ...a,
-                      metadata: JSON.parse(a.metadata as string)
-                    }
-                  ]))
-            })
+      res.data.data.items.forEach((a: MonitorDto) => {
+        setMonitorPointsDto(prev => (
+          prev.some(x => x.guid == a.guid) ?
+            [...prev]
+            :
+            [
+
+              ...prev,
+              {
+                ...a,
+                metadata: JSON.parse(a.metadata as string)
+              }
+            ]))
+      })
       setPagination(res.data.data);
 
       // Batch set state
-      const newStatuses = res.data.data.items.map((a: InputDto) => {
+      const newStatuses = res.data.data.items.map((a: MonitorDto) => {
         const status: InputStatus = {
           guid: a.guid,
           code: ChangeOfStateEncode.Unknown,
@@ -289,20 +287,20 @@ const Input = () => {
       setStatus((prev) => [...prev, ...newStatuses]);
 
       // Fetch status for each
-      res.data.data.items.forEach((a: InputDto) => {
+      res.data.data.items.forEach((a: MonitorDto) => {
         fetchStatus(a.guid);
       });
     }
   };
   const fetchStatus = async (guid: string) => {
     await send.get(MonitorPointEndpoint.GET_MP_STATUS(guid));
-    
+
   };
 
   {
     /* checkBox */
   }
-  const [selectedObjects, setSelectedObjects] = useState<InputDto[]>([]);
+  const [selectedObjects, setSelectedObjects] = useState<MonitorDto[]>([]);
 
   {
     /* UseEffect */
@@ -352,7 +350,7 @@ const Input = () => {
     };
   }, [refresh, locationGuid, token]);
 
-  const renderOptionalComponent = (data: InputDto) => {
+  const renderOptionalComponent = (data: MonitorDto) => {
     // 1. Look up the matched record once
     const matchedItem = status.find((b) => b.guid === data.guid);
     const currentChangeEncode = matchedItem?.status ?? ChangeOfStateEncode.Unknown;
@@ -370,18 +368,18 @@ const Input = () => {
               ? "Non-settling error"
               : currentChangeEncode === ChangeOfStateEncode.SupervisoryFaultCodes
                 ? "Supervisory fault"
-                : iconCos.label || "Unknown";
+                : "Unknown";
     const statusColor: "success" | "error" | "warning" | "light" =
       currentChangeEncode === ChangeOfStateEncode.Active
         ? "success"
         : currentChangeEncode === ChangeOfStateEncode.Inactive ||
-            currentChangeEncode === ChangeOfStateEncode.GroudFault ||
-            currentChangeEncode === ChangeOfStateEncode.Short ||
-            currentChangeEncode === ChangeOfStateEncode.NonSettlingError
+          currentChangeEncode === ChangeOfStateEncode.GroudFault ||
+          currentChangeEncode === ChangeOfStateEncode.Short ||
+          currentChangeEncode === ChangeOfStateEncode.NonSettlingError
           ? "error"
           : currentChangeEncode === ChangeOfStateEncode.OpenCircuit ||
-              currentChangeEncode === ChangeOfStateEncode.ForeignVoltage ||
-              currentChangeEncode === ChangeOfStateEncode.SupervisoryFaultCodes
+            currentChangeEncode === ChangeOfStateEncode.ForeignVoltage ||
+            currentChangeEncode === ChangeOfStateEncode.SupervisoryFaultCodes
             ? "warning"
             : "light";
 
@@ -472,7 +470,7 @@ const Input = () => {
       label: "Monitor Point",
       icon: <MonitorIcon />,
       content: (
-        <InputForm
+        <MonitorForm
           handleClick={handleClick}
           dto={monitorPointDto}
           setDto={setMonitorPointDto}
@@ -487,7 +485,7 @@ const Input = () => {
       {form ? (
         <BaseForm tabContent={tabContent} handleClick={handleClick} type={formType} />
       ) : (
-        <BaseTable<InputDto>
+        <BaseTable<MonitorDto>
           headers={MP_TABLE_HEADER}
           keys={MP_KEY}
           data={monitorPointsDto}
@@ -503,10 +501,23 @@ const Input = () => {
           fetchData={fetchData}
           locationGuid={locationGuid}
           refresh={refresh}
+          specialDisplay={[
+            {
+              key: "slotNo",
+              content: (data, i) => <TableCell key={i} className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                {`Input ${data.slotNo + 1}`}
+              </TableCell>,
+            }, {
+              key: "deviceModule",
+              content: (data, i) => <TableCell key={i} className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                {data.deviceModule.name}
+              </TableCell>,
+            }
+          ]}
         />
       )}
     </>
   );
 };
 
-export default Input;
+export default Monitor;

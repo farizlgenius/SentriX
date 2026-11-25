@@ -25,7 +25,7 @@ import Home from "./pages/Dashboard/Home";
 
 // ACS
 import Event from "./pages/Event/Event";
-import Input from "./pages/Input/Input";
+import Monitor from "./pages/Input/Monitor";
 import Device from "./pages/Device/Device";
 import PopupExample from "./pages/UiElements/PopupExample";
 import Door from "./pages/Door/Door";
@@ -70,7 +70,7 @@ import { useIdReport } from "./context/IdReportContext";
 import { SignalRTopic } from "./constants/signalr-constant";
 import { DeviceEndpoint } from "./endpoint/DeviceEndpoint";
 import Scan from "./pages/Scan/Scan";
-import Output from "./pages/Output/Output";
+import Control from "./pages/Output/Control";
 import AdapterEvent from "./pages/Diagnostic/AdapterEvent";
 import { Visitor } from "./pages/Visitor/Visitor";
 import Interval from "./pages/Interval/Interval";
@@ -231,8 +231,8 @@ export default function App() {
             <Route path="/scan" element={<Scan />} />
             <Route path="/device" element={<Device />} />
             <Route path="/event" element={<Event />} />
-            <Route path="/output" element={<Output />} />
-            <Route path="/input" element={<Input />} />
+            <Route path="/output" element={<Control />} />
+            <Route path="/input" element={<Monitor />} />
             <Route path="/popup" element={<PopupExample />} />
             <Route path="/door" element={<Door />} />
             <Route path="/turnstile" element={<Turnstile />} />

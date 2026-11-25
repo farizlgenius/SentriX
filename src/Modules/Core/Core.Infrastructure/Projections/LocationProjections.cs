@@ -13,8 +13,10 @@ public static class LocationProjections
                         x.guid,
                         x.name,
                         x.description,
-                        x.country_id,
-                        x.country.name,
+                        new BaseDto(
+                            x.country.guid,
+                            x.country.name
+                        ),
                         x.is_active,
                         x.is_default
                   );

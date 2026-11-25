@@ -14,13 +14,16 @@ public static class InputProjections
             x.name,
             x.slot_no,
             x.metadata,
-            x.vendor,
-            x.device_module.device.guid,
-            x.device_module.device.name ?? string.Empty,
-            x.device_module.guid,
-            x.device_module.name ?? string.Empty,
-            x.location == null ? Guid.Empty : x.location.guid,
-            x.location == null ? string.Empty : x.location.name ?? string.Empty,
+            new BaseDto(
+               x.device_module.device.guid,
+               x.device_module.device.name,
+               x.device_module.device.vendor
+            ),
+            new BaseDto(
+                x.device_module.guid,
+                x.device_module.name,
+                x.device_module.device.vendor
+            ),
             x.is_active,
             x.is_default
         );
@@ -33,7 +36,7 @@ public static class InputProjections
         x.device_module.device.ip,
         x.device_module.id,
         x.device_module.external_id ?? -1,
-        x.vendor,
+        x.device_module.device.vendor,
         x.location_id,
         x.id,
         x.external_id

@@ -1,14 +1,14 @@
-import { Vendor } from "../../enum/Vendor";
+import { BaseDto } from "../BaseDto";
 import { AeroOutputMetadata } from "./AeroOutputMetadata";
 
-export interface OutputDto 
+export interface ControlDto 
 {
     guid:string;
     name:string;
     slotNo:number;
     metadata:string | AeroOutputMetadata;
-    vendor:Vendor;
-    deviceModuleGuid:string;
+    device:BaseDto;
+    deviceModule:BaseDto;
     isActive:boolean;
     isDefault:boolean;
 }

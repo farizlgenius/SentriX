@@ -11,7 +11,7 @@ export const ControlEndpoint = {
     UPDATE : `/api/${CONTROLLER}`,
     STATUS :(guid:string)=> `/api/${CONTROLLER}/status/${guid}`,
     OUTPUT : (module:number) => `/api/${CONTROLLER}/relay/${module}`,
-    DELETE_RANGE: `/api/${CONTROLLER}/delete/range`,
+    DELETE_RANGE: `/api/${CONTROLLER}/list`,
     RELAY_DRIVE_MODE:`/api/${CONTROLLER}/relay/drive/mode`,
     RELAY_OFFLINE_MODE: `/api/${CONTROLLER}/relay/offline/mode`
 } as const;

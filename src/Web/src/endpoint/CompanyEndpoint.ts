@@ -14,5 +14,5 @@ export const CompanyEndpoint = {
   UPDATE: `/api/${CONTROLLER}`,
   DELETE: (guid: string) => `/api/${CONTROLLER}/${guid}`,
   GET_RANGE: `/api/${CONTROLLER}/range`,
-  DELETE_RANGE: `/api/${CONTROLLER}/delete/range`,
+  DELETE_RANGE: `/api/${CONTROLLER}/range`,
 } as const;

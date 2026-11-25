@@ -134,6 +134,7 @@ export const BaseForm: React.FC<PropsWithChildren<FormProp>> = ({
                           onClickWithEvent={handleClick}
                           name="close"
                           className="min-w-[120px]"
+                          variant="outline"
                           size="sm"
                         >
                           Cancel
