@@ -22,13 +22,14 @@ public sealed class UserService(
   IAdapterFactory adapter,
   IDeviceRepository device,
   IStorage file,
+  ILocationRepository loc,
   IMessageBus bus
   ) : IUser
 {
   public async Task<bool> ChangePasswordAsync(ChangePasswordDto dto, CancellationToken ct = default)
   {
     // Check that username exits
-    if (!await repo.IsAnyUsernameAsync(dto.Username))
+    if (!await repo.IsAnyUsernameAsync(dto.Username, ct))
       throw new NotFoundException(EntityType.USER.ToString(), dto.Username);
 
     // Get Password from username
@@ -39,7 +40,7 @@ public sealed class UserService(
       throw new BadRequestException(EntityType.USER.ToString(), "Password incorrect.");
 
     // Validate Password
-    var IsValidPassword = await bus.QueryAsync(new ValidatePasswordWithRuleQuery(dto.New));
+    var IsValidPassword = await bus.QueryAsync(new ValidatePasswordWithRuleQuery(dto.New), ct);
     if (!string.IsNullOrWhiteSpace(IsValidPassword))
       throw new BadRequestException(EntityType.USER.ToString(), IsValidPassword);
 
@@ -52,16 +53,16 @@ public sealed class UserService(
   {
 
     //var roleId = dto.RoleGuid == Guid.Empty ? 0 : await bus.QueryAsync(new RoleIdByGuidQuery(dto.RoleGuid));
-    var roleId = dto.RoleGuid == null ? 0 : await role.GetIdByGuidAsync(dto.RoleGuid ?? Guid.Empty,ct);
+    var roleId = dto.RoleGuid == null ? 0 : await role.GetIdByGuidAsync(dto.RoleGuid ?? Guid.Empty, ct);
     //var companyId = dto.CompanyGuid == Guid.Empty ? 0 : await bus.QueryAsync(new CompanyIdByGuidQuery(dto.CompanyGuid));
-    var companyId = dto.CompanyGuid == null ? 0 : await company.GetIdByGuidAsync(dto.CompanyGuid ?? Guid.Empty,ct);
+    var companyId = dto.CompanyGuid == null ? 0 : await company.GetIdByGuidAsync(dto.CompanyGuid ?? Guid.Empty, ct);
     var departmentId = dto.DepartmentGuid == null ? 0 : await bus.QueryAsync(new DepartmentIdByGuidQuery(dto.DepartmentGuid ?? Guid.Empty), ct);
     var positionId = dto.PositionGuid == null ? 0 : await bus.QueryAsync(new PositionIdByGuidQuery(dto.PositionGuid ?? Guid.Empty), ct);
-    var locationIds = dto.Locations.Count == 0 ? [] : await bus.QueryAsync(new LocationIdsByGuidsQuery(dto.Locations), ct);
+    var locationIds = dto.Locations.Count == 0 ? [] : await loc.GetIdsByGuidsAsync(dto.Locations, ct);
     var groupIds = dto.Groups.Count == 0 ? [] : await bus.QueryAsync(new GroupIdsByGuidsQuery(dto.Groups), ct);
-    var details = dto.Groups.Count == 0 ? [] : await group.GetDetailsByGroupGuidsAsync(dto.Groups,ct);
+    var details = dto.Groups.Count == 0 ? [] : await group.GetDetailsByGroupGuidsAsync(dto.Groups, ct);
 
-        
+
 
     var d = new User(
       dto.UserCode,
@@ -101,26 +102,26 @@ public sealed class UserService(
     if (d.Username != null && await repo.IsAnyUsernameAsync(d.Username, ct))
       throw new DuplicateException(EntityType.USER.ToString(), dto.Username);
 
-    if (await repo.IsAnyIdentificationAsync(dto.Identification,ct))
+    if (await repo.IsAnyIdentificationAsync(dto.Identification, ct))
       throw new DuplicateException(EntityType.USER.ToString(), dto.Username);
 
 
 
     // 1.Get mac or device list that this user in by group
-    var deviceDetail = await group.GetDetailsByGroupGuidsAsync(dto.Groups,ct);
+    var deviceDetail = await group.GetDetailsByGroupGuidsAsync(dto.Groups, ct);
 
     // 2.Send credential to each device
     foreach (var dev in deviceDetail)
     {
       // Send card detail
       int i = 0;
-      var devs = await device.GetCommandDetailAsync(dev.guid,ct);
+      var devs = await device.GetCommandDetailAsync(dev.guid, ct);
       foreach (var c in dto.Cards)
       {
-        
-        var deviceExternalId = await device.GetExternalIdByGuidAsync(dev.guid,ct);
-        var groupExternaIds = await group.GetRangeExernalIdByGuidsAsync(dto.Groups,ct);
-        
+
+        var deviceExternalId = await device.GetExternalIdByGuidAsync(dev.guid, ct);
+        var groupExternaIds = await group.GetRangeExernalIdByGuidsAsync(dto.Groups, ct);
+
         await adapter.GetAdapter(dev.vendor).User.AddUserAsync(
           dev.mac,
           dev.ip,
@@ -150,8 +151,8 @@ public sealed class UserService(
       throw new NotFoundException(EntityType.USER.ToString(), guid.ToString());
 
     // Send command to delete user from device
-    var user = await repo.GetAsync(guid,ct);
-    var deviceDetail = await repo.GetDetailsByUserGuidAsync(guid,ct);
+    var user = await repo.GetAsync(guid, ct);
+    var deviceDetail = await repo.GetDetailsByUserGuidAsync(guid, ct);
 
     foreach (var dev in deviceDetail)
     {
@@ -208,16 +209,16 @@ public sealed class UserService(
     return await repo.GetAsync(guid, ct);
   }
 
-      public async Task<IEnumerable<UserDto>> GetByLocationAsync(Guid guid, CancellationToken ct = default)
+  public async Task<IEnumerable<UserDto>> GetByLocationAsync(Guid guid, CancellationToken ct = default)
   {
     return await repo.GetByLocationAsync(guid, ct);
   }
 
   public async Task<Stream?> GetImageByGuidAsync(Guid guid, CancellationToken ct = default)
   {
-    if (!await repo.IsAnyGuidAsync(guid))
+    if (!await repo.IsAnyGuidAsync(guid, ct))
       return null;
-      //throw new NotFoundException(EntityType.User.ToString(), guid.ToString());
+    //throw new NotFoundException(EntityType.User.ToString(), guid.ToString());
 
     return await file.ReadUserAsync(guid.ToString());
   }
@@ -230,15 +231,15 @@ public sealed class UserService(
 
   public async Task<Guid> UpdateAsync(UpdateUserDto dto, CancellationToken ct = default)
   {
-    if (!await repo.IsAnyGuidAsync(dto.Guid))
+    if (!await repo.IsAnyGuidAsync(dto.Guid, ct))
       throw new NotFoundException(EntityType.USER.ToString(), dto.Guid.ToString());
 
-    var roleId = dto.RoleGuid == null ? 0 :  await bus.QueryAsync(new RoleIdByGuidQuery(dto.RoleGuid ?? Guid.Empty));
-    var companyId = dto.CompanyGuid == null ? 0 : await bus.QueryAsync(new CompanyIdByGuidQuery(dto.CompanyGuid ?? Guid.Empty));
-    var departmentId = dto.DepartmentGuid == null ? 0 : await bus.QueryAsync(new DepartmentIdByGuidQuery(dto.DepartmentGuid ?? Guid.Empty));
-    var positionId = dto.PositionGuid == null ? 0 : await bus.QueryAsync(new PositionIdByGuidQuery(dto.PositionGuid ?? Guid.Empty));
-    var locationIds = await bus.QueryAsync(new LocationIdsByGuidsQuery(dto.Locations));
-    var groupIds = dto.Groups.Count == 0 ? [] : await bus.QueryAsync(new GroupIdsByGuidsQuery(dto.Groups));
+    var roleId = dto.RoleGuid == null ? 0 : await role.GetIdByGuidAsync(dto.RoleGuid ?? Guid.Empty, ct);
+    var companyId = dto.CompanyGuid == null ? 0 : await bus.QueryAsync(new CompanyIdByGuidQuery(dto.CompanyGuid ?? Guid.Empty), ct);
+    var departmentId = dto.DepartmentGuid == null ? 0 : await bus.QueryAsync(new DepartmentIdByGuidQuery(dto.DepartmentGuid ?? Guid.Empty), ct);
+    var positionId = dto.PositionGuid == null ? 0 : await bus.QueryAsync(new PositionIdByGuidQuery(dto.PositionGuid ?? Guid.Empty), ct);
+    var locationIds = dto.Locations.Count == 0 ? [] : await loc.GetIdsByGuidsAsync(dto.Locations, ct);
+    var groupIds = dto.Groups.Count == 0 ? [] : await bus.QueryAsync(new GroupIdsByGuidsQuery(dto.Groups), ct);
 
     var d = new User(
       dto.UserCode,
@@ -283,14 +284,14 @@ public sealed class UserService(
 
   }
 
-      public Task UploadAsync(CancellationToken ct = default)
-      {
-            throw new NotImplementedException();
-      }
-
-      public async Task<bool> UploadImageAsync(Guid guid, Stream stream, CancellationToken ct = default)
+  public Task UploadAsync(CancellationToken ct = default)
   {
-    if (!await repo.IsAnyGuidAsync(guid))
+    throw new NotImplementedException();
+  }
+
+  public async Task<bool> UploadImageAsync(Guid guid, Stream stream, CancellationToken ct = default)
+  {
+    if (!await repo.IsAnyGuidAsync(guid, ct))
       throw new NotFoundException(EntityType.USER.ToString(), guid.ToString());
 
 

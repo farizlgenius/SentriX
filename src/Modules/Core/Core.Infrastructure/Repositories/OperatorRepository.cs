@@ -87,24 +87,7 @@ public sealed class OperatorRepository(CoreDbContext context) : BaseRepository<P
          .AsNoTracking()
          .OrderByDescending(x => x.id)
          .Where(x => x.username.Equals(username))
-         .Select(x => new OperatorDto(
-        x.guid,
-        x.username,
-        x.title,
-        x.firstname,
-        x.middlename,
-        x.lastname,
-        x.gender,
-        x.email,
-        x.phone,
-        x.role.guid,
-        x.role.name,
-        x.joined_date,
-        x.expired_date ?? new DateTime(9999, 01, 01, 0, 0, 0, DateTimeKind.Utc),
-        x.operator_locations.Select(x => x.location.guid).ToList(),
-        x.is_active,
-        x.is_default
-      ))
+         .Select(OperatorProjections.ToDto)
       .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.OPERATOR.ToString(), username);
 
 
@@ -213,6 +196,52 @@ public sealed class OperatorRepository(CoreDbContext context) : BaseRepository<P
       .AsNoTracking()
       .AnyAsync(x => x.id == RoleId, ct);
 
+  }
+
+  public override async Task UpdateAsync(Operator dom,CancellationToken ct = default)
+  {
+          var en = await Context.Operators
+                  .Include(x => x.operator_locations)
+                  .Where(x => x.guid == dom.Guid)
+                  .FirstOrDefaultAsync(ct) ?? throw new NotFoundException(EntityType.OPERATOR.ToString(), dom.Guid.ToString());
+
+            en.username = dom.Username;
+            en.title = dom.Title;
+            en.firstname = dom.Firstname;
+            en.middlename = dom.Middlename;
+            en.lastname = dom.Lastname;
+            en.gender = dom.Gender;
+            en.email = dom.Email;
+            en.phone = dom.Phone;
+            en.role_id = dom.RoleId;
+            en.updated_at = DateTime.UtcNow;
+
+            var existingLocationIds = en.operator_locations.Select(x => x.location_id).ToList();
+
+            var newLocationIds = dom.LocationIds;
+
+            foreach (var locationId in existingLocationIds)
+            {
+              if (!newLocationIds.Contains(locationId))
+              {
+                var operatorLocation = en.operator_locations.FirstOrDefault(x => x.location_id == locationId);
+                if (operatorLocation != null)
+                {
+                  en.operator_locations.Remove(operatorLocation);
+                }
+              }
+            }
+
+            foreach (var locationId in newLocationIds)
+            {
+              if (!existingLocationIds.Contains(locationId))
+              {
+                en.operator_locations.Add(new Persistences.Entities.OperatorLocation(0, locationId));
+              }
+            }
+
+            Context.Operators.Update(en);
+            await Context.SaveChangesAsync(ct);
   }
 
   public async Task RemoveOperatorLocationByLocationIdAsync(int locationId, CancellationToken ct = default)

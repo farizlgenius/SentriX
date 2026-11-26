@@ -17,7 +17,7 @@ public sealed class Operator : BaseDomain
   public DateTime JoinedDate { get; set; } = DateTime.UtcNow;
   public DateTime ExpiredDate { get; set; } = DateTime.UtcNow.AddYears(1);
   public int RoleId { get; set; }
-  public List<int> LocationIds { get; set; } = default!;
+  public IEnumerable<int> LocationIds { get; set; } = default!;
 
   public Operator(
     string userName,
@@ -32,7 +32,7 @@ public sealed class Operator : BaseDomain
     DateTime join,
     DateTime expire,
     int roleId,
-    List<int> locationIds
+    IEnumerable<int> locationIds
   )
   {
     ValidationHelper.CharAndDigit(userName, nameof(Username));
@@ -68,7 +68,7 @@ public sealed class Operator : BaseDomain
     DateTime join,
     DateTime expire,
     int roleId,
-    List<int> locationIds
+    IEnumerable<int> locationIds
   ) : base(Guid)
   {
     ValidationHelper.CharAndDigit(userName, nameof(Username));
@@ -103,7 +103,7 @@ public sealed class Operator : BaseDomain
     DateTime join,
     DateTime expire,
     int roleId,
-    List<int> locationIds
+    IEnumerable<int> locationIds
   ) : base(Guid)
   {
     ValidationHelper.CharAndDigit(userName, nameof(Username));

@@ -20,7 +20,7 @@ import { usePagination } from "../../context/PaginationContext";
 import { CreateRoleDto } from "../../model/Role/CreateRoleDto";
 import { UpdateRoleDto } from "../../model/Role/UpdateRoleDto";
 
-const LOCATION_HEADER: string[] = ["Name", "Status", "Action"];
+const LOCATION_HEADER: string[] = ["Name", "Action"];
 const LOCATION_KEY: string[] = ["name"];
 
 export const Role = () => {
@@ -41,7 +41,7 @@ export const Role = () => {
   const [form, setForm] = useState<boolean>(false);
   const [refresh, setRefresh] = useState<boolean>(false);
   const defaultDto: RoleDto = {
-    guid: "00000000-0000-0000-0000-000000010000",
+    guid: "",
     name: "",
     modules: [
       {
@@ -401,6 +401,7 @@ export const Role = () => {
           dto={roleDto}
           setDto={setRoleDto}
           handleClick={handleClick}
+          handleChange={()=>{}}
         />
       ),
     },

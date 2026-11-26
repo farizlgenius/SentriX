@@ -67,14 +67,19 @@ public sealed class RoleRepository(CoreDbContext context) : BaseRepository<Persi
                   )).ToArrayAsync(cancellationToken: ct);
       }
 
-    
-      public async Task<bool> IsAnyByNameAndLocationIdAsync(string name, int locationId = default, CancellationToken ct = default)
+      public async Task<IEnumerable<ModuleDto>> GetRoleModuleAsync(CancellationToken ct = default)
       {
-            return await Context.Roles
+            return await Context.Modules
                   .AsNoTracking()
-                  .AnyAsync(x => x.name.Equals(name), cancellationToken: ct);
+                  .Select(m => new ModuleDto(
+                        m.guid,
+                        m.name,
+                        m.features.Select(f => new FeatureDto(
+                              f.guid,
+                              f.name
+                        ))
+                  )).ToArrayAsync(ct);
       }
-
      
 
       public async Task<bool> IsAnyNameAsync(string Name, Guid locationGuid = default, CancellationToken ct = default)

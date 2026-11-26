@@ -437,7 +437,7 @@ const Control = () => {
               ? "Non-settling error"
               : currentChangeEncode === ChangeOfStateEncode.SupervisoryFaultCodes
                 ? "Supervisory fault"
-                : "Unknown";
+                : iconCos.label == "light" ? "Unknown" : iconCos.label;
     const statusColor: "success" | "error" | "warning" | "light" =
       currentChangeEncode === ChangeOfStateEncode.Active
         ? "success"

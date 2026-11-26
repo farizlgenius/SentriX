@@ -38,6 +38,12 @@ import { countries } from "../../../constants/phone-code";
 import DatePicker from "../date-picker";
 import { LocationDto } from "../../../model/Location/LocationDto";
 import { useLocation } from "../../../context/LocationContext";
+import { BaseDto } from "../../../model/BaseDto";
+
+interface PersonalInformationFormProp extends FormProp<OperatorDto> {
+  image: File | undefined;
+  setImage: React.Dispatch<React.SetStateAction<File | undefined>>;
+}
 
 type PasswordDto = {
   userName: string;
@@ -47,8 +53,8 @@ type PasswordDto = {
 };
 
 export const OperatorForm: React.FC<
-  PropsWithChildren<FormProp<OperatorDto>>
-> = ({ dto, setDto, type }) => {
+  PropsWithChildren<PersonalInformationFormProp>
+> = ({ dto, setDto, type,image,setImage }) => {
   const defaultPassDto: PasswordDto = useMemo(
     () => ({
       userName: dto.username,
@@ -61,8 +67,12 @@ export const OperatorForm: React.FC<
 
   const { toggleToast } = useToast();
   const { locationList } = useLocation();
-  const [locationsGuid, setLocationGuid] = useState<string>("");
-  const [selectedLocationGuids, setSelectedLocationGuids] = useState<string[]>(
+  const [location, setLocation] = useState<BaseDto>({
+    guid:"",
+    name:null,
+    vendor:null
+  });
+  const [selectedLocations, setSelectedLocations] = useState<BaseDto[]>(
     [],
   );
   const [locations, setLocations] = useState<Options[]>(
@@ -89,7 +99,6 @@ export const OperatorForm: React.FC<
   });
 
   const isReadOnly = type === FormType.INFO;
-  const [image, setImage] = useState<File | undefined>();
   const [newImage, setNewImage] = useState<File | undefined>();
   const [file, setFile] = useState<boolean>(false);
   const [cam, setCam] = useState<boolean>(false);
@@ -111,9 +120,9 @@ export const OperatorForm: React.FC<
     setPassForm(true);
   };
 
-  const toggleLocationSelection = (data: string) => {
-    setSelectedLocationGuids((prev) =>
-      prev.includes(data) ? prev.filter((x) => x !== data) : [...prev, data],
+  const toggleLocationSelection = (data: BaseDto) => {
+    setSelectedLocations((prev) =>
+      prev.some(x => x.guid == data.guid) ? prev.filter((x) => x !== data) : [...prev, data],
     );
   };
 
@@ -179,41 +188,50 @@ export const OperatorForm: React.FC<
   };
 
   const addLocation = () => {
-    console.log(locationsGuid);
-    if (locationsGuid === "" || dto.locationGuids.includes(locationsGuid))
+    if (location.guid === "" || dto.locations.some(x => x.guid == location.guid))
       return;
 
     setDto((prev) => ({
       ...prev,
-      locationGuids: [...prev.locationGuids, locationsGuid],
+      locations: [
+        ...prev.locations,
+        {
+          guid:location.guid,
+          name:location.name,
+          vendor:null
+        }
+      ],
     }));
 
     setLocations((prev) =>
-      Helper.updateOptionByValue(prev, locationsGuid, true),
+      Helper.updateOptionByValue(prev, location.guid as string, true),
     );
 
-    setLocationGuid("");
-    console.log(dto.locationGuids);
+    setLocation({
+      guid:"",
+      name:null,
+      vendor:null
+    });
   };
 
   const removeSelectedLocations = () => {
-    if (selectedLocationGuids.length === 0) return;
+    if (selectedLocations.length === 0) return;
 
-    const idsToRemove = [...selectedLocationGuids];
+    const locationToRemove = [...selectedLocations];
     setDto((prev) => ({
       ...prev,
-      locationGuids: prev.locationGuids.filter(
-        (id) => !idsToRemove.includes(id),
+      locations: prev.locations.filter(
+        (loc) => !locationToRemove.some(x => loc.guid == x.guid),
       ),
     }));
     setLocations((prev) =>
       prev.map((option) =>
-        idsToRemove.includes(option.value.toString())
+        locationToRemove.some(x => x.guid == option.value)
           ? { ...option, isTaken: false }
           : option,
       ),
     );
-    setSelectedLocationGuids([]);
+    setSelectedLocations([]);
   };
 
   const fetchPasswordRule = async () => {
@@ -547,14 +565,17 @@ export const OperatorForm: React.FC<
                   disabled={isReadOnly}
                   isString={true}
                   options={roles}
-                  defaultValue={dto.roleGuid}
+                  defaultValue={dto.role.guid as string}
                   onChange={(e) =>
                     setDto((prev) => ({
                       ...prev,
-                      roleGuid: e,
+                      role: {
+                        ...prev.role,
+                        guid:e.target.value
+                      }
                     }))
                   }
-                  name="roleGuid"
+                  name="role"
                   placeholder="Select role"
                 />
               </div>
@@ -745,22 +766,26 @@ export const OperatorForm: React.FC<
                   disabled={isReadOnly}
                   isString={true}
                   options={locations.filter((x) => x.isTaken == false)}
-                  defaultValue={locationsGuid}
-                  onChange={(value) => setLocationGuid(value)}
+                  defaultValue={location.guid as string}
+                  onChange={(e) => setLocation({
+                    guid:e.target.value,
+                    name:locations.find(x => x.value == e.target.value)?.label ?? "",
+                    vendor:null
+                  })}
                   name="location"
                   placeholder="Select location"
                 />
               </div>
               <div className="flex gap-3 lg:items-end">
                 <Button
-                  disabled={isReadOnly || locationsGuid === ""}
+                  disabled={isReadOnly || location.guid === ""}
                   onClick={addLocation}
                   className="min-w-[120px] justify-center"
                 >
                   Add
                 </Button>
                 <Button
-                  disabled={isReadOnly || selectedLocationGuids.length === 0}
+                  disabled={isReadOnly || selectedLocations.length === 0}
                   variant="danger"
                   onClick={removeSelectedLocations}
                   className="min-w-[120px] justify-center"
@@ -771,14 +796,14 @@ export const OperatorForm: React.FC<
             </div>
 
             <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-              {dto.locationGuids.length > 0 ? (
-                dto.locationGuids.map((id, i) => (
+              {dto.locations.length > 0 ? (
+                dto.locations.map((item, i) => (
                   <button
                     key={i}
                     type="button"
-                    onClick={() => toggleLocationSelection(id)}
+                    onClick={() => toggleLocationSelection(item)}
                     className={`flex items-center gap-4 rounded-[22px] border px-4 py-4 text-left transition ${
-                      selectedLocationGuids.includes(id)
+                      selectedLocations.includes(item)
                         ? "border-brand-500 bg-brand-50 dark:bg-brand-500/10"
                         : "border-[var(--app-panel-border)] bg-[var(--app-panel-muted)]/30 hover:border-brand-300"
                     }`}
@@ -788,11 +813,10 @@ export const OperatorForm: React.FC<
                     </div>
                     <div>
                       <p className="text-sm font-semibold text-gray-800 dark:text-white/90">
-                        {locations.find((location) => location.value === id)
-                          ?.label ?? `Location ${id}`}
+                        {item.name}
                       </p>
                       <p className="text-xs text-gray-500 dark:text-gray-400">
-                        {selectedLocationGuids.includes(id)
+                        {selectedLocations.some(x => x == item)
                           ? "Selected for removal"
                           : "Assigned location"}
                       </p>

@@ -78,7 +78,7 @@ public sealed class RoleService(
                         throw new FoundRelateException(EntityType.OPERATOR.ToString(), guid.ToString(), EntityType.USER.ToString());
             }
 
-            await repo.DeleteRangeAsync(guids);
+            await repo.DeleteRangeAsync(guids, ct);
 
             return guids;
       }
@@ -122,6 +122,11 @@ public sealed class RoleService(
             return await repo.GetPaginationAsync(param, ct);
       }
 
+      public async Task<IEnumerable<ModuleDto>> GetRoleModuleAsync(CancellationToken ct = default)
+      {
+           return await repo.GetRoleModuleAsync(ct);
+      }
+
       public async Task<Guid> UpdateAsync(UpdateRoleDto dto, CancellationToken ct = default)
       {
             // Check is any location with guid
@@ -131,20 +136,20 @@ public sealed class RoleService(
 
             var d = new Core.Domain.Entities.Role(
                   dto.Name,
-                  dto.Modules.Select(x => new ModulePermission(
+                  [.. dto.Modules.Select(x => new ModulePermission(
                         x.IsEnabled,
                         x.Id,
-                        x.Features.Select(s => new FeaturePermission(
+                        [.. x.Features.Select(s => new FeaturePermission(
                               s.Id,
                               s.IsEnabled,
                               s.IsCreated,
                               s.IsUpdated,
                               s.IsDeleted
-                        )).ToList()
-                  )).ToList()
+                        ))]
+                  ))]
             );
 
-            await repo.UpdateAsync(d);
+            await repo.UpdateAsync(d, ct);
 
             return d.Guid;
       }

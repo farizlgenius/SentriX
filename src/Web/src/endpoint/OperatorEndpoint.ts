@@ -9,5 +9,7 @@ export const OperatorEndpoint = {
     DELETE:(guid:string) => `/api/${CONTROLLER}/${guid}`,
     UPDATE:`/api/${CONTROLLER}`,
     PASS: `/api/${CONTROLLER}/password/update`,
-    DELETE_RANGE: `/api/${CONTROLLER}/delete/range`
+    DELETE_RANGE: `/api/${CONTROLLER}/delete/range`,
+    UPLOAD: (guid: string) => `/api/${CONTROLLER}/image/upload/${guid}`,
+    IMAGE: (guid: string) => `/api/${CONTROLLER}/image/${guid}`,
 } as const;

@@ -1,5 +1,6 @@
 import { Gender } from "../../enum/Gender";
 import { Title } from "../../enum/Title";
+import { BaseDto } from "../BaseDto";
 
 export interface OperatorDto {
   guid: string;
@@ -14,9 +15,8 @@ export interface OperatorDto {
   phone: string;
   joinedDate: Date;
   expiredDate: Date;
-  roleGuid: string;
-  role: string;
-  locationGuids: string[];
+  role: BaseDto;
+  locations:BaseDto[];
   isActive: boolean;
   isDefault: boolean;
 }

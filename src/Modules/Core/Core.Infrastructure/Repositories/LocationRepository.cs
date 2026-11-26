@@ -125,14 +125,15 @@ public sealed class LocationRepository(CoreDbContext context) :BaseRepository<Pe
       }
 
 
-
-      public async Task<IEnumerable<Guid>> IsAnyInvalidGuidsAsync(IEnumerable<Guid> guids, CancellationToken ct = default)
+      public async Task<bool> IsAnyInvalidGuidsAsync(IEnumerable<Guid> guids,CancellationToken ct = default)
       {
-            return await Context.Locations
+            var count = await Context.Locations
                   .AsNoTracking()
-                  .Where(x => !guids.Contains(x.guid))
-                  .Select(x => x.guid)
-                  .ToListAsync(ct);
+                  .Where(x => guids.Contains(x.guid))
+                  .Select(x => x.id)
+                  .CountAsync(ct);
+
+            return count != guids.Count();
       }
 
       public async Task<bool> IsAnyRelatedEntitiesAsync(Guid guid, CancellationToken ct = default)

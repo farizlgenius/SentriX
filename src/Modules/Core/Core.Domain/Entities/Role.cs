@@ -10,7 +10,7 @@ public sealed class Role : BaseDomain
       public Role(
             string Name,
             List<ModulePermission> ModulePermissions
-      )
+      ) : base(Guid.NewGuid())
       {
             ValidationHelper.Name(Name);
             this.Name = Name;

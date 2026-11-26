@@ -5,6 +5,7 @@ namespace Core.Contract.DTOs.Operator;
 public record UpdateOperatorDto(
   Guid Guid,
   string Username,
+  string Password,
   Title Title,
   string Firstname,
   string Middlename,
@@ -14,6 +15,6 @@ public record UpdateOperatorDto(
   string Phone,
   DateTime JoinedDate,
   DateTime ExpiredDate,
-  Guid RoleGuid,
-  List<Guid> LocationGuids
+  BaseDto Role,
+  List<BaseDto> Locations
   );

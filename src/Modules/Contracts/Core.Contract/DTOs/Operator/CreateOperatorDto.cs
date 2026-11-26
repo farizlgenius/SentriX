@@ -14,6 +14,6 @@ public record CreateOperatorDto(
   string Phone,
   DateTime JoinedDate,
   DateTime ExpiredDate,
-  Guid RoleGuid,
-  List<Guid> LocationGuids
+  BaseDto Role,
+  List<BaseDto> Locations
   );

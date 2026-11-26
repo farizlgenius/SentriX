@@ -19,6 +19,7 @@ import { usePagination } from "../../context/PaginationContext";
 import { Title } from "../../enum/Title";
 import { Gender } from "../../enum/Gender";
 import { OperatorForm } from "../../components/form/operator/OperatorForm";
+import { HttpStatusCode } from "axios";
 
 const defaultDto: OperatorDto = {
   guid: "",
@@ -33,14 +34,17 @@ const defaultDto: OperatorDto = {
   gender: Gender.Male,
   joinedDate: new Date(),
   expiredDate: new Date(new Date().setFullYear(new Date().getFullYear() + 10)),
-  roleGuid: "",
-  role: "",
-  locationGuids: [],
+  role: {
+    guid:"",
+    name:null,
+    vendor:null
+  },
+  locations:[],
   isActive: true,
   isDefault: false,
 };
 
-const HEADER: string[] = ["Username", "Email", "Enable", "Action"];
+const HEADER: string[] = ["Username", "Email", "Action"];
 const KEY: string[] = ["username", "email"];
 
 export const Operator = () => {
@@ -64,6 +68,7 @@ export const Operator = () => {
   const [operatorDto, setOperatorDto] = useState<OperatorDto>(defaultDto);
   const [operatorsDto, setOperatorsDto] = useState<OperatorDto[]>([]);
   const toggleRefresh = () => setRefresh(!refresh);
+  const [image, setImage] = useState<File | undefined>();
 
   const handleRemove = (data: OperatorDto) => {
     setConfirmRemove(() => async () => {
@@ -91,7 +96,8 @@ export const Operator = () => {
     setForm(true);
   };
 
-  const handleInfo = (data: OperatorDto) => {
+  const handleInfo = async (data: OperatorDto) => {
+    await fetchImage(data.guid);
     data.password = "";
     setOperatorDto(data);
     setFormType(
@@ -141,6 +147,21 @@ export const Operator = () => {
           if (
             Helper.handleToastByResCode(res, OperatorToast.CREATE, toggleToast)
           ) {
+            if(image != undefined){
+              const payload = new FormData();
+              payload.append("image",image)
+              const res2 = await send.postForm(
+                OperatorEndpoint.UPLOAD(res.data.data),payload
+              );
+
+              if(Helper.handleToastByResCode(res2,OperatorToast.CREATE,toggleToast)){
+              setForm(false);
+            setOperatorDto(defaultDto);
+            toggleRefresh();
+            }
+            }
+            
+          }else{
             setForm(false);
             setOperatorDto(defaultDto);
             toggleRefresh();
@@ -154,6 +175,21 @@ export const Operator = () => {
           if (
             Helper.handleToastByResCode(res, OperatorToast.UPDATE, toggleToast)
           ) {
+            if(image != undefined){
+              const payload = new FormData();
+              payload.append("image",image)
+              const res2 = await send.postForm(
+                OperatorEndpoint.UPLOAD(res.data.data),payload
+              );
+
+              if(Helper.handleToastByResCode(res2,OperatorToast.UPDATE,toggleToast)){
+              setForm(false);
+            setOperatorDto(defaultDto);
+            toggleRefresh();
+            }
+            }
+            
+          }else{
             setForm(false);
             setOperatorDto(defaultDto);
             toggleRefresh();
@@ -186,10 +222,24 @@ export const Operator = () => {
           dto={operatorDto}
           setDto={setOperatorDto}
           handleClick={handleClick}
+          handleChange={()=>{}}
+          image={image}
+          setImage={setImage}
         />
       ),
     },
   ];
+
+  const fetchImage = async (data:string) => {
+    const res = await send.getImage(OperatorEndpoint.IMAGE(data))
+    console.log(res);
+    if(res.status == HttpStatusCode.Ok){
+      const blob = new Blob([res.data], {
+          type: res.headers["content-type"] || "image/png",
+        });
+    }
+    
+  }
 
   const fetchData = async (
     pageNumber: number,

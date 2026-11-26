@@ -20,6 +20,13 @@ namespace Host.Controllers
                   return Ok(res);
             }
 
+            [HttpGet("module")]
+            public async Task<IActionResult> GetRoleModuleAsync()
+            {
+                  var res = await role.GetRoleModuleAsync();
+                  return Ok(res);
+            }
+
             [HttpGet("pagination")]
             public async Task<IActionResult> GetPaginationAsync([FromQuery] PaginationParams param)
             {

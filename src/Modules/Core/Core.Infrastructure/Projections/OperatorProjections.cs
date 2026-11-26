@@ -19,11 +19,16 @@ public static class OperatorProjections
         x.gender,
         x.email,
         x.phone,
-        x.role.guid,
-        x.role.name,
         x.joined_date,
         x.expired_date ?? new DateTime(9999, 01, 01, 0, 0, 0, DateTimeKind.Utc),
-        x.operator_locations.Select(x => x.location.guid).ToList(),
+        new BaseDto(
+          x.role.guid,
+          x.role.name
+        ),
+        x.operator_locations.Select(l => new BaseDto(
+          l.location.guid,
+          l.location.name
+        )),
         x.is_active,
         x.is_default
       );

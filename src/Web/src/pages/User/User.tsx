@@ -206,10 +206,28 @@ const User = () => {
       case "update":
         setConfirmUpdate(() => async () => {
           const res = await send.put(UserEndpoint.UPDATE, userDto);
-          if (Helper.handleToastByResCode(res, UserToast.UPDATE, toggleToast)) {
-            setUserDto(defaultDto);
-            setForm(false);
-            toggleRefresh();
+          if (
+            Helper.handleToastByResCode(res, UserToast.UPDATE, toggleToast)
+          ) {
+            if (image != undefined) {
+              const payload = new FormData();
+              payload.append("image", image);
+              const res2 = await send.postForm(
+                UserEndpoint.UPLOAD(res.data.data),
+                payload,
+              );
+              if (
+                Helper.handleToastByResCode(res2, UserToast.UPDATE, toggleToast)
+              ) {
+                setUserDto(defaultDto);
+                setForm(false);
+                toggleRefresh();
+              }
+            } else {
+              setUserDto(defaultDto);
+              setForm(false);
+              toggleRefresh();
+            }
           }
         });
         setUpdate(true);

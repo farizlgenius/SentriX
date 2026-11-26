@@ -100,7 +100,7 @@ export const FormSection: React.FC<FormSectionProps> = ({
           )} */}
         </div>
       )}
-      <div className="flex flex-col justify-between h-full">
+      <div className="flex flex-col h-full">
         {children}
       </div>
       

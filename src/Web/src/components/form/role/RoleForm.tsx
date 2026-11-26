@@ -22,6 +22,7 @@ import {
 } from "../template/FormTemplate";
 import { ModulePermissionDto } from "../../../model/Role/ModulePermissionDto";
 import { FeaturePermissionDto } from "../../../model/Role/FeaturePermissionDto";
+import { HttpStatusCode } from "axios";
 
 export const RoleForm: React.FC<PropsWithChildren<FormProp<RoleDto>>> = ({
   type,
@@ -32,49 +33,22 @@ export const RoleForm: React.FC<PropsWithChildren<FormProp<RoleDto>>> = ({
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDto((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
-  const fetchFeatureList = async () => {
-    const res = await api.get(RoleEndpoint.GET_FEATURE);
-    console.log(res);
-    if (res && res.data) {
-      // setList(res.data.data)
-      if (type == FormType.CREATE) {
-        setDto((prev) => ({
-          ...prev,
-          permissions: res.data.map((feature: FeatureDto) => ({
-            featureId: feature.id,
-            featureName: feature.name,
-            isCreated: false,
-            isEnabled: false,
-            isDeleted: false,
-            isUpdated: false,
-          })),
-        }));
-      }
-    }
-  };
 
-  useEffect(() => {
-    fetchFeatureList();
-  }, []);
+
   return (
     <div className="grid gap-5">
-      <FormSection
-        overall="Role Details"
-        title="Role Details"
-        description="Start with the role name, then fine-tune access below."
-      >
-        <FormField className="max-w-xl">
+     <FormField className="max-w-xl">
           <Label htmlFor="name">Name</Label>
           <Input
             disabled={isReadOnly}
             name="name"
+            placeholder="Role name"
             type="text"
             id="name"
             onChange={handleChange}
             value={dto.name}
           />
         </FormField>
-      </FormSection>
       {dto.modules.map((m: ModulePermissionDto) => {
         return (
           <FormSectionChecked

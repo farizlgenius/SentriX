@@ -11,10 +11,8 @@ let accessToken: string | null = null;
 const api: AxiosInstance = axios.create({
   baseURL: API_BASE,
   timeout: 15000,
-  withCredentials: true, // remove if you don't need cookies
+  withCredentials: true,
 });
-
-// ---- Token Setters -----------------------------------------------------
 
 export function setAccessToken(token: string | null) {
   accessToken = token;
@@ -38,8 +36,7 @@ export function clearAccessToken() {
 export const send = {
   get: async (endpoint: string) => {
     try {
-      const res = await api.get(endpoint);
-      return res;
+      return await api.get(endpoint);
     } catch (e: any) {
       Logger.error(e);
       return e.response;
@@ -48,10 +45,9 @@ export const send = {
 
   getImage: async (endpoint: string) => {
     try {
-      const res = await api.get(endpoint, {
+      return await api.get(endpoint, {
         responseType: "arraybuffer",
       });
-      return res;
     } catch (e: any) {
       Logger.error(e);
       return e.response;
@@ -60,46 +56,45 @@ export const send = {
 
   post: async (endpoint: string, payload?: Object) => {
     try {
-      const res = await api.post(endpoint, payload);
-      return res;
+      return await api.post(endpoint, payload);
     } catch (e: any) {
       Logger.error(e);
       return e;
     }
   },
+
   put: async (endpoint: string, payload: Object) => {
     try {
-      const res = await api.put(endpoint, payload);
-      return res;
+      return await api.put(endpoint, payload);
     } catch (e: any) {
       Logger.error(e);
       return e.response;
     }
   },
+
   delete: async (endpoint: string) => {
     try {
-      const res = await api.delete(endpoint);
-      return res;
+      return await api.delete(endpoint);
     } catch (e: any) {
       Logger.error(e);
       return e.response;
     }
   },
+
   deleteBody: async (endpoint: string, payload: Object) => {
     try {
-      const res = await api.delete(endpoint, {
+      return await api.delete(endpoint, {
         data: payload,
       });
-      return res;
     } catch (e: any) {
       Logger.error(e);
       return e.response;
     }
   },
+
   postForm: async (endpoint: string, payload: FormData) => {
     try {
-      const res = await api.post(endpoint, payload);
-      return res;
+      return await api.post(endpoint, payload);
     } catch (e: any) {
       Logger.error(e);
       return e.response;
@@ -107,19 +102,21 @@ export const send = {
   },
 };
 
-// ---- Request Interceptor (optional) ------------------------------------
-
 api.interceptors.request.use((config) => {
+  const isFormData = config.data instanceof FormData;
+
   if (accessToken) {
-    config.headers = {
-      ...(config.headers as any),
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${accessToken}`,
-    };
+    config.headers.set("Authorization", `Bearer ${accessToken}`);
   }
+
+  if (isFormData) {
+    // Let Axios/browser set multipart/form-data with the boundary
+    config.headers.delete("Content-Type");
+  } else if (!config.headers.has("Content-Type")) {
+    config.headers.set("Content-Type", "application/json");
+  }
+
   return config;
 });
-
-// ---- Export -------------------------------------------------------------
 
 export default api;

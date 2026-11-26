@@ -8,4 +8,5 @@ public interface IRoleRepository : IRepository<RoleDto, Role>
   Task<bool> IsAnyUserByGuidAsync(Guid guid, CancellationToken ct = default);
   Task<IEnumerable<ModulePermissionDto>> GetPermissionByRoleIdAsync(int id, CancellationToken ct = default);
   Task<IEnumerable<RoleDto>> GetAsync(CancellationToken ct = default);
+  Task<IEnumerable<ModuleDto>> GetRoleModuleAsync(CancellationToken ct = default);
 }
