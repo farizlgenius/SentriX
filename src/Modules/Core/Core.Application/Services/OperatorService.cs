@@ -179,7 +179,7 @@ public sealed class OperatorService(
                   throw new NotFoundException(EntityType.USER.ToString(), guid.ToString());
 
 
-            var path = await file.SaveUserAsync(stream, guid.ToString());
+            var path = await file.SaveOperatorAsync(stream, guid.ToString());
 
             return true;
       }
@@ -189,6 +189,6 @@ public sealed class OperatorService(
             if (!await oper.IsAnyGuidAsync(guid, ct))
                   throw new NotFoundException(EntityType.USER.ToString(), guid.ToString());
 
-            return await file.ReadUserAsync(guid.ToString());
+            return await file.ReadOperatorAsync(guid.ToString());
       }
 }

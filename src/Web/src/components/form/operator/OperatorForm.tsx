@@ -472,6 +472,7 @@ export const OperatorForm: React.FC<
                       userId={dto.guid}
                       newImage={newImage}
                       image={image}
+                      endpoint={OperatorEndpoint.IMAGE}
                     />
                   </div>
 

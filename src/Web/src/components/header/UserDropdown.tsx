@@ -4,6 +4,7 @@ import { Dropdown } from "../ui/dropdown/Dropdown";
 import { useNavigate } from "react-router";
 import { useAuth } from "../../context/AuthContext";
 import { Avatar } from "../../pages/UiElements/Avatar";
+import { OperatorEndpoint } from "../../endpoint/OperatorEndpoint";
 
 export default function UserDropdown() {
   const { signOut, username, imageName } = useAuth();
@@ -25,7 +26,7 @@ export default function UserDropdown() {
       >
         <span className="mr-3 overflow-hidden rounded-full h-11 w-11">
           {/* <img src={`/images/user/${imageName}.jpg`} alt="User" /> */}
-          <Avatar userId={imageName} />
+          <Avatar userId={imageName} endpoint={OperatorEndpoint.IMAGE} />
         </span>
 
         <span className="mr-1 block text-theme-sm font-medium">{username}</span>

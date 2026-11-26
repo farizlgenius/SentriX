@@ -135,6 +135,7 @@ public sealed class RoleService(
 
 
             var d = new Core.Domain.Entities.Role(
+                  dto.Guid,
                   dto.Name,
                   [.. dto.Modules.Select(x => new ModulePermission(
                         x.IsEnabled,

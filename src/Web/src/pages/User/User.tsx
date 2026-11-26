@@ -440,7 +440,7 @@ const User = () => {
                   className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400"
                 >
                   <div className="cursor-pointer w-11 h-11 overflow-hidden border border-gray-200 rounded-full dark:border-gray-800">
-                    <Avatar userId={d.guid} />
+                    <Avatar userId={d.guid} endpoint={UserEndpoint.IMAGE} />
                   </div>
                 </TableCell>
               ),
